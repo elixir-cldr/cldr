@@ -1,0 +1,30 @@
+{
+  "main": {
+    "sr-Cyrl-ME": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Cyrl",
+        "territory": "ME"
+      },
+      "characters": {
+        "exemplarCharacters": "[а б в г д ђ е ж з и ј к л љ м н њ о п р с т ћ у ф х ц ч џ ш]",
+        "auxiliary": "[ё й щ ъ ы ь э ю я]",
+        "index": "[А Б В Г Д Ђ Е Ж З И Ј К Л Љ М Н Њ О П Р С Т Ћ У Ф Х Ц Ч Џ Ш]",
+        "punctuation": "[\\\\- ‐ – , ; \\\\: ! ? . … ‘ ‚ “ „ ( ) \\\\[ \\\\] \\\\{ \\\\} * #]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

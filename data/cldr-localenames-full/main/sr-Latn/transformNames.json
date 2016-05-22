@@ -1,0 +1,28 @@
+{
+  "main": {
+    "sr-Latn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12417 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Latn"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN (BGN)",
+          "Numeric": "Numerička",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN (BGN)",
+          "x-Accents": "Akcenti",
+          "x-Fullwidth": "puna širina",
+          "x-Halfwidth": "pola širine",
+          "x-Jamo": "Džamo",
+          "x-Pinyin": "Pinjin",
+          "x-Publishing": "Izdavački"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "main": {
+    "sw-KE": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw",
+        "territory": "KE"
+      },
+      "characters": {
+        "exemplarCharacters": "[a b {ch} d e f g h i j k l m n o p r s t u v w y z]",
+        "auxiliary": "[c q x]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

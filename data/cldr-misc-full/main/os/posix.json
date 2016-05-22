@@ -1,0 +1,19 @@
+{
+  "main": {
+    "os": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12313 $",
+          "_cldrVersion": "29"
+        },
+        "language": "os"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "уойы:у",
+          "nostr": "нӕйы:н"
+        }
+      }
+    }
+  }
+}

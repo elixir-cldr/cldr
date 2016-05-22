@@ -1,0 +1,20 @@
+{
+  "main": {
+    "pa": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pa"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ਮੀਟਰਿਕ",
+          "UK": "ਯੂ. ਕੇ.",
+          "US": "ਯੂ. ਐਸ."
+        }
+      }
+    }
+  }
+}

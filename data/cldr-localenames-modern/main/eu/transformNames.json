@@ -1,0 +1,27 @@
+{
+  "main": {
+    "eu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "eu"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN bihurketa",
+          "Numeric": "Zenbakizko bihurketa",
+          "Tone": "Tonu-bihurketa",
+          "UNGEGN": "UNGEGN bihurketa",
+          "x-Accents": "Azentu-bihurketa",
+          "x-Fullwidth": "Zabalera osoko karaktere-bihurketa",
+          "x-Halfwidth": "Zabalera erdiko karaktere-bihurketa",
+          "x-Jamo": "Jamo-bihurketa",
+          "x-Pinyin": "Pinyina",
+          "x-Publishing": "Argitalpen-bihurketa"
+        }
+      }
+    }
+  }
+}

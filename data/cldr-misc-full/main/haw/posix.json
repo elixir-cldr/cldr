@@ -1,0 +1,19 @@
+{
+  "main": {
+    "haw": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "haw"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "yes:y",
+          "nostr": "no:n"
+        }
+      }
+    }
+  }
+}

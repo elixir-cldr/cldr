@@ -1,0 +1,21 @@
+{
+  "main": {
+    "pt-AO": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pt",
+        "territory": "AO"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "métrico",
+          "UK": "inglês",
+          "US": "americano"
+        }
+      }
+    }
+  }
+}

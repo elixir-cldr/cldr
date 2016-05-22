@@ -1,0 +1,19 @@
+{
+  "main": {
+    "dz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "dz"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ཨིན་:ཨ",
+          "nostr": "མེན་:མ"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "jgo": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "jgo"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ɔ́ŋ:ɔ́",
+          "nostr": "ŋgáŋ:ŋ"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "main": {
+    "el-CY": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "el",
+        "territory": "CY"
+      },
+      "contextTransforms": {
+        "relative": {
+          "stand-alone": "titlecase-firstword",
+          "uiListOrMenu": "titlecase-firstword"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "main": {
+    "bs-Cyrl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bs",
+        "script": "Cyrl"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Календар",
+          "cf": "cf",
+          "collation": "Сортирање",
+          "currency": "Валута",
+          "hc": "hc",
+          "lb": "lb",
+          "ms": "ms",
+          "numbers": "Бројеви",
+          "x": "Приватна употреба"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Будистички календар",
+            "chinese": "Кинески календар",
+            "coptic": "коптски календар",
+            "dangi": "dangi",
+            "ethiopic": "етиопски календар",
+            "ethiopic-amete-alem": "етиопски амет алем календар",
+            "gregorian": "Грегоријански календар",
+            "hebrew": "Хебрејски календар",
+            "indian": "Индијски национални календар",
+            "islamic": "Исламски календар",
+            "islamic-civil": "Исламски цивилни календар",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "iso8601",
+            "japanese": "Јапански календар",
+            "persian": "персијски календар",
+            "roc": "Календар Републике Кине"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "Традиционално кинеско сортирање",
+            "compat": "compat",
+            "dictionary": "Редослед сортирања у речнику",
+            "ducet": "Подразумевани Unicode редослед сортирања",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Поједностављено кинеско сортирање",
+            "phonebook": "Сортирање као телефонски именик",
+            "pinyin": "Пињин сортирање",
+            "reformed": "Реформисани редослед сортирања",
+            "search": "Опште намењена претрага",
+            "searchjl": "searchjl",
+            "standard": "standard",
+            "stroke": "Сортирање по броју црта",
+            "traditional": "Традиционално сортирање",
+            "unihan": "Редослед сортирања радикалним цртицама",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "h11",
+            "h12": "h12",
+            "h23": "h23",
+            "h24": "h24"
+          },
+          "lb": {
+            "loose": "loose",
+            "normal": "normal",
+            "strict": "strict"
+          },
+          "ms": {
+            "metric": "metric",
+            "uksystem": "uksystem",
+            "ussystem": "ussystem"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "арапско-индијске цифре",
+            "arabext": "продужене арапско-индијске цифре",
+            "armn": "јерменски бројеви",
+            "armnlow": "мали јерменски бројеви",
+            "bali": "bali",
+            "beng": "бенгалске цифре",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "девангари цифре",
+            "ethi": "етиопски бројеви",
+            "fullwide": "цифре пуне ширине",
+            "geor": "грузијски бројеви",
+            "grek": "грчки бројеви",
+            "greklow": "мали грчки бројеви",
+            "gujr": "гуџаратске цифре",
+            "guru": "гурмуки цифре",
+            "hanidec": "кинески децимални бројеви",
+            "hans": "поједностављени кинески бројеви",
+            "hansfin": "поједностављени кинески финансијски бројеви",
+            "hant": "традиционални кинески бројеви",
+            "hantfin": "традиционални кинески финансијски бројеви",
+            "hebr": "хебрејски бројеви",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "јапански бројеви",
+            "jpanfin": "јапански финансијски бројеви",
+            "kali": "kali",
+            "khmr": "кмерске цифре",
+            "knda": "канада цифре",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "лаошке цифре",
+            "latn": "западне цифре",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "малајалам цифре",
+            "modi": "modi",
+            "mong": "монголске цифре",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "мијанмарске цифре",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "орија цифре",
+            "osma": "osma",
+            "roman": "римски бројеви",
+            "romanlow": "мали римски бројеви",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "тамилски бројеви",
+            "tamldec": "tamldec",
+            "telu": "телугу цифре",
+            "thai": "тајске цифре",
+            "tibt": "тибетанске цифре",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "{0}",
+          "script": "{0}",
+          "territory": "{0}"
+        }
+      }
+    }
+  }
+}

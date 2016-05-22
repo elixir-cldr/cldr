@@ -1,0 +1,28 @@
+{
+  "main": {
+    "fr-PF": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fr",
+        "territory": "PF"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numérique",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Pleine chasse",
+          "x-Halfwidth": "Demi-chasse",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publication"
+        }
+      }
+    }
+  }
+}

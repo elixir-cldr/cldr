@@ -1,0 +1,27 @@
+{
+  "main": {
+    "fil": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fil"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeric",
+          "Tone": "Tono",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Fullwidth",
+          "x-Halfwidth": "Halfwidth",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

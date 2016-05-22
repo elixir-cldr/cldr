@@ -1,0 +1,28 @@
+{
+  "main": {
+    "bem": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bem"
+      },
+      "characters": {
+        "exemplarCharacters": "[a b c e f g i j k l m n o p s {sh} t u w y]",
+        "auxiliary": "[d h q r v x z]",
+        "index": "[A B C E F G I J K L M N O P S {SH} T U W Y]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

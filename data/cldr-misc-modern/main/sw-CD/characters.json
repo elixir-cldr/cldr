@@ -1,0 +1,28 @@
+{
+  "main": {
+    "sw-CD": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12197 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw",
+        "territory": "CD"
+      },
+      "characters": {
+        "exemplarCharacters": "[a b c d e f g h i j k l m n o p r s t u v w y z]",
+        "auxiliary": "[q x]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

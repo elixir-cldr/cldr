@@ -1,0 +1,19 @@
+{
+  "main": {
+    "to": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12379 $",
+          "_cldrVersion": "29"
+        },
+        "language": "to"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

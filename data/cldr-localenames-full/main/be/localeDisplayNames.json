@@ -1,0 +1,171 @@
+{
+  "main": {
+    "be": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "be"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "каляндар",
+          "cf": "cf",
+          "collation": "сартаванне",
+          "currency": "валюта",
+          "hc": "часавы цыкл (12 і 24)",
+          "lb": "правілы разрыву радка",
+          "ms": "сістэма мер",
+          "numbers": "лічбы"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "будыйскі каляндар",
+            "chinese": "кітайскі каляндар",
+            "coptic": "coptic",
+            "dangi": "каляндар дангі",
+            "ethiopic": "эфіопскі каляндар",
+            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "gregorian": "грыгарыянскі каляндар",
+            "hebrew": "яўрэйскі каляндар",
+            "indian": "indian",
+            "islamic": "мусульманскі каляндар",
+            "islamic-civil": "мусульманскі свецкі каляндар",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "каляндар ISO-8601",
+            "japanese": "японскі каляндар",
+            "persian": "персідскі каляндар",
+            "roc": "каляндар Міньго"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "big5han",
+            "compat": "compat",
+            "dictionary": "dictionary",
+            "ducet": "стандартнае сартаванне Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "gb2312han",
+            "phonebook": "phonebook",
+            "pinyin": "pinyin",
+            "reformed": "reformed",
+            "search": "універсальны пошук",
+            "searchjl": "searchjl",
+            "standard": "стандартнае сартаванне",
+            "stroke": "stroke",
+            "traditional": "traditional",
+            "unihan": "unihan",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "12-гадзінны фармат часу (0-11)",
+            "h12": "12-гадзінны фармат часу (1-12)",
+            "h23": "24-гадзінны фармат часу (0-23)",
+            "h24": "24-гадзінны фармат часу (1-24)"
+          },
+          "lb": {
+            "loose": "гібкія правілы разрыву радка",
+            "normal": "стандартныя правілы разрыву радка",
+            "strict": "строгія правілы разрыву радка"
+          },
+          "ms": {
+            "metric": "метрычная сістэма мер",
+            "uksystem": "брытанская сістэма мер",
+            "ussystem": "амерыканская сістэма мер"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "арабска-індыйскія лічбы",
+            "arabext": "пашыраная сістэма арабска-індыйскіх лічбаў",
+            "armn": "армянскія лічбы",
+            "armnlow": "армянскія лічбы ў ніжнім рэгістры",
+            "bali": "bali",
+            "beng": "бенгальскія лічбы",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "лічбы дэванагары",
+            "ethi": "эфіопскія лічбы",
+            "fullwide": "поўнашырынныя лічбы",
+            "geor": "грузінскія лічбы",
+            "grek": "грэчаскія лічбы",
+            "greklow": "грэчаскія лічбы ў ніжнім рэгістры",
+            "gujr": "лічбы гуджараці",
+            "guru": "лічбы гурмукхі",
+            "hanidec": "кітайскія дзесятковыя лічбы",
+            "hans": "кітайскія спрошчаныя лічбы",
+            "hansfin": "кітайскія спрошчаныя лічбы (фінансы)",
+            "hant": "кітайскія традыцыйныя лічбы",
+            "hantfin": "кітайскія традыцыйныя лічбы (фінансы)",
+            "hebr": "яўрэйскія лічбы",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "японскія лічбы",
+            "jpanfin": "японскія лічбы (фінансы)",
+            "kali": "kali",
+            "khmr": "хмерскія лічбы",
+            "knda": "лічбы каннада",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "лаоскія лічбы",
+            "latn": "сучасныя арабскія лічбы",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "лічбы малаялам",
+            "modi": "modi",
+            "mong": "mong",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "бірманскія лічбы",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "лічбы орыя",
+            "osma": "osma",
+            "roman": "рымскія лічбы",
+            "romanlow": "рымскія лічбы ў ніжнім рэгістры",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "тамільскія традыцыйныя лічбы",
+            "tamldec": "тамільскія лічбы",
+            "telu": "лічбы тэлугу",
+            "thai": "тайскія лічбы",
+            "tibt": "тыбецкія лічбы",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Мова: {0}",
+          "script": "Пісьмо: {0}",
+          "territory": "Рэгіён: {0}"
+        }
+      }
+    }
+  }
+}

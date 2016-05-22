@@ -1,0 +1,21 @@
+{
+  "main": {
+    "zh-Hans-SG": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh",
+        "script": "Hans",
+        "territory": "SG"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "确定:是",
+          "nostr": "否定:否"
+        }
+      }
+    }
+  }
+}

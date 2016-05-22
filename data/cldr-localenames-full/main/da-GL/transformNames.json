@@ -1,0 +1,28 @@
+{
+  "main": {
+    "da-GL": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "da",
+        "territory": "GL"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerisk",
+          "Tone": "Tone",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accenter",
+          "x-Fullwidth": "Fuld bredde",
+          "x-Halfwidth": "Halv bredde",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

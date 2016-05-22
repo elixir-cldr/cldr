@@ -1,0 +1,20 @@
+{
+  "main": {
+    "sq": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sq"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metrik",
+          "UK": "britanik (imperial)",
+          "US": "amerikan"
+        }
+      }
+    }
+  }
+}

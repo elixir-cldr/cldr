@@ -1,0 +1,20 @@
+{
+  "main": {
+    "fur": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fur"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metric",
+          "UK": "Ream Unît",
+          "US": "USA"
+        }
+      }
+    }
+  }
+}

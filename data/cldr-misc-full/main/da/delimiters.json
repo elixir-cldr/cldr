@@ -1,0 +1,19 @@
+{
+  "main": {
+    "da": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12387 $",
+          "_cldrVersion": "29"
+        },
+        "language": "da"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "naq": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "naq"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Îi:Î",
+          "nostr": "Hî-î:H"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "main": {
+    "de-LI": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "de",
+        "territory": "LI"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ja:j",
+          "nostr": "nein:n"
+        }
+      }
+    }
+  }
+}

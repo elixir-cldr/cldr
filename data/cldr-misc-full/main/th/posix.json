@@ -1,0 +1,19 @@
+{
+  "main": {
+    "th": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "th"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ใช่",
+          "nostr": "ไม่ใช่"
+        }
+      }
+    }
+  }
+}

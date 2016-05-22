@@ -1,0 +1,27 @@
+{
+  "main": {
+    "sv": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12366 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sv"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerisk",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accenter",
+          "x-Fullwidth": "Helbreda",
+          "x-Halfwidth": "Halvbreda",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "För publicering"
+        }
+      }
+    }
+  }
+}

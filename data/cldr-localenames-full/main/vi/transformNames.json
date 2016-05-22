@@ -1,0 +1,27 @@
+{
+  "main": {
+    "vi": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12312 $",
+          "_cldrVersion": "29"
+        },
+        "language": "vi"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Số",
+          "Tone": "Âm",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Dấu",
+          "x-Fullwidth": "Độ rộng tối đa",
+          "x-Halfwidth": "Nửa độ rộng",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Bính âm",
+          "x-Publishing": "Xuất bản"
+        }
+      }
+    }
+  }
+}

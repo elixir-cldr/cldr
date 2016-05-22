@@ -1,0 +1,19 @@
+{
+  "main": {
+    "guz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12313 $",
+          "_cldrVersion": "29"
+        },
+        "language": "guz"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

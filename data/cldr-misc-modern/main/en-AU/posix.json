@@ -1,0 +1,20 @@
+{
+  "main": {
+    "en-AU": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12413 $",
+          "_cldrVersion": "29"
+        },
+        "language": "en",
+        "territory": "AU"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "yes:y",
+          "nostr": "no:n"
+        }
+      }
+    }
+  }
+}

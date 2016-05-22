@@ -1,0 +1,21 @@
+{
+  "main": {
+    "bs-Cyrl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bs",
+        "script": "Cyrl"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Метрички",
+          "UK": "империјални",
+          "US": "САД"
+        }
+      }
+    }
+  }
+}

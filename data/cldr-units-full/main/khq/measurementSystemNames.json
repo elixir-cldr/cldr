@@ -1,0 +1,20 @@
+{
+  "main": {
+    "khq": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "khq"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metric",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

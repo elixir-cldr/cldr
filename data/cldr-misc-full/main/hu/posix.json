@@ -1,0 +1,19 @@
+{
+  "main": {
+    "hu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hu"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "igen:i",
+          "nostr": "nem:n"
+        }
+      }
+    }
+  }
+}

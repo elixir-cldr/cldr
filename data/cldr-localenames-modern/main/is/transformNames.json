@@ -1,0 +1,27 @@
+{
+  "main": {
+    "is": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "is"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Tölulegur",
+          "Tone": "Tónn",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Áherslur",
+          "x-Fullwidth": "Full breidd",
+          "x-Halfwidth": "Hálf breidd",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Birting"
+        }
+      }
+    }
+  }
+}

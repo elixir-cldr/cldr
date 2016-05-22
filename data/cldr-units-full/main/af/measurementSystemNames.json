@@ -1,0 +1,20 @@
+{
+  "main": {
+    "af": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "af"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metriek",
+          "UK": "VK",
+          "US": "VSA"
+        }
+      }
+    }
+  }
+}

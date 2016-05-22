@@ -1,0 +1,224 @@
+{
+  "main": {
+    "af-NA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "af",
+        "territory": "NA"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalender",
+          "cf": "cf",
+          "colAlternate": "Ignoreer simboolsortering",
+          "colBackwards": "Omgekeerde aksentsortering",
+          "colCaseFirst": "Hoofletters/kleinletters-sortering",
+          "colCaseLevel": "Kassensitiewe sortering",
+          "colHiraganaQuaternary": "Kana-sortering",
+          "collation": "Sorteervolgorde",
+          "colNormalization": "Genormaliseerde sortering",
+          "colNumeric": "Numeriese sortering",
+          "colStrength": "Sorteringssterkte",
+          "currency": "Geldeenheid",
+          "hc": "Uursiklus (12 vs 24)",
+          "lb": "Reëlbreek-styl",
+          "ms": "Meetstelsel",
+          "numbers": "Syfers",
+          "timezone": "Tydsone",
+          "va": "Lokaalvariant",
+          "variableTop": "Sorteer as simbole",
+          "x": "Privaat gebruik"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Boeddhistiese kalender",
+            "chinese": "Sjinese kalender",
+            "coptic": "Koptiese kalender",
+            "dangi": "Dangi-kalender",
+            "ethiopic": "Ethiopiese kalender",
+            "ethiopic-amete-alem": "Etiopiese Amete Alem-kalender",
+            "gregorian": "Gregoriese kalender",
+            "hebrew": "Hebreeuse kalender",
+            "indian": "Indiese nasionale kalender",
+            "islamic": "Islamitiese kalender",
+            "islamic-civil": "Islamitiese siviele kalender",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ISO-8601-kalender",
+            "japanese": "Japannese kalender",
+            "persian": "Persiese kalender",
+            "roc": "Minguo-kalender"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "Sorteer simbole",
+            "shifted": "Sorteer ignoreersimbole"
+          },
+          "colBackwards": {
+            "no": "Sorteer aksente gewoonweg",
+            "yes": "Sorteer aksente omgekeerd"
+          },
+          "colCaseFirst": {
+            "lower": "Sorteer kleinletters veerste",
+            "no": "Sorteer gewone letterorde",
+            "upper": "Sorteer hoofletters eerste"
+          },
+          "colCaseLevel": {
+            "no": "Sorteer nie kassensitief nie",
+            "yes": "Sorteer kassensitief"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Sorteer Kana afsonderlik",
+            "yes": "Sorteer Kana anders"
+          },
+          "collation": {
+            "big5han": "Tradisionele Chinese sorteervolgorde - Groot5",
+            "compat": "compat",
+            "dictionary": "Woordeboek-sorteervolgorde",
+            "ducet": "Verstek Unicode-sorteervolgorde",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Vereenvoudigde Chinese sorteervolgorde - GB2312",
+            "phonebook": "Foonboek-sorteervolgorde",
+            "phonetic": "Fonetiese sorteerorde",
+            "pinyin": "Pinyin-sorteervolgorde",
+            "reformed": "Gereformeerde sorteervolgorde",
+            "search": "Algemenedoel-soektog",
+            "searchjl": "Soek volgens Hangul-beginkonsonant",
+            "standard": "Standaard sorteervolgorde",
+            "stroke": "Slag-sorteervolgorde",
+            "traditional": "Tradisionele sorteervolgorde",
+            "unihan": "Radikale-slag-sorteervolgorde",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "Sorteer sonder normalisering",
+            "yes": "Sorteer Unicode genormaliseer"
+          },
+          "colNumeric": {
+            "no": "Sorteer syfers individueel",
+            "yes": "Sorteer syfers numeries"
+          },
+          "colStrength": {
+            "identical": "Sorteer almal",
+            "primary": "Sorteer slegs basisletters",
+            "quaternary": "Sorteer aksente/kas/breedte/Kana",
+            "secondary": "Sorteer aksente",
+            "tertiary": "Sorteer aksente/kas/breedte"
+          },
+          "hc": {
+            "h11": "12-uur-stelsel (0-11)",
+            "h12": "112-uur-stelsel (1-12)",
+            "h23": "24-uur-stelsel",
+            "h24": "24-uur-stelsel (1-24)"
+          },
+          "lb": {
+            "loose": "Los reëlbreek-styl",
+            "normal": "Normale reëlbreek-styl",
+            "strict": "Streng reëlbreek-styl"
+          },
+          "ms": {
+            "metric": "Metriese stelsel",
+            "uksystem": "Imperiale meetstelsel",
+            "ussystem": "VS-meetstelsel"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "Arabies-Indiese syfers",
+            "arabext": "Uitgebreide Arabies-Indiese syfers",
+            "armn": "Armeense syfers",
+            "armnlow": "Armeense kleinletter-syfers",
+            "bali": "bali",
+            "beng": "Bengaalse syfers",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "Devanagari-syfers",
+            "ethi": "Ethiopiese syfers",
+            "finance": "Finansiële syfers",
+            "fullwide": "Vollewydte-syfers",
+            "geor": "Georgiese syfers",
+            "grek": "Griekse syfers",
+            "greklow": "Griekse kleinletter-syfers",
+            "gujr": "Goedjarati-syfers",
+            "guru": "Gurmukhi-syfers",
+            "hanidec": "Chinese desimale syfers",
+            "hans": "Vereenvoudigde Sjinese syfers",
+            "hansfin": "Vereenvoudigde Sjinese finansiële syfers",
+            "hant": "Tradisionele Sjinese syfers",
+            "hantfin": "Tradisionele Sjinese finansiële syfers",
+            "hebr": "Hebreeuse syfers",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "Japannese syfers",
+            "jpanfin": "Japannese finansiële syfers",
+            "kali": "kali",
+            "khmr": "Khmer-syfers",
+            "knda": "Kannada-syfers",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Lao-syfers",
+            "latn": "Westerse syfers",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "Malabaarse syfers",
+            "modi": "modi",
+            "mong": "Mongoliese syfers",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "Mianmar-syfers",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "Inheemse syfers",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "Oriya-syfers",
+            "osma": "osma",
+            "roman": "Romeinse syfers",
+            "romanlow": "Romeinse kleinletter-syfers",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Tradisionele Tamil-syfers",
+            "tamldec": "Tamil-syfers",
+            "telu": "Teloegoe-syfers",
+            "thai": "Thaise syfers",
+            "tibt": "Tibettaanse syfers",
+            "tirh": "tirh",
+            "traditional": "Tradisionele syfers",
+            "vaii": "Vai-syfers",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Taal: {0}",
+          "script": "Skrif: {0}",
+          "territory": "Streek: {0}"
+        }
+      }
+    }
+  }
+}

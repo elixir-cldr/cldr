@@ -1,0 +1,27 @@
+{
+  "main": {
+    "gu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gu"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "સંખ્યા",
+          "Tone": "ધ્વની",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "સ્વરાઘાતો",
+          "x-Fullwidth": "પૂર્ણપહોળાઇ",
+          "x-Halfwidth": "અર્ધપહોળાઈ",
+          "x-Jamo": "જેમો",
+          "x-Pinyin": "પીનયીન",
+          "x-Publishing": "પ્રકાશન"
+        }
+      }
+    }
+  }
+}

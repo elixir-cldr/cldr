@@ -1,0 +1,19 @@
+{
+  "main": {
+    "yue": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12347 $",
+          "_cldrVersion": "29"
+        },
+        "language": "yue"
+      },
+      "delimiters": {
+        "quotationStart": "「",
+        "quotationEnd": "」",
+        "alternateQuotationStart": "『",
+        "alternateQuotationEnd": "』"
+      }
+    }
+  }
+}

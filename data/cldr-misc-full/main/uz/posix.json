@@ -1,0 +1,19 @@
+{
+  "main": {
+    "uz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "uz"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ha:h",
+          "nostr": "yo‘q:y"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "main": {
+    "ebu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ebu"
+      },
+      "characters": {
+        "exemplarCharacters": "[a b c d e f g h i ĩ j k l m n o p q r s t u ũ v w x y z]",
+        "auxiliary": "[]",
+        "index": "[A B C D E F G H I Ĩ J K L M N O P Q R S T U Ũ V W X Y Z]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

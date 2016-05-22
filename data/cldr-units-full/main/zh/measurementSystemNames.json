@@ -1,0 +1,20 @@
+{
+  "main": {
+    "zh": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "公制",
+          "UK": "英制",
+          "US": "美制"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "es": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12318 $",
+          "_cldrVersion": "29"
+        },
+        "language": "es"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "sí:s",
+          "nostr": "no:n"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "sbp": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sbp"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ena:E",
+          "nostr": "Ndaali:N"
+        }
+      }
+    }
+  }
+}

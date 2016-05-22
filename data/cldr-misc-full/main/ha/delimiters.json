@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ha": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12128 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ha"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

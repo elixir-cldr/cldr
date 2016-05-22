@@ -1,0 +1,223 @@
+{
+  "main": {
+    "fi": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fi"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "kalenteri",
+          "cf": "cf",
+          "colAlternate": "symbolien lajittelu",
+          "colBackwards": "painomerkkien lajittelu",
+          "colCaseFirst": "isojen ja pienten kirjainten järjestys",
+          "colCaseLevel": "aakkoslajien lajittelu",
+          "colHiraganaQuaternary": "kana-merkkien lajittelu",
+          "collation": "lajittelujärjestys",
+          "colNormalization": "lajittelun normalisointi",
+          "colNumeric": "numeroiden lajittelu",
+          "colStrength": "lajittelun taso",
+          "currency": "valuutta",
+          "hc": "tuntijärjestelmä",
+          "lb": "rivinvaihtotyyli",
+          "ms": "mittajärjestelmä",
+          "numbers": "numerot",
+          "timezone": "aikavyöhyke",
+          "va": "maavalinnan muunnelma",
+          "variableTop": "lajittelu symboleina",
+          "x": "yksityiskäyttö"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "buddhalainen kalenteri",
+            "chinese": "kiinalainen kalenteri",
+            "coptic": "koptilainen kalenteri",
+            "dangi": "dangilainen kalenteri",
+            "ethiopic": "etiopialainen kalenteri",
+            "ethiopic-amete-alem": "etiopialainen amete alem -kalenteri",
+            "gregorian": "gregoriaaninen kalenteri",
+            "hebrew": "juutalainen kalenteri",
+            "indian": "intialainen kalenteri",
+            "islamic": "islamilainen kalenteri",
+            "islamic-civil": "islamilainen siviilikalenteri, perjantai-epookki",
+            "islamic-rgsa": "islamilainen saudiarabialainen kalenteri",
+            "islamic-tbla": "islamilainen matemaattinen kalenteri, torstai-epookki",
+            "islamic-umalqura": "islamilainen Umm al-Qura -kalenteri",
+            "iso8601": "ISO 8601 -kalenteri",
+            "japanese": "japanilainen kalenteri",
+            "persian": "persialainen kalenteri",
+            "roc": "Kiinan tasavallan kalenteri"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "symbolit huomioiva lajittelu",
+            "shifted": "symbolit ohittava lajittelu"
+          },
+          "colBackwards": {
+            "no": "painomerkkien normaali lajittelu",
+            "yes": "painomerkkien käänteinen lajittelu"
+          },
+          "colCaseFirst": {
+            "lower": "pienet kirjaimet edeltävät isoja",
+            "no": "isojen ja pienten kirjainten normaalijärjestys",
+            "upper": "isot kirjaimet edeltävät pieniä"
+          },
+          "colCaseLevel": {
+            "no": "isojen ja pienten kirjainten lajittelu yhdessä",
+            "yes": "isojen ja pienten kirjainten lajittelu erikseen"
+          },
+          "colHiraganaQuaternary": {
+            "no": "kana-merkkien lajittelu erillisinä",
+            "yes": "kana-merkkien lajittelu tyypin mukaan"
+          },
+          "collation": {
+            "big5han": "perinteinen kiinalainen järjestys Big5",
+            "compat": "aiempi lajittelujärjestys yhteensopivuutta varten",
+            "dictionary": "sanakirjajärjestys",
+            "ducet": "Unicoden oletusjärjestys",
+            "emoji": "emojien lajittelujärjestys",
+            "eor": "yleiseurooppalainen lajittelujärjestys",
+            "gb2312han": "yksinkertaistettu kiinalainen järjestys GB2312",
+            "phonebook": "puhelinluettelojärjestys",
+            "phonetic": "äänteellinen järjestys",
+            "pinyin": "pinyin-järjestys",
+            "reformed": "uudistettu järjestys",
+            "search": "yleishakujärjestys",
+            "searchjl": "haku hangul-alkukonsonantin mukaan",
+            "standard": "normaalijärjestys",
+            "stroke": "piirtojärjestys",
+            "traditional": "perinteinen järjestys",
+            "unihan": "radikaali- ja piirtojärjestys",
+            "zhuyin": "zhuyin-järjestys"
+          },
+          "colNormalization": {
+            "no": "lajittelu ilman normalisoinrtia",
+            "yes": "lajittelu Unicode-normalisoituna"
+          },
+          "colNumeric": {
+            "no": "numero-numerolta lajittelu",
+            "yes": "numeroden lajittelu lukuina"
+          },
+          "colStrength": {
+            "identical": "kaikkien merkkien lajittelu",
+            "primary": "vain peruskirjainten lajittelu",
+            "quaternary": "painomerkit ja aakkoslajit tai merkkileveydet ja kana-merkit huomioiva lajittelu",
+            "secondary": "painomerkit huomioiva lajittelu",
+            "tertiary": "painomerkit ja aakkoslajit tai merkkileveydet huomioiva lajittelu"
+          },
+          "hc": {
+            "h11": "12 tunnin järjestelmä (0–11)",
+            "h12": "12 tunnin järjestelmä (1–12)",
+            "h23": "24 tunnin järjestelmä (0–23)",
+            "h24": "24 tunnin järjestelmä (1–24)"
+          },
+          "lb": {
+            "loose": "väljä rivinvaihto",
+            "normal": "normaali rivinvaihto",
+            "strict": "tarkka rivinvaihto"
+          },
+          "ms": {
+            "metric": "metrijärjestelmä",
+            "uksystem": "brittiläinen mittajärjestelmä",
+            "ussystem": "yhdysvaltalainen mittajärjestelmä"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "arabialaiset numerot",
+            "arabext": "laajennetut arabialaiset numerot",
+            "armn": "armenialaiset numerot",
+            "armnlow": "armenialaiset piennumerot",
+            "bali": "balilaiset numerot",
+            "beng": "bengalilaiset numerot",
+            "brah": "brahmilaiset numerot",
+            "cakm": "chakmalaiset numerot",
+            "cham": "cham-numerot",
+            "cyrl": "cyrl",
+            "deva": "devanagarinumerot",
+            "ethi": "etiopialaiset numerot",
+            "finance": "talousnumerot",
+            "fullwide": "ideografin levyiset numerot",
+            "geor": "georgialaiset numerot",
+            "grek": "kreikkalaiset numerot",
+            "greklow": "kreikkalaiset piennumerot",
+            "gujr": "gudžaratilaiset numerot",
+            "guru": "gurmukhilaiset numerot",
+            "hanidec": "kiinalaiset desimaalinumerot",
+            "hans": "yksinkertaistetut kiinalaiset numerot",
+            "hansfin": "yksinkertaistetut kiinalaiset talousnumerot",
+            "hant": "perinteiset kiinalaiset numerot",
+            "hantfin": "perinteiset kiinalaiset talousnumerot",
+            "hebr": "heprealaiset numerot",
+            "hmng": "hmng",
+            "java": "jaavalaiset numerot",
+            "jpan": "japanilaiset numerot",
+            "jpanfin": "japanilaiset talousnumerot",
+            "kali": "kayah li -numerot",
+            "khmr": "khmeriläiset numerot",
+            "knda": "kannadalaiset numerot",
+            "lana": "taithamin hora-numerot",
+            "lanatham": "taithamin tham-numerot",
+            "laoo": "laolaiset numerot",
+            "latn": "länsimaiset numerot",
+            "lepc": "lepchanumerot",
+            "limb": "limbunumerot",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "malajalamilaiset numerot",
+            "modi": "modi",
+            "mong": "mongolialaiset numerot",
+            "mroo": "mroo",
+            "mtei": "meetei mayek -numerot",
+            "mymr": "burmalaiset numerot",
+            "mymrshan": "myanmarin shan-numerot",
+            "mymrtlng": "mymrtlng",
+            "native": "kielen omat numerot",
+            "nkoo": "n’ko-numerot",
+            "olck": "ol chiki -numerot",
+            "orya": "orijalaiset numerot",
+            "osma": "osmanjalaiset numerot",
+            "roman": "roomalaiset numerot",
+            "romanlow": "roomalaiset piennumerot",
+            "saur": "saurashtra-numerot",
+            "shrd": "šarida-numerot",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora sompeng -numerot",
+            "sund": "sundalaiset numerot",
+            "takr": "takri-numerot",
+            "talu": "uudet tai lue -numerot",
+            "taml": "perinteiset tamilinumerot",
+            "tamldec": "tamilinumerot",
+            "telu": "telugulaiset numerot",
+            "thai": "thainumerot",
+            "tibt": "tiibetiläiset numerot",
+            "tirh": "tirh",
+            "traditional": "perinteiset numerot",
+            "vaii": "vai-numerot",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "kieli: {0}",
+          "script": "kirjoitusjärjestelmä: {0}",
+          "territory": "alue: {0}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "main": {
+    "nb-SJ": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "nb",
+        "territory": "SJ"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerisk",
+          "Tone": "Tonespråk",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksenter",
+          "x-Fullwidth": "Full bredde",
+          "x-Halfwidth": "Halv bredde",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "For publisering"
+        }
+      }
+    }
+  }
+}

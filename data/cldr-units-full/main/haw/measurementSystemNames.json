@@ -1,0 +1,20 @@
+{
+  "main": {
+    "haw": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "haw"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Mekalika",
+          "UK": "UK",
+          "US": "ʻAmelika Hui Pū ʻIa"
+        }
+      }
+    }
+  }
+}

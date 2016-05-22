@@ -1,0 +1,19 @@
+{
+  "main": {
+    "lv": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "lv"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "jā:j",
+          "nostr": "nē:n"
+        }
+      }
+    }
+  }
+}

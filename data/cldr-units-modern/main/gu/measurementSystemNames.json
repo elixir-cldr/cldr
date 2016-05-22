@@ -1,0 +1,20 @@
+{
+  "main": {
+    "gu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gu"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "મેટ્રિક",
+          "UK": "યુકે",
+          "US": "અમેરિકા"
+        }
+      }
+    }
+  }
+}

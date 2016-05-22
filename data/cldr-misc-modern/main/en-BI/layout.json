@@ -1,0 +1,20 @@
+{
+  "main": {
+    "en-BI": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12347 $",
+          "_cldrVersion": "29"
+        },
+        "language": "en",
+        "territory": "BI"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

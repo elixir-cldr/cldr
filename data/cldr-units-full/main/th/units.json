@@ -1,0 +1,1737 @@
+{
+  "main": {
+    "th": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "th"
+      },
+      "units": {
+        "long": {
+          "per": {
+            "compoundUnitPattern": "{0}ต่อ{1}"
+          },
+          "acceleration-g-force": {
+            "displayName": "แรง G",
+            "unitPattern-count-other": "{0} แรง G"
+          },
+          "acceleration-meter-per-second-squared": {
+            "displayName": "เมตรต่อวินาทีกำลังสอง",
+            "unitPattern-count-other": "{0} เมตรต่อวินาทีกำลังสอง"
+          },
+          "angle-revolution": {
+            "displayName": "รอบ",
+            "unitPattern-count-other": "{0} รอบ"
+          },
+          "angle-radian": {
+            "displayName": "เรเดียน",
+            "unitPattern-count-other": "{0} เรเดียน"
+          },
+          "angle-degree": {
+            "displayName": "องศา",
+            "unitPattern-count-other": "{0} องศา"
+          },
+          "angle-arc-minute": {
+            "displayName": "ลิปดา",
+            "unitPattern-count-other": "{0} ลิปดา"
+          },
+          "angle-arc-second": {
+            "displayName": "พิลิปดา",
+            "unitPattern-count-other": "{0} พิลิปดา"
+          },
+          "area-square-kilometer": {
+            "displayName": "ตารางกิโลเมตร",
+            "unitPattern-count-other": "{0} ตารางกิโลเมตร"
+          },
+          "area-hectare": {
+            "displayName": "เฮกตาร์",
+            "unitPattern-count-other": "{0} เฮกตาร์"
+          },
+          "area-square-meter": {
+            "displayName": "ตารางเมตร",
+            "unitPattern-count-other": "{0} ตารางเมตร",
+            "perUnitPattern": "{0} ต่อ ตร.ม."
+          },
+          "area-square-centimeter": {
+            "displayName": "ตารางเซนติเมตร",
+            "unitPattern-count-other": "{0} ตารางเซนติเมตร",
+            "perUnitPattern": "{0} ต่อตารางเซนติเมตร"
+          },
+          "area-square-mile": {
+            "displayName": "ตารางไมล์",
+            "unitPattern-count-other": "{0} ตารางไมล์"
+          },
+          "area-acre": {
+            "displayName": "เอเคอร์",
+            "unitPattern-count-other": "{0} เอเคอร์"
+          },
+          "area-square-yard": {
+            "displayName": "ตารางวา",
+            "unitPattern-count-other": "{0} ตารางวา"
+          },
+          "area-square-foot": {
+            "displayName": "ตารางฟุต",
+            "unitPattern-count-other": "{0} ตารางฟุต"
+          },
+          "area-square-inch": {
+            "displayName": "ตารางนิ้ว",
+            "unitPattern-count-other": "{0} ตร.นิ้ว",
+            "perUnitPattern": "{0} ต่อตารางนิ้ว"
+          },
+          "concentr-karat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "concentr-milligram-per-deciliter": {
+            "displayName": "mg/dL",
+            "unitPattern-count-other": "{0} mg/dL"
+          },
+          "concentr-millimole-per-liter": {
+            "displayName": "mmol/L",
+            "unitPattern-count-other": "{0} mmol/L"
+          },
+          "concentr-part-per-million": {
+            "displayName": "ppm",
+            "unitPattern-count-other": "{0} ppm"
+          },
+          "consumption-liter-per-kilometer": {
+            "displayName": "ลิตรต่อกิโลเมตร",
+            "unitPattern-count-other": "{0} ลิตรต่อกิโลเมตร"
+          },
+          "consumption-liter-per-100kilometers": {
+            "displayName": "ลิตรต่อ100 กิโลเมตร",
+            "unitPattern-count-other": "{0} ลิตร/100 กิโลเมตร"
+          },
+          "consumption-mile-per-gallon": {
+            "displayName": "ไมล์ต่อแกลลอน",
+            "unitPattern-count-other": "{0} ไมล์ต่อแกลลอน"
+          },
+          "consumption-mile-per-gallon-imperial": {
+            "displayName": "mpg Imp.",
+            "unitPattern-count-other": "{0} mpg Imp."
+          },
+          "digital-terabyte": {
+            "displayName": "เทราไบต์",
+            "unitPattern-count-other": "{0} เทราไบต์"
+          },
+          "digital-terabit": {
+            "displayName": "เทราบิต",
+            "unitPattern-count-other": "{0} เทราบิต"
+          },
+          "digital-gigabyte": {
+            "displayName": "กิกะไบต์",
+            "unitPattern-count-other": "{0} กิกะไบต์"
+          },
+          "digital-gigabit": {
+            "displayName": "กิกะบิต",
+            "unitPattern-count-other": "{0} กิกะบิต"
+          },
+          "digital-megabyte": {
+            "displayName": "เมกะไบต์",
+            "unitPattern-count-other": "{0} เมกะไบต์"
+          },
+          "digital-megabit": {
+            "displayName": "เมกะบิต",
+            "unitPattern-count-other": "{0} เมกะบิต"
+          },
+          "digital-kilobyte": {
+            "displayName": "กิโลไบต์",
+            "unitPattern-count-other": "{0} กิโลไบต์"
+          },
+          "digital-kilobit": {
+            "displayName": "กิโลบิต",
+            "unitPattern-count-other": "{0} กิโลบิต"
+          },
+          "digital-byte": {
+            "displayName": "ไบต์",
+            "unitPattern-count-other": "{0} ไบต์"
+          },
+          "digital-bit": {
+            "displayName": "บิต",
+            "unitPattern-count-other": "{0} บิต"
+          },
+          "duration-century": {
+            "displayName": "ศตวรรษ",
+            "unitPattern-count-other": "{0} ศตวรรษ"
+          },
+          "duration-year": {
+            "displayName": "ปี",
+            "unitPattern-count-other": "{0} ปี",
+            "perUnitPattern": "{0} ต่อปี"
+          },
+          "duration-month": {
+            "displayName": "เดือน",
+            "unitPattern-count-other": "{0} เดือน",
+            "perUnitPattern": "{0} ต่อเดือน"
+          },
+          "duration-week": {
+            "displayName": "สัปดาห์",
+            "unitPattern-count-other": "{0} สัปดาห์",
+            "perUnitPattern": "{0} ต่อสัปดาห์"
+          },
+          "duration-day": {
+            "displayName": "วัน",
+            "unitPattern-count-other": "{0} วัน",
+            "perUnitPattern": "{0} ต่อวัน"
+          },
+          "duration-hour": {
+            "displayName": "ชั่วโมง",
+            "unitPattern-count-other": "{0} ชั่วโมง",
+            "perUnitPattern": "{0} ต่อชั่วโมง"
+          },
+          "duration-minute": {
+            "displayName": "นาที",
+            "unitPattern-count-other": "{0} นาที",
+            "perUnitPattern": "{0} ต่อนาที"
+          },
+          "duration-second": {
+            "displayName": "วินาที",
+            "unitPattern-count-other": "{0} วินาที",
+            "perUnitPattern": "{0} ต่อวินาที"
+          },
+          "duration-millisecond": {
+            "displayName": "มิลลิวินาที",
+            "unitPattern-count-other": "{0} มิลลิวินาที"
+          },
+          "duration-microsecond": {
+            "displayName": "ไมโครวินาที",
+            "unitPattern-count-other": "{0} ไมโครวินาที"
+          },
+          "duration-nanosecond": {
+            "displayName": "นาโนวินาที",
+            "unitPattern-count-other": "{0} นาโนวินาที"
+          },
+          "electric-ampere": {
+            "displayName": "แอมแปร์",
+            "unitPattern-count-other": "{0} แอมแปร์"
+          },
+          "electric-milliampere": {
+            "displayName": "มิลลิแอมแปร์",
+            "unitPattern-count-other": "{0} มิลลิแอมแปร์"
+          },
+          "electric-ohm": {
+            "displayName": "โอห์ม",
+            "unitPattern-count-other": "{0} โอห์ม"
+          },
+          "electric-volt": {
+            "displayName": "โวลต์",
+            "unitPattern-count-other": "{0} โวลต์"
+          },
+          "energy-kilocalorie": {
+            "displayName": "กิโลแคลอรี่",
+            "unitPattern-count-other": "{0} กิโลแคลอรี่"
+          },
+          "energy-calorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-foodcalorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-kilojoule": {
+            "displayName": "กิโลจูล",
+            "unitPattern-count-other": "{0} กิโลจูล"
+          },
+          "energy-joule": {
+            "displayName": "จูล",
+            "unitPattern-count-other": "{0} จูล"
+          },
+          "energy-kilowatt-hour": {
+            "displayName": "กิโลวัตต์-ชั่วโมง",
+            "unitPattern-count-other": "{0} กิโลวัตต์-ชั่วโมง"
+          },
+          "frequency-gigahertz": {
+            "displayName": "กิกะเฮิรตซ์",
+            "unitPattern-count-other": "{0} กิกะเฮิรตซ์"
+          },
+          "frequency-megahertz": {
+            "displayName": "เมกะเฮิรตซ์",
+            "unitPattern-count-other": "{0} เมกะเฮิรตซ์"
+          },
+          "frequency-kilohertz": {
+            "displayName": "กิโลเฮิรตซ์",
+            "unitPattern-count-other": "{0} กิโลเฮิรตซ์"
+          },
+          "frequency-hertz": {
+            "displayName": "เฮิรตซ์",
+            "unitPattern-count-other": "{0} เฮิรตซ์"
+          },
+          "length-kilometer": {
+            "displayName": "กิโลเมตร",
+            "unitPattern-count-other": "{0} กิโลเมตร",
+            "perUnitPattern": "{0} ต่อกิโลเมตร"
+          },
+          "length-meter": {
+            "displayName": "เมตร",
+            "unitPattern-count-other": "{0} เมตร",
+            "perUnitPattern": "{0} ต่อเมตร"
+          },
+          "length-decimeter": {
+            "displayName": "เดซิเมตร",
+            "unitPattern-count-other": "{0} เดซิเมตร"
+          },
+          "length-centimeter": {
+            "displayName": "เซนติเมตร",
+            "unitPattern-count-other": "{0} เซนติเมตร",
+            "perUnitPattern": "{0} ต่อเซนติเมตร"
+          },
+          "length-millimeter": {
+            "displayName": "มิลลิเมตร",
+            "unitPattern-count-other": "{0} มิลลิเมตร"
+          },
+          "length-micrometer": {
+            "displayName": "ไมโครเมตร",
+            "unitPattern-count-other": "{0} ไมโครเมตร"
+          },
+          "length-nanometer": {
+            "displayName": "นาโนเมตร",
+            "unitPattern-count-other": "{0} นาโนเมตร"
+          },
+          "length-picometer": {
+            "displayName": "พิโกเมตร",
+            "unitPattern-count-other": "{0} พิโกเมตร"
+          },
+          "length-mile": {
+            "displayName": "ไมล์",
+            "unitPattern-count-other": "{0} ไมล์"
+          },
+          "length-yard": {
+            "displayName": "หลา",
+            "unitPattern-count-other": "{0} หลา"
+          },
+          "length-foot": {
+            "displayName": "ฟุต",
+            "unitPattern-count-other": "{0} ฟุต",
+            "perUnitPattern": "{0} ต่อฟุต"
+          },
+          "length-inch": {
+            "displayName": "นิ้ว",
+            "unitPattern-count-other": "{0} นิ้ว",
+            "perUnitPattern": "{0} ต่อนิ้ว"
+          },
+          "length-parsec": {
+            "displayName": "พาร์เซก",
+            "unitPattern-count-other": "{0} พาร์เซก"
+          },
+          "length-light-year": {
+            "displayName": "ปีแสง",
+            "unitPattern-count-other": "{0} ปีแสง"
+          },
+          "length-astronomical-unit": {
+            "displayName": "หน่วยดาราศาสตร์",
+            "unitPattern-count-other": "{0} หน่วยดาราศาสตร์"
+          },
+          "length-furlong": {
+            "displayName": "fur",
+            "unitPattern-count-other": "{0} fur"
+          },
+          "length-fathom": {
+            "displayName": "fm",
+            "unitPattern-count-other": "{0} fm"
+          },
+          "length-nautical-mile": {
+            "displayName": "ไมล์ทะเล",
+            "unitPattern-count-other": "{0} ไมล์ทะเล"
+          },
+          "length-mile-scandinavian": {
+            "displayName": "ไมล์สแกนดิเนเวีย",
+            "unitPattern-count-other": "{0} ไมล์สแกนดิเนเวีย"
+          },
+          "light-lux": {
+            "displayName": "ลักซ์",
+            "unitPattern-count-other": "{0} ลักซ์"
+          },
+          "mass-metric-ton": {
+            "displayName": "เมตริกตัน",
+            "unitPattern-count-other": "{0} เมตริกตัน"
+          },
+          "mass-kilogram": {
+            "displayName": "กิโลกรัม",
+            "unitPattern-count-other": "{0} กิโลกรัม",
+            "perUnitPattern": "{0} ต่อกิโลกรัม"
+          },
+          "mass-gram": {
+            "displayName": "กรัม",
+            "unitPattern-count-other": "{0} กรัม",
+            "perUnitPattern": "{0} ต่อกรัม"
+          },
+          "mass-milligram": {
+            "displayName": "มิลลิกรัม",
+            "unitPattern-count-other": "{0} มิลลิกรัม"
+          },
+          "mass-microgram": {
+            "displayName": "ไมโครกรัม",
+            "unitPattern-count-other": "{0} ไมโครกรัม"
+          },
+          "mass-ton": {
+            "displayName": "ตัน",
+            "unitPattern-count-other": "{0} ตัน"
+          },
+          "mass-stone": {
+            "displayName": "st",
+            "unitPattern-count-other": "{0} st"
+          },
+          "mass-pound": {
+            "displayName": "ปอนด์",
+            "unitPattern-count-other": "{0} ปอนด์",
+            "perUnitPattern": "{0} ต่อปอนด์"
+          },
+          "mass-ounce": {
+            "displayName": "ออนซ์",
+            "unitPattern-count-other": "{0} ออนซ์",
+            "perUnitPattern": "{0} ต่อออนซ์"
+          },
+          "mass-ounce-troy": {
+            "displayName": "ทรอยออนซ์",
+            "unitPattern-count-other": "{0} ทรอยออนซ์"
+          },
+          "mass-carat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "power-gigawatt": {
+            "displayName": "กิกะวัตต์",
+            "unitPattern-count-other": "{0} กิกะวัตต์"
+          },
+          "power-megawatt": {
+            "displayName": "เมกะวัตต์",
+            "unitPattern-count-other": "{0} เมกะวัตต์"
+          },
+          "power-kilowatt": {
+            "displayName": "กิโลวัตต์",
+            "unitPattern-count-other": "{0} กิโลวัตต์"
+          },
+          "power-watt": {
+            "displayName": "วัตต์",
+            "unitPattern-count-other": "{0} วัตต์"
+          },
+          "power-milliwatt": {
+            "displayName": "มิลลิวัตต์",
+            "unitPattern-count-other": "{0} มิลลิวัตต์"
+          },
+          "power-horsepower": {
+            "displayName": "แรงม้า",
+            "unitPattern-count-other": "{0} แรงม้า"
+          },
+          "pressure-hectopascal": {
+            "displayName": "เฮกโตปาสกาล",
+            "unitPattern-count-other": "{0} เฮกโตปาสกาล"
+          },
+          "pressure-millimeter-of-mercury": {
+            "displayName": "มิลลิเมตรปรอท",
+            "unitPattern-count-other": "{0} มิลลิเมตรปรอท"
+          },
+          "pressure-pound-per-square-inch": {
+            "displayName": "ปอนด์ต่อตารางนิ้ว",
+            "unitPattern-count-other": "{0} ปอนด์ต่อตารางนิ้ว"
+          },
+          "pressure-inch-hg": {
+            "displayName": "นิ้วปรอท",
+            "unitPattern-count-other": "{0} นิ้วปรอท"
+          },
+          "pressure-millibar": {
+            "displayName": "มิลลิบาร์",
+            "unitPattern-count-other": "{0} มิลลิบาร์"
+          },
+          "speed-kilometer-per-hour": {
+            "displayName": "กิโลเมตรต่อชั่วโมง",
+            "unitPattern-count-other": "{0} กิโลเมตรต่อชั่วโมง"
+          },
+          "speed-meter-per-second": {
+            "displayName": "เมตรต่อวินาที",
+            "unitPattern-count-other": "{0} เมตรต่อวินาที"
+          },
+          "speed-mile-per-hour": {
+            "displayName": "ไมล์ต่อชั่วโมง",
+            "unitPattern-count-other": "{0} ไมล์ต่อชั่วโมง"
+          },
+          "speed-knot": {
+            "displayName": "นอต",
+            "unitPattern-count-other": "{0} นอต"
+          },
+          "temperature-generic": {
+            "displayName": "°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-celsius": {
+            "displayName": "องศาเซลเซียส",
+            "unitPattern-count-other": "{0} องศาเซลเซียส"
+          },
+          "temperature-fahrenheit": {
+            "displayName": "องศาฟาเรนไฮต์",
+            "unitPattern-count-other": "{0} องศาฟาเรนไฮต์"
+          },
+          "temperature-kelvin": {
+            "displayName": "เคลวิน",
+            "unitPattern-count-other": "{0} เคลวิน"
+          },
+          "volume-cubic-kilometer": {
+            "displayName": "ลูกบาศก์กิโลเมตร",
+            "unitPattern-count-other": "{0} ลูกบาศก์กิโลเมตร"
+          },
+          "volume-cubic-meter": {
+            "displayName": "ลูกบาศก์เมตร",
+            "unitPattern-count-other": "{0} ลูกบาศก์เมตร",
+            "perUnitPattern": "{0} ต่อลูกบาศก์เมตร"
+          },
+          "volume-cubic-centimeter": {
+            "displayName": "ลูกบาศก์เซนติเมตร",
+            "unitPattern-count-other": "{0} ลูกบาศก์เซนติเมตร",
+            "perUnitPattern": "{0} ต่อลูกบาศก์เซนติเมตร"
+          },
+          "volume-cubic-mile": {
+            "displayName": "ลูกบาศก์ไมล์",
+            "unitPattern-count-other": "{0} ลูกบาศก์ไมล์"
+          },
+          "volume-cubic-yard": {
+            "displayName": "ลูกบาศก์หลา",
+            "unitPattern-count-other": "{0} ลูกบาศก์หลา"
+          },
+          "volume-cubic-foot": {
+            "displayName": "ลูกบาศก์ฟุต",
+            "unitPattern-count-other": "{0} ลูกบาศก์ฟุต"
+          },
+          "volume-cubic-inch": {
+            "displayName": "ลูกบาศก์นิ้ว",
+            "unitPattern-count-other": "{0} ลูกบาศก์นิ้ว"
+          },
+          "volume-megaliter": {
+            "displayName": "เมกกะลิตร",
+            "unitPattern-count-other": "{0} เมกกะลิตร"
+          },
+          "volume-hectoliter": {
+            "displayName": "เฮกโตลิตร",
+            "unitPattern-count-other": "{0} เฮกโตลิตร"
+          },
+          "volume-liter": {
+            "displayName": "ลิตร",
+            "unitPattern-count-other": "{0} ลิตร",
+            "perUnitPattern": "{0} ต่อลิตร"
+          },
+          "volume-deciliter": {
+            "displayName": "เดซิลิตร",
+            "unitPattern-count-other": "{0} เดซิลิตร"
+          },
+          "volume-centiliter": {
+            "displayName": "เซนติลิตร",
+            "unitPattern-count-other": "{0} เซนติลิตร"
+          },
+          "volume-milliliter": {
+            "displayName": "มิลลิลิตร",
+            "unitPattern-count-other": "{0} มิลลิลิตร"
+          },
+          "volume-pint-metric": {
+            "displayName": "ไพนต์เมตริก",
+            "unitPattern-count-other": "{0} ไพนต์เมตริก"
+          },
+          "volume-cup-metric": {
+            "displayName": "ถ้วยเมตริก",
+            "unitPattern-count-other": "{0} ถ้วยเมตริก"
+          },
+          "volume-acre-foot": {
+            "displayName": "เอเคอร์-ฟุต",
+            "unitPattern-count-other": "{0} เอเคอร์-ฟุต"
+          },
+          "volume-bushel": {
+            "displayName": "bu",
+            "unitPattern-count-other": "{0} bu"
+          },
+          "volume-gallon": {
+            "displayName": "แกลลอน",
+            "unitPattern-count-other": "{0} แกลลอน",
+            "perUnitPattern": "{0} ต่อแกลลอน"
+          },
+          "volume-gallon-imperial": {
+            "displayName": "Imp. gal",
+            "unitPattern-count-other": "{0} gal Imp.",
+            "perUnitPattern": "{0}/gal Imp."
+          },
+          "volume-quart": {
+            "displayName": "ควอร์ต",
+            "unitPattern-count-other": "{0} ควอร์ต"
+          },
+          "volume-pint": {
+            "displayName": "ไพนต์",
+            "unitPattern-count-other": "{0} ไพนต์"
+          },
+          "volume-cup": {
+            "displayName": "ถ้วย",
+            "unitPattern-count-other": "{0} ถ้วย"
+          },
+          "volume-fluid-ounce": {
+            "displayName": "ฟลูอิดออนซ์",
+            "unitPattern-count-other": "{0} ฟลูอิดออนซ์"
+          },
+          "volume-tablespoon": {
+            "displayName": "ช้อนโต๊ะ",
+            "unitPattern-count-other": "{0} ช้อนโต๊ะ"
+          },
+          "volume-teaspoon": {
+            "displayName": "ช้อนชา",
+            "unitPattern-count-other": "{0} ช้อนชา"
+          },
+          "coordinateUnit": {
+            "east": "{0}ตะวันออก",
+            "north": "{0}เหนือ",
+            "south": "{0}ใต้",
+            "west": "{0}ตะวันตก"
+          }
+        },
+        "short": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "displayName": "แรง G",
+            "unitPattern-count-other": "{0} G"
+          },
+          "acceleration-meter-per-second-squared": {
+            "displayName": "เมตร/วินาที²",
+            "unitPattern-count-other": "{0} ม./วินาที²"
+          },
+          "angle-revolution": {
+            "displayName": "รอบ",
+            "unitPattern-count-other": "{0} รอบ"
+          },
+          "angle-radian": {
+            "displayName": "เรเดียน",
+            "unitPattern-count-other": "{0} เรเดียน"
+          },
+          "angle-degree": {
+            "displayName": "องศา",
+            "unitPattern-count-other": "{0}°"
+          },
+          "angle-arc-minute": {
+            "displayName": "ลิปดา",
+            "unitPattern-count-other": "{0} ลิปดา"
+          },
+          "angle-arc-second": {
+            "displayName": "พิลิปดา",
+            "unitPattern-count-other": "{0} พิลิปดา"
+          },
+          "area-square-kilometer": {
+            "displayName": "ตร.กม.",
+            "unitPattern-count-other": "{0} ตร.กม."
+          },
+          "area-hectare": {
+            "displayName": "เฮกตาร์",
+            "unitPattern-count-other": "{0} เฮกตาร์"
+          },
+          "area-square-meter": {
+            "displayName": "ตร.ม.",
+            "unitPattern-count-other": "{0} ตร.ม.",
+            "perUnitPattern": "{0} ต่อ ตร.ม."
+          },
+          "area-square-centimeter": {
+            "displayName": "ตร.ซม.",
+            "unitPattern-count-other": "{0} ตร.ซม.",
+            "perUnitPattern": "{0} ต่อ ตร.ซม."
+          },
+          "area-square-mile": {
+            "displayName": "ตร.ไมล์",
+            "unitPattern-count-other": "{0} ตร.ไมล์"
+          },
+          "area-acre": {
+            "displayName": "เอเคอร์",
+            "unitPattern-count-other": "{0} เอเคอร์"
+          },
+          "area-square-yard": {
+            "displayName": "ตร.ว.",
+            "unitPattern-count-other": "{0} ตร.ว."
+          },
+          "area-square-foot": {
+            "displayName": "ตร.ฟุต",
+            "unitPattern-count-other": "{0} ตร.ฟุต"
+          },
+          "area-square-inch": {
+            "displayName": "ตร.นิ้ว",
+            "unitPattern-count-other": "{0} ตร.นิ้ว",
+            "perUnitPattern": "{0} ต่อตารางนิ้ว"
+          },
+          "concentr-karat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "concentr-milligram-per-deciliter": {
+            "displayName": "mg/dL",
+            "unitPattern-count-other": "{0} mg/dL"
+          },
+          "concentr-millimole-per-liter": {
+            "displayName": "mmol/L",
+            "unitPattern-count-other": "{0} mmol/L"
+          },
+          "concentr-part-per-million": {
+            "displayName": "ppm",
+            "unitPattern-count-other": "{0} ppm"
+          },
+          "consumption-liter-per-kilometer": {
+            "displayName": "ลิตร/กม.",
+            "unitPattern-count-other": "{0} ล./กม."
+          },
+          "consumption-liter-per-100kilometers": {
+            "displayName": "ลิตร/100 กิโลเมตร",
+            "unitPattern-count-other": "{0} ล./100กม."
+          },
+          "consumption-mile-per-gallon": {
+            "displayName": "ไมล์/แกลลอน",
+            "unitPattern-count-other": "{0} ไมล์/แกลลอน"
+          },
+          "consumption-mile-per-gallon-imperial": {
+            "displayName": "mpg Imp.",
+            "unitPattern-count-other": "{0} mpg Imp."
+          },
+          "digital-terabyte": {
+            "displayName": "TB",
+            "unitPattern-count-other": "{0} TB"
+          },
+          "digital-terabit": {
+            "displayName": "Tb",
+            "unitPattern-count-other": "{0} Tb"
+          },
+          "digital-gigabyte": {
+            "displayName": "GB",
+            "unitPattern-count-other": "{0} GB"
+          },
+          "digital-gigabit": {
+            "displayName": "Gb",
+            "unitPattern-count-other": "{0} Gb"
+          },
+          "digital-megabyte": {
+            "displayName": "MB",
+            "unitPattern-count-other": "{0} MB"
+          },
+          "digital-megabit": {
+            "displayName": "Mb",
+            "unitPattern-count-other": "{0} Mb"
+          },
+          "digital-kilobyte": {
+            "displayName": "kB",
+            "unitPattern-count-other": "{0} kB"
+          },
+          "digital-kilobit": {
+            "displayName": "kb",
+            "unitPattern-count-other": "{0} kb"
+          },
+          "digital-byte": {
+            "displayName": "ไบต์",
+            "unitPattern-count-other": "{0} ไบต์"
+          },
+          "digital-bit": {
+            "displayName": "บิต",
+            "unitPattern-count-other": "{0} บิต"
+          },
+          "duration-century": {
+            "displayName": "ศตวรรษ",
+            "unitPattern-count-other": "{0} ศตวรรษ"
+          },
+          "duration-year": {
+            "displayName": "ปี",
+            "unitPattern-count-other": "{0} ปี",
+            "perUnitPattern": "{0}/ปี"
+          },
+          "duration-month": {
+            "displayName": "เดือน",
+            "unitPattern-count-other": "{0} เดือน",
+            "perUnitPattern": "{0}/เดือน"
+          },
+          "duration-week": {
+            "displayName": "สัปดาห์",
+            "unitPattern-count-other": "{0} สัปดาห์",
+            "perUnitPattern": "{0}/สัปดาห์"
+          },
+          "duration-day": {
+            "displayName": "วัน",
+            "unitPattern-count-other": "{0} วัน",
+            "perUnitPattern": "{0}/วัน"
+          },
+          "duration-hour": {
+            "displayName": "ชั่วโมง",
+            "unitPattern-count-other": "{0} ชม.",
+            "perUnitPattern": "{0}/ชม."
+          },
+          "duration-minute": {
+            "displayName": "นาที",
+            "unitPattern-count-other": "{0} นาที",
+            "perUnitPattern": "{0}/นาที"
+          },
+          "duration-second": {
+            "displayName": "วินาที",
+            "unitPattern-count-other": "{0} วิ",
+            "perUnitPattern": "{0}/วิ"
+          },
+          "duration-millisecond": {
+            "displayName": "มิลลิวินาที",
+            "unitPattern-count-other": "{0} มิลลิวินาที"
+          },
+          "duration-microsecond": {
+            "displayName": "ไมโครวินาที",
+            "unitPattern-count-other": "{0} ไมโครวิ"
+          },
+          "duration-nanosecond": {
+            "displayName": "นาโนวินาที",
+            "unitPattern-count-other": "{0} นาโนวิ"
+          },
+          "electric-ampere": {
+            "displayName": "แอมป์",
+            "unitPattern-count-other": "{0} แอมป์"
+          },
+          "electric-milliampere": {
+            "displayName": "มิลลิแอมป์",
+            "unitPattern-count-other": "{0} มิลลิแอมป์"
+          },
+          "electric-ohm": {
+            "displayName": "โอห์ม",
+            "unitPattern-count-other": "{0} Ω"
+          },
+          "electric-volt": {
+            "displayName": "โวลต์",
+            "unitPattern-count-other": "{0} V"
+          },
+          "energy-kilocalorie": {
+            "displayName": "กิโลแคลอรี่",
+            "unitPattern-count-other": "{0} กิโลแคลอรี่"
+          },
+          "energy-calorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-foodcalorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-kilojoule": {
+            "displayName": "กิโลจูล",
+            "unitPattern-count-other": "{0} กิโลจูล"
+          },
+          "energy-joule": {
+            "displayName": "จูล",
+            "unitPattern-count-other": "{0} จูล"
+          },
+          "energy-kilowatt-hour": {
+            "displayName": "กว.-ชม.",
+            "unitPattern-count-other": "{0} กว.-ชม."
+          },
+          "frequency-gigahertz": {
+            "displayName": "GHz",
+            "unitPattern-count-other": "{0} GHz"
+          },
+          "frequency-megahertz": {
+            "displayName": "MHz",
+            "unitPattern-count-other": "{0} MHz"
+          },
+          "frequency-kilohertz": {
+            "displayName": "kHz",
+            "unitPattern-count-other": "{0} kHz"
+          },
+          "frequency-hertz": {
+            "displayName": "Hz",
+            "unitPattern-count-other": "{0} Hz"
+          },
+          "length-kilometer": {
+            "displayName": "กม.",
+            "unitPattern-count-other": "{0} กม.",
+            "perUnitPattern": "{0}/กม."
+          },
+          "length-meter": {
+            "displayName": "เมตร",
+            "unitPattern-count-other": "{0} ม.",
+            "perUnitPattern": "{0}/ม."
+          },
+          "length-decimeter": {
+            "displayName": "ดม.",
+            "unitPattern-count-other": "{0} ดม."
+          },
+          "length-centimeter": {
+            "displayName": "ซม.",
+            "unitPattern-count-other": "{0} ซม.",
+            "perUnitPattern": "{0}/ซม."
+          },
+          "length-millimeter": {
+            "displayName": "มม.",
+            "unitPattern-count-other": "{0} มม."
+          },
+          "length-micrometer": {
+            "displayName": "ไมโครเมตร",
+            "unitPattern-count-other": "{0} ไมโครเมตร"
+          },
+          "length-nanometer": {
+            "displayName": "น.ม.",
+            "unitPattern-count-other": "{0} น.ม."
+          },
+          "length-picometer": {
+            "displayName": "พิโกเมตร",
+            "unitPattern-count-other": "{0} พิโกเมตร"
+          },
+          "length-mile": {
+            "displayName": "ไมล์",
+            "unitPattern-count-other": "{0} ไมล์"
+          },
+          "length-yard": {
+            "displayName": "หลา",
+            "unitPattern-count-other": "{0} หลา"
+          },
+          "length-foot": {
+            "displayName": "ฟุต",
+            "unitPattern-count-other": "{0} ฟุต",
+            "perUnitPattern": "{0}/ฟุต"
+          },
+          "length-inch": {
+            "displayName": "นิ้ว",
+            "unitPattern-count-other": "{0} นิ้ว",
+            "perUnitPattern": "{0}/นิ้ว"
+          },
+          "length-parsec": {
+            "displayName": "พาร์เซก",
+            "unitPattern-count-other": "{0} พาร์เซก"
+          },
+          "length-light-year": {
+            "displayName": "ปีแสง",
+            "unitPattern-count-other": "{0} ปีแสง"
+          },
+          "length-astronomical-unit": {
+            "displayName": "หน่วยดาราศาสตร์",
+            "unitPattern-count-other": "{0} หน่วยดาราศาสตร์"
+          },
+          "length-furlong": {
+            "displayName": "fur",
+            "unitPattern-count-other": "{0} fur"
+          },
+          "length-fathom": {
+            "displayName": "fm",
+            "unitPattern-count-other": "{0} fm"
+          },
+          "length-nautical-mile": {
+            "displayName": "ไมล์ทะเล",
+            "unitPattern-count-other": "{0} ไมล์ทะเล"
+          },
+          "length-mile-scandinavian": {
+            "displayName": "ไมล์สแกนดินีเวีย",
+            "unitPattern-count-other": "{0} ไมล์สแกนดินีเวีย"
+          },
+          "light-lux": {
+            "displayName": "ลักซ์",
+            "unitPattern-count-other": "{0} ลักซ์"
+          },
+          "mass-metric-ton": {
+            "displayName": "ต.",
+            "unitPattern-count-other": "{0} ต."
+          },
+          "mass-kilogram": {
+            "displayName": "กก.",
+            "unitPattern-count-other": "{0} กก.",
+            "perUnitPattern": "{0}/ก.ก."
+          },
+          "mass-gram": {
+            "displayName": "กรัม",
+            "unitPattern-count-other": "{0} ก.",
+            "perUnitPattern": "{0}/กรัม"
+          },
+          "mass-milligram": {
+            "displayName": "มก.",
+            "unitPattern-count-other": "{0} มก."
+          },
+          "mass-microgram": {
+            "displayName": "มคก.",
+            "unitPattern-count-other": "{0} มคก."
+          },
+          "mass-ton": {
+            "displayName": "ตัน",
+            "unitPattern-count-other": "{0} ตัน"
+          },
+          "mass-stone": {
+            "displayName": "st",
+            "unitPattern-count-other": "{0} st"
+          },
+          "mass-pound": {
+            "displayName": "ปอนด์",
+            "unitPattern-count-other": "{0} ปอนด์",
+            "perUnitPattern": "{0}/ปอนด์"
+          },
+          "mass-ounce": {
+            "displayName": "ออนซ์",
+            "unitPattern-count-other": "{0} ออนซ์",
+            "perUnitPattern": "{0}/ออนซ์"
+          },
+          "mass-ounce-troy": {
+            "displayName": "ทรอยออนซ์",
+            "unitPattern-count-other": "{0} ทรอยออนซ์"
+          },
+          "mass-carat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "power-gigawatt": {
+            "displayName": "กิกะวัตต์",
+            "unitPattern-count-other": "{0} กิกะวัตต์"
+          },
+          "power-megawatt": {
+            "displayName": "เมกะวัตต์",
+            "unitPattern-count-other": "{0} เมกะวัตต์"
+          },
+          "power-kilowatt": {
+            "displayName": "กิโลวัตต์",
+            "unitPattern-count-other": "{0} กิโลวัตต์"
+          },
+          "power-watt": {
+            "displayName": "วัตต์",
+            "unitPattern-count-other": "{0} วัตต์"
+          },
+          "power-milliwatt": {
+            "displayName": "มิลลิวัตต์",
+            "unitPattern-count-other": "{0} มิลลิวัตต์"
+          },
+          "power-horsepower": {
+            "displayName": "แรงม้า",
+            "unitPattern-count-other": "{0} แรงม้า"
+          },
+          "pressure-hectopascal": {
+            "displayName": "เฮกโตปาสกาล",
+            "unitPattern-count-other": "{0} เฮกโตปาสกาล"
+          },
+          "pressure-millimeter-of-mercury": {
+            "displayName": "มม. ปรอท",
+            "unitPattern-count-other": "{0} มม. ปรอท"
+          },
+          "pressure-pound-per-square-inch": {
+            "displayName": "ปอนด์/ตร.นิ้ว",
+            "unitPattern-count-other": "{0} ปอนด์/ตร.นิ้ว"
+          },
+          "pressure-inch-hg": {
+            "displayName": "นิ้วปรอท",
+            "unitPattern-count-other": "{0} นิ้วปรอท"
+          },
+          "pressure-millibar": {
+            "displayName": "มิลลิบาร์",
+            "unitPattern-count-other": "{0} มิลลิบาร์"
+          },
+          "speed-kilometer-per-hour": {
+            "displayName": "กม./ชั่วโมง",
+            "unitPattern-count-other": "{0} กม./ชม."
+          },
+          "speed-meter-per-second": {
+            "displayName": "เมตรต่อวินาที",
+            "unitPattern-count-other": "{0} ม./วิ"
+          },
+          "speed-mile-per-hour": {
+            "displayName": "ไมล์/ชั่วโมง",
+            "unitPattern-count-other": "{0} ไมล์/ชม."
+          },
+          "speed-knot": {
+            "displayName": "นอต",
+            "unitPattern-count-other": "{0} นอต"
+          },
+          "temperature-generic": {
+            "displayName": "°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-celsius": {
+            "displayName": "องศาเซลเซียส",
+            "unitPattern-count-other": "{0}°C"
+          },
+          "temperature-fahrenheit": {
+            "displayName": "องศาฟาเรนไฮต์",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "temperature-kelvin": {
+            "displayName": "K",
+            "unitPattern-count-other": "{0} K"
+          },
+          "volume-cubic-kilometer": {
+            "displayName": "ลบ.กม.",
+            "unitPattern-count-other": "{0} ลบ.กม."
+          },
+          "volume-cubic-meter": {
+            "displayName": "ลบ.ม.",
+            "unitPattern-count-other": "{0} ลบ.ม.",
+            "perUnitPattern": "{0}/ลบ.ม."
+          },
+          "volume-cubic-centimeter": {
+            "displayName": "ลบ.ซม.",
+            "unitPattern-count-other": "{0} ลบ.ซม.",
+            "perUnitPattern": "{0}/ลบ.ซม."
+          },
+          "volume-cubic-mile": {
+            "displayName": "ลบ.ไมล์",
+            "unitPattern-count-other": "{0} ลบ.ไมล์"
+          },
+          "volume-cubic-yard": {
+            "displayName": "ลบ.หลา",
+            "unitPattern-count-other": "{0} ลบ.หลา"
+          },
+          "volume-cubic-foot": {
+            "displayName": "ลบ.ฟุต",
+            "unitPattern-count-other": "{0} ลบ.ฟุต"
+          },
+          "volume-cubic-inch": {
+            "displayName": "ลบ.นิ้ว",
+            "unitPattern-count-other": "{0} ลบ.นิ้ว"
+          },
+          "volume-megaliter": {
+            "displayName": "เมกกะลิตร",
+            "unitPattern-count-other": "{0} เมกกะลิตร"
+          },
+          "volume-hectoliter": {
+            "displayName": "ฮล.",
+            "unitPattern-count-other": "{0} ฮล."
+          },
+          "volume-liter": {
+            "displayName": "ลิตร",
+            "unitPattern-count-other": "{0} ล.",
+            "perUnitPattern": "{0}/ล."
+          },
+          "volume-deciliter": {
+            "displayName": "ดล.",
+            "unitPattern-count-other": "{0} ดล."
+          },
+          "volume-centiliter": {
+            "displayName": "ซล.",
+            "unitPattern-count-other": "{0} ซล."
+          },
+          "volume-milliliter": {
+            "displayName": "มล.",
+            "unitPattern-count-other": "{0} มล."
+          },
+          "volume-pint-metric": {
+            "displayName": "ไพนต์เมตริก",
+            "unitPattern-count-other": "{0} ไพนต์เมตริก"
+          },
+          "volume-cup-metric": {
+            "displayName": "ถ. เมตริก",
+            "unitPattern-count-other": "{0} ถ. เมตริก"
+          },
+          "volume-acre-foot": {
+            "displayName": "เอเคอร์-ฟุต",
+            "unitPattern-count-other": "{0} เอเคอร์-ฟุต"
+          },
+          "volume-bushel": {
+            "displayName": "bu",
+            "unitPattern-count-other": "{0} bu"
+          },
+          "volume-gallon": {
+            "displayName": "แกลลอน",
+            "unitPattern-count-other": "{0} แกลลอน",
+            "perUnitPattern": "{0}/แกลลอน"
+          },
+          "volume-gallon-imperial": {
+            "displayName": "Imp. gal",
+            "unitPattern-count-other": "{0} gal Imp.",
+            "perUnitPattern": "{0}/gal Imp."
+          },
+          "volume-quart": {
+            "displayName": "คว.",
+            "unitPattern-count-other": "{0} คว."
+          },
+          "volume-pint": {
+            "displayName": "ไพนต์",
+            "unitPattern-count-other": "{0} ไพนต์"
+          },
+          "volume-cup": {
+            "displayName": "ถ้วย",
+            "unitPattern-count-other": "{0} ถ."
+          },
+          "volume-fluid-ounce": {
+            "displayName": "ฟลูอิดออนซ์",
+            "unitPattern-count-other": "{0} ฟลูอิดออนซ์"
+          },
+          "volume-tablespoon": {
+            "displayName": "ชต.",
+            "unitPattern-count-other": "{0} ชต."
+          },
+          "volume-teaspoon": {
+            "displayName": "ชช.",
+            "unitPattern-count-other": "{0} ชช."
+          },
+          "coordinateUnit": {
+            "east": "{0} ตอ",
+            "north": "{0} น",
+            "south": "{0}ใต้",
+            "west": "{0} ตต"
+          }
+        },
+        "narrow": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "displayName": "แรง G",
+            "unitPattern-count-other": "{0}G"
+          },
+          "acceleration-meter-per-second-squared": {
+            "displayName": "เมตร/วินาที²",
+            "unitPattern-count-other": "{0} ม./วินาที²"
+          },
+          "angle-revolution": {
+            "displayName": "รอบ",
+            "unitPattern-count-other": "{0} รอบ"
+          },
+          "angle-radian": {
+            "displayName": "เรเดียน",
+            "unitPattern-count-other": "{0} เรเดียน"
+          },
+          "angle-degree": {
+            "displayName": "องศา",
+            "unitPattern-count-other": "{0}°"
+          },
+          "angle-arc-minute": {
+            "displayName": "ลิปดา",
+            "unitPattern-count-other": "{0}นาที"
+          },
+          "angle-arc-second": {
+            "displayName": "พิลิปดา",
+            "unitPattern-count-other": "{0}วิ"
+          },
+          "area-square-kilometer": {
+            "displayName": "ตร.กม.",
+            "unitPattern-count-other": "{0}ตร.กม."
+          },
+          "area-hectare": {
+            "displayName": "เฮกตาร์",
+            "unitPattern-count-other": "{0}เฮกตาร์"
+          },
+          "area-square-meter": {
+            "displayName": "ตร.ม.",
+            "unitPattern-count-other": "{0}ตร.ม.",
+            "perUnitPattern": "{0} ต่อ ตร.ม."
+          },
+          "area-square-centimeter": {
+            "displayName": "ตร.ซม.",
+            "unitPattern-count-other": "{0} ตร.ซม.",
+            "perUnitPattern": "{0} ต่อ ตร.ซม."
+          },
+          "area-square-mile": {
+            "displayName": "ตร.ไมล์",
+            "unitPattern-count-other": "{0}ตร.ไมล์"
+          },
+          "area-acre": {
+            "displayName": "เอเคอร์",
+            "unitPattern-count-other": "{0}เอเคอร์"
+          },
+          "area-square-yard": {
+            "displayName": "ตร.ว.",
+            "unitPattern-count-other": "{0} ตร.ว."
+          },
+          "area-square-foot": {
+            "displayName": "ตร.ฟุต",
+            "unitPattern-count-other": "{0}ตร.ฟุต"
+          },
+          "area-square-inch": {
+            "displayName": "ตร.นิ้ว",
+            "unitPattern-count-other": "{0} ตร.นิ้ว",
+            "perUnitPattern": "{0} ต่อตารางนิ้ว"
+          },
+          "concentr-karat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "concentr-milligram-per-deciliter": {
+            "displayName": "mg/dL",
+            "unitPattern-count-other": "{0} mg/dL"
+          },
+          "concentr-millimole-per-liter": {
+            "displayName": "mmol/L",
+            "unitPattern-count-other": "{0} mmol/L"
+          },
+          "concentr-part-per-million": {
+            "displayName": "ppm",
+            "unitPattern-count-other": "{0} ppm"
+          },
+          "consumption-liter-per-kilometer": {
+            "displayName": "ลิตร/กม.",
+            "unitPattern-count-other": "{0} ล./กม."
+          },
+          "consumption-liter-per-100kilometers": {
+            "displayName": "ล. /100 กม.",
+            "unitPattern-count-other": "{0}ล/100กม"
+          },
+          "consumption-mile-per-gallon": {
+            "displayName": "ไมล์/แกลลอน",
+            "unitPattern-count-other": "{0} ไมล์/แกลลอน"
+          },
+          "consumption-mile-per-gallon-imperial": {
+            "displayName": "mpg Imp.",
+            "unitPattern-count-other": "{0} mpg Imp."
+          },
+          "digital-terabyte": {
+            "displayName": "TB",
+            "unitPattern-count-other": "{0} TB"
+          },
+          "digital-terabit": {
+            "displayName": "Tb",
+            "unitPattern-count-other": "{0} Tb"
+          },
+          "digital-gigabyte": {
+            "displayName": "GB",
+            "unitPattern-count-other": "{0} GB"
+          },
+          "digital-gigabit": {
+            "displayName": "Gb",
+            "unitPattern-count-other": "{0} Gb"
+          },
+          "digital-megabyte": {
+            "displayName": "MB",
+            "unitPattern-count-other": "{0} MB"
+          },
+          "digital-megabit": {
+            "displayName": "Mb",
+            "unitPattern-count-other": "{0} Mb"
+          },
+          "digital-kilobyte": {
+            "displayName": "kB",
+            "unitPattern-count-other": "{0} kB"
+          },
+          "digital-kilobit": {
+            "displayName": "kb",
+            "unitPattern-count-other": "{0} kb"
+          },
+          "digital-byte": {
+            "displayName": "ไบต์",
+            "unitPattern-count-other": "{0} ไบต์"
+          },
+          "digital-bit": {
+            "displayName": "บิต",
+            "unitPattern-count-other": "{0} บิต"
+          },
+          "duration-century": {
+            "displayName": "ศตวรรษ",
+            "unitPattern-count-other": "{0} ศตวรรษ"
+          },
+          "duration-year": {
+            "displayName": "ปี",
+            "unitPattern-count-other": "{0}ปี",
+            "perUnitPattern": "{0}/ปี"
+          },
+          "duration-month": {
+            "displayName": "เดือน",
+            "unitPattern-count-other": "{0}เดือน",
+            "perUnitPattern": "{0}/เดือน"
+          },
+          "duration-week": {
+            "displayName": "สัปดาห์",
+            "unitPattern-count-other": "{0}สัปดาห์",
+            "perUnitPattern": "{0}/สัปดาห์"
+          },
+          "duration-day": {
+            "displayName": "วัน",
+            "unitPattern-count-other": "{0}วัน",
+            "perUnitPattern": "{0}/วัน"
+          },
+          "duration-hour": {
+            "displayName": "ชั่วโมง",
+            "unitPattern-count-other": "{0}ชม.",
+            "perUnitPattern": "{0}/ชม."
+          },
+          "duration-minute": {
+            "displayName": "นาที",
+            "unitPattern-count-other": "{0}นาที",
+            "perUnitPattern": "{0}/นาที"
+          },
+          "duration-second": {
+            "displayName": "วิ",
+            "unitPattern-count-other": "{0}วิ",
+            "perUnitPattern": "{0}/วิ"
+          },
+          "duration-millisecond": {
+            "displayName": "มิลลิวินาที",
+            "unitPattern-count-other": "{0} มิลลิวิ"
+          },
+          "duration-microsecond": {
+            "displayName": "ไมโครวินาที",
+            "unitPattern-count-other": "{0} ไมโครวิ"
+          },
+          "duration-nanosecond": {
+            "displayName": "นาโนวินาที",
+            "unitPattern-count-other": "{0} นาโนวิ"
+          },
+          "electric-ampere": {
+            "displayName": "แอมป์",
+            "unitPattern-count-other": "{0} แอมป์"
+          },
+          "electric-milliampere": {
+            "displayName": "มิลลิแอมป์",
+            "unitPattern-count-other": "{0} มิลลิแอมป์"
+          },
+          "electric-ohm": {
+            "displayName": "โอห์ม",
+            "unitPattern-count-other": "{0} Ω"
+          },
+          "electric-volt": {
+            "displayName": "โวลต์",
+            "unitPattern-count-other": "{0} V"
+          },
+          "energy-kilocalorie": {
+            "displayName": "กิโลแคลอรี่",
+            "unitPattern-count-other": "{0} กิโลแคลอรี่"
+          },
+          "energy-calorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-foodcalorie": {
+            "displayName": "แคลอรี่",
+            "unitPattern-count-other": "{0} แคลอรี่"
+          },
+          "energy-kilojoule": {
+            "displayName": "กิโลจูล",
+            "unitPattern-count-other": "{0} กิโลจูล"
+          },
+          "energy-joule": {
+            "displayName": "จูล",
+            "unitPattern-count-other": "{0} จูล"
+          },
+          "energy-kilowatt-hour": {
+            "displayName": "กว.-ชม.",
+            "unitPattern-count-other": "{0} กว.-ชม."
+          },
+          "frequency-gigahertz": {
+            "displayName": "GHz",
+            "unitPattern-count-other": "{0} GHz"
+          },
+          "frequency-megahertz": {
+            "displayName": "MHz",
+            "unitPattern-count-other": "{0} MHz"
+          },
+          "frequency-kilohertz": {
+            "displayName": "kHz",
+            "unitPattern-count-other": "{0} kHz"
+          },
+          "frequency-hertz": {
+            "displayName": "Hz",
+            "unitPattern-count-other": "{0} Hz"
+          },
+          "length-kilometer": {
+            "displayName": "กม.",
+            "unitPattern-count-other": "{0}กม.",
+            "perUnitPattern": "{0}/กม."
+          },
+          "length-meter": {
+            "displayName": "เมตร",
+            "unitPattern-count-other": "{0}ม.",
+            "perUnitPattern": "{0}/ม."
+          },
+          "length-decimeter": {
+            "displayName": "ดม.",
+            "unitPattern-count-other": "{0} ดม."
+          },
+          "length-centimeter": {
+            "displayName": "ซม.",
+            "unitPattern-count-other": "{0}ซม.",
+            "perUnitPattern": "{0}/ซม."
+          },
+          "length-millimeter": {
+            "displayName": "มม.",
+            "unitPattern-count-other": "{0}มม."
+          },
+          "length-micrometer": {
+            "displayName": "ไมโครเมตร",
+            "unitPattern-count-other": "{0} ไมโครเมตร"
+          },
+          "length-nanometer": {
+            "displayName": "น.ม.",
+            "unitPattern-count-other": "{0} น.ม."
+          },
+          "length-picometer": {
+            "displayName": "พิโกเมตร",
+            "unitPattern-count-other": "{0}พิโกเมตร"
+          },
+          "length-mile": {
+            "displayName": "ไมล์",
+            "unitPattern-count-other": "{0}ไมล์"
+          },
+          "length-yard": {
+            "displayName": "หลา",
+            "unitPattern-count-other": "{0}หลา"
+          },
+          "length-foot": {
+            "displayName": "ฟุต",
+            "unitPattern-count-other": "{0}′",
+            "perUnitPattern": "{0}/ฟุต"
+          },
+          "length-inch": {
+            "displayName": "นิ้ว",
+            "unitPattern-count-other": "{0}″",
+            "perUnitPattern": "{0}/นิ้ว"
+          },
+          "length-parsec": {
+            "displayName": "พาร์เซก",
+            "unitPattern-count-other": "{0} พาร์เซก"
+          },
+          "length-light-year": {
+            "displayName": "ปีแสง",
+            "unitPattern-count-other": "{0}ปีแสง"
+          },
+          "length-astronomical-unit": {
+            "displayName": "หน่วยดาราศาสตร์",
+            "unitPattern-count-other": "{0} หน่วยดาราศาสตร์"
+          },
+          "length-furlong": {
+            "displayName": "fur",
+            "unitPattern-count-other": "{0} fur"
+          },
+          "length-fathom": {
+            "displayName": "fm",
+            "unitPattern-count-other": "{0} fm"
+          },
+          "length-nautical-mile": {
+            "displayName": "ไมล์ทะเล",
+            "unitPattern-count-other": "{0} ไมล์ทะเล"
+          },
+          "length-mile-scandinavian": {
+            "displayName": "ไมล์สแกนดินีเวีย",
+            "unitPattern-count-other": "{0} ไมล์สแกนดินีเวีย"
+          },
+          "light-lux": {
+            "displayName": "ลักซ์",
+            "unitPattern-count-other": "{0} ลักซ์"
+          },
+          "mass-metric-ton": {
+            "displayName": "ต.",
+            "unitPattern-count-other": "{0} ต."
+          },
+          "mass-kilogram": {
+            "displayName": "กก.",
+            "unitPattern-count-other": "{0}กก.",
+            "perUnitPattern": "{0}/ก.ก."
+          },
+          "mass-gram": {
+            "displayName": "กรัม",
+            "unitPattern-count-other": "{0}ก.",
+            "perUnitPattern": "{0}/กรัม"
+          },
+          "mass-milligram": {
+            "displayName": "มก.",
+            "unitPattern-count-other": "{0} มก."
+          },
+          "mass-microgram": {
+            "displayName": "มคก.",
+            "unitPattern-count-other": "{0} มคก."
+          },
+          "mass-ton": {
+            "displayName": "ตัน",
+            "unitPattern-count-other": "{0} ตัน"
+          },
+          "mass-stone": {
+            "displayName": "st",
+            "unitPattern-count-other": "{0} st"
+          },
+          "mass-pound": {
+            "displayName": "ปอนด์",
+            "unitPattern-count-other": "{0}#",
+            "perUnitPattern": "{0}/ปอนด์"
+          },
+          "mass-ounce": {
+            "displayName": "ออนซ์",
+            "unitPattern-count-other": "{0}ออนซ์",
+            "perUnitPattern": "{0}/ออนซ์"
+          },
+          "mass-ounce-troy": {
+            "displayName": "ทรอยออนซ์",
+            "unitPattern-count-other": "{0} ทรอยออนซ์"
+          },
+          "mass-carat": {
+            "displayName": "กะรัต",
+            "unitPattern-count-other": "{0} กะรัต"
+          },
+          "power-gigawatt": {
+            "displayName": "กิกะวัตต์",
+            "unitPattern-count-other": "{0} กิกะวัตต์"
+          },
+          "power-megawatt": {
+            "displayName": "เมกะวัตต์",
+            "unitPattern-count-other": "{0} เมกะวัตต์"
+          },
+          "power-kilowatt": {
+            "displayName": "กิโลวัตต์",
+            "unitPattern-count-other": "{0}กิโลวัตต์"
+          },
+          "power-watt": {
+            "displayName": "วัตต์",
+            "unitPattern-count-other": "{0}วัตต์"
+          },
+          "power-milliwatt": {
+            "displayName": "มิลลิวัตต์",
+            "unitPattern-count-other": "{0} มิลลิวัตต์"
+          },
+          "power-horsepower": {
+            "displayName": "แรงม้า",
+            "unitPattern-count-other": "{0}แรงม้า"
+          },
+          "pressure-hectopascal": {
+            "displayName": "เฮกโตปาสกาล",
+            "unitPattern-count-other": "{0}hPa"
+          },
+          "pressure-millimeter-of-mercury": {
+            "displayName": "มม. ปรอท",
+            "unitPattern-count-other": "{0} มม. ปรอท"
+          },
+          "pressure-pound-per-square-inch": {
+            "displayName": "ปอนด์/ตร.นิ้ว",
+            "unitPattern-count-other": "{0} ปอนด์/ตร.นิ้ว"
+          },
+          "pressure-inch-hg": {
+            "displayName": "นิ้วปรอท",
+            "unitPattern-count-other": "{0}\\\" Hg"
+          },
+          "pressure-millibar": {
+            "displayName": "มิลลิบาร์",
+            "unitPattern-count-other": "{0}มิลลิบาร์"
+          },
+          "speed-kilometer-per-hour": {
+            "displayName": "กม./ชม.",
+            "unitPattern-count-other": "{0}กม./ชม."
+          },
+          "speed-meter-per-second": {
+            "displayName": "เมตรต่อวินาที",
+            "unitPattern-count-other": "{0}ม./วิ"
+          },
+          "speed-mile-per-hour": {
+            "displayName": "ไมล์/ชั่วโมง",
+            "unitPattern-count-other": "{0}ไมล์/ชม."
+          },
+          "speed-knot": {
+            "displayName": "นอต",
+            "unitPattern-count-other": "{0} นอต"
+          },
+          "temperature-generic": {
+            "displayName": "°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-celsius": {
+            "displayName": "°C",
+            "unitPattern-count-other": "{0}°C"
+          },
+          "temperature-fahrenheit": {
+            "displayName": "องศาฟาเรนไฮต์",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "temperature-kelvin": {
+            "displayName": "K",
+            "unitPattern-count-other": "{0} K"
+          },
+          "volume-cubic-kilometer": {
+            "displayName": "ลบ.กม.",
+            "unitPattern-count-other": "{0}ลบ.กม."
+          },
+          "volume-cubic-meter": {
+            "displayName": "ลบ.ม.",
+            "unitPattern-count-other": "{0} ลบ.ม.",
+            "perUnitPattern": "{0}/ลบ.ม."
+          },
+          "volume-cubic-centimeter": {
+            "displayName": "ลบ.ซม.",
+            "unitPattern-count-other": "{0} ลบ.ซม.",
+            "perUnitPattern": "{0}/ลบ.ซม."
+          },
+          "volume-cubic-mile": {
+            "displayName": "ลบ.ไมล์",
+            "unitPattern-count-other": "{0}ลบ.ไมล์"
+          },
+          "volume-cubic-yard": {
+            "displayName": "ลบ.หลา",
+            "unitPattern-count-other": "{0} ลบ.หลา"
+          },
+          "volume-cubic-foot": {
+            "displayName": "ลบ.ฟุต",
+            "unitPattern-count-other": "{0} ลบ.ฟุต"
+          },
+          "volume-cubic-inch": {
+            "displayName": "ลบ.นิ้ว",
+            "unitPattern-count-other": "{0} ลบ.นิ้ว"
+          },
+          "volume-megaliter": {
+            "displayName": "เมกกะลิตร",
+            "unitPattern-count-other": "{0} เมกกะลิตร"
+          },
+          "volume-hectoliter": {
+            "displayName": "ฮล.",
+            "unitPattern-count-other": "{0} ฮล."
+          },
+          "volume-liter": {
+            "displayName": "ลิตร",
+            "unitPattern-count-other": "{0}ล.",
+            "perUnitPattern": "{0}/ล."
+          },
+          "volume-deciliter": {
+            "displayName": "ดล.",
+            "unitPattern-count-other": "{0} ดล."
+          },
+          "volume-centiliter": {
+            "displayName": "ซล.",
+            "unitPattern-count-other": "{0} ซล."
+          },
+          "volume-milliliter": {
+            "displayName": "มล.",
+            "unitPattern-count-other": "{0} มล."
+          },
+          "volume-pint-metric": {
+            "displayName": "ไพนต์เมตริก",
+            "unitPattern-count-other": "{0} ไพนต์เมตริก"
+          },
+          "volume-cup-metric": {
+            "displayName": "ถ. เมตริก",
+            "unitPattern-count-other": "{0} ถ. เมตริก"
+          },
+          "volume-acre-foot": {
+            "displayName": "เอเคอร์-ฟุต",
+            "unitPattern-count-other": "{0} เอเคอร์-ฟุต"
+          },
+          "volume-bushel": {
+            "displayName": "bu",
+            "unitPattern-count-other": "{0} bu"
+          },
+          "volume-gallon": {
+            "displayName": "แกลลอน",
+            "unitPattern-count-other": "{0} แกลลอน",
+            "perUnitPattern": "{0}/แกลลอน"
+          },
+          "volume-gallon-imperial": {
+            "displayName": "Imp. gal",
+            "unitPattern-count-other": "{0} gal Imp.",
+            "perUnitPattern": "{0}/gal Imp."
+          },
+          "volume-quart": {
+            "displayName": "คว.",
+            "unitPattern-count-other": "{0} คว."
+          },
+          "volume-pint": {
+            "displayName": "ไพนต์",
+            "unitPattern-count-other": "{0} ไพนต์"
+          },
+          "volume-cup": {
+            "displayName": "ถ้วย",
+            "unitPattern-count-other": "{0} ถ."
+          },
+          "volume-fluid-ounce": {
+            "displayName": "ฟลูอิดออนซ์",
+            "unitPattern-count-other": "{0} ฟลูอิดออนซ์"
+          },
+          "volume-tablespoon": {
+            "displayName": "ชต.",
+            "unitPattern-count-other": "{0} ชต."
+          },
+          "volume-teaspoon": {
+            "displayName": "ชช.",
+            "unitPattern-count-other": "{0} ชช."
+          },
+          "coordinateUnit": {
+            "east": "{0} ตอ",
+            "north": "{0} น",
+            "south": "{0}ใต้",
+            "west": "{0} ตต"
+          }
+        },
+        "durationUnit-type-hm": {
+          "durationUnitPattern": "h:mm"
+        },
+        "durationUnit-type-hms": {
+          "durationUnitPattern": "h:mm:ss"
+        },
+        "durationUnit-type-ms": {
+          "durationUnitPattern": "m:ss"
+        }
+      }
+    }
+  }
+}

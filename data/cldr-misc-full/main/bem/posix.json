@@ -1,0 +1,19 @@
+{
+  "main": {
+    "bem": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bem"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ee:E",
+          "nostr": "Awe:A"
+        }
+      }
+    }
+  }
+}

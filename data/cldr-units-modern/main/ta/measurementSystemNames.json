@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ta": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12316 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ta"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "மெட்ரிக்",
+          "UK": "யூகே",
+          "US": "யூஎஸ்"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ms": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12416 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ms"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

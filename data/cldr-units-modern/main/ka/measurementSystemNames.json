@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ka": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ka"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "მეტრული",
+          "UK": "ბრიტანული",
+          "US": "ამერიკული"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "main": {
+    "hsb": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hsb"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metriski",
+          "UK": "britiski",
+          "US": "ameriski"
+        }
+      }
+    }
+  }
+}

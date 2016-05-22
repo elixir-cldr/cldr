@@ -1,0 +1,27 @@
+{
+  "main": {
+    "haw": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "haw"
+      },
+      "characters": {
+        "exemplarCharacters": "[a ā e ē i ī o ō u ū h k l m n p w ʻ]",
+        "auxiliary": "[b c d f g j q r s t v x y z]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

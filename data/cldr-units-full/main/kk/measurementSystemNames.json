@@ -1,0 +1,20 @@
+{
+  "main": {
+    "kk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kk"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Метрлік",
+          "UK": "Ағылшын",
+          "US": "Американдық"
+        }
+      }
+    }
+  }
+}

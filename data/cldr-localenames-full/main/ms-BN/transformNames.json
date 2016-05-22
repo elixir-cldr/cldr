@@ -1,0 +1,28 @@
+{
+  "main": {
+    "ms-BN": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ms",
+        "territory": "BN"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Bernombor",
+          "Tone": "Nada",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksen",
+          "x-Fullwidth": "Kelebaran penuh",
+          "x-Halfwidth": "Kelebaran separa",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Penerbitan"
+        }
+      }
+    }
+  }
+}

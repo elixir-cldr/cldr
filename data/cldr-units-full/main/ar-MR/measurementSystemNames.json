@@ -1,0 +1,21 @@
+{
+  "main": {
+    "ar-MR": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12217 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ar",
+        "territory": "MR"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "النظام المتري",
+          "UK": "المملكة المتحدة",
+          "US": "النظام الأمريكي"
+        }
+      }
+    }
+  }
+}

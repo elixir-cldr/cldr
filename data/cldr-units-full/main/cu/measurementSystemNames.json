@@ -1,0 +1,20 @@
+{
+  "main": {
+    "cu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11977 $",
+          "_cldrVersion": "29"
+        },
+        "language": "cu"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metric",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

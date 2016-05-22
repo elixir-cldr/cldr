@@ -1,0 +1,20 @@
+{
+  "main": {
+    "dz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "dz"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "མེ་ཊྲིཀ་བརྩི་ལུགས",
+          "UK": "བྲི་ཊིཤ་ བརྩི་ལུགས",
+          "US": "ཨ་མི་རི་ཀཱན་ བརྩི་ལུགས"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "main": {
+    "pa-Arab": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11974 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pa",
+        "script": "Arab"
+      },
+      "characters": {
+        "exemplarCharacters": "[\\u064F ء آ ؤ ئ ا ب پ ت ث ٹ ج چ ح خ د ذ ڈ ر ز ڑ ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن ں ه ھ ہ و ی ے]",
+        "auxiliary": "[\\u200E\\u200F أ ٻ ة ٺ ټ ٽ]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

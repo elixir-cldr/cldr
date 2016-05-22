@@ -1,0 +1,223 @@
+{
+  "main": {
+    "sl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sl"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "koledar",
+          "cf": "cf",
+          "colAlternate": "Razvrščanje s prezrtimi znaki",
+          "colBackwards": "Razvrščanje z obratnimi naglasi",
+          "colCaseFirst": "Razvrščanje velike črke/male črke",
+          "colCaseLevel": "Razvrščanje, občutljivo na velike/male črke",
+          "colHiraganaQuaternary": "Razvrščanje kana",
+          "collation": "razvrščanje",
+          "colNormalization": "Normalizirano razvrščanje",
+          "colNumeric": "Številsko razvrščanje",
+          "colStrength": "Moč razvrščanja",
+          "currency": "valuta",
+          "hc": "urni prikaz (12 ali 24)",
+          "lb": "Slog preloma vrstic",
+          "ms": "merski sistem",
+          "numbers": "številke",
+          "timezone": "Časovni pas",
+          "va": "Različica območnih nastavitev",
+          "variableTop": "Razvrščanje kot simboli",
+          "x": "Private-Use"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "budistični koledar",
+            "chinese": "kitajski koledar",
+            "coptic": "Koptski koledar",
+            "dangi": "stari korejski koledar",
+            "ethiopic": "etiopski koledar",
+            "ethiopic-amete-alem": "Etiopsko ametsko alemski koledar",
+            "gregorian": "gregorijanski koledar",
+            "hebrew": "hebrejski koledar",
+            "indian": "indijanski koledar",
+            "islamic": "islamski koledar",
+            "islamic-civil": "islamski civilni koledar",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "koledar ISO-8601",
+            "japanese": "japonski koledar",
+            "persian": "perzijski koledar",
+            "roc": "kitajski državni koledar"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "Razvrščanje simbolov",
+            "shifted": "Razvrščanje s prezrtjem simbolov"
+          },
+          "colBackwards": {
+            "no": "Navadno razvrščanje naglasov",
+            "yes": "Obratno razvrščanje naglasov"
+          },
+          "colCaseFirst": {
+            "lower": "Razvrščanje malih črk najprej",
+            "no": "Razvrščanje v običajnem zaporedju velikih/malih črk",
+            "upper": "Razvrščanje velikih črk najprej"
+          },
+          "colCaseLevel": {
+            "no": "Razvrščanje ne glede na velike/male črke",
+            "yes": "Razvrščanje ob upoštevanju velikih/malih črk"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Razvrščanje kana ločeno",
+            "yes": "Razvrščanje kana različno"
+          },
+          "collation": {
+            "big5han": "razvrščanje po sistemu tradicionalne kitajščine - Big5",
+            "compat": "compat",
+            "dictionary": "Vrstni red razvrščanja v slovarju",
+            "ducet": "Privzeto razvrščanje Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "razvrščanje po sistemu poenostavljene kitajščine - GB2312",
+            "phonebook": "razvrščanje po abecedi",
+            "phonetic": "Fonetično razvrščanje",
+            "pinyin": "razvrščanje po sistemu pinjin",
+            "reformed": "Reformirano razvrščanje",
+            "search": "Splošno iskanje",
+            "searchjl": "Iskanje po začetnem soglasniku hangul",
+            "standard": "Standardno razvrščanje",
+            "stroke": "razvrščanje po zaporedju pisanja pismenk",
+            "traditional": "razvrščanje po tradicionalnem sistemu",
+            "unihan": "Razvrščanje koren-poteza",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "Razvrščanje brez normaliziranja",
+            "yes": "Normalizirano razvrščanje Unicode"
+          },
+          "colNumeric": {
+            "no": "Ločeno razvrščanje številk",
+            "yes": "Številsko razvrščanje števk"
+          },
+          "colStrength": {
+            "identical": "Razvrščanje vsega",
+            "primary": "Razvrščanje samo osnovnih črk",
+            "quaternary": "Razvrščanje po naglasih/velikih črkah/malih črkah/širini/kana",
+            "secondary": "Razvrščanje naglasov",
+            "tertiary": "Razvrščanje po naglasih/velikih črkah/malih črkah/širini"
+          },
+          "hc": {
+            "h11": "12-urni sistem (0–11)",
+            "h12": "12-urni sistem (1–12)",
+            "h23": "24-urni sistem (0–23)",
+            "h24": "24-urni sistem (1–24)"
+          },
+          "lb": {
+            "loose": "Prosti slog preloma vrstic",
+            "normal": "Običajni slog preloma vrstic",
+            "strict": "Strogi slog preloma vrstic"
+          },
+          "ms": {
+            "metric": "metrični sistem",
+            "uksystem": "imperialni merski sistem",
+            "ussystem": "merski sistem Združenih držav"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "arabskoindijske števke",
+            "arabext": "razširjene arabskoindijske števke",
+            "armn": "armenske številke",
+            "armnlow": "armenske majhne številke",
+            "bali": "bali",
+            "beng": "Bengalske števke",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "devangarske števke",
+            "ethi": "Etiopijske številke",
+            "finance": "Finančne številke",
+            "fullwide": "števke polne širine",
+            "geor": "gruzijske številke",
+            "grek": "grške številke",
+            "greklow": "grške male številke",
+            "gujr": "gudžaratske števke",
+            "guru": "gurmuške števke",
+            "hanidec": "kitajske decimalne številke",
+            "hans": "poenostavljene kitajske številke",
+            "hansfin": "poenostavljene kitajske finančne številke",
+            "hant": "tradicionalne kitajske številke",
+            "hantfin": "tradicionalne kitajske finančne številke",
+            "hebr": "hebrejske številke",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "japonske številke",
+            "jpanfin": "japonske finančne številke",
+            "kali": "kali",
+            "khmr": "kmerske števke",
+            "knda": "Kanaredske števke",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "laoške števke",
+            "latn": "zahodne števke",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "malajalamske števke",
+            "modi": "modi",
+            "mong": "Mongolske števke",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "mjanmarske števke",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "Domače števke",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "orijske števke",
+            "osma": "osma",
+            "roman": "rimske številke",
+            "romanlow": "rimske male številke",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "tamilske številke",
+            "tamldec": "tamilske števke",
+            "telu": "teluške števke",
+            "thai": "tajske števke",
+            "tibt": "tibetanske števke",
+            "tirh": "tirh",
+            "traditional": "Tradicionalne številke",
+            "vaii": "Številke vai",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Jezik: {0}",
+          "script": "{0}",
+          "territory": "Regija: {0}"
+        }
+      }
+    }
+  }
+}

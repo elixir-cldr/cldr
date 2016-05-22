@@ -1,0 +1,19 @@
+{
+  "main": {
+    "eu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "eu"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "bai:b",
+          "nostr": "ez:e"
+        }
+      }
+    }
+  }
+}

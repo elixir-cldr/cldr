@@ -1,0 +1,27 @@
+{
+  "main": {
+    "mr": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "mr"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "अंकीय",
+          "Tone": "स्वर",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "गडद-फिकेपणा",
+          "x-Fullwidth": "पूर्णरुंदी",
+          "x-Halfwidth": "अर्धीरुंदी",
+          "x-Jamo": "जामो",
+          "x-Pinyin": "पिनयिन",
+          "x-Publishing": "प्रकाशन"
+        }
+      }
+    }
+  }
+}

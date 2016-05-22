@@ -1,0 +1,21 @@
+{
+  "main": {
+    "ar-AE": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11994 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ar",
+        "territory": "AE"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "النظام المتري",
+          "UK": "المملكة المتحدة",
+          "US": "النظام الأمريكي"
+        }
+      }
+    }
+  }
+}

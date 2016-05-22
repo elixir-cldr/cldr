@@ -1,0 +1,20 @@
+{
+  "main": {
+    "sw": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Mfumo wa Mita",
+          "UK": "Uingereza",
+          "US": "Marekani"
+        }
+      }
+    }
+  }
+}

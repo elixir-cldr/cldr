@@ -1,0 +1,19 @@
+{
+  "main": {
+    "cgg": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12128 $",
+          "_cldrVersion": "29"
+        },
+        "language": "cgg"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

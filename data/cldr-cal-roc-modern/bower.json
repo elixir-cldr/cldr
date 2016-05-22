@@ -1,0 +1,12 @@
+{
+  "name": "cldr-cal-roc-modern",
+  "version": "29.0.0",
+  "dependencies": {
+    "cldr-dates-modern": "29.0.0"
+  },
+  "main": "main/**/*.json",
+  "ignore": [
+    ".gitattributes",
+    "README.md"
+  ]
+}

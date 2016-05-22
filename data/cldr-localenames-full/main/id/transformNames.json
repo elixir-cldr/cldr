@@ -1,0 +1,27 @@
+{
+  "main": {
+    "id": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "id"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Angka",
+          "Tone": "Nada",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksen",
+          "x-Fullwidth": "Lebar penuh",
+          "x-Halfwidth": "Lebar separuh",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Penerbitan"
+        }
+      }
+    }
+  }
+}

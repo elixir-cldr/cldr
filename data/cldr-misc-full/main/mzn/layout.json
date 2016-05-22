@@ -1,0 +1,19 @@
+{
+  "main": {
+    "mzn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "mzn"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "right-to-left",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

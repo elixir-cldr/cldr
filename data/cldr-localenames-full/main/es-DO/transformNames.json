@@ -1,0 +1,28 @@
+{
+  "main": {
+    "es-DO": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12217 $",
+          "_cldrVersion": "29"
+        },
+        "language": "es",
+        "territory": "DO"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numérico",
+          "Tone": "Tono",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Acentos",
+          "x-Fullwidth": "Ancho completo",
+          "x-Halfwidth": "Ancho medio",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicación"
+        }
+      }
+    }
+  }
+}

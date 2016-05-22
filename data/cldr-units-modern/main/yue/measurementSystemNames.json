@@ -1,0 +1,20 @@
+{
+  "main": {
+    "yue": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12347 $",
+          "_cldrVersion": "29"
+        },
+        "language": "yue"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "公制",
+          "UK": "英制",
+          "US": "美制"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "zu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zu"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "yebo:y",
+          "nostr": "cha:c"
+        }
+      }
+    }
+  }
+}

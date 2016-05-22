@@ -1,0 +1,39 @@
+{
+  "main": {
+    "my": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12384 $",
+          "_cldrVersion": "29"
+        },
+        "language": "my"
+      },
+      "listPatterns": {
+        "listPattern-type-standard": {
+          "start": "{0}၊ {1}",
+          "middle": "{0}၊ {1}",
+          "end": "{0}၊ နှင့်{1}",
+          "2": "{0}နှင့်{1}"
+        },
+        "listPattern-type-unit": {
+          "start": "{0}၊ {1}",
+          "middle": "{0}၊ {1}",
+          "end": "{0}၊ နှင့်{1}",
+          "2": "{0}နှင့်{1}"
+        },
+        "listPattern-type-unit-narrow": {
+          "start": "{0}၊ {1}",
+          "middle": "{0}၊ {1}",
+          "end": "{0}၊ နှင့်{1}",
+          "2": "{0}နှင့်{1}"
+        },
+        "listPattern-type-unit-short": {
+          "start": "{0}၊ {1}",
+          "middle": "{0}၊ {1}",
+          "end": "{0}၊ နှင့်{1}",
+          "2": "{0}နှင့်{1}"
+        }
+      }
+    }
+  }
+}

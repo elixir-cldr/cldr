@@ -1,0 +1,20 @@
+{
+  "main": {
+    "my": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12384 $",
+          "_cldrVersion": "29"
+        },
+        "language": "my"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "မက်ထရစ်စနစ်",
+          "UK": "ဗြိတိန်စနစ်",
+          "US": "အမေရိကန်စနစ်"
+        }
+      }
+    }
+  }
+}

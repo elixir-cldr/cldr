@@ -1,0 +1,20 @@
+{
+  "main": {
+    "gd": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gd"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Meatrach",
+          "UK": "RA",
+          "US": "SA"
+        }
+      }
+    }
+  }
+}

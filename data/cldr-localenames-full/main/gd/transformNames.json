@@ -1,0 +1,27 @@
+{
+  "main": {
+    "gd": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gd"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Àireamhach",
+          "Tone": "Tòna",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Stràcan",
+          "x-Fullwidth": "Làn-Leud",
+          "x-Halfwidth": "Leth-Leud",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Foillseachadh"
+        }
+      }
+    }
+  }
+}

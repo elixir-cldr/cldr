@@ -1,0 +1,28 @@
+{
+  "main": {
+    "fa-AF": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12217 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fa",
+        "territory": "AF"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "سیستم اعداد",
+          "Tone": "تون",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "تکیه",
+          "x-Fullwidth": "تمام‌عرض",
+          "x-Halfwidth": "نیم‌عرض",
+          "x-Jamo": "جامو",
+          "x-Pinyin": "پین‌یین",
+          "x-Publishing": "نشر"
+        }
+      }
+    }
+  }
+}

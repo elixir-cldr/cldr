@@ -1,0 +1,27 @@
+{
+  "main": {
+    "kn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kn"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "ಸಂಖ್ಯೆ",
+          "Tone": "ಧ್ವನಿ",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "ಉಚ್ಚಾರಣೆಗಳು",
+          "x-Fullwidth": "ಪೂರ್ಣಅಗಲ",
+          "x-Halfwidth": "ಅರೆಅಗಲ",
+          "x-Jamo": "ಹಮೋ",
+          "x-Pinyin": "ಪಿನ್‌ಯಿನ್‌",
+          "x-Publishing": "ಪ್ರಕಟಣೆ"
+        }
+      }
+    }
+  }
+}

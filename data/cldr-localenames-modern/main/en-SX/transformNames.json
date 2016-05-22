@@ -1,0 +1,28 @@
+{
+  "main": {
+    "en-SX": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "en",
+        "territory": "SX"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeric",
+          "Tone": "Tone",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Fullwidth",
+          "x-Halfwidth": "Halfwidth",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

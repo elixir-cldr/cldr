@@ -1,0 +1,19 @@
+{
+  "main": {
+    "eo": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12354 $",
+          "_cldrVersion": "29"
+        },
+        "language": "eo"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

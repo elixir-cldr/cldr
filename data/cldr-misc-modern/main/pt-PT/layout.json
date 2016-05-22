@@ -1,0 +1,20 @@
+{
+  "main": {
+    "pt-PT": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12413 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pt",
+        "territory": "PT"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

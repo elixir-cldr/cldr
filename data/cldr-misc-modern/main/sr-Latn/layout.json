@@ -1,0 +1,20 @@
+{
+  "main": {
+    "sr-Latn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12417 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Latn"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

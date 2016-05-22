@@ -1,0 +1,398 @@
+{
+  "main": {
+    "mzn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "mzn"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "تقویم"
+          },
+          "year": {
+            "displayName": "سال",
+            "relative-type--1": "پارسال",
+            "relative-type-0": "امسال",
+            "relative-type-1": "سال دیگه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} سال دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} سال پیش"
+            }
+          },
+          "year-short": {
+            "displayName": "سال",
+            "relative-type--1": "پارسال",
+            "relative-type-0": "امسال",
+            "relative-type-1": "سال دیگه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} سال دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} سال پیش"
+            }
+          },
+          "year-narrow": {
+            "displayName": "سال",
+            "relative-type--1": "پارسال",
+            "relative-type-0": "امسال",
+            "relative-type-1": "سال دیگه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} سال دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} سال پیش"
+            }
+          },
+          "quarter": {
+            "displayName": "ربع",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ربع دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ربع پیش"
+            }
+          },
+          "quarter-short": {
+            "displayName": "ربع",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ربع دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ربع پیش"
+            }
+          },
+          "quarter-narrow": {
+            "displayName": "ربع",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ربع دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ربع پیش"
+            }
+          },
+          "month": {
+            "displayName": "ماه",
+            "relative-type--1": "ماه قبل",
+            "relative-type-0": "این ماه",
+            "relative-type-1": "ماه ِبعد",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ماه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ماه پیش"
+            }
+          },
+          "month-short": {
+            "displayName": "ماه",
+            "relative-type--1": "ماه قبل",
+            "relative-type-0": "این ماه",
+            "relative-type-1": "ماه ِبعد",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ماه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ماه پیش"
+            }
+          },
+          "month-narrow": {
+            "displayName": "ماه",
+            "relative-type--1": "ماه قبل",
+            "relative-type-0": "این ماه",
+            "relative-type-1": "ماه ِبعد",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ماه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ماه پیش"
+            }
+          },
+          "week": {
+            "displayName": "هفته",
+            "relative-type--1": "قبلی هفته",
+            "relative-type-0": "این هفته",
+            "relative-type-1": "بعدی هفته",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} هفته دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} هفته پیش"
+            }
+          },
+          "week-short": {
+            "displayName": "هفته",
+            "relative-type--1": "قبلی هفته",
+            "relative-type-0": "این هفته",
+            "relative-type-1": "بعدی هفته",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} هفته دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} هفته پیش"
+            }
+          },
+          "week-narrow": {
+            "displayName": "هفته",
+            "relative-type--1": "قبلی هفته",
+            "relative-type-0": "این هفته",
+            "relative-type-1": "بعدی هفته",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} هفته دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} هفته پیش"
+            }
+          },
+          "day": {
+            "displayName": "روز",
+            "relative-type--1": "دیروز",
+            "relative-type-0": "اَمروز",
+            "relative-type-1": "فِردا",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} روز دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} روز پیش"
+            }
+          },
+          "day-short": {
+            "displayName": "روز",
+            "relative-type--1": "دیروز",
+            "relative-type-0": "اَمروز",
+            "relative-type-1": "فِردا",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} روز دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} روز پیش"
+            }
+          },
+          "day-narrow": {
+            "displayName": "روز",
+            "relative-type--1": "دیروز",
+            "relative-type-0": "اَمروز",
+            "relative-type-1": "فِردا",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} روز دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} روز پیش"
+            }
+          },
+          "weekday": {
+            "displayName": "هفته‌ی ِروز"
+          },
+          "sun": {
+            "relative-type--1": "قبلی یکشنبه",
+            "relative-type-0": "این یکشنبه",
+            "relative-type-1": "بعدی یکشنبه"
+          },
+          "sun-short": {
+            "relative-type--1": "یکشنبه قبل",
+            "relative-type-0": "این یکشنبه",
+            "relative-type-1": "یکشنبه بعد"
+          },
+          "sun-narrow": {
+            "relative-type--1": "قبلی یکشنبه",
+            "relative-type-0": "این یکشنبه",
+            "relative-type-1": "بعدی یکشنبه"
+          },
+          "mon": {
+            "relative-type--1": "قبلی دِشنبه",
+            "relative-type-0": "این دِشنبه",
+            "relative-type-1": "بعدی دِشنبه"
+          },
+          "mon-short": {
+            "relative-type--1": "قبلی دِشنبه",
+            "relative-type-0": "این دِشنبه",
+            "relative-type-1": "بعدی دِشنبه"
+          },
+          "mon-narrow": {
+            "relative-type--1": "قبلی دِشنبه",
+            "relative-type-0": "این دِشنبه",
+            "relative-type-1": "بعدی دِشنبه"
+          },
+          "tue": {
+            "relative-type--1": "قبلی سه‌شنبه",
+            "relative-type-0": "این سه‌شنبه",
+            "relative-type-1": "بعدی سه‌شنبه"
+          },
+          "tue-short": {
+            "relative-type--1": "قبلی سه‌شنبه",
+            "relative-type-0": "این سه‌شنبه",
+            "relative-type-1": "بعدی سه‌شنبه"
+          },
+          "tue-narrow": {
+            "relative-type--1": "قبلی سه‌شنبه",
+            "relative-type-0": "این سه‌شنبه",
+            "relative-type-1": "بعدی سه‌شنبه"
+          },
+          "wed": {
+            "relative-type--1": "قبلی چارشنبه",
+            "relative-type-0": "این چارشنبه",
+            "relative-type-1": "بعدی چارشنبه"
+          },
+          "wed-short": {
+            "relative-type--1": "قبلی چارشنبه",
+            "relative-type-0": "این چارشنبه",
+            "relative-type-1": "بعدی چارشنبه"
+          },
+          "wed-narrow": {
+            "relative-type--1": "قبلی چارشنبه",
+            "relative-type-0": "این چارشنبه",
+            "relative-type-1": "بعدی چارشنبه"
+          },
+          "thu": {
+            "relative-type--1": "قبلی پنجشنبه",
+            "relative-type-0": "این پنجشنبه",
+            "relative-type-1": "بعدی پنجشنبه"
+          },
+          "thu-short": {
+            "relative-type--1": "قبلی پنجشنبه",
+            "relative-type-0": "این پنجشنبه",
+            "relative-type-1": "بعدی پنجشنبه"
+          },
+          "thu-narrow": {
+            "relative-type--1": "قبلی پنجشنبه",
+            "relative-type-0": "این پنجشنبه",
+            "relative-type-1": "بعدی پنجشنبه"
+          },
+          "fri": {
+            "relative-type--1": "قبلی جومه",
+            "relative-type-0": "این جومه",
+            "relative-type-1": "بعدی جومه"
+          },
+          "fri-short": {
+            "relative-type--1": "قبلی جومه",
+            "relative-type-0": "این جومه",
+            "relative-type-1": "بعدی جومه"
+          },
+          "fri-narrow": {
+            "relative-type--1": "قبلی جومه",
+            "relative-type-0": "این جومه",
+            "relative-type-1": "بعدی جومه"
+          },
+          "sat": {
+            "relative-type--1": "قبلی شنبه",
+            "relative-type-0": "این شنبه",
+            "relative-type-1": "بعدی شنبه"
+          },
+          "sat-short": {
+            "relative-type--1": "قبلی شنبه",
+            "relative-type-0": "این شنبه",
+            "relative-type-1": "بعدی شنبه"
+          },
+          "sat-narrow": {
+            "relative-type--1": "قبلی شنبه",
+            "relative-type-0": "این شنبه",
+            "relative-type-1": "بعدی شنبه"
+          },
+          "dayperiod": {
+            "displayName": "صواحی/ظُر"
+          },
+          "hour": {
+            "displayName": "ساعِت",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ساعِت دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ساعِت پیش"
+            }
+          },
+          "hour-short": {
+            "displayName": "ساعت",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ساعت دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ساعت پیش"
+            }
+          },
+          "hour-narrow": {
+            "displayName": "ساعت",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ساعت دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ساعت پیش"
+            }
+          },
+          "minute": {
+            "displayName": "دقیقه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} دقیقه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} دَقه پیش"
+            }
+          },
+          "minute-short": {
+            "displayName": "دَقه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} دَقه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} دَقه پیش"
+            }
+          },
+          "minute-narrow": {
+            "displayName": "دَقه",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} دَقه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} دَقه پیش"
+            }
+          },
+          "second": {
+            "displayName": "ثانیه",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ثانیه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ثانیه پیش"
+            }
+          },
+          "second-short": {
+            "displayName": "ثانیه",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ثانیه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ثانیه پیش"
+            }
+          },
+          "second-narrow": {
+            "displayName": "ثانیه",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "{0} ثانیه دله"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} ثانیه پیش"
+            }
+          },
+          "zone": {
+            "displayName": "زمونی منقطه"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "cu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11977 $",
+          "_cldrVersion": "29"
+        },
+        "language": "cu"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

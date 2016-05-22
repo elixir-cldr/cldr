@@ -1,0 +1,223 @@
+{
+  "main": {
+    "zu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zu"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Ikhalenda",
+          "cf": "cf",
+          "colAlternate": "Ziba Ukuhlelwa Kwezimpawu",
+          "colBackwards": "Ukuhlelwa Kwendlela Yokubiza Okuhlehlisiwe",
+          "colCaseFirst": "Ukuhlelwa Ngokwezinhlamvu Ezinkulu/Ezincane",
+          "colCaseLevel": "Ukuhlelwa Okuncike Ezinkinobhweni",
+          "colHiraganaQuaternary": "Ukuhlela ngokwe-Kana",
+          "collation": "Uhlelo lokuhlunga",
+          "colNormalization": "Ukuhlelwa Okulinganisiwe",
+          "colNumeric": "Ukuhlelwa Ngezinombolo",
+          "colStrength": "Amandla Okuhlelwa",
+          "currency": "Ikharensi",
+          "hc": "Umjikelezo wehora (12 vs 24",
+          "lb": "I-Line Break Style",
+          "ms": "Isistimu yokulinganisa",
+          "numbers": "Izinombolo",
+          "timezone": "Izoni yesikhathi:",
+          "va": "Okokwehlukanisa Kwasendaweni",
+          "variableTop": "Hlela Njengezimpawu",
+          "x": "i-Private-Use"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "ikhalenda lesi-Buddhist",
+            "chinese": "ikhalenda lesi-Chinese",
+            "coptic": "i-Coptic Calender",
+            "dangi": "ikhalenda lesi-Dangi",
+            "ethiopic": "ikhalenda lesi-Ethiopic",
+            "ethiopic-amete-alem": "i-Ethiopic Amete Alem Calender",
+            "gregorian": "ikhalenda lesi-Gregorian",
+            "hebrew": "ikhalenda lesi-Hebrew",
+            "indian": "i-Indian National Calender",
+            "islamic": "ikhalenda lesi-Islamic",
+            "islamic-civil": "i-Islamic-Civil Calendar",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ikhalenda le-ISO-8601",
+            "japanese": "ikhalenda lesi-Japanese",
+            "persian": "ikhalenda lesi-Persian",
+            "roc": "ikhalenda lesi-Minguo"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "Hlela Izimpawu",
+            "shifted": "Hlela Ukuziba Izimpawu"
+          },
+          "colBackwards": {
+            "no": "Hlela Izindlela Zokuphimisela Ngokujwayelekile",
+            "yes": "Ukuhlelwa Kokuphimisela Kuhlehlisiwe"
+          },
+          "colCaseFirst": {
+            "lower": "Hlela Okwezinhlamvu Eziphansi Kuqala",
+            "no": "Hlela Ngokwenhlamvu Ezejwayelekile",
+            "upper": "Hlela Izinhlamvu Ezinkulu Kuqala"
+          },
+          "colCaseLevel": {
+            "no": "Hlela Okungancikile Ezinkinobhweni",
+            "yes": "Hlela Okuncike Ekumeni Kwezinkinobho"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Hlela i-Kana Eceleni",
+            "yes": "Hlela i-Kana Ngendlela Ehlukile"
+          },
+          "collation": {
+            "big5han": "Ukuhlunga kwe-Traditional Chinese - Big5",
+            "compat": "compat",
+            "dictionary": "Ukuhlunga kwesichazimazwi",
+            "ducet": "Ukuhlunga okuzenzakalelayo kwe-Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Ukuhlunga kwe-Simplified Chinese - GB2312",
+            "phonebook": "Ukuhlunga kwebhuku lefoni",
+            "phonetic": "Hlela Ngokwefonetiki",
+            "pinyin": "Ukuhlunga nge-Pinyin",
+            "reformed": "Ukuhlunga okwenziwe kabusha",
+            "search": "Usesho olujwayelekile",
+            "searchjl": "Sesha nge-Hangul Ongwaqa Basekuqaleni",
+            "standard": "I-oda yokuhlunga ejwayelekile",
+            "stroke": "Ukuhlunga kwe-Stroke",
+            "traditional": "Ukuhlunga ngokisiko",
+            "unihan": "Ukuhlunga kwe-Radical-Stroke",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "Hlela Ngaphandle Kokulinganisa",
+            "yes": "Ukuhlelwa Khekhodi Enye Kulinganisiwe"
+          },
+          "colNumeric": {
+            "no": "Hlela Izinhlamvu Zenombolo Ngazinye",
+            "yes": "Hlela Izinhlamvu Ngokwezinombolo"
+          },
+          "colStrength": {
+            "identical": "Hlela konke",
+            "primary": "Hlela Izinhlamvu Zaphansi Kuphela",
+            "quaternary": "Hlola Ukuphimisela/Ukuma kwezinhlamvu/Ububanzi/i-Kana",
+            "secondary": "Hlela Ukuphimisela",
+            "tertiary": "Hlela Ukuphimisela/Ukuma kwezinhlamvu/Ububanzi"
+          },
+          "hc": {
+            "h11": "isistimu yamahora angu-12 (0-11)",
+            "h12": "isistimu yamahora angu-12 (1-12)",
+            "h23": "isistimu yamahora angu-24 (0-23)",
+            "h24": "isistimu yamahora angu-24 (1-24)"
+          },
+          "lb": {
+            "loose": "i-Line Break Style exegayo",
+            "normal": "i-Line Break Style ekahle",
+            "strict": "i-Line Break Style enomthetho oqinile"
+          },
+          "ms": {
+            "metric": "isistimu ye-Metric",
+            "uksystem": "isistimu yokulinganisa ebusayo",
+            "ussystem": "isistimu yokulinganisa yase-US"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "amadijithi esi-Arabic-Indic",
+            "arabext": "amadijithi esi-Arabic-Indic eluliwe",
+            "armn": "izinombolo zesi-Armenian",
+            "armnlow": "izinombolo ezincane zesi-Armenian",
+            "bali": "bali",
+            "beng": "izinombolo zesi-Bengali",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "izinombolo zesi-Devanagari",
+            "ethi": "izinombolo zesi-Ethiopic",
+            "finance": "Izinombolo Zezomnotho",
+            "fullwide": "ububanzi obugcwele bamadijithi",
+            "geor": "izinombolo zesi-Georgian",
+            "grek": "izinombolo zesi-Greek",
+            "greklow": "izinombolo ezincane zesi-Greek",
+            "gujr": "amadijithi esi-Gujarati",
+            "guru": "amadijithi esi-Gurmukhi",
+            "hanidec": "izinombolo zezinombolo zesi-Chinese",
+            "hans": "izinombolo ezicacile zesi-Chinese",
+            "hansfin": "izinombolo ezicacile zezezimali zesi-Chinese",
+            "hant": "izinombolo zosiko zesi-Chinese",
+            "hantfin": "izinombolo zosiko zezezimali zesi-Chinese",
+            "hebr": "izinombolo zesi-Hebrew",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "izinombolo zesi-Japanese",
+            "jpanfin": "izinombolo zezezimali zesi-Japanese",
+            "kali": "kali",
+            "khmr": "amadijithi esi-Khmer",
+            "knda": "amadijithi esi-Kannada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "amadijithi esi-Lao",
+            "latn": "amadijithi ase-Western",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "amadijithi esi-Malayalam",
+            "modi": "modi",
+            "mong": "i-Mongolian Digits",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "amadijithi esi-Maynmar",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "Izinkinobho Zasendaweni",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "amadijithi esi-Oriya",
+            "osma": "osma",
+            "roman": "izinombolo zesi-Roman",
+            "romanlow": "izinombolo zesi-Tamil",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "izinombolo zesi-Tamil",
+            "tamldec": "amadijithi esi-Tamil",
+            "telu": "amadijithi esi-Telegu",
+            "thai": "amadijithi esi-Thai",
+            "tibt": "amadijithi esi-Tibetan",
+            "tirh": "tirh",
+            "traditional": "Izinombolo Ezijwayelekile",
+            "vaii": "Izinhlazu Zezinombolo ze-Vai",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "{0}",
+          "script": "{0}",
+          "territory": "{0}"
+        }
+      }
+    }
+  }
+}

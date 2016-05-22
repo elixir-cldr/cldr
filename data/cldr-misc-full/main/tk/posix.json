@@ -1,0 +1,19 @@
+{
+  "main": {
+    "tk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "tk"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "hawa:h",
+          "nostr": "ýok:ý"
+        }
+      }
+    }
+  }
+}

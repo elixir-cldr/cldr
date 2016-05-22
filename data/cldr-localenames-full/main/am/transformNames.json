@@ -1,0 +1,27 @@
+{
+  "main": {
+    "am": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "am"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "ቢ ጂ ኤን",
+          "Numeric": "አሃዛዊ",
+          "Tone": "የድምፅ ቃና",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "ትእምርት",
+          "x-Fullwidth": "ሙሉ ወርድ",
+          "x-Halfwidth": "ሃልፍዊድዝ",
+          "x-Jamo": "ጃሞ",
+          "x-Pinyin": "ፒንዪን",
+          "x-Publishing": "ማሳተም"
+        }
+      }
+    }
+  }
+}

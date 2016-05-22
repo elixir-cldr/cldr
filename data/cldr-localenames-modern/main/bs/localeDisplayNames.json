@@ -1,0 +1,171 @@
+{
+  "main": {
+    "bs": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bs"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalendar",
+          "cf": "cf",
+          "collation": "Sortiranje",
+          "currency": "Valuta",
+          "hc": "Satni ciklus (12 ili 24)",
+          "lb": "Stil završetka reda",
+          "ms": "Mjerni sistem",
+          "numbers": "Brojevi"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Budistički kalendar",
+            "chinese": "Kineski kalendar",
+            "coptic": "coptic",
+            "dangi": "Dangi kalendar",
+            "ethiopic": "Etiopski kalendar",
+            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "gregorian": "Gregorijanski kalendar",
+            "hebrew": "Hebrejski kalendar",
+            "indian": "Indijski nacionalni kalendar",
+            "islamic": "Islamski kalendar",
+            "islamic-civil": "Islamski civilni kalendar",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ISO-8601 kalendar",
+            "japanese": "Japanski kalendar",
+            "persian": "Perzijski kalendar",
+            "roc": "Kalendar Republike Kine"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "Tradicionalno kinesko sortiranje",
+            "compat": "compat",
+            "dictionary": "dictionary",
+            "ducet": "Standardno Unicode razvrstavanje",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Pojednostavljeno kinesko sortiranje",
+            "phonebook": "Sortiranje kao telefonski imenik",
+            "pinyin": "Pinjin sortiranje",
+            "reformed": "reformed",
+            "search": "Općenito pretraživanje",
+            "searchjl": "searchjl",
+            "standard": "Standardno razvrstavanje",
+            "stroke": "Sortiranje po broju crta",
+            "traditional": "Tradicionalno sortiranje",
+            "unihan": "unihan",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "12-satni sistem (0-11)",
+            "h12": "12-satni sistem (1-12)",
+            "h23": "24- satni sistem (0-23)",
+            "h24": "24-satni sistem (1-24)"
+          },
+          "lb": {
+            "loose": "Opušteni stil završetka reda",
+            "normal": "Normalni stil završetka reda",
+            "strict": "Strogi stil završetka reda"
+          },
+          "ms": {
+            "metric": "Metrički sistem",
+            "uksystem": "Imperijalni mjerni sistem",
+            "ussystem": "Američki mjerni sistem"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "arapsko-indijske brojke",
+            "arabext": "proširene arapsko-indijske brojke",
+            "armn": "jermenski brojevi",
+            "armnlow": "mali jermenski brojevi",
+            "bali": "bali",
+            "beng": "brojke bengalskog pisma",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "brojke pisma devanagari",
+            "ethi": "etiopski brojevi",
+            "fullwide": "Široki brojevi",
+            "geor": "gruzijski brojevi",
+            "grek": "grčki brojevi",
+            "greklow": "mali grčki brojevi",
+            "gujr": "gudžaratske brojke",
+            "guru": "brojke pisma gurmuki",
+            "hanidec": "kineski decimalni brojevi",
+            "hans": "pojednostavljeni kineski brojevi",
+            "hansfin": "pojednostavljeni kineski finansijski brojevi",
+            "hant": "tradicionalni kineski brojevi",
+            "hantfin": "tradicionalni kineski finansijski brojevi",
+            "hebr": "hebrejski brojevi",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "japanski brojevi",
+            "jpanfin": "japanski finansijski brojevi",
+            "kali": "kali",
+            "khmr": "kmerske brojke",
+            "knda": "brojke pisma kanada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "laoske brojke",
+            "latn": "arapski brojevi",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "malajalamske brojke",
+            "modi": "modi",
+            "mong": "mong",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "mijanmarske brojke",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "orijske brojke",
+            "osma": "osma",
+            "roman": "rimski brojevi",
+            "romanlow": "mali rimski brojevi",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "tamilski brojevi",
+            "tamldec": "tamilske brojke",
+            "telu": "brojke teluškog pisma",
+            "thai": "tajlandske brojke",
+            "tibt": "tibetske brojke",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Jezik: {0}",
+          "script": "Pismo: {0}",
+          "territory": "Regija: {0}"
+        }
+      }
+    }
+  }
+}

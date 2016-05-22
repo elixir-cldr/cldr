@@ -1,0 +1,20 @@
+{
+  "main": {
+    "brx": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "brx"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "मिथार खिलमिथार",
+          "UK": "UK",
+          "US": "यु.एस"
+        }
+      }
+    }
+  }
+}

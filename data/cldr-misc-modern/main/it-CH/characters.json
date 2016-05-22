@@ -1,0 +1,29 @@
+{
+  "main": {
+    "it-CH": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12415 $",
+          "_cldrVersion": "29"
+        },
+        "language": "it",
+        "territory": "CH"
+      },
+      "characters": {
+        "exemplarCharacters": "[a à b c d e é è f g h i ì j k l m n o ó ò p q r s t u ù v w x y z]",
+        "auxiliary": "[ª á â å ä ã æ ç ê ë í î ï ñ º ô ö õ ø œ ß ú û ü ÿ]",
+        "index": "[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]",
+        "punctuation": "[\\\\- — , ; \\\\: ! ? . … ' ’ \\\" “ ” « » ( ) \\\\[ \\\\] \\\\{ \\\\} @ /]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

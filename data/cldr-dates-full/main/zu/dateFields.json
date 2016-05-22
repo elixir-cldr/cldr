@@ -1,0 +1,452 @@
+{
+  "main": {
+    "zu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zu"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Isikhathi"
+          },
+          "year": {
+            "displayName": "Unyaka",
+            "relative-type--1": "onyakeni odlule",
+            "relative-type-0": "kulo nyaka",
+            "relative-type-1": "unyaka ozayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "onyakeni ongu-{0} ozayo",
+              "relativeTimePattern-count-other": "eminyakeni engu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} unyaka odlule",
+              "relativeTimePattern-count-other": "{0} iminyaka edlule"
+            }
+          },
+          "year-short": {
+            "displayName": "Unyaka",
+            "relative-type--1": "onyakeni odlule",
+            "relative-type-0": "kulo nyaka",
+            "relative-type-1": "unyaka ozayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "onyakeni ongu-{0} ozayo",
+              "relativeTimePattern-count-other": "eminyakeni engu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} unyaka odlule",
+              "relativeTimePattern-count-other": "{0} unyaka odlule"
+            }
+          },
+          "year-narrow": {
+            "displayName": "Unyaka",
+            "relative-type--1": "onyakeni odlule",
+            "relative-type-0": "kulo nyaka",
+            "relative-type-1": "unyaka ozayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "onyakeni ongu-{0} ozayo",
+              "relativeTimePattern-count-other": "eminyakeni engu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} unyaka odlule",
+              "relativeTimePattern-count-other": "{0} unyaka odlule"
+            }
+          },
+          "quarter": {
+            "displayName": "Ikota",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kwikota engu-{0} ezayo",
+              "relativeTimePattern-count-other": "kumakota angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ikota edlule",
+              "relativeTimePattern-count-other": "{0} amakota adlule"
+            }
+          },
+          "quarter-short": {
+            "displayName": "Ikota",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kwikota engu-{0} ezayo",
+              "relativeTimePattern-count-other": "kumakota angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} amakota adlule",
+              "relativeTimePattern-count-other": "{0} amakota edlule"
+            }
+          },
+          "quarter-narrow": {
+            "displayName": "Ikota",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kumakota angu-{0}",
+              "relativeTimePattern-count-other": "kumakota angu-{0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} amakota adlule",
+              "relativeTimePattern-count-other": "{0} amakota edlule"
+            }
+          },
+          "month": {
+            "displayName": "Inyanga",
+            "relative-type--1": "inyanga edlule",
+            "relative-type-0": "le nyanga",
+            "relative-type-1": "inyanga ezayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "enyangeni engu-{0}",
+              "relativeTimePattern-count-other": "ezinyangeni ezingu-{0} ezizayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} inyanga edlule",
+              "relativeTimePattern-count-other": "{0} izinyanga ezedlule"
+            }
+          },
+          "month-short": {
+            "displayName": "Inyanga",
+            "relative-type--1": "inyanga edlule",
+            "relative-type-0": "le nyanga",
+            "relative-type-1": "inyanga ezayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "ezinyangeni ezingu-{0} ezizayo",
+              "relativeTimePattern-count-other": "ezinyangeni ezingu-{0} ezizayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} izinyanga ezedlule",
+              "relativeTimePattern-count-other": "{0} izinyanga ezedlule"
+            }
+          },
+          "month-narrow": {
+            "displayName": "Inyanga",
+            "relative-type--1": "inyanga edlule",
+            "relative-type-0": "le nyanga",
+            "relative-type-1": "inyanga ezayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "enyangeni engu-{0} ezayo",
+              "relativeTimePattern-count-other": "enyangeni engu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} izinyanga ezedlule",
+              "relativeTimePattern-count-other": "{0} izinyanga ezedlule"
+            }
+          },
+          "week": {
+            "displayName": "Iviki",
+            "relative-type--1": "iviki eledlule",
+            "relative-type-0": "leli viki",
+            "relative-type-1": "iviki elizayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "evikini elingu-{0}",
+              "relativeTimePattern-count-other": "emavikini angu-{0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "evikini elingu-{0} eledlule",
+              "relativeTimePattern-count-other": "amaviki angu-{0} edlule"
+            }
+          },
+          "week-short": {
+            "displayName": "Iviki",
+            "relative-type--1": "iviki eledlule",
+            "relative-type-0": "leli viki",
+            "relative-type-1": "iviki elizayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "evikini elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "emavikini angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "amaviki angu-{0} edlule",
+              "relativeTimePattern-count-other": "amaviki angu-{0} edlule"
+            }
+          },
+          "week-narrow": {
+            "displayName": "Iviki",
+            "relative-type--1": "iviki eledlule",
+            "relative-type-0": "leli viki",
+            "relative-type-1": "iviki elizayo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "emavikini angu-{0} ezayo",
+              "relativeTimePattern-count-other": "emavikini angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "amaviki angu-{0} edlule",
+              "relativeTimePattern-count-other": "amaviki angu-{0} edlule"
+            }
+          },
+          "day": {
+            "displayName": "Usuku",
+            "relative-type--2": "usuku olwandulela olwayizolo",
+            "relative-type--1": "izolo",
+            "relative-type-0": "namhlanje",
+            "relative-type-1": "kusasa",
+            "relative-type-2": "usuku olulandela olwakusasa",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "osukwini olungu-{0} oluzayo",
+              "relativeTimePattern-count-other": "ezinsukwini ezingu-{0} ezizayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "osukwini olungu-{0} olwedlule",
+              "relativeTimePattern-count-other": "ezinsukwini ezingu-{0} ezedlule."
+            }
+          },
+          "day-short": {
+            "displayName": "Usuku",
+            "relative-type--2": "usuku olwandulela olwayizolo",
+            "relative-type--1": "izolo",
+            "relative-type-0": "namhlanje",
+            "relative-type-1": "kusasa",
+            "relative-type-2": "usuku olulandela olwakusasa",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "osukwini olungu-{0} oluzayo",
+              "relativeTimePattern-count-other": "ezinsukwini ezingu-{0} ezizayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} usuku olwedlule",
+              "relativeTimePattern-count-other": "{0} izinsuku ezedlule"
+            }
+          },
+          "day-narrow": {
+            "displayName": "Usuku",
+            "relative-type--2": "usuku olwandulela olwayizolo",
+            "relative-type--1": "izolo",
+            "relative-type-0": "namhlanje",
+            "relative-type-1": "kusasa",
+            "relative-type-2": "usuku olulandela olwakusasa",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "osukwini olungu-{0} oluzayo",
+              "relativeTimePattern-count-other": "ezinsukwini ezingu-{0} ezizayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} usuku olwedlule",
+              "relativeTimePattern-count-other": "{0} izinsuku ezedlule"
+            }
+          },
+          "weekday": {
+            "displayName": "Usuku evikini"
+          },
+          "sun": {
+            "relative-type--1": "iSonto eledlule",
+            "relative-type-0": "kuleli Sonto",
+            "relative-type-1": "iSonto elizayo"
+          },
+          "sun-short": {
+            "relative-type--1": "iSonto eledlule",
+            "relative-type-0": "kuleli Sonto",
+            "relative-type-1": "iSonto elizayo"
+          },
+          "sun-narrow": {
+            "relative-type--1": "iSonto eledlule",
+            "relative-type-0": "kuleli Sonto",
+            "relative-type-1": "iSonto elizayo"
+          },
+          "mon": {
+            "relative-type--1": "uMsombuluko odlule",
+            "relative-type-0": "kulo Msombuluko",
+            "relative-type-1": "uMsombuluko ozayo"
+          },
+          "mon-short": {
+            "relative-type--1": "uMsombuluko odlule",
+            "relative-type-0": "kulo Msombuluko",
+            "relative-type-1": "uMsombuluko ozayo"
+          },
+          "mon-narrow": {
+            "relative-type--1": "uMsombuluko odlule",
+            "relative-type-0": "kulo Msombuluko",
+            "relative-type-1": "uMsombuluko ozayo"
+          },
+          "tue": {
+            "relative-type--1": "uLwesibili oludlule",
+            "relative-type-0": "kulo Lwesibili",
+            "relative-type-1": "uLwesibili oluzayo"
+          },
+          "tue-short": {
+            "relative-type--1": "uLwesibili oludlule",
+            "relative-type-0": "kulo Lwesibili",
+            "relative-type-1": "uLwesibili oluzayo"
+          },
+          "tue-narrow": {
+            "relative-type--1": "uLwesibili oludlule",
+            "relative-type-0": "kulo Lwesibili",
+            "relative-type-1": "uLwesibili oluzayo"
+          },
+          "wed": {
+            "relative-type--1": "uLwesithathu oludlule",
+            "relative-type-0": "kulo Lwesithathu",
+            "relative-type-1": "uLwesithathu oluzayo"
+          },
+          "wed-short": {
+            "relative-type--1": "uLwesithathu oludlule",
+            "relative-type-0": "kulo Lwesithathu",
+            "relative-type-1": "uLwesithathu oluzayo"
+          },
+          "wed-narrow": {
+            "relative-type--1": "uLwesithathu oludlule",
+            "relative-type-0": "kulo Lwesithathu",
+            "relative-type-1": "uLwesithathu oluzayo"
+          },
+          "thu": {
+            "relative-type--1": "uLwesine oludlule",
+            "relative-type-0": "kulo Lwesine",
+            "relative-type-1": "uLwesine oluzayo"
+          },
+          "thu-short": {
+            "relative-type--1": "uLwesine oludlule",
+            "relative-type-0": "kulo Lwesine",
+            "relative-type-1": "uLwesine oluzayo"
+          },
+          "thu-narrow": {
+            "relative-type--1": "uLwesine oludlule",
+            "relative-type-0": "kulo Lwesine",
+            "relative-type-1": "uLwesine oluzayo"
+          },
+          "fri": {
+            "relative-type--1": "uLwesihlanu oludlule",
+            "relative-type-0": "kulo Lwesihlanu",
+            "relative-type-1": "uLwesihlanu oluzayo"
+          },
+          "fri-short": {
+            "relative-type--1": "uLwesihlanu oludlule",
+            "relative-type-0": "kulo Lwesihlanu",
+            "relative-type-1": "uLwesihlanu oluzayo"
+          },
+          "fri-narrow": {
+            "relative-type--1": "uLwesihlanu oludlule",
+            "relative-type-0": "kulo Lwesihlanu",
+            "relative-type-1": "uLwesihlanu oluzayo"
+          },
+          "sat": {
+            "relative-type--1": "uMgqibelo odlule",
+            "relative-type-0": "kulo Mgqibelo",
+            "relative-type-1": "uMgqibelo ozayo"
+          },
+          "sat-short": {
+            "relative-type--1": "uMgqibelo odlule",
+            "relative-type-0": "kulo Mgqibelo",
+            "relative-type-1": "uMgqibelo ozayo"
+          },
+          "sat-narrow": {
+            "relative-type--1": "uMgqibelo odlule",
+            "relative-type-0": "kulo Mgqibelo",
+            "relative-type-1": "uMgqibelo ozayo"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "Ihora",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "ehoreni elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "emahoreni angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ihora eledlule",
+              "relativeTimePattern-count-other": "emahoreni angu-{0} edlule"
+            }
+          },
+          "hour-short": {
+            "displayName": "Ihora",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "ehoreni elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "emahoreni angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ihora eledlule",
+              "relativeTimePattern-count-other": "{0} amahora edlule"
+            }
+          },
+          "hour-narrow": {
+            "displayName": "Ihora",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "ehoreni elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "emahoreni angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ihora eledlule",
+              "relativeTimePattern-count-other": "{0} amahora edlule"
+            }
+          },
+          "minute": {
+            "displayName": "Iminithi",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kuminithi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumaminithi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} iminithi eledlule",
+              "relativeTimePattern-count-other": "{0} amaminithi edlule"
+            }
+          },
+          "minute-short": {
+            "displayName": "Iminithi",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kuminithi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumaminithi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} iminithi eledlule",
+              "relativeTimePattern-count-other": "{0} amaminithi edlule"
+            }
+          },
+          "minute-narrow": {
+            "displayName": "Iminithi",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kuminithi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumaminithi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} iminithi eledlule",
+              "relativeTimePattern-count-other": "{0} amaminithi edlule"
+            }
+          },
+          "second": {
+            "displayName": "Isekhondi",
+            "relative-type-0": "manje",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kusekhondi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumasekhondi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} isekhondi eledlule",
+              "relativeTimePattern-count-other": "{0} amasekhondi edlule"
+            }
+          },
+          "second-short": {
+            "displayName": "Isekhondi",
+            "relative-type-0": "manje",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kusekhondi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumasekhondi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} isekhondi eledlule",
+              "relativeTimePattern-count-other": "{0} amasekhondi edlule"
+            }
+          },
+          "second-narrow": {
+            "displayName": "Isekhondi",
+            "relative-type-0": "manje",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "kusekhondi elingu-{0} elizayo",
+              "relativeTimePattern-count-other": "kumasekhondi angu-{0} ezayo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} isekhondi eledlule",
+              "relativeTimePattern-count-other": "{0} amasekhondi edlule"
+            }
+          },
+          "zone": {
+            "displayName": "Isikhathi sendawo"
+          }
+        }
+      }
+    }
+  }
+}

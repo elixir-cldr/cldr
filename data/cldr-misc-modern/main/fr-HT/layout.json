@@ -1,0 +1,20 @@
+{
+  "main": {
+    "fr-HT": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11994 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fr",
+        "territory": "HT"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

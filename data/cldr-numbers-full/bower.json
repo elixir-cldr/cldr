@@ -1,0 +1,12 @@
+{
+  "name": "cldr-numbers-full",
+  "version": "29.0.0",
+  "dependencies": {
+    "cldr-core": "29.0.0"
+  },
+  "main": "main/**/*.json",
+  "ignore": [
+    ".gitattributes",
+    "README.md"
+  ]
+}

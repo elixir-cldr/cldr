@@ -1,0 +1,22 @@
+{
+  "main": {
+    "sr-Cyrl-ME": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Cyrl",
+        "territory": "ME"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Метрички",
+          "UK": "УК",
+          "US": "САД"
+        }
+      }
+    }
+  }
+}

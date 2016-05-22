@@ -1,0 +1,28 @@
+{
+  "main": {
+    "hr-BA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hr",
+        "territory": "BA"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerički",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Naglasci",
+          "x-Fullwidth": "Široki",
+          "x-Halfwidth": "Uski",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Nakladnički"
+        }
+      }
+    }
+  }
+}

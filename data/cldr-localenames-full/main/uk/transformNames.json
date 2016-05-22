@@ -1,0 +1,27 @@
+{
+  "main": {
+    "uk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "uk"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Цифри",
+          "Tone": "Тон",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Діактричні знаки",
+          "x-Fullwidth": "Повна ширина",
+          "x-Halfwidth": "Половинна ширина",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Піньїнь",
+          "x-Publishing": "Публікація"
+        }
+      }
+    }
+  }
+}

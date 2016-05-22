@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ast": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12411 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ast"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "sí:s",
+          "nostr": "non:n"
+        }
+      }
+    }
+  }
+}

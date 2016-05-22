@@ -1,0 +1,19 @@
+{
+  "main": {
+    "zh": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "确定:是",
+          "nostr": "否定:否"
+        }
+      }
+    }
+  }
+}

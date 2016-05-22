@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ta": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12316 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ta"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

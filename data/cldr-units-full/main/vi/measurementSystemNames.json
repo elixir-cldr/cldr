@@ -1,0 +1,20 @@
+{
+  "main": {
+    "vi": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12312 $",
+          "_cldrVersion": "29"
+        },
+        "language": "vi"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Hệ mét",
+          "UK": "Hệ Anh",
+          "US": "Hệ Mỹ"
+        }
+      }
+    }
+  }
+}

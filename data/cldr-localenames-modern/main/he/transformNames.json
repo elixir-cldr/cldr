@@ -1,0 +1,27 @@
+{
+  "main": {
+    "he": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "he"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "מטבע BGN",
+          "Numeric": "מספרי",
+          "Tone": "טון",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "סימנים דיאקריטיים",
+          "x-Fullwidth": "רוחב מלא",
+          "x-Halfwidth": "חצי רוחב",
+          "x-Jamo": "ג׳אמו",
+          "x-Pinyin": "פיניין",
+          "x-Publishing": "הוצאה לאור"
+        }
+      }
+    }
+  }
+}

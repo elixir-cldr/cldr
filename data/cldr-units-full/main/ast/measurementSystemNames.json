@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ast": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12411 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ast"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Métricu",
+          "UK": "R.X.",
+          "US": "EE.XX."
+        }
+      }
+    }
+  }
+}

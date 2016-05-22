@@ -1,0 +1,446 @@
+{
+  "main": {
+    "tk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "tk"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "döwür"
+          },
+          "year": {
+            "displayName": "ýyl",
+            "relative-type--1": "geçen ýyl",
+            "relative-type-0": "şu ýyl",
+            "relative-type-1": "indiki ýyl",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ýyldan",
+              "relativeTimePattern-count-other": "{0} ýyldan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ýyl öň",
+              "relativeTimePattern-count-other": "{0} ýyl öň"
+            }
+          },
+          "year-short": {
+            "displayName": "ý.",
+            "relative-type--1": "geçen ýyl",
+            "relative-type-0": "şu ýyl",
+            "relative-type-1": "indiki ýyl",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0}ý.-dan",
+              "relativeTimePattern-count-other": "{0}ý.-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0}ý. öň",
+              "relativeTimePattern-count-other": "{0}ý. öň"
+            }
+          },
+          "year-narrow": {
+            "displayName": "ý.",
+            "relative-type--1": "geçen ýyl",
+            "relative-type-0": "şu ýyl",
+            "relative-type-1": "indiki ýyl",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0}ý.-dan",
+              "relativeTimePattern-count-other": "{0}ý.-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0}ý. öň",
+              "relativeTimePattern-count-other": "{0}ý. öň"
+            }
+          },
+          "quarter": {
+            "displayName": "çarýek",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} çärýekden",
+              "relativeTimePattern-count-other": "{0} çärýekden"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} çärýek öň",
+              "relativeTimePattern-count-other": "{0} çärýek öň"
+            }
+          },
+          "quarter-short": {
+            "displayName": "çär.",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} çär-den",
+              "relativeTimePattern-count-other": "{0} çär-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} çär. öň",
+              "relativeTimePattern-count-other": "{0} çär. öň"
+            }
+          },
+          "quarter-narrow": {
+            "displayName": "çär.",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ç-den",
+              "relativeTimePattern-count-other": "{0} ç-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ç. öň",
+              "relativeTimePattern-count-other": "{0} ç. öň"
+            }
+          },
+          "month": {
+            "displayName": "aý",
+            "relative-type--1": "geçen aý",
+            "relative-type-0": "şu aý",
+            "relative-type-1": "indiki aý",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} aýdan",
+              "relativeTimePattern-count-other": "{0} aýdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} aý öň",
+              "relativeTimePattern-count-other": "{0} aý öň"
+            }
+          },
+          "month-short": {
+            "displayName": "aý",
+            "relative-type--1": "geçen aý",
+            "relative-type-0": "şu aý",
+            "relative-type-1": "indiki aý",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} aýdan",
+              "relativeTimePattern-count-other": "{0} aýdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} aý öň",
+              "relativeTimePattern-count-other": "{0} aý öň"
+            }
+          },
+          "month-narrow": {
+            "displayName": "aý",
+            "relative-type--1": "geçen aý",
+            "relative-type-0": "şu aý",
+            "relative-type-1": "indiki aý",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} aýdan",
+              "relativeTimePattern-count-other": "{0} aýdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} aý öň",
+              "relativeTimePattern-count-other": "{0} aý öň"
+            }
+          },
+          "week": {
+            "displayName": "hepde",
+            "relative-type--1": "geçen hepde",
+            "relative-type-0": "şu hepde",
+            "relative-type-1": "indiki hepde",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} hepdeden",
+              "relativeTimePattern-count-other": "{0} hepdeden"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} hepde öň",
+              "relativeTimePattern-count-other": "{0} hepde öň"
+            }
+          },
+          "week-short": {
+            "displayName": "hep.",
+            "relative-type--1": "geçen hepde",
+            "relative-type-0": "şu hepde",
+            "relative-type-1": "indiki hepde",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} hep-den",
+              "relativeTimePattern-count-other": "{0} hep-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} hep. öň",
+              "relativeTimePattern-count-other": "{0} hep. öň"
+            }
+          },
+          "week-narrow": {
+            "displayName": "hep.",
+            "relative-type--1": "geçen hepde",
+            "relative-type-0": "şu hepde",
+            "relative-type-1": "indiki hepde",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} h-den",
+              "relativeTimePattern-count-other": "{0} h-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} h. öň",
+              "relativeTimePattern-count-other": "{0} h. öň"
+            }
+          },
+          "day": {
+            "displayName": "gün",
+            "relative-type--1": "düýn",
+            "relative-type-0": "şu gün",
+            "relative-type-1": "ertir",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} günden",
+              "relativeTimePattern-count-other": "{0} günden"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} gün öň",
+              "relativeTimePattern-count-other": "{0} gün öň"
+            }
+          },
+          "day-short": {
+            "displayName": "gün",
+            "relative-type--1": "düýn",
+            "relative-type-0": "şu gün",
+            "relative-type-1": "ertir",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} g-den",
+              "relativeTimePattern-count-other": "{0} g-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} g. öň",
+              "relativeTimePattern-count-other": "{0} g. öň"
+            }
+          },
+          "day-narrow": {
+            "displayName": "gün",
+            "relative-type--1": "düýn",
+            "relative-type-0": "şu gün",
+            "relative-type-1": "ertir",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} g-den",
+              "relativeTimePattern-count-other": "{0} g-den"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} g. öň",
+              "relativeTimePattern-count-other": "{0} g. öň"
+            }
+          },
+          "weekday": {
+            "displayName": "hepdäniň güni"
+          },
+          "sun": {
+            "relative-type--1": "last Sunday",
+            "relative-type-0": "this Sunday",
+            "relative-type-1": "next Sunday"
+          },
+          "sun-short": {
+            "relative-type--1": "last Sunday",
+            "relative-type-0": "this Sunday",
+            "relative-type-1": "next Sunday"
+          },
+          "sun-narrow": {
+            "relative-type--1": "last Sunday",
+            "relative-type-0": "this Sunday",
+            "relative-type-1": "next Sunday"
+          },
+          "mon": {
+            "relative-type--1": "last Monday",
+            "relative-type-0": "this Monday",
+            "relative-type-1": "next Monday"
+          },
+          "mon-short": {
+            "relative-type--1": "last Monday",
+            "relative-type-0": "this Monday",
+            "relative-type-1": "next Monday"
+          },
+          "mon-narrow": {
+            "relative-type--1": "last Monday",
+            "relative-type-0": "this Monday",
+            "relative-type-1": "next Monday"
+          },
+          "tue": {
+            "relative-type--1": "last Tuesday",
+            "relative-type-0": "this Tuesday",
+            "relative-type-1": "next Tuesday"
+          },
+          "tue-short": {
+            "relative-type--1": "last Tuesday",
+            "relative-type-0": "this Tuesday",
+            "relative-type-1": "next Tuesday"
+          },
+          "tue-narrow": {
+            "relative-type--1": "last Tuesday",
+            "relative-type-0": "this Tuesday",
+            "relative-type-1": "next Tuesday"
+          },
+          "wed": {
+            "relative-type--1": "last Wednesday",
+            "relative-type-0": "this Wednesday",
+            "relative-type-1": "next Wednesday"
+          },
+          "wed-short": {
+            "relative-type--1": "last Wednesday",
+            "relative-type-0": "this Wednesday",
+            "relative-type-1": "next Wednesday"
+          },
+          "wed-narrow": {
+            "relative-type--1": "last Wednesday",
+            "relative-type-0": "this Wednesday",
+            "relative-type-1": "next Wednesday"
+          },
+          "thu": {
+            "relative-type--1": "last Thursday",
+            "relative-type-0": "this Thursday",
+            "relative-type-1": "next Thursday"
+          },
+          "thu-short": {
+            "relative-type--1": "last Thursday",
+            "relative-type-0": "this Thursday",
+            "relative-type-1": "next Thursday"
+          },
+          "thu-narrow": {
+            "relative-type--1": "last Thursday",
+            "relative-type-0": "this Thursday",
+            "relative-type-1": "next Thursday"
+          },
+          "fri": {
+            "relative-type--1": "last Friday",
+            "relative-type-0": "this Friday",
+            "relative-type-1": "next Friday"
+          },
+          "fri-short": {
+            "relative-type--1": "last Friday",
+            "relative-type-0": "this Friday",
+            "relative-type-1": "next Friday"
+          },
+          "fri-narrow": {
+            "relative-type--1": "last Friday",
+            "relative-type-0": "this Friday",
+            "relative-type-1": "next Friday"
+          },
+          "sat": {
+            "relative-type--1": "last Saturday",
+            "relative-type-0": "this Saturday",
+            "relative-type-1": "next Saturday"
+          },
+          "sat-short": {
+            "relative-type--1": "last Saturday",
+            "relative-type-0": "this Saturday",
+            "relative-type-1": "next Saturday"
+          },
+          "sat-narrow": {
+            "relative-type--1": "last Saturday",
+            "relative-type-0": "this Saturday",
+            "relative-type-1": "next Saturday"
+          },
+          "dayperiod": {
+            "displayName": "güniň dowamy"
+          },
+          "hour": {
+            "displayName": "sagat",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sagatdan",
+              "relativeTimePattern-count-other": "{0} sagatdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sagat öň",
+              "relativeTimePattern-count-other": "{0} sagat öň"
+            }
+          },
+          "hour-short": {
+            "displayName": "sag.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sag-dan",
+              "relativeTimePattern-count-other": "{0} sag-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sag. öň",
+              "relativeTimePattern-count-other": "{0} sag. öň"
+            }
+          },
+          "hour-narrow": {
+            "displayName": "sag.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sag-dan",
+              "relativeTimePattern-count-other": "{0} sag-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sag. öň",
+              "relativeTimePattern-count-other": "{0} sag. öň"
+            }
+          },
+          "minute": {
+            "displayName": "minut",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} minutdan",
+              "relativeTimePattern-count-other": "{0} minutdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} minut öň",
+              "relativeTimePattern-count-other": "{0} minut öň"
+            }
+          },
+          "minute-short": {
+            "displayName": "min.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} min-dan",
+              "relativeTimePattern-count-other": "{0} min-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} min. öň",
+              "relativeTimePattern-count-other": "{0} min. öň"
+            }
+          },
+          "minute-narrow": {
+            "displayName": "min.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} min-dan",
+              "relativeTimePattern-count-other": "{0} min-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} min. öň",
+              "relativeTimePattern-count-other": "{0} min. öň"
+            }
+          },
+          "second": {
+            "displayName": "sekunt",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sekuntdan",
+              "relativeTimePattern-count-other": "{0} sekuntdan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sekunt öň",
+              "relativeTimePattern-count-other": "{0} sekunt öň"
+            }
+          },
+          "second-short": {
+            "displayName": "sek.",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sek-dan",
+              "relativeTimePattern-count-other": "{0} sek-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sek. öň",
+              "relativeTimePattern-count-other": "{0} sek. öň"
+            }
+          },
+          "second-narrow": {
+            "displayName": "sek.",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} sek-dan",
+              "relativeTimePattern-count-other": "{0} sek-dan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} sek. öň",
+              "relativeTimePattern-count-other": "{0} sek. öň"
+            }
+          },
+          "zone": {
+            "displayName": "sagat guşaklygy"
+          }
+        }
+      }
+    }
+  }
+}

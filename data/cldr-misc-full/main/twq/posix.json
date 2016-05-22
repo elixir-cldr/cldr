@@ -1,0 +1,19 @@
+{
+  "main": {
+    "twq": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "twq"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ayyo:A",
+          "nostr": "Kala:K"
+        }
+      }
+    }
+  }
+}

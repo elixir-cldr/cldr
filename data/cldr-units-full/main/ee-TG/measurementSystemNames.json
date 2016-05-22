@@ -1,0 +1,21 @@
+{
+  "main": {
+    "ee-TG": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ee",
+        "territory": "TG"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metric",
+          "UK": "uk",
+          "US": "us"
+        }
+      }
+    }
+  }
+}

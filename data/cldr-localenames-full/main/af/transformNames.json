@@ -1,0 +1,27 @@
+{
+  "main": {
+    "af": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "af"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeries",
+          "Tone": "Toon",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksente",
+          "x-Fullwidth": "Vollewydte",
+          "x-Halfwidth": "halfwydte",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publisering"
+        }
+      }
+    }
+  }
+}

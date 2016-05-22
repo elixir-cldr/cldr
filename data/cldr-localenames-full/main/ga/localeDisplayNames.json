@@ -1,0 +1,171 @@
+{
+  "main": {
+    "ga": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ga"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Féilire",
+          "cf": "cf",
+          "collation": "Ord Sórtála",
+          "currency": "Airgeadra",
+          "hc": "Timthriall Uaire (12 vs 24)",
+          "lb": "Stíl Briseadh Líne",
+          "ms": "Córas Tomhais",
+          "numbers": "Uimhreacha"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Féilire Búdaíoch",
+            "chinese": "Féilire Síneach",
+            "coptic": "Féilire Coptach",
+            "dangi": "Féilire Dangi",
+            "ethiopic": "Féilire Aetóipice",
+            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "gregorian": "Féilire Ghréagóra",
+            "hebrew": "Féilire na nEabhrach",
+            "indian": "indian",
+            "islamic": "Féilire Ioslámach",
+            "islamic-civil": "islamic-civil",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "Féilire ISO-8601",
+            "japanese": "Féilire Seapánach",
+            "persian": "Féilire Peirseach",
+            "roc": "Féilire Téavánach"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "big5han",
+            "compat": "compat",
+            "dictionary": "dictionary",
+            "ducet": "Ord Réamhshocraithe Sórtála Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "gb2312han",
+            "phonebook": "phonebook",
+            "pinyin": "pinyin",
+            "reformed": "reformed",
+            "search": "Cuardach Ilfhóinteach",
+            "searchjl": "searchjl",
+            "standard": "Ord Caighdeánach Sórtála",
+            "stroke": "stroke",
+            "traditional": "traditional",
+            "unihan": "unihan",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "Córas 12 Uair (0–11)",
+            "h12": "Córas 12 Uair (1–12)",
+            "h23": "Córas 24 Uair (0–23)",
+            "h24": "Córas 24 Uair (1–24)"
+          },
+          "lb": {
+            "loose": "Stíl Briseadh Líne Scaoilte",
+            "normal": "Stíl Gnáthbhriseadh Líne",
+            "strict": "Stíl Briseadh Líne Docht"
+          },
+          "ms": {
+            "metric": "Córas Méadrach",
+            "uksystem": "Córas Impiriúil Tomhais",
+            "ussystem": "Córas SAM Tomhais"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "Digití Ind-Arabacha",
+            "arabext": "Digití Ind-Arabacha Breisithe",
+            "armn": "Uimhreacha Airméanacha",
+            "armnlow": "armnlow",
+            "bali": "Digití Bailíocha",
+            "beng": "Digití Beangálacha",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "Digití Déiveanágracha",
+            "ethi": "Uimhreacha Aetóipice",
+            "fullwide": "Digití Lánleithid",
+            "geor": "Uimhreacha Seoirseacha",
+            "grek": "Uimhreacha Gréagacha",
+            "greklow": "greklow",
+            "gujr": "Digití Gúisearátacha",
+            "guru": "Digití Gurmúcacha",
+            "hanidec": "Uimhreacha Deachúlacha Síneacha",
+            "hans": "hans",
+            "hansfin": "hansfin",
+            "hant": "hant",
+            "hantfin": "hantfin",
+            "hebr": "Uimhreacha Eabhracha",
+            "hmng": "hmng",
+            "java": "Digití Iávacha",
+            "jpan": "Uimhreacha Seapánacha",
+            "jpanfin": "jpanfin",
+            "kali": "kali",
+            "khmr": "Digití Ciméaracha",
+            "knda": "Digití Cannadacha",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Digití Laosacha",
+            "latn": "Digití Iartharacha",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "Digití Mailéalamacha",
+            "modi": "modi",
+            "mong": "mong",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "Digití Maenmaracha",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "Digití Oiríseacha",
+            "osma": "osma",
+            "roman": "Uimhreacha Rómhánacha",
+            "romanlow": "romanlow",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Uimhreacha Traidisiúnta Tamalacha",
+            "tamldec": "Digití Tamalacha",
+            "telu": "Digití Teileagúcha",
+            "thai": "Digití Téalannacha",
+            "tibt": "Digití Tibéadacha",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Teanga: {0}",
+          "script": "Script: {0}",
+          "territory": "Réigiún: {0}"
+        }
+      }
+    }
+  }
+}

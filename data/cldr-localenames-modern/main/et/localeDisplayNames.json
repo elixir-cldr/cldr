@@ -1,0 +1,223 @@
+{
+  "main": {
+    "et": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "et"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "kalender",
+          "cf": "cf",
+          "colAlternate": "sümbolite eiramine järjestuses",
+          "colBackwards": "diakriitikute pöördjärjestus",
+          "colCaseFirst": "suur- ja väiketähe järjestus",
+          "colCaseLevel": "järjestuse tõstutundlikkus",
+          "colHiraganaQuaternary": "kana kirja järjestus",
+          "collation": "sortimisjärjestus",
+          "colNormalization": "normaliseeritud järjestus",
+          "colNumeric": "numbrite järjestus",
+          "colStrength": "järjestuskaalud",
+          "currency": "vääring",
+          "hc": "12 või 24 tunni süsteem",
+          "lb": "reavahetuse laad",
+          "ms": "mõõdustik",
+          "numbers": "numbrid",
+          "timezone": "ajavöönd",
+          "va": "lokaadi variant",
+          "variableTop": "sümbolite alusel järjestamine",
+          "x": "erakasutus"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "budistlik kalender",
+            "chinese": "Hiina kalender",
+            "coptic": "kopti kalender",
+            "dangi": "dangi kalender",
+            "ethiopic": "Etioopia kalender",
+            "ethiopic-amete-alem": "Etioopia amete alemi kalender",
+            "gregorian": "Gregoriuse kalender",
+            "hebrew": "juudi kalender",
+            "indian": "India rahvuslik kalender",
+            "islamic": "islamikalender",
+            "islamic-civil": "islami ilmalik kalender",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ISO-8601 kalender",
+            "japanese": "Jaapani kalender",
+            "persian": "Pärsia kalender",
+            "roc": "Hiina Vabariigi kalender"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "järjesta sümbolid",
+            "shifted": "eira järjestuses sümboleid"
+          },
+          "colBackwards": {
+            "no": "diakriitikud tavajärjestuses",
+            "yes": "diakriitikud pöördjärjestuses"
+          },
+          "colCaseFirst": {
+            "lower": "väiketäht järjestuses eespool",
+            "no": "harilik järjestus",
+            "upper": "suurtäht järjestuses eespool"
+          },
+          "colCaseLevel": {
+            "no": "tõstutundetu järjestus",
+            "yes": "tõstutundlik järjestus"
+          },
+          "colHiraganaQuaternary": {
+            "no": "järjesta kana eraldi",
+            "yes": "järjesta kana erinevalt"
+          },
+          "collation": {
+            "big5han": "hiina traditsiooniline sortimisjärjestus (Big5)",
+            "compat": "varasem sortimisjärjestus (ühilduvuse jaoks)",
+            "dictionary": "sõnastiku sortimisjärjestus",
+            "ducet": "Unicode’i sortimise vaikejärjestus",
+            "emoji": "emoji sortimisjärjestus",
+            "eor": "Euroopa järjestusreeglid",
+            "gb2312han": "hiina lihtsustatud sortimisjärjestus (GB2312)",
+            "phonebook": "telefoniraamatu sortimisjärjestus",
+            "phonetic": "foneetiline sortimisjärjestus",
+            "pinyin": "pinyin’i sortimisjärjestus",
+            "reformed": "reformitud sortimisjärjestus",
+            "search": "üldeesmärgiline otsing",
+            "searchjl": "otsing korea alguskonsonandi järgi",
+            "standard": "standardne sortimisjärjestus",
+            "stroke": "kriipsude sortimisjärjestus",
+            "traditional": "traditsiooniline sortimisjärjestus",
+            "unihan": "võtmete-kriipsude sortimisjärjestus",
+            "zhuyin": "zhuyin’i sortimisjärjestus"
+          },
+          "colNormalization": {
+            "no": "järjesta normaliseerimata",
+            "yes": "järjesta Unicode’i normaliseerimisega"
+          },
+          "colNumeric": {
+            "no": "järjesta numbrid eraldi",
+            "yes": "järjesta numbrid arvuliselt"
+          },
+          "colStrength": {
+            "identical": "järjesta kõik",
+            "primary": "järjesta ainult alustähed",
+            "quaternary": "järjesta diakriitikud, algustähed, laius ja kana kiri",
+            "secondary": "järjesta diakriitikud",
+            "tertiary": "järjesta diakriitikud, algustähed ja laius"
+          },
+          "hc": {
+            "h11": "12-tunnine süsteem (0–11)",
+            "h12": "12-tunnine süsteem (1–12)",
+            "h23": "24-tunnine süsteem (0–23)",
+            "h24": "24-tunnine süsteem (1–24)"
+          },
+          "lb": {
+            "loose": "paindlik reavahetuse laad",
+            "normal": "harilik reavahetuse laad",
+            "strict": "jäik reavahetuse laad"
+          },
+          "ms": {
+            "metric": "meetermõõdustik",
+            "uksystem": "inglise mõõdustik",
+            "ussystem": "USA mõõdustik"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "idaaraabia numbrid",
+            "arabext": "laiendatud idaaraabia numbrid",
+            "armn": "armeenia numbrid",
+            "armnlow": "väiketähelised armeenia numbrid",
+            "bali": "bali numbrid",
+            "beng": "bengali numbrid",
+            "brah": "braahmi numbrid",
+            "cakm": "tšaakma numbrid",
+            "cham": "tšaami numbrid",
+            "cyrl": "cyrl",
+            "deva": "devanaagari numbrid",
+            "ethi": "etioopia numbrid",
+            "finance": "finantsnumbrid",
+            "fullwide": "täislaiusega numbrid",
+            "geor": "gruusia numbrid",
+            "grek": "kreeka numbrid",
+            "greklow": "väiketähelised kreeka numbrid",
+            "gujr": "gudžarati numbrid",
+            "guru": "gurmukhi numbrid",
+            "hanidec": "hiina kümnendnumbrid",
+            "hans": "lihtsustatud hiina keele numbrid",
+            "hansfin": "lihtsustatud hiina keele finantsnumbrid",
+            "hant": "traditsioonilise hiina keele numbrid",
+            "hantfin": "traditsioonilise hiina keele finantsnumbrid",
+            "hebr": "heebrea numbrid",
+            "hmng": "hmng",
+            "java": "jaava numbrid",
+            "jpan": "jaapani numbrid",
+            "jpanfin": "jaapani finantsnumbrid",
+            "kali": "kaja-lii numbrid",
+            "khmr": "khmeeri numbrid",
+            "knda": "kannada numbrid",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "lao numbrid",
+            "latn": "araabia numbrid",
+            "lepc": "leptša numbrid",
+            "limb": "limbu numbrid",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "malajalami numbrid",
+            "modi": "modi",
+            "mong": "mongoli numbrid",
+            "mroo": "mroo",
+            "mtei": "meitei numbrid",
+            "mymr": "birma numbrid",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "kohalikud numbrid",
+            "nkoo": "nkoo numbrid",
+            "olck": "santali numbrid",
+            "orya": "oria numbrid",
+            "osma": "osmani numbrid",
+            "roman": "Rooma numbrid",
+            "romanlow": "väiketähelised Rooma numbrid",
+            "saur": "sauraštra numbrid",
+            "shrd": "šaarada numbrid",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora numbrid",
+            "sund": "sunda numbrid",
+            "takr": "taakri numbrid",
+            "talu": "uue tai-lõõ numbrid",
+            "taml": "traditsioonilised tamili numbrid",
+            "tamldec": "tamili numbrid",
+            "telu": "telugu numbrid",
+            "thai": "tai numbrid",
+            "tibt": "tiibeti numbrid",
+            "tirh": "tirh",
+            "traditional": "traditsioonilised numbrid",
+            "vaii": "vai numbrid",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Keel: {0}",
+          "script": "Kiri: {0}",
+          "territory": "Piirkond: {0}"
+        }
+      }
+    }
+  }
+}

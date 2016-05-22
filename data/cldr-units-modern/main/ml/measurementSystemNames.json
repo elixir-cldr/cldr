@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ml": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ml"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "മെട്രിക്ക്",
+          "UK": "യുകെ",
+          "US": "യുഎസ്"
+        }
+      }
+    }
+  }
+}

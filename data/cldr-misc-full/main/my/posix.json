@@ -1,0 +1,19 @@
+{
+  "main": {
+    "my": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12384 $",
+          "_cldrVersion": "29"
+        },
+        "language": "my"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ဟုတ်တယ်",
+          "nostr": "မဟုတ်ဘူး"
+        }
+      }
+    }
+  }
+}

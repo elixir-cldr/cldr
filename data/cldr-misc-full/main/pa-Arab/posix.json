@@ -1,0 +1,20 @@
+{
+  "main": {
+    "pa-Arab": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11974 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pa",
+        "script": "Arab"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ہاں",
+          "nostr": "نہيں"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "gu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gu"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "હા",
+          "nostr": "નહીં"
+        }
+      }
+    }
+  }
+}

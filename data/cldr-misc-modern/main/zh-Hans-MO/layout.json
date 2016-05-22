@@ -1,0 +1,21 @@
+{
+  "main": {
+    "zh-Hans-MO": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh",
+        "script": "Hans",
+        "territory": "MO"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

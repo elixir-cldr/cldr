@@ -1,0 +1,21 @@
+{
+  "main": {
+    "el-CY": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "el",
+        "territory": "CY"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Μετρικό",
+          "UK": "Βρετανικό",
+          "US": "Αγγλοσαξωνικό"
+        }
+      }
+    }
+  }
+}

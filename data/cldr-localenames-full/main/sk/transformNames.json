@@ -1,0 +1,27 @@
+{
+  "main": {
+    "sk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12411 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sk"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Číslice",
+          "Tone": "Tón",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Diakritika",
+          "x-Fullwidth": "Celá šírka",
+          "x-Halfwidth": "Polovičná šírka",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Uverejnenie"
+        }
+      }
+    }
+  }
+}

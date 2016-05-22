@@ -1,0 +1,21 @@
+{
+  "main": {
+    "hr-BA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hr",
+        "territory": "BA"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metrički sustav",
+          "UK": "imperijalni sustav",
+          "US": "američki sustav"
+        }
+      }
+    }
+  }
+}

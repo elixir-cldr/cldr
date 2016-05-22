@@ -1,0 +1,20 @@
+{
+  "main": {
+    "vai": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12128 $",
+          "_cldrVersion": "29"
+        },
+        "language": "vai"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metric",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "main": {
+    "pa-Guru": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pa",
+        "script": "Guru"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ਮੀਟਰਿਕ",
+          "UK": "ਯੂ. ਕੇ.",
+          "US": "ਯੂ. ਐਸ."
+        }
+      }
+    }
+  }
+}

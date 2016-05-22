@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ja": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ja"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "メートル法",
+          "UK": "英ヤード・ポンド法",
+          "US": "米ヤード・ポンド法"
+        }
+      }
+    }
+  }
+}

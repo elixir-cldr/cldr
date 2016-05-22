@@ -1,0 +1,19 @@
+{
+  "main": {
+    "guz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12313 $",
+          "_cldrVersion": "29"
+        },
+        "language": "guz"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ee bono:E",
+          "nostr": "Yaya:Y"
+        }
+      }
+    }
+  }
+}

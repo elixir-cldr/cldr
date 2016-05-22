@@ -1,0 +1,21 @@
+{
+  "main": {
+    "de-LI": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "de",
+        "territory": "LI"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Internationales (SI)",
+          "UK": "Englisches",
+          "US": "Angloamerikanisches"
+        }
+      }
+    }
+  }
+}

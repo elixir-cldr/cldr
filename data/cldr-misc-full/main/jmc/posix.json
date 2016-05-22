@@ -1,0 +1,19 @@
+{
+  "main": {
+    "jmc": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "jmc"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Haya:H",
+          "nostr": "Ote:O"
+        }
+      }
+    }
+  }
+}

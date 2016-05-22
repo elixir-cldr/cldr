@@ -1,0 +1,27 @@
+{
+  "main": {
+    "tr": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12373 $",
+          "_cldrVersion": "29"
+        },
+        "language": "tr"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Rakam",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksanlar",
+          "x-Fullwidth": "Tam Genişlik",
+          "x-Halfwidth": "Yarım genişlik",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Yayıncılık"
+        }
+      }
+    }
+  }
+}

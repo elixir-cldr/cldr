@@ -1,0 +1,27 @@
+{
+  "main": {
+    "lt": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "lt"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN simboliai",
+          "Numeric": "Skaitinis",
+          "Tone": "Tonas",
+          "UNGEGN": "UNGEGN simboliai",
+          "x-Accents": "Kirčiai",
+          "x-Fullwidth": "Viso pločio",
+          "x-Halfwidth": "Vidutinio pločio",
+          "x-Jamo": "Jamo simboliai",
+          "x-Pinyin": "Pinjino simboliai",
+          "x-Publishing": "Skelbimas"
+        }
+      }
+    }
+  }
+}

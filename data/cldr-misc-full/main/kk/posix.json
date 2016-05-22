@@ -1,0 +1,19 @@
+{
+  "main": {
+    "kk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kk"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "иә:и",
+          "nostr": "жоқ:ж"
+        }
+      }
+    }
+  }
+}

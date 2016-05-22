@@ -1,0 +1,19 @@
+{
+  "main": {
+    "uk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "uk"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "так:т",
+          "nostr": "ні:н"
+        }
+      }
+    }
+  }
+}

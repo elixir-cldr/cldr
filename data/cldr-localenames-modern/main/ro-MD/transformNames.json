@@ -1,0 +1,28 @@
+{
+  "main": {
+    "ro-MD": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ro",
+        "territory": "MD"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeric",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accente",
+          "x-Fullwidth": "Cu lățime întreagă",
+          "x-Halfwidth": "Cu jumătate de lățime",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicare"
+        }
+      }
+    }
+  }
+}

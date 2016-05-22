@@ -1,0 +1,28 @@
+{
+  "main": {
+    "en-NZ": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12295 $",
+          "_cldrVersion": "29"
+        },
+        "language": "en",
+        "territory": "NZ"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeric",
+          "Tone": "Tone",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Fullwidth",
+          "x-Halfwidth": "Halfwidth",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

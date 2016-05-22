@@ -1,0 +1,223 @@
+{
+  "main": {
+    "pt": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pt"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Calendário",
+          "cf": "cf",
+          "colAlternate": "Ignorar classificação de símbolos",
+          "colBackwards": "Classificação reversa de acentos",
+          "colCaseFirst": "Ordem de maiúsculas/minúsculas",
+          "colCaseLevel": "Ordem com diferenciação de maiúsculas e minúsculas",
+          "colHiraganaQuaternary": "Classificação kana",
+          "collation": "Ordenação",
+          "colNormalization": "Classificação normalizada",
+          "colNumeric": "Classificação numérica",
+          "colStrength": "Intensidade da classificação",
+          "currency": "Moeda",
+          "hc": "Ciclo de horário (12 vs. 24)",
+          "lb": "Estilo de quebra de linha",
+          "ms": "Sistema de medição",
+          "numbers": "Números",
+          "timezone": "Fuso horário",
+          "va": "Variante de localidade",
+          "variableTop": "Classificar como símbolos",
+          "x": "Uso privado"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Calendário Budista",
+            "chinese": "Calendário Chinês",
+            "coptic": "Calendário Coptic",
+            "dangi": "Calendário Dangi",
+            "ethiopic": "Calendário etíope",
+            "ethiopic-amete-alem": "Calendário Amete Alem da Etiópia",
+            "gregorian": "Calendário Gregoriano",
+            "hebrew": "Calendário Hebraico",
+            "indian": "Calendário Nacional Indiano",
+            "islamic": "Calendário Islâmico",
+            "islamic-civil": "Calendário Civil Islâmico",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "Calendário ISO-8601",
+            "japanese": "Calendário Japonês",
+            "persian": "Calendário Persa",
+            "roc": "Calendário da República da China"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "Classificar símbolos",
+            "shifted": "Classificar ignorando símbolos"
+          },
+          "colBackwards": {
+            "no": "Classificar acentos normalmente",
+            "yes": "Classificação reversa de acentos"
+          },
+          "colCaseFirst": {
+            "lower": "Classificar por minúsculas",
+            "no": "Classificação normal de maiúsculas e minúsculas",
+            "upper": "Classificar por maiúsculas"
+          },
+          "colCaseLevel": {
+            "no": "Classificação sem diferenciação de maiúsculas e minúsculas",
+            "yes": "Classificação com diferenciação de maiúsculas e minúsculas"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Classificar kana separadamente",
+            "yes": "Classificar kana diferentemente"
+          },
+          "collation": {
+            "big5han": "Ordem do Chinês Tradicional - Big5",
+            "compat": "compat",
+            "dictionary": "Ordem do dicionário",
+            "ducet": "Ordem padrão do Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Ordem do Chinês Simplificado - GB2312",
+            "phonebook": "Ordem de Lista Telefônica",
+            "phonetic": "Ordem de classificação fonética",
+            "pinyin": "Ordem Pin-yin",
+            "reformed": "Ordem reformulada",
+            "search": "Pesquisa de uso geral",
+            "searchjl": "Pesquisar por consonante inicial hangul",
+            "standard": "padrão",
+            "stroke": "Ordem dos Traços",
+            "traditional": "Ordem Tradicional",
+            "unihan": "Ordem por Radical-Traços",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "Classificar sem normalização",
+            "yes": "Classificar Unicode normalizado"
+          },
+          "colNumeric": {
+            "no": "Classificar dígitos individualmente",
+            "yes": "Classificar dígitos numericamente"
+          },
+          "colStrength": {
+            "identical": "Classificar tudo",
+            "primary": "Classificar somente letras básicas",
+            "quaternary": "Classificar acentos/maiúsculas e minúsculas/largura/kana",
+            "secondary": "Classificar acentos",
+            "tertiary": "Classificar acentos/maiúsculas e minúsculas/largura"
+          },
+          "hc": {
+            "h11": "Sistema de 12 horas (0–11)",
+            "h12": "Sistema de 12 horas (1–12)",
+            "h23": "Sistema de 24 horas (0–23)",
+            "h24": "Sistema de 24 horas (1–24)"
+          },
+          "lb": {
+            "loose": "Quebra de linha com estilo solto",
+            "normal": "Quebra de linha com estilo normal",
+            "strict": "Quebra de linha com estilo estrito"
+          },
+          "ms": {
+            "metric": "Sistema métrico",
+            "uksystem": "Sistema de medição imperial",
+            "ussystem": "Sistema de medição americano"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "Algarismos indo-arábicos",
+            "arabext": "Algarismos indo-arábicos por extenso",
+            "armn": "Algarismos armênios",
+            "armnlow": "Algarismos armênios minúsculos",
+            "bali": "bali",
+            "beng": "Algarismos Bengali",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "Algarismos Devanagari",
+            "ethi": "Algarismos etiopianos",
+            "finance": "Numerais financeiros",
+            "fullwide": "Algarismos em extensão total",
+            "geor": "Algarismos georgianos",
+            "grek": "Algarismos gregos",
+            "greklow": "Algarismos gregos minúsculos",
+            "gujr": "Algarismos Gujarati",
+            "guru": "Algarismos Gurmukhi",
+            "hanidec": "Algarismos decimais chineses",
+            "hans": "Algarismos chineses simplificados",
+            "hansfin": "Algarismos financeiros chineses simplificados",
+            "hant": "Algarismos chineses tradicionais",
+            "hantfin": "Algarismos financeiros chineses tradicionais",
+            "hebr": "Algarismos hebraicos",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "Algarismos japoneses",
+            "jpanfin": "Algarismos financeiros japoneses",
+            "kali": "kali",
+            "khmr": "Algarismos Khmer",
+            "knda": "Algarismos Kannada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Algarismos laosianos",
+            "latn": "Algarismos ocidentais",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "Algarismos Malayalam",
+            "modi": "modi",
+            "mong": "Algarismos mongóis",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "Algarismos Myanmar",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "Dígitos nativos",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "Algarismos Oriya",
+            "osma": "osma",
+            "roman": "Algarismos romanos",
+            "romanlow": "Algarismos romanos minúsculos",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Algarismos Tâmil",
+            "tamldec": "Algarismos Tâmil",
+            "telu": "Algarismos Telugu",
+            "thai": "Algarismos tailandeses",
+            "tibt": "Algarismos tibetanos",
+            "tirh": "tirh",
+            "traditional": "Numerais tradicionais",
+            "vaii": "Dígitos vai",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "Idioma: {0}",
+          "script": "Alfabeto: {0}",
+          "territory": "Região: {0}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "main": {
+    "sq-MK": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sq",
+        "territory": "MK"
+      },
+      "listPatterns": {
+        "listPattern-type-standard": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} dhe {1}",
+          "2": "{0} dhe {1}"
+        },
+        "listPattern-type-unit": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} e {1}",
+          "2": "{0} e {1}"
+        },
+        "listPattern-type-unit-narrow": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} e {1}",
+          "2": "{0} e {1}"
+        },
+        "listPattern-type-unit-short": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} e {1}",
+          "2": "{0} e {1}"
+        }
+      }
+    }
+  }
+}

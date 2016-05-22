@@ -1,0 +1,19 @@
+{
+  "main": {
+    "hy": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hy"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "այո:ա",
+          "nostr": "ոչ:ո"
+        }
+      }
+    }
+  }
+}

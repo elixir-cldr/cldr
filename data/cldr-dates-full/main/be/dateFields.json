@@ -1,0 +1,548 @@
+{
+  "main": {
+    "be": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "be"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "эра"
+          },
+          "year": {
+            "displayName": "год",
+            "relative-type--1": "у мінулым годзе",
+            "relative-type-0": "у гэтым годзе",
+            "relative-type-1": "у наступным годзе",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} год",
+              "relativeTimePattern-count-few": "праз {0} гады",
+              "relativeTimePattern-count-many": "праз {0} гадоў",
+              "relativeTimePattern-count-other": "праз {0} года"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} год таму",
+              "relativeTimePattern-count-few": "{0} гады таму",
+              "relativeTimePattern-count-many": "{0} гадоў таму",
+              "relativeTimePattern-count-other": "{0} года таму"
+            }
+          },
+          "year-short": {
+            "displayName": "г.",
+            "relative-type--1": "у мінулым годзе",
+            "relative-type-0": "у гэтым годзе",
+            "relative-type-1": "у наступным годзе",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} г.",
+              "relativeTimePattern-count-few": "праз {0} г.",
+              "relativeTimePattern-count-many": "праз {0} г.",
+              "relativeTimePattern-count-other": "праз {0} г."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} г. таму",
+              "relativeTimePattern-count-few": "{0} г. таму",
+              "relativeTimePattern-count-many": "{0} г. таму",
+              "relativeTimePattern-count-other": "{0} г. таму"
+            }
+          },
+          "year-narrow": {
+            "displayName": "г.",
+            "relative-type--1": "у мінулым годзе",
+            "relative-type-0": "у гэтым годзе",
+            "relative-type-1": "у наступным годзе",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} г.",
+              "relativeTimePattern-count-few": "праз {0} г.",
+              "relativeTimePattern-count-many": "праз {0} г.",
+              "relativeTimePattern-count-other": "праз {0} г."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} г. таму",
+              "relativeTimePattern-count-few": "{0} г. таму",
+              "relativeTimePattern-count-many": "{0} г. таму",
+              "relativeTimePattern-count-other": "{0} г. таму"
+            }
+          },
+          "quarter": {
+            "displayName": "квартал",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} квартал",
+              "relativeTimePattern-count-few": "праз {0} кварталы",
+              "relativeTimePattern-count-many": "праз {0} кварталаў",
+              "relativeTimePattern-count-other": "праз {0} квартала"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} квартал таму",
+              "relativeTimePattern-count-few": "{0} кварталы таму",
+              "relativeTimePattern-count-many": "{0} кварталаў таму",
+              "relativeTimePattern-count-other": "{0} квартала таму"
+            }
+          },
+          "quarter-short": {
+            "displayName": "кв.",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} кв.",
+              "relativeTimePattern-count-few": "праз {0} кв.",
+              "relativeTimePattern-count-many": "праз {0} кв.",
+              "relativeTimePattern-count-other": "праз {0} кв."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} кв. таму",
+              "relativeTimePattern-count-few": "{0} кв. таму",
+              "relativeTimePattern-count-many": "{0} кв. таму",
+              "relativeTimePattern-count-other": "{0} кв. таму"
+            }
+          },
+          "quarter-narrow": {
+            "displayName": "кв.",
+            "relative-type--1": "last quarter",
+            "relative-type-0": "this quarter",
+            "relative-type-1": "next quarter",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} кв.",
+              "relativeTimePattern-count-few": "праз {0} кв.",
+              "relativeTimePattern-count-many": "праз {0} кв.",
+              "relativeTimePattern-count-other": "праз {0} кв."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} кв. таму",
+              "relativeTimePattern-count-few": "{0} кв. таму",
+              "relativeTimePattern-count-many": "{0} кв. таму",
+              "relativeTimePattern-count-other": "{0} кв. таму"
+            }
+          },
+          "month": {
+            "displayName": "месяц",
+            "relative-type--1": "у мінулым месяцы",
+            "relative-type-0": "у гэтым месяцы",
+            "relative-type-1": "у наступным месяцы",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} месяц",
+              "relativeTimePattern-count-few": "праз {0} месяцы",
+              "relativeTimePattern-count-many": "праз {0} месяцаў",
+              "relativeTimePattern-count-other": "праз {0} месяца"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} месяц таму",
+              "relativeTimePattern-count-few": "{0} месяцы таму",
+              "relativeTimePattern-count-many": "{0} месяцаў таму",
+              "relativeTimePattern-count-other": "{0} месяца таму"
+            }
+          },
+          "month-short": {
+            "displayName": "мес.",
+            "relative-type--1": "у мінулым месяцы",
+            "relative-type-0": "у гэтым месяцы",
+            "relative-type-1": "у наступным месяцы",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} мес.",
+              "relativeTimePattern-count-few": "праз {0} мес.",
+              "relativeTimePattern-count-many": "праз {0} мес.",
+              "relativeTimePattern-count-other": "праз {0} мес."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} мес. таму",
+              "relativeTimePattern-count-few": "{0} мес. таму",
+              "relativeTimePattern-count-many": "{0} мес. таму",
+              "relativeTimePattern-count-other": "{0} мес. таму"
+            }
+          },
+          "month-narrow": {
+            "displayName": "мес.",
+            "relative-type--1": "у мінулым месяцы",
+            "relative-type-0": "у гэтым месяцы",
+            "relative-type-1": "у наступным месяцы",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} мес.",
+              "relativeTimePattern-count-few": "праз {0} мес.",
+              "relativeTimePattern-count-many": "праз {0} мес.",
+              "relativeTimePattern-count-other": "праз {0} мес."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} мес. таму",
+              "relativeTimePattern-count-few": "{0} мес. таму",
+              "relativeTimePattern-count-many": "{0} мес. таму",
+              "relativeTimePattern-count-other": "{0} мес. таму"
+            }
+          },
+          "week": {
+            "displayName": "тыдзень",
+            "relative-type--1": "на мінулым тыдні",
+            "relative-type-0": "на гэтым тыдні",
+            "relative-type-1": "на наступным тыдні",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} тыдзень",
+              "relativeTimePattern-count-few": "праз {0} тыдні",
+              "relativeTimePattern-count-many": "праз {0} тыдняў",
+              "relativeTimePattern-count-other": "праз {0} тыдня"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} тыдзень таму",
+              "relativeTimePattern-count-few": "{0} тыдні таму",
+              "relativeTimePattern-count-many": "{0} тыдняў таму",
+              "relativeTimePattern-count-other": "{0} тыдня таму"
+            }
+          },
+          "week-short": {
+            "displayName": "тыд.",
+            "relative-type--1": "на мінулым тыдні",
+            "relative-type-0": "на гэтым тыдні",
+            "relative-type-1": "на наступным тыдні",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} тыд.",
+              "relativeTimePattern-count-few": "праз {0} тыд.",
+              "relativeTimePattern-count-many": "праз {0} тыд.",
+              "relativeTimePattern-count-other": "праз {0} тыд."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} тыд. таму",
+              "relativeTimePattern-count-few": "{0} тыд. таму",
+              "relativeTimePattern-count-many": "{0} тыд. таму",
+              "relativeTimePattern-count-other": "{0} тыд. таму"
+            }
+          },
+          "week-narrow": {
+            "displayName": "тыд.",
+            "relative-type--1": "на мінулым тыдні",
+            "relative-type-0": "на гэтым тыдні",
+            "relative-type-1": "на наступным тыдні",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} тыд.",
+              "relativeTimePattern-count-few": "праз {0} тыд.",
+              "relativeTimePattern-count-many": "праз {0} тыд.",
+              "relativeTimePattern-count-other": "праз {0} тыд."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} тыд. таму",
+              "relativeTimePattern-count-few": "{0} тыд. таму",
+              "relativeTimePattern-count-many": "{0} тыд. таму",
+              "relativeTimePattern-count-other": "{0} тыд. таму"
+            }
+          },
+          "day": {
+            "displayName": "дзень",
+            "relative-type--2": "пазаўчора",
+            "relative-type--1": "учора",
+            "relative-type-0": "сёння",
+            "relative-type-1": "заўтра",
+            "relative-type-2": "паслязаўтра",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} дзень",
+              "relativeTimePattern-count-few": "праз {0} дні",
+              "relativeTimePattern-count-many": "праз {0} дзён",
+              "relativeTimePattern-count-other": "праз {0} дня"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} дзень таму",
+              "relativeTimePattern-count-few": "{0} дні таму",
+              "relativeTimePattern-count-many": "{0} дзён таму",
+              "relativeTimePattern-count-other": "{0} дня таму"
+            }
+          },
+          "day-short": {
+            "displayName": "дзень",
+            "relative-type--2": "пазаўчора",
+            "relative-type--1": "учора",
+            "relative-type-0": "сёння",
+            "relative-type-1": "заўтра",
+            "relative-type-2": "паслязаўтра",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} дзень",
+              "relativeTimePattern-count-few": "праз {0} дні",
+              "relativeTimePattern-count-many": "праз {0} дзён",
+              "relativeTimePattern-count-other": "праз {0} дня"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} дзень таму",
+              "relativeTimePattern-count-few": "{0} дні таму",
+              "relativeTimePattern-count-many": "{0} дзён таму",
+              "relativeTimePattern-count-other": "{0} дня таму"
+            }
+          },
+          "day-narrow": {
+            "displayName": "д.",
+            "relative-type--2": "пазаўчора",
+            "relative-type--1": "учора",
+            "relative-type-0": "сёння",
+            "relative-type-1": "заўтра",
+            "relative-type-2": "паслязаўтра",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} д.",
+              "relativeTimePattern-count-few": "праз {0} д.",
+              "relativeTimePattern-count-many": "праз {0} д.",
+              "relativeTimePattern-count-other": "праз {0} д."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} д. таму",
+              "relativeTimePattern-count-few": "{0} д. таму",
+              "relativeTimePattern-count-many": "{0} д. таму",
+              "relativeTimePattern-count-other": "{0} д. таму"
+            }
+          },
+          "weekday": {
+            "displayName": "дзень тыдня"
+          },
+          "sun": {
+            "relative-type--1": "у мінулую нядзелю",
+            "relative-type-0": "у гэту нядзелю",
+            "relative-type-1": "у наступную нядзелю"
+          },
+          "sun-short": {
+            "relative-type--1": "у мінулую нд",
+            "relative-type-0": "у гэту нд",
+            "relative-type-1": "у наступную нд"
+          },
+          "sun-narrow": {
+            "relative-type--1": "у мінулую нд",
+            "relative-type-0": "у гэту нд",
+            "relative-type-1": "у наступную нд"
+          },
+          "mon": {
+            "relative-type--1": "у мінулы панядзелак",
+            "relative-type-0": "у гэты панядзелак",
+            "relative-type-1": "у наступны панядзелак"
+          },
+          "mon-short": {
+            "relative-type--1": "у мінулы пн",
+            "relative-type-0": "у гэты пн",
+            "relative-type-1": "у наступны пн"
+          },
+          "mon-narrow": {
+            "relative-type--1": "у мінулы пн",
+            "relative-type-0": "у гэты пн",
+            "relative-type-1": "у наступны пн"
+          },
+          "tue": {
+            "relative-type--1": "у мінулы аўторак",
+            "relative-type-0": "у гэты аўторак",
+            "relative-type-1": "у наступны аўторак"
+          },
+          "tue-short": {
+            "relative-type--1": "у мінулы аў",
+            "relative-type-0": "у гэты аў",
+            "relative-type-1": "у наступны аў"
+          },
+          "tue-narrow": {
+            "relative-type--1": "у мінулы аў",
+            "relative-type-0": "у гэты аў",
+            "relative-type-1": "у наступны аў"
+          },
+          "wed": {
+            "relative-type--1": "у мінулую сераду",
+            "relative-type-0": "у гэту сераду",
+            "relative-type-1": "у наступную сераду"
+          },
+          "wed-short": {
+            "relative-type--1": "у мінулую ср",
+            "relative-type-0": "у гэту ср",
+            "relative-type-1": "у наступную ср"
+          },
+          "wed-narrow": {
+            "relative-type--1": "у мінулую ср",
+            "relative-type-0": "у гэту ср",
+            "relative-type-1": "у наступную ср"
+          },
+          "thu": {
+            "relative-type--1": "у мінулы чацвер",
+            "relative-type-0": "у гэты чацвер",
+            "relative-type-1": "у наступны чацвер"
+          },
+          "thu-short": {
+            "relative-type--1": "у мінулы чц",
+            "relative-type-0": "у гэты чц",
+            "relative-type-1": "у наступны чц"
+          },
+          "thu-narrow": {
+            "relative-type--1": "у мінулы чц",
+            "relative-type-0": "у гэты чц",
+            "relative-type-1": "у наступны чц"
+          },
+          "fri": {
+            "relative-type--1": "у мінулую пятніцу",
+            "relative-type-0": "у гэту пятніцу",
+            "relative-type-1": "у наступную пятніцу"
+          },
+          "fri-short": {
+            "relative-type--1": "у мінулую пт",
+            "relative-type-0": "у гэту пт",
+            "relative-type-1": "у наступную пт"
+          },
+          "fri-narrow": {
+            "relative-type--1": "у мінулую пт",
+            "relative-type-0": "у гэту пт",
+            "relative-type-1": "у наступную пт"
+          },
+          "sat": {
+            "relative-type--1": "у мінулую суботу",
+            "relative-type-0": "у гэту суботу",
+            "relative-type-1": "у наступную суботу"
+          },
+          "sat-short": {
+            "relative-type--1": "у мінулую сб",
+            "relative-type-0": "у гэту сб",
+            "relative-type-1": "у наступную сб"
+          },
+          "sat-narrow": {
+            "relative-type--1": "у мінулую сб",
+            "relative-type-0": "у гэту сб",
+            "relative-type-1": "у наступную сб"
+          },
+          "dayperiod": {
+            "displayName": "ДП/ПП"
+          },
+          "hour": {
+            "displayName": "гадзіна",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} гадзіну",
+              "relativeTimePattern-count-few": "праз {0} гадзіны",
+              "relativeTimePattern-count-many": "праз {0} гадзін",
+              "relativeTimePattern-count-other": "праз {0} гадзіны"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} гадзіна таму",
+              "relativeTimePattern-count-few": "{0} гадзіны таму",
+              "relativeTimePattern-count-many": "{0} гадзін таму",
+              "relativeTimePattern-count-other": "{0} гадзіны таму"
+            }
+          },
+          "hour-short": {
+            "displayName": "гадз.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} гадз.",
+              "relativeTimePattern-count-few": "праз {0} гадз.",
+              "relativeTimePattern-count-many": "праз {0} гадз.",
+              "relativeTimePattern-count-other": "праз {0} гадз."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} гадз. таму",
+              "relativeTimePattern-count-few": "{0} гадз. таму",
+              "relativeTimePattern-count-many": "{0} гадз. таму",
+              "relativeTimePattern-count-other": "{0} гадз. таму"
+            }
+          },
+          "hour-narrow": {
+            "displayName": "гадз.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} гадз.",
+              "relativeTimePattern-count-few": "праз {0} гадз.",
+              "relativeTimePattern-count-many": "праз {0} гадз.",
+              "relativeTimePattern-count-other": "праз {0} гадз."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} гадз. таму",
+              "relativeTimePattern-count-few": "{0} гадз. таму",
+              "relativeTimePattern-count-many": "{0} гадз. таму",
+              "relativeTimePattern-count-other": "{0} гадз. таму"
+            }
+          },
+          "minute": {
+            "displayName": "хвіліна",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} хвіліну",
+              "relativeTimePattern-count-few": "праз {0} хвіліны",
+              "relativeTimePattern-count-many": "праз {0} хвілін",
+              "relativeTimePattern-count-other": "праз {0} хвіліны"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} хвіліна таму",
+              "relativeTimePattern-count-few": "{0} хвіліны таму",
+              "relativeTimePattern-count-many": "{0} хвілін таму",
+              "relativeTimePattern-count-other": "{0} хвіліны таму"
+            }
+          },
+          "minute-short": {
+            "displayName": "хв.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} хв.",
+              "relativeTimePattern-count-few": "праз {0} хв.",
+              "relativeTimePattern-count-many": "праз {0} хв.",
+              "relativeTimePattern-count-other": "праз {0} хв."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} хв. таму",
+              "relativeTimePattern-count-few": "{0} хв. таму",
+              "relativeTimePattern-count-many": "{0} хв. таму",
+              "relativeTimePattern-count-other": "{0} хв. таму"
+            }
+          },
+          "minute-narrow": {
+            "displayName": "хв.",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} хв.",
+              "relativeTimePattern-count-few": "праз {0} хв.",
+              "relativeTimePattern-count-many": "праз {0} хв.",
+              "relativeTimePattern-count-other": "праз {0} хв."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} хв. таму",
+              "relativeTimePattern-count-few": "{0} хв. таму",
+              "relativeTimePattern-count-many": "{0} хв. таму",
+              "relativeTimePattern-count-other": "{0} хв. таму"
+            }
+          },
+          "second": {
+            "displayName": "секунда",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} секунду",
+              "relativeTimePattern-count-few": "праз {0} секунды",
+              "relativeTimePattern-count-many": "праз {0} секунд",
+              "relativeTimePattern-count-other": "праз {0} секунды"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} секунда таму",
+              "relativeTimePattern-count-few": "{0} секунды таму",
+              "relativeTimePattern-count-many": "{0} секунд таму",
+              "relativeTimePattern-count-other": "{0} секунды таму"
+            }
+          },
+          "second-short": {
+            "displayName": "сек.",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} сек.",
+              "relativeTimePattern-count-few": "праз {0} сек.",
+              "relativeTimePattern-count-many": "праз {0} сек.",
+              "relativeTimePattern-count-other": "праз {0} сек."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} сек. таму",
+              "relativeTimePattern-count-few": "{0} сек. таму",
+              "relativeTimePattern-count-many": "{0} сек. таму",
+              "relativeTimePattern-count-other": "{0} сек. таму"
+            }
+          },
+          "second-narrow": {
+            "displayName": "сек.",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "праз {0} сек.",
+              "relativeTimePattern-count-few": "праз {0} сек.",
+              "relativeTimePattern-count-many": "праз {0} сек.",
+              "relativeTimePattern-count-other": "праз {0} сек."
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} сек. таму",
+              "relativeTimePattern-count-few": "{0} сек. таму",
+              "relativeTimePattern-count-many": "{0} сек. таму",
+              "relativeTimePattern-count-other": "{0} сек. таму"
+            }
+          },
+          "zone": {
+            "displayName": "часавы пояс"
+          }
+        }
+      }
+    }
+  }
+}

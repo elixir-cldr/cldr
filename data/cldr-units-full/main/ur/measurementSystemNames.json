@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ur": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12311 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ur"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "میٹرک",
+          "UK": "سلطنت متحدہ",
+          "US": "ریاستہائے متحدہ"
+        }
+      }
+    }
+  }
+}

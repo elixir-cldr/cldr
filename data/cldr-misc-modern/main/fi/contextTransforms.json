@@ -1,0 +1,21 @@
+{
+  "main": {
+    "fi": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fi"
+      },
+      "contextTransforms": {
+        "languages": {
+          "uiListOrMenu": "titlecase-firstword"
+        },
+        "relative": {
+          "stand-alone": "titlecase-firstword"
+        }
+      }
+    }
+  }
+}

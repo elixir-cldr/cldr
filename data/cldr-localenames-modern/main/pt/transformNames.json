@@ -1,0 +1,27 @@
+{
+  "main": {
+    "pt": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pt"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numérico",
+          "Tone": "Tom",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Tonalidade",
+          "x-Fullwidth": "Extensão total",
+          "x-Halfwidth": "Extensão total",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicação"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "main": {
+    "af-NA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "af",
+        "territory": "NA"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeries",
+          "Tone": "Toon",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Aksente",
+          "x-Fullwidth": "Vollewydte",
+          "x-Halfwidth": "halfwydte",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publisering"
+        }
+      }
+    }
+  }
+}

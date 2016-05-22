@@ -1,0 +1,171 @@
+{
+  "main": {
+    "mn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "mn"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "хуанли",
+          "cf": "cf",
+          "collation": "Захиалга ялгах",
+          "currency": "мөнгөн тэмдэгт",
+          "hc": "hc",
+          "lb": "lb",
+          "ms": "ms",
+          "numbers": "Тоо"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "буддын хуанли",
+            "chinese": "хятад хуанли",
+            "coptic": "coptic",
+            "dangi": "данги хуанли",
+            "ethiopic": "этиоп хуанли",
+            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "gregorian": "грегорийн хуанли",
+            "hebrew": "еврей хуанли",
+            "indian": "indian",
+            "islamic": "исламын хуанли",
+            "islamic-civil": "islamic-civil",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ISO-8601 хуанли",
+            "japanese": "япон хуанли",
+            "persian": "перс хуанли",
+            "roc": "минго хуанли"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "big5han",
+            "compat": "compat",
+            "dictionary": "dictionary",
+            "ducet": "юникодын үндсэн эрэмбэлэх дараалал",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "gb2312han",
+            "phonebook": "phonebook",
+            "pinyin": "pinyin",
+            "reformed": "reformed",
+            "search": "ерөнхий зорилготой хайлт",
+            "searchjl": "searchjl",
+            "standard": "стандарт эрэмбэлэх дараалал",
+            "stroke": "stroke",
+            "traditional": "traditional",
+            "unihan": "unihan",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "h11",
+            "h12": "h12",
+            "h23": "h23",
+            "h24": "h24"
+          },
+          "lb": {
+            "loose": "loose",
+            "normal": "normal",
+            "strict": "strict"
+          },
+          "ms": {
+            "metric": "metric",
+            "uksystem": "uksystem",
+            "ussystem": "ussystem"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "араб-энэтхэг тоо",
+            "arabext": "өргөтгөсөн араб-энэтхэг тоо",
+            "armn": "армен тоо",
+            "armnlow": "жижиг армен тоо",
+            "bali": "bali",
+            "beng": "бенгал тоо",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "деванагари тоо",
+            "ethi": "этиоп тоо",
+            "fullwide": "бүрэн хэмжээтэй тоо",
+            "geor": "гүрж тоо",
+            "grek": "грек тоо",
+            "greklow": "жижиг грек тоо",
+            "gujr": "гүжарати тоо",
+            "guru": "гүрмүкхи тоо",
+            "hanidec": "хятад аравтын тоо",
+            "hans": "хялбаршуулсан хятад тоо",
+            "hansfin": "хялбаршуулсан хятад санхүүгийн тоо",
+            "hant": "уламжлалт хятад тоо",
+            "hantfin": "уламжлалт хятад санхүүгийн тоо",
+            "hebr": "еврей тоо",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "япон тоо",
+            "jpanfin": "япон санхүүгийн тоо",
+            "kali": "kali",
+            "khmr": "кхмер тоо",
+            "knda": "каннада тоо",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "лаос тоо",
+            "latn": "араб тоо",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "малаялам тоо",
+            "modi": "modi",
+            "mong": "монгол тоо",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "мьянмар тоо",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "ория тоо",
+            "osma": "osma",
+            "roman": "ром тоо",
+            "romanlow": "жижиг ром тоо",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "уламжлалт тамил тоо",
+            "tamldec": "тамил тоо",
+            "telu": "телүгү тоо",
+            "thai": "тай тоо",
+            "tibt": "тибет тоо",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "{0}",
+          "script": "{0}",
+          "territory": "{0}"
+        }
+      }
+    }
+  }
+}

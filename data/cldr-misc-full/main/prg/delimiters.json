@@ -1,0 +1,19 @@
+{
+  "main": {
+    "prg": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12313 $",
+          "_cldrVersion": "29"
+        },
+        "language": "prg"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

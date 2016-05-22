@@ -1,0 +1,41 @@
+{
+  "main": {
+    "sr-Cyrl-XK": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Cyrl",
+        "territory": "XK"
+      },
+      "listPatterns": {
+        "listPattern-type-standard": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} и {1}",
+          "2": "{0} и {1}"
+        },
+        "listPattern-type-unit": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} и {1}",
+          "2": "{0} и {1}"
+        },
+        "listPattern-type-unit-narrow": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} и {1}",
+          "2": "{0} и {1}"
+        },
+        "listPattern-type-unit-short": {
+          "start": "{0}, {1}",
+          "middle": "{0}, {1}",
+          "end": "{0} и {1}",
+          "2": "{0} и {1}"
+        }
+      }
+    }
+  }
+}

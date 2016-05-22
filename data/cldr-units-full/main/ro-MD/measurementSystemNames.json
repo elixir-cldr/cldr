@@ -1,0 +1,21 @@
+{
+  "main": {
+    "ro-MD": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ro",
+        "territory": "MD"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metric",
+          "UK": "britanic",
+          "US": "american"
+        }
+      }
+    }
+  }
+}

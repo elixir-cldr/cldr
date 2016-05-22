@@ -1,0 +1,28 @@
+{
+  "main": {
+    "pt-CH": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12400 $",
+          "_cldrVersion": "29"
+        },
+        "language": "pt",
+        "territory": "CH"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numérico",
+          "Tone": "Tom",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Acentos",
+          "x-Fullwidth": "Largura completa",
+          "x-Halfwidth": "Meia largura",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicação"
+        }
+      }
+    }
+  }
+}

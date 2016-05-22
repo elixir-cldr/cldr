@@ -1,0 +1,28 @@
+{
+  "main": {
+    "ta-LK": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ta",
+        "territory": "LK"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "எண்",
+          "Tone": "டோன்",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "ஒலிப்புகள்",
+          "x-Fullwidth": "முழு அகலம்",
+          "x-Halfwidth": "அரை அகலம்",
+          "x-Jamo": "ஜமோ",
+          "x-Pinyin": "பின்யின்",
+          "x-Publishing": "வெளியிடுகிறது"
+        }
+      }
+    }
+  }
+}

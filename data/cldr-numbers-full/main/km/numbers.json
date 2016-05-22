@@ -1,0 +1,204 @@
+{
+  "main": {
+    "km": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "km"
+      },
+      "numbers": {
+        "defaultNumberingSystem": "latn",
+        "otherNumberingSystems": {
+          "native": "khmr"
+        },
+        "minimumGroupingDigits": "1",
+        "symbols-numberSystem-khmr": {
+          "decimal": ",",
+          "group": ".",
+          "list": ";",
+          "percentSign": "%",
+          "plusSign": "+",
+          "minusSign": "-",
+          "exponential": "E",
+          "superscriptingExponent": "×",
+          "perMille": "‰",
+          "infinity": "∞",
+          "nan": "NaN",
+          "timeSeparator": ":"
+        },
+        "symbols-numberSystem-latn": {
+          "decimal": ",",
+          "group": ".",
+          "list": ";",
+          "percentSign": "%",
+          "plusSign": "+",
+          "minusSign": "-",
+          "exponential": "E",
+          "superscriptingExponent": "×",
+          "perMille": "‰",
+          "infinity": "∞",
+          "nan": "NaN",
+          "timeSeparator": ":"
+        },
+        "decimalFormats-numberSystem-khmr": {
+          "standard": "#,##0.###",
+          "long": {
+            "decimalFormat": {
+              "1000-count-other": "0ពាន់",
+              "10000-count-other": "0​មឺុន",
+              "100000-count-other": "0សែន",
+              "1000000-count-other": "0លាន",
+              "10000000-count-other": "0​ដប់​លាន",
+              "100000000-count-other": "0​រយលាន",
+              "1000000000-count-other": "0​កោដិ",
+              "10000000000-count-other": "0​ដប់​កោដិ",
+              "100000000000-count-other": "0​រយ​កោដិ",
+              "1000000000000-count-other": "0​ពាន់​កោដិ",
+              "10000000000000-count-other": "0​មឺុន​កោដិ",
+              "100000000000000-count-other": "0​សែន​កោដិ"
+            }
+          },
+          "short": {
+            "decimalFormat": {
+              "1000-count-other": "0ពាន់",
+              "10000-count-other": "0​មឺុន",
+              "100000-count-other": "0សែន",
+              "1000000-count-other": "0លាន",
+              "10000000-count-other": "0​ដប់​លាន",
+              "100000000-count-other": "0​រយលាន",
+              "1000000000-count-other": "0​កោដិ",
+              "10000000000-count-other": "0​ដប់​កោដិ",
+              "100000000000-count-other": "0​រយ​កោដិ",
+              "1000000000000-count-other": "0​ពាន់​កោដិ",
+              "10000000000000-count-other": "0​មឺុន​កោដិ",
+              "100000000000000-count-other": "0​សែន​កោដិ"
+            }
+          }
+        },
+        "decimalFormats-numberSystem-latn": {
+          "standard": "#,##0.###",
+          "long": {
+            "decimalFormat": {
+              "1000-count-other": "0ពាន់",
+              "10000-count-other": "0​មឺុន",
+              "100000-count-other": "0សែន",
+              "1000000-count-other": "0លាន",
+              "10000000-count-other": "0​ដប់​លាន",
+              "100000000-count-other": "0​រយលាន",
+              "1000000000-count-other": "0​កោដិ",
+              "10000000000-count-other": "0​ដប់​កោដិ",
+              "100000000000-count-other": "0​រយ​កោដិ",
+              "1000000000000-count-other": "0​ពាន់​កោដិ",
+              "10000000000000-count-other": "0​មឺុន​កោដិ",
+              "100000000000000-count-other": "0​សែន​កោដិ"
+            }
+          },
+          "short": {
+            "decimalFormat": {
+              "1000-count-other": "0ពាន់",
+              "10000-count-other": "0​មឺុន",
+              "100000-count-other": "0សែន",
+              "1000000-count-other": "0លាន",
+              "10000000-count-other": "0​ដប់​លាន",
+              "100000000-count-other": "0​រយលាន",
+              "1000000000-count-other": "0​កោដិ",
+              "10000000000-count-other": "0​ដប់​កោដិ",
+              "100000000000-count-other": "0​រយ​កោដិ",
+              "1000000000000-count-other": "0​ពាន់​កោដិ",
+              "10000000000000-count-other": "0​មឺុន​កោដិ",
+              "100000000000000-count-other": "0​សែន​កោដិ"
+            }
+          }
+        },
+        "scientificFormats-numberSystem-khmr": {
+          "standard": "#E0"
+        },
+        "scientificFormats-numberSystem-latn": {
+          "standard": "#E0"
+        },
+        "percentFormats-numberSystem-khmr": {
+          "standard": "#,##0%"
+        },
+        "percentFormats-numberSystem-latn": {
+          "standard": "#,##0%"
+        },
+        "currencyFormats-numberSystem-khmr": {
+          "currencySpacing": {
+            "beforeCurrency": {
+              "currencyMatch": "[:^S:]",
+              "surroundingMatch": "[:digit:]",
+              "insertBetween": " "
+            },
+            "afterCurrency": {
+              "currencyMatch": "[:^S:]",
+              "surroundingMatch": "[:digit:]",
+              "insertBetween": " "
+            }
+          },
+          "standard": "¤#,##0.00",
+          "accounting": "¤#,##0.00;(¤#,##0.00)",
+          "short": {
+            "standard": {
+              "1000-count-other": "¤0ពាន់",
+              "10000-count-other": "¤0​មឺុន",
+              "100000-count-other": "¤0សែន",
+              "1000000-count-other": "¤0លាន",
+              "10000000-count-other": "¤0​ដប់​លាន",
+              "100000000-count-other": "¤0​រយលាន",
+              "1000000000-count-other": "¤0​កោដិ",
+              "10000000000-count-other": "¤0​ដប់​កោដិ",
+              "100000000000-count-other": "¤0​រយ​កោដិ",
+              "1000000000000-count-other": "¤0​ពាន់​កោដិ",
+              "10000000000000-count-other": "¤0​មឺុន​កោដិ",
+              "100000000000000-count-other": "¤0​សែន​កោដិ"
+            }
+          },
+          "unitPattern-count-other": "{0} {1}"
+        },
+        "currencyFormats-numberSystem-latn": {
+          "currencySpacing": {
+            "beforeCurrency": {
+              "currencyMatch": "[:^S:]",
+              "surroundingMatch": "[:digit:]",
+              "insertBetween": " "
+            },
+            "afterCurrency": {
+              "currencyMatch": "[:^S:]",
+              "surroundingMatch": "[:digit:]",
+              "insertBetween": " "
+            }
+          },
+          "standard": "¤#,##0.00",
+          "accounting": "¤#,##0.00;(¤#,##0.00)",
+          "short": {
+            "standard": {
+              "1000-count-other": "¤0ពាន់",
+              "10000-count-other": "¤0​មឺុន",
+              "100000-count-other": "¤0សែន",
+              "1000000-count-other": "¤0លាន",
+              "10000000-count-other": "¤0​ដប់​លាន",
+              "100000000-count-other": "¤0​រយលាន",
+              "1000000000-count-other": "¤0​កោដិ",
+              "10000000000-count-other": "¤0​ដប់​កោដិ",
+              "100000000000-count-other": "¤0​រយ​កោដិ",
+              "1000000000000-count-other": "¤0​ពាន់​កោដិ",
+              "10000000000000-count-other": "¤0​មឺុន​កោដិ",
+              "100000000000000-count-other": "¤0​សែន​កោដិ"
+            }
+          },
+          "unitPattern-count-other": "{0} {1}"
+        },
+        "miscPatterns-numberSystem-khmr": {
+          "atLeast": "{0}+",
+          "range": "{0}–{1}"
+        },
+        "miscPatterns-numberSystem-latn": {
+          "atLeast": "{0}+",
+          "range": "{0}–{1}"
+        }
+      }
+    }
+  }
+}

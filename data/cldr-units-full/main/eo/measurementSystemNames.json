@@ -1,0 +1,20 @@
+{
+  "main": {
+    "eo": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12354 $",
+          "_cldrVersion": "29"
+        },
+        "language": "eo"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metric",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

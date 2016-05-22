@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ms": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12416 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ms"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

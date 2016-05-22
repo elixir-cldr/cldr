@@ -1,0 +1,19 @@
+{
+  "main": {
+    "lrc": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "lrc"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "هأری:ه",
+          "nostr": "نه:ن"
+        }
+      }
+    }
+  }
+}

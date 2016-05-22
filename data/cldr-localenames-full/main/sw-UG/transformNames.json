@@ -1,0 +1,28 @@
+{
+  "main": {
+    "sw-UG": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw",
+        "territory": "UG"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Ya Nambari",
+          "Tone": "Sauti",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Rangi za Kuangaza",
+          "x-Fullwidth": "Upana kamili",
+          "x-Halfwidth": "Nusu upana",
+          "x-Jamo": "Kijamo",
+          "x-Pinyin": "Kipinyin",
+          "x-Publishing": "Inachapishwa"
+        }
+      }
+    }
+  }
+}

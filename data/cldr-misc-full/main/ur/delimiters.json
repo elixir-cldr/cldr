@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ur": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12311 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ur"
+      },
+      "delimiters": {
+        "quotationStart": "”",
+        "quotationEnd": "“",
+        "alternateQuotationStart": "’",
+        "alternateQuotationEnd": "‘"
+      }
+    }
+  }
+}

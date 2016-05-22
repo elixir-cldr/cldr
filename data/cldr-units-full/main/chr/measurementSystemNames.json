@@ -1,0 +1,20 @@
+{
+  "main": {
+    "chr": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "chr"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ᎺᏘᎩ",
+          "UK": "UK",
+          "US": "ᎣᏂᏏ"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "main": {
+    "ca": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ca"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numèric",
+          "Tone": "To",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Amplada completa",
+          "x-Halfwidth": "Amplada mitjana",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicació"
+        }
+      }
+    }
+  }
+}

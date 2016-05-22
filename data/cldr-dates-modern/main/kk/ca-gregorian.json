@@ -1,0 +1,482 @@
+{
+  "main": {
+    "kk": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kk"
+      },
+      "dates": {
+        "calendars": {
+          "gregorian": {
+            "months": {
+              "format": {
+                "abbreviated": {
+                  "1": "қаң.",
+                  "2": "ақп.",
+                  "3": "нау.",
+                  "4": "сәу.",
+                  "5": "мам.",
+                  "6": "мау.",
+                  "7": "шіл.",
+                  "8": "там.",
+                  "9": "қыр.",
+                  "10": "қаз.",
+                  "11": "қар.",
+                  "12": "жел."
+                },
+                "narrow": {
+                  "1": "Қ",
+                  "2": "А",
+                  "3": "Н",
+                  "4": "С",
+                  "5": "М",
+                  "6": "М",
+                  "7": "Ш",
+                  "8": "Т",
+                  "9": "Қ",
+                  "10": "Қ",
+                  "11": "Қ",
+                  "12": "Ж"
+                },
+                "wide": {
+                  "1": "қаңтар",
+                  "2": "ақпан",
+                  "3": "наурыз",
+                  "4": "сәуір",
+                  "5": "мамыр",
+                  "6": "маусым",
+                  "7": "шілде",
+                  "8": "тамыз",
+                  "9": "қыркүйек",
+                  "10": "қазан",
+                  "11": "қараша",
+                  "12": "желтоқсан"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "1": "Қаң.",
+                  "2": "Ақп.",
+                  "3": "Нау.",
+                  "4": "Сәу.",
+                  "5": "Мам.",
+                  "6": "Мау.",
+                  "7": "Шіл.",
+                  "8": "Там.",
+                  "9": "Қыр.",
+                  "10": "Қаз.",
+                  "11": "Қар.",
+                  "12": "Жел."
+                },
+                "narrow": {
+                  "1": "Қ",
+                  "2": "А",
+                  "3": "Н",
+                  "4": "С",
+                  "5": "М",
+                  "6": "М",
+                  "7": "Ш",
+                  "8": "Т",
+                  "9": "Қ",
+                  "10": "Қ",
+                  "11": "Қ",
+                  "12": "Ж"
+                },
+                "wide": {
+                  "1": "Қаңтар",
+                  "2": "Ақпан",
+                  "3": "Наурыз",
+                  "4": "Сәуір",
+                  "5": "Мамыр",
+                  "6": "Маусым",
+                  "7": "Шілде",
+                  "8": "Тамыз",
+                  "9": "Қыркүйек",
+                  "10": "Қазан",
+                  "11": "Қараша",
+                  "12": "Желтоқсан"
+                }
+              }
+            },
+            "days": {
+              "format": {
+                "abbreviated": {
+                  "sun": "Жс",
+                  "mon": "Дс",
+                  "tue": "Сс",
+                  "wed": "Ср",
+                  "thu": "Бс",
+                  "fri": "Жм",
+                  "sat": "Сб"
+                },
+                "narrow": {
+                  "sun": "Ж",
+                  "mon": "Д",
+                  "tue": "С",
+                  "wed": "С",
+                  "thu": "Б",
+                  "fri": "Ж",
+                  "sat": "С"
+                },
+                "short": {
+                  "sun": "Жс",
+                  "mon": "Дс",
+                  "tue": "Сс",
+                  "wed": "Ср",
+                  "thu": "Бс",
+                  "fri": "Жм",
+                  "sat": "Сб"
+                },
+                "wide": {
+                  "sun": "жексенбі",
+                  "mon": "дүйсенбі",
+                  "tue": "сейсенбі",
+                  "wed": "сәрсенбі",
+                  "thu": "бейсенбі",
+                  "fri": "жұма",
+                  "sat": "сенбі"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "sun": "Жс",
+                  "mon": "Дс",
+                  "tue": "Сс",
+                  "wed": "Ср",
+                  "thu": "Бс",
+                  "fri": "Жм",
+                  "sat": "Сб"
+                },
+                "narrow": {
+                  "sun": "Ж",
+                  "mon": "Д",
+                  "tue": "С",
+                  "wed": "С",
+                  "thu": "Б",
+                  "fri": "Ж",
+                  "sat": "С"
+                },
+                "short": {
+                  "sun": "Жс",
+                  "mon": "Дс",
+                  "tue": "Сс",
+                  "wed": "Ср",
+                  "thu": "Бс",
+                  "fri": "Жм",
+                  "sat": "Сб"
+                },
+                "wide": {
+                  "sun": "Жексенбі",
+                  "mon": "Дүйсенбі",
+                  "tue": "Сейсенбі",
+                  "wed": "Сәрсенбі",
+                  "thu": "Бейсенбі",
+                  "fri": "Жұма",
+                  "sat": "Сенбі"
+                }
+              }
+            },
+            "quarters": {
+              "format": {
+                "abbreviated": {
+                  "1": "І ш.",
+                  "2": "ІІ ш.",
+                  "3": "ІІІ ш.",
+                  "4": "IV ш."
+                },
+                "narrow": {
+                  "1": "I",
+                  "2": "II",
+                  "3": "III",
+                  "4": "IV"
+                },
+                "wide": {
+                  "1": "І ширек",
+                  "2": "ІІ ширек",
+                  "3": "ІІІ ширек",
+                  "4": "IV ширек"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "1": "І ш.",
+                  "2": "ІІ ш.",
+                  "3": "ІІІ ш.",
+                  "4": "IV ш."
+                },
+                "narrow": {
+                  "1": "I",
+                  "2": "II",
+                  "3": "III",
+                  "4": "IV"
+                },
+                "wide": {
+                  "1": "І ширек",
+                  "2": "ІІ ширек",
+                  "3": "ІІІ ширек",
+                  "4": "IV ширек"
+                }
+              }
+            },
+            "dayPeriods": {
+              "format": {
+                "abbreviated": {
+                  "midnight": "түн жарымы",
+                  "am": "таңғы",
+                  "noon": "түскі",
+                  "pm": "түскі/кешкі",
+                  "morning1": "таңғы",
+                  "afternoon1": "түстен кейінгі",
+                  "evening1": "кешкі",
+                  "night1": "түнгі"
+                },
+                "narrow": {
+                  "midnight": "түн жарымы",
+                  "am": "таңғы",
+                  "noon": "түскі",
+                  "pm": "түскі/кешкі",
+                  "morning1": "таңғы",
+                  "afternoon1": "түстен кейінгі",
+                  "evening1": "кешкі",
+                  "night1": "түнгі"
+                },
+                "wide": {
+                  "midnight": "түн жарымы",
+                  "am": "таңғы",
+                  "noon": "түскі",
+                  "pm": "түскі/кешкі",
+                  "morning1": "таңғы",
+                  "afternoon1": "түстен кейінгі",
+                  "evening1": "кешкі",
+                  "night1": "түнгі"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "midnight": "түн жарымы",
+                  "am": "таң",
+                  "noon": "талтүс",
+                  "pm": "түс/кеш",
+                  "morning1": "таң",
+                  "afternoon1": "түстен кейін",
+                  "evening1": "кеш",
+                  "night1": "түн"
+                },
+                "narrow": {
+                  "midnight": "түн жарымы",
+                  "am": "таң",
+                  "noon": "талтүс",
+                  "pm": "түс/кеш",
+                  "morning1": "таң",
+                  "afternoon1": "түстен кейін",
+                  "evening1": "кеш",
+                  "night1": "түн"
+                },
+                "wide": {
+                  "midnight": "түн жарымы",
+                  "am": "таң",
+                  "noon": "талтүс",
+                  "pm": "түс/кеш",
+                  "morning1": "таң",
+                  "afternoon1": "түстен кейін",
+                  "evening1": "кеш",
+                  "night1": "түн"
+                }
+              }
+            },
+            "eras": {
+              "eraNames": {
+                "0": "Біздің заманымызға дейін",
+                "0-alt-variant": "BCE",
+                "1": "Біздің заманымыз",
+                "1-alt-variant": "CE"
+              },
+              "eraAbbr": {
+                "0": "б.з.д.",
+                "0-alt-variant": "BCE",
+                "1": "б.з.",
+                "1-alt-variant": "CE"
+              },
+              "eraNarrow": {
+                "0": "б.з.д.",
+                "0-alt-variant": "BCE",
+                "1": "б.з.",
+                "1-alt-variant": "CE"
+              }
+            },
+            "dateFormats": {
+              "full": "y 'ж'. d MMMM, EEEE",
+              "long": "y 'ж'. d MMMM",
+              "medium": "y 'ж'. dd MMM",
+              "short": "dd.MM.yy"
+            },
+            "timeFormats": {
+              "full": "HH:mm:ss zzzz",
+              "long": "HH:mm:ss z",
+              "medium": "HH:mm:ss",
+              "short": "HH:mm"
+            },
+            "dateTimeFormats": {
+              "full": "{1} {0}",
+              "long": "{1} {0}",
+              "medium": "{1} {0}",
+              "short": "{1} {0}",
+              "availableFormats": {
+                "d": "d",
+                "E": "ccc",
+                "Ed": "d, E",
+                "Ehm": "E, a h:mm",
+                "EHm": "E HH:mm",
+                "Ehms": "E, a h:mm:ss",
+                "EHms": "E HH:mm:ss",
+                "Gy": "G y 'ж'.",
+                "GyMMM": "G y 'ж'. MMM",
+                "GyMMMd": "G y 'ж'. d MMM",
+                "GyMMMEd": "G y 'ж'. d MMM, E",
+                "h": "a h",
+                "H": "HH",
+                "hm": "a h:mm",
+                "Hm": "HH:mm",
+                "hms": "a h:mm:ss",
+                "Hms": "HH:mm:ss",
+                "hmsv": "a h:mm:ss v",
+                "Hmsv": "HH:mm:ss v",
+                "hmv": "a h:mm v",
+                "Hmv": "HH:mm v",
+                "M": "L",
+                "Md": "dd.MM",
+                "MEd": "dd.MM, E",
+                "MMM": "LLL",
+                "MMMd": "d MMM",
+                "MMMEd": "d MMM, E",
+                "MMMMd": "d MMMM",
+                "ms": "mm:ss",
+                "y": "y",
+                "yM": "MM.y",
+                "yMd": "dd.MM.y",
+                "yMEd": "dd.MM.y, E",
+                "yMMM": "y 'ж'. MMM",
+                "yMMMd": "y 'ж'. d MMM",
+                "yMMMEd": "y 'ж'. d MMM, E",
+                "yMMMM": "y 'ж'. MMMM",
+                "yQQQ": "y 'ж'. QQQ",
+                "yQQQQ": "y 'ж'. QQQQ"
+              },
+              "appendItems": {
+                "Day": "{0} ({2}: {1})",
+                "Day-Of-Week": "{0} {1}",
+                "Era": "{1} {0}",
+                "Hour": "{0} ({2}: {1})",
+                "Minute": "{0} ({2}: {1})",
+                "Month": "{0} ({2}: {1})",
+                "Quarter": "{0} ({2}: {1})",
+                "Second": "{0} ({2}: {1})",
+                "Timezone": "{0} {1}",
+                "Week": "{0} ({2}: {1})",
+                "Year": "{1} {0}"
+              },
+              "intervalFormats": {
+                "intervalFormatFallback": "{0} - {1}",
+                "d": {
+                  "d": "d–d"
+                },
+                "h": {
+                  "a": "a h – a h",
+                  "h": "a h–h"
+                },
+                "H": {
+                  "H": "HH–HH"
+                },
+                "hm": {
+                  "a": "a h:mm – a h:mm",
+                  "h": "a h:mm–h:mm",
+                  "m": "a h:mm–h:mm"
+                },
+                "Hm": {
+                  "H": "HH:mm–HH:mm",
+                  "m": "HH:mm–HH:mm"
+                },
+                "hmv": {
+                  "a": "a h:mm – a h:mm v",
+                  "h": "a h:mm – h:mm v",
+                  "m": "a h:mm – h:mm v"
+                },
+                "Hmv": {
+                  "H": "HH:mm–HH:mm v",
+                  "m": "HH:mm–HH:mm v"
+                },
+                "hv": {
+                  "a": "a h – a h v",
+                  "h": "a h – h v"
+                },
+                "Hv": {
+                  "H": "HH–HH v"
+                },
+                "M": {
+                  "M": "M–M"
+                },
+                "Md": {
+                  "d": "dd.MM – dd.MM",
+                  "M": "dd.MM – dd.MM"
+                },
+                "MEd": {
+                  "d": "dd.MM, E – dd.MM, E",
+                  "M": "dd.MM, E – dd.MM, E"
+                },
+                "MMM": {
+                  "M": "MMM–MMM"
+                },
+                "MMMd": {
+                  "d": "d–d MMM",
+                  "M": "d MMM – d MMM"
+                },
+                "MMMEd": {
+                  "d": "d MMM, E – d MMM, E",
+                  "M": "d MMM, E – d MMM, E"
+                },
+                "y": {
+                  "y": "y–y"
+                },
+                "yM": {
+                  "M": "MM.y – MM.y",
+                  "y": "MM.y – MM.y"
+                },
+                "yMd": {
+                  "d": "dd.MM.y – dd.MM.y",
+                  "M": "dd.MM.y – dd.MM.y",
+                  "y": "dd.MM.y – dd.MM.y"
+                },
+                "yMEd": {
+                  "d": "dd.MM.y, E – dd.MM.y, E",
+                  "M": "dd.MM.y, E – dd.MM.y, E",
+                  "y": "dd.MM.y, E – dd.MM.y, E"
+                },
+                "yMMM": {
+                  "M": "y 'ж'. MMM–MMM",
+                  "y": "y 'ж'. MMM – y 'ж'. MMM"
+                },
+                "yMMMd": {
+                  "d": "y 'ж'. d–d MMM",
+                  "M": "y 'ж'. d MMM – d MMM",
+                  "y": "y 'ж'. d MMM – y 'ж'. d MMM"
+                },
+                "yMMMEd": {
+                  "d": "y 'ж'. d MMM, E – y 'ж'. d MMM, E",
+                  "M": "y 'ж'. d MMM, E – d MMM, E",
+                  "y": "y 'ж'. d MMM, E – y 'ж'. d MMM, E"
+                },
+                "yMMMM": {
+                  "M": "y 'ж'. MMMM – MMMM",
+                  "y": "y 'ж'. MMMM – y 'ж'. MMMM"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

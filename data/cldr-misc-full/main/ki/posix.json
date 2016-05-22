@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ki": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ki"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ĩĩ:Ĩ",
+          "nostr": "Ca:C"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "main": {
+    "lv": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "lv"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Ciparu",
+          "Tone": "Intonācija",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Diakritiskās zīmes",
+          "x-Fullwidth": "Pilna platuma",
+          "x-Halfwidth": "Pusplatuma",
+          "x-Jamo": "Džamo",
+          "x-Pinyin": "Piņjiņ",
+          "x-Publishing": "Izdevējdarbība"
+        }
+      }
+    }
+  }
+}

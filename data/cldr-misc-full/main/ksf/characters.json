@@ -1,0 +1,28 @@
+{
+  "main": {
+    "ksf": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ksf"
+      },
+      "characters": {
+        "exemplarCharacters": "[a á b c d e é ǝ {ǝ\\u0301} ɛ {ɛ\\u0301} f g h i í j k l m n ŋ o ó ɔ {ɔ\\u0301} p r s t u ú v w y z]",
+        "auxiliary": "[q x]",
+        "index": "[A B C D E Ǝ Ɛ F G H I J K L M N Ŋ O Ɔ P R S T U V W Y Z]",
+        "punctuation": "[\\\\- , ; \\\\: ! ? . ( ) \\\\[ \\\\] \\\\{ \\\\}]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

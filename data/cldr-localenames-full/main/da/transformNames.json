@@ -1,0 +1,27 @@
+{
+  "main": {
+    "da": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12387 $",
+          "_cldrVersion": "29"
+        },
+        "language": "da"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerisk",
+          "Tone": "Tone",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accenter",
+          "x-Fullwidth": "Fuld bredde",
+          "x-Halfwidth": "Halv bredde",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

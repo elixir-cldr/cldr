@@ -1,0 +1,20 @@
+{
+  "main": {
+    "bs": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bs"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metrički",
+          "UK": "UK",
+          "US": "SAD"
+        }
+      }
+    }
+  }
+}

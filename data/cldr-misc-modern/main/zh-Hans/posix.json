@@ -1,0 +1,20 @@
+{
+  "main": {
+    "zh-Hans": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh",
+        "script": "Hans"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "确定:是",
+          "nostr": "否定:否"
+        }
+      }
+    }
+  }
+}

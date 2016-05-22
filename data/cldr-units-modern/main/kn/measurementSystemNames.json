@@ -1,0 +1,20 @@
+{
+  "main": {
+    "kn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kn"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ಮೆಟ್ರಿಕ್",
+          "UK": "ಯುಕೆ",
+          "US": "ಯುಎಸ್"
+        }
+      }
+    }
+  }
+}

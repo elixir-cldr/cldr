@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ak": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ak"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Yiw:Y",
+          "nostr": "Daabi:D"
+        }
+      }
+    }
+  }
+}

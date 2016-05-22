@@ -1,0 +1,19 @@
+{
+  "main": {
+    "kde": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "kde"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Elo:E",
+          "nostr": "Nanga:N"
+        }
+      }
+    }
+  }
+}

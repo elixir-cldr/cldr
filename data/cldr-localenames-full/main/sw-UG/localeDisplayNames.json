@@ -1,0 +1,224 @@
+{
+  "main": {
+    "sw-UG": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw",
+        "territory": "UG"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalenda",
+          "cf": "cf",
+          "colAlternate": "Puuza Upangaji Alama",
+          "colBackwards": "Upangaji Uliogeuzwa wa Kiinitoni",
+          "colCaseFirst": "Upangaji wa Herufi kubwa/Herufi ndogo",
+          "colCaseLevel": "Upangaji Unaoathiriwa na Herufi",
+          "colHiraganaQuaternary": "Upangaji wa Kana",
+          "collation": "Mpangilio",
+          "colNormalization": "Upangaji wa Kawaida",
+          "colNumeric": "Upangaji wa Namba",
+          "colStrength": "Nguvu ya Upangaji",
+          "currency": "Sarafu",
+          "hc": "hc",
+          "lb": "lb",
+          "ms": "ms",
+          "numbers": "Nambari",
+          "timezone": "Ukanda Saa",
+          "va": "Tofauti ya Mandhari",
+          "variableTop": "Panga Kama Alama",
+          "x": "Matumizi ya Kibinafsi"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Kalenda ya Kibuddha",
+            "chinese": "Kalenda ya Kichina",
+            "coptic": "Kalenda ya Koptiki",
+            "dangi": "Kalenda ya Dangi",
+            "ethiopic": "Kalenda ya Kiethiopia",
+            "ethiopic-amete-alem": "Kalenda ya Kiethiopia ya Amete Alem",
+            "gregorian": "Kalenda ya Kigregori",
+            "hebrew": "Kalenda ya Kiebrania",
+            "indian": "Kalenda ya Taifa ya India",
+            "islamic": "Kalenda ya Kiislamu",
+            "islamic-civil": "Kalenda ya Kiislamu/Rasmi",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "Kalenda ya ISO-8601",
+            "japanese": "Kalenda ya Kijapani",
+            "persian": "Kalenda ya Kiajemi",
+            "roc": "Kalenda ya Minguo"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "Panga Alama",
+            "shifted": "Panga Alama za Kupuuza"
+          },
+          "colBackwards": {
+            "no": "Panga Viinitoni kwa Kawaida",
+            "yes": "Panga Viinitoni Kumegeuzwa"
+          },
+          "colCaseFirst": {
+            "lower": "Panga Herufi ndogo Kwanza",
+            "no": "Panga Utaratibu wa Herufi ya Kawaida",
+            "upper": "Panga Herufi kubwa Kwanza"
+          },
+          "colCaseLevel": {
+            "no": "Panga Isiyoathiriwa na Herufi",
+            "yes": "Panga kwa Inayoathiriwa na Herufi"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Panga Kana Kando",
+            "yes": "Panga Kana Kitofauti"
+          },
+          "collation": {
+            "big5han": "Mpangilio wa Kichina cha Jadi - Big5",
+            "compat": "compat",
+            "dictionary": "Mpangilio wa Kamusi",
+            "ducet": "Mpangilio Chaguo-Msingi wa Unicode",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "Mpangilio wa Kichina Rahisi - GB2312",
+            "phonebook": "Mpangilio wa Orodha za Nambari za Simu",
+            "phonetic": "Utaratibu wa Kupanga Fonetiki",
+            "pinyin": "Mpangilio wa Kipinyin",
+            "reformed": "Mpangilio Uliorekebishwa",
+            "search": "Utafutaji wa Kijumla",
+            "searchjl": "Tafuta kwa Konsonanti Halisi ya Hangul",
+            "standard": "Mpangilio wa Kawaida",
+            "stroke": "Mpangilio wa Mikwaju",
+            "traditional": "Mpangilio wa Kawaida",
+            "unihan": "Mpangilio wa Mikwaju ya Shina",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "Panga Bila Ukawaida",
+            "yes": "Upangaji Msimbosare Umekawaidishwa"
+          },
+          "colNumeric": {
+            "no": "Panga Tarakimu Kivyake",
+            "yes": "Panga Dijiti kwa Namba"
+          },
+          "colStrength": {
+            "identical": "Panga Zote",
+            "primary": "Panga Herufi Msingi Tu",
+            "quaternary": "Panga Viinitoni/Herufi/Upana/Kana",
+            "secondary": "Panga Viinitoni",
+            "tertiary": "Panga Viinitoni/Herufi/Upana"
+          },
+          "hc": {
+            "h11": "h11",
+            "h12": "h12",
+            "h23": "h23",
+            "h24": "h24"
+          },
+          "lb": {
+            "loose": "loose",
+            "normal": "normal",
+            "strict": "strict"
+          },
+          "ms": {
+            "metric": "metriki",
+            "uksystem": "mfumo wa UK",
+            "ussystem": "Mfumo wa US"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "Nambari za Kiarabu/Kihindi",
+            "arabext": "Nambari za Kiarabu/Kihindi Zilizopanuliwa",
+            "armn": "Nambari za Kiarmenia",
+            "armnlow": "Nambari Ndogo za Kiarmenia",
+            "bali": "bali",
+            "beng": "Nambari za Kibengali",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "Nambari za Kidevanagari",
+            "ethi": "Nambari za Kiethiopia",
+            "finance": "Tarakimu za Kifedha",
+            "fullwide": "Nambari za Upana Kamili",
+            "geor": "Nambari za Georgia",
+            "grek": "Nambari za Kigiriki",
+            "greklow": "Nambari Ndogo za Kigiriki",
+            "gujr": "Nambari za Kigujarati",
+            "guru": "Nambari za Kigurumukhi",
+            "hanidec": "Nambari za Desimali za Kichina",
+            "hans": "Nambari za Kichina Rahisi",
+            "hansfin": "Nambari za Kifedha za Kichina Rahisi",
+            "hant": "Nambari za Kichina cha Jadi",
+            "hantfin": "Nambari za Kichina za Fedha",
+            "hebr": "Nambari za Kiebrania",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "Nambari za Kijapani",
+            "jpanfin": "Nambari za Kifedha za Kijapani",
+            "kali": "kali",
+            "khmr": "Nambari za Kikhmeri",
+            "knda": "Nambari za Kikannada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Nambari za Kilao",
+            "latn": "Nambari za Magharibi",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "Nambari za Kimalayamu",
+            "modi": "modi",
+            "mong": "Nambari za Kimongolia",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "Nambari za Myama",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "Digiti Asili",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "Nambari za Kioriya",
+            "osma": "osma",
+            "roman": "Nambari za Kirumi",
+            "romanlow": "Nambari Ndogo za Kirumi",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Nambari za Kitamili",
+            "tamldec": "Nambari za Kitamili",
+            "telu": "Nambari za Kitelugu",
+            "thai": "Nambari za Kitai",
+            "tibt": "Nambari za Kitibeti",
+            "tirh": "tirh",
+            "traditional": "Tarakimu za Jadi",
+            "vaii": "Dijiti za Vai",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "{0}",
+          "script": "{0}",
+          "territory": "{0}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "main": {
+    "am": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "am"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ሜትሪክ",
+          "UK": "ዩኬ",
+          "US": "ዩ ኤስ"
+        }
+      }
+    }
+  }
+}

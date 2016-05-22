@@ -1,0 +1,223 @@
+{
+  "main": {
+    "bn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12306 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bn"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "ক্যালেন্ডার",
+          "cf": "cf",
+          "colAlternate": "প্রতীক বাছাইকরণ উপেক্ষা করুন",
+          "colBackwards": "বিপরীত করা স্বরাঘাত বাছাইকরণ",
+          "colCaseFirst": "বড়হাতের/ছোটহাতের অক্ষর ক্রম",
+          "colCaseLevel": "কেস সংবেদী বাছাইকরণ",
+          "colHiraganaQuaternary": "কানা বাছাইকরণ",
+          "collation": "বাছাই বিন্যাস",
+          "colNormalization": "স্বাভাবিককৃত বাছাইকরণ",
+          "colNumeric": "সংখ্যাসূচক বাছাইকরণ",
+          "colStrength": "বাছাইকরণ শক্তি",
+          "currency": "মুদ্রা",
+          "hc": "hc",
+          "lb": "lb",
+          "ms": "ms",
+          "numbers": "সংখ্যাগুলি",
+          "timezone": "সময় জোন",
+          "va": "স্থানীয় ভিন্নতা",
+          "variableTop": "প্রতীক হিসেবে বাছাই করুন",
+          "x": "বক্তিগত- ব্যবহার"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "বৌদ্ধ বর্ষপঞ্জী",
+            "chinese": "চীনা বর্ষপঞ্জী",
+            "coptic": "কপটিক ক্যালেন্ডার",
+            "dangi": "দাঙ্গী বর্ষপঞ্জী",
+            "ethiopic": "ইথিওপিক ক্যালেন্ডার",
+            "ethiopic-amete-alem": "ইথিওপিও আমেতে আলেম ক্যালেন্ডার",
+            "gregorian": "গ্রিগোরিয়ান বর্ষপঞ্জী",
+            "hebrew": "হিব্রু বর্ষপঞ্জী",
+            "indian": "ভারতীয় জাতীয় বর্ষপঞ্জী",
+            "islamic": "ইসলামিক বর্ষপঞ্জী",
+            "islamic-civil": "ইসলামিক-সিভিল বর্ষপঞ্জী",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ISO-8601 বর্ষপঞ্জী",
+            "japanese": "জাপানি বর্ষপঞ্জী",
+            "persian": "ফারসি ক্যালেন্ডার",
+            "roc": "মিঙ্গুও বর্ষপঞ্জী"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "colAlternate": {
+            "non-ignorable": "প্রতীক বাছাই করুন",
+            "shifted": "উপেক্ষা প্রতীক বাছাই করুন"
+          },
+          "colBackwards": {
+            "no": "স্বরাঘাত সাধারণতভাবে বাছাই করুন",
+            "yes": "স্বরাঘাত বিপরীত বাছাই করুন"
+          },
+          "colCaseFirst": {
+            "lower": "প্রথমে ছোট হাতের অক্ষর বাছাই করুন",
+            "no": "সাধারন কেস ক্রম বাছাই করুন",
+            "upper": "প্রথমে বড়হাতের অক্ষর বাছাই করুন"
+          },
+          "colCaseLevel": {
+            "no": "কেস অসংবেদী বাছাই করুন",
+            "yes": "কেস সংবেদী বাছাই করুন"
+          },
+          "colHiraganaQuaternary": {
+            "no": "কানা আলাদাভাবে বাছাই করুন",
+            "yes": "কানা ভিন্নভাবে বাছাই করুন"
+          },
+          "collation": {
+            "big5han": "প্রথাগত চীনা সজ্জাক্রম - বিগ৫",
+            "compat": "compat",
+            "dictionary": "অভিধান বাছাই বিন্যাস",
+            "ducet": "ডিফল্ট ইউনিকোড বাছাই বিন্যাস",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "সাধারণ চীনা সজ্জাক্রম - জিবি২৩১২",
+            "phonebook": "ফোনবুক সজ্জাক্রম",
+            "phonetic": "ধ্বনি নির্দেশক বাছাই ক্রম",
+            "pinyin": "পিনিন সজ্জাক্রম",
+            "reformed": "রিফর্মড বাছাই বিন্যাস",
+            "search": "সাধারণ-উদ্দেশ্যে অনুসন্ধান",
+            "searchjl": "হাঙ্গুল প্রাথমিক ব্যঞ্জনবর্ণ দ্বারা অনুসন্ধান করুন",
+            "standard": "আদর্শ বাছাই বিন্যাস",
+            "stroke": "আবর্তিত সজ্জাক্রম",
+            "traditional": "প্রথাগত সজ্জাক্রম",
+            "unihan": "রাডিকেল স্ট্রোক বাছাই বিন্যাস",
+            "zhuyin": "zhuyin"
+          },
+          "colNormalization": {
+            "no": "স্বাভাবিক ছাড়া বাছাই করুন",
+            "yes": "স্বাভাবিকৃত ইউনিকোড বাছাই করুন"
+          },
+          "colNumeric": {
+            "no": "সংখ্যা পৃথকভাবে বাছাই করুন",
+            "yes": "সংখ্যা সংখ্যাসূচকভাবে বাছাই করুন"
+          },
+          "colStrength": {
+            "identical": "সমস্ত বাছাই করুন",
+            "primary": "কেবল বুনিয়াদি বর্ণ বাছাই করুন",
+            "quaternary": "স্বরাঘাত/কেস/প্রস্থ/কানা বাছাই করুন",
+            "secondary": "স্বরাঘাত বাছাই করুন",
+            "tertiary": "স্বরাঘাত/কেস/প্রস্থ বাছাই করুন"
+          },
+          "hc": {
+            "h11": "h11",
+            "h12": "h12",
+            "h23": "h23",
+            "h24": "h24"
+          },
+          "lb": {
+            "loose": "loose",
+            "normal": "normal",
+            "strict": "strict"
+          },
+          "ms": {
+            "metric": "metric",
+            "uksystem": "uksystem",
+            "ussystem": "ussystem"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "আরবি-ভারতীয় সংখ্যা",
+            "arabext": "প্রসারিত আরবি -ভারতীয় সংখ্যা",
+            "armn": "আর্মেনীয় সংখ্যা",
+            "armnlow": "আর্মেনীয় ছোটহাতের সংখ্যা",
+            "bali": "bali",
+            "beng": "বাংলা সংখ্যা",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "দেবনাগরি সংখ্যা",
+            "ethi": "ইথীয়োপিক সংখ্যা",
+            "finance": "অর্থনৈতিক সংখ্যাসূচক",
+            "fullwide": "পূর্ণ চওড়া সংখ্যা",
+            "geor": "জর্জিয়ান সংখ্যা",
+            "grek": "গ্রিক সংখ্যা",
+            "greklow": "গ্রীক ছোট হাতের সংখ্যা",
+            "gujr": "গুজরাতি শংখ্যা",
+            "guru": "গুরুমুখি সংখ্যা",
+            "hanidec": "চৈনিক দশমিক সংখ্যা",
+            "hans": "সরলিকৃত চৈনিক সংখ্যা",
+            "hansfin": "সরলিকৃত চৈনিক আর্থিক সংখ্যা",
+            "hant": "ঐতিহ্যাবাহী চৈনিক সংখ্যা",
+            "hantfin": "ঐতিহ্যবাহী চৈনিক আর্থিক সংখ্যা",
+            "hebr": "হিব্রু সংখ্যা",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "জাপানি সংখ্যা",
+            "jpanfin": "জাপানি আর্থিক সংখ্যা",
+            "kali": "kali",
+            "khmr": "খেমের সংখ্যা",
+            "knda": "কান্নাডা শংখ্যা",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "লাও সংখ্যা",
+            "latn": "ওয়েস্টার্ন ডিজিট",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "মালয়ালম শংখ্যা",
+            "modi": "modi",
+            "mong": "মঙ্গোলীয় সংখ্যা",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "মায়ানমার সংখ্যা",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "native": "স্থানীয় সংখ্যা",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "ওড়িয়া শংখ্যা",
+            "osma": "osma",
+            "roman": "রোমান সংখ্যা",
+            "romanlow": "রোমান ছোটহাতের সংখ্যা",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "ঐতিহ্যবাহী তামিল সংখ্যা",
+            "tamldec": "তামিল সংখ্যা",
+            "telu": "তেলুগু সংখ্যা",
+            "thai": "থাই সংখ্যা",
+            "tibt": "তিব্বতি সংখ্যা",
+            "tirh": "tirh",
+            "traditional": "ঐতিহ্যগত সংখ্যাসূচক",
+            "vaii": "ভাই সংখ্যা",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "ভাষা: {0}",
+          "script": "লিপি: {0}",
+          "territory": "অঞ্চল: {0}"
+        }
+      }
+    }
+  }
+}

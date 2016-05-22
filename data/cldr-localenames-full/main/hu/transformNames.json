@@ -1,0 +1,27 @@
+{
+  "main": {
+    "hu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hu"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Szám",
+          "Tone": "Hangsúly",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Ékezetek",
+          "x-Fullwidth": "Teljes szélesség",
+          "x-Halfwidth": "Fél szélesség",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinjin",
+          "x-Publishing": "Kiadásra"
+        }
+      }
+    }
+  }
+}

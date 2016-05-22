@@ -1,0 +1,19 @@
+{
+  "main": {
+    "sw": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sw"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ndiyo:N",
+          "nostr": "Hapana:H"
+        }
+      }
+    }
+  }
+}

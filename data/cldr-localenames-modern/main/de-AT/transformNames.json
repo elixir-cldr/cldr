@@ -1,0 +1,28 @@
+{
+  "main": {
+    "de-AT": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "de",
+        "territory": "AT"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numerisch",
+          "Tone": "Tonsprache",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Akzente",
+          "x-Fullwidth": "Breit",
+          "x-Halfwidth": "Halbe Breite",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Veröffentlichung"
+        }
+      }
+    }
+  }
+}

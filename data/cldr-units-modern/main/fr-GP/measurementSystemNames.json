@@ -1,0 +1,21 @@
+{
+  "main": {
+    "fr-GP": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fr",
+        "territory": "GP"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "métrique",
+          "UK": "impérial",
+          "US": "américain"
+        }
+      }
+    }
+  }
+}

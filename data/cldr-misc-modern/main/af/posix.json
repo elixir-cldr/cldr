@@ -1,0 +1,19 @@
+{
+  "main": {
+    "af": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "af"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ja:j",
+          "nostr": "nee:n"
+        }
+      }
+    }
+  }
+}

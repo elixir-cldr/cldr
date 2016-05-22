@@ -1,0 +1,473 @@
+{
+  "main": {
+    "mn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "mn"
+      },
+      "dates": {
+        "calendars": {
+          "generic": {
+            "months": {
+              "format": {
+                "abbreviated": {
+                  "1": "M01",
+                  "2": "M02",
+                  "3": "M03",
+                  "4": "M04",
+                  "5": "M05",
+                  "6": "M06",
+                  "7": "M07",
+                  "8": "M08",
+                  "9": "M09",
+                  "10": "M10",
+                  "11": "M11",
+                  "12": "M12"
+                },
+                "narrow": {
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
+                  "4": "4",
+                  "5": "5",
+                  "6": "6",
+                  "7": "7",
+                  "8": "8",
+                  "9": "9",
+                  "10": "10",
+                  "11": "11",
+                  "12": "12"
+                },
+                "wide": {
+                  "1": "M01",
+                  "2": "M02",
+                  "3": "M03",
+                  "4": "M04",
+                  "5": "M05",
+                  "6": "M06",
+                  "7": "M07",
+                  "8": "M08",
+                  "9": "M09",
+                  "10": "M10",
+                  "11": "M11",
+                  "12": "M12"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "1": "M01",
+                  "2": "M02",
+                  "3": "M03",
+                  "4": "M04",
+                  "5": "M05",
+                  "6": "M06",
+                  "7": "M07",
+                  "8": "M08",
+                  "9": "M09",
+                  "10": "M10",
+                  "11": "M11",
+                  "12": "M12"
+                },
+                "narrow": {
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
+                  "4": "4",
+                  "5": "5",
+                  "6": "6",
+                  "7": "7",
+                  "8": "8",
+                  "9": "9",
+                  "10": "10",
+                  "11": "11",
+                  "12": "12"
+                },
+                "wide": {
+                  "1": "M01",
+                  "2": "M02",
+                  "3": "M03",
+                  "4": "M04",
+                  "5": "M05",
+                  "6": "M06",
+                  "7": "M07",
+                  "8": "M08",
+                  "9": "M09",
+                  "10": "M10",
+                  "11": "M11",
+                  "12": "M12"
+                }
+              }
+            },
+            "days": {
+              "format": {
+                "abbreviated": {
+                  "sun": "Ня",
+                  "mon": "Да",
+                  "tue": "Мя",
+                  "wed": "Лх",
+                  "thu": "Пү",
+                  "fri": "Ба",
+                  "sat": "Бя"
+                },
+                "narrow": {
+                  "sun": "1",
+                  "mon": "2",
+                  "tue": "3",
+                  "wed": "4",
+                  "thu": "5",
+                  "fri": "6",
+                  "sat": "7"
+                },
+                "short": {
+                  "sun": "Ня",
+                  "mon": "Да",
+                  "tue": "Мя",
+                  "wed": "Лх",
+                  "thu": "Пү",
+                  "fri": "Ба",
+                  "sat": "Бя"
+                },
+                "wide": {
+                  "sun": "ням",
+                  "mon": "даваа",
+                  "tue": "мягмар",
+                  "wed": "лхагва",
+                  "thu": "пүрэв",
+                  "fri": "баасан",
+                  "sat": "бямба"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "sun": "Ня",
+                  "mon": "Да",
+                  "tue": "Мя",
+                  "wed": "Лх",
+                  "thu": "Пү",
+                  "fri": "Ба",
+                  "sat": "Бя"
+                },
+                "narrow": {
+                  "sun": "1",
+                  "mon": "2",
+                  "tue": "3",
+                  "wed": "4",
+                  "thu": "5",
+                  "fri": "6",
+                  "sat": "7"
+                },
+                "short": {
+                  "sun": "Ня",
+                  "mon": "Да",
+                  "tue": "Мя",
+                  "wed": "Лх",
+                  "thu": "Пү",
+                  "fri": "Ба",
+                  "sat": "Бя"
+                },
+                "wide": {
+                  "sun": "ням",
+                  "mon": "даваа",
+                  "tue": "мягмар",
+                  "wed": "лхагва",
+                  "thu": "пүрэв",
+                  "fri": "баасан",
+                  "sat": "бямба"
+                }
+              }
+            },
+            "quarters": {
+              "format": {
+                "abbreviated": {
+                  "1": "У1",
+                  "2": "У2",
+                  "3": "У3",
+                  "4": "У4"
+                },
+                "narrow": {
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
+                  "4": "4"
+                },
+                "wide": {
+                  "1": "1-р улирал",
+                  "2": "2-р улирал",
+                  "3": "3-р улирал",
+                  "4": "4-р улирал"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "1": "У1",
+                  "2": "У2",
+                  "3": "У3",
+                  "4": "У4"
+                },
+                "narrow": {
+                  "1": "1",
+                  "2": "2",
+                  "3": "3",
+                  "4": "4"
+                },
+                "wide": {
+                  "1": "1-р улирал",
+                  "2": "2-р улирал",
+                  "3": "3-р улирал",
+                  "4": "4-р улирал"
+                }
+              }
+            },
+            "dayPeriods": {
+              "format": {
+                "abbreviated": {
+                  "midnight": "шөнө дунд",
+                  "am": "ҮӨ",
+                  "noon": "үд дунд",
+                  "pm": "ҮХ",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                },
+                "narrow": {
+                  "midnight": "шөнө дунд",
+                  "am": "үө",
+                  "noon": "үд",
+                  "pm": "үх",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                },
+                "wide": {
+                  "midnight": "шөнө дунд",
+                  "am": "ҮӨ",
+                  "noon": "үд дунд",
+                  "pm": "ҮХ",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                }
+              },
+              "stand-alone": {
+                "abbreviated": {
+                  "midnight": "шөнө дунд",
+                  "am": "ҮӨ",
+                  "noon": "үд дунд",
+                  "pm": "ҮХ",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                },
+                "narrow": {
+                  "midnight": "шөнө дунд",
+                  "am": "ҮӨ",
+                  "noon": "үд дунд",
+                  "pm": "ҮХ",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                },
+                "wide": {
+                  "midnight": "шөнө дунд",
+                  "am": "ҮӨ",
+                  "noon": "үд дунд",
+                  "pm": "ҮХ",
+                  "morning1": "өглөө",
+                  "afternoon1": "өдөр",
+                  "evening1": "орой",
+                  "night1": "шөнө"
+                }
+              }
+            },
+            "eras": {
+              "eraNames": {
+                "0": "ERA0",
+                "1": "ERA1"
+              },
+              "eraAbbr": {
+                "0": "ERA0",
+                "1": "ERA1"
+              },
+              "eraNarrow": {
+                "0": "ERA0",
+                "1": "ERA1"
+              }
+            },
+            "dateFormats": {
+              "full": "EEEE, G y 'оны' MM 'сарын' dd",
+              "long": "G y 'оны' MM 'сарын' d",
+              "medium": "G y MM d",
+              "short": "GGGGG y-MM-dd"
+            },
+            "timeFormats": {
+              "full": "HH:mm:ss zzzz",
+              "long": "HH:mm:ss z",
+              "medium": "HH:mm:ss",
+              "short": "HH:mm"
+            },
+            "dateTimeFormats": {
+              "full": "{1} {0}",
+              "long": "{1} {0}",
+              "medium": "{1} {0}",
+              "short": "{1}, {0}",
+              "availableFormats": {
+                "d": "d",
+                "E": "ccc",
+                "Ed": "dd E",
+                "Ehm": "E h:mm a",
+                "EHm": "E HH:mm",
+                "Ehms": "E h:mm:ss a",
+                "EHms": "E HH:mm:ss",
+                "Gy": "G y",
+                "GyMMM": "G y MM",
+                "GyMMMd": "G y MMM d",
+                "GyMMMEd": "E, G y MMM d",
+                "h": "h a",
+                "H": "HH",
+                "hm": "h:mm a",
+                "Hm": "HH:mm",
+                "hms": "h:mm:ss a",
+                "Hms": "HH:mm:ss",
+                "M": "L",
+                "Md": "M-d",
+                "MEd": "E, M-d",
+                "MMM": "LLL",
+                "MMMd": "MMM d",
+                "MMMEd": "E MMM d",
+                "MMMMd": "MMMM d",
+                "ms": "mm:ss",
+                "y": "G y",
+                "yyyy": "G y",
+                "yyyyM": "G y-M",
+                "yyyyMd": "G y-M-d",
+                "yyyyMEd": "E, G y-M-d",
+                "yyyyMMM": "G y MMM",
+                "yyyyMMMd": "G y MMM d",
+                "yyyyMMMEd": "E, G y MMM d",
+                "yyyyMMMM": "G y MMMM",
+                "yyyyQQQ": "G y QQQ",
+                "yyyyQQQQ": "G y 'оны' QQQQ"
+              },
+              "appendItems": {
+                "Day": "{0} ({2}: {1})",
+                "Day-Of-Week": "{0} {1}",
+                "Era": "{1} {0}",
+                "Hour": "{0} ({2}: {1})",
+                "Minute": "{0} ({2}: {1})",
+                "Month": "{0} ({2}: {1})",
+                "Quarter": "{0} ({2}: {1})",
+                "Second": "{0} ({2}: {1})",
+                "Timezone": "{0} {1}",
+                "Week": "{0} ({2}: {1})",
+                "Year": "{1} {0}"
+              },
+              "intervalFormats": {
+                "intervalFormatFallback": "{0} – {1}",
+                "d": {
+                  "d": "d–d"
+                },
+                "h": {
+                  "a": "h a – h a",
+                  "h": "h–h a"
+                },
+                "H": {
+                  "H": "HH–HH"
+                },
+                "hm": {
+                  "a": "h:mm a – h:mm a",
+                  "h": "h:mm–h:mm a",
+                  "m": "h:mm–h:mm a"
+                },
+                "Hm": {
+                  "H": "HH:mm–HH:mm",
+                  "m": "HH:mm–HH:mm"
+                },
+                "hmv": {
+                  "a": "h:mm a – h:mm a v",
+                  "h": "h:mm–h:mm a v",
+                  "m": "h:mm–h:mm a v"
+                },
+                "Hmv": {
+                  "H": "HH:mm–HH:mm v",
+                  "m": "HH:mm–HH:mm v"
+                },
+                "hv": {
+                  "a": "h a – h a v",
+                  "h": "h–h a v"
+                },
+                "Hv": {
+                  "H": "HH–HH v"
+                },
+                "M": {
+                  "M": "M–M"
+                },
+                "Md": {
+                  "d": "MM/dd–MM/dd",
+                  "M": "MM/dd–MM/dd"
+                },
+                "MEd": {
+                  "d": "E, MM/dd – E, MM/dd",
+                  "M": "E, MM/dd – E, MM/dd"
+                },
+                "MMM": {
+                  "M": "LLL–LLL"
+                },
+                "MMMd": {
+                  "d": "MM/d–d",
+                  "M": "MM/d – MM/d"
+                },
+                "MMMEd": {
+                  "d": "E, MM/dd – E, MM/dd",
+                  "M": "E, MM/dd – E, MM/dd"
+                },
+                "y": {
+                  "y": "G y–y"
+                },
+                "yM": {
+                  "M": "G y/MM–MM",
+                  "y": "G y/MM – y/MM"
+                },
+                "yMd": {
+                  "d": "G y/MM/dd–dd",
+                  "M": "G y/MM/dd –MM/dd",
+                  "y": "G y/MM/dd – y/MM/dd"
+                },
+                "yMEd": {
+                  "d": "E, G y/MM/dd – E, y/MM/dd",
+                  "M": "E, G y/MM/dd – E, y/MM/dd",
+                  "y": "E, G y/MM/dd – E, y/MM/dd"
+                },
+                "yMMM": {
+                  "M": "G y/MM–MM",
+                  "y": "G y/MM – y/MM"
+                },
+                "yMMMd": {
+                  "d": "G y/MM/d–d",
+                  "M": "G y/MM/dd – MM/dd",
+                  "y": "G y/MM/dd – y/MM/dd"
+                },
+                "yMMMEd": {
+                  "d": "E, G y/MM/dd – E, y/MM/dd",
+                  "M": "E, G y/MM/dd – E, y/MM/dd",
+                  "y": "E, G y/MM/dd – E, y/MM/dd"
+                },
+                "yMMMM": {
+                  "M": "G y 'оны' MM–MM-'р' 'сар'",
+                  "y": "G y/MM –y/MM"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

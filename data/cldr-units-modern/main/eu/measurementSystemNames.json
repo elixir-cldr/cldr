@@ -1,0 +1,20 @@
+{
+  "main": {
+    "eu": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "eu"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Sistema metrikoa",
+          "UK": "Erresuma Batuko sistema",
+          "US": "AEBetako sistema"
+        }
+      }
+    }
+  }
+}

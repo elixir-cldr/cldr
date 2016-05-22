@@ -1,0 +1,27 @@
+{
+  "main": {
+    "te": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "te"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "సంఖ్య",
+          "Tone": "టోన్",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "గాఢతలు",
+          "x-Fullwidth": "పూర్తి వెడల్పు",
+          "x-Halfwidth": "సగం వెడల్పు",
+          "x-Jamo": "జమో",
+          "x-Pinyin": "పిన్యిన్",
+          "x-Publishing": "ప్రచురించబడుతోంది"
+        }
+      }
+    }
+  }
+}

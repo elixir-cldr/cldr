@@ -1,0 +1,21 @@
+{
+  "main": {
+    "en-CA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12291 $",
+          "_cldrVersion": "29"
+        },
+        "language": "en",
+        "territory": "CA"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metric",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

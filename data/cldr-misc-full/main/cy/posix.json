@@ -1,0 +1,19 @@
+{
+  "main": {
+    "cy": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "cy"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ie:i",
+          "nostr": "na:n"
+        }
+      }
+    }
+  }
+}

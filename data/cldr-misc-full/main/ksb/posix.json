@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ksb": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ksb"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Ehe:E",
+          "nostr": "Doo:D"
+        }
+      }
+    }
+  }
+}

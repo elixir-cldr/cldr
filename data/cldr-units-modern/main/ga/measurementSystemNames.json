@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ga": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ga"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Méadrach",
+          "UK": "RA",
+          "US": "SAM"
+        }
+      }
+    }
+  }
+}

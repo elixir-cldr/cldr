@@ -1,0 +1,19 @@
+{
+  "main": {
+    "fur": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fur"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "sì:si:s",
+          "nostr": "no:n"
+        }
+      }
+    }
+  }
+}

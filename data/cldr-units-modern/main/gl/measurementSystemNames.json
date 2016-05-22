@@ -1,0 +1,20 @@
+{
+  "main": {
+    "gl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12376 $",
+          "_cldrVersion": "29"
+        },
+        "language": "gl"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "métrico decimal",
+          "UK": "británico",
+          "US": "americano"
+        }
+      }
+    }
+  }
+}

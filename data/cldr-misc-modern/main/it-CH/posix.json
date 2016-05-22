@@ -1,0 +1,20 @@
+{
+  "main": {
+    "it-CH": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12415 $",
+          "_cldrVersion": "29"
+        },
+        "language": "it",
+        "territory": "CH"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "sì:s",
+          "nostr": "no:n"
+        }
+      }
+    }
+  }
+}

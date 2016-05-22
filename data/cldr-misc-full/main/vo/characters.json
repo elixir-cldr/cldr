@@ -1,0 +1,28 @@
+{
+  "main": {
+    "vo": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12319 $",
+          "_cldrVersion": "29"
+        },
+        "language": "vo"
+      },
+      "characters": {
+        "exemplarCharacters": "[a ä b c d e f g h i j k l m n o ö p r s t u ü v x y z]",
+        "auxiliary": "[q w]",
+        "index": "[A Ä B C D E F G H I J K L M N O Ö P R S T U Ü V X Y Z]",
+        "punctuation": "[\\\\- ‐ – — , ; \\\\: ! ? . … ' ‘ ’ \\\" “ ” « » ( ) \\\\[ \\\\] \\\\{ \\\\} § @ * / \\\\& #]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

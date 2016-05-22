@@ -1,0 +1,27 @@
+{
+  "main": {
+    "sl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sl"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Številsko",
+          "Tone": "Ton",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accents",
+          "x-Fullwidth": "Polna širina",
+          "x-Halfwidth": "Polovična širina",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinjin",
+          "x-Publishing": "Publishing"
+        }
+      }
+    }
+  }
+}

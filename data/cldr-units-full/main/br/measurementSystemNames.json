@@ -1,0 +1,20 @@
+{
+  "main": {
+    "br": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "br"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metrek",
+          "UK": "RU",
+          "US": "SU"
+        }
+      }
+    }
+  }
+}

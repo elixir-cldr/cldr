@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ksh": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12128 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ksh"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "SI",
+          "UK": "änglesch",
+          "US": "ammärekaanesch"
+        }
+      }
+    }
+  }
+}

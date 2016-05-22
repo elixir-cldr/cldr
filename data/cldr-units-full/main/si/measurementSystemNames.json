@@ -1,0 +1,20 @@
+{
+  "main": {
+    "si": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12384 $",
+          "_cldrVersion": "29"
+        },
+        "language": "si"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "මෙට්රික්",
+          "UK": "එංගලන්ත",
+          "US": "ඇමරිකානු"
+        }
+      }
+    }
+  }
+}

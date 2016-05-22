@@ -1,0 +1,20 @@
+{
+  "main": {
+    "lo": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "lo"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "ເມທຣິກ",
+          "UK": "ອັງກິດ",
+          "US": "ອາເມລິກາ"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "vun": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "vun"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "Haya:H",
+          "nostr": "Ote:O"
+        }
+      }
+    }
+  }
+}

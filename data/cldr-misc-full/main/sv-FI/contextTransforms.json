@@ -1,0 +1,24 @@
+{
+  "main": {
+    "sv-FI": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sv",
+        "territory": "FI"
+      },
+      "contextTransforms": {
+        "currencyName": {
+          "stand-alone": "titlecase-firstword",
+          "uiListOrMenu": "titlecase-firstword"
+        },
+        "languages": {
+          "stand-alone": "titlecase-firstword",
+          "uiListOrMenu": "titlecase-firstword"
+        }
+      }
+    }
+  }
+}

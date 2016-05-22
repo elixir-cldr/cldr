@@ -1,0 +1,22 @@
+{
+  "main": {
+    "sr-Latn-BA": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12417 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr",
+        "script": "Latn",
+        "territory": "BA"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metrički",
+          "UK": "UK",
+          "US": "SAD"
+        }
+      }
+    }
+  }
+}

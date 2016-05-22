@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ug": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12313 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ug"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ھەئە:ھەئە",
+          "nostr": "ياق:ياق"
+        }
+      }
+    }
+  }
+}

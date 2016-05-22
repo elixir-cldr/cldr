@@ -1,0 +1,19 @@
+{
+  "main": {
+    "nl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12381 $",
+          "_cldrVersion": "29"
+        },
+        "language": "nl"
+      },
+      "delimiters": {
+        "quotationStart": "‘",
+        "quotationEnd": "’",
+        "alternateQuotationStart": "“",
+        "alternateQuotationEnd": "”"
+      }
+    }
+  }
+}

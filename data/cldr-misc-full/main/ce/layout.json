@@ -1,0 +1,19 @@
+{
+  "main": {
+    "ce": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12197 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ce"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

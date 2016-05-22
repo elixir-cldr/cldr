@@ -1,0 +1,20 @@
+{
+  "main": {
+    "ru-MD": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ru",
+        "territory": "MD"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "да:д",
+          "nostr": "нет:н"
+        }
+      }
+    }
+  }
+}

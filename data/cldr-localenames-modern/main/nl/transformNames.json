@@ -1,0 +1,27 @@
+{
+  "main": {
+    "nl": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12381 $",
+          "_cldrVersion": "29"
+        },
+        "language": "nl"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeriek",
+          "Tone": "Toon",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accenten",
+          "x-Fullwidth": "Volledige breedte",
+          "x-Halfwidth": "Halve breedte",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicatie"
+        }
+      }
+    }
+  }
+}

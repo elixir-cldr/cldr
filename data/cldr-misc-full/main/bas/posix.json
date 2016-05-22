@@ -1,0 +1,19 @@
+{
+  "main": {
+    "bas": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "bas"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ŋ̀ŋ̂:Ŋ",
+          "nostr": "tɔ̀:T"
+        }
+      }
+    }
+  }
+}

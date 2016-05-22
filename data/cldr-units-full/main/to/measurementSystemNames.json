@@ -1,0 +1,20 @@
+{
+  "main": {
+    "to": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12379 $",
+          "_cldrVersion": "29"
+        },
+        "language": "to"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "fakamita",
+          "UK": "fakapilitānia",
+          "US": "fakaʻamelika"
+        }
+      }
+    }
+  }
+}

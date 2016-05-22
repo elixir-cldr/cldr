@@ -1,0 +1,19 @@
+{
+  "main": {
+    "sr": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sr"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "да:д",
+          "nostr": "не:н"
+        }
+      }
+    }
+  }
+}

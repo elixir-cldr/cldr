@@ -1,0 +1,19 @@
+{
+  "main": {
+    "sv": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12366 $",
+          "_cldrVersion": "29"
+        },
+        "language": "sv"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ja:j",
+          "nostr": "nej:n"
+        }
+      }
+    }
+  }
+}

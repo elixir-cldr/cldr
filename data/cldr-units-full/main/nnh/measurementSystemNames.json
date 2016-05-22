@@ -1,0 +1,20 @@
+{
+  "main": {
+    "nnh": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12307 $",
+          "_cldrVersion": "29"
+        },
+        "language": "nnh"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "fʉ̀ʼʉ mmó",
+          "UK": "UK",
+          "US": "US"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "main": {
+    "nl-BE": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "nl",
+        "territory": "BE"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "ja:j",
+          "nostr": "nee:n"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "main": {
+    "zh-Hant-MO": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "zh",
+        "script": "Hant",
+        "territory": "MO"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "公制",
+          "UK": "英制",
+          "US": "美制"
+        }
+      }
+    }
+  }
+}

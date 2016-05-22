@@ -1,0 +1,19 @@
+{
+  "main": {
+    "id": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "id"
+      },
+      "contextTransforms": {
+        "relative": {
+          "stand-alone": "titlecase-firstword",
+          "uiListOrMenu": "titlecase-firstword"
+        }
+      }
+    }
+  }
+}

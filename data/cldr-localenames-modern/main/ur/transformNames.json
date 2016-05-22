@@ -1,0 +1,27 @@
+{
+  "main": {
+    "ur": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12311 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ur"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "عددی",
+          "Tone": "ٹون",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "لہجے",
+          "x-Fullwidth": "پورا عرض",
+          "x-Halfwidth": "نصف عرض",
+          "x-Jamo": "جامو",
+          "x-Pinyin": "پن یِن",
+          "x-Publishing": "اشاعت"
+        }
+      }
+    }
+  }
+}

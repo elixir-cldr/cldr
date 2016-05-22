@@ -1,0 +1,171 @@
+{
+  "main": {
+    "ky": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "ky"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Жылнаама",
+          "cf": "cf",
+          "collation": "Иргөө тартиби",
+          "currency": "Валюта",
+          "hc": "Саат мерчеми (12/24)",
+          "lb": "Саптарды ажыратуу стили",
+          "ms": "Өлчөө тутуму",
+          "numbers": "сандар"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "Будда жылнаамасы",
+            "chinese": "Кытай жылнаамасы",
+            "coptic": "coptic",
+            "dangi": "Данги жылнаамасы",
+            "ethiopic": "Эфиоп жылнаамасы",
+            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "gregorian": "Григориан жылнаамасы",
+            "hebrew": "Иврит жылнаамасы",
+            "indian": "indian",
+            "islamic": "Ислам жылнаамасы",
+            "islamic-civil": "islamic-civil",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "ИСО-8601 жылнаамасы",
+            "japanese": "Жапон жылнаамасы",
+            "persian": "Перс жылнаамасы",
+            "roc": "Мингуо жылнаамасы"
+          },
+          "cf": {
+            "account": "account",
+            "standard": "standard"
+          },
+          "collation": {
+            "big5han": "big5han",
+            "compat": "compat",
+            "dictionary": "dictionary",
+            "ducet": "Демейки Unicode иргөө тартиби",
+            "emoji": "emoji",
+            "eor": "eor",
+            "gb2312han": "gb2312han",
+            "phonebook": "phonebook",
+            "pinyin": "pinyin",
+            "reformed": "reformed",
+            "search": "Жалпы издөө",
+            "searchjl": "searchjl",
+            "standard": "Стандарттуу иргөө тартиби",
+            "stroke": "stroke",
+            "traditional": "traditional",
+            "unihan": "unihan",
+            "zhuyin": "zhuyin"
+          },
+          "hc": {
+            "h11": "12 сааттык тутум (0–11)",
+            "h12": "12 сааттык тутум (1–12)",
+            "h23": "24 сааттык тутум (0–23)",
+            "h24": "24 сааттык тутум (1–24)"
+          },
+          "lb": {
+            "loose": "Саптардын арасы кенен",
+            "normal": "Саптардын арасы орточо",
+            "strict": "Саптардын арасы тыкыс"
+          },
+          "ms": {
+            "metric": "Метрикалык тутум",
+            "uksystem": "Британ империясынын өлчөө тутуму",
+            "ussystem": "АКШнын өлчөө тутуму"
+          },
+          "numbers": {
+            "ahom": "ahom",
+            "arab": "араб-индус сандары",
+            "arabext": "кеңейтилген араб-индус сандары",
+            "armn": "армян сандары",
+            "armnlow": "армян сандары (саптык жазылыш)",
+            "bali": "bali",
+            "beng": "бенгали сандары",
+            "brah": "brah",
+            "cakm": "cakm",
+            "cham": "cham",
+            "cyrl": "cyrl",
+            "deva": "деванагари сандары",
+            "ethi": "эфиоп сандары",
+            "fullwide": "толук эндүү сандар",
+            "geor": "грузин сандары",
+            "grek": "грек сандары",
+            "greklow": "грек сандары (саптык жазылыш)",
+            "gujr": "гужарати сандары",
+            "guru": "гурмухи сандары",
+            "hanidec": "кытай ондук сандары",
+            "hans": "жөнөкөйлөштүрүлгөн кытай сандары",
+            "hansfin": "жөнөкөйлөштүрүлгөн кытай финансы сандары",
+            "hant": "салттуу кытай сандары",
+            "hantfin": "салттуу кытай финансы сандары",
+            "hebr": "иврит сандары",
+            "hmng": "hmng",
+            "java": "java",
+            "jpan": "япон сандары",
+            "jpanfin": "япон финансы сандары",
+            "kali": "kali",
+            "khmr": "кмер сандары",
+            "knda": "каннада сандары",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "лао сандары",
+            "latn": "батыш сандары",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mathbold": "mathbold",
+            "mathdbl": "mathdbl",
+            "mathmono": "mathmono",
+            "mathsanb": "mathsanb",
+            "mathsans": "mathsans",
+            "mlym": "малайалам сандары",
+            "modi": "modi",
+            "mong": "mong",
+            "mroo": "mroo",
+            "mtei": "mtei",
+            "mymr": "мйанмар сандары",
+            "mymrshan": "mymrshan",
+            "mymrtlng": "mymrtlng",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "ория сандары",
+            "osma": "osma",
+            "roman": "роман сандары",
+            "romanlow": "роман сандары (саптык жазылыш)",
+            "saur": "saur",
+            "shrd": "shrd",
+            "sind": "sind",
+            "sinh": "sinh",
+            "sora": "sora",
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "салттуу тамил сандары",
+            "tamldec": "тамил сандары",
+            "telu": "телугу сандары",
+            "thai": "тай сандары",
+            "tibt": "тибет сандары",
+            "tirh": "tirh",
+            "vaii": "vaii",
+            "wara": "wara"
+          }
+        },
+        "codePatterns": {
+          "language": "тили: {0}",
+          "script": "жазуусу: {0}",
+          "territory": "региону:{0}"
+        }
+      }
+    }
+  }
+}

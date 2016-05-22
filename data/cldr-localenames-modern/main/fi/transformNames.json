@@ -1,0 +1,27 @@
+{
+  "main": {
+    "fi": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fi"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN-latinaistus",
+          "Numeric": "numeerinen muunnos",
+          "Tone": "tooni",
+          "UNGEGN": "UNGEGN-latinaistus",
+          "x-Accents": "aksenttimerkit",
+          "x-Fullwidth": "ideogrammin levyinen",
+          "x-Halfwidth": "ideogrammin puolikkaan levyinen",
+          "x-Jamo": "jamo",
+          "x-Pinyin": "pinyin-latinaistus",
+          "x-Publishing": "julkaisuvalinta"
+        }
+      }
+    }
+  }
+}

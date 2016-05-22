@@ -1,0 +1,20 @@
+{
+  "main": {
+    "fa-AF": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12217 $",
+          "_cldrVersion": "29"
+        },
+        "language": "fa",
+        "territory": "AF"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "بله:ب:آری:آ",
+          "nostr": "نه:ن:خیر:خ"
+        }
+      }
+    }
+  }
+}

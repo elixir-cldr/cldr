@@ -1,0 +1,20 @@
+{
+  "main": {
+    "uz": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "uz"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Metrik",
+          "UK": "Buyuk Britaniya",
+          "US": "AQSH"
+        }
+      }
+    }
+  }
+}

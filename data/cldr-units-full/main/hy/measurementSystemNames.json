@@ -1,0 +1,20 @@
+{
+  "main": {
+    "hy": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "hy"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Մետրական",
+          "UK": "Անգլիական",
+          "US": "Ամերիկյան"
+        }
+      }
+    }
+  }
+}

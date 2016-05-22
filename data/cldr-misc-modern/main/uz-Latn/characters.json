@@ -1,0 +1,29 @@
+{
+  "main": {
+    "uz-Latn": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "uz",
+        "script": "Latn"
+      },
+      "characters": {
+        "exemplarCharacters": "[a {aʼ} b {ch} d e {eʼ} f g {gʻ} h i {iʼ} j k l m n o {oʻ} p q r s {sh} t u {uʼ} v x y z]",
+        "auxiliary": "[c w]",
+        "index": "[A B {CH} D E F G {Gʻ} H I J K L M N O {Oʻ} P Q R S {SH} T U V X Y Z]",
+        "punctuation": "[\\\\- ‐ – — , ; \\\\: ! ? . … ' ‘ ‚ \\\" “ „ « » ( ) \\\\[ \\\\] \\\\{ \\\\} § @ * / \\\\& #]",
+        "ellipsis": {
+          "final": "{0}…",
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "word-final": "{0} …",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

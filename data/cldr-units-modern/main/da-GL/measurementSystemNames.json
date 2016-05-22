@@ -1,0 +1,21 @@
+{
+  "main": {
+    "da-GL": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 11914 $",
+          "_cldrVersion": "29"
+        },
+        "language": "da",
+        "territory": "GL"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "Det metriske system",
+          "UK": "De britiske målesystemer",
+          "US": "De amerikanske målesystemer"
+        }
+      }
+    }
+  }
+}

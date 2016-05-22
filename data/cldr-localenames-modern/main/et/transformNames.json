@@ -1,0 +1,27 @@
+{
+  "main": {
+    "et": {
+      "identity": {
+        "version": {
+          "_number": "$Revision: 12293 $",
+          "_cldrVersion": "29"
+        },
+        "language": "et"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numbriline",
+          "Tone": "Toon",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Diakriitikud",
+          "x-Fullwidth": "Täislaius",
+          "x-Halfwidth": "Poolaius",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Kirjastamine"
+        }
+      }
+    }
+  }
+}
