@@ -32,7 +32,7 @@ defmodule Cldr.Rbnf do
     [%Rule{rule | :range => range_from_next_rule(rule.rule, next_rule.rule)}] ++ set_range([next_rule] ++ rest)
   end
   def set_range([rule | []]) do
-    [%Rule{rule | :range => nil}]
+    [%Rule{rule | :range => :undefined}]
   end
   
   def range_from_next_rule(rule, next_rule) do
