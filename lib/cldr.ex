@@ -4,28 +4,46 @@
 # For any other recognized locale we need a way to either fallback
 # to a known locale, or error exit (configurable)
 defmodule Cldr.Rbnf do
-  def parse(string) do
-    :rbnf.string(String.to_charlist(string))
+  import Xml
+  alias Cldr.Rbnf.Rule
+
+  def f do
+    "/Users/kip/Development/databases/cldr/common/rbnf/en.xml"
   end
   
-  def rbnf_dir do
-    Path.join(__DIR__, "/../data/rbnf")
+  def rulegroups(xml, path \\ "//rulesetGrouping") do
+    Enum.map(all(xml, path), fn(node) -> attr(node, "type") end)
   end
   
-  def locale_filename(locale) do
-    path = "#{rbnf_dir}/#{locale}.json"
-    if File.exists?(path) do
-      {:ok, path}
+  def rulesets(xml, rulegroup) do
+    path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset"
+    Enum.map(all(xml, path), fn(node) -> [attr(node, "type"), attr(node, "access") || "public"] end)
+  end
+  
+  def rules(xml, rulegroup, ruleset) do
+    path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset[@type='#{ruleset}']/rbnfrule"
+    Enum.map(all(xml, path), fn(node) -> 
+      %Rule{rule: attr(node, "value"), radix: attr(node, "radix"), definition: text(node)}
+    end)
+    |> set_range
+  end
+  
+  def set_range([rule | [next_rule | rest]]) do
+    [%Rule{rule | :range => range_from_next_rule(rule.rule, next_rule.rule)}] ++ set_range([next_rule] ++ rest)
+  end
+  def set_range([rule | []]) do
+    [%Rule{rule | :range => nil}]
+  end
+  
+  def range_from_next_rule(rule, next_rule) do
+    with {_, ""} <- Integer.parse(rule),
+         {_, ""} <- Integer.parse(next_rule) 
+    do
+      next_rule
     else
-      {:enoent, path}
+      :error -> :undefined
+      _ -> :error
     end
   end
 
-  def test1(locale \\ "en") do
-    with {:ok, filename} <- locale_filename(locale),
-         {:ok, json} <- File.read(filename),
-         {:ok, %{"rbnf" => %{"rbnf" => rule_sets}}} <- Poison.decode(json) do
-      IO.puts "Rule sets: #{inspect Map.keys(rule_sets)}"
-    end
-  end
 end

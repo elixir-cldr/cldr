@@ -6,7 +6,7 @@
 %
 % Can be invoked in elixir as:
 %
-%   iex> :rbnf.string(rule_part_as_a_char_list)
+%   iex> :rbnf.string(rules_set_as_a_char_list)
 %
 % Note the part about being a char_list since thats what Erlang expects.
 
@@ -34,7 +34,9 @@ Less_than               = <
 Equals                  = =
 Semicolon               = ;
 Colon                   = :
-Text                    = [a-zA-Z0-9\s\-\.]
+Text                    = [^<>=\[\]\n\t\s:%]
+
+Whitespace              = [\s\n\t]
 
 Rules.
 
@@ -49,6 +51,7 @@ Rules.
 {Rule_numeric}            : {token,{rule_numeric,TokenLine,get_range_and_radix(TokenChars)}}.
 {Rule_nan}                : {token,{rule_nan,TokenLine,TokenChars}}.
 {Plural_rules}            : {token,{plural_rules,TokenLine,TokenChars}}.
+{Colon}                   : {token,{colon,TokenLine,TokenChars}}.
 
 % This part is for the definitions.
 {Text}+                   : {token,{text,TokenLine,TokenChars}}.
@@ -63,7 +66,7 @@ Rules.
 {Rule_cardinal_start}     : {token,{rule_cardinal_start,TokenLine,TokenChars}}.
 {Rule_ordinal_start}      : {token,{rule_ordinal_start,TokenLine,TokenChars}}.
 {Rule_cardord_end}        : {token,{rule_card_ord_end,TokenLine,TokenChars}}.
-
+{Whitespace}+             : skip_token.
 Erlang code.
 
 get_range_and_radix(TokenChars) ->
