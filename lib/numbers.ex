@@ -178,12 +178,12 @@ defmodule Cldr.Numbers.Cardinal do
     spell(left) <> " point " <> spell(right)
   end
 
-  defp turn_fraction_into_integer(int, precision) do
-    trunc_int = trunc(int)
-    if trunc_int == int do
-      trunc_int
+  def turn_fraction_into_integer(fraction, precision) do
+    trunc_fraction = trunc(fraction)
+    if trunc_fraction == fraction do
+      trunc_fraction
     else
-      Float.round(int * 10, precision) |> turn_fraction_into_integer(precision)
+      Float.round(fraction * 10, precision) |> turn_fraction_into_integer(precision)
     end
   end
 end 

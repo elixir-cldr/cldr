@@ -16,7 +16,7 @@ defmodule Cldr.Rbnf do
   
   @spec locale_path(binary) :: String.t
   def locale_path(locale) when is_binary(locale) do
-    Path.join(rbnf_dir, "/#{locale}.xml")
+    Path.join(rbnf_dir(), "/#{locale}.xml")
   end
   
   @doc """
