@@ -34,7 +34,7 @@ defmodule Cldr.Rbnf do
   def rules(xml, rulegroup, ruleset) do
     path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset[@type='#{ruleset}']/rbnfrule"
     Enum.map(all(xml, path), fn(node) -> 
-      %Rule{rule: attr(node, "value"), radix: attr(node, "radix"), definition: text(node)}
+      %Rule{name: attr(node, "value"), radix: attr(node, "radix"), definition: text(node)}
     end)
     |> set_range
   end
@@ -48,7 +48,7 @@ defmodule Cldr.Rbnf do
   #
   # Means that rule "0" is applied for values up to but not including "10"
   defp set_range([rule | [next_rule | rest]]) do
-    [%Rule{rule | :range => range_from_next_rule(rule.rule, next_rule.rule)}] ++ set_range([next_rule] ++ rest)
+    [%Rule{rule | :range => range_from_next_rule(rule.name, next_rule.name)}] ++ set_range([next_rule] ++ rest)
   end
   defp set_range([rule | []]) do
     [%Rule{rule | :range => :undefined}]
