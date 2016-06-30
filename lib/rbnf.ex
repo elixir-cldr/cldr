@@ -14,6 +14,13 @@ defmodule Cldr.Rbnf do
     @rbnf_dir
   end
   
+  {:ok, files} = File.ls(@rbnf_dir)
+  @locales Enum.map(files, &Path.basename(&1, ".xml"))
+  @spec locales :: [String.t] | []
+  def locales do
+    @locales
+  end
+  
   @spec locale_path(binary) :: String.t
   def locale_path(locale) when is_binary(locale) do
     Path.join(rbnf_dir(), "/#{locale}.xml")
