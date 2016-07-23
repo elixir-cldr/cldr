@@ -1,5 +1,5 @@
 defmodule Cldr.Currency do
-  defstruct [:code, :name, :one, :many, :symbol, :narrow_symbol, :minor_units, :number]
+  defstruct [:code, :name, :one, :many, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding]
   alias Cldr.Currency
 
   @moduledoc """
@@ -13,30 +13,35 @@ defmodule Cldr.Currency do
     Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json")
   end
   
-  @iso4217_path   Path.join(Cldr.data_dir, "iso4217/list_one.xml")
-  @iso4217_data   Xml.parse(@iso4217_path)
-  @resource       @iso4217_path
-  
   IO.puts "Generating currencies for locales #{inspect Cldr.known_locales}"
   IO.puts "Default locale is #{inspect Cldr.default_locale}"
   
-  @spec find(String.t, String.t) :: %Cldr.Currency{}
-  def find(currency, locale \\ Cldr.default_locale)
-  def find(currency, locale) when is_binary(currency),
-    do: do_find(String.upcase(currency), locale)
-  def find(currency, locale) when is_atom(currency),
-    do: find(Atom.to_string(currency), locale)
+  @spec for_code(String.t, String.t) :: %Cldr.Currency{}
+  def for_code(currency, locale \\ Cldr.default_locale)
+  def for_code(currency, locale) when is_binary(currency),
+    do: do_for_code(String.upcase(currency), locale)
+  def for_code(currency, locale) when is_atom(currency),
+    do: for_code(Atom.to_string(currency), locale)
   
+  # Currency information in the default locale
   {:ok, currencies} = 
     Path.join(Cldr.locale_dir(), "/#{Cldr.default_locale()}/currencies.json") 
     |> File.read! 
     |> Poison.decode
   @currencies currencies["main"][Cldr.default_locale()]["numbers"]["currencies"] 
     |> Enum.map(fn {code, _currency} -> code end)
+    
+  # Rounding and fraction information which is independent of locale
+  {:ok, rounding} = 
+    Path.join(Cldr.data_dir(), "/cldr-core/supplemental/currencyData.json") 
+    |> File.read! 
+    |> Poison.decode
+  @rounding rounding["supplemental"]["currencyData"]["fractions"]
   
   def known_currencies do
     @currencies
   end
+  defdelegate currency_codes, to: __MODULE__, as: :known_currencies
 
   def known_currency?(currency) when is_binary(currency) do
     upcase_currency = String.upcase(currency)
@@ -46,44 +51,34 @@ defmodule Cldr.Currency do
     known_currency?(Atom.to_string(currency))
   end
     
-  @spec do_find(String.t, String.t) :: %Cldr.Currency{}
+  @spec do_for_code(String.t, String.t) :: %Cldr.Currency{}
   Enum.each Cldr.known_locales, fn locale ->
     {:ok, currencies} = 
       Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json") 
       |> File.read! 
       |> Poison.decode
       
-    currencies = currencies["main"][locale]["numbers"]["currencies"]
+    currencies = currencies["main"][locale]["numbers"]["currencies"] 
     Enum.each currencies, fn {code, currency} ->
-      iso_currency = Xml.first(@iso4217_data, "//CcyNtry[Ccy='#{code}']") 
-      currency_number = iso_currency |> Xml.first("//CcyNbr") |> Xml.text
-      currency_number =
-        if is_nil(currency_number), 
-          do: nil,
-          else: String.to_integer(currency_number)
-        
-      minor_units = iso_currency |> Xml.first("//CcyMnrUnts") |> Xml.text
-      minor_units = 
-        if minor_units == "N.A." || is_nil(minor_units),
-          do: 0, 
-          else: String.to_integer(minor_units)
-        
-      defp do_find(unquote(code), unquote(locale)) do
+      rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
+      defp do_for_code(unquote(code), unquote(locale)) do
         %Currency{
-          code: unquote(code),
-          name: unquote(currency["displayName"]), 
-          one:  unquote(currency["displayName-count-one"]),
-          many: unquote(currency["displayName-count-other"]),
-          symbol: unquote(currency["symbol"]),
+          code:          unquote(code),
+          name:          unquote(currency["displayName"]), 
+          one:           unquote(currency["displayName-count-one"]),
+          many:          unquote(currency["displayName-count-other"]),
+          symbol:        unquote(currency["symbol"]),
           narrow_symbol: unquote(currency["symbol-alt-narrow"]),
-          minor_units:   unquote(minor_units),
-          number: unquote(currency_number)
+          digits:        unquote(rounding["_digits"] |> String.to_integer),
+          rounding:      unquote(rounding["_rounding"] |> String.to_integer),
+          cash_digits:   unquote((rounding["_cashDigits"] || rounding["_digits"]) |> String.to_integer),
+          cash_rounding: unquote((rounding["_cashRounding"] || rounding["_rounding"]) |> String.to_integer)
         }
       end
     end
   end
   
-  defp do_find(any, locale) when is_binary(any) do
+  defp do_for_code(any, locale) when is_binary(any) do
     raise ArgumentError, message: "Currency #{inspect any} is not known in locale #{inspect locale}"
   end
 
