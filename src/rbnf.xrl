@@ -15,7 +15,7 @@ Definitions.
 Rule_cardinal_start     = \$\(cardinal,
 Rule_ordinal_start      = \$\(ordinal,
 Rule_cardord_end        = \)\$
-Plural_rules            = (one\{.+\})(two\{.+\})?(few\{.+\})?(other\{.+\})?
+Plural_rules            = (zero\{.+\})?(one\{.+\})?(two\{.+\})?(few\{.+\})?(many\{.+\})?(other\{.+\})?
 
 Rule_name               = (%[%a-zA-Z\-]+)
 Number_format           = ([0#]([0#,]+)?)(\.([0#]+))?([eE]([-+]?[0#]+))?

@@ -23,7 +23,8 @@ defmodule Cldr.Currency do
   def for_code(currency, locale) when is_atom(currency),
     do: for_code(Atom.to_string(currency), locale)
   
-  # Currency information in the default locale
+  # A list of known currencies derived from the data in the
+  # default locale
   {:ok, currencies} = 
     Path.join(Cldr.locale_dir(), "/#{Cldr.default_locale()}/currencies.json") 
     |> File.read! 
@@ -51,6 +52,8 @@ defmodule Cldr.Currency do
     known_currency?(Atom.to_string(currency))
   end
     
+  # For each locale, generate a currency lookup function for 
+  # each known currency
   @spec do_for_code(String.t, String.t) :: %Cldr.Currency{}
   Enum.each Cldr.known_locales, fn locale ->
     {:ok, currencies} = 

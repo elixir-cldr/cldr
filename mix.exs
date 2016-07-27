@@ -27,6 +27,7 @@ defmodule Cldr.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:poison, "~> 2.1"}]
+    [{:poison, "~> 2.1"},
+    { :decimal, "~> 1.1.0" }]
   end
 end
