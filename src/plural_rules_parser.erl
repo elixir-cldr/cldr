@@ -1,6 +1,6 @@
 -module(plural_rules_parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("src/plural_rules_parser.yrl", 86).
+-file("src/plural_rules_parser.yrl", 89).
 
 -import('Elixir.Float', [floor/1]).
 
@@ -42,8 +42,8 @@ range(Start, End) ->
 conditional('in', A, B) -> 
   {'in', kernel_context(), [A, B]};
   
-conditional('=', A, B) ->
-  {'=', [], A, B};
+conditional(equals, A, B) ->
+  {'==', [], A, B};
   
 conditional('!=', A, B) ->
   {'!=', [], A, B}.
@@ -66,7 +66,7 @@ atomize(Token) ->
   list_to_atom(unwrap(Token)).
   
 
--file("/usr/local/Cellar/erlang-r19/19.0.1/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -329,30 +329,28 @@ yeccpars2(41=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(42=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_42(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(43=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(44=S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_44(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(45=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2(43=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(44=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(45=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_45(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(46=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_46(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(47=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_47(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(48=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_48(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(49=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_49(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(50=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2(49=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(50=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_50(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(51=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_51(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(52=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_52(S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccpars2(53=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2(52=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_25(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(54=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_54(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(53=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_53(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
  erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
@@ -371,7 +369,7 @@ yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccgoto_plural_rule(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccpars2_3(S, and_predicate, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 53, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 52, Ss, Stack, T, Ts, Tzr);
 yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccgoto_and_condition(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
@@ -513,21 +511,17 @@ yeccpars2_30(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccgoto_conditional(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_31(S, not_op, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 50, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 49, Ss, Stack, T, Ts, Tzr);
 yeccpars2_31(S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_21(S, Cat, Ss, Stack, T, Ts, Tzr).
 
 %% yeccpars2_32: see yeccpars2_21
 
 -dialyzer({nowarn_function, yeccpars2_33/7}).
-yeccpars2_33(S, equals, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 29, Ss, Stack, T, Ts, Tzr);
 yeccpars2_33(S, in, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 30, Ss, Stack, T, Ts, Tzr);
-yeccpars2_33(S, not_equals, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 44, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 43, Ss, Stack, T, Ts, Tzr);
 yeccpars2_33(S, within_op, Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 45, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 44, Ss, Stack, T, Ts, Tzr);
 yeccpars2_33(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
@@ -567,83 +561,79 @@ yeccpars2_42(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 
 %% yeccpars2_43: see yeccpars2_21
 
-yeccpars2_44(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- NewStack = yeccpars2_44_(Stack),
- yeccgoto_conditional(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
+%% yeccpars2_44: see yeccpars2_21
 
-%% yeccpars2_45: see yeccpars2_21
+yeccpars2_45(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_,_|Nss] = Ss,
+ NewStack = yeccpars2_45_(Stack),
+ yeccgoto_within_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_46(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_,_|Nss] = Ss,
  NewStack = yeccpars2_46_(Stack),
- yeccgoto_within_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ yeccgoto_in_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_47(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_,_|Nss] = Ss,
+ [_,_|Nss] = Ss,
  NewStack = yeccpars2_47_(Stack),
  yeccgoto_in_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_48(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
  NewStack = yeccpars2_48_(Stack),
- yeccgoto_in_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
-
-yeccpars2_49(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_|Nss] = Ss,
- NewStack = yeccpars2_49_(Stack),
  yeccgoto_is_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
-%% yeccpars2_50: see yeccpars2_21
+%% yeccpars2_49: see yeccpars2_21
+
+yeccpars2_50(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_,_|Nss] = Ss,
+ NewStack = yeccpars2_50_(Stack),
+ yeccgoto_is_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccpars2_51(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_,_|Nss] = Ss,
- NewStack = yeccpars2_51_(Stack),
- yeccgoto_is_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
-
-yeccpars2_52(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
- NewStack = yeccpars2_52_(Stack),
+ NewStack = yeccpars2_51_(Stack),
  yeccgoto_in_relation(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
-%% yeccpars2_53: see yeccpars2_25
+%% yeccpars2_52: see yeccpars2_25
 
-yeccpars2_54(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_53(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  [_,_|Nss] = Ss,
- NewStack = yeccpars2_54_(Stack),
+ NewStack = yeccpars2_53_(Stack),
  yeccgoto_and_condition(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 yeccgoto_and_condition(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_9(9, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_and_condition(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_26(_S, Cat, Ss, Stack, T, Ts, Tzr).
+yeccgoto_and_condition(25, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_9(9, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_condition(0, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr).
+ yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_condition(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_26(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_conditional(7, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_21(28, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_conditional(33, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_21(43, Cat, Ss, Stack, T, Ts, Tzr).
+ yeccpars2_21(28, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_expression(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(7, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_expression(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(7, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_expression(53, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_expression(52, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(7, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_in_relation(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_in_relation(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_in_relation(53=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_in_relation(52=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_is_relation(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_is_relation(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_is_relation(53=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_is_relation(52=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_plural_rule(0, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -659,21 +649,21 @@ yeccgoto_range(39=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_38(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range(43=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_38(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_range(45=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_range(44=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_38(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_range_list(28=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_52(_S, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_51(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range_list(32=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_48(_S, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_47(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range_list(34=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_37(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range_list(39=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_40(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range_list(43=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_47(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_range_list(45=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_46(_S, Cat, Ss, Stack, T, Ts, Tzr).
+ yeccpars2_46(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_range_list(44=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_45(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_range_or_value(28, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_36(36, Cat, Ss, Stack, T, Ts, Tzr);
@@ -685,15 +675,15 @@ yeccgoto_range_or_value(39, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_36(36, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_range_or_value(43, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_36(36, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_range_or_value(45, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_range_or_value(44, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_36(36, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_relation(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(3, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_relation(25, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(3, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_relation(53=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_54(_S, Cat, Ss, Stack, T, Ts, Tzr).
+yeccgoto_relation(52=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_53(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_sample_list(11, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_14(14, Cat, Ss, Stack, T, Ts, Tzr);
@@ -723,7 +713,7 @@ yeccgoto_value(23=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_value(28, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_35(35, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_value(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_49(_S, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_48(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_value(32, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_35(35, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_value(34, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -734,20 +724,20 @@ yeccgoto_value(41=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_42(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_value(43, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_35(35, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_value(45, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_value(44, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_35(35, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_value(50=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_51(_S, Cat, Ss, Stack, T, Ts, Tzr).
+yeccgoto_value(49=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_50(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccgoto_within_relation(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_within_relation(25=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_within_relation(53=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_within_relation(52=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -compile({inline,yeccpars2_8_/1}).
--file("src/plural_rules_parser.yrl", 31).
+-file("src/plural_rules_parser.yrl", 33).
 yeccpars2_8_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -755,7 +745,7 @@ yeccpars2_8_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_10_/1}).
--file("src/plural_rules_parser.yrl", 59).
+-file("src/plural_rules_parser.yrl", 62).
 yeccpars2_10_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -763,7 +753,7 @@ yeccpars2_10_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_13_/1}).
--file("src/plural_rules_parser.yrl", 76).
+-file("src/plural_rules_parser.yrl", 79).
 yeccpars2_13_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -771,7 +761,7 @@ yeccpars2_13_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_14_/1}).
--file("src/plural_rules_parser.yrl", 73).
+-file("src/plural_rules_parser.yrl", 76).
 yeccpars2_14_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -779,7 +769,7 @@ yeccpars2_14_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_15_/1}).
--file("src/plural_rules_parser.yrl", 70).
+-file("src/plural_rules_parser.yrl", 73).
 yeccpars2_15_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -787,7 +777,7 @@ yeccpars2_15_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_17_/1}).
--file("src/plural_rules_parser.yrl", 69).
+-file("src/plural_rules_parser.yrl", 72).
 yeccpars2_17_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -795,7 +785,7 @@ yeccpars2_17_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_18_/1}).
--file("src/plural_rules_parser.yrl", 72).
+-file("src/plural_rules_parser.yrl", 75).
 yeccpars2_18_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -803,7 +793,7 @@ yeccpars2_18_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_20_/1}).
--file("src/plural_rules_parser.yrl", 75).
+-file("src/plural_rules_parser.yrl", 78).
 yeccpars2_20_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -811,7 +801,7 @@ yeccpars2_20_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_22_/1}).
--file("src/plural_rules_parser.yrl", 78).
+-file("src/plural_rules_parser.yrl", 81).
 yeccpars2_22_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -819,7 +809,7 @@ yeccpars2_22_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_24_/1}).
--file("src/plural_rules_parser.yrl", 58).
+-file("src/plural_rules_parser.yrl", 61).
 yeccpars2_24_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -827,7 +817,7 @@ yeccpars2_24_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_26_/1}).
--file("src/plural_rules_parser.yrl", 34).
+-file("src/plural_rules_parser.yrl", 36).
 yeccpars2_26_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -835,7 +825,7 @@ yeccpars2_26_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_27_/1}).
--file("src/plural_rules_parser.yrl", 30).
+-file("src/plural_rules_parser.yrl", 32).
 yeccpars2_27_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -843,7 +833,7 @@ yeccpars2_27_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_29_/1}).
--file("src/plural_rules_parser.yrl", 55).
+-file("src/plural_rules_parser.yrl", 57).
 yeccpars2_29_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -851,7 +841,7 @@ yeccpars2_29_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_30_/1}).
--file("src/plural_rules_parser.yrl", 54).
+-file("src/plural_rules_parser.yrl", 56).
 yeccpars2_30_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -859,7 +849,7 @@ yeccpars2_30_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_37_/1}).
--file("src/plural_rules_parser.yrl", 51).
+-file("src/plural_rules_parser.yrl", 53).
 yeccpars2_37_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -867,7 +857,7 @@ yeccpars2_37_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_40_/1}).
--file("src/plural_rules_parser.yrl", 61).
+-file("src/plural_rules_parser.yrl", 64).
 yeccpars2_40_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -875,76 +865,68 @@ yeccpars2_40_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_42_/1}).
--file("src/plural_rules_parser.yrl", 67).
+-file("src/plural_rules_parser.yrl", 70).
 yeccpars2_42_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
    range ( __1 , __3 )
   end | __Stack].
 
--compile({inline,yeccpars2_44_/1}).
--file("src/plural_rules_parser.yrl", 56).
-yeccpars2_44_(__Stack0) ->
- [__1 | __Stack] = __Stack0,
+-compile({inline,yeccpars2_45_/1}).
+-file("src/plural_rules_parser.yrl", 54).
+yeccpars2_45_(__Stack0) ->
+ [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   '!='
+   not_function ( conditional ( equals , __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_46_/1}).
--file("src/plural_rules_parser.yrl", 52).
+-file("src/plural_rules_parser.yrl", 51).
 yeccpars2_46_(__Stack0) ->
  [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( '=' , __1 , __4 ) )
+   not_function ( conditional ( equals , __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_47_/1}).
 -file("src/plural_rules_parser.yrl", 49).
 yeccpars2_47_(__Stack0) ->
- [__4,__3,__2,__1 | __Stack] = __Stack0,
+ [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( '=' , __1 , __4 ) )
+   not_function ( conditional ( equals , __1 , __3 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_48_/1}).
--file("src/plural_rules_parser.yrl", 47).
+-file("src/plural_rules_parser.yrl", 46).
 yeccpars2_48_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( '=' , __1 , __3 ) )
+   conditional ( equals , __1 , __3 )
   end | __Stack].
 
--compile({inline,yeccpars2_49_/1}).
--file("src/plural_rules_parser.yrl", 44).
-yeccpars2_49_(__Stack0) ->
- [__3,__2,__1 | __Stack] = __Stack0,
+-compile({inline,yeccpars2_50_/1}).
+-file("src/plural_rules_parser.yrl", 47).
+yeccpars2_50_(__Stack0) ->
+ [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   conditional ( '=' , __1 , __3 )
+   not_function ( conditional ( equals , __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_51_/1}).
--file("src/plural_rules_parser.yrl", 45).
+-file("src/plural_rules_parser.yrl", 50).
 yeccpars2_51_(__Stack0) ->
- [__4,__3,__2,__1 | __Stack] = __Stack0,
- [begin
-   not_function ( conditional ( '=' , __1 , __4 ) )
-  end | __Stack].
-
--compile({inline,yeccpars2_52_/1}).
--file("src/plural_rules_parser.yrl", 48).
-yeccpars2_52_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   conditional ( '=' , __1 , __3 )
+   conditional ( equals , __1 , __3 )
   end | __Stack].
 
--compile({inline,yeccpars2_54_/1}).
--file("src/plural_rules_parser.yrl", 37).
-yeccpars2_54_(__Stack0) ->
+-compile({inline,yeccpars2_53_/1}).
+-file("src/plural_rules_parser.yrl", 39).
+yeccpars2_53_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
    and_function ( __1 , __3 )
   end | __Stack].
 
 
--file("src/plural_rules_parser.yrl", 151).
+-file("src/plural_rules_parser.yrl", 154).

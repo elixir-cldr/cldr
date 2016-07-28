@@ -28,14 +28,16 @@ comma decimal integer ellipsis equals in within_op not_equals.
 
 Rootsymbol plural_rule.
 
-Left  100   and_predicate.
-Left  200   or_predicate.
+Right     100   mod.
+Nonassoc  200   equals not_equals.
+Left      300   and_predicate.
+Left      400   or_predicate.
 
 plural_rule       ->  condition samples : append({rule, '$1'}, '$2').
 plural_rule       ->  condition : [{rule, '$1'}].
 plural_rule       ->  samples : '$1'.
   
-condition         ->  and_condition or_predicate and_condition : or_function('$1', '$3').
+condition         ->  and_condition or_predicate condition : or_function('$1', '$3').
 condition         ->  and_condition : '$1'.
 
 and_condition     ->  relation and_predicate relation : and_function('$1', '$3').
@@ -45,20 +47,21 @@ relation          ->  is_relation : '$1'.
 relation          ->  in_relation : '$1'.
 relation          ->  within_relation : '$1'.
 
-is_relation       ->  expression is_op value : conditional('=', '$1', '$3').
-is_relation       ->  expression is_op not_op value : not_function(conditional('=', '$1', '$4')).
+is_relation       ->  expression is_op value : conditional(equals, '$1', '$3').
+is_relation       ->  expression is_op not_op value : not_function(conditional(equals, '$1', '$4')).
 
-in_relation       ->  expression not_equals range_list : not_function(conditional('=', '$1', '$3')).
-in_relation       ->  expression conditional range_list : conditional('=', '$1', '$3').
-in_relation       ->  expression not_op conditional range_list : not_function(conditional('=', '$1', '$4')).
+in_relation       ->  expression not_equals range_list : not_function(conditional(equals, '$1', '$3')).
+in_relation       ->  expression conditional range_list : conditional(equals, '$1', '$3').
+in_relation       ->  expression not_op in range_list : not_function(conditional(equals, '$1', '$4')).
 
 within_relation   ->  expression within_op range_list : conditional('in', '$1', '$3').
-within_relation   ->  expression not_op within_op range_list : not_function(conditional('=', '$1', '$4')).
+within_relation   ->  expression not_op within_op range_list : not_function(conditional(equals, '$1', '$4')).
 
 conditional       ->  in : 'in'.
 conditional       ->  equals : '='.
-conditional       ->  not_equals : '!='.
 
+% TODO It would be good to keep track of the operands used so we only generate those ones
+% TODO We need to generate variables for the mod expressions to avoid duplicate calculations too
 expression        ->  operand mod value : mod('$1', '$3').                      
 expression        ->  operand : operand('$1').
 
@@ -125,8 +128,8 @@ range(Start, End) ->
 conditional('in', A, B) -> 
   {'in', kernel_context(), [A, B]};
   
-conditional('=', A, B) ->
-  {'=', [], A, B};
+conditional(equals, A, B) ->
+  {'==', [], A, B};
   
 conditional('!=', A, B) ->
   {'!=', [], A, B}.
