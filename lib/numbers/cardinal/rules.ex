@@ -52,9 +52,8 @@ defmodule Cldr.Numbers.Cardinal.Rules do
   end
   
   # Generate the functions to process plural rules
-  @spec do_cardinal(binary, number, number, number, number, number, number) 
-    :: :one | :two | :few | :many | :other
-    
+  @spec do_cardinal(binary, number, number, number, number, number, number) ::
+     :one | :two | :few | :many | :other
   Enum.each Cldr.known_locales, fn (locale) ->
     function_body = cardinal_rules[locale] |> rules_to_condition_statement(__MODULE__)
     function = quote do
