@@ -2,20 +2,13 @@
 -export([parse/1, parse_and_scan/1, format_error/1]).
 -file("src/plural_rules_parser.yrl", 89).
 
--import('Elixir.Float', [floor/1]).
+-export([kernel_context/0]).
 
 % mod function will calculate the modulo in Java fashion
 % for floats and decimals so that mod(4.3, 3) == 1.3
 % The function itself is defined in Cldr.Numbers
 mod(Operand, Value) ->
   {'mod', kernel_context(), [operand(Operand), Value]}.
-    
-% Return a token value
-unwrap({_,_,V}) -> V.
-
-% Elixir Kernel Context
-kernel_context() ->
-  [{context, 'Elixir'}, {import, 'Elixir.Kernel'}].
   
 % Return a reference to an operand
 operand(Operand) ->
@@ -37,16 +30,31 @@ not_function(A) ->
 range(Start, End) ->
   {'..', kernel_context(), [Start, End]}.
   
-% TODO: Since a conditional can be a list or ranges or values
-% we need to unwrap the list into a set of "OR" conditions
-conditional('in', A, B) -> 
+% Inclusion forms
+% -> for a range
+conditional(equals, A, B = {'..', _C, _L}) ->
   {'in', kernel_context(), [A, B]};
   
+% -> for an expression
+% NOTE this will calculate the expression each time which is 
+% inefficienct.  But parser isn't the right place to unwrap that.
+conditional({'mod', [_C], [{_L}]}, A, B) ->
+  {'==', kernel_context(), [A, B]};
+    
+% -> for a value
 conditional(equals, A, B) ->
-  {'==', [], A, B};
+  {'==', kernel_context(), [A, B]}.
   
-conditional('!=', A, B) ->
-  {'!=', [], A, B}.
+% Convert a range list into a postfix 'or' form
+or_range_list(_Operand, [A | B]) when B == [] -> 
+  A;
+
+or_range_list(Operand, [A | B]) ->
+  or_function(conditional(equals, Operand, A), 
+    conditional(equals, Operand, or_range_list(Operand, B)));
+    
+or_range_list(Operand, Value) -> 
+  conditional(equals, Operand, Value).
     
 % Append to build up a list of ranges or values
 append(A, B) when is_list(A) and is_list(B) ->
@@ -60,6 +68,13 @@ append(A, B) when not is_list(A) and is_list(B) ->
   
 append(A, B) when not is_list(A) and not is_list(B) ->
   [A, B].
+
+% Return a token value
+unwrap({_,_,V}) -> V.
+
+% Elixir Kernel Context
+kernel_context() ->
+  [{context, 'Elixir'}, {import, 'Elixir.Kernel'}].
   
 % Atomize a token value
 atomize(Token) ->
@@ -240,7 +255,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/plural_rules_parser.erl", 243).
+-file("src/plural_rules_parser.erl", 258).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -446,7 +461,8 @@ yeccpars2_15(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccgoto_value(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_16(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccgoto_sample_range(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
+ NewStack = yeccpars2_16_(Stack),
+ yeccgoto_sample_range(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
 
 yeccpars2_17(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_17_(Stack),
@@ -776,6 +792,14 @@ yeccpars2_15_(__Stack0) ->
    unwrap ( __1 )
   end | __Stack].
 
+-compile({inline,yeccpars2_16_/1}).
+-file("src/plural_rules_parser.yrl", 83).
+yeccpars2_16_(__Stack0) ->
+ [__1 | __Stack] = __Stack0,
+ [begin
+   ellipsis
+  end | __Stack].
+
 -compile({inline,yeccpars2_17_/1}).
 -file("src/plural_rules_parser.yrl", 72).
 yeccpars2_17_(__Stack0) ->
@@ -853,7 +877,7 @@ yeccpars2_30_(__Stack0) ->
 yeccpars2_37_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   conditional ( in , __1 , __3 )
+   or_range_list ( __1 , __3 )
   end | __Stack].
 
 -compile({inline,yeccpars2_40_/1}).
@@ -877,7 +901,7 @@ yeccpars2_42_(__Stack0) ->
 yeccpars2_45_(__Stack0) ->
  [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( equals , __1 , __4 ) )
+   not_function ( or_range_list ( __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_46_/1}).
@@ -885,7 +909,7 @@ yeccpars2_45_(__Stack0) ->
 yeccpars2_46_(__Stack0) ->
  [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( equals , __1 , __4 ) )
+   not_function ( or_range_list ( __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_47_/1}).
@@ -893,7 +917,7 @@ yeccpars2_46_(__Stack0) ->
 yeccpars2_47_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( equals , __1 , __3 ) )
+   not_function ( or_range_list ( __1 , __3 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_48_/1}).
@@ -901,7 +925,7 @@ yeccpars2_47_(__Stack0) ->
 yeccpars2_48_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   conditional ( equals , __1 , __3 )
+   or_range_list ( __1 , __3 )
   end | __Stack].
 
 -compile({inline,yeccpars2_50_/1}).
@@ -909,7 +933,7 @@ yeccpars2_48_(__Stack0) ->
 yeccpars2_50_(__Stack0) ->
  [__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   not_function ( conditional ( equals , __1 , __4 ) )
+   not_function ( or_range_list ( __1 , __4 ) )
   end | __Stack].
 
 -compile({inline,yeccpars2_51_/1}).
@@ -917,7 +941,7 @@ yeccpars2_50_(__Stack0) ->
 yeccpars2_51_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   conditional ( equals , __1 , __3 )
+   or_range_list ( __1 , __3 )
   end | __Stack].
 
 -compile({inline,yeccpars2_53_/1}).
@@ -929,4 +953,4 @@ yeccpars2_53_(__Stack0) ->
   end | __Stack].
 
 
--file("src/plural_rules_parser.yrl", 154).
+-file("src/plural_rules_parser.yrl", 169).

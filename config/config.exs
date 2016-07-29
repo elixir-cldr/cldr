@@ -30,5 +30,5 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 config :cldr,
   default_locale: "en",
-  locales: ["fr", "en"],
+  locales: ["fr", "en", "ga", "gv", "gd"],
   gettext: Cldr.Gettext

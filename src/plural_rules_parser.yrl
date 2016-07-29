@@ -47,15 +47,15 @@ relation          ->  is_relation : '$1'.
 relation          ->  in_relation : '$1'.
 relation          ->  within_relation : '$1'.
 
-is_relation       ->  expression is_op value : conditional(equals, '$1', '$3').
-is_relation       ->  expression is_op not_op value : not_function(conditional(equals, '$1', '$4')).
+is_relation       ->  expression is_op value : or_range_list('$1', '$3').
+is_relation       ->  expression is_op not_op value : not_function(or_range_list('$1', '$4')).
 
-in_relation       ->  expression not_equals range_list : not_function(conditional(equals, '$1', '$3')).
-in_relation       ->  expression conditional range_list : conditional(equals, '$1', '$3').
-in_relation       ->  expression not_op in range_list : not_function(conditional(equals, '$1', '$4')).
+in_relation       ->  expression not_equals range_list : not_function(or_range_list('$1', '$3')).
+in_relation       ->  expression conditional range_list : or_range_list('$1', '$3').
+in_relation       ->  expression not_op in range_list : not_function(or_range_list('$1', '$4')).
 
-within_relation   ->  expression within_op range_list : conditional('in', '$1', '$3').
-within_relation   ->  expression not_op within_op range_list : not_function(conditional(equals, '$1', '$4')).
+within_relation   ->  expression within_op range_list : or_range_list('$1', '$3').
+within_relation   ->  expression not_op within_op range_list : not_function(or_range_list('$1', '$4')).
 
 conditional       ->  in : 'in'.
 conditional       ->  equals : '='.
@@ -84,24 +84,17 @@ sample_list       ->  sample_range : ['$1'].
 
 sample_range      ->  value tilde value : range('$1', '$3').
 sample_range      ->  value : '$1'.
-sample_range      ->  ellipsis : '$1'.
+sample_range      ->  ellipsis : 'ellipsis'.
 
 Erlang code.
 
--import('Elixir.Float', [floor/1]).
+-export([kernel_context/0]).
 
 % mod function will calculate the modulo in Java fashion
 % for floats and decimals so that mod(4.3, 3) == 1.3
 % The function itself is defined in Cldr.Numbers
 mod(Operand, Value) ->
   {'mod', kernel_context(), [operand(Operand), Value]}.
-    
-% Return a token value
-unwrap({_,_,V}) -> V.
-
-% Elixir Kernel Context
-kernel_context() ->
-  [{context, 'Elixir'}, {import, 'Elixir.Kernel'}].
   
 % Return a reference to an operand
 operand(Operand) ->
@@ -123,16 +116,31 @@ not_function(A) ->
 range(Start, End) ->
   {'..', kernel_context(), [Start, End]}.
   
-% TODO: Since a conditional can be a list or ranges or values
-% we need to unwrap the list into a set of "OR" conditions
-conditional('in', A, B) -> 
+% Inclusion forms
+% -> for a range
+conditional(equals, A, B = {'..', _C, _L}) ->
   {'in', kernel_context(), [A, B]};
   
+% -> for an expression
+% NOTE this will calculate the expression each time which is 
+% inefficienct.  But parser isn't the right place to unwrap that.
+conditional({'mod', [_C], [{_L}]}, A, B) ->
+  {'==', kernel_context(), [A, B]};
+    
+% -> for a value
 conditional(equals, A, B) ->
-  {'==', [], A, B};
+  {'==', kernel_context(), [A, B]}.
   
-conditional('!=', A, B) ->
-  {'!=', [], A, B}.
+% Convert a range list into a postfix 'or' form
+or_range_list(_Operand, [A | B]) when B == [] -> 
+  A;
+
+or_range_list(Operand, [A | B]) ->
+  or_function(conditional(equals, Operand, A), 
+    conditional(equals, Operand, or_range_list(Operand, B)));
+    
+or_range_list(Operand, Value) -> 
+  conditional(equals, Operand, Value).
     
 % Append to build up a list of ranges or values
 append(A, B) when is_list(A) and is_list(B) ->
@@ -146,6 +154,13 @@ append(A, B) when not is_list(A) and is_list(B) ->
   
 append(A, B) when not is_list(A) and not is_list(B) ->
   [A, B].
+
+% Return a token value
+unwrap({_,_,V}) -> V.
+
+% Elixir Kernel Context
+kernel_context() ->
+  [{context, 'Elixir'}, {import, 'Elixir.Kernel'}].
   
 % Atomize a token value
 atomize(Token) ->

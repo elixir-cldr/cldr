@@ -1,0 +1,49 @@
+defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
+  alias Cldr.Numbers.Cardinal.Rules
+  
+  # Obsolete but a good code pattern to know
+  # defmacrop define_do_cardinal(rules, locale) do
+  #   {:defp, context, [arguments]} = quote do: defp do_cardinal(unquote(locale), n, i, v, w, f, t)
+  #   function = {:defp, context, [arguments, [do: rules]]}
+  #   function
+  # end
+  
+  @doc """
+  Converts a map representing a set of plural rules and converts it
+  to an `cond` statement.
+  
+  `rules` is a map of the locale specific branch of the plurals.json
+  file from CLDR.  It is then tokenized, parsed and the resulting ast
+  converted to a `cond` statement.
+  """
+  def rules_to_condition_statement(rules, module) do
+    branches = Enum.map rules, fn({"pluralRule-count-" <> category, rule}) ->
+      {:ok, definition} = Rules.Compiler.parse(rule)
+      {new_ast, _} = set_operand_module(definition[:rule], module)
+      rule_to_cond_branch(new_ast, String.to_atom(category))
+    end
+    {:cond, [],[[do: branches]]}
+  end
+  
+  # Walk the AST and replace the variable context to that of the calling
+  # module
+  defp set_operand_module(ast, module) do
+    Macro.prewalk ast, [], fn(expr, acc) ->
+      new_expr = case expr do
+        {var, [], Elixir} ->
+          {var, [], module}
+        _ ->
+          expr
+      end
+      {new_expr, acc}
+    end
+  end
+  
+  # Transform the rule AST into a branch of a `cond` statement
+  defp rule_to_cond_branch(nil, category) do
+     {:->, [], [[true], category]}
+  end
+  defp rule_to_cond_branch(rule_ast, category) do
+     {:->, [], [[rule_ast], category]}
+  end
+end
