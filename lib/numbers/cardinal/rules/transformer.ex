@@ -41,6 +41,8 @@ defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
       new_expr = case expr do
         {var, [], Elixir} ->
           {var, [], module}
+        {:mod, _context, [operand, value]} ->
+          {:mod, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, value]}
         _ ->
           expr
       end
