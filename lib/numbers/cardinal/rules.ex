@@ -1,5 +1,4 @@
 defmodule Cldr.Numbers.Cardinal.Rules do
-  import Kernel, except: [mod: 2]
   import Cldr.Numbers
   import Cldr.Numbers.Cardinal.Rules.Transformer
   import Cldr.Numbers.Cardinal.Rules.Compiler 
@@ -61,6 +60,7 @@ defmodule Cldr.Numbers.Cardinal.Rules do
     function = quote do
       defp do_cardinal(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)
     end
+    if System.get_env("DEBUG"), do: IO.puts Macro.to_string(function)
     Code.eval_quoted(function, [], __ENV__)
   end
 end

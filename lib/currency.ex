@@ -13,8 +13,7 @@ defmodule Cldr.Currency do
     Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json")
   end
   
-  IO.puts "Generating currencies for locales #{inspect Cldr.known_locales}"
-  IO.puts "Default locale is #{inspect Cldr.default_locale}"
+  IO.puts "Generating currencies for locales #{inspect Cldr.known_locales} with default #{inspect Cldr.default_locale}"
   
   @spec for_code(String.t, String.t) :: %Cldr.Currency{}
   def for_code(currency, locale \\ Cldr.default_locale)
@@ -23,10 +22,13 @@ defmodule Cldr.Currency do
   def for_code(currency, locale) when is_atom(currency),
     do: for_code(Atom.to_string(currency), locale)
   
+  @currencies_path "/#{Cldr.default_locale()}/currencies.json"
+  @currencies_data "/cldr-core/supplemental/currencyData.json"
+  
   # A list of known currencies derived from the data in the
   # default locale
   {:ok, currencies} = 
-    Path.join(Cldr.locale_dir(), "/#{Cldr.default_locale()}/currencies.json") 
+    Path.join(Cldr.locale_dir(), @currencies_path) 
     |> File.read! 
     |> Poison.decode
   @currencies currencies["main"][Cldr.default_locale()]["numbers"]["currencies"] 
@@ -34,7 +36,7 @@ defmodule Cldr.Currency do
     
   # Rounding and fraction information which is independent of locale
   {:ok, rounding} = 
-    Path.join(Cldr.data_dir(), "/cldr-core/supplemental/currencyData.json") 
+    Path.join(Cldr.data_dir(), @currencies_data) 
     |> File.read! 
     |> Poison.decode
   @rounding rounding["supplemental"]["currencyData"]["fractions"]

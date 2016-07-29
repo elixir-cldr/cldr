@@ -22,7 +22,16 @@ defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
       {new_ast, _} = set_operand_module(definition[:rule], module)
       rule_to_cond_branch(new_ast, String.to_atom(category))
     end
-    {:cond, [],[[do: branches]]}
+    {:cond, [],[[do: move_true_branch_to_end(branches)]]}
+  end
+  
+  # We can't assume the order of branches and we need the
+  # `true` branch at the end since it will always match
+  # and hence potentially shadow other branches
+  defp move_true_branch_to_end(branches) do
+    Enum.sort branches, fn ({:->, [], [[ast], _category]}, _other_branch) ->
+      not(ast == true)
+    end
   end
   
   # Walk the AST and replace the variable context to that of the calling
