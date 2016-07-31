@@ -1,6 +1,5 @@
 defmodule Cldr.Currency do
-  defstruct [:code, :name, :one, :many, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding]
-  alias Cldr.Currency
+  # defstruct [:code, :name, :one, :many, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding]
 
   @moduledoc """
   *Implements CLDR currency format functions*
@@ -13,14 +12,14 @@ defmodule Cldr.Currency do
     Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json")
   end
   
-  IO.puts "Generating currencies for locales #{inspect Cldr.known_locales} with default #{inspect Cldr.default_locale}"
+  IO.puts "Generating currencies for #{Enum.count(Cldr.known_locales)} locales #{inspect Cldr.known_locales, limit: 10} with default #{inspect Cldr.default_locale}"
   
-  @spec for_code(String.t, String.t) :: %Cldr.Currency{}
+  @spec for_code(String.t, String.t) :: %{}
   def for_code(currency, locale \\ Cldr.default_locale)
   def for_code(currency, locale) when is_binary(currency),
-    do: do_for_code(String.upcase(currency), locale)
+    do: for_code(String.to_existing_atom(String.upcase(currency)), locale)
   def for_code(currency, locale) when is_atom(currency),
-    do: for_code(Atom.to_string(currency), locale)
+    do: do_for_code(currency, locale)
   
   @currencies_path "/#{Cldr.default_locale()}/currencies.json"
   @currencies_data "/cldr-core/supplemental/currencyData.json"
@@ -56,30 +55,32 @@ defmodule Cldr.Currency do
     
   # For each locale, generate a currency lookup function for 
   # each known currency
-  @spec do_for_code(String.t, String.t) :: %Cldr.Currency{}
+  @spec do_for_code(String.t, String.t) :: %{}
   Enum.each Cldr.known_locales, fn locale ->
     {:ok, currencies} = 
       Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json") 
       |> File.read! 
       |> Poison.decode
       
-    currencies = currencies["main"][locale]["numbers"]["currencies"] 
-    Enum.each currencies, fn {code, currency} ->
-      rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
-      defp do_for_code(unquote(code), unquote(locale)) do
-        %Currency{
-          code:          unquote(code),
-          name:          unquote(currency["displayName"]), 
-          one:           unquote(currency["displayName-count-one"]),
-          many:          unquote(currency["displayName-count-other"]),
-          symbol:        unquote(currency["symbol"]),
-          narrow_symbol: unquote(currency["symbol-alt-narrow"]),
-          digits:        unquote(rounding["_digits"] |> String.to_integer),
-          rounding:      unquote(rounding["_rounding"] |> String.to_integer),
-          cash_digits:   unquote((rounding["_cashDigits"] || rounding["_digits"]) |> String.to_integer),
-          cash_rounding: unquote((rounding["_cashRounding"] || rounding["_rounding"]) |> String.to_integer)
-        }
-      end
+    currencies = currencies["main"][locale]["numbers"]["currencies"]
+    currencies = Enum.map currencies, fn {code, currency} ->
+       rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
+       {String.to_atom(code), %{
+         code:          code,
+         name:          currency["displayName"],
+         one:           currency["displayName-count-one"],
+         many:          currency["displayName-count-other"],
+         symbol:        currency["symbol"],
+         narrow_symbol: currency["symbol-alt-narrow"],
+         digits:        String.to_integer(rounding["_digits"]),
+         rounding:      String.to_integer(rounding["_rounding"]),
+         cash_digits:   String.to_integer(rounding["_cashDigits"] || rounding["_digits"]),
+         cash_rounding: String.to_integer(rounding["_cashRounding"] || rounding["_rounding"])
+         }}
+    end
+    currencies = Enum.into(currencies, %{}) |> Macro.escape
+    defp do_for_code(code, unquote(locale)) when is_atom(code) do
+      unquote(currencies)[code]
     end
   end
   

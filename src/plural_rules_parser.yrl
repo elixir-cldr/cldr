@@ -40,7 +40,7 @@ plural_rule       ->  samples : '$1'.
 condition         ->  and_condition or_predicate condition : or_function('$1', '$3').
 condition         ->  and_condition : '$1'.
 
-and_condition     ->  relation and_predicate relation : and_function('$1', '$3').
+and_condition     ->  relation and_predicate and_condition : and_function('$1', '$3').
 and_condition     ->  relation : '$1'.
 
 relation          ->  is_relation : '$1'.
@@ -117,9 +117,16 @@ range(Start, End) ->
   {'..', kernel_context(), [Start, End]}.
   
 % Inclusion forms
-% -> for a range
-conditional(equals, A, B = {'..', _C, _L}) ->
-  {'in', kernel_context(), [A, B]};
+% -> for a range. call a helper function `within`
+% so we can handle integers and floats/decimals
+% separately
+conditional(equals, A, B = {'..', _C, [_From, _To]}) ->
+  {'within', kernel_context(), [A, B]};
+% {'and', kernel_context(),
+%   [{'and', kernel_context(),
+%    [{'>=', kernel_context(), [A, From]},
+%     {'<=', kernel_context(), [A, To]}]},
+%   {'==', kernel_context(), [{'t', [], 'Elixir'}, 0]}]};
   
 % -> for an expression
 % NOTE this will calculate the expression each time which is 
@@ -132,13 +139,17 @@ conditional(equals, A, B) ->
   {'==', kernel_context(), [A, B]}.
   
 % Convert a range list into a postfix 'or' form
-or_range_list(_Operand, [A | B]) when B == [] -> 
-  A;
-
+% Just two items in the list
+or_range_list(Operand, [A, B]) ->
+  or_function(conditional(equals, Operand, A), 
+              conditional(equals, Operand, B));
+              
+% Many items in a list
 or_range_list(Operand, [A | B]) ->
   or_function(conditional(equals, Operand, A), 
-    conditional(equals, Operand, or_range_list(Operand, B)));
-    
+              or_range_list(Operand, B));
+
+% When theres only one value
 or_range_list(Operand, Value) -> 
   conditional(equals, Operand, Value).
     

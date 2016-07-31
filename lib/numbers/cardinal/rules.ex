@@ -1,7 +1,7 @@
 defmodule Cldr.Numbers.Cardinal.Rules do
   import Cldr.Numbers
-  import Cldr.Numbers.Cardinal.Rules.Transformer
   import Cldr.Numbers.Cardinal.Rules.Compiler 
+  import Cldr.Numbers.Cardinal.Rules.Transformer
   
   # Plural Operand Meanings as defined in CLDR plural rules and used
   # in the generated code
@@ -40,22 +40,45 @@ defmodule Cldr.Numbers.Cardinal.Rules do
   end
   
   # For the case where its a Decimal we guard against a map (which is the underlying representation of
-  # a Decimal)
+  # a Decimal).  Don't use rounding because the precision is specified for Decimals.
   def category(number, locale, rounding) when is_map(number) and is_integer(rounding) and rounding > 0 do
+    # n absolute value of the source number (integer and decimals).
     n = Decimal.abs(number)
-    i = Decimal.round(n, 0)
-    v = rounding
-    t = fraction_as_integer(Decimal.sub(n, i), rounding)
+    
+    # i integer digits of n.    
+    i = Decimal.round(n, 0, :floor)
+    
+    # v number of visible fraction digits in n, with trailing zeros.
+    v = abs(n.exp)
+    
+    # f visible fractional digits in n, with trailing zeros.
+    f = Decimal.sub(n, i) 
+      |> Decimal.mult(Decimal.new(:math.pow(10, v))) 
+      |> Decimal.round(0, :floor) 
+      |> Decimal.to_integer
+    
+    #   t visible fractional digits in n, without trailing zeros.
+    t = remove_trailing_zeroes(f)
+    
+    # w number of visible fraction digits in n, without trailing zeros.
     w = number_of_digits(t)
-    f = t * :math.pow(10, v - w) |> trunc
+    
+    i = Decimal.to_integer(i)
+    n = to_float(n)
+    
+    # IO.puts "n: #{inspect n}; i: #{inspect i}; v: #{inspect v}; w: #{inspect w}; f: #{inspect f}; t: #{inspect t}"
     do_cardinal(locale, n, i, v, w, f, t)
+  end
+  
+  defp to_float(decimal) do
+    decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
   end
   
   # Generate the functions to process plural rules
   @spec do_cardinal(binary, number, number, number, number, number, number) 
     :: :one | :two | :few | :many | :other
     
-  Enum.each Cldr.known_locales, fn (locale) ->
+  Enum.each configured_locales, fn (locale) ->
     function_body = cardinal_rules[locale] |> rules_to_condition_statement(__MODULE__)
     function = quote do
       defp do_cardinal(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)

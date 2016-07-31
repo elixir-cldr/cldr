@@ -43,6 +43,8 @@ defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
           {var, [], module}
         {:mod, _context, [operand, value]} ->
           {:mod, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, value]}
+        {:within, _context, [operand, range]} ->
+          {:within, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, range]}
         _ ->
           expr
       end

@@ -24,7 +24,7 @@ defmodule Cldr.Numbers do
   
   @decimal_10 Decimal.new(10)
   def fraction_as_integer(fraction, rounding) when is_map(fraction) do
-    truncated_fraction = Decimal.round(fraction, 0)
+    truncated_fraction = Decimal.round(fraction, 0, :floor)
     if Decimal.equal?(truncated_fraction, fraction) do
       truncated_fraction |> Decimal.to_integer
     else
@@ -52,6 +52,29 @@ defmodule Cldr.Numbers do
     else
       div(number, 10) |> do_number_of_digits(count + 1)
     end
+  end
+  
+  def remove_trailing_zeroes(number) when number == 0, do: number
+  def remove_trailing_zeroes(number) do
+    if rem(number, 10) != 0 do
+      number
+    else
+      div(number,10) |> remove_trailing_zeroes()
+    end
+  end
+  
+  @doc """
+  Check if the value is within a range.  Handle integer, float and
+  decimal separately.
+  """
+  def within(value, range) when is_integer(value) do
+    value in range
+  end
+  
+  # When checking if a decimal is in a range it is only
+  # valid if there are no decimal places
+  def within(value, first..last) when is_float(value) do
+    value == trunc(value) && value >= first && value <= last
   end
   
   @doc """

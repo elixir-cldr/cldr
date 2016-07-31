@@ -27,6 +27,12 @@ defmodule Cldr do
     @locales
   end
   
+  # If locales is configured to be :all then set locales to be 
+  # the list of available locales
+  if Application.get_env(:cldr, :locales) == :all do
+    Application.put_env(:cldr, :locales, @locales)
+  end
+  
   # The configured Gettext backend
   @gettext            Application.get_env(:cldr, :gettext)
   
@@ -75,7 +81,10 @@ defmodule Cldr do
   In which case the combination of locales "en", "fr" and
   whatever is configured for App.Gettext will be generated.
   """
-  @known_locales  MapSet.intersection(MapSet.new(@configured_locales), MapSet.new(@locales)) |> MapSet.to_list
+  @known_locales  MapSet.intersection(MapSet.new(@configured_locales), MapSet.new(@locales)) 
+    |> MapSet.to_list
+    |> Enum.sort
+    
   @spec known_locales :: [String.t] | []
   def known_locales do
     @known_locales

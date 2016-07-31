@@ -11,6 +11,30 @@ defmodule Cldr.Numbers.Cardinal.Rules.Compiler do
   @cardinal_rules json["supplemental"]["plurals-type-cardinal"]
   
   @doc """
+  The locales for which cardinal rules are defined
+  """
+  @cardinal_rules_locales Map.keys(@cardinal_rules) |> Enum.sort
+  def known_locales do
+    @cardinal_rules_locales
+  end
+  
+  @doc """
+  The configured locales for which plural rules are defined
+  
+  This is the intersection of the Cldr.known_locales and the locales for
+  which plural rules are defined.  There are many Cldr locales which
+  don't have their own plural rules so this list is the intersection
+  of Cldr's configured locales and those that have rules.
+  """
+  @configured_locales  MapSet.intersection(MapSet.new(@cardinal_rules_locales), MapSet.new(Cldr.known_locales)) 
+  |> MapSet.to_list
+  |> Enum.sort
+  
+  def configured_locales do
+    @configured_locales
+  end
+  
+  @doc """
   The cardinal plural rules defined in CLDR.
   """
   @spec cardinal_rules :: Map.t
