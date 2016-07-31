@@ -54,8 +54,11 @@ defmodule Cldr.Numbers do
     end
   end
   
-  def remove_trailing_zeroes(number) when number == 0, do: number
-  def remove_trailing_zeroes(number) do
+  @doc """
+  Remove trailing zeroes from an integer
+  """
+  def remove_trailing_zeroes(number) when is_integer(number) and number == 0, do: number
+  def remove_trailing_zeroes(number) when is_integer(number) do
     if rem(number, 10) != 0 do
       number
     else
@@ -101,16 +104,10 @@ defmodule Cldr.Numbers do
     mod(number, Decimal.new(modulus))
   end
   
-  # % Count the number of trailing zeroes
-  # trailing_zeroes(Num) when is_integer(Num) ->
-  #   do_trailing_zeroes(Num, 0);
-  # trailing_zeroes(Num) when is_float(Num) ->
-  #   trailing_zeroes(trunc(Num)).
-  #
-  # do_trailing_zeroes(Num, Count) ->
-  #   if
-  #     Num == 0 -> Count;
-  #     (Num rem 10) /= 0 -> Count;
-  #     true -> do_trailing_zeroes(Num div 10, Count + 1)
-  #   end.
+  @doc """
+  Convert a decimal to a float
+  """
+  def to_float(decimal) do
+    decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
+  end
 end 

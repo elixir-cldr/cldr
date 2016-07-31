@@ -70,10 +70,6 @@ defmodule Cldr.Numbers.Cardinal.Rules do
     do_cardinal(locale, n, i, v, w, f, t)
   end
   
-  defp to_float(decimal) do
-    decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
-  end
-  
   # Generate the functions to process plural rules
   @spec do_cardinal(binary, number, number, number, number, number, number) 
     :: :one | :two | :few | :many | :other
