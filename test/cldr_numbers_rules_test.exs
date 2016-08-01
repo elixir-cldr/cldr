@@ -1,4 +1,4 @@
-defmodule CldrTest do
+defmodule Cldr.Numbers.Rules.Test do
   use ExUnit.Case
   alias Cldr.Numbers.PluralRules.Compiler
 

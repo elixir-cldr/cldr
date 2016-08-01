@@ -64,28 +64,38 @@ defmodule Cldr.Currency do
       
     currencies = currencies["main"][locale]["numbers"]["currencies"]
     currencies = Enum.map currencies, fn {code, currency} ->
-       rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
-       {String.to_atom(code), %{
-         code:          code,
-         name:          currency["displayName"],
-         one:           currency["displayName-count-one"],
-         many:          currency["displayName-count-other"],
-         symbol:        currency["symbol"],
-         narrow_symbol: currency["symbol-alt-narrow"],
-         digits:        String.to_integer(rounding["_digits"]),
-         rounding:      String.to_integer(rounding["_rounding"]),
-         cash_digits:   String.to_integer(rounding["_cashDigits"] || rounding["_digits"]),
-         cash_rounding: String.to_integer(rounding["_cashRounding"] || rounding["_rounding"])
-         }}
+      rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
+      currency_data = %{
+        code:          code,
+        name:          currency["displayName"],
+        symbol:        currency["symbol"],
+        narrow_symbol: currency["symbol-alt-narrow"],
+        digits:        String.to_integer(rounding["_digits"]),
+        rounding:      String.to_integer(rounding["_rounding"]),
+        cash_digits:   String.to_integer(rounding["_cashDigits"] || rounding["_digits"]),
+        cash_rounding: String.to_integer(rounding["_cashRounding"] || rounding["_rounding"]),
+        count:         %{}
+      }
+
+      @count_types [:one, :two, :few, :many, :other]
+      counts = Enum.reduce @count_types, %{}, fn (category, counts) ->
+        if display_count = currency["displayName-count-#{category}"] do 
+          Map.put(counts, category, display_count)
+        else
+          counts
+        end
+      end
+      {String.to_atom(code), %{currency_data | count: counts}}
     end
     currencies = Enum.into(currencies, %{}) |> Macro.escape
-    defp do_for_code(code, unquote(locale)) when is_atom(code) do
-      unquote(currencies)[code]
+    
+    def for_locale(unquote(locale)) do
+      unquote(currencies)
     end
-  end
-  
-  defp do_for_code(any, locale) when is_binary(any) do
-    raise ArgumentError, message: "Currency #{inspect any} is not known in locale #{inspect locale}"
+    
+    defp do_for_code(code, locale) when is_atom(code) do
+      for_locale(locale)[code]
+    end
   end
 
 end
