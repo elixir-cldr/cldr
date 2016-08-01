@@ -19,7 +19,7 @@ defmodule CldrTest do
   
   defp validate_ordinal do
     Enum.each Cldr.Numbers.Ordinal.configured_locales, fn (locale) ->
-      rules_for_locale(Cldr.Numbers.Ordinal, locale) |> validate_rules(Cldr.Numbers.Cardinal, locale)
+      rules_for_locale(Cldr.Numbers.Ordinal, locale) |> validate_rules(Cldr.Numbers.Ordinal, locale)
     end
   end
   

@@ -1,6 +1,6 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
 defmodule Cldr.Numbers.Ordinal do
-  use Cldr.Numbers.PluralRules, :cardinal
+  use Cldr.Numbers.PluralRules, :ordinal
   
   # Generate the functions to process plural rules
   @spec do_category(binary, number, number, number, number, number, number) 
@@ -11,7 +11,7 @@ defmodule Cldr.Numbers.Ordinal do
     function = quote do
       defp do_category(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)
     end
-    if System.get_env("DEBUG"), do: IO.puts Macro.to_string(function)
+    IO.puts Macro.to_string(function)
     Code.eval_quoted(function, [], __ENV__)
   end
 end
