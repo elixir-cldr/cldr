@@ -67,8 +67,9 @@ defmodule Cldr.Numbers do
   end
   
   @doc """
-  Check if the value is within a range.  Handle integer, float and
-  decimal separately.
+  Check if the value is within a range.
+  
+  Supports integer and float.
   """
   def within(value, range) when is_integer(value) do
     value in range

@@ -1,5 +1,5 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
-defmodule Cldr.Numbers.Cardinal do
+defmodule Cldr.Numbers.Ordinal do
   use Cldr.Numbers.PluralRules, :cardinal
   
   # Generate the functions to process plural rules
@@ -14,4 +14,4 @@ defmodule Cldr.Numbers.Cardinal do
     if System.get_env("DEBUG"), do: IO.puts Macro.to_string(function)
     Code.eval_quoted(function, [], __ENV__)
   end
-end 
+end
