@@ -1,7 +1,7 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
-defmodule Cldr.Numbers do
+defmodule Cldr.Number.Math do
   @default_rounding 2
-  
+    
   @doc """
   Returns the default rounding used by fraction_as_integer/2
   and any other Cldr function that takes a `rounding` argument.
@@ -88,6 +88,7 @@ defmodule Cldr.Numbers do
   function rem/2. For the other cases the modulo is calculated 
   separately.
   """
+  @spec mod(number, integer | float | %Decimal{}) :: integer | float | %Decimal{}
   def mod(number, modulus) when is_integer(number) do
     rem(number, modulus)
   end
@@ -108,6 +109,7 @@ defmodule Cldr.Numbers do
   @doc """
   Convert a decimal to a float
   """
+  @spec to_float(%Decimal{}) :: float
   def to_float(decimal) do
     decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
   end

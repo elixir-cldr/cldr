@@ -1,6 +1,6 @@
 defmodule Cldr.Numbers.Rules.Test do
   use ExUnit.Case
-  alias Cldr.Numbers.PluralRules.Compiler
+  alias Cldr.Number.PluralRules.Compiler
 
   test "Validate Cardinal CLDR plural rules categories against sample data" do
     validate_cardinal()
@@ -12,14 +12,14 @@ defmodule Cldr.Numbers.Rules.Test do
   
   # Run sample tests against all configured locales
   defp validate_cardinal do
-    Enum.each Cldr.Numbers.Cardinal.configured_locales, fn (locale) ->
-      rules_for_locale(Cldr.Numbers.Cardinal, locale) |> validate_rules(Cldr.Numbers.Cardinal, locale)
+    Enum.each Cldr.Number.Cardinal.configured_locales, fn (locale) ->
+      rules_for_locale(Cldr.Number.Cardinal, locale) |> validate_rules(Cldr.Number.Cardinal, locale)
     end
   end
   
   defp validate_ordinal do
-    Enum.each Cldr.Numbers.Ordinal.configured_locales, fn (locale) ->
-      rules_for_locale(Cldr.Numbers.Ordinal, locale) |> validate_rules(Cldr.Numbers.Ordinal, locale)
+    Enum.each Cldr.Number.Ordinal.configured_locales, fn (locale) ->
+      rules_for_locale(Cldr.Number.Ordinal, locale) |> validate_rules(Cldr.Number.Ordinal, locale)
     end
   end
   
@@ -61,7 +61,7 @@ defmodule Cldr.Numbers.Rules.Test do
   end
   
   defp validate(module, locale, int, expected) do
-    got = apply(module, :category, [int, locale])
+    got = apply(module, :plural_rule, [int, locale])
     # unless expected == got do
     #   IO.puts "Locale: #{inspect locale} for #{inspect int} should be #{inspect expected} but got #{inspect got}"
     # end
@@ -71,12 +71,12 @@ defmodule Cldr.Numbers.Rules.Test do
   # We're validating a range.  But for a decimal the range is infinite.
   # Just validate `from` and `to` for now
   defp validate_decimal_range(module, locale, from, to, expected) do
-    got = apply(module, :category, [from, locale])
+    got = apply(module, :plural_rule, [from, locale])
     assert expected == got
     # unless expected == got do
     #   IO.puts "Locale: #{inspect locale} for #{inspect from} should be #{inspect expected} but got #{inspect got}"
     # end
-    got = apply(module, :category, [to, locale])
+    got = apply(module, :plural_rule, [to, locale])
     assert expected == got
     # unless expected == got do
     #   IO.puts "Locale: #{inspect locale} for #{inspect to} should be #{inspect expected} but got #{inspect got}"
@@ -84,7 +84,7 @@ defmodule Cldr.Numbers.Rules.Test do
   end
   
   defp rules_for_locale(module, locale) do
-    Enum.map apply(module, :rules, [])[locale], fn({"pluralRule-count-" <> category, rule}) ->
+    Enum.map apply(module, :plural_rules, [])[locale], fn({"pluralRule-count-" <> category, rule}) ->
       {:ok, definition} = Compiler.parse(rule)
       {String.to_atom(category), definition}
     end

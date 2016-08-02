@@ -1,4 +1,4 @@
-defmodule Cldr.Numbers.PluralRules do
+defmodule Cldr.Number.PluralRules do
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
       raise ArgumentError, "Invalid option #{inspect opts}.  :cardinal or :ordinal are the only valid options"
@@ -8,9 +8,9 @@ defmodule Cldr.Numbers.PluralRules do
     plurals_type = if opts == :cardinal, do: "cardinal", else: "ordinal"
     
     quote do
-      import Cldr.Numbers
-      import Cldr.Numbers.PluralRules.Compiler 
-      import Cldr.Numbers.PluralRules.Transformer
+      import Cldr.Number.Math
+      import Cldr.Number.PluralRules.Compiler 
+      import Cldr.Number.PluralRules.Transformer
       
       {:ok, json} = Path.join(__DIR__, "/../../data/cldr-core/supplemental/#{unquote(plurals_filename)}.json") 
         |> File.read! 
@@ -44,8 +44,8 @@ defmodule Cldr.Numbers.PluralRules do
       @doc """
       The plural rules defined in CLDR.
       """
-      @spec rules :: Map.t
-      def rules do
+      @spec plural_rules :: Map.t
+      def plural_rules do
         @rules
       end
       
@@ -67,27 +67,27 @@ defmodule Cldr.Numbers.PluralRules do
       in a given locale fits into.  This category can then be used to format the
       number or currency
       """
-      def category(number, locale \\ Cldr.default_locale(), rounding \\ Cldr.Numbers.default_rounding())
-      def category(number, locale, _rounding) when is_integer(number) do
+      def plural_rule(number, locale \\ Cldr.default_locale(), rounding \\ Cldr.Number.Math.default_rounding())
+      def plural_rule(number, locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
         v = 0; w = 0; f = 0; t = 0
-        do_category(locale, n, i, v, w, f, t)
+        do_plural_rule(locale, n, i, v, w, f, t)
       end
   
-      def category(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
+      def plural_rule(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
         n = abs(number) |> Float.round(rounding)
         i = trunc(n)
         v = rounding
         t = fraction_as_integer(n - i, rounding)
         w = number_of_digits(t)
         f = t * :math.pow(10, v - w) |> trunc
-        do_category(locale, n, i, v, w, f, t)
+        do_plural_rule(locale, n, i, v, w, f, t)
       end
   
       # For the case where its a Decimal we guard against a map (which is the underlying representation of
       # a Decimal).  Don't use rounding because the precision is specified for Decimals.
-      def category(number, locale, rounding) when is_map(number) and is_integer(rounding) and rounding > 0 do
+      def plural_rule(number, locale, rounding) when is_map(number) and is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
     
@@ -113,7 +113,7 @@ defmodule Cldr.Numbers.PluralRules do
         n = to_float(n)
     
         # IO.puts "n: #{inspect n}; i: #{inspect i}; v: #{inspect v}; w: #{inspect w}; f: #{inspect f}; t: #{inspect t}"
-        do_category(locale, n, i, v, w, f, t)
+        do_plural_rule(locale, n, i, v, w, f, t)
       end
     end
   end

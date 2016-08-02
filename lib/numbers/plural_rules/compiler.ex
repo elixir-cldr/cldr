@@ -1,5 +1,5 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
-defmodule Cldr.Numbers.PluralRules.Compiler do
+defmodule Cldr.Number.PluralRules.Compiler do
   @moduledoc """
   Generate functions from CLDR plural rules that can be used to determine 
   which pularization rule to be used for a given number.

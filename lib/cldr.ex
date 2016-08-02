@@ -1,4 +1,6 @@
 defmodule Cldr do
+  @type locale :: String.t
+  
   # Treat this as the canonical definition of what locales are available
   @locale_dir Path.join(__DIR__, "/../data/cldr-numbers-full/main")
   def locale_dir do
@@ -107,4 +109,5 @@ defmodule Cldr do
   def locale_exists?(locale) when is_binary(locale) do
     Enum.find(locales(), &(&1 == locale))
   end
+
 end

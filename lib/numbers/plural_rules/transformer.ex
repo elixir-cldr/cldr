@@ -1,5 +1,5 @@
-defmodule Cldr.Numbers.PluralRules.Transformer do
-  alias Cldr.Numbers.PluralRules
+defmodule Cldr.Number.PluralRules.Transformer do
+  alias Cldr.Number.PluralRules
   
   # Obsolete but a good code pattern to know
   # defmacrop define_do_cardinal(rules, locale) do
@@ -42,9 +42,9 @@ defmodule Cldr.Numbers.PluralRules.Transformer do
         {var, [], Elixir} ->
           {var, [], module}
         {:mod, _context, [operand, value]} ->
-          {:mod, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, value]}
+          {:mod, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, value]}
         {:within, _context, [operand, range]} ->
-          {:within, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, range]}
+          {:within, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, range]}
         _ ->
           expr
       end
