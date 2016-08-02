@@ -1,4 +1,4 @@
-defmodule Cldr.Number.Format do 
+defmodule Cldr.Number.Formats do 
   @moduledoc """
   Functions for introspecting on the number formats and
   number systems in CLDR.
