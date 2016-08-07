@@ -25,7 +25,7 @@ defmodule Cldr.Number.Metadata do
   
   @doc false
   def decimal_format_list do
-    Enum.map(decimal_formats, fn {_locale, formats} -> Map.values(formats) end)
+    Enum.map(decimal_formats(), fn {_locale, formats} -> Map.values(formats) end)
     |> Enum.map(&(hd(&1)))
     |> Enum.map(&(Map.values(&1)))
     |> List.flatten
