@@ -49,6 +49,19 @@ defmodule Cldr.Number.PluralRules do
         @rules
       end
       
+      @doc """
+      Return the plural rules for a locale.
+      
+      The rules are returned in AST form after parsing.
+      """
+      @spec plural_rules_for(Cldr.locale) :: %{}
+      def plural_rules_for(locale) do
+        Enum.map plural_rules[locale], fn({"pluralRule-count-" <> category, rule}) ->
+          {:ok, definition} = parse(rule)
+          {String.to_atom(category), definition}
+        end
+      end
+      
       # Plural Operand Meanings as defined in CLDR plural rules and used
       # in the generated code
       #

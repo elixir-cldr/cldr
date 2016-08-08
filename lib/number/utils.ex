@@ -1,6 +1,7 @@
 if Mix.env == :dev do
   defmodule Cldr.Number.Utils do
     alias Cldr.Number
+    alias Cldr.File
   
     # Just checking if we have more than one scientific or percentage
     # formats.  As of this writing there are no formats beyond "standard"
@@ -10,7 +11,7 @@ if Mix.env == :dev do
     def format_inspector(locales \\ Cldr.known_locales()) do
       Enum.each locales, fn (locale) ->
         Enum.each Number.System.number_systems_for(locale), fn (system) ->
-          numbers = Number.System.numbers_for(locale)
+          numbers = File.read(:numbers, locale)
           number_system = elem(system, 1)
           if scientific = numbers["scientificFormats-numberSystem-#{number_system}"] do
             if (count = Enum.count(scientific)) > 1 do
