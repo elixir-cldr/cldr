@@ -1,7 +1,7 @@
 defmodule Cldr.Number.System do
   alias Cldr.File
 
-  # defstruct [:number_system, :type, :digits, :rules]
+  defstruct [:name, :type, :digits, :rules]
     
   @default_number_system  :default
  
@@ -76,36 +76,24 @@ defmodule Cldr.Number.System do
   Examples:
   
       iex> Cldr.Number.System.number_systems_for "en"
-      %{default: %{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
-      native: %{digits: "0123456789", name: "latn", rules: nil, type: :numeric}}
+      %{default: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
+      native: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric}}
       
       iex> Cldr.Number.System.number_systems_for "th"
-      %{default: %{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
-      native: %{digits: "๐๑๒๓๔๕๖๗๘๙", name: "thai", rules: nil,
+      %{default: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
+      native: %Cldr.Number.System{digits: "๐๑๒๓๔๕๖๗๘๙", name: "thai", rules: nil,
       type: :numeric}}
   """
   @spec number_systems_for(Cldr.locale) :: [String.t]
   Enum.each Cldr.known_locales, fn (locale) ->
-    numbers = File.read(:numbers, locale)
-    number_systems = Map.merge(%{"default" => numbers["defaultNumberingSystem"]}, numbers["otherNumberingSystems"])
-    |> Enum.map(fn {type, system} -> {String.to_atom(type), @number_systems[system]} end)
-    |> Enum.into(%{})
-    |> Macro.escape
-    
+    number_systems = File.read(:number_systems, locale) |> Macro.escape
     def number_systems_for(unquote(locale)) do
       unquote(number_systems)
-    end
-    
-    def numbers_for(unquote(locale)) do
-      unquote(Macro.escape(numbers))
     end
   end
   
   def number_systems_for(locale) do
     raise ArgumentError, "Locale #{inspect locale} is not known."
   end
-  
-  def numbers_for(locale) do
-    raise ArgumentError, "Locale #{inspect locale} is not known."
-  end
+
 end 

@@ -46,7 +46,15 @@ defmodule Cldr.Config do
   def full_or_modern do
     @full_or_modern
   end
-    
+  
+  @doc """
+  Return the path name of the CLDR data directory.
+  """
+  @data_dir Path.join(__DIR__, "/../../data")
+  def data_dir do
+    @data_dir
+  end
+  
   @doc """
   Return the configured `Gettext` module name or `nil`.
   """
@@ -89,20 +97,6 @@ defmodule Cldr.Config do
   end
   
   @doc """
-  Returns a list of all locales configured in the `config.exs`
-  file.
-  
-  In order of priority return either:
-  
-  * The list of locales configured configured in mix.exs if any
-  * The default locale
-  """
-  @spec configured_locales :: [String.t]
-  def configured_locales do
-    Application.get_env(:cldr, :locales) || [default_locale()]
-  end
-  
-  @doc """
   Returns a list of all locales in the CLDR repository.
   
   Returns a list of the complete locales list in CLDR, irrespective
@@ -111,12 +105,37 @@ defmodule Cldr.Config do
   Any configured locales that are not present in this list will be
   ignored.
   """
+  @locales_path Path.join(@data_dir, "cldr-core/availableLocales.json")
+  {:ok, locales} = File.read!(@locales_path) |> Poison.decode
+  @all_locales locales["availableLocales"][@full_or_modern]
   @spec all_locales :: [String.t]
   def all_locales do
-    locales_path = Path.join(data_dir(), "cldr-core/availableLocales.json")
-    {:ok, locales} = File.read!(locales_path)
-    |> Poison.decode
-    locales["availableLocales"][full_or_modern()]
+    @all_locales
+  end
+  
+  @doc """
+  Returns a list of all locales configured in the `config.exs`
+  file.
+  
+  In order of priority return either:
+  
+  * The list of locales configured configured in mix.exs if any
+  * The default locale
+  
+  If the configured locales is `:all` then all locales
+  in CLDR are configured.
+  
+  This is not recommended since all 511 locales take
+  quite some time (minutes) to compile. It is however
+  helpful for testing Cldr.
+  """
+  @spec configured_locales :: [String.t]
+  def configured_locales do
+    case app_locales = Application.get_env(:cldr, :locales) do
+      :all  -> @all_locales
+      nil   -> [default_locale()]
+      _     -> app_locales
+    end
   end
   
   @doc """
@@ -141,13 +160,6 @@ defmodule Cldr.Config do
   def requested_locales do
     (configured_locales ++ gettext_locales ++ [default_locale])
     |> Enum.uniq
-  end
-  
-  @doc """
-  Return the path name of the CLDR data directory.
-  """
-  def data_dir do
-    Path.join(__DIR__, "/../../data")
   end
   
   @doc """

@@ -3,12 +3,6 @@ defmodule Cldr do
   
   @type locale :: String.t
   
-  # If locales is configured to be :all then set locales to be 
-  # the list of available locales
-  if Application.get_env(:cldr, :locales) == :all do
-    Application.put_env(:cldr, :locales, Config.all_locales)
-  end
-  
   @warn_if_greater_than 100
   @known_locale_count Enum.count(Config.known_locales)
   IO.puts "Generating functions for #{@known_locale_count} locales #{inspect Config.known_locales, limit: 5} with default #{inspect Config.default_locale}"
@@ -106,7 +100,12 @@ defmodule Cldr do
   
   @doc """
   Returns a boolean indicating if the specified locale
-  is available in Cldr
+  is available in CLDR.
+  
+  The return value depends on whether the locale is
+  defined in the CLDR repository.  It does not mean
+  the locale is configured for Cldr.  See also
+  `Cldr.known_locale?/1`.
   """
   @spec locale_exists?(locale) :: boolean
   def locale_exists?(locale) when is_binary(locale) do

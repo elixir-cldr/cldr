@@ -15,5 +15,4 @@ defmodule Cldr.Number do
   def to_string(number, _locale, :scientific) do
     IO.puts inspect(number)
   end
-  
 end 

@@ -1,7 +1,10 @@
 defmodule Cldr.Currency do
-  alias Cldr.Currency.Metadata
+  alias Cldr.File
   defstruct [:code, :name, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding, :count]
   
+  @type format :: :standard | :accounting | :short | :long | :percent | :scientific
+  @type code :: atom | String.t
+ 
   @doc """
   Returns a list of all known currency codes.
   
@@ -10,26 +13,30 @@ defmodule Cldr.Currency do
       iex> Cldr.Currency.known_currencies |> Enum.count
       297
   """
-  defdelegate known_currencies,      to: Metadata
+  @currency_codes File.read(:currency_codes)
+  def known_currencies do
+    @currency_codes
+  end
   
   @doc """
   Returns a boolean indicating if the supplied currency code is known.
   
   Examples:
   
-      iex> Cldr.Currency.known_currency? :AUD
+      iex> Cldr.Currency.known_currency? "AUD"
       true
       
       iex> Cldr.Currency.known_currency? "GGG"
       false
   """
-  defdelegate known_currency?(code), to: Metadata
-  
+  @spec known_currency?(code) :: boolean
+  def known_currency?(currency) when is_binary(currency) do
+    !!Enum.find(known_currencies, &(&1 == currency))
+  end 
   @doc """
   Returns the currency metadata for the requested currency code.
   
-  The currency code can be either an `atom` or `string` representation
-  of an ISO 4217 currency code.
+  The currency code is a string representation of an ISO 4217 currency code.
   
   Examples:
   
@@ -38,15 +45,31 @@ defmodule Cldr.Currency do
       count: %{one: "Australian dollar", other: "Australian dollars"}, digits: 2,
       name: "Australian Dollar", narrow_symbol: "$", rounding: 0, symbol: "A$"}
       
-      iex> Cldr.Currency.for_code :thb
+      iex> Cldr.Currency.for_code "THB"
       %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "THB",
       count: %{one: "Thai baht", other: "Thai baht"}, digits: 2, name: "Thai Baht",
       narrow_symbol: "฿", rounding: 0, symbol: "THB"}
   """
-  defdelegate for_code(code),        to: Metadata
+  @spec for_code(code, Cldr.locale) :: %{}
+  def for_code(currency, locale \\ Cldr.default_locale), do: do_for_code(currency, locale)
   
-  @type format :: :standard | :accounting | :short | :long | :percent | :scientific
-  @type code :: atom | String.t
+  @doc """
+  Returns the currency metadata for a locale.
+  """
+  @spec for_locale(Cldr.locale) :: %{}
+  def for_locale(locale \\ Cldr.default_locale())
+  
+  Enum.each Cldr.known_locales(), fn locale ->
+    currencies = File.read(:currency, locale) |> Macro.escape
+    def for_locale(unquote(locale)) do
+      unquote(currencies)
+    end
+  end
+  
+  @spec do_for_code(code, Cldr.locale) :: %{}
+  defp do_for_code(code, locale) when is_binary(code) do
+    for_locale(locale)[code]
+  end
   
   # @spec to_string(number, code, Cldr.locale, format) :: String.t
   # def to_string(number, code, locale \\ Cldr.default_locale(), options \\ :standard)

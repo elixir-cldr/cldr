@@ -1,4 +1,7 @@
 defmodule Cldr.Number.Format do
+  defstruct [:standard, :currency, :accounting, :scientific, :percent]
+  alias Cldr.File
+  
   @moduledoc """
   Functions for introspecting on the number formats in CLDR.
   
@@ -8,19 +11,32 @@ defmodule Cldr.Number.Format do
   Details of the number formats are described in the 
   [Unicode documentation](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
   """
-  @type format :: String.t
   
-  @decimal_formats      Cldr.Number.Metadata.decimal_formats
-  @decimal_format_list  Cldr.Number.Metadata.decimal_format_list
-    
+  @type format :: String.t
+
   @doc """
   The decimal formats in configured locales.
+  
+  Example:
+  
+      Cldr.Number.Format.decimal_formats              
+      %{"en" => %{
+          latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
+           currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
+           standard: "#,##0.###"}},
+        "th" => %{
+          latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
+           currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
+           standard: "#,##0.###"},
+          thai: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
+           currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
+           standard: "#,##0.###"}}}
   """
-  @spec decimal_formats :: %{}
+  @decimal_formats File.read(:decimal_formats)
   def decimal_formats do
     @decimal_formats
   end
-  
+
   @doc """
   Returns the list of decimal formats in the 
   CLDR repository.
@@ -28,19 +44,27 @@ defmodule Cldr.Number.Format do
   Example:
   
       iex(1)> Cldr.Number.Format.decimal_format_list
-      ["#,##0.00¤", "#,##0%", "#E0", "#,##0.###",
-      "#,##0.00 ¤;(#,##0.00 ¤)", "#,##0.00 ¤", "#,##0 %",
-      "¤#,##0.00;¤-#,##0.00", "#", "¤ #,##0.00",
-      "¤#,##0.00;(¤#,##0.00)", "¤#,##0.00", "¤ #0.00", "#0%",
-      "0.000000E+000", "#0.######", "¤ #,##,##0.00", "#,##,##0%",
-      "#,##,##0.###", "¤ #,##0.00;(¤ #,##0.00)",
-      "¤ #,##0.00;¤ -#,##0.00", "#0.00 ¤",
-      "¤ #,##0.00;¤-#,##0.00", "‎¤#,##0.00;‎(¤#,##0.00)",
-      "‎¤#,##0.00", "¤#,##,##0.00;(¤#,##,##0.00)", "¤#,##,##0.00",
-      "[#E0]", "#,##,##0.00¤;(#,##,##0.00¤)", "#,##,##0.00¤",
-      "#,##,##0 %", "¤#,##0.00;¤- #,##0.00", "%#,##0",
-      "¤ #,##0.00;¤ #,##0.00-", "% #,##0", "#,##0.00¤;(#,##0.00¤)"]
+      ["#", "#,##,##0%", "#,##,##0.###", "#,##,##0.00¤",
+      "#,##,##0.00¤;(#,##,##0.00¤)", "#,##,##0 %", "#,##0%",
+      "#,##0.###", "#,##0.00 ¤", "#,##0.00 ¤;(#,##0.00 ¤)",
+      "#,##0.00¤", "#,##0.00¤;(#,##0.00¤)", "#,##0 %", "#0%",
+      "#0.######", "#0.00 ¤", "#E0", "%#,##0", "% #,##0",
+      "0.000000E+000", "[#E0]", "¤#,##,##0.00",
+      "¤#,##,##0.00;(¤#,##,##0.00)", "¤#,##0.00",
+      "¤#,##0.00;(¤#,##0.00)", "¤#,##0.00;¤-#,##0.00",
+      "¤#,##0.00;¤- #,##0.00", "¤ #,##,##0.00", "¤ #,##0.00",
+      "¤ #,##0.00;(¤ #,##0.00)", "¤ #,##0.00;¤-#,##0.00",
+      "¤ #,##0.00;¤ #,##0.00-", "¤ #,##0.00;¤ -#,##0.00",
+      "¤ #0.00", "‎¤#,##0.00", "‎¤#,##0.00;‎(¤#,##0.00)"]
   """
+  @decimal_format_list Enum.map(@decimal_formats, fn {_locale, formats} -> Map.values(formats) end)
+    |> Enum.map(&(hd(&1)))
+    |> Enum.map(&(Map.values(&1)))
+    |> List.flatten
+    |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
+    |> Enum.uniq
+    |> Enum.sort
+    
   @spec decimal_format_list :: [format]
   def decimal_format_list do
     @decimal_format_list
@@ -53,17 +77,17 @@ defmodule Cldr.Number.Format do
   Examples:
   
       iex(2)> Cldr.Number.Format.decimal_formats_for "en"
-      %{latn: %{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
+      %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
       
       iex(1)> Cldr.Number.Format.decimal_formats_for "th"
-      %{latn: %{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
+      %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"},
-      thai: %{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
+      thai: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
       
       iex(2)> Cldr.Number.Format.decimal_formats_for "th", :thai
-      %{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
+      %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}
   """
   @spec decimal_formats_for(Cldr.locale) :: Map.t
