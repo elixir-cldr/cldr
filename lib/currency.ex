@@ -1,90 +1,74 @@
 defmodule Cldr.Currency do
-  defstruct [:code, :name, :one, :many, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding]
-  alias Cldr.Currency
-
-  @moduledoc """
-  *Implements CLDR currency format functions*
+  alias Cldr.Currency.Metadata
+  defstruct [:code, :name, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding, :count]
   
-  Note that the actual data used is the json version of cldr, not the LDML version described in the standard.  
-  Conversion is done using the Unicode Consortiums [ldml2json](http://cldr.unicode.org/tools) tool.
+  @doc """
+  Returns a list of all known currency codes.
+  
+  Example:
+  
+      iex> Cldr.Currency.known_currencies |> Enum.count
+      297
   """
-  @spec locale_path(binary) :: String.t
-  def locale_path(locale) when is_binary(locale) do
-    Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json")
-  end
+  defdelegate known_currencies,      to: Metadata
   
-  IO.puts "Generating currencies for locales #{inspect Cldr.known_locales} with default #{inspect Cldr.default_locale}"
+  @doc """
+  Returns a boolean indicating if the supplied currency code is known.
   
-  @spec for_code(String.t, String.t) :: %Cldr.Currency{}
-  def for_code(currency, locale \\ Cldr.default_locale)
-  def for_code(currency, locale) when is_binary(currency),
-    do: do_for_code(String.upcase(currency), locale)
-  def for_code(currency, locale) when is_atom(currency),
-    do: for_code(Atom.to_string(currency), locale)
+  Examples:
   
-  @currencies_path "/#{Cldr.default_locale()}/currencies.json"
-  @currencies_data "/cldr-core/supplemental/currencyData.json"
-  
-  # A list of known currencies derived from the data in the
-  # default locale
-  {:ok, currencies} = 
-    Path.join(Cldr.locale_dir(), @currencies_path) 
-    |> File.read! 
-    |> Poison.decode
-  @currencies currencies["main"][Cldr.default_locale()]["numbers"]["currencies"] 
-    |> Enum.map(fn {code, _currency} -> code end)
-    
-  # Rounding and fraction information which is independent of locale
-  {:ok, rounding} = 
-    Path.join(Cldr.data_dir(), @currencies_data) 
-    |> File.read! 
-    |> Poison.decode
-  @rounding rounding["supplemental"]["currencyData"]["fractions"]
-  
-  def known_currencies do
-    @currencies
-  end
-  defdelegate currency_codes, to: __MODULE__, as: :known_currencies
-
-  def known_currency?(currency) when is_binary(currency) do
-    upcase_currency = String.upcase(currency)
-    !!Enum.find(known_currencies, &(&1 == upcase_currency))
-  end
-  def known_currency?(currency) when is_atom(currency) do
-    known_currency?(Atom.to_string(currency))
-  end
-    
-  # For each locale, generate a currency lookup function for 
-  # each known currency
-  @spec do_for_code(String.t, String.t) :: %Cldr.Currency{}
-  Enum.each Cldr.known_locales, fn locale ->
-    {:ok, currencies} = 
-      Path.join(Cldr.locale_dir(), "/#{locale}/currencies.json") 
-      |> File.read! 
-      |> Poison.decode
+      iex> Cldr.Currency.known_currency? :AUD
+      true
       
-    currencies = currencies["main"][locale]["numbers"]["currencies"] 
-    Enum.each currencies, fn {code, currency} ->
-      rounding = Map.merge(@rounding["DEFAULT"], (@rounding[code] || %{}))
-      defp do_for_code(unquote(code), unquote(locale)) do
-        %Currency{
-          code:          unquote(code),
-          name:          unquote(currency["displayName"]), 
-          one:           unquote(currency["displayName-count-one"]),
-          many:          unquote(currency["displayName-count-other"]),
-          symbol:        unquote(currency["symbol"]),
-          narrow_symbol: unquote(currency["symbol-alt-narrow"]),
-          digits:        unquote(rounding["_digits"] |> String.to_integer),
-          rounding:      unquote(rounding["_rounding"] |> String.to_integer),
-          cash_digits:   unquote((rounding["_cashDigits"] || rounding["_digits"]) |> String.to_integer),
-          cash_rounding: unquote((rounding["_cashRounding"] || rounding["_rounding"]) |> String.to_integer)
-        }
-      end
-    end
-  end
+      iex> Cldr.Currency.known_currency? "GGG"
+      false
+  """
+  defdelegate known_currency?(code), to: Metadata
   
-  defp do_for_code(any, locale) when is_binary(any) do
-    raise ArgumentError, message: "Currency #{inspect any} is not known in locale #{inspect locale}"
-  end
+  @doc """
+  Returns the currency metadata for the requested currency code.
+  
+  The currency code can be either an `atom` or `string` representation
+  of an ISO 4217 currency code.
+  
+  Examples:
+  
+      iex> Cldr.Currency.for_code "AUD" 
+      %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "AUD",
+      count: %{one: "Australian dollar", other: "Australian dollars"}, digits: 2,
+      name: "Australian Dollar", narrow_symbol: "$", rounding: 0, symbol: "A$"}
+      
+      iex> Cldr.Currency.for_code :thb
+      %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "THB",
+      count: %{one: "Thai baht", other: "Thai baht"}, digits: 2, name: "Thai Baht",
+      narrow_symbol: "฿", rounding: 0, symbol: "THB"}
+  """
+  defdelegate for_code(code),        to: Metadata
+  
+  @type format :: :standard | :accounting | :short | :long | :percent | :scientific
+  @type code :: atom | String.t
+  
+  # @spec to_string(number, code, Cldr.locale, format) :: String.t
+  # def to_string(number, code, locale \\ Cldr.default_locale(), options \\ :standard)
+  #
+  # # Use the formal from currencyFormat
+  # def to_string(number, code, locale, :standard) do
+  #   IO.puts inspect(number)
+  # end
+  #
+  # # Use the accounting format
+  # def to_string(number, code, locale, :accounting) do
+  #   IO.puts inspect(number)
+  # end
+  #
+  # # Use the short format
+  # def to_string(number, code, locale, :short) do
+  #   IO.puts inspect(number)
+  # end
+  #
+  # # Use the format from Decimal format with the text expansion
+  # def to_string(number, code, locale, :long) do
+  #   IO.puts inspect(number)
+  # end
 
 end

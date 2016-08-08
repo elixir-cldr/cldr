@@ -1,7 +1,7 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
-defmodule Cldr.Numbers do
+defmodule Cldr.Number.Math do
   @default_rounding 2
-  
+    
   @doc """
   Returns the default rounding used by fraction_as_integer/2
   and any other Cldr function that takes a `rounding` argument.
@@ -24,7 +24,7 @@ defmodule Cldr.Numbers do
   
   @decimal_10 Decimal.new(10)
   def fraction_as_integer(fraction, rounding) when is_map(fraction) do
-    truncated_fraction = Decimal.round(fraction, 0)
+    truncated_fraction = Decimal.round(fraction, 0, :floor)
     if Decimal.equal?(truncated_fraction, fraction) do
       truncated_fraction |> Decimal.to_integer
     else
@@ -55,12 +55,40 @@ defmodule Cldr.Numbers do
   end
   
   @doc """
+  Remove trailing zeroes from an integer
+  """
+  def remove_trailing_zeroes(number) when is_integer(number) and number == 0, do: number
+  def remove_trailing_zeroes(number) when is_integer(number) do
+    if rem(number, 10) != 0 do
+      number
+    else
+      div(number,10) |> remove_trailing_zeroes()
+    end
+  end
+  
+  @doc """
+  Check if the value is within a range.
+  
+  Supports integer and float.
+  """
+  def within(value, range) when is_integer(value) do
+    value in range
+  end
+  
+  # When checking if a decimal is in a range it is only
+  # valid if there are no decimal places
+  def within(value, first..last) when is_float(value) do
+    value == trunc(value) && value >= first && value <= last
+  end
+  
+  @doc """
   Calculates the modulus of a number (integer, float, decimal)
   
   For the case of an integer the result is that of the BIF
   function rem/2. For the other cases the modulo is calculated 
   separately.
   """
+  @spec mod(number, integer | float | %Decimal{}) :: integer | float | %Decimal{}
   def mod(number, modulus) when is_integer(number) do
     rem(number, modulus)
   end
@@ -78,16 +106,11 @@ defmodule Cldr.Numbers do
     mod(number, Decimal.new(modulus))
   end
   
-  # % Count the number of trailing zeroes
-  # trailing_zeroes(Num) when is_integer(Num) ->
-  #   do_trailing_zeroes(Num, 0);
-  # trailing_zeroes(Num) when is_float(Num) ->
-  #   trailing_zeroes(trunc(Num)).
-  #
-  # do_trailing_zeroes(Num, Count) ->
-  #   if
-  #     Num == 0 -> Count;
-  #     (Num rem 10) /= 0 -> Count;
-  #     true -> do_trailing_zeroes(Num div 10, Count + 1)
-  #   end.
+  @doc """
+  Convert a decimal to a float
+  """
+  @spec to_float(%Decimal{}) :: float
+  def to_float(decimal) do
+    decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
+  end
 end 

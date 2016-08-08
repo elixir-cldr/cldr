@@ -1,22 +1,9 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
-defmodule Cldr.Numbers.Cardinal.Rules.Compiler do
+defmodule Cldr.Number.PluralRules.Compiler do
   @moduledoc """
   Generate functions from CLDR plural rules that can be used to determine 
   which pularization rule to be used for a given number.
   """
-  
-  {:ok, json} = Path.join(__DIR__, "/../../../../data/cldr-core/supplemental/plurals.json") 
-    |> File.read! 
-    |> Poison.decode
-  @cardinal_rules json["supplemental"]["plurals-type-cardinal"]
-  
-  @doc """
-  The cardinal plural rules defined in CLDR.
-  """
-  @spec cardinal_rules :: Map.t
-  def cardinal_rules do
-    @cardinal_rules
-  end
   
   @doc """
   Scan a rule definition

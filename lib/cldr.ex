@@ -1,82 +1,88 @@
 defmodule Cldr do
-  # Treat this as the canonical definition of what locales are available
-  @locale_dir Path.join(__DIR__, "/../data/cldr-numbers-full/main")
-  def locale_dir do
-    @locale_dir
+  alias Cldr.Config
+  
+  @type locale :: String.t
+  
+  # If locales is configured to be :all then set locales to be 
+  # the list of available locales
+  if Application.get_env(:cldr, :locales) == :all do
+    Application.put_env(:cldr, :locales, Config.all_locales)
   end
   
-  @data_dir   Path.join(__DIR__, "/../data")
+  @warn_if_greater_than 100
+  @known_locale_count Enum.count(Config.known_locales)
+  IO.puts "Generating functions for #{@known_locale_count} locales #{inspect Config.known_locales, limit: 5} with default #{inspect Config.default_locale}"
+  if @known_locale_count > @warn_if_greater_than do
+    IO.puts "Please be patient, generating functions for many locales can take some time"
+  end
+  
+  # Treat this as the canonical definition of what locales are available
+  @numbers_locale_dir Config.numbers_locale_dir()
+  def numbers_locale_dir do
+    @numbers_locale_dir
+  end
+  
+  @data_dir Config.data_dir()
   def data_dir do
     @data_dir
   end   
   
   @doc """
-  Returns a list of the locales defined in Cldr
+  Return the default locale name.
   
-  Note that not necessarily all of these locales are
-  available since functions are only generated for configured
-  locales which is most cases will be a subset of locales
-  defined in Cldr.
+  Example:
   
-  See also: configured_locales/0 and known_locales/0
+  iex> Cldr.default_locale()
+  "en"
   """
-  {:ok, files} = File.ls(@locale_dir)
-  @locales Enum.map(files, &Path.basename(&1))
-  @spec locales :: [String.t]
-  def locales do
-    @locales
-  end
-  
-  # The configured Gettext backend
-  @gettext            Application.get_env(:cldr, :gettext)
-  
-  # Use the configured default. If there isn't one use the Gettext default if available, otherwise "en"
-  @default_locale     if (is_nil(Application.get_env(:cldr, :default_locale)) && @gettext && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(@gettext)),
-                        do: Gettext.get_locale(@gettext),
-                        else: Application.get_env(:cldr, :default_locale) || "en"
-  
-  # The locales known to Gettext
-  @gettext_locales    if (@gettext && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(@gettext)),
-                        do: Gettext.known_locales(@gettext),
-                        else: []
-                        
-  # The configured locales to use.  If not specified use Gettext locales if they're known. Otherwise
-  # just the default locale
-  @cldr_locales       if (is_nil(Application.get_env(:cldr, :locales)) && @gettext && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(@gettext)),
-                        do: Gettext.known_locales(@gettext),
-                        else: Application.get_env(:cldr, :locales) || [@default_locale]
-                        
-  @spec default_locale :: [String.t]
+  @default_locale Config.default_locale()
+  @spec default_locale :: [locale]
   def default_locale do
     @default_locale
   end
   
-  @configured_locales Enum.uniq(@cldr_locales ++ @gettext_locales ++ [@default_locale])
-  @spec configured_locales :: [String.t]
-  def configured_locales do
-    @configured_locales
+  @doc """
+  Returns a list of all the locales defined in the CLDR
+  repository.
+  
+  Note that not necessarily all of these locales are
+  available since functions are only generated for configured
+  locales which is most cases will be a subset of locales
+  defined in CLDR.
+  
+  See also: `requested_locales/0` and `known_locales/0`
+  """
+  @all_locales Config.all_locales
+  @spec all_locales :: [locale]
+  def all_locales do
+    @all_locales
+  end
+
+  @doc """
+  Returns a list of all requested locales.
+  
+  The list is the combination of configured locales,
+  `Gettext` locales and the default locale.
+  
+  See also `known_locales/0` and `all_locales/0`
+  """
+  @requested_locales Config.requested_locales
+  @spec requested_locales :: [locale] | []
+  def requested_locales do
+    @requested_locales
   end
   
   @doc """
-  Returns a list of the available locales for cldr
+  Returns a list of the known locales.
   
-  Locales are configured in `config.exs` 
-  
-      config :cldr,
-        locales: ["en", "fr"]
-        
-  It's also possible to use the locales from a Gettext
-  configuration:
-  
-      config :cldr,
-        locales: ["en", "fr"]
-        gettext: App.Gettext
-  
-  In which case the combination of locales "en", "fr" and
-  whatever is configured for App.Gettext will be generated.
+  Known locales are those locales which
+  are the subset of all CLDR locales that
+  have been configured for use either 
+  directly in the `config.exs` file or
+  in `Gettext`.
   """
-  @known_locales  MapSet.intersection(MapSet.new(@configured_locales), MapSet.new(@locales)) |> MapSet.to_list
-  @spec known_locales :: [String.t] | []
+  @known_locales Config.known_locales
+  @spec known_locales :: [locale] | []
   def known_locales do
     @known_locales
   end
@@ -84,18 +90,27 @@ defmodule Cldr do
   @doc """
   Returns a boolean indicating if the specified locale
   is configured and available in Cldr
+  
+  Examples:
+  
+    iex> Cldr.known_locale? "en"
+    true
+  
+    iex> Cldr.known_locale? "!!"
+    false
   """
-  @spec known_locale?(String.t) :: boolean
+  @spec known_locale?(locale) :: boolean
   def known_locale?(locale) when is_binary(locale) do
-    Enum.find(known_locales(), &(&1 == locale))
+    !!Enum.find(known_locales(), &(&1 == locale))
   end
   
   @doc """
   Returns a boolean indicating if the specified locale
   is available in Cldr
   """
-  @spec locale_exists?(String.t) :: boolean
+  @spec locale_exists?(locale) :: boolean
   def locale_exists?(locale) when is_binary(locale) do
-    Enum.find(locales(), &(&1 == locale))
+    !!Enum.find(Config.all_locales(), &(&1 == locale))
   end
+
 end

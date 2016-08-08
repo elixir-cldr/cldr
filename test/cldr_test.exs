@@ -1,8 +1,12 @@
-defmodule CldrTest do
+defmodule Cldr.Test do
   use ExUnit.Case
   doctest Cldr
+  doctest Cldr.Config
+  doctest Cldr.File
+  doctest Cldr.Number.Format
+  doctest Cldr.Number.System
+  doctest Cldr.Currency
 
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
+  
 end
+

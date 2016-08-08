@@ -1,5 +1,5 @@
-defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
-  alias Cldr.Numbers.Cardinal.Rules
+defmodule Cldr.Number.PluralRules.Transformer do
+  alias Cldr.Number.PluralRules
   
   # Obsolete but a good code pattern to know
   # defmacrop define_do_cardinal(rules, locale) do
@@ -18,7 +18,7 @@ defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
   """
   def rules_to_condition_statement(rules, module) do
     branches = Enum.map rules, fn({"pluralRule-count-" <> category, rule}) ->
-      {:ok, definition} = Rules.Compiler.parse(rule)
+      {:ok, definition} = PluralRules.Compiler.parse(rule)
       {new_ast, _} = set_operand_module(definition[:rule], module)
       rule_to_cond_branch(new_ast, String.to_atom(category))
     end
@@ -42,7 +42,9 @@ defmodule Cldr.Numbers.Cardinal.Rules.Transformer do
         {var, [], Elixir} ->
           {var, [], module}
         {:mod, _context, [operand, value]} ->
-          {:mod, [context: Elixir, import: Elixir.Cldr.Numbers], [operand, value]}
+          {:mod, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, value]}
+        {:within, _context, [operand, range]} ->
+          {:within, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, range]}
         _ ->
           expr
       end

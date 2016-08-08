@@ -7,7 +7,7 @@ defmodule Cldr.Rbnf do
   import Xml
   alias Cldr.Rbnf.Rule
   defdelegate parse(filename), to: Xml
-  @rbnf_dir Path.join(__DIR__, "/../data/common/rbnf")
+  @rbnf_dir Path.join(__DIR__, "/../../data/common/rbnf")
   
   @spec rbnf_dir :: String.t
   def rbnf_dir do

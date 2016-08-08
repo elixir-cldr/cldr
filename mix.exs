@@ -14,7 +14,7 @@ defmodule Cldr.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :ex_unit]]
   end
 
   # Dependencies can be Hex packages:
