@@ -12,9 +12,9 @@ decimal_format    ->  positive_format semicolon negative_format : [{positive, '$
 decimal_format    ->  positive_format : [{positive, '$1'}, {negative, nil}].
 
 positive_format   ->  prefix number_format suffix : '$1' ++ format('$2') ++ '$3'.
-positive_format   ->  prefix number_format : '$1' ++ format('$2') ++ suffix(nil).
-positive_format   ->  number_format suffix : prefix(nil) ++ format('$1') ++ '$2'.
-positive_format   ->  number_format :        prefix(nil) ++ format('$1') ++ suffix(nil).
+positive_format   ->  prefix number_format : '$1' ++ format('$2').
+positive_format   ->  number_format suffix : format('$1') ++ '$2'.
+positive_format   ->  number_format :        format('$1').
 
 negative_format   ->  positive_format : '$1'.
 
@@ -42,7 +42,7 @@ Erlang code.
 % Append list items.  Consolidate literals if possible into
 % a single list element.
 append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
-  [{literal, Literal1 ++ Literal2}] ++ Rest;
+  [{literal, list_to_binary([Literal1, Literal2])}] ++ Rest;
 append(A, B) when is_list(A) and is_list(B) ->
   A ++ B.
   
@@ -52,11 +52,7 @@ format(F) ->
 pad(V) ->
   [{pad, unwrap(V)}].
   
-prefix(V) ->
-  [{prefix, V}].
-
-suffix(V) ->
-  [{suffix, V}].
-  
 % Return a token value
+unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
+  

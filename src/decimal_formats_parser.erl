@@ -5,7 +5,7 @@
 % Append list items.  Consolidate literals if possible into
 % a single list element.
 append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
-  [{literal, Literal1 ++ Literal2}] ++ Rest;
+  [{literal, list_to_binary([Literal1, Literal2])}] ++ Rest;
 append(A, B) when is_list(A) and is_list(B) ->
   A ++ B.
   
@@ -15,14 +15,10 @@ format(F) ->
 pad(V) ->
   [{pad, unwrap(V)}].
   
-prefix(V) ->
-  [{prefix, V}].
-
-suffix(V) ->
-  [{suffix, V}].
-  
 % Return a token value
+unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
+  
 -file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
@@ -197,7 +193,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/decimal_formats_parser.erl", 200).
+-file("src/decimal_formats_parser.erl", 196).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -501,7 +497,7 @@ yeccpars2_2_(__Stack0) ->
 yeccpars2_3_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   prefix ( nil ) ++ format ( __1 ) ++ suffix ( nil )
+   format ( __1 )
   end | __Stack].
 
 -compile({inline,yeccpars2_7_/1}).
@@ -597,7 +593,7 @@ yeccpars2_17_(__Stack0) ->
 yeccpars2_18_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
-   prefix ( nil ) ++ format ( __1 ) ++ __2
+   format ( __1 ) ++ __2
   end | __Stack].
 
 -compile({inline,yeccpars2_22_/1}).
@@ -613,7 +609,7 @@ yeccpars2_22_(__Stack0) ->
 yeccpars2_23_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
-   __1 ++ format ( __2 ) ++ suffix ( nil )
+   __1 ++ format ( __2 )
   end | __Stack].
 
 -compile({inline,yeccpars2_24_/1}).
@@ -625,4 +621,4 @@ yeccpars2_24_(__Stack0) ->
   end | __Stack].
 
 
--file("src/decimal_formats_parser.yrl", 62).
+-file("src/decimal_formats_parser.yrl", 58).
