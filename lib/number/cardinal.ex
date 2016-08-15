@@ -1,5 +1,5 @@
 defmodule Cldr.Number.Cardinal do
-  use Cldr.Number.PluralRules, :cardinal
+  use Cldr.Number.PluralRule, :cardinal
   
   @type operand :: non_neg_integer
   

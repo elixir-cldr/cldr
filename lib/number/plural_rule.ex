@@ -1,4 +1,4 @@
-defmodule Cldr.Number.PluralRules do
+defmodule Cldr.Number.PluralRule do
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
       raise ArgumentError, "Invalid option #{inspect opts}.  :cardinal or :ordinal are the only valid options"
@@ -9,8 +9,8 @@ defmodule Cldr.Number.PluralRules do
     
     quote do
       import Cldr.Number.Math
-      import Cldr.Number.PluralRules.Compiler 
-      import Cldr.Number.PluralRules.Transformer
+      import Cldr.Number.PluralRule.Compiler 
+      import Cldr.Number.PluralRule.Transformer
       
       {:ok, json} = Path.join(__DIR__, "/../../data/cldr-core/supplemental/#{unquote(plurals_filename)}.json") 
         |> File.read! 
@@ -93,7 +93,7 @@ defmodule Cldr.Number.PluralRules do
         i = trunc(n)
         v = rounding
         t = fraction_as_integer(n - i, rounding)
-        w = number_of_digits(t)
+        w = number_of_integer_digits(t)
         f = t * :math.pow(10, v - w) |> trunc
         do_plural_rule(locale, n, i, v, w, f, t)
       end
@@ -112,15 +112,15 @@ defmodule Cldr.Number.PluralRules do
     
         # f visible fractional digits in n, with trailing zeros.
         f = Decimal.sub(n, i) 
-          |> Decimal.mult(Decimal.new(:math.pow(10, v))) 
-          |> Decimal.round(0, :floor) 
-          |> Decimal.to_integer
+        |> Decimal.mult(Decimal.new(:math.pow(10, v))) 
+        |> Decimal.round(0, :floor) 
+        |> Decimal.to_integer
     
         #   t visible fractional digits in n, without trailing zeros.
         t = remove_trailing_zeroes(f)
     
         # w number of visible fraction digits in n, without trailing zeros.
-        w = number_of_digits(t)
+        w = number_of_integer_digits(t)
     
         i = Decimal.to_integer(i)
         n = to_float(n)

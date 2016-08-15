@@ -1,6 +1,6 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
 defmodule Cldr.Number.Ordinal do
-  use Cldr.Number.PluralRules, :ordinal
+  use Cldr.Number.PluralRule, :ordinal
   
   @type operand :: non_neg_integer
   

@@ -20,7 +20,7 @@ defmodule Cldr.Number.System do
   default number system for a given locale with
   `number_systems_for(locale)[default_number_system()]`.
   
-  Example:
+  ## Example
   
       iex> Cldr.Number.System.default_number_system_type
       :default
@@ -32,7 +32,7 @@ defmodule Cldr.Number.System do
   @doc """
   Return a map of all CLDR number systems and definitions.
   
-  Example:
+  ## Example
   
       iex> Cldr.Number.System.number_systems |> Enum.count
       74
@@ -46,7 +46,7 @@ defmodule Cldr.Number.System do
   @doc """
   The unique Cldr number systems names,
   
-  Example:
+  ## Example
   
       iex> Cldr.Number.System.number_system_names
       ["ahom", "arab", "arabext", "armn", "armnlow", 
@@ -73,7 +73,7 @@ defmodule Cldr.Number.System do
   @doc """
   The number systems available for a locale.
   
-  Examples:
+  ## Examples
   
       iex> Cldr.Number.System.number_systems_for "en"
       %{default: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric},

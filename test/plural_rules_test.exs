@@ -1,7 +1,7 @@
 defmodule PluralRules.Test do
   use ExUnit.Case
   @moduletag :slow
-  @sample_types [:decimal] # [:decimal, :integer]
+  @sample_types [:integer] # [:decimal, :integer]
   @modules      [Cldr.Number.Cardinal, Cldr.Number.Ordinal]
 
   Enum.each @modules, fn (module) ->

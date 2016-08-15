@@ -43,7 +43,7 @@ defmodule Cldr.Number.Format do
   @doc """
   The decimal formats in configured locales.
   
-  Example:
+  ## Example
   
       Cldr.Number.Format.decimal_formats              
       %{"en" => %{
@@ -67,7 +67,7 @@ defmodule Cldr.Number.Format do
   Returns the list of decimal formats in the 
   CLDR repository.
   
-  Example:
+  ## Example
   
       iex(1)> Cldr.Number.Format.decimal_format_list
       ["#", "#,##,##0%", "#,##,##0.###", "#,##,##0.00¤",
@@ -100,7 +100,7 @@ defmodule Cldr.Number.Format do
   The decimal formats defined for a given locale or
   for a given locale and number system.
   
-  Examples:
+  ## Examples
   
       iex(2)> Cldr.Number.Format.decimal_formats_for "en"
       %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
