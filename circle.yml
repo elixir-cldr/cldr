@@ -1,6 +1,5 @@
 dependencies:
   pre:
-    - pwd
     - script/ci/prepare.sh
   cache_directories:
     - ~/dependencies
