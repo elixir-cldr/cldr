@@ -193,8 +193,6 @@ defmodule Cldr.Number.Format.Compiler do
   {:ok, regex} = Regex.compile(@leading_digits <> @min_significant_digits <> @max_significant_digits)
   @significant_digits_match regex
   
-  @no_significant_digits %{minimum_significant_digits: 0, maximum_significant_digits: 0}
-  
   defp significant_digits(format) do
     compacted_format = String.replace(format[:positive][:format], @grouping_separator, "")
     if captures = Regex.named_captures(@significant_digits_match, compacted_format) do
@@ -202,7 +200,7 @@ defmodule Cldr.Number.Format.Compiler do
       maximim_significant_digits = minimum_significant_digits + String.length(captures["hashes"])
       %{minimum_significant_digits: minimum_significant_digits, maximum_significant_digits: maximim_significant_digits}
     else
-      @no_significant_digits
+      %{minimum_significant_digits: 0, maximum_significant_digits: 0}
     end
   end
   

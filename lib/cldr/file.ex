@@ -99,6 +99,15 @@ defmodule Cldr.File do
     locales["availableLocales"][full_or_modern]
   end
   
+  def read(:list_patterns, locale) do
+    path = Path.join(Cldr.data_dir(), ["cldr-misc-#{Config.full_or_modern}/main/", locale, "/listPatterns.json"])
+    patterns = read_cldr_data(path)
+    Enum.map(patterns["main"][locale]["listPatterns"], fn {"listPattern-type-" <> type, data} ->
+      type_name = String.replace(type, "-", "_") |> String.to_atom
+      {type_name, data}
+    end) |> Enum.into(%{})
+  end
+  
   @count_types [:one, :two, :few, :many, :other]
   def read(:currency_counts, currency) do
     Enum.reduce @count_types, %{}, fn (category, counts) ->
@@ -110,11 +119,13 @@ defmodule Cldr.File do
     end
   end
   
+  def underscore_keys(nil), do: nil
   def underscore_keys(map) do
     Enum.map(map, fn {k, v} -> {Macro.underscore(k), v} end)
     |> Enum.into(%{})
   end
   
+  def atomize_keys(nil), do: nil
   def atomize_keys(map) do
     Enum.map(map, fn {k, v} -> {String.to_atom(k), v} end)
     |> Enum.into(%{})
