@@ -3,10 +3,35 @@ defmodule Cldr.Number.Format do
   alias Cldr.File
   
   @moduledoc """
-  Functions for introspecting on the number formats in CLDR.
+  *Number Patterns*
+
+  Number patterns affect how numbers are interpreted in a localized context. Here are some examples, 
+  based on the French locale. The "." shows where the decimal point should go. The "," shows where 
+  the thousands separator should go. A "0" indicates zero-padding: if the number is too short, a 
+  zero (in the locale's numeric set) will go there. A "#" indicates no padding: if the number is 
+  too short, nothing goes there. A "¤" shows where the currency sign will go. The following illustrates 
+  the effects of different patterns for the French locale, with the number "1234.567". Notice how 
+  the pattern characters ',' and '.' are replaced by the characters appropriate for the locale.
+
+  *Number Pattern Examples*
   
-  These functions would normally be used at compile time
-  to generate functions for formatting numbers.
+  | Pattern	      | Currency	      | Text        |
+  |---------------|-----------------|-------------|
+  | #,##0.##	    | n/a	            | 1 234,57    |
+  | #,##0.###	    | n/a	            | 1 234,567   |
+  | ###0.#####	  | n/a	            | 1234,567    |
+  | ###0.0000#	  | n/a	            | 1234,5670   |
+  | 00000.0000	  | n/a	            | 01234,5670  |
+  | #,##0.00 ¤	  | EUR	            | 1 234,57 €  |
+  |               | JPY	            | 1 235 ¥JP   |
+            
+  The number of # placeholder characters before the decimal do not matter, since no limit is 
+  placed on the maximum number of digits. There should, however, be at least one zero some place 
+  in the pattern. In currency formats, the number of digits after the decimal also do not matter, 
+  since the information in the supplemental data (see Supplemental Currency Data) is used to 
+  override the number of decimal places — and the rounding — according to the currency that 
+  is being formatted. That can be seen in the above chart, with the difference between Yen 
+  and Euro formatting.
   
   Details of the number formats are described in the 
   [Unicode documentation](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
