@@ -84,16 +84,26 @@ defmodule Cldr.Number.System do
       native: %Cldr.Number.System{digits: "๐๑๒๓๔๕๖๗๘๙", name: "thai", rules: nil,
       type: :numeric}}
   """
-  @spec number_systems_for(Cldr.locale) :: [String.t]
+  @spec number_systems_for(Cldr.locale) :: %{}
+  @spec number_system_names_for(Cldr.locale) :: [String.t]  
   Enum.each Cldr.known_locales, fn (locale) ->
-    number_systems = File.read(:number_systems, locale) |> Macro.escape
+    number_systems = File.read(:number_systems, locale) 
+    number_system_names = Enum.map(number_systems, fn {_type, system} -> system.name end) |> Enum.uniq
+    
     def number_systems_for(unquote(locale)) do
-      unquote(number_systems)
+      unquote(Macro.escape(number_systems))
+    end
+    
+    def number_system_names_for(unquote(locale)) do
+      unquote(number_system_names)
     end
   end
   
   def number_systems_for(locale) do
     raise ArgumentError, "Locale #{inspect locale} is not known."
   end
-
+  
+  def number_system_names_for(locale) do
+    raise ArgumentError, "Locale #{inspect locale} is not known."
+  end
 end 

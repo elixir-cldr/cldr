@@ -1,7 +1,8 @@
 defmodule Cldr.Number.Format do
   defstruct [:standard, :currency, :accounting, :scientific, :percent]
+  defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
   alias Cldr.File
-  
+
   @moduledoc """
   *Number Patterns*
 

@@ -110,6 +110,16 @@ defmodule Cldr.File do
     end
   end
   
+  def underscore_keys(map) do
+    Enum.map(map, fn {k, v} -> {Macro.underscore(k), v} end)
+    |> Enum.into(%{})
+  end
+  
+  def atomize_keys(map) do
+    Enum.map(map, fn {k, v} -> {String.to_atom(k), v} end)
+    |> Enum.into(%{})
+  end
+  
   defp read_cldr_data(file) do
     {:ok, data} = File.read!(file) 
     |> Poison.decode

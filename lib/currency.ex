@@ -60,9 +60,9 @@ defmodule Cldr.Currency do
   def for_locale(locale \\ Cldr.default_locale())
   
   Enum.each Cldr.known_locales(), fn locale ->
-    currencies = File.read(:currency, locale) |> Macro.escape
+    currencies = File.read(:currency, locale)
     def for_locale(unquote(locale)) do
-      unquote(currencies)
+      unquote(Macro.escape(currencies))
     end
   end
   

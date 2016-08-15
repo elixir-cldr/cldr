@@ -12,9 +12,10 @@ defmodule Cldr.Number.Format.Compiler do
   @digits               ~r/[0-9]/
   @significant_digit    "@"
   
-  {:ok, rounding_pattern}  = Regex.compile("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
+  {:ok, rounding_pattern}  = 
+    Regex.compile("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
+    
   @rounding_pattern     rounding_pattern
-  
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
   
@@ -56,11 +57,15 @@ defmodule Cldr.Number.Format.Compiler do
   end
     
   defp analyze(format) do
-    IO.puts "Length: #{length(format)}"
-    IO.puts "Multiplier: #{multiplier(format)}"
-    IO.puts "Grouping: #{inspect grouping(format)}"
-    IO.puts "Significant Digits: #{inspect significant_digits(format)}"
-    IO.puts "Rounding: #{inspect rounding(format)}"
+    %{
+      currency?:          currency_format?(format),
+      length:             length(format),
+      multiplier:         multiplier(format),
+      grouping:           grouping(format),
+      significant_digits: significant_digits(format),
+      rounding:           rounding(format),
+      format:             format
+    }
   end
   
   @docp """
@@ -245,8 +250,8 @@ defmodule Cldr.Number.Format.Compiler do
     Keyword.has_key? format[:positive], :permille
   end
   
-  # defp currency_format?(format) do
-  #   Keyword.has_key? format[:positive], :currency
-  # end
+  defp currency_format?(format) do
+    Keyword.has_key? format[:positive], :currency
+  end
 end      
          
