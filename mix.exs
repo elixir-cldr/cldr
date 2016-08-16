@@ -35,6 +35,7 @@ defmodule Cldr.Mixfile do
     [
       {:poison, "~> 2.1"},
       {:decimal, "~> 1.1.0" },
+      {:float, github: "kipcole9/elixir-float_pp"},
       {:junit_formatter, "~> 0.0.2", only: :test}
     ]
   end
