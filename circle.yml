@@ -1,6 +1,7 @@
 dependencies:
   pre:
-    - script/ci/prepare.sh
+    - script/ci/prepare.sh:
+      timeout: 1200
   cache_directories:
     - ~/dependencies
     - ~/.mix
