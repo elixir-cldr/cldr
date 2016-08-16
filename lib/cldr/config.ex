@@ -22,20 +22,31 @@ defmodule Cldr.Config do
   
   In which case the combination of locales "en", "fr" and
   whatever is configured for App.Gettext will be generated.
+        
+  Locales can also be configured by using a `regex` which is most
+  useful when dealing with locales that have many regional variants
+  like English (over 100!) and French.  For example:
+  
+      config :cldr,
+        locales: ["fr-*", "en-[A-Z]+"]
+        
+  will configure all French locales and all English locales that have 
+  alphabetic regional variants.  The expansion is made using 
+  `Regex.match?` so any valid regex can be used.
   
   As a special case, all locales in CLDR can be configured
   by using the keyword `:all`.  For example:
   
       config :cldr,
         locales: :all
-    
+        
   *Configuring all locales is not recommended*. Doing so
   imposes a significant compilation load as many functions
-  are created at compmile time for each locale.
+  are created at compmile time for each locale.*
   
   The `Cldr` test configuration does configure all locales in order
-  to ensure test coverage.  This does provide good test
-  coverage at the expense of significant compile time.
+  to ensure good test coverage.  This is done at the expense 
+  of significant compile time.
   """
   
   @doc """
@@ -134,7 +145,7 @@ defmodule Cldr.Config do
     case app_locales = Application.get_env(:cldr, :locales) do
       :all  -> @all_locales
       nil   -> [default_locale()]
-      _     -> app_locales
+      _     -> expand_locales(app_locales)
     end
   end
   
@@ -173,7 +184,7 @@ defmodule Cldr.Config do
   Returns true if a `Gettext` module is configured in Cldr and
   the `Gettext` module is available.
   
-  Example:
+  ## Example
   
       iex> Cldr.Config.gettext_configured?
       false
@@ -181,5 +192,38 @@ defmodule Cldr.Config do
   @spec gettext_configured? :: boolean
   def gettext_configured? do
     gettext() && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext())
-  end  
+  end
+  
+  @doc """
+  Expands wildcards in locale names.
+  
+  Locales often have region variants (for example en-AU is one of 104
+  variants in CLDR).  To make it easier to configure a language and all
+  its variants, a locale can be specified as a regex which will
+  then do a match against all CLDR locales.
+  
+  ## Examples
+  
+      iex> Cldr.Config.expand_locales(["en-A+"]) 
+      ["en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
+  
+      iex(15)> Cldr.Config.expand_locales(["fr-*"])
+      ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",
+       "fr-CG", "fr-CH", "fr-CI", "fr-CM", "fr-DJ", "fr-DZ", "fr-GA", "fr-GF",
+       "fr-GN", "fr-GP", "fr-GQ", "fr-HT", "fr-KM", "fr-LU", "fr-MA", "fr-MC",
+       "fr-MF", "fr-MG", "fr-ML", "fr-MQ", "fr-MR", "fr-MU", "fr-NC", "fr-NE",
+       "fr-PF", "fr-PM", "fr-RE", "fr-RW", "fr-SC", "fr-SN", "fr-SY", "fr-TD",
+       "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
+  """
+  @wildcard_matchers ["*", "+", "."]
+  @spec expand_locales([String.t]) :: [String.t]
+  def expand_locales(locales) do
+    Enum.map(locales, fn locale -> 
+      if String.contains?(locale, @wildcard_matchers) do
+        Enum.filter(@all_locales, &Regex.match?(Regex.compile!(locale), &1))
+      else
+        locale
+      end
+    end) |> List.flatten |> Enum.uniq
+  end
 end
