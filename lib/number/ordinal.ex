@@ -1,4 +1,3 @@
-# http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
 defmodule Cldr.Number.Ordinal do
   use Cldr.Number.PluralRule, :ordinal
   

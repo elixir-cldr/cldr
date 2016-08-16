@@ -79,7 +79,7 @@ defmodule Cldr.Config do
       app_default ->
         app_default
       gettext_configured?() ->
-        apply(Gettext, :get_locale, [gettext])
+        apply(Gettext, :get_locale, [gettext()])
       true ->
         "en"
     end
@@ -144,7 +144,7 @@ defmodule Cldr.Config do
   """
   @spec known_locales :: [String.t]
   def known_locales do
-    MapSet.intersection(MapSet.new(requested_locales), MapSet.new(all_locales)) 
+    MapSet.intersection(MapSet.new(requested_locales()), MapSet.new(all_locales())) 
     |> MapSet.to_list
     |> Enum.sort
   end
@@ -158,7 +158,7 @@ defmodule Cldr.Config do
   """
   @spec requested_locales :: [String.t]
   def requested_locales do
-    (configured_locales ++ gettext_locales ++ [default_locale])
+    (configured_locales() ++ gettext_locales() ++ [default_locale()])
     |> Enum.uniq
   end
   
@@ -166,7 +166,7 @@ defmodule Cldr.Config do
   Return the path name of the CLDR number directory
   """
   def numbers_locale_dir do
-    Path.join(__DIR__, "/../../data/cldr-numbers-#{full_or_modern}/main")
+    Path.join(__DIR__, "/../../data/cldr-numbers-#{full_or_modern()}/main")
   end
   
   @doc """
@@ -180,6 +180,6 @@ defmodule Cldr.Config do
   """
   @spec gettext_configured? :: boolean
   def gettext_configured? do
-    gettext && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext)
+    gettext() && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext())
   end  
 end

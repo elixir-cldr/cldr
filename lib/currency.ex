@@ -31,7 +31,7 @@ defmodule Cldr.Currency do
   """
   @spec known_currency?(code) :: boolean
   def known_currency?(currency) when is_binary(currency) do
-    !!Enum.find(known_currencies, &(&1 == currency))
+    !!Enum.find(known_currencies(), &(&1 == currency))
   end 
   @doc """
   Returns the currency metadata for the requested currency code.

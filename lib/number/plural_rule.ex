@@ -33,7 +33,7 @@ defmodule Cldr.Number.PluralRule do
       don't have their own plural rules so this list is the intersection
       of Cldr's configured locales and those that have rules.
       """
-      @configured_locales  MapSet.intersection(MapSet.new(@rules_locales), MapSet.new(Cldr.known_locales)) 
+      @configured_locales  MapSet.intersection(MapSet.new(@rules_locales), MapSet.new(Cldr.known_locales())) 
       |> MapSet.to_list
       |> Enum.sort
   
@@ -56,7 +56,7 @@ defmodule Cldr.Number.PluralRule do
       """
       @spec plural_rules_for(Cldr.locale) :: %{}
       def plural_rules_for(locale) do
-        Enum.map plural_rules[locale], fn({"pluralRule-count-" <> category, rule}) ->
+        Enum.map plural_rules()[locale], fn({"pluralRule-count-" <> category, rule}) ->
           {:ok, definition} = parse(rule)
           {String.to_atom(category), definition}
         end
