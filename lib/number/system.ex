@@ -106,4 +106,45 @@ defmodule Cldr.Number.System do
   def number_system_names_for(locale) do
     raise ArgumentError, "Locale #{inspect locale} is not known."
   end
+  
+  @doc """
+  Transliterates from latin digits to another number system's digits.
+  
+  Transliterates the latin digits 0..9 to their equivalents in
+  another number system. Any non-digit in the string will be returned
+  "as is".
+  
+  For available number systems see `Cldr.Number.System.number_systems/0`
+  and `Cldr.Number.System.number_systems_for/1`
+  
+  ## Examples
+  
+      iex> Cldr.Number.System.transliterate "123556", "thai"
+      "๑๒๓๕๕๖"
+      
+      iex> Cldr.Number.System.transliterate "Some number is: 123556", "thai"
+      "Some number is: ๑๒๓๕๕๖"
+  """
+  @spec transliterate(String.t, String.t) :: String.t
+  def transliterate(sequence, number_system) do
+    Enum.map(String.graphemes(sequence), &transliterate_digit(&1, number_system))
+    |> List.to_string
+  end
+  
+  # Generate the transliteration functions that map one latin digit to
+  # any other number system digit.  
+  Enum.each @number_systems, fn {name, system} ->
+    if digits = system.digits do
+      graphemes = String.graphemes(digits)
+      Enum.each 0..9, fn (latin_digit) ->
+        defp transliterate_digit(unquote(Integer.to_string(latin_digit)), unquote(name)) do
+          unquote(:lists.nth(latin_digit + 1, graphemes))
+        end
+      end
+    end
+    # Any unknown mapping gets returned as is
+    defp transliterate_digit(digit, unquote(name)) do
+      digit
+    end
+  end
 end 
