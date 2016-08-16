@@ -14,7 +14,12 @@ defmodule Cldr.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :ex_unit]]
+    [
+      applications: [
+        :logger, 
+        :ex_unit
+      ]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -30,7 +35,7 @@ defmodule Cldr.Mixfile do
     [
       {:poison, "~> 2.1"},
       {:decimal, "~> 1.1.0" },
-      {:junit_formatter, "~> 0.0.2", only: :test} 
+      {:junit_formatter, "~> 0.0.2", only: :test}
     ]
   end
 end
