@@ -3,7 +3,8 @@ defmodule Cldr.Number.System do
 
   defstruct [:name, :type, :digits, :rules]
     
-  @default_number_system  :default
+  @default_number_system_type  :default
+  @default_number_system       "latn"
  
   @type name :: atom
   
@@ -26,7 +27,7 @@ defmodule Cldr.Number.System do
       :default
   """
   def default_number_system_type do
-    @default_number_system
+    @default_number_system_type
   end
    
   @doc """
@@ -119,32 +120,71 @@ defmodule Cldr.Number.System do
   
   ## Examples
   
-      iex> Cldr.Number.System.transliterate "123556", "thai"
+      iex> Cldr.Number.System.transliterate("123556")
+      "123556"
+  
+      iex> Cldr.Number.System.transliterate("123556", "thai")
       "๑๒๓๕๕๖"
       
-      iex> Cldr.Number.System.transliterate "Some number is: 123556", "thai"
+      iex> Cldr.Number.System.transliterate("Some number is: 123556", "thai")
       "Some number is: ๑๒๓๕๕๖"
+      
+      iex(5)> Cldr.Number.System.transliterate(12345, "thai")
+      "๑๒๓๔๕"
+      
+      iex(6)> Cldr.Number.System.transliterate(12345.0, "thai")
+      "๑๒๓๔๕.๐"
+      
+      iex(7)> Cldr.Number.System.transliterate(Decimal.new(12345.0), "thai")
+      "๑๒๓๔๕.๐"
   """
-  @spec transliterate(String.t, String.t) :: String.t
-  def transliterate(sequence, number_system) do
-    Enum.map(String.graphemes(sequence), &transliterate_digit(&1, number_system))
-    |> List.to_string
+  @spec transliterate(String.t | number, String.t) :: String.t
+  def transliterate(sequence, number_system \\ @default_number_system)
+  def transliterate(sequence, number_system) when is_integer(sequence) do
+    transliterate(Integer.to_string(sequence), number_system)
+  end
+  def transliterate(sequence, number_system) when is_float(sequence) do
+    transliterate(Float.to_string(sequence), number_system)
+  end
+  def transliterate(sequence = %Decimal{}, number_system) do
+    transliterate(Decimal.to_string(sequence), number_system)
+  end
+  def transliterate(sequence, @default_number_system) do
+    sequence
+  end
+
+  # Generate the transliteration functions that map one latin digit to
+  # any other number system digit. Only applicable to number systems that
+  # have digits (some don't because they are rule based). Also omit
+  # the "latn" system since that doesn't require transliteration and is 
+  # handled by the default function above.
+  systems_with_digits = Enum.reject @number_systems, fn {name, system} -> 
+    is_nil(system.digits) || name == @default_number_system
   end
   
-  # Generate the transliteration functions that map one latin digit to
-  # any other number system digit.  
-  Enum.each @number_systems, fn {name, system} ->
-    if digits = system.digits do
-      graphemes = String.graphemes(digits)
-      Enum.each 0..9, fn (latin_digit) ->
-        defp transliterate_digit(unquote(Integer.to_string(latin_digit)), unquote(name)) do
-          unquote(:lists.nth(latin_digit + 1, graphemes))
-        end
+  Enum.each systems_with_digits, fn {name, %{digits: digits}} ->
+    graphemes = String.graphemes(digits)
+    
+    def transliterate(sequence, number_system = unquote(name)) do
+      Enum.map(String.graphemes(sequence), &transliterate_digit(&1, number_system))
+      |> List.to_string
+    end
+
+    # Mapping for each digit character
+    Enum.each 0..9, fn (latin_digit) ->
+      grapheme = :lists.nth(latin_digit + 1, graphemes)
+      defp transliterate_digit(unquote(Integer.to_string(latin_digit)), unquote(name)) do
+        unquote(grapheme)
       end
     end
+
     # Any unknown mapping gets returned as is
     defp transliterate_digit(digit, unquote(name)) do
       digit
     end
+  end
+  
+  def transliterate(_digit, number_system) do
+    raise ArgumentError, "Number system #{inspect number_system} is not known."
   end
 end 
