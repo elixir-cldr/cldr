@@ -1,7 +1,5 @@
 # Cldr
 
-[![CircleCI](https://circleci.com/gh/kipcole9/cldr.svg?style=shield)](https://circleci.com/gh/kipcole9/cldr)
-
 **Common locale libary for Elixir**
 
 Just starting implementation and not ready for use.
