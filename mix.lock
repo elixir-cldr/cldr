@@ -1,4 +1,4 @@
 %{"decimal": {:git, "https://github.com/ericmj/decimal.git", "2d0e5f2ffb45d377f6a25a642bc27a0f56e2e3d3", []},
+  "float": {:git, "https://github.com/kipcole9/elixir-float_pp.git", "0c6980f147d954cbd9e325c4084753c568267cae", []},
   "junit_formatter": {:hex, :junit_formatter, "0.0.3", "03bf08bc86ec01ae7e16081ee6387f447df024b1664b93aa0b897933ff925974", [:mix], []},
-  "poison": {:hex, :poison, "2.2.0", "4763b69a8a77bd77d26f477d196428b741261a761257ff1cf92753a0d4d24a63", [:mix], []},
-  "yaml_elixir": {:hex, :yaml_elixir, "1.2.0", "6b7a1d82f00d536831f5f1dfa2aad4f71138059336e513efefdb5f9c20ddb281", [:mix], []}}
+  "poison": {:hex, :poison, "2.2.0", "4763b69a8a77bd77d26f477d196428b741261a761257ff1cf92753a0d4d24a63", [:mix], []}}
