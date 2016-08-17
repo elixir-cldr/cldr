@@ -209,7 +209,7 @@ defmodule Cldr.Number.Format.Compiler do
       multiplier:               multiplier(format),
       grouping:                 grouping(parts["integer"]),
       significant_digits:       significant_digits(format),
-      rounding:                 rounding(format),
+      rounding:                 rounding(parts["integer"], parts["fraction"]),
       format:                   format,
       currency?:                currency_format?(format),
       percent?:                 percent_format?(format),
@@ -454,8 +454,10 @@ defmodule Cldr.Number.Format.Compiler do
   * In a pattern, digits '1' through '9' specify rounding, but otherwise behave identically to digit '0'.
   """
   @default_rounding Decimal.new(1)
+  defp rounding(integer, ""), do: rounding(integer)
+  defp rounding(integer, fraction), do: rounding("#{integer}.#{fraction}")
   defp rounding(format) do
-    rounding_chars = String.replace(format[:positive][:format], @rounding_pattern, "")
+    rounding_chars = String.replace(format, @rounding_pattern, "")
     if String.length(rounding_chars) > 0 do
       Decimal.new(rounding_chars)
     else
