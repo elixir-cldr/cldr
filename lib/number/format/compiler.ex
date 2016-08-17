@@ -197,15 +197,17 @@ defmodule Cldr.Number.Format.Compiler do
   The metadata is used to generate the formatted output.
   """
   defp analyze(format) do
-    [integer_format, fraction_format] = split_format(format)
+    parts = split_format(format)
     %{
-      required_integer_digits:  required_integer_digits(integer_format),
-      required_fraction_digits: required_fraction_digits(fraction_format),
-      optional_fraction_digits: optional_fraction_digits(fraction_format),
+      required_integer_digits:  required_integer_digits(parts["integer"]),
+      required_fraction_digits: required_fraction_digits(parts["fraction"]),
+      optional_fraction_digits: optional_fraction_digits(parts["fraction"]),
+      exponent:                 exponent(parts["exponent"]),
+      exponent_sign:            parts["exponent_sign"],
       padding_length:           padding_length(format),
       padding_char:             padding_char(format),
       multiplier:               multiplier(format),
-      grouping:                 grouping(integer_format),
+      grouping:                 grouping(parts["integer"]),
       significant_digits:       significant_digits(format),
       rounding:                 rounding(format),
       format:                   format,
@@ -232,7 +234,7 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Extract how many fraction digits are required to be displayed.
   """
-  defp required_fraction_digits(nil), do: 0
+  defp required_fraction_digits(""), do: 0
   defp required_fraction_digits(fraction_format) do
     compacted_format = String.replace(fraction_format, @grouping_separator, "")
     if captures = Regex.named_captures(@digits, compacted_format) do
@@ -247,7 +249,7 @@ defmodule Cldr.Number.Format.Compiler do
   """
   {:ok, regex} = Regex.compile("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
   @hashes regex
-  defp optional_fraction_digits(nil), do: 0
+  defp optional_fraction_digits(""), do: 0
   defp optional_fraction_digits(fraction_format) do
     compacted_format = String.replace(fraction_format, @grouping_separator, "")
     if captures = Regex.named_captures(@hashes, compacted_format) do
@@ -255,6 +257,11 @@ defmodule Cldr.Number.Format.Compiler do
     else
       0
     end
+  end
+  
+  defp exponent(""), do: 0
+  defp exponent(exp) do
+    String.to_integer(exp)
   end
   
   @docp """
@@ -457,15 +464,17 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  Separate the format into the integer and fraction parts.
+  Separate the format into the integer, fraction and exponent parts.
+  
+  In the lexer the regex is ([@#,]*)?([0-9]+)?(\.[0-9#,]+)?([Ee](\+)?[0-9]+)?
   """
+  @integer_part  "(?<integer>[0-9,@#]+)"
+  @fraction_part "((\.(?<fraction>[0-9,#]+))?"
+  @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+))))?"
+  {:ok, regex} = Regex.compile(@integer_part <> @fraction_part <> @exponent_part)
+  @format regex
   defp split_format(format) do
-    case String.split(format[:positive][:format], @decimal_separator) do
-      [integer_format, fraction_format] ->
-        [integer_format, fraction_format]
-      [integer_format | []] ->
-        [integer_format, nil]
-    end
+    Regex.named_captures(@format, format[:positive][:format])
   end
   
   defp percent_format?(format) do
