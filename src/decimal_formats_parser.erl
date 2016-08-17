@@ -2,6 +2,10 @@
 -export([parse/1, parse_and_scan/1, format_error/1]).
 -file("src/decimal_formats_parser.yrl", 43).
 
+% If there is no negative pattern then build the default one
+negative(_Positive) ->
+  {negative, [{minus, "-"}, {format, same_as_positive}]}.
+  
 % Append list items.  Consolidate literals if possible into
 % a single list element.
 append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
@@ -199,7 +203,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/decimal_formats_parser.erl", 202).
+-file("src/decimal_formats_parser.erl", 206).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -565,7 +569,7 @@ yeccgoto_suffix(27=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccpars2_2_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   [ { positive , __1 } , { negative , nil } ]
+   [ { positive , __1 } , negative ( __1 ) ]
   end | __Stack].
 
 -compile({inline,yeccpars2_3_/1}).
@@ -729,4 +733,4 @@ yeccpars2_28_(__Stack0) ->
   end | __Stack].
 
 
--file("src/decimal_formats_parser.yrl", 67).
+-file("src/decimal_formats_parser.yrl", 71).

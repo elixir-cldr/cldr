@@ -15,17 +15,14 @@ defmodule Cldr.Number.Format.Compiler do
 
   ### Number Pattern Examples
   
-  ```
-  Pattern	   | Currency	| Text      
-  -----------|----------|-----------
-  #,##0.##	 | n/a	    | 1 234,57  
-  #,##0.###	 | n/a	    | 1 234,567 
-  ###0.##### | n/a	    | 1234,567  
-  ###0.0000# | n/a	    | 1234,5670 
-  00000.0000 | n/a	    | 01234,5670
-  #,##0.00 ¤ | EUR	    | 1 234,57 €
-             | JPY	    | 1 235 ¥JP 
-  ```
+  Pattern	   | Currency	 | Text
+  ---------- | --------- | ----------
+  #,##0.##	 | n/a	     | 1 234,57  
+  #,##0.###	 | n/a	     | 1 234,567 
+  ###0.##### | n/a	     | 1234,567  
+  ###0.0000# | n/a	     | 1234,5670 
+  00000.0000 | n/a	     | 01234,5670
+  #,##0.00 ¤ | EUR	     | 1 234,57 €
                 
   The number of # placeholder characters before the decimal do not matter, since 
   no limit is placed on the maximum number of digits. There should, however, be 
@@ -51,29 +48,26 @@ defmodule Cldr.Number.Format.Compiler do
 
   To insert a special character in a pattern as a literal, that is, without any special 
   meaning, the character must be quoted. There are some exceptions to this which are noted 
-  below. The Localized Replacement column shows the replacement from Cldr.Number.Symbol or 
-  the Cldr.Number.System's digits: italic indicates a special function.
+  below.
 
   ### Number Pattern Character Definitions
   
-  ```
-  Symbol      | Meaning
-  ------------|----------------------------------
-  0	          | Digit
-  1-9	        | '1' through '9' indicate rounding.
-  @	          | Significant digit
-  #	          | Digit, omitting leading/trailing zeros
-  .	          | Decimal separator or monetary decimal separator
-  -	          | Minus sign.
-  ,	          | Grouping separator. 
-  +	          | Prefix positive exponents with localized plus sign. 
-  %	          | Multiply by 100 and show as percentage
-  ‰ (U+2030)  | Multiply by 1000 and show as per mille (aka “basis points”)
-  ;	          | Separates positive and negative subpatterns. 
-  ¤ (U+00A4)	| Any sequence is replaced by the localized currency symbol for the currency being formatted.
-  *	          | Pad escape, precedes pad character
-  '	          | Used to quote special characters in a prefix or suffix, for example, "'#'#" formats 123 to "#123"
-  ```
+  Symbol | Meaning
+  ------ | -------
+  0	     | Digit
+  1..9   | '1' through '9' indicate rounding
+  @	     | Significant digit
+  #	     | Digit, omitting leading/trailing zeros
+  .	     | Decimal separator or monetary decimal separator
+  -	     | Minus sign
+  ,	     | Grouping separator
+  +	     | Prefix positive exponents with localized plus sign
+  %	     | Multiply by 100 and show as percentage
+  ‰      | Multiply by 1000 and show as per mille (aka “basis points”)
+  ;	     | Separates positive and negative subpatterns
+  ¤      | Any sequence is replaced by the localized currency symbol
+  *	     | Pad escape, precedes pad character
+  '	     | Used to quote special characters in a prefix or suffix
   
   A pattern contains a positive subpattern and may contain a negative subpattern, for example, 
   "#,##0.00;(#,##0.00)". Each subpattern has a prefix, a numeric part, and a suffix. If there is 
@@ -102,12 +96,16 @@ defmodule Cldr.Number.Format.Compiler do
   @plus_placeholder     "+"
   @minus_placeholder    "-"
   @digit_omit_zeroes    "#"
-  @digits               ~r/[0-9]/
+  @digits               "[0-9]"
   @significant_digit    "@"
   
   {:ok, rounding_pattern}  =
     Regex.compile("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
     
+  {:ok, digits_pattern} = 
+    Regex.compile(@digits)
+  
+  @digits_pattern       digits_pattern
   @rounding_pattern     rounding_pattern
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
@@ -130,11 +128,11 @@ defmodule Cldr.Number.Format.Compiler do
   @spec placeholders :: %{}
   def placeholders do
     %{
-      decimal:              @decimal_separator,
-      group:                @grouping_separator,
-      exponent:             @exponent_separator,
-      plus:                 @plus_placeholder,
-      minus:                @minus_placeholder
+      decimal:  @decimal_separator,
+      group:    @grouping_separator,
+      exponent: @exponent_separator,
+      plus:     @plus_placeholder,
+      minus:    @minus_placeholder
     }
   end
   
@@ -193,21 +191,71 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
   
+  @docp """
+  Extract the metadata from the format.
   
+  The metadata is used to generate the formatted output.
+  """
   defp analyze(format) do
+    [integer_format, fraction_format] = split_format(format)
+      
     %{
-      currency?:          currency_format?(format),
-      length:             length(format),
-      multiplier:         multiplier(format),
-      grouping:           grouping(format),
-      significant_digits: significant_digits(format),
-      rounding:           rounding(format),
-      format:             format
+      required_integer_digits:  required_integer_digits(integer_format),
+      required_fraction_digits: required_fraction_digits(fraction_format),
+      optional_fraction_digits: optional_fraction_digits(fraction_format),
+      length:                   length(format),
+      multiplier:               multiplier(format),
+      grouping:                 grouping(integer_format),
+      significant_digits:       significant_digits(format),
+      rounding:                 rounding(format),
+      format:                   format
     }
   end
   
   @docp """
-  *Padding*
+  Extact how many integer digits are to be displayed.
+  """
+  {:ok, regex} = Regex.compile("(?<digits>" <> @digits <> "+)")
+  @digits regex
+  defp required_integer_digits(integer_format) do
+    compacted_format = String.replace(integer_format, @grouping_separator, "")
+    if captures = Regex.named_captures(@digits, compacted_format) do
+      String.length(captures["digits"])
+    else
+      0
+    end
+  end
+  
+  @docp """
+  Extract how many fraction digits are required to be displayed.
+  """
+  defp required_fraction_digits(nil), do: 0
+  defp required_fraction_digits(fraction_format) do
+    compacted_format = String.replace(fraction_format, @grouping_separator, "")
+    if captures = Regex.named_captures(@digits, compacted_format) do
+      String.length(captures["digits"])
+    else
+      0
+    end
+  end
+  
+  @docp """
+  Extract how many fraction digits can be optionally displayed.
+  """
+  {:ok, regex} = Regex.compile("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
+  @hashes regex
+  defp optional_fraction_digits(nil), do: 0
+  defp optional_fraction_digits(fraction_format) do
+    compacted_format = String.replace(fraction_format, @grouping_separator, "")
+    if captures = Regex.named_captures(@hashes, compacted_format) do
+      String.length(captures["hashes"])
+    else
+      0
+    end
+  end
+  
+  @docp """
+  ## Padding
 
   Patterns support padding the result to a specific width. In a pattern the pad escape character, 
   followed by a single pad character, causes padding to be parsed and formatted. The pad escape 
@@ -265,8 +313,7 @@ defmodule Cldr.Number.Format.Compiler do
   
   A format may have zero, one or two groupings - any others are ignored.
   """
-  defp grouping(format) do
-    [integer_format | _fraction_format] = String.split(format[:positive][:format], @decimal_separator)
+  defp grouping(integer_format) do
     [_drop | groups] = String.split(integer_format, @grouping_separator)
     
     grouping = groups
@@ -296,7 +343,7 @@ defmodule Cldr.Number.Format.Compiler do
   Significant Digits Examples
   
   | Pattern	| Minimum significant digits  | Maximum significant digits  | Number	  | Output |
-  |---------|-----------------------------|-----------------------------|-----------|--------|
+  | ------- | --------------------------- | --------------------------- | --------- | ------ |
   | @@@	    | 3	                          | 3	                          | 12345	    | 12300  |
   | @@@	    | 3	                          | 3	                          | 0.12345	  | 0.123  |
   | @@##	  | 2	                          | 4	                          | 3.14159	  | 3.142  |
@@ -391,6 +438,18 @@ defmodule Cldr.Number.Format.Compiler do
       Decimal.new(rounding_chars)
     else
       @default_rounding
+    end
+  end
+  
+  @docp """
+  Separate the format into the integer and fraction parts.
+  """
+  defp split_format(format) do
+    case String.split(format[:positive][:format], @decimal_separator) do
+      [integer_format, fraction_format] ->
+        [integer_format, fraction_format]
+      [integer_format | []] ->
+        [integer_format, nil]
     end
   end
   

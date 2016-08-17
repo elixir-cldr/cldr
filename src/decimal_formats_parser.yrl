@@ -9,7 +9,7 @@ Terminals plus minus format currency percent permille literal semicolon pad.
 Rootsymbol decimal_format.
 
 decimal_format    ->  positive_format semicolon negative_format : [{positive, '$1'}, {negative, '$3'}].
-decimal_format    ->  positive_format : [{positive, '$1'}, {negative, nil}].
+decimal_format    ->  positive_format : [{positive, '$1'}, negative('$1')].
 
 positive_format   ->  prefix number_format suffix : '$1' ++ format('$2') ++ '$3'.
 positive_format   ->  prefix number_format : '$1' ++ format('$2').
@@ -42,6 +42,10 @@ literal_elem      ->  minus : [{minus, "-"}].
 
 Erlang code.
 
+% If there is no negative pattern then build the default one
+negative(_Positive) ->
+  {negative, [{minus, "-"}, {format, same_as_positive}]}.
+  
 % Append list items.  Consolidate literals if possible into
 % a single list element.
 append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
