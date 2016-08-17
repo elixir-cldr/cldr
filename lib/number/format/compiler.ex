@@ -1,7 +1,100 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
 defmodule Cldr.Number.Format.Compiler do
-  import Kernel, except: [length: 1]
+  @moduledoc """
+  ## Number Patterns
+
+  Number patterns affect how numbers are interpreted in a localized context. Here 
+  are some examples, based on the French locale. The "." shows where the decimal 
+  point should go. The "," shows where the thousands separator should go. A "0" 
+  indicates zero-padding: if the number is too short, a zero (in the locale's 
+  numeric set) will go there. A "#" indicates no padding: if the number is too short, 
+  nothing goes there. A "¤" shows where the currency sign will go. The following 
+  illustrates the effects of different patterns for the French locale, with the number 
+  "1234.567". Notice how the pattern characters ',' and '.' are replaced by the 
+  characters appropriate for the locale.
+
+  ### Number Pattern Examples
   
+  ```
+  Pattern	   | Currency	| Text      
+  -----------|----------|-----------
+  #,##0.##	 | n/a	    | 1 234,57  
+  #,##0.###	 | n/a	    | 1 234,567 
+  ###0.##### | n/a	    | 1234,567  
+  ###0.0000# | n/a	    | 1234,5670 
+  00000.0000 | n/a	    | 01234,5670
+  #,##0.00 ¤ | EUR	    | 1 234,57 €
+             | JPY	    | 1 235 ¥JP 
+  ```
+                
+  The number of # placeholder characters before the decimal do not matter, since 
+  no limit is placed on the maximum number of digits. There should, however, be 
+  at least one zero someplace in the pattern. In currency formats, the number of 
+  digits after the decimal also do not matter, since the information in the 
+  supplemental data (see Supplemental Currency Data) is used to override the 
+  number of decimal places — and the rounding — according to the currency that 
+  is being formatted. That can be seen in the above chart, with the difference 
+  between Yen and Euro formatting.
+
+  ## Special Pattern Characters
+
+  Many characters in a pattern are taken literally; they are matched during parsing 
+  and output unchanged during formatting. Special characters, on the other hand, 
+  stand for other characters, strings, or classes of characters. For example, the 
+  '#' character is replaced by a localized digit for the chosen numberSystem. Often 
+  the replacement character is the same as the pattern character; in the U.S. locale, 
+  the ',' grouping character is replaced by ','. However, the replacement is still 
+  happening, and if the symbols are modified, the grouping character changes. Some 
+  special characters affect the behavior of the formatter by their presence; for 
+  example, if the percent character is seen, then the value is multiplied by 100 before 
+  being displayed.
+
+  To insert a special character in a pattern as a literal, that is, without any special 
+  meaning, the character must be quoted. There are some exceptions to this which are noted 
+  below. The Localized Replacement column shows the replacement from Cldr.Number.Symbol or 
+  the Cldr.Number.System's digits: italic indicates a special function.
+
+  ### Number Pattern Character Definitions
+  
+  ```
+  Symbol      | Meaning
+  ------------|----------------------------------
+  0	          | Digit
+  1-9	        | '1' through '9' indicate rounding.
+  @	          | Significant digit
+  #	          | Digit, omitting leading/trailing zeros
+  .	          | Decimal separator or monetary decimal separator
+  -	          | Minus sign.
+  ,	          | Grouping separator. 
+  +	          | Prefix positive exponents with localized plus sign. 
+  %	          | Multiply by 100 and show as percentage
+  ‰ (U+2030)  | Multiply by 1000 and show as per mille (aka “basis points”)
+  ;	          | Separates positive and negative subpatterns. 
+  ¤ (U+00A4)	| Any sequence is replaced by the localized currency symbol for the currency being formatted.
+  *	          | Pad escape, precedes pad character
+  '	          | Used to quote special characters in a prefix or suffix, for example, "'#'#" formats 123 to "#123"
+  ```
+  
+  A pattern contains a positive subpattern and may contain a negative subpattern, for example, 
+  "#,##0.00;(#,##0.00)". Each subpattern has a prefix, a numeric part, and a suffix. If there is 
+  no explicit negative subpattern, the implicit negative subpattern is the ASCII minus sign (-) 
+  prefixed to the positive subpattern. That is, "0.00" alone is equivalent to "0.00;-0.00". 
+  (The data in CLDR is normalized to remove an explicit subpattern where it would be identical 
+  to the explicit form.) If there is an explicit negative subpattern, it serves only to specify 
+  the negative prefix and suffix; the number of digits, minimal digits, and other characteristics 
+  are ignored in the negative subpattern. That means that "#,##0.0#;(#)" has precisely the same 
+  result as "#,##0.0#;(#,##0.0#)". However in the CLDR data, the format is normalized so that the 
+  other characteristics are preserved, just for readability.
+
+  Note: The thousands separator and decimal separator in patterns are always ASCII ',' and '.'. 
+  They are substituted by the code with the correct local values according to other fields in 
+  CLDR. The same is true of the - (ASCII minus sign) and other special characters listed above.
+  
+  Extracted from [Unicode number formats in TR35](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Formats)
+  """
+  
+  import Kernel, except: [length: 1]
+    
   @decimal_separator    "."
   @grouping_separator   ","
   @exponent_separator   "E"
@@ -12,7 +105,7 @@ defmodule Cldr.Number.Format.Compiler do
   @digits               ~r/[0-9]/
   @significant_digit    "@"
   
-  {:ok, rounding_pattern}  = 
+  {:ok, rounding_pattern}  =
     Regex.compile("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
     
   @rounding_pattern     rounding_pattern
@@ -31,6 +124,8 @@ defmodule Cldr.Number.Format.Compiler do
   
   ## Example
   
+      iex> Cldr.Number.Format.Compiler.placeholders
+      %{decimal: ".", exponent: "E", group: ",", minus: "-", plus: "+"}
   """
   @spec placeholders :: %{}
   def placeholders do
@@ -55,8 +150,15 @@ defmodule Cldr.Number.Format.Compiler do
   @doc """
   Parse a number format definition
 
-  Using a yexx lexer, parse a nunber format definition into an Elixir
-  AST that can then be `unquoted` into a function definition.
+  Using a yexx lexer, parse a nunber format definition into list of 
+  elements we can then interpret to format a number.
+  
+  ## Example
+  
+      iex> Cldr.Number.Format.Compiler.parse "¤ #,##0.00;¤-#,##0.00"
+      {:ok,
+       [positive: [currency: 1, literal: " ", format: "#,##0.00"],
+        negative: [currency: 1, minus: '-', format: :same_as_positive]]}
   """
   def parse(tokens) when is_list(tokens) do
     :decimal_formats_parser.parse tokens
@@ -67,6 +169,21 @@ defmodule Cldr.Number.Format.Compiler do
     tokens |> :decimal_formats_parser.parse
   end
   
+  @doc """
+  Parse a number format definition and analyze it.
+
+  After parsing, reduce the format to a set of metrics
+  that can then be used to format a number.
+  
+  ## Example
+  
+      iex> Cldr.Number.Format.Compiler.decode("#")
+      %{currency?: false, format: [positive: [format: "#"], negative: nil],
+        grouping: %{first: 0, rest: 0}, length: 1, multiplier: 1,
+        rounding: #Decimal<1>,
+        significant_digits: %{maximum_significant_digits: 0,
+          minimum_significant_digits: 0}}
+  """
   def decode(definition) do
     case parse(definition) do
     {:ok, format} ->
@@ -75,7 +192,8 @@ defmodule Cldr.Number.Format.Compiler do
       {:error, "Decimal format compiler: #{message}#{context}"}
     end
   end
-    
+  
+  
   defp analyze(format) do
     %{
       currency?:          currency_format?(format),
@@ -128,6 +246,12 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end 
   
+  @docp """
+  Return a scale factor depending on the format mask.
+  
+  We multiply the number by a scale factor if the format
+  has a percent or permille symbol.
+  """
   defp multiplier(format) do
     cond do
       percent_format?(format)   -> 100
@@ -136,6 +260,11 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
   
+  @docp """
+  Return the size of the groups (first and rest) for the format.
+  
+  A format may have zero, one or two groupings - any others are ignored.
+  """
   defp grouping(format) do
     [integer_format | _fraction_format] = String.split(format[:positive][:format], @decimal_separator)
     [_drop | groups] = String.split(integer_format, @grouping_separator)
@@ -255,9 +384,14 @@ defmodule Cldr.Number.Format.Compiler do
   
   * In a pattern, digits '1' through '9' specify rounding, but otherwise behave identically to digit '0'.
   """
+  @default_rounding Decimal.new(1)
   defp rounding(format) do
-    String.replace(format[:positive][:format], @rounding_pattern, "")
-    |> Decimal.new
+    rounding_chars = String.replace(format[:positive][:format], @rounding_pattern, "")
+    if String.length(rounding_chars) > 0 do
+      Decimal.new(rounding_chars)
+    else
+      @default_rounding
+    end
   end
   
   defp percent_format?(format) do

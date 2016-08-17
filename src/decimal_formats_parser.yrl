@@ -14,9 +14,12 @@ decimal_format    ->  positive_format : [{positive, '$1'}, {negative, nil}].
 positive_format   ->  prefix number_format suffix : '$1' ++ format('$2') ++ '$3'.
 positive_format   ->  prefix number_format : '$1' ++ format('$2').
 positive_format   ->  number_format suffix : format('$1') ++ '$2'.
-positive_format   ->  number_format :        format('$1').
+positive_format   ->  number_format :  format('$1').
 
-negative_format   ->  positive_format : '$1'.
+negative_format   ->  prefix number_format suffix : '$1' ++ neg_format('$2') ++ '$3'.
+negative_format   ->  prefix number_format : '$1' ++ neg_format('$2').
+negative_format   ->  number_format suffix : neg_format('$1') ++ '$2'.
+negative_format   ->  number_format :  neg_format('$1').
 
 number_format     ->  format : unwrap('$1').
 
@@ -48,6 +51,12 @@ append(A, B) when is_list(A) and is_list(B) ->
   
 format(F) ->
   [{format, F}].
+  
+% Doesn't matter what the negative format is
+% its always the same as the positive one
+% with potentially different suffix and prefix
+neg_format(_F) ->
+  [{format, same_as_positive}].
   
 pad(V) ->
   [{pad, unwrap(V)}].
