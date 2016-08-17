@@ -99,14 +99,8 @@ defmodule Cldr.Number.Format.Compiler do
   @digits               "[0-9]"
   @significant_digit    "@"
   
-  {:ok, rounding_pattern}  =
-    Regex.compile("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
-    
-  {:ok, digits_pattern} = 
-    Regex.compile(@digits)
-  
-  @digits_pattern       digits_pattern
-  @rounding_pattern     rounding_pattern
+  @digits_pattern       Regex.compile!(@digits)
+  @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
   
@@ -247,8 +241,7 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Extract how many fraction digits can be optionally displayed.
   """
-  {:ok, regex} = Regex.compile("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
-  @hashes regex
+  @hashes Regex.compile!("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
   defp optional_fraction_digits(""), do: 0
   defp optional_fraction_digits(fraction_format) do
     compacted_format = String.replace(fraction_format, @grouping_separator, "")
@@ -408,15 +401,15 @@ defmodule Cldr.Number.Format.Compiler do
   @leading_digits           "([" <> @digit_omit_zeroes <> @grouping_separator <> "]" <> "*)?"
   @min_significant_digits   "(?<ats>" <> @significant_digit <> "+)"
   @max_significant_digits   "(?<hashes>" <> @digit_omit_zeroes <> "*)?"
-  {:ok, regex} = Regex.compile(@leading_digits <> @min_significant_digits <> @max_significant_digits)
-  @significant_digits_match regex
+  @significant_digits_match Regex.compile!(@leading_digits <> @min_significant_digits <> @max_significant_digits)
   
   defp significant_digits(format) do
     compacted_format = String.replace(format[:positive][:format], @grouping_separator, "")
     if captures = Regex.named_captures(@significant_digits_match, compacted_format) do
       minimum_significant_digits = String.length(captures["ats"])
       maximim_significant_digits = minimum_significant_digits + String.length(captures["hashes"])
-      %{minimum_significant_digits: minimum_significant_digits, maximum_significant_digits: maximim_significant_digits}
+      %{minimum_significant_digits: minimum_significant_digits, 
+        maximum_significant_digits: maximim_significant_digits}
     else
       %{minimum_significant_digits: 0, maximum_significant_digits: 0}
     end
@@ -439,7 +432,8 @@ defmodule Cldr.Number.Format.Compiler do
   To specify a rounding increment in a pattern, include the increment in the pattern itself.
   "#,#50" specifies a rounding increment of 50. "#,##0.05" specifies a rounding increment of 0.05.
 
-  * Rounding only affects the string produced by formatting. It does not affect parsing or change any numerical values.
+  * Rounding only affects the string produced by formatting. It does not affect parsing or 
+  change any numerical values.
   
   * An implementation may allow the specification of a rounding mode to determine how values are
   rounded. In the absence of such choices, the default is to round "half-even", as described
