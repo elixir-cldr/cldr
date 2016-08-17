@@ -198,17 +198,20 @@ defmodule Cldr.Number.Format.Compiler do
   """
   defp analyze(format) do
     [integer_format, fraction_format] = split_format(format)
-      
     %{
       required_integer_digits:  required_integer_digits(integer_format),
       required_fraction_digits: required_fraction_digits(fraction_format),
       optional_fraction_digits: optional_fraction_digits(fraction_format),
-      length:                   length(format),
+      padding_length:           padding_length(format),
+      padding_char:             padding_char(format),
       multiplier:               multiplier(format),
       grouping:                 grouping(integer_format),
       significant_digits:       significant_digits(format),
       rounding:                 rounding(format),
-      format:                   format
+      format:                   format,
+      currency?:                currency_format?(format),
+      percent?:                 percent_format?(format),
+      permille?:                permille_format?(format)
     }
   end
   
@@ -280,19 +283,31 @@ defmodule Cldr.Number.Format.Compiler do
   
   This function determines the length of the pattern against which we pad if required.
   """
-  defp length(format) do
-    Enum.reduce format[:positive], 0, fn (element, len) ->
-      len + case element do
-        {:currency, size}   -> size
-        {:percent, _}       -> 1
-        {:permille, _}      -> 1
-        {:plus, _}          -> 1
-        {:minus, _}         -> 1
-        {:literal, literal} -> String.length(literal)
-        {:format, format}   -> String.length(format)
+  defp padding_length(format) do
+    if format[:positive][:pad] do
+      Enum.reduce format[:positive], 0, fn (element, len) ->
+        len + case element do
+          {:currency, size}   -> size
+          {:percent, _}       -> 1
+          {:permille, _}      -> 1
+          {:plus, _}          -> 1
+          {:minus, _}         -> 1
+          {:pad, _}           -> 0
+          {:literal, literal} -> String.length(literal)
+          {:format, format}   -> String.length(format)
+        end
       end
+    else
+      0
     end
-  end 
+  end
+  
+  @docp """
+  The pad char to be applied
+  """
+  def padding_char(format) do
+    format[:positive][:pad] || ""
+  end
   
   @docp """
   Return a scale factor depending on the format mask.
