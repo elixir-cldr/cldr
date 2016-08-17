@@ -66,7 +66,7 @@ defmodule Cldr.File do
   end
   
   def read(:numbers, locale) do
-    path = Path.join([Config.data_dir(), "cldr-numbers-#{Config.full_or_modern}", "main", locale, "numbers.json"])
+    path = Path.join([Config.data_dir(), "cldr-numbers-#{Config.full_or_modern()}", "main", locale, "numbers.json"])
     numbers = read_cldr_data(path)
     numbers["main"][locale]["numbers"]
   end

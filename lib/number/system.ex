@@ -1,6 +1,7 @@
 defmodule Cldr.Number.System do
+  alias Cldr.Number.Format.Compiler
   alias Cldr.File
-
+  
   defstruct [:name, :type, :digits, :rules]
     
   @default_number_system_type  :default
@@ -112,79 +113,126 @@ defmodule Cldr.Number.System do
   Transliterates from latin digits to another number system's digits.
   
   Transliterates the latin digits 0..9 to their equivalents in
-  another number system. Any non-digit in the string will be returned
-  "as is".
+  another number system. Also transliterates the decimal and grouping
+  separators as well as the plus and minus sign. Any other character
+  in the string will be returned "as is".
+  
+  * `locale` is any known locale, defaulting to `Cldr.default_locale()`.
+  
+  * `number_system` is any known number system.  If expressed as a
+  `binary` it is the actual name of a known number system.  If 
+  epressed as an atom it is used as a key to look up a number system for
+  the locale (the usual keys are `:default` and `:native`) but definitions
+  vary.  See `Cldr.Number.System.number_systems_for/1` for a locale
+  to see what number system types are defined.  The default is `:default`.
   
   For available number systems see `Cldr.Number.System.number_systems/0`
-  and `Cldr.Number.System.number_systems_for/1`
+  and `Cldr.Number.System.number_systems_for/1`.  Also see 
+  `Cldr.Number.Symbol.number_symbols_for/1`.
   
   ## Examples
   
       iex> Cldr.Number.System.transliterate("123556")
       "123556"
+      
+      iex> Cldr.Number.System.transliterate("123,556.000", "fr", :default) 
+      "123 556,000"
+      
+      iex> Cldr.Number.System.transliterate("123556", "th", :default)
+      "123556"
   
-      iex> Cldr.Number.System.transliterate("123556", "thai")
+      iex> Cldr.Number.System.transliterate("123556", "th", "thai")
       "๑๒๓๕๕๖"
       
-      iex> Cldr.Number.System.transliterate("Some number is: 123556", "thai")
+      iex> Cldr.Number.System.transliterate("123556", "th", :native)
+      "๑๒๓๕๕๖"
+      
+      iex> Cldr.Number.System.transliterate("Some number is: 123556", "th", "thai")
       "Some number is: ๑๒๓๕๕๖"
       
-      iex(5)> Cldr.Number.System.transliterate(12345, "thai")
+      iex(5)> Cldr.Number.System.transliterate(12345, "th", "thai")
       "๑๒๓๔๕"
       
-      iex(6)> Cldr.Number.System.transliterate(12345.0, "thai")
+      iex(6)> Cldr.Number.System.transliterate(12345.0, "th", "thai")
       "๑๒๓๔๕.๐"
       
-      iex(7)> Cldr.Number.System.transliterate(Decimal.new(12345.0), "thai")
+      iex(7)> Cldr.Number.System.transliterate(Decimal.new(12345.0), "th", "thai")
       "๑๒๓๔๕.๐"
   """
-  @spec transliterate(String.t | number, String.t) :: String.t
-  def transliterate(sequence, number_system \\ @default_number_system)
-  def transliterate(sequence, number_system) when is_integer(sequence) do
-    transliterate(Integer.to_string(sequence), number_system)
+  @spec transliterate(String.t | number, Cldr.locale, String.t) :: String.t
+  def transliterate(sequence, locale \\ Cldr.default_locale(), number_system \\ @default_number_system_type)
+  
+  # Maps the system type key to the actual type for transliteration
+  def transliterate(sequence, locale, number_system) when is_atom(number_system) do
+    transliterate(sequence, locale, Map.get(Cldr.Number.System.number_systems_for(locale), number_system).name)
   end
-  def transliterate(sequence, number_system) when is_float(sequence) do
-    transliterate(Float.to_string(sequence), number_system)
+  
+  # Convert common types to string for convenience.
+  def transliterate(sequence, locale, number_system) when is_integer(sequence) do
+    transliterate(Integer.to_string(sequence), locale, number_system)
   end
-  def transliterate(sequence = %Decimal{}, number_system) do
-    transliterate(Decimal.to_string(sequence), number_system)
+  def transliterate(sequence, locale, number_system) when is_float(sequence) do
+    transliterate(Float.to_string(sequence), locale, number_system)
   end
-  def transliterate(sequence, @default_number_system) do
-    sequence
+  def transliterate(sequence = %Decimal{}, locale, number_system) do
+    transliterate(Decimal.to_string(sequence), locale, number_system)
   end
 
   # Generate the transliteration functions that map one latin digit to
   # any other number system digit. Only applicable to number systems that
-  # have digits (some don't because they are rule based). Also omit
-  # the "latn" system since that doesn't require transliteration and is 
-  # handled by the default function above.
-  systems_with_digits = Enum.reject @number_systems, fn {name, system} -> 
-    is_nil(system.digits) || name == @default_number_system
+  # have digits (some don't because they are rule based).
+  systems_with_digits = Enum.reject @number_systems, fn {_name, system} -> 
+    is_nil(system.digits)
   end
   
   Enum.each systems_with_digits, fn {name, %{digits: digits}} ->
     graphemes = String.graphemes(digits)
     
-    def transliterate(sequence, number_system = unquote(name)) do
-      Enum.map(String.graphemes(sequence), &transliterate_digit(&1, number_system))
+    def transliterate(sequence, locale, number_system = unquote(name)) do
+      Enum.map(String.graphemes(sequence), &transliterate_char(&1, locale, number_system))
       |> List.to_string
     end
 
     # Mapping for each digit character
     Enum.each 0..9, fn (latin_digit) ->
       grapheme = :lists.nth(latin_digit + 1, graphemes)
-      defp transliterate_digit(unquote(Integer.to_string(latin_digit)), unquote(name)) do
+      defp transliterate_char(unquote(Integer.to_string(latin_digit)), _locale, unquote(name)) do
         unquote(grapheme)
       end
     end
+    
+    # Mapping for the grouping separator
+    defp transliterate_char(unquote(Compiler.placeholders().group), locale, unquote(name)) do
+      Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).group
+    end
+    
+    # Mapping for the decimal separator
+    defp transliterate_char(unquote(Compiler.placeholders().decimal), locale, unquote(name)) do
+      Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).decimal
+    end
 
+    # Mapping for the exponent
+    defp transliterate_char(unquote(Compiler.placeholders().exponent), locale, unquote(name)) do
+      Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).exponent
+    end
+    
+    # Mapping for the plus sign
+    defp transliterate_char(unquote(Compiler.placeholders().plus), locale, unquote(name)) do
+      Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).plus_sign
+    end
+    
+    # Mapping for the minus sign
+    defp transliterate_char(unquote(Compiler.placeholders().minus), locale, unquote(name)) do
+      Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).minus_sign
+    end
+    
     # Any unknown mapping gets returned as is
-    defp transliterate_digit(digit, unquote(name)) do
+    defp transliterate_char(digit, _locale, unquote(name)) do
       digit
     end
   end
   
-  def transliterate(_digit, number_system) do
+  def transliterate(_digit, _locale, number_system) do
     raise ArgumentError, "Number system #{inspect number_system} is not known."
   end
 end 

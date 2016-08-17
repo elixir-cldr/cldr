@@ -23,6 +23,27 @@ defmodule Cldr.Number.Format.Compiler do
   @min_fraction_digits  @min_integer_digits
   
   @doc """
+  Returns a map of the number placeholder symbols.
+  
+  These symbols are used in decimal number format
+  and are replaced with locale-specific characters
+  during number formatting.
+  
+  ## Example
+  
+  """
+  @spec placeholders :: %{}
+  def placeholders do
+    %{
+      decimal:              @decimal_separator,
+      group:                @grouping_separator,
+      exponent:             @exponent_separator,
+      plus:                 @plus_placeholder,
+      minus:                @minus_placeholder
+    }
+  end
+  
+  @doc """
   Scan a number format definition
   
   Using a leex lexer, tokenize a rule definition
@@ -47,7 +68,6 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   def decode(definition) do
-    IO.puts "Definition: #{inspect definition}"
     case parse(definition) do
     {:ok, format} ->
       analyze(format)
