@@ -99,13 +99,15 @@ defmodule Cldr.Number.Format.Compiler do
   @digits               "[0-9]"
   @significant_digit    "@"
   
-  @digits_pattern       Regex.compile!(@digits)
-  @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <> @significant_digit <> @grouping_separator <> "]")
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
   
   @max_fraction_digits  @max_integer_digits
   @min_fraction_digits  @min_integer_digits
+  
+  @digits_pattern       Regex.compile!(@digits)
+  @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <> 
+    @significant_digit <> @grouping_separator <> "]")
   
   @doc """
   Returns a map of the number placeholder symbols.
@@ -191,34 +193,32 @@ defmodule Cldr.Number.Format.Compiler do
   The metadata is used to generate the formatted output.
   """
   defp analyze(format) do
-    parts = split_format(format)
+    format_parts = split_format(format)
     %{
-      required_integer_digits:  required_integer_digits(parts["integer"]),
-      required_fraction_digits: required_fraction_digits(parts["fraction"]),
-      optional_fraction_digits: optional_fraction_digits(parts["fraction"]),
-      exponent:                 exponent(parts["exponent"]),
-      exponent_sign:            parts["exponent_sign"],
+      required_integer_digits:  required_integer_digits(format_parts),
+      required_fraction_digits: required_fraction_digits(format_parts),
+      optional_fraction_digits: optional_fraction_digits(format_parts),
+      exponent:                 exponent(format_parts),
+      exponent_sign:            exponent_sign(format_parts),
+      grouping:                 grouping(format_parts),
+      rounding:                 rounding(format_parts),
+      significant_digits:       significant_digits(format),
       padding_length:           padding_length(format),
       padding_char:             padding_char(format),
       multiplier:               multiplier(format),
-      grouping:                 grouping(parts["integer"]),
-      significant_digits:       significant_digits(format),
-      rounding:                 rounding(parts["integer"], parts["fraction"]),
-      format:                   format,
       currency?:                currency_format?(format),
       percent?:                 percent_format?(format),
-      permille?:                permille_format?(format)
+      permille?:                permille_format?(format),
+      format:                   format,
     }
   end
   
   @docp """
   Extact how many integer digits are to be displayed.
   """
-  {:ok, regex} = Regex.compile("(?<digits>" <> @digits <> "+)")
-  @digits regex
-  defp required_integer_digits(integer_format) do
-    compacted_format = String.replace(integer_format, @grouping_separator, "")
-    if captures = Regex.named_captures(@digits, compacted_format) do
+  @digits_match Regex.compile!("(?<digits>" <> @digits <> "+)")
+  defp required_integer_digits(%{"compact_integer" => integer_format}) do
+    if captures = Regex.named_captures(@digits_match, integer_format) do
       String.length(captures["digits"])
     else
       0
@@ -226,12 +226,11 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  Extract how many fraction digits are required to be displayed.
+  Extract how many fraction digits must be displayed.
   """
-  defp required_fraction_digits(""), do: 0
-  defp required_fraction_digits(fraction_format) do
-    compacted_format = String.replace(fraction_format, @grouping_separator, "")
-    if captures = Regex.named_captures(@digits, compacted_format) do
+  defp required_fraction_digits(%{"compact_fraction" => nil}), do: 0
+  defp required_fraction_digits(%{"compact_fraction" => fraction_format}) do
+    if captures = Regex.named_captures(@digits_match, fraction_format) do
       String.length(captures["digits"])
     else
       0
@@ -239,26 +238,34 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  Extract how many fraction digits can be optionally displayed.
+  Extract how many additional fraction digits may be displayed.
   """
-  @hashes Regex.compile!("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
-  defp optional_fraction_digits(""), do: 0
-  defp optional_fraction_digits(fraction_format) do
-    compacted_format = String.replace(fraction_format, @grouping_separator, "")
-    if captures = Regex.named_captures(@hashes, compacted_format) do
+  @hashes_match Regex.compile!("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
+  defp optional_fraction_digits(%{"compact_fraction" => ""}), do: 0
+  defp optional_fraction_digits(%{"compact_fraction" => fraction_format}) do
+    if captures = Regex.named_captures(@hashes_match, fraction_format) do
       String.length(captures["hashes"])
     else
       0
     end
   end
   
-  defp exponent(""), do: 0
-  defp exponent(exp) do
+  @docp """
+  Extract the exponent from the format
+  """
+  defp exponent(%{"exponent" => ""}), do: 0
+  defp exponent(%{"exponent" => exp}) do
     String.to_integer(exp)
   end
   
   @docp """
-  ## Padding
+  Extract whether a + sign was given the format exponent
+  """
+  def exponent_sign(%{"exponent_sign" => ""}), do: false
+  def exponent_sign(%{"exponent_sign" => _exponent_sign}), do: true
+  
+  @docp """
+  Extract the padding length of the format.
 
   Patterns support padding the result to a specific width. In a pattern the pad escape character, 
   followed by a single pad character, causes padding to be parsed and formatted. The pad escape 
@@ -303,10 +310,10 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  The pad char to be applied
+  The pad character to be applied if padding is in effect.
   """
   def padding_char(format) do
-    format[:positive][:pad] || ""
+    format[:positive][:pad] || nil
   end
   
   @docp """
@@ -324,11 +331,11 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  Return the size of the groups (first and rest) for the format.
+  Return the size of the groupings (first and rest) for the format.
   
   A format may have zero, one or two groupings - any others are ignored.
   """
-  defp grouping(integer_format) do
+  defp grouping(%{"integer" => integer_format}) do
     [_drop | groups] = String.split(integer_format, @grouping_separator)
     
     grouping = groups
@@ -347,7 +354,7 @@ defmodule Cldr.Number.Format.Compiler do
   end
   
   @docp """
-  *Significant Digits*
+  Extracts the significant digit metrics from the format.
 
   There are two ways of controlling how many digits are shows: (a) significant digits counts, or 
   (b) integer and fraction digit counts. Integer and fraction digit counts are described above. 
@@ -364,7 +371,8 @@ defmodule Cldr.Number.Format.Compiler do
   | @@##	  | 2	                          | 4	                          | 3.14159	  | 3.142  |
   | @@##	  | 2	                          | 4	                          | 1.23004	  | 1.23   |
 
-  * In order to enable significant digits formatting, use a pattern containing the '@' pattern character.
+  * In order to enable significant digits formatting, use a pattern containing the '@' pattern 
+  character.
   
   * In order to disable significant digits formatting, use a pattern that does not contain the '@' 
   pattern character.
@@ -403,20 +411,18 @@ defmodule Cldr.Number.Format.Compiler do
   @max_significant_digits   "(?<hashes>" <> @digit_omit_zeroes <> "*)?"
   @significant_digits_match Regex.compile!(@leading_digits <> @min_significant_digits <> @max_significant_digits)
   
-  defp significant_digits(format) do
-    compacted_format = String.replace(format[:positive][:format], @grouping_separator, "")
-    if captures = Regex.named_captures(@significant_digits_match, compacted_format) do
-      minimum_significant_digits = String.length(captures["ats"])
-      maximim_significant_digits = minimum_significant_digits + String.length(captures["hashes"])
-      %{minimum_significant_digits: minimum_significant_digits, 
-        maximum_significant_digits: maximim_significant_digits}
+  defp significant_digits(%{"compact_integer" => integer_format}) do
+    if captures = Regex.named_captures(@significant_digits_match, integer_format) do
+      minimum = String.length(captures["ats"])
+      maximim = minimum + String.length(captures["hashes"])
+      %{minimum: minimum, maximum: maximim}
     else
-      %{minimum_significant_digits: 0, maximum_significant_digits: 0}
+      %{minimum: 0, maximum: 0}
     end
   end
   
   @docp """
-  *Rounding*
+  Extract the rounding value from a format.
 
   Patterns support rounding to a specific increment. For example, 1230 rounded to
   the nearest 50 is 1250. Mathematically, rounding to specific increments is
@@ -448,9 +454,8 @@ defmodule Cldr.Number.Format.Compiler do
   * In a pattern, digits '1' through '9' specify rounding, but otherwise behave identically to digit '0'.
   """
   @default_rounding Decimal.new(1)
-  defp rounding(integer, ""), do: rounding(integer)
-  defp rounding(integer, fraction), do: rounding("#{integer}.#{fraction}")
-  defp rounding(format) do
+  defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
+    format = integer_format <> "." <> fraction_format
     rounding_chars = String.replace(format, @rounding_pattern, "")
     if String.length(rounding_chars) > 0 do
       Decimal.new(rounding_chars)
@@ -466,11 +471,14 @@ defmodule Cldr.Number.Format.Compiler do
   """
   @integer_part  "(?<integer>[0-9,@#]+)"
   @fraction_part "((\.(?<fraction>[0-9,#]+))?"
-  @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+))))?"
-  {:ok, regex} = Regex.compile(@integer_part <> @fraction_part <> @exponent_part)
-  @format regex
+  @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+)))?)?"
+  @format        Regex.compile!(@integer_part <> @fraction_part <> @exponent_part)
   defp split_format(format) do
-    Regex.named_captures(@format, format[:positive][:format])
+    parts = Regex.named_captures(@format, format[:positive][:format])
+    
+    parts
+    |> Map.put("compact_integer", String.replace(parts["integer"], @grouping_separator, ""))
+    |> Map.put("compact_fraction", String.replace(parts["fraction"], @grouping_separator, ""))
   end
   
   defp percent_format?(format) do

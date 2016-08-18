@@ -1,7 +1,4 @@
 defmodule Cldr.File do
-  alias Cldr.Config
-  alias Cldr.Number
-  
   @moduledoc """
   Utility functions to read the CLDR repository json
   files.
@@ -11,6 +8,9 @@ defmodule Cldr.File do
   support the generation of locale-specific functions
   at compile time.
   """
+  
+  alias Cldr.Config
+  alias Cldr.Number
   
   @currencies_data_path Path.join(Cldr.data_dir(), "/cldr-core/supplemental/currencyData.json")
   {:ok, data} = File.read!(@currencies_data_path) |> Poison.decode
@@ -82,6 +82,7 @@ defmodule Cldr.File do
         name:          currency["displayName"],
         symbol:        currency["symbol"],
         narrow_symbol: currency["symbol-alt-narrow"],
+        tender:        String.to_atom(rounding["_tender"] || "true"),
         digits:        String.to_integer(rounding["_digits"]),
         rounding:      String.to_integer(rounding["_rounding"]),
         cash_digits:   String.to_integer(rounding["_cashDigits"] || rounding["_digits"]),

@@ -11,6 +11,10 @@ defmodule Cldr.Number.Symbol do
       unquote(minimum_grouping_digits)
     end
     
+    def number_symbols_for(locale, system_name) when is_atom(system_name) do
+      number_symbols_for(locale, Atom.to_string(system_name))
+    end
+    
     Enum.each number_system_names, fn (system_name) ->
       symbol_info = numbers["symbols-numberSystem-#{system_name}"] 
       |> File.underscore_keys 

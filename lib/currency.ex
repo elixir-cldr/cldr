@@ -1,6 +1,7 @@
 defmodule Cldr.Currency do
   alias Cldr.File
-  defstruct [:code, :name, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, :cash_rounding, :count]
+  defstruct [:code, :name, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, 
+    :cash_rounding, :tender, :count]
   
   @type format :: :standard | :accounting | :short | :long | :percent | :scientific
   @type code :: atom | String.t
@@ -40,18 +41,20 @@ defmodule Cldr.Currency do
   
   Examples:
   
-      iex> Cldr.Currency.for_code "AUD" 
+      iex> Cldr.Currency.for_code("AUD") 
       %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "AUD",
-      count: %{one: "Australian dollar", other: "Australian dollars"}, digits: 2,
-      name: "Australian Dollar", narrow_symbol: "$", rounding: 0, symbol: "A$"}
+      count: %{one: "Australian dollar", other: "Australian dollars"},
+      digits: 2, name: "Australian Dollar", narrow_symbol: "$",
+      rounding: 0, symbol: "A$", tender: true}
       
-      iex> Cldr.Currency.for_code "THB"
+      iex> Cldr.Currency.for_code("THB")
       %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "THB",
-      count: %{one: "Thai baht", other: "Thai baht"}, digits: 2, name: "Thai Baht",
-      narrow_symbol: "฿", rounding: 0, symbol: "THB"}
+      count: %{one: "Thai baht", other: "Thai baht"}, digits: 2,
+      name: "Thai Baht", narrow_symbol: "฿", rounding: 0, symbol: "THB",
+      tender: true}
   """
   @spec for_code(code, Cldr.locale) :: %{}
-  def for_code(currency, locale \\ Cldr.default_locale), do: do_for_code(currency, locale)
+  def for_code(currency, locale \\ Cldr.default_locale()), do: do_for_code(currency, locale)
   
   @doc """
   Returns the currency metadata for a locale.
