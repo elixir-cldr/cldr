@@ -31,11 +31,10 @@ defmodule Cldr.Number do
 
   alias Cldr.Number.System
   alias Cldr.Number.Format
+  alias Cldr.Number.Format.Compiler
   
-  @type format :: :standard | :short | :long | :percent | :accounting | :scientific
-  
-  @spec to_string(number, [Keyword.t]) :: String.t
-  
+  @type format_type :: :standard | :short | :long | :percent | :accounting | :scientific
+
   @default_options [as:            :standard,
                     locale:        Cldr.default_locale(),
                     number_system: :default, 
@@ -43,6 +42,7 @@ defmodule Cldr.Number do
                     rounding:      :half_even, 
                     precision:     Cldr.Number.Math.default_rounding()]
   
+  @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options) do
     options = normalize_options(options, @default_options)
     if options[:format] do
@@ -56,19 +56,53 @@ defmodule Cldr.Number do
     end
   end
   
-  defp to_string(_number, _format, _options) do
+  # Compile the known decimal formats extracted from the 
+  # current configuration of Cldr.  This avoids having to tokenize
+  # parse and analyse the format on each invokation.  There
+  # are around 74 Cldr defined decimal formats so this isn't
+  # to burdensome on the compiler of the BEAM.
+  #
+  # TODO:  Is it worth precompiling even further using "en"
+  # locale?
+  Enum.each Cldr.Number.Format.decimal_format_list(), fn format ->
+    meta = Compiler.decode(format)
+    defp to_string(number, unquote(format), options) do
+      do_to_string(number, unquote(Macro.escape(meta)), options)
+    end
+  end
+  
+  # For formats not predefined we need to compile first
+  # and then process
+  defp to_string(number, format, options) do
+    meta = Compiler.decode(format)
+    do_to_string(number, meta, options)
+  end
+  
+  # Now we have the number to be formatted, the meta data that 
+  # defines the formatting and the options to be applied 
+  # (which is related to localisation of the final format)
+  defp do_to_string(_number, _meta, _options) do
     
   end
 
+  # us the `number_system` as a key to retrieve the format.  If you look
+  # at `Cldr.Number.System.number_systems_for("en") as an example you'll see a map
+  # of number systems keyed by a `type`.  This is a good abstract way to get to the
+  # formats when you're not interested in the details of a particular number system.
   defp format_from(locale, number_system) when is_atom(number_system) do
     system = System.number_systems_for(locale)[number_system].name |> String.to_existing_atom
     Format.decimal_formats_for(locale)[system]
   end
+  
+  # ...If however you already know the number system you want, then just specify
+  # it as a `String` for the `number_system` and it'll be directly retrieved.
   defp format_from(locale, number_system) when is_binary(number_system) do
     system = String.to_existing_atom(number_system)
     Format.decimal_formats_for(locale)[system]
   end
   
+  # Merge options and default options with supplied options always
+  # the winner.
   defp normalize_options(options, defaults) do
     Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
   end

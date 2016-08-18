@@ -198,11 +198,11 @@ defmodule Cldr.Number.Format.Compiler do
       required_integer_digits:  required_integer_digits(format_parts),
       required_fraction_digits: required_fraction_digits(format_parts),
       optional_fraction_digits: optional_fraction_digits(format_parts),
+      significant_digits:       significant_digits(format_parts),
       exponent:                 exponent(format_parts),
       exponent_sign:            exponent_sign(format_parts),
       grouping:                 grouping(format_parts),
       rounding:                 rounding(format_parts),
-      significant_digits:       significant_digits(format),
       padding_length:           padding_length(format),
       padding_char:             padding_char(format),
       multiplier:               multiplier(format),
@@ -455,7 +455,7 @@ defmodule Cldr.Number.Format.Compiler do
   """
   @default_rounding Decimal.new(1)
   defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
-    format = integer_format <> "." <> fraction_format
+    format = integer_format <> "." <> fraction_format |> String.trim_trailing(@decimal_separator)
     rounding_chars = String.replace(format, @rounding_pattern, "")
     if String.length(rounding_chars) > 0 do
       Decimal.new(rounding_chars)
