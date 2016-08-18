@@ -91,7 +91,7 @@ defmodule Cldr.Number do
                     locale:        Cldr.default_locale(),
                     number_system: :default, 
                     currency:      nil, 
-                    rounding:      :half_even, 
+                    rounding_mode: :half_even, 
                     precision:     Cldr.Number.Math.default_rounding()]
   
   @spec to_string(number, [Keyword.t]) :: String.t
@@ -137,12 +137,15 @@ defmodule Cldr.Number do
   defp do_to_string(number, meta, options) do
     to_decimal(number)
     |> multiply_by_factor(meta[:multiplier])
-    |> round_to_nearest(meta[:rounding], options[:rounding])
-    |> output_to_string(meta[:integer_digits], meta[:fractional_digits])
-    |> apply_grouping(meta[:grouping])
-    |> transliterate(options[:locale], options[:number_system])
-    |> apply_padding(meta[:padding_length], meta[:padding_char])
-    |> assemble_format(meta[:format])
+    |> round_to_nearest(meta[:rounding], options[:rounding_mode])
+    |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
+    |> adjust_leading_zeroes(meta[:integer_digits])
+    |> adjust_trailing_zeroes(meta[:fractional_digits])
+    # |> apply_grouping(meta[:grouping])
+    # |> reassemble_number_string
+    # |> transliterate(options[:locale], options[:number_system])
+    # |> apply_padding(meta[:padding_length], meta[:padding_char])
+    # |> assemble_format(meta[:format])
   end
 
   defp to_decimal(number = %Decimal{}), 
@@ -150,19 +153,42 @@ defmodule Cldr.Number do
   defp to_decimal(number), 
     do: Decimal.new(number)
   
-  defp multiply_by_factor(number, factor = %Decimal{coef: 1}), 
+  defp multiply_by_factor(number, _factor = %Decimal{coef: 1}), 
     do: number
   defp multiply_by_factor(number, factor), 
     do: Decimal.mult(number, factor)
   
-  defp round_to_nearest(number , rounding = %Decimal{coef: 0}, rounding_type),
+  defp round_to_nearest(number, %Decimal{coef: 0}, _rounding_mode),
     do: number
-  defp round_to_nearest(number, rounding, rounding_type) do
+  defp round_to_nearest(number, rounding, rounding_mode) do
     Decimal.div(number, rounding)
-    |> Decimal.round(0, rounding_type)
+    |> Decimal.round(0, rounding_mode)
     |> Decimal.mult(rounding)
   end
   
+  defp output_to_string(number, fraction_digits, rounding_mode) do
+    string = number
+    |> Decimal.round(fraction_digits[:max], rounding_mode)
+    |> Decimal.to_string
+    
+    Regex.named_captures(Compiler.number_match_regex(), string)
+  end
+  
+  # Remove all the trailing zeroes and add back what we
+  # need
+  defp adjust_trailing_zeroes(number, fraction_digits) do
+    fraction = String.trim_trailing(number["fraction"], "0")
+    number
+    |> Map.put("fraction", pad_trailing_zeroes(fraction, fraction_digits[:min]))
+  end
+ 
+  # Remove all the leading zeroes and add back what we
+  # need
+  defp adjust_leading_zeroes(number, integer_digits) do
+    integer = String.trim_leading(number["integer"], "0")
+    number
+    |> Map.put("integer", pad_leading_zeroes(integer, integer_digits[:min]))
+  end
   
   # use the `number_system` as a key to retrieve the format.  If you look
   # at `Cldr.Number.System.number_systems_for("en") as an example you'll 
@@ -180,6 +206,20 @@ defmodule Cldr.Number do
   defp format_from(locale, number_system) when is_binary(number_system) do
     system = String.to_existing_atom(number_system)
     Format.decimal_formats_for(locale)[system]
+  end
+  
+  defp pad_leading_zeroes(number, count) when count <= 0 do
+    number
+  end
+  defp pad_leading_zeroes(number, count) do
+    String.pad_leading(number, count, "0")
+  end
+  
+  defp pad_trailing_zeroes(number, count) when count <= 0 do
+    number
+  end
+  defp pad_trailing_zeroes(number, count) do
+    String.pad_trailing(number, count, "0")
   end
   
   # Merge options and default options with supplied options always

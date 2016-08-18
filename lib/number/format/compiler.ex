@@ -203,7 +203,8 @@ defmodule Cldr.Number.Format.Compiler do
       integer_digits:      %{min: required_integer_digits(format_parts),
                              max: @max_integer_digits},
       fractional_digits:   %{min: required_fraction_digits(format_parts),
-                             max: optional_fraction_digits(format_parts)},
+                             max: optional_fraction_digits(format_parts) +
+                                  required_fraction_digits(format_parts)},
       significant_digits:  significant_digits(format_parts),
       exponent:            exponent(format_parts),
       exponent_sign:       exponent_sign(format_parts),
@@ -334,9 +335,9 @@ defmodule Cldr.Number.Format.Compiler do
   """
   defp multiplier(format) do
     cond do
-      percent_format?(format)   -> 100
-      permille_format?(format)  -> 1000
-      true                      -> 1
+      percent_format?(format)   -> Decimal.new(100)
+      permille_format?(format)  -> Decimal.new(1000)
+      true                      -> Decimal.new(1)
     end
   end
   
@@ -497,6 +498,11 @@ defmodule Cldr.Number.Format.Compiler do
   @fraction_part "((\.(?<fraction>[0-9,#]+))?"
   @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+)))?)?"
   @format Regex.compile!(@integer_part <> @fraction_part <> @exponent_part)
+  
+  def number_match_regex do
+    @format
+  end
+  
   defp split_format(format) do
     parts = Regex.named_captures(@format, format[:positive][:format])
     
