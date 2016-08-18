@@ -77,7 +77,6 @@ defmodule Cldr.Number do
   are required to display the specified number of significant digits. It may
   ignore min/max integer/fraction digits, or it may use them to the extent
   possible.
-
   """
 
   alias Cldr.Number.System
@@ -104,7 +103,7 @@ defmodule Cldr.Number do
     else
       options = options |> Keyword.delete(:format)
       format = format_from(options[:locale], options[:number_system]) 
-      |> Map.get(options[:as])
+        |> Map.get(options[:as])
       to_string(number, format, options)
     end
   end
@@ -153,13 +152,18 @@ defmodule Cldr.Number do
   defp to_decimal(number), 
     do: Decimal.new(number)
   
-  defp multiply_by_factor(number, _factor = %Decimal{coef: 1}), 
-    do: number
-  defp multiply_by_factor(number, factor), 
-    do: Decimal.mult(number, factor)
+  defp multiply_by_factor(number, %Decimal{coef: 1} = _factor) do
+    number
+  end
   
-  defp round_to_nearest(number, %Decimal{coef: 0}, _rounding_mode),
-    do: number
+  defp multiply_by_factor(number, factor) do
+    Decimal.mult(number, factor)
+  end
+  
+  defp round_to_nearest(number, %Decimal{coef: 0}, _rounding_mode) do
+    number
+  end
+  
   defp round_to_nearest(number, rounding, rounding_mode) do
     Decimal.div(number, rounding)
     |> Decimal.round(0, rounding_mode)
@@ -178,22 +182,20 @@ defmodule Cldr.Number do
   # need
   defp adjust_trailing_zeroes(number, fraction_digits) do
     fraction = String.trim_trailing(number["fraction"], "0")
-    number
-    |> Map.put("fraction", pad_trailing_zeroes(fraction, fraction_digits[:min]))
+    %{number | "fraction" => pad_trailing_zeroes(fraction, fraction_digits[:min])}
   end
  
   # Remove all the leading zeroes and add back what we
   # need
   defp adjust_leading_zeroes(number, integer_digits) do
     integer = String.trim_leading(number["integer"], "0")
-    number
-    |> Map.put("integer", pad_leading_zeroes(integer, integer_digits[:min]))
+    %{number | "integer" => pad_leading_zeroes(integer, integer_digits[:min])}
   end
   
   # use the `number_system` as a key to retrieve the format.  If you look
   # at `Cldr.Number.System.number_systems_for("en") as an example you'll 
   # see a map of number systems keyed by a `type`.  This is a good abstract 
-  # to get to theformats when you're not interested in the details of a 
+  # to get to the formats when you're not interested in the details of a 
   # particular number system.
   defp format_from(locale, number_system) when is_atom(number_system) do
     system = System.number_systems_for(locale)[number_system].name 

@@ -1,11 +1,40 @@
 defmodule Cldr.Currency do
   alias Cldr.File
-  defstruct [:code, :name, :symbol, :narrow_symbol, :digits, :rounding, :cash_digits, 
-    :cash_rounding, :tender, :count]
   
-  @type format :: :standard | :accounting | :short | :long | :percent | :scientific
-  @type code :: atom | String.t
- 
+  @type format :: :standard | 
+    :accounting | 
+    :short | 
+    :long | 
+    :percent | 
+    :scientific
+                  
+  @type code :: String.t
+  
+  @type t :: %__MODULE__{
+    code: code,
+    name: String.t,
+    tender: boolean,
+    symbol: String.t,
+    digits: pos_integer,
+    rounding: pos_integer,
+    narrow_symbol: String.t,
+    cash_digits: pos_integer,
+    cash_rounding: pos_integer,
+    count: %{}
+  }
+  
+  defstruct [
+    :code, 
+    :name, 
+    :symbol, 
+    :narrow_symbol, 
+    :digits, 
+    :rounding, 
+    :cash_digits, 
+    :cash_rounding, 
+    :tender, 
+    :count]
+    
   @doc """
   Returns a list of all known currency codes.
   
@@ -34,6 +63,7 @@ defmodule Cldr.Currency do
   def known_currency?(currency) when is_binary(currency) do
     !!Enum.find(known_currencies(), &(&1 == currency))
   end 
+  
   @doc """
   Returns the currency metadata for the requested currency code.
   
@@ -54,7 +84,9 @@ defmodule Cldr.Currency do
       tender: true}
   """
   @spec for_code(code, Cldr.locale) :: %{}
-  def for_code(currency, locale \\ Cldr.default_locale()), do: do_for_code(currency, locale)
+  def for_code(currency, locale \\ Cldr.default_locale()) do
+    do_for_code(currency, locale)
+  end
   
   @doc """
   Returns the currency metadata for a locale.
