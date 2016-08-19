@@ -80,10 +80,16 @@ defmodule Cldr.Number do
   """
   import Cldr.Number.String
   import Cldr.Number.Format, only: [format_from: 2]
-  alias Cldr.Number.Format.Compiler
+  import Cldr.Number.System, only: [transliterate: 3]
   
-  @type format_type :: :standard | :short | :long | :percent 
-                      | :accounting | :scientific
+  alias Cldr.Number.Format.Compiler
+
+  @type format_type :: :standard | 
+                       :short | 
+                       :long | 
+                       :percent |
+                       :accounting |
+                       :scientific
 
   @default_options [as:            :standard,
                     locale:        Cldr.default_locale(),
@@ -93,7 +99,7 @@ defmodule Cldr.Number do
                     precision:     Cldr.Number.Math.default_rounding()]
   
   @spec to_string(number, [Keyword.t]) :: String.t
-  def to_string(number, options) do
+  def to_string(number, options \\ @default_options) do
     options = normalize_options(options, @default_options)
     if options[:format] do
       options = options |> Keyword.delete(:as)
@@ -141,9 +147,9 @@ defmodule Cldr.Number do
     |> adjust_trailing_zeroes(meta[:fractional_digits])
     |> apply_grouping(meta[:grouping])
     |> reassemble_number_string
-    # |> transliterate(options[:locale], options[:number_system])
-    # |> apply_padding(meta[:padding_length], meta[:padding_char])
-    # |> assemble_format(meta[:format])
+    |> transliterate(options[:locale], options[:number_system])
+    |> apply_padding(meta[:padding_length], meta[:padding_char])
+    |> assemble_format(meta[:format], options[:locale], options[:number_system])
   end
 
   defp to_decimal(number = %Decimal{}), 
@@ -221,10 +227,19 @@ defmodule Cldr.Number do
   def reassemble_number_string(%{"fraction" => ""} = number) do
     number["integer"]
   end
+  
   def reassemble_number_string(number) do
     number["integer"] <> Compiler.placeholder(:decimal) <> number["fraction"]
   end
    
+  def apply_padding(number, length, char) do
+    String.pad_leading(number, length, char)
+  end
+  
+  def assemble_format(number, format, locale, number_system) do
+    number
+  end
+  
   # Merge options and default options with supplied options always
   # the winner.
   defp normalize_options(options, defaults) do

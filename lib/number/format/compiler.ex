@@ -103,6 +103,7 @@ defmodule Cldr.Number.Format.Compiler do
   @digit_omit_zeroes    "#"
   @digits               "[0-9]"
   @significant_digit    "@"
+  @default_pad_char     " "
   
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
@@ -207,7 +208,7 @@ defmodule Cldr.Number.Format.Compiler do
       exponent_sign:       exponent_sign(format_parts),
       grouping:            grouping(format_parts),
       rounding:            rounding(format_parts),
-      padding_length:      padding_length(format),
+      padding_length:      padding_length(format[:positive][:pad], format),
       padding_char:        padding_char(format),
       multiplier:          multiplier(format),
       currency?:           currency_format?(format),
@@ -298,22 +299,22 @@ defmodule Cldr.Number.Format.Compiler do
  This function determines the length of the pattern against which we pad if
   required.
   """
-  defp padding_length(format) do
-    if format[:positive][:pad] do
-      Enum.reduce format[:positive], 0, fn (element, len) ->
-        len + case element do
-          {:currency, size}   -> size
-          {:percent, _}       -> 1
-          {:permille, _}      -> 1
-          {:plus, _}          -> 1
-          {:minus, _}         -> 1
-          {:pad, _}           -> 0
-          {:literal, literal} -> String.length(literal)
-          {:format, format}   -> String.length(format)
-        end
+  defp padding_length(nil, _format) do
+    0
+  end
+  
+  defp padding_length(_pad, format) do
+    Enum.reduce format[:positive], 0, fn (element, len) ->
+      len + case element do
+        {:currency, size}   -> size
+        {:percent, _}       -> 1
+        {:permille, _}      -> 1
+        {:plus, _}          -> 1
+        {:minus, _}         -> 1
+        {:pad, _}           -> 0
+        {:literal, literal} -> String.length(literal)
+        {:format, format}   -> String.length(format)
       end
-    else
-      0
     end
   end
   
@@ -321,7 +322,7 @@ defmodule Cldr.Number.Format.Compiler do
   The pad character to be applied if padding is in effect.
   """
   def padding_char(format) do
-    format[:positive][:pad] || nil
+    format[:positive][:pad] || @default_pad_char
   end
   
   @docp """
@@ -442,9 +443,10 @@ defmodule Cldr.Number.Format.Compiler do
   """
   
   # Build up the regex to extract the '@' and following '#' from the pattern
-  @leading_digits "([" <> @digit_omit_zeroes <> @grouping_separator <> "]" <> "*)?"
   @min_significant_digits   "(?<ats>" <> @significant_digit <> "+)"
   @max_significant_digits   "(?<hashes>" <> @digit_omit_zeroes <> "*)?"
+  @leading_digits "([" <> @digit_omit_zeroes 
+      <> @grouping_separator <> "]" <> "*)?"
   @significant_digits_match Regex.compile!(@leading_digits 
       <> @min_significant_digits <> @max_significant_digits)
   
@@ -508,11 +510,6 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
   
-  @docp """
-  Separate the format into the integer, fraction and exponent parts.
-  
-  In the lexer the regex is ([@#,]*)?([0-9]+)?(\.[0-9#,]+)?([Ee](\+)?[0-9]+)?
-  """
   @integer_part  "(?<integer>[0-9,@#]+)"
   @fraction_part "((\.(?<fraction>[0-9,#]+))?"
   @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+)))?)?"
@@ -522,6 +519,11 @@ defmodule Cldr.Number.Format.Compiler do
     @format
   end
   
+  @docp """
+  Separate the format into the integer, fraction and exponent parts.
+  
+  In the lexer the regex is ([@#,]*)?([0-9]+)?(\.[0-9#,]+)?([Ee](\+)?[0-9]+)?
+  """
   defp split_format(format) do
     parts = Regex.named_captures(@format, format[:positive][:format])
     
