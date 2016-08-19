@@ -297,11 +297,13 @@ defmodule Cldr.Number do
     end
   end
   
-  # ¤      Standard currency symbol
-  # ¤¤     ISO currency symbol (constant)
-  # ¤¤¤    Appropriate currency display name for the currency, based on the
-  #        plural rules in effect for the locale
-  # ¤¤¤¤¤  Narrow currency symbol.
+  # Extract the appropriate currency symbol based upon how many currency
+  # placeholders are in the format as follows:
+  #   ¤      Standard currency symbol
+  #   ¤¤     ISO currency symbol (constant)
+  #   ¤¤¤    Appropriate currency display name for the currency, based on the
+  #          plural rules in effect for the locale
+  #   ¤¤¤¤¤  Narrow currency symbol.
   defp currency_symbol(%Cldr.Currency{} = currency, _number, 1, _locale) do
     currency.symbol
   end
@@ -311,8 +313,6 @@ defmodule Cldr.Number do
   end
  
   defp currency_symbol(%Cldr.Currency{} = currency, number, 3, locale) do
-    IO.puts "Number: #{inspect number}"
-    IO.puts "Locale: #{inspect locale}"
     selector = Cldr.Number.Cardinal.plural_rule(number, locale)
     currency.count[selector] || currency.count[:other]
   end
