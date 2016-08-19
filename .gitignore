@@ -1,6 +1,7 @@
 /_build
 /cover
 /deps
+*.snapshot
 erl_crash.dump
 *.ez
 .DS_Store
