@@ -30,7 +30,6 @@ defmodule Cldr.Mixfile do
   defp deps do
     [{:poison, "~> 2.1"},
      {:decimal, github: "ericmj/decimal" },
-     {:float, github: "kipcole9/elixir-float_pp"},
      {:junit_formatter, "~> 0.0.2", only: :test},
      {:benchfella, "~> 0.3.0", only: :dev}]
   end

@@ -81,6 +81,11 @@ defmodule Cldr.Number.PluralRule do
       number or currency
       """
       def plural_rule(number, locale \\ Cldr.default_locale(), rounding \\ Cldr.Number.Math.default_rounding())
+      
+      def plural_rule(string, locale, rounding) when is_binary(string) do
+        plural_rule(Decimal.new(string), locale, rounding)
+      end
+      
       def plural_rule(number, locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
@@ -100,7 +105,7 @@ defmodule Cldr.Number.PluralRule do
   
       # For the case where its a Decimal we guard against a map (which is the underlying representation of
       # a Decimal).  Don't use rounding because the precision is specified for Decimals.
-      def plural_rule(number, locale, rounding) when is_map(number) and is_integer(rounding) and rounding > 0 do
+      def plural_rule(%Decimal{} = number, locale, rounding) when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
     

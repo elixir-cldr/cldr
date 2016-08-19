@@ -81,8 +81,10 @@ defmodule Cldr.Number do
   import Cldr.Number.String
   import Cldr.Number.Format, only: [format_from: 2]
   import Cldr.Number.System, only: [transliterate: 3]
+  import Cldr.Number.Symbol, only: [number_symbols_for: 2]
   
   alias Cldr.Number.Format.Compiler
+  alias Cldr.Currency
 
   @type format_type :: :standard | 
                        :short | 
@@ -101,6 +103,8 @@ defmodule Cldr.Number do
   @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options \\ @default_options) do
     options = normalize_options(options, @default_options)
+    |> detect_negative_number(number)
+    
     if options[:format] do
       options = options |> Keyword.delete(:as)
       format = options[:format]
@@ -149,14 +153,24 @@ defmodule Cldr.Number do
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
     |> apply_padding(meta[:padding_length], meta[:padding_char])
-    |> assemble_format(meta[:format], options[:locale], options[:number_system])
+    |> assemble_format(number, meta[:format], options)
   end
 
-  defp to_decimal(number = %Decimal{}), 
-    do: number
-  defp to_decimal(number), 
-    do: Decimal.new(number)
+  # Convert the number to a decimal since it preserves precision
+  # better when we round.  Then use the absolute value since
+  # the sign only determines which pattern we use (positive
+  # or negative)
+  defp to_decimal(number = %Decimal{}) do
+    number |> Decimal.abs()
+  end
   
+  defp to_decimal(number) do
+    Decimal.new(number) |> Decimal.abs()
+  end
+  
+  # If the format includes a % (percent) or permille then we
+  # adjust the number by a factor.  All other formats the factor
+  # is 1 and hence we avoid the multiplication.
   defp multiply_by_factor(number, %Decimal{coef: 1} = _factor) do
     number
   end
@@ -165,6 +179,8 @@ defmodule Cldr.Number do
     Decimal.mult(number, factor)
   end
   
+  # A format can include a rounding specification which we apply
+  # here execpt if there is no rounding specified.
   defp round_to_nearest(number, %Decimal{coef: 0}, _rounding_mode) do
     number
   end
@@ -175,6 +191,9 @@ defmodule Cldr.Number do
     |> Decimal.mult(rounding)
   end
   
+  # Output the number to a string - all the other transformations
+  # are done on the string version split into its constituent
+  # parts
   defp output_to_string(number, fraction_digits, rounding_mode) do
     string = number
     |> Decimal.round(fraction_digits[:max], rounding_mode)
@@ -183,61 +202,135 @@ defmodule Cldr.Number do
     Regex.named_captures(Compiler.number_match_regex(), string)
   end
   
-  # Remove all the trailing zeroes and add back what we
-  # need
+  # Remove all the trailing zeroes and add back what
+  # is required for the format
   defp adjust_trailing_zeroes(number, fraction_digits) do
     fraction = String.trim_trailing(number["fraction"], "0")
     %{number | "fraction" => pad_trailing_zeroes(fraction, fraction_digits[:min])}
   end
  
-  # Remove all the leading zeroes and add back what we
-  # need
+  # Remove all the leading zeroes and add back what
+  # is required for the format
   defp adjust_leading_zeroes(number, integer_digits) do
     integer = String.trim_leading(number["integer"], "0")
     %{number | "integer" => pad_leading_zeroes(integer, integer_digits[:min])}
   end
 
-  # Grouping for when there is only one group size
-  defp apply_grouping(string, %{first: first, rest: rest})  when first == rest do
-    do_grouping(string, first)
-  end
-  
-  # Group the digits
-  defp apply_grouping(number, groups) do
-    integer = do_grouping(number["integer"], groups[:integer], :reverse)
-    fraction = do_grouping(number["fraction"], groups[:fraction])
+  # Insert the grouping placeholder in the right place in the number.
+  # There may be one or two different groupings for the integer part
+  # and one grouping for the fraction part.
+  defp apply_grouping(string, groups) do
+    integer = do_grouping(string["integer"], groups[:integer], :reverse)
+    fraction = do_grouping(string["fraction"], groups[:fraction])
     
-    %{number | "integer" => integer, "fraction" => fraction}
+    %{string | "integer" => integer, "fraction" => fraction}
   end
   
-  # TODO: Currently is ignoring the `rest` grouping size
-  def do_grouping(string, groups, direction \\ :forward)
-  def do_grouping(string, groups, :reverse) do
+  # The actually grouping function.  Note there are two directions,
+  # `:forward` and `:reverse`.  Thats because we group from the decimal
+  # placeholder outwards and there may be a final group that is less than
+  # the grouping size.  For the fraction part the dangling part is at the
+  # end (:forward direction) whereas for the integer part the dangling
+  # group is at the beginning (:reverse direction)
+  defp do_grouping(string, groups, direction \\ :forward)
+  defp do_grouping(string, groups, :reverse) do
     String.reverse(string) 
     |> do_grouping(groups)
     |> String.reverse
   end
-  def do_grouping(string, %{first: first, rest: _rest}, :forward) do
+  
+  # The case when there is only one grouping.
+  defp do_grouping(string, %{first: first, rest: rest}, :forward) when first == rest do
     chunk_string(string, first)
     |> Enum.join(Compiler.placeholder(:group))
   end
   
+  # The case when there are two different groupings this applies only to
+  # The integer part.
+  defp do_grouping(string, %{first: first, rest: rest}, :forward) do
+    [first_group | other_groups] = chunk_string(string, first)
+    other_groups = Enum.join(other_groups) |> chunk_string(rest)
+    Enum.join([first_group] ++ other_groups, Compiler.placeholder(:group))
+  end
+  
   # Put the parts of the number back together again
   # TODO: Not yet handling the exponent
-  def reassemble_number_string(%{"fraction" => ""} = number) do
+  defp reassemble_number_string(%{"fraction" => ""} = number) do
     number["integer"]
   end
   
-  def reassemble_number_string(number) do
+  # When there is both an integer and fraction parts
+  defp reassemble_number_string(number) do
     number["integer"] <> Compiler.placeholder(:decimal) <> number["fraction"]
   end
    
-  def apply_padding(number, length, char) do
+  # Pad the number to the format length
+  defp apply_padding(number, 0, _char) do
+    number
+  end
+  
+  defp apply_padding(number, length, char) do
     String.pad_leading(number, length, char)
   end
   
-  def assemble_format(number, format, locale, number_system) do
-    number
+  # Now we can assemble the final format.  Based upon
+  # whether the number is positive or negative (as indicated
+  # by options[:sign]) we assemble the parts and transliterate
+  # the currency sign, percent and permille characters.
+  defp assemble_format(number_string, number, format, options) do
+    format = format[options[:pattern]]
+    locale = options[:locale]
+    system = options[:number_system]
+    currency = options[:currency]
+    
+    Enum.reduce format, "", fn (token, string) ->
+      string <> case token do
+        {:currency, size}   -> currency_symbol(currency, number, size, locale)
+        {:percent, _}       -> number_symbols_for(locale, system).percent_sign
+        {:permille, _}      -> number_symbols_for(locale, system).permille
+        {:plus, _}          -> number_symbols_for(locale, system).plus_sign
+        {:minus, _}         -> number_symbols_for(locale, system).minus_sign
+        {:literal, literal} -> literal
+        {:format, _format}  -> number_string
+        {:pad, _}           -> ""
+      end
+    end
+  end
+  
+  # ¤      Standard currency symbol
+  # ¤¤     ISO currency symbol (constant)
+  # ¤¤¤    Appropriate currency display name for the currency, based on the
+  #        plural rules in effect for the locale
+  # ¤¤¤¤¤  Narrow currency symbol.
+  defp currency_symbol(%Cldr.Currency{} = currency, _number, 1, _locale) do
+    currency.symbol
+  end
+  
+  defp currency_symbol(%Cldr.Currency{} = currency, _number, 2, _locale) do
+    currency.code
+  end
+ 
+  defp currency_symbol(%Cldr.Currency{} = currency, number, 3, locale) do
+    IO.puts "Number: #{inspect number}"
+    IO.puts "Locale: #{inspect locale}"
+    selector = Cldr.Number.Cardinal.plural_rule(number, locale)
+    currency.count[selector] || currency.count[:other]
+  end
+ 
+  defp currency_symbol(%Cldr.Currency{} = currency, _number, 5, _locale) do
+    currency.narrow_symbol || currency.symbol
+  end
+  
+  defp currency_symbol(nil, _number, _size, _locale) do
+    raise ArgumentError, message: """
+      Cannot use a format with a currency place holder
+      unless `option[:currency] is set to a currency code.
+    """
+  end
+  
+  defp currency_symbol(currency, number, size, locale) do
+    currency = Currency.for_code(currency, locale) 
+    currency_symbol(currency, number, size, locale)
   end
   
   # Merge options and default options with supplied options always
@@ -246,4 +339,16 @@ defmodule Cldr.Number do
     Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
   end
   
+  defp detect_negative_number(options, number)
+      when (is_float(number) or is_integer(number)) and number < 0 do
+    Keyword.put(options, :pattern, :negative)
+  end
+  
+  defp detect_negative_number(options, %Decimal{sign: sign}) when sign < 0 do
+    Keyword.put(options, :pattern, :negative)
+  end
+  
+  defp detect_negative_number(options, _number) do
+    Keyword.put(options, :pattern, :positive)
+  end
 end 

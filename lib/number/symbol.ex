@@ -11,8 +11,12 @@ defmodule Cldr.Number.Symbol do
       unquote(minimum_grouping_digits)
     end
     
+    # If the system_name is an atom then it is a key into the number
+    # systems for the locale (:default, :native, etc) which we use to 
+    # look up the system name and then re-invoke
     def number_symbols_for(locale, system_name) when is_atom(system_name) do
-      number_symbols_for(locale, Atom.to_string(system_name))
+      number_system = Number.System.number_systems_for(locale)[system_name].name
+      number_symbols_for(locale, number_system)
     end
     
     Enum.each number_system_names, fn (system_name) ->
