@@ -250,7 +250,7 @@ defmodule Cldr.Number do
   defp do_grouping(string, %{first: first, rest: rest}, :forward) do
     [first_group | other_groups] = chunk_string(string, first)
     other_groups = Enum.join(other_groups) |> chunk_string(rest)
-    Enum.join([first_group] ++ other_groups, Compiler.placeholder(:group))
+    [first_group] ++ other_groups |> Enum.join(Compiler.placeholder(:group))
   end
   
   # Put the parts of the number back together again
