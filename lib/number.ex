@@ -79,9 +79,8 @@ defmodule Cldr.Number do
   possible.
 
   """
-
-  alias Cldr.Number.System
-  alias Cldr.Number.Format
+  import Cldr.Number.String
+  import Cldr.Number.Format, only: [format_from: 2]
   alias Cldr.Number.Format.Compiler
   
   @type format_type :: :standard | :short | :long | :percent 
@@ -141,8 +140,8 @@ defmodule Cldr.Number do
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeroes(meta[:integer_digits])
     |> adjust_trailing_zeroes(meta[:fractional_digits])
-    # |> apply_grouping(meta[:grouping])
-    # |> reassemble_number_string
+    |> apply_grouping(meta[:grouping])
+    |> reassemble_number_string
     # |> transliterate(options[:locale], options[:number_system])
     # |> apply_padding(meta[:padding_length], meta[:padding_char])
     # |> assemble_format(meta[:format])
@@ -190,38 +189,40 @@ defmodule Cldr.Number do
     |> Map.put("integer", pad_leading_zeroes(integer, integer_digits[:min]))
   end
   
-  # use the `number_system` as a key to retrieve the format.  If you look
-  # at `Cldr.Number.System.number_systems_for("en") as an example you'll 
-  # see a map of number systems keyed by a `type`.  This is a good abstract 
-  # to get to theformats when you're not interested in the details of a 
-  # particular number system.
-  defp format_from(locale, number_system) when is_atom(number_system) do
-    system = System.number_systems_for(locale)[number_system].name 
-    |> String.to_existing_atom
-    Format.decimal_formats_for(locale)[system]
+  # Grouping for when there is only one group size
+  defp apply_grouping(string, %{first: first, rest: rest})  when first == rest do
+    do_grouping(string, first)
   end
   
-  # ...If however you already know the number system you want, then just specify
-  # it as a `String` for the `number_system` and it'll be directly retrieved.
-  defp format_from(locale, number_system) when is_binary(number_system) do
-    system = String.to_existing_atom(number_system)
-    Format.decimal_formats_for(locale)[system]
+  # Group the digits
+  defp apply_grouping(number, groups) do
+    integer = do_grouping(number["integer"], groups[:integer], :reverse)
+    fraction = do_grouping(number["fraction"], groups[:fraction])
+    
+    %{number | "integer" => integer, "fraction" => fraction}
   end
   
-  defp pad_leading_zeroes(number, count) when count <= 0 do
-    number
+  # TODO: Currently is ignoring the `rest` grouping size
+  def do_grouping(string, groups, direction \\ :forward)
+  def do_grouping(string, groups, :reverse) do
+    String.reverse(string) 
+    |> do_grouping(groups)
+    |> String.reverse
   end
-  defp pad_leading_zeroes(number, count) do
-    String.pad_leading(number, count, "0")
-  end
-  
-  defp pad_trailing_zeroes(number, count) when count <= 0 do
-    number
-  end
-  defp pad_trailing_zeroes(number, count) do
-    String.pad_trailing(number, count, "0")
+  def do_grouping(string, %{first: first, rest: _rest}, :forward) do
+    chunk_string(string, first)
+    |> Enum.join(Compiler.placeholder(:group))
   end
   
+  # Put the parts of the number back together again
+  # TODO: Not yet handling the exponent
+  def reassemble_number_string(%{"fraction" => ""} = number) do
+    number["integer"]
+  end
+  def reassemble_number_string(number) do
+    number["integer"] <> Compiler.placeholder(:decimal) <> number["fraction"]
+  end
+   
   # Merge options and default options with supplied options always
   # the winner.
   defp normalize_options(options, defaults) do

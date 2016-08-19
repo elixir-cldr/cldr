@@ -202,27 +202,27 @@ defmodule Cldr.Number.System do
     end
     
     # Mapping for the grouping separator
-    defp transliterate_char(unquote(Compiler.placeholders().group), locale, unquote(name)) do
+    defp transliterate_char(unquote(Compiler.placeholder(:group)), locale, unquote(name)) do
       Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).group
     end
     
     # Mapping for the decimal separator
-    defp transliterate_char(unquote(Compiler.placeholders().decimal), locale, unquote(name)) do
+    defp transliterate_char(unquote(Compiler.placeholder(:decimal)), locale, unquote(name)) do
       Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).decimal
     end
 
     # Mapping for the exponent
-    defp transliterate_char(unquote(Compiler.placeholders().exponent), locale, unquote(name)) do
+    defp transliterate_char(unquote(Compiler.placeholder(:exponent)), locale, unquote(name)) do
       Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).exponent
     end
     
     # Mapping for the plus sign
-    defp transliterate_char(unquote(Compiler.placeholders().plus), locale, unquote(name)) do
+    defp transliterate_char(unquote(Compiler.placeholder(:plus)), locale, unquote(name)) do
       Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).plus_sign
     end
     
     # Mapping for the minus sign
-    defp transliterate_char(unquote(Compiler.placeholders().minus), locale, unquote(name)) do
+    defp transliterate_char(unquote(Compiler.placeholder(:minus)), locale, unquote(name)) do
       Cldr.Number.Symbol.number_symbols_for(locale, unquote(name)).minus_sign
     end
     

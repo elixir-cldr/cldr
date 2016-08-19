@@ -126,17 +126,14 @@ defmodule Cldr.Number.Format.Compiler do
       iex> Cldr.Number.Format.Compiler.placeholders
       %{decimal: ".", exponent: "E", group: ",", minus: "-", plus: "+"}
   """
-  @spec placeholders :: %{}
-  def placeholders do
-    %{
-      decimal:  @decimal_separator,
-      group:    @grouping_separator,
-      exponent: @exponent_separator,
-      plus:     @plus_placeholder,
-      minus:    @minus_placeholder
-    }
-  end
   
+  def placeholder(:decimal),  do: @decimal_separator
+  def placeholder(:group),    do: @grouping_separator
+  def placeholder(:exponent), do: @exponent_separator
+  def placeholder(:plus),     do: @plus_placeholder
+  def placeholder(:minus),    do: @minus_placeholder
+  def placeholder(:currency), do: @currency_placeholder
+
   @doc """
   Scan a number format definition
   
@@ -344,10 +341,19 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Return the size of the groupings (first and rest) for the format.
   
-  A format may have zero, one or two groupings - any others are ignored.
+  An integer format may have zero, one or two groupings - any others 
+  are ignored. A fraction format may have one group only.
   """
-  defp grouping(%{"integer" => integer_format}) do
-    [_drop | groups] = String.split(integer_format, @grouping_separator)
+  defp grouping(%{"integer" => integer_format, "fraction" => fraction_format}) do
+    %{integer: integer_grouping(integer_format),
+      fraction: fraction_grouping(fraction_format)}
+  end
+  
+  @docp """
+  Extract the integer grouping
+  """
+  defp integer_grouping(format) do
+    [_drop | groups] = String.split(format, @grouping_separator)
     
     grouping = groups
     |> Enum.reverse
@@ -360,9 +366,22 @@ defmodule Cldr.Number.Format.Compiler do
       [first] ->
         %{first: first, rest: first}
       _ ->
-        %{first: 0, rest: 0}
+        %{first: @max_integer_digits, rest: @max_integer_digits}
     end
   end
+  
+  @docp """
+  Extract the fraction grouping
+  """
+  defp fraction_grouping(format) do
+    [group | _drop] = String.split(format, @grouping_separator)
+    if (group_size = String.length(group)) == 0 do
+      %{first: @max_integer_digits, rest: @max_integer_digits}
+    else
+      %{first: group_size, rest: group_size}
+    end
+  end
+  
   
   @docp """
   Extracts the significant digit metrics from the format.
@@ -478,12 +497,12 @@ defmodule Cldr.Number.Format.Compiler do
   """
   @default_rounding Decimal.new(0)
   defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
-    format = integer_format <> "." <> fraction_format 
+    format = integer_format <> @decimal_separator <> fraction_format
+    |> String.replace(@rounding_pattern, "")
     |> String.trim_trailing(@decimal_separator)
     
-    rounding_chars = String.replace(format, @rounding_pattern, "")
-    if String.length(rounding_chars) > 0 do
-      Decimal.new(rounding_chars)
+    if String.length(format) > 0 do
+      Decimal.new(format)
     else
       @default_rounding
     end
