@@ -14,6 +14,8 @@
 %% User code. This is placed here to allow extra attributes.
 -file("src/decimal_formats_lexer.xrl", 32).
 
+currency_symbol(Len) ->
+  list_to_atom("currency_" ++ integer_to_list(Len)).
 -file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
@@ -282,7 +284,7 @@ yysuf(List, N) -> lists:nthtail(N, List).
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("src/decimal_formats_lexer.erl", 284).
+-file("src/decimal_formats_lexer.erl", 287).
 yystate() -> 23.
 
 yystate(24, [58|Ics], Line, Tlen, _, _) ->
@@ -736,7 +738,7 @@ yyaction_5(TokenChars, TokenLine) ->
 -compile({inline,yyaction_6/2}).
 -file("src/decimal_formats_lexer.xrl", 24).
 yyaction_6(TokenChars, TokenLine) ->
-     { token, { currency, TokenLine, length (TokenChars) } } .
+     { token, { currency_symbol (length (TokenChars)), TokenLine, length (TokenChars) } } .
 
 -compile({inline,yyaction_7/2}).
 -file("src/decimal_formats_lexer.xrl", 25).

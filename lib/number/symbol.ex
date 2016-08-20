@@ -1,11 +1,12 @@
 defmodule Cldr.Number.Symbol do
+  import Cldr.Helpers
   alias Cldr.File
   alias Cldr.Number
   
   Enum.each Cldr.known_locales, fn (locale) ->
     numbers = File.read(:numbers, locale)
     number_system_names = Number.System.number_system_names_for(locale)
-    minimum_grouping_digits = numbers["minimumGroupingDigits"] |> String.to_integer
+    minimum_grouping_digits = String.to_integer(numbers["minimumGroupingDigits"])
     
     def minimum_grouping_digits_for(unquote(locale)) do
       unquote(minimum_grouping_digits)
@@ -21,8 +22,8 @@ defmodule Cldr.Number.Symbol do
     
     Enum.each number_system_names, fn (system_name) ->
       symbol_info = numbers["symbols-numberSystem-#{system_name}"] 
-      |> File.underscore_keys 
-      |> File.atomize_keys
+      |> underscore_keys 
+      |> atomize_keys
       
       def number_symbols_for(unquote(locale), unquote(system_name)) do
         unquote(Macro.escape(symbol_info))

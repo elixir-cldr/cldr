@@ -12,23 +12,30 @@ defmodule Cldr.File do
   alias Cldr.Config
   alias Cldr.Number
   
-  @currencies_data_path Path.join(Cldr.data_dir(), "/cldr-core/supplemental/currencyData.json")
-  {:ok, data} = File.read!(@currencies_data_path) |> Poison.decode
+  @supplemental_path "/cldr-core/supplemental"
+  @currencies        [@supplemental_path, "/currencyData.json"]
+  @number_systems    [@supplemental_path, "/numberingSystems.json"]
+  
+  @currencies_file Path.join(Cldr.data_dir(), @currencies)
+  @number_systems_file Path.join(Cldr.data_dir(), @number_systems)
+    
+  {:ok, data} = File.read!(@currencies_file) |> Poison.decode
   @currency_data data["supplemental"]["currencyData"]["fractions"]
   def read(:currency_data) do
     @currency_data
   end
   
-  @currencies_path Path.join(Cldr.numbers_locale_dir(), [Cldr.default_locale(), "/currencies.json"])
+  @currencies_path Path.join(Cldr.numbers_locale_dir(), 
+    [Cldr.default_locale(), "/currencies.json"])
+  
   def read(:currency_codes) do
     currencies = read_cldr_data(@currencies_path)
     currencies["main"][Cldr.default_locale()]["numbers"]["currencies"] 
     |> Enum.map(fn {code, _currency} -> code end)
   end
   
-  @number_systems_path Path.join(Cldr.data_dir(), "/cldr-core/supplemental/numberingSystems.json")
   def read(:number_systems) do
-    systems = read_cldr_data(@number_systems_path)
+    systems = read_cldr_data(@number_systems_file)
     Enum.map(systems["supplemental"]["numberingSystems"], fn {system, meta} ->
       {system, %Cldr.Number.System{
         name:       system,
@@ -41,7 +48,9 @@ defmodule Cldr.File do
   
   def read(:decimal_formats) do
     formats = Enum.map Cldr.Config.known_locales, fn (locale) ->
-      number_systems = Number.System.number_systems_for(locale) |> Enum.map(fn {_k, v} -> v.name end) |> Enum.uniq
+      number_systems = Number.System.number_systems_for(locale) 
+        |> Enum.map(fn {_k, v} -> v.name end) |> Enum.uniq
+      
       number_formats = Enum.reduce number_systems, %{}, fn (number_system, formats) ->
         numbers = read(:numbers, locale)
         locale_formats = %Number.Format{
@@ -66,7 +75,8 @@ defmodule Cldr.File do
   end
   
   def read(:numbers, locale) do
-    path = Path.join([Config.data_dir(), "cldr-numbers-#{Config.full_or_modern()}", "main", locale, "numbers.json"])
+    path = Path.join([Config.data_dir(), "cldr-numbers-#{Config.full_or_modern()}", 
+      "main", locale, "numbers.json"])
     numbers = read_cldr_data(path)
     numbers["main"][locale]["numbers"]
   end
@@ -101,7 +111,8 @@ defmodule Cldr.File do
   end
   
   def read(:list_patterns, locale) do
-    path = Path.join(Cldr.data_dir(), ["cldr-misc-#{Config.full_or_modern}/main/", locale, "/listPatterns.json"])
+    path = Path.join(Cldr.data_dir(), ["cldr-misc-#{Config.full_or_modern}/main/", 
+      locale, "/listPatterns.json"])
     patterns = read_cldr_data(path)
     Enum.map(patterns["main"][locale]["listPatterns"], fn {"listPattern-type-" <> type, data} ->
       type_name = String.replace(type, "-", "_") |> String.to_atom
@@ -118,18 +129,6 @@ defmodule Cldr.File do
         counts
       end
     end
-  end
-  
-  def underscore_keys(nil), do: nil
-  def underscore_keys(map) do
-    Enum.map(map, fn {k, v} -> {Macro.underscore(k), v} end)
-    |> Enum.into(%{})
-  end
-  
-  def atomize_keys(nil), do: nil
-  def atomize_keys(map) do
-    Enum.map(map, fn {k, v} -> {String.to_atom(k), v} end)
-    |> Enum.into(%{})
   end
   
   defp read_cldr_data(file) do

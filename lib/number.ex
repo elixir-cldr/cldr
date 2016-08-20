@@ -78,27 +78,32 @@ defmodule Cldr.Number do
   ignore min/max integer/fraction digits, or it may use them to the extent
   possible.
   """
+  import Cldr.Macros
   import Cldr.Number.String
   import Cldr.Number.Format, only: [format_from: 2]
   import Cldr.Number.System, only: [transliterate: 3]
-  import Cldr.Number.Symbol, only: [number_symbols_for: 2]
+  import Cldr.Number.Symbol, only: [number_symbols_for: 2, 
+                                    minimum_grouping_digits_for: 1]
   
   alias Cldr.Number.Format.Compiler
   alias Cldr.Currency
 
-  @type format_type :: :standard | 
-                       :short | 
-                       :long | 
-                       :percent |
-                       :accounting |
-                       :scientific
+  @type format_type :: 
+    :standard | 
+    :short | 
+    :long | 
+    :percent |
+    :accounting |
+    :scientific
 
-  @default_options [as:            :standard,
-                    locale:        Cldr.default_locale(),
-                    number_system: :default, 
-                    currency:      nil, 
-                    rounding_mode: :half_even, 
-                    precision:     Cldr.Number.Math.default_rounding()]
+  @default_options [
+    as:            :standard,
+    currency:      nil,
+    cash:          false,
+    rounding_mode: :half_even,
+    number_system: :default, 
+    locale:        Cldr.default_locale()
+  ]
   
   @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options \\ @default_options) do
@@ -132,7 +137,7 @@ defmodule Cldr.Number do
     end
   end
   
-  # For formats not predefined we need to compile first
+  # For formats not precompiled we need to compile first
   # and then process
   defp to_string(number, format, options) do
     meta = Compiler.decode(format)
@@ -143,19 +148,45 @@ defmodule Cldr.Number do
   # defines the formatting and the options to be applied 
   # (which is related to localisation of the final format)
   defp do_to_string(number, meta, options) do
+    meta = meta 
+    |> adjust_fraction_for_currency(options[:currency], options[:cash])
+    
     to_decimal(number)
     |> multiply_by_factor(meta[:multiplier])
     |> round_to_nearest(meta[:rounding], options[:rounding_mode])
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeroes(meta[:integer_digits])
     |> adjust_trailing_zeroes(meta[:fractional_digits])
-    |> apply_grouping(meta[:grouping])
+    |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
     |> apply_padding(meta[:padding_length], meta[:padding_char])
     |> assemble_format(number, meta[:format], options)
   end
 
+  # When formatting a currency we need to adjust the number of fractional
+  # digits to match the currency definition.  We also need to adjust the
+  # rounding increment to match the currency definition.
+  defp adjust_fraction_for_currency(meta, nil, _cash) do
+    meta
+  end
+  
+  defp adjust_fraction_for_currency(meta, currency, cash) when is_false(cash) do
+    currency = Currency.for_code(currency)
+    do_adjust_fraction(meta, currency.digits, currency.rounding)
+  end
+  
+  defp adjust_fraction_for_currency(meta, currency, _cash) do
+    currency = Currency.for_code(currency)
+    do_adjust_fraction(meta, currency.cash_digits, currency.cash_rounding)
+  end
+  
+  defp do_adjust_fraction(meta, digits, rounding) do
+    rounding = Decimal.new(:math.pow(10, -digits) * rounding)
+    %{meta | fractional_digits: %{max: digits, min: digits},
+             rounding: rounding}
+  end
+  
   # Convert the number to a decimal since it preserves precision
   # better when we round.  Then use the absolute value since
   # the sign only determines which pattern we use (positive
@@ -219,40 +250,57 @@ defmodule Cldr.Number do
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
-  defp apply_grouping(string, groups) do
-    integer = do_grouping(string["integer"], groups[:integer], :reverse)
-    fraction = do_grouping(string["fraction"], groups[:fraction])
+  defp apply_grouping(string, groups, locale) do
+    integer = do_grouping(string["integer"], groups[:integer], 
+                String.length(string["integer"]), 
+                minimum_group_size(groups[:integer], locale), 
+                :reverse)
+    
+    fraction = do_grouping(string["fraction"], groups[:fraction], 
+                 String.length(string["integer"]), 
+                 minimum_group_size(groups[:integer], locale))
     
     %{string | "integer" => integer, "fraction" => fraction}
   end
   
-  # The actually grouping function.  Note there are two directions,
+  defp minimum_group_size(%{first: group_size}, locale) do
+    minimum_grouping_digits_for(locale) + group_size
+  end
+  
+  # The actual grouping function.  Note there are two directions,
   # `:forward` and `:reverse`.  Thats because we group from the decimal
   # placeholder outwards and there may be a final group that is less than
   # the grouping size.  For the fraction part the dangling part is at the
   # end (:forward direction) whereas for the integer part the dangling
   # group is at the beginning (:reverse direction)
-  defp do_grouping(string, groups, direction \\ :forward)
-  defp do_grouping(string, groups, :reverse) do
+  defp do_grouping(string, groups, string_length, min_grouping, direction \\ :forward)
+  
+  # No grouping if the string length (number of digits) is less than the
+  # minimum grouping size.
+  defp do_grouping(string, _, string_length, min_grouping, _) when string_length < min_grouping do
+    string
+  end
+  
+  defp do_grouping(string, groups, string_length, min_grouping, :reverse) do
     String.reverse(string) 
-    |> do_grouping(groups)
+    |> do_grouping(groups, string_length, min_grouping)
     |> String.reverse
   end
   
   # The case when there is only one grouping.
-  defp do_grouping(string, %{first: first, rest: rest}, :forward) when first == rest do
+  defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) when first == rest  do
     chunk_string(string, first)
     |> Enum.join(Compiler.placeholder(:group))
   end
   
-  # The case when there are two different groupings this applies only to
-  # The integer part.
-  defp do_grouping(string, %{first: first, rest: rest}, :forward) do
+  # The case when there are two different groupings. This applies only to
+  # The integer part, it can never be true for the fraction part.
+  defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) do
     [first_group | other_groups] = chunk_string(string, first)
     other_groups = Enum.join(other_groups) |> chunk_string(rest)
     [first_group] ++ other_groups |> Enum.join(Compiler.placeholder(:group))
   end
-  
+
   # Put the parts of the number back together again
   # TODO: Not yet handling the exponent
   defp reassemble_number_string(%{"fraction" => ""} = number) do
@@ -282,14 +330,15 @@ defmodule Cldr.Number do
     locale = options[:locale]
     system = options[:number_system]
     currency = options[:currency]
+    symbols = number_symbols_for(locale, system)
     
     Enum.reduce format, "", fn (token, string) ->
       string <> case token do
-        {:currency, size}   -> currency_symbol(currency, number, size, locale)
-        {:percent, _}       -> number_symbols_for(locale, system).percent_sign
-        {:permille, _}      -> number_symbols_for(locale, system).permille
-        {:plus, _}          -> number_symbols_for(locale, system).plus_sign
-        {:minus, _}         -> number_symbols_for(locale, system).minus_sign
+        {:currency, type}   -> currency_symbol(currency, number, type, locale)
+        {:percent, _}       -> symbols.percent_sign
+        {:permille, _}      -> symbols.permille
+        {:plus, _}          -> symbols.plus_sign
+        {:minus, _}         -> symbols.minus_sign
         {:literal, literal} -> literal
         {:format, _format}  -> number_string
         {:pad, _}           -> ""
@@ -321,7 +370,7 @@ defmodule Cldr.Number do
     currency.narrow_symbol || currency.symbol
   end
   
-  defp currency_symbol(nil, _number, _size, _locale) do
+  defp currency_symbol(nil, _number, _type, _locale) do
     raise ArgumentError, message: """
       Cannot use a format with a currency place holder
       unless `option[:currency] is set to a currency code.
