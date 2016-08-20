@@ -155,8 +155,8 @@ defmodule Cldr.Number do
     |> multiply_by_factor(meta[:multiplier])
     |> round_to_nearest(meta[:rounding], options[:rounding_mode])
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
-    |> adjust_leading_zeroes(meta[:integer_digits])
-    |> adjust_trailing_zeroes(meta[:fractional_digits])
+    |> adjust_leading_zeroes(:integer, meta[:integer_digits])
+    |> adjust_trailing_zeroes(:fraction, meta[:fractional_digits])
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
@@ -228,25 +228,33 @@ defmodule Cldr.Number do
   defp output_to_string(number, fraction_digits, rounding_mode) do
     string = number
     |> Decimal.round(fraction_digits[:max], rounding_mode)
-    |> Decimal.to_string
+    |> Decimal.to_string(:normal)
     
     Regex.named_captures(Compiler.number_match_regex(), string)
   end
   
-  # Remove all the trailing zeroes and add back what
+  # Remove all the trailing zeroes from a fraction and add back what
   # is required for the format
-  defp adjust_trailing_zeroes(number, fraction_digits) do
+  defp adjust_trailing_zeroes(number, :fraction, fraction_digits) do
     fraction = String.trim_trailing(number["fraction"], "0")
     %{number | "fraction" => pad_trailing_zeroes(fraction, fraction_digits[:min])}
   end
+  
+  defp adjust_trailing_zeroes(number, _fraction, _fraction_digits) do
+    number
+  end
  
-  # Remove all the leading zeroes and add back what
+  # Remove all the leading zeroes from an integer and add back what
   # is required for the format
-  defp adjust_leading_zeroes(number, integer_digits) do
+  defp adjust_leading_zeroes(number, :integer, integer_digits) do
     integer = String.trim_leading(number["integer"], "0")
     %{number | "integer" => pad_leading_zeroes(integer, integer_digits[:min])}
   end
 
+  defp adjust_leading_zeroes(number, _integer, _integer_digits) do
+    number
+  end
+  
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
@@ -257,8 +265,8 @@ defmodule Cldr.Number do
                 :reverse)
     
     fraction = do_grouping(string["fraction"], groups[:fraction], 
-                 String.length(string["integer"]), 
-                 minimum_group_size(groups[:integer], locale))
+                 String.length(string["fraction"]), 
+                 minimum_group_size(groups[:fraction], locale))
     
     %{string | "integer" => integer, "fraction" => fraction}
   end
@@ -340,6 +348,8 @@ defmodule Cldr.Number do
         {:plus, _}          -> symbols.plus_sign
         {:minus, _}         -> symbols.minus_sign
         {:literal, literal} -> literal
+        {:quote, char}      -> char
+        {:quote_char, char} -> char
         {:format, _format}  -> number_string
         {:pad, _}           -> ""
       end

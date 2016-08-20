@@ -296,8 +296,23 @@ defmodule Cldr.Number.Format.Compiler do
   That is, the pad escape escapes the following character. If there is no
   character after the pad escape, then the pattern is illegal.
 
- This function determines the length of the pattern against which we pad if
-  required.
+  This function determines the length of the pattern against which we pad if
+  required.  Although the padding length is considered to be the sum of the
+  prefix, format and suffix the reality is that prefix and suffix also fill
+  part of the format so the padding length is really only the length of the
+  format itself, plus any add-back due to quoted characters (this is because
+  in the output string the quotes aren't included - therefore they need to be
+  considered available for padding space). 
+  
+  Then we need to consider any padding applicable to the currency format. 
+  
+  The currency placeholder is between 1 and 5 characters.  The substitution can
+  be between 1 and an arbitrarily sized string.  Worse, we don't know the
+  substitution until runtime so we can't precalculate it.
+  
+  Therefore our strategy is to set padding to be the sum of the format length
+  plus any add-backs for a quote character and any quoted character and adjust 
+  at runtime for any differences due to the currency symbol.
   """
   defp padding_length(nil, _format) do
     0
@@ -306,14 +321,10 @@ defmodule Cldr.Number.Format.Compiler do
   defp padding_length(_pad, format) do
     Enum.reduce format[:positive], 0, fn (element, len) ->
       len + case element do
-        {:currency, size}   -> size
-        {:percent, _}       -> 1
-        {:permille, _}      -> 1
-        {:plus, _}          -> 1
-        {:minus, _}         -> 1
-        {:pad, _}           -> 0
-        {:literal, literal} -> String.length(literal)
+        {:quote, _}         -> 1  # Since its '' in the format
+        {:quoted_char, _}   -> 2  # Since its 'x' in the format
         {:format, format}   -> String.length(format)
+        _                   -> 0
       end
     end
   end

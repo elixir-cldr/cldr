@@ -748,12 +748,12 @@ yyaction_7(TokenChars, TokenLine) ->
 -compile({inline,yyaction_8/2}).
 -file("src/decimal_formats_lexer.xrl", 26).
 yyaction_8(TokenChars, TokenLine) ->
-     { token, { literal, TokenLine, [lists : nth (2, TokenChars) ] } } .
+     { token, { quoted_char, TokenLine, [lists : nth (2, TokenChars) ] } } .
 
 -compile({inline,yyaction_9/2}).
 -file("src/decimal_formats_lexer.xrl", 27).
 yyaction_9(TokenChars, TokenLine) ->
-     { token, { literal, TokenLine, [lists : nth (2, TokenChars) ] } } .
+     { token, { quote, TokenLine, [lists : nth (2, TokenChars) ] } } .
 
 -compile({inline,yyaction_10/2}).
 -file("src/decimal_formats_lexer.xrl", 28).

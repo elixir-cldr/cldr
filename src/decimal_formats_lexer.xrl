@@ -25,8 +25,8 @@ Rules.
 {Semicolon}           : {token,{semicolon,TokenLine,TokenChars}}.
 {Currency}            : {token,{currency_symbol(length(TokenChars)),TokenLine,length(TokenChars)}}.
 {Pad}                 : {token,{pad,TokenLine,[lists:nth(2,TokenChars)]}}.
-{Quoted}              : {token,{literal,TokenLine,[lists:nth(2, TokenChars)]}}.
-{Quote}               : {token,{literal,TokenLine,[lists:nth(2, TokenChars)]}}.
+{Quoted}              : {token,{quoted_char,TokenLine,[lists:nth(2, TokenChars)]}}.
+{Quote}               : {token,{quote,TokenLine,[lists:nth(2, TokenChars)]}}.
 {Literal}             : {token,{literal,TokenLine,TokenChars}}.
 
 Erlang code.
