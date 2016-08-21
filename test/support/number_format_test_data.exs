@@ -40,7 +40,10 @@ defmodule Cldr.Number.Format.Test do
       {1234, "1,250",            [format: "#,#50"]},
       
       # Percentage
-      {0.1234, "12.34%",         [format: "#0.0#%"]}
+      {0.1234, "12.34%",         [format: "#0.0#%"]},
+      
+      # Negative number format
+      {-1234, "(1234.00)",       [format: "0.00;(0.00)"]}
     ]
   end
   
