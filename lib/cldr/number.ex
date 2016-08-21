@@ -107,19 +107,13 @@ defmodule Cldr.Number do
   
   @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options \\ @default_options) do
-    options = options
+    {format, options} = options
     |> normalize_options(@default_options)
     |> detect_negative_number(number)
     
-    if options[:format] do
-      options = options |> Keyword.delete(:as)
-      format = options[:format]
-      to_string(number, format, options)
+    if currency_format?(format) && !Keyword.get(options, :currency) do
+      {:error, "currency format #{inspect format} requires that options[:currency] be specified"}
     else
-      options = options |> Keyword.delete(:format)
-      format = options[:locale] 
-        |> format_from(options[:number_system]) 
-        |> Map.get(options[:as])
       to_string(number, format, options)
     end
   end
@@ -400,11 +394,6 @@ defmodule Cldr.Number do
     currency.narrow_symbol || currency.symbol
   end
   
-  defp currency_symbol(nil, _number, _type, _locale) do
-    raise ArgumentError, message: "Cannot use a currency format " <>
-    "unless `option[:currency]` is set to a currency code."
-  end
-  
   defp currency_symbol(currency, number, size, locale) do
     currency = Currency.for_code(currency, locale) 
     currency_symbol(currency, number, size, locale)
@@ -413,19 +402,33 @@ defmodule Cldr.Number do
   # Merge options and default options with supplied options always
   # the winner.
   defp normalize_options(options, defaults) do
-    Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
+    options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
+
+    if options[:format] do
+      {options[:format], Keyword.delete(options, :as)}
+    else
+      options = Keyword.delete(options, :format)
+      format = options[:locale]
+      |> format_from(options[:number_system])
+      |> Map.get(options[:as])
+      {format, options}
+    end
   end
-  
-  defp detect_negative_number(options, number)
+
+  defp detect_negative_number({format, options}, number)
       when (is_float(number) or is_integer(number)) and number < 0 do
-    Keyword.put(options, :pattern, :negative)
+    {format, Keyword.put(options, :pattern, :negative)}
   end
-  
-  defp detect_negative_number(options, %Decimal{sign: sign}) when sign < 0 do
-    Keyword.put(options, :pattern, :negative)
+
+  defp detect_negative_number({format, options}, %Decimal{sign: sign}) when sign < 0 do
+    {format, Keyword.put(options, :pattern, :negative)}
   end
-  
-  defp detect_negative_number(options, _number) do
-    Keyword.put(options, :pattern, :positive)
+
+  defp detect_negative_number({format, options}, _number) do
+    {format, Keyword.put(options, :pattern, :positive)}
+  end
+
+  defp currency_format?(format) do
+    String.contains?(format, Compiler.placeholder(:currency))
   end
 end 
