@@ -8,4 +8,13 @@ defmodule Number.Format.Test do
     end
   end
   
+  test "invalid format returns an error" do
+    assert {:error, _message} = Cldr.Number.to_string(1234, format: "xxx")
+  end
+  
+  test "a currency format with no currency specified raises" do
+    assert_raise ArgumentError, ~r/Cannot use a currency format/, fn ->
+      Cldr.Number.to_string(1234, format: "¤ #,##0.00")
+    end
+  end
 end

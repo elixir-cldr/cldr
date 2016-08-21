@@ -401,10 +401,8 @@ defmodule Cldr.Number do
   end
   
   defp currency_symbol(nil, _number, _type, _locale) do
-    raise ArgumentError, message: """
-      Cannot use a format with a currency place holder
-      unless `option[:currency] is set to a currency code.
-    """
+    raise ArgumentError, message: "Cannot use a currency format " <>
+    "unless `option[:currency]` is set to a currency code."
   end
   
   defp currency_symbol(currency, number, size, locale) do
