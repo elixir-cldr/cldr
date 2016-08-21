@@ -1,7 +1,7 @@
 defmodule Cldr.Number.PluralRule do
   @moduledoc """
   Macro to define plural rule methods on a module.
-  
+
   Used to generate functions for `Cldr.Number.Ordinal` and `
   Cldr.Number.Cardinal`
   """
@@ -9,35 +9,35 @@ defmodule Cldr.Number.PluralRule do
     unless opts in [:cardinal, :ordinal] do
       raise ArgumentError, "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
     end
-    
+
     plurals_filename = if opts == :cardinal, do: "plurals", else: "ordinals"
     plurals_type = if opts == :cardinal, do: "cardinal", else: "ordinal"
-    
+
     quote do
       import Cldr.Number.Math
-      import Cldr.Number.PluralRule.Compiler 
+      import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
-      
+
       {:ok, json} = Cldr.supplemental_dir()
-      |> Path.join("/#{unquote(plurals_filename)}.json") 
-      |> File.read! 
+      |> Path.join("/#{unquote(plurals_filename)}.json")
+      |> File.read!
       |> Poison.decode
       @rules json["supplemental"]["plurals-type-#{unquote(plurals_type)}"]
-  
+
       @doc """
       The locales for which cardinal rules are defined
       """
       @rules_locales @rules
       |> Map.keys
       |> Enum.sort
-      
+
       def known_locales do
         @rules_locales
       end
-  
+
       @doc """
       The configured locales for which plural rules are defined
-  
+
       This is the intersection of the Cldr.known_locales and the locales for
       which plural rules are defined.  There are many Cldr locales which
       don't have their own plural rules so this list is the intersection
@@ -45,14 +45,14 @@ defmodule Cldr.Number.PluralRule do
       """
       @configured_locales @rules_locales
       |> MapSet.new
-      |> MapSet.intersection(MapSet.new(Cldr.known_locales())) 
+      |> MapSet.intersection(MapSet.new(Cldr.known_locales()))
       |> MapSet.to_list
       |> Enum.sort
-  
+
       def configured_locales do
         @configured_locales
       end
-  
+
       @doc """
       The plural rules defined in CLDR.
       """
@@ -60,10 +60,10 @@ defmodule Cldr.Number.PluralRule do
       def plural_rules do
         @rules
       end
-      
+
       @doc """
       Return the plural rules for a locale.
-      
+
       The rules are returned in AST form after parsing.
       """
       @spec plural_rules_for(Cldr.locale) :: %{}
@@ -73,7 +73,7 @@ defmodule Cldr.Number.PluralRule do
           {String.to_atom(category), definition}
         end
       end
-      
+
       # Plural Operand Meanings as defined in CLDR plural rules and used
       # in the generated code
       #
@@ -84,27 +84,27 @@ defmodule Cldr.Number.PluralRule do
       #   w       number of visible fraction digits in n, without trailing zeros.
       #   f       visible fractional digits in n, with trailing zeros.
       #   t       visible fractional digits in n, without trailing zeros.
-  
+
       @doc """
       Lookup the plural cardinal category for a given number in a given locale
-  
+
       Identify which category (zero, one, two, few, many or other) a given number
       in a given locale fits into.  This category can then be used to format the
       number or currency
       """
       def plural_rule(number, locale \\ Cldr.default_locale(), rounding \\ Cldr.Number.Math.default_rounding())
-      
+
       def plural_rule(string, locale, rounding) when is_binary(string) do
         plural_rule(Decimal.new(string), locale, rounding)
       end
-      
+
       def plural_rule(number, locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
         v = 0; w = 0; f = 0; t = 0
         do_plural_rule(locale, n, i, v, w, f, t)
       end
-      
+
       @lint {Credo.Check.Refactor.PipeChainStart, false}
       def plural_rule(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
         plural_rule(Decimal.new(number), locale, rounding)
@@ -116,36 +116,36 @@ defmodule Cldr.Number.PluralRule do
         # f = trunc(t * :math.pow(10, v - w))
         # do_plural_rule(locale, n, i, v, w, f, t)
       end
-  
+
       # For the case where its a Decimal we guard against a map (which is the
       # underlying representation of a Decimal).  Don't use rounding because
       # the precision is specified for Decimals.
       def plural_rule(%Decimal{} = number, locale, rounding) when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
-    
-        # i integer digits of n.    
+
+        # i integer digits of n.
         i = Decimal.round(n, 0, :floor)
-    
+
         # v number of visible fraction digits in n, with trailing zeros.
         v = abs(n.exp)
-    
+
         # f visible fractional digits in n, with trailing zeros.
         f = n
-        |> Decimal.sub(i) 
-        |> Decimal.mult(Decimal.new(:math.pow(10, v))) 
-        |> Decimal.round(0, :floor) 
+        |> Decimal.sub(i)
+        |> Decimal.mult(Decimal.new(:math.pow(10, v)))
+        |> Decimal.round(0, :floor)
         |> Decimal.to_integer
-    
+
         #   t visible fractional digits in n, without trailing zeros.
         t = remove_trailing_zeroes(f)
-    
+
         # w number of visible fraction digits in n, without trailing zeros.
         w = number_of_integer_digits(t)
-    
+
         i = Decimal.to_integer(i)
         n = to_float(n)
-    
+
         # IO.puts "n: #{inspect n}; i: #{inspect i}; v: #{inspect v}; w: #{inspect w}; f: #{inspect f}; t: #{inspect t}"
         do_plural_rule(locale, n, i, v, w, f, t)
       end

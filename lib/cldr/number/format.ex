@@ -13,7 +13,7 @@ defmodule Cldr.Number.Format do
   ',' and '.' are replaced by the characters appropriate for the locale.
 
   *Number Pattern Examples*
-  
+
   | Pattern	      | Currency	      | Text        |
   |---------------|-----------------|-------------|
   | #,##0.##	    | n/a	            | 1 234,57    |
@@ -23,7 +23,7 @@ defmodule Cldr.Number.Format do
   | 00000.0000	  | n/a	            | 01234,5670  |
   | #,##0.00 ¤	  | EUR	            | 1 234,57 €  |
   |               | JPY	            | 1 235 ¥JP   |
-            
+
   The number of # placeholder characters before the decimal do not matter,
   since no limit is placed on the maximum number of digits. There should,
   however, be at least one zero some place in the pattern. In currency formats,
@@ -32,14 +32,14 @@ defmodule Cldr.Number.Format do
   to override the number of decimal places — and the rounding — according to
   the currency that is being formatted. That can be seen in the above chart,
   with the difference between Yen and Euro formatting.
-  
-  Details of the number formats are described in the 
+
+  Details of the number formats are described in the
   [Unicode documentation]
   (http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
   """
-  
+
   @type format :: String.t
-  
+
   defstruct [:standard, :currency, :accounting, :scientific, :percent]
   defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
   alias Cldr.File
@@ -47,10 +47,10 @@ defmodule Cldr.Number.Format do
 
   @doc """
   The decimal formats in configured locales.
-  
+
   ## Example
-  
-      Cldr.Number.Format.decimal_formats              
+
+      Cldr.Number.Format.decimal_formats
       %{"en" => %{
           latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
            currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
@@ -69,11 +69,11 @@ defmodule Cldr.Number.Format do
   end
 
   @doc """
-  Returns the list of decimal formats in the 
+  Returns the list of decimal formats in the
   CLDR repository.
-  
+
   ## Example
-  
+
       iex(1)> Cldr.Number.Format.decimal_format_list
       ["#", "#,##,##0%", "#,##,##0.###", "#,##,##0.00¤",
       "#,##,##0.00¤;(#,##,##0.00¤)", "#,##,##0 %", "#,##0%",
@@ -96,7 +96,7 @@ defmodule Cldr.Number.Format do
   |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
   |> Enum.uniq
   |> Enum.sort
-    
+
   @spec decimal_format_list :: [format]
   def decimal_format_list do
     @decimal_format_list
@@ -105,19 +105,19 @@ defmodule Cldr.Number.Format do
   @doc """
   The decimal formats defined for a given locale or
   for a given locale and number system.
-  
+
   ## Examples
-  
+
       iex(2)> Cldr.Number.Format.decimal_formats_for "en"
       %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
-      
+
       iex(1)> Cldr.Number.Format.decimal_formats_for "th"
       %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"},
       thai: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
-      
+
       iex(2)> Cldr.Number.Format.decimal_formats_for "th", :thai
       %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
       percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}
@@ -128,38 +128,37 @@ defmodule Cldr.Number.Format do
     def decimal_formats_for(unquote(locale)) do
       unquote(Macro.escape(formats))
     end
-    
+
     Enum.each formats, fn {number_system, system_formats} ->
       def decimal_formats_for(unquote(locale), unquote(number_system)) do
         unquote(Macro.escape(system_formats))
       end
     end
   end
-  
+
   def decimal_formats_for(locale) do
     raise ArgumentError, "Unknown locale #{inspect locale}."
   end
-  
+
   def decimal_formats_for(locale, number_system) do
     raise ArgumentError, "Unknown locale #{inspect locale} or number_system #{inspect number_system}."
   end
-  
+
   # use the `number_system` as a key to retrieve the format.  If you look
-  # at `Cldr.Number.System.number_systems_for("en") as an example you'll 
-  # see a map of number systems keyed by a `type`.  This is a good abstract 
-  # to get to theformats when you're not interested in the details of a 
+  # at `Cldr.Number.System.number_systems_for("en") as an example you'll
+  # see a map of number systems keyed by a `type`.  This is a good abstract
+  # to get to theformats when you're not interested in the details of a
   # particular number system.
   def format_from(locale, number_system) when is_atom(number_system) do
-    system = System.number_systems_for(locale)[number_system].name 
+    system = System.number_systems_for(locale)[number_system].name
     |> String.to_existing_atom
     decimal_formats_for(locale)[system]
   end
-  
+
   # ...If however you already know the number system you want, then just specify
   # it as a `String` for the `number_system` and it'll be directly retrieved.
   def format_from(locale, number_system) when is_binary(number_system) do
     system = String.to_existing_atom(number_system)
     decimal_formats_for(locale)[system]
   end
- 
-end 
+end

@@ -14,16 +14,16 @@ defmodule Cldr.Number.Format.Compiler do
   '.' are replaced by the characters appropriate for the locale.
 
   ### Number Pattern Examples
-  
+
   Pattern	   | Currency	 | Text
   ---------- | --------- | ----------
-  #,##0.##	 | n/a	     | 1 234,57  
-  #,##0.###	 | n/a	     | 1 234,567 
-  ###0.##### | n/a	     | 1234,567  
-  ###0.0000# | n/a	     | 1234,5670 
+  #,##0.##	 | n/a	     | 1 234,57
+  #,##0.###	 | n/a	     | 1 234,567
+  ###0.##### | n/a	     | 1234,567
+  ###0.0000# | n/a	     | 1234,5670
   00000.0000 | n/a	     | 01234,5670
   #,##0.00 ¤ | EUR	     | 1 234,57 €
-                
+
   The number of # placeholder characters before the decimal do not matter,
   since no limit is placed on the maximum number of digits. There should,
   however, be at least one zero someplace in the pattern. In currency formats,
@@ -51,7 +51,7 @@ defmodule Cldr.Number.Format.Compiler do
   this which are noted below.
 
   ### Number Pattern Character Definitions
-  
+
   Symbol | Meaning
   ------ | -------
   0	     | Digit
@@ -68,7 +68,7 @@ defmodule Cldr.Number.Format.Compiler do
   ¤      | Any sequence is replaced by the localized currency symbol
   *	     | Pad escape, precedes pad character
   '	     | Used to quote special characters in a prefix or suffix
-  
+
   A pattern contains a positive subpattern and may contain a negative
   subpattern, for example, "#,##0.00;(#,##0.00)". Each subpattern has a prefix,
   a numeric part, and a suffix. If there is no explicit negative subpattern,
@@ -87,13 +87,13 @@ defmodule Cldr.Number.Format.Compiler do
   ASCII ',' and '.'. They are substituted by the code with the correct local
   values according to other fields in CLDR. The same is true of the - (ASCII
   minus sign) and other special characters listed above.
-  
+
   Extracted from [Unicode number formats in TR35]
   (http://unicode.org/reports/tr35/tr35-numbers.html#Number_Formats)
   """
-  
+
   import Kernel, except: [length: 1]
-    
+
   @decimal_separator    "."
   @grouping_separator   ","
   @exponent_separator   "E"
@@ -104,30 +104,30 @@ defmodule Cldr.Number.Format.Compiler do
   @digits               "[0-9]"
   @significant_digit    "@"
   @default_pad_char     " "
-  
+
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   0
-  
+
   @max_fraction_digits  @max_integer_digits
   @min_fraction_digits  @min_integer_digits
-  
+
   @digits_pattern       Regex.compile!(@digits)
-  @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <> 
+  @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <>
     @significant_digit <> @grouping_separator <> "]")
-  
+
   @doc """
   Returns a map of the number placeholder symbols.
-  
+
   These symbols are used in decimal number format
   and are replaced with locale-specific characters
   during number formatting.
-  
+
   ## Example
-  
+
       iex> Cldr.Number.Format.Compiler.placeholders
       %{decimal: ".", exponent: "E", group: ",", minus: "-", plus: "+"}
   """
-  
+
   def placeholder(:decimal),  do: @decimal_separator
   def placeholder(:group),    do: @grouping_separator
   def placeholder(:exponent), do: @exponent_separator
@@ -137,7 +137,7 @@ defmodule Cldr.Number.Format.Compiler do
 
   @doc """
   Scan a number format definition
-  
+
   Using a leex lexer, tokenize a rule definition
   """
   def tokenize(definition) when is_binary(definition) do
@@ -145,15 +145,15 @@ defmodule Cldr.Number.Format.Compiler do
     |> String.to_charlist
     |> :decimal_formats_lexer.string
   end
-  
+
   @doc """
   Parse a number format definition
 
-  Using a yexx lexer, parse a nunber format definition into list of 
+  Using a yexx lexer, parse a nunber format definition into list of
   elements we can then interpret to format a number.
-  
+
   ## Example
-  
+
       iex> Cldr.Number.Format.Compiler.parse "¤ #,##0.00;¤-#,##0.00"
       {:ok,
        [positive: [currency: 1, literal: " ", format: "#,##0.00"],
@@ -167,11 +167,11 @@ defmodule Cldr.Number.Format.Compiler do
     {:ok, tokens, _end_line} = tokenize(definition)
     tokens |> :decimal_formats_parser.parse
   end
-  
+
   def parse("") do
     {:error, "empty format string cannot be compiled"}
   end
-  
+
   def parse(nil) do
     {:error, "no format string or token list provided"}
   end
@@ -180,9 +180,9 @@ defmodule Cldr.Number.Format.Compiler do
 
   After parsing, reduce the format to a set of metrics
   that can then be used to format a number.
-  
+
   ## Example
-  
+
       iex> Cldr.Number.Format.Compiler.decode("#")
       %{currency?: false, format: [positive: [format: "#"], negative: nil],
         grouping: %{first: 0, rest: 0}, length: 1, multiplier: 1,
@@ -198,10 +198,10 @@ defmodule Cldr.Number.Format.Compiler do
       {:error, "Decimal format compiler: #{message}#{Enum.join(context)}"}
     end
   end
-  
+
   @docp """
   Extract the metadata from the format.
-  
+
   The metadata is used to generate the formatted output.
   """
   defp analyze(format) do
@@ -226,7 +226,7 @@ defmodule Cldr.Number.Format.Compiler do
       format:              format,
     }
   end
-  
+
   @docp """
   Extact how many integer digits are to be displayed.
   """
@@ -238,7 +238,7 @@ defmodule Cldr.Number.Format.Compiler do
       0
     end
   end
-  
+
   @docp """
   Extract how many fraction digits must be displayed.
   """
@@ -250,7 +250,7 @@ defmodule Cldr.Number.Format.Compiler do
       0
     end
   end
-  
+
   @docp """
   Extract how many additional fraction digits may be displayed.
   """
@@ -263,7 +263,7 @@ defmodule Cldr.Number.Format.Compiler do
       0
     end
   end
-  
+
   @docp """
   Extract the exponent from the format
   """
@@ -271,13 +271,13 @@ defmodule Cldr.Number.Format.Compiler do
   defp exponent(%{"exponent" => exp}) do
     String.to_integer(exp)
   end
-  
+
   @docp """
   Extract whether a + sign was given the format exponent
   """
   def exponent_sign(%{"exponent_sign" => ""}), do: false
   def exponent_sign(%{"exponent_sign" => _exponent_sign}), do: true
-  
+
   @docp """
   Extract the padding length of the format.
 
@@ -311,22 +311,22 @@ defmodule Cldr.Number.Format.Compiler do
   part of the format so the padding length is really only the length of the
   format itself, plus any add-back due to quoted characters (this is because
   in the output string the quotes aren't included - therefore they need to be
-  considered available for padding space). 
-  
-  Then we need to consider any padding applicable to the currency format. 
-  
+  considered available for padding space).
+
+  Then we need to consider any padding applicable to the currency format.
+
   The currency placeholder is between 1 and 5 characters.  The substitution can
   be between 1 and an arbitrarily sized string.  Worse, we don't know the
   substitution until runtime so we can't precalculate it.
-  
+
   Therefore our strategy is to set padding to be the sum of the format length
-  plus any add-backs for a quote character and any quoted character and adjust 
+  plus any add-backs for a quote character and any quoted character and adjust
   at runtime for any differences due to the currency symbol.
   """
   defp padding_length(nil, _format) do
     0
   end
-  
+
   defp padding_length(_pad, format) do
     Enum.reduce format[:positive], 0, fn (element, len) ->
       len + case element do
@@ -337,17 +337,17 @@ defmodule Cldr.Number.Format.Compiler do
       end
     end
   end
-  
+
   @docp """
   The pad character to be applied if padding is in effect.
   """
   def padding_char(format) do
     format[:positive][:pad] || @default_pad_char
   end
-  
+
   @docp """
   Return a scale factor depending on the format mask.
-  
+
   We multiply the number by a scale factor if the format
   has a percent or permille symbol.
   """
@@ -358,29 +358,29 @@ defmodule Cldr.Number.Format.Compiler do
       true                      -> Decimal.new(1)
     end
   end
-  
+
   @docp """
   Return the size of the groupings (first and rest) for the format.
-  
-  An integer format may have zero, one or two groupings - any others 
+
+  An integer format may have zero, one or two groupings - any others
   are ignored. A fraction format may have one group only.
   """
   defp grouping(%{"integer" => integer_format, "fraction" => fraction_format}) do
     %{integer: integer_grouping(integer_format),
       fraction: fraction_grouping(fraction_format)}
   end
-  
+
   @docp """
   Extract the integer grouping
   """
   defp integer_grouping(format) do
     [_drop | groups] = String.split(format, @grouping_separator)
-    
+
     grouping = groups
     |> Enum.reverse
     |> Enum.slice(0..1)
     |> Enum.map(&String.length/1)
-    
+
     case grouping do
       [first, rest] ->
         %{first: first, rest: rest}
@@ -390,7 +390,7 @@ defmodule Cldr.Number.Format.Compiler do
         %{first: @max_integer_digits, rest: @max_integer_digits}
     end
   end
-  
+
   @docp """
   Extract the fraction grouping
   """
@@ -403,8 +403,8 @@ defmodule Cldr.Number.Format.Compiler do
       %{first: group_size, rest: group_size}
     end
   end
-  
-  
+
+
   @docp """
   Extracts the significant digit metrics from the format.
 
@@ -416,13 +416,13 @@ defmodule Cldr.Number.Format.Compiler do
   integer/fraction digits, or it may use them to the extent possible.
 
   Significant Digits Examples
-  
+
   Pattern	| Min sign. digits  | Max sign. digits  | Number	  | Output
   ------- | ----------------- | ----------------- | --------- | ------
-  @@@	    | 3	                | 3	                | 12345	    | 12300 
-  @@@	    | 3	                | 3	                | 0.12345	  | 0.123 
-  @@##	  | 2	                | 4	                | 3.14159	  | 3.142 
-  @@##	  | 2	                | 4	                | 1.23004	  | 1.23  
+  @@@	    | 3	                | 3	                | 12345	    | 12300
+  @@@	    | 3	                | 3	                | 0.12345	  | 0.123
+  @@##	  | 2	                | 4	                | 3.14159	  | 3.142
+  @@##	  | 2	                | 4	                | 1.23004	  | 1.23
 
   * In order to enable significant digits formatting, use a pattern containing
     the '@' pattern character.
@@ -462,15 +462,15 @@ defmodule Cldr.Number.Format.Compiler do
     equivalent to "0.0###E0".
 
   """
-  
+
   # Build up the regex to extract the '@' and following '#' from the pattern
   @min_significant_digits   "(?<ats>" <> @significant_digit <> "+)"
   @max_significant_digits   "(?<hashes>" <> @digit_omit_zeroes <> "*)?"
-  @leading_digits "([" <> @digit_omit_zeroes 
+  @leading_digits "([" <> @digit_omit_zeroes
       <> @grouping_separator <> "]" <> "*)?"
-  @significant_digits_match Regex.compile!(@leading_digits 
+  @significant_digits_match Regex.compile!(@leading_digits
       <> @min_significant_digits <> @max_significant_digits)
-  
+
   defp significant_digits(%{"compact_integer" => integer_format}) do
     if captures = Regex.named_captures(@significant_digits_match, integer_format) do
       minimum = String.length(captures["ats"])
@@ -480,7 +480,7 @@ defmodule Cldr.Number.Format.Compiler do
       %{minimum: 0, maximum: 0}
     end
   end
-  
+
   @docp """
   Extract the rounding value from a format.
 
@@ -524,48 +524,47 @@ defmodule Cldr.Number.Format.Compiler do
     format = integer_format <> @decimal_separator <> fraction_format
     |> String.replace(@rounding_pattern, "")
     |> String.trim_trailing(@decimal_separator)
-    
+
     if String.length(format) > 0 do
       Decimal.new(format)
     else
       @default_rounding
     end
   end
-  
+
   @integer_part  "(?<integer>[0-9,@#]+)"
   @fraction_part "((\.(?<fraction>[0-9,#]+))?"
   @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+)))?)?"
   @format Regex.compile!(@integer_part <> @fraction_part <> @exponent_part)
-  
+
   def number_match_regex do
     @format
   end
-  
+
   @docp """
   Separate the format into the integer, fraction and exponent parts.
-  
+
   In the lexer the regex is ([@#,]*)?([0-9]+)?(\.[0-9#,]+)?([Ee](\+)?[0-9]+)?
   """
   defp split_format(format) do
     parts = Regex.named_captures(@format, format[:positive][:format])
-    
+
     parts
-    |> Map.put("compact_integer", 
+    |> Map.put("compact_integer",
         String.replace(parts["integer"], @grouping_separator, ""))
-    |> Map.put("compact_fraction", 
+    |> Map.put("compact_fraction",
         String.replace(parts["fraction"], @grouping_separator, ""))
   end
-  
+
   defp percent_format?(format) do
     Keyword.has_key? format[:positive], :percent
   end
-  
+
   defp permille_format?(format) do
     Keyword.has_key? format[:positive], :permille
   end
-  
+
   defp currency_format?(format) do
     Keyword.has_key? format[:positive], :currency
   end
-end      
-         
+end

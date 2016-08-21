@@ -2,20 +2,20 @@ defmodule Xml do
   @moduledoc """
   Helper functions for xml
   """
-  
+
   require Record
   Record.defrecord :xmlAttribute, Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")
   Record.defrecord :xmlElement,   Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl")
   Record.defrecord :xmlText,      Record.extract(:xmlText,    from_lib: "xmerl/include/xmerl.hrl")
   @type document :: {:xmlElement, list}
   @type xpath :: String.t
-    
+
   @spec parse(String.t) :: document | :error
   def parse(filename) when is_binary(filename) do
     {doc, _} = :xmerl_scan.file(String.to_charlist(filename))
     doc
   end
-  
+
   @spec all(document, xpath) :: [document]
   def all(xml_node, path) do
     for child_element <- xpath(xml_node, path) do
@@ -47,5 +47,4 @@ defmodule Xml do
   defp xpath(xml_node, path) do
     :xmerl_xpath.string(to_char_list(path), xml_node)
   end
-  
 end

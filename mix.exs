@@ -2,7 +2,7 @@ defmodule Cldr.Mixfile do
   use Mix.Project
 
   @version "0.0.1-dev"
-  
+
   def project do
     [app: :cldr,
      version: @version,
@@ -12,7 +12,7 @@ defmodule Cldr.Mixfile do
      docs: [source_ref: "v#{@version}", main: "readme", extras: ["README.md"]],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps(), 
+     deps: deps(),
      description: description(),
      package: package()]
   end
@@ -34,7 +34,7 @@ defmodule Cldr.Mixfile do
      {:benchfella, "~> 0.3.0", only: :dev},
      {:credo, "~> 0.4", only: [:dev, :test]}]
   end
-  
+
   defp package do
     [maintainers: ["Kip Cole"],
      licenses: ["Apache 2.0"],
