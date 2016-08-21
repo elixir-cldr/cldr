@@ -262,14 +262,14 @@ defmodule Cldr.Number do
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
-  defp apply_grouping(string, groups, locale) do
-    integer = do_grouping(string["integer"], groups[:integer], 
-                String.length(string["integer"]), 
+  defp apply_grouping(%{"integer" => integer, "fraction" => fraction} = string, groups, locale) do
+    integer = do_grouping(integer, groups[:integer], 
+                String.length(integer), 
                 minimum_group_size(groups[:integer], locale), 
                 :reverse)
     
-    fraction = do_grouping(string["fraction"], groups[:fraction], 
-                 String.length(string["fraction"]), 
+    fraction = do_grouping(fraction, groups[:fraction], 
+                 String.length(fraction), 
                  minimum_group_size(groups[:fraction], locale))
     
     %{string | "integer" => integer, "fraction" => fraction}
@@ -293,32 +293,19 @@ defmodule Cldr.Number do
     string
   end
   
-  defp do_grouping(string, groups, string_length, min_grouping, :reverse) do
+  # The case when there is only one grouping. Always true for fraction part.
+  defp do_grouping(string, %{first: first, rest: rest}, _, _, direction) when first == rest do
     string
-    |> String.reverse
-    |> do_grouping(groups, string_length, min_grouping)
-    |> String.reverse
-  end
-  
-  # The case when there is only one grouping.
-  defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) when first == rest  do
-    string
-    |> chunk_string(first)
+    |> chunk_string(first, direction)
     |> Enum.join(Compiler.placeholder(:group))
   end
-  
+
   # The case when there are two different groupings. This applies only to
   # The integer part, it can never be true for the fraction part.
-  @lint false
-  defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) do
-    [first_group | other_groups] = chunk_string(string, first)
-    
-    other_groups = other_groups
-    |> Enum.join 
-    |> chunk_string(rest)
-    
-    ([first_group] ++ other_groups)
-    |> Enum.join(Compiler.placeholder(:group))
+  defp do_grouping(string, %{first: first, rest: rest}, string_length, _, :reverse) do
+    {rest_of_string, first_group} = String.split_at(string, string_length - first)
+    other_groups = chunk_string(rest_of_string, rest, :reverse)
+    Enum.join(other_groups ++ [first_group], Compiler.placeholder(:group))
   end
 
   # Put the parts of the number back together again
@@ -348,23 +335,23 @@ defmodule Cldr.Number do
   @lint {~r/Refactor/, false}
   defp assemble_format(number_string, number, format, options) do
     format = format[options[:pattern]]
-    locale = options[:locale]
     system = options[:number_system]
-    currency = options[:currency]
+    locale = options[:locale]
     symbols = number_symbols_for(locale, system)
-    
+  
     Enum.reduce format, "", fn (token, string) ->
       string <> case token do
-        {:currency, type}   -> currency_symbol(currency, number, type, locale)
-        {:percent, _}       -> symbols.percent_sign
-        {:permille, _}      -> symbols.permille
+        {:format, _format}  -> number_string
+        {:pad, _}           -> ""
         {:plus, _}          -> symbols.plus_sign
         {:minus, _}         -> symbols.minus_sign
+        {:currency, type}   -> 
+          currency_symbol(options[:currency], number, type, locale)
+        {:percent, _}       -> symbols.percent_sign
+        {:permille, _}      -> symbols.permille
         {:literal, literal} -> literal
         {:quote, char}      -> char
         {:quote_char, char} -> char
-        {:format, _format}  -> number_string
-        {:pad, _}           -> ""
       end
     end
   end

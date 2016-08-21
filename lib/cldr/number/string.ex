@@ -52,17 +52,42 @@ defmodule Cldr.Number.String do
       iex> Cldr.Number.String.chunk_string("1234", 4)            
       ["1234"]
   """
-  @spec chunk_string(String.t, integer) :: [String.t]
-  def chunk_string("", _size) do
+  @spec chunk_string(String.t, integer, :forward | :reverse) :: [String.t]
+ 
+  def chunk_string("", _size, _) do
+    [""]
+  end
+  
+  def chunk_string(string, size, :forward) do
+    len = String.length(string)
+    remainder = rem(len, size)
+    if remainder > 0 do
+      {head, last} = String.split_at(string, len - remainder)
+      chunks = do_chunk_string(head, size)
+      chunks ++ [last]
+    else
+      do_chunk_string(string, size)
+    end
+  end
+  
+  def chunk_string(string, size, :reverse) do
+    len = String.length(string)
+    remainder = rem(len, size)
+    if remainder > 0 do
+      {head, last} = String.split_at(string, remainder)
+      chunks = do_chunk_string(last, size)
+      [head] ++ chunks
+    else
+      do_chunk_string(string, size)
+    end
+  end
+  
+  defp do_chunk_string("", _size) do
     []
   end
   
-  def chunk_string(string, size) do
-    if String.length(string) < size do
-      [string]
-    else
-      {chunk, rest} = String.split_at(string, size)
-      [chunk] ++ chunk_string(rest, size)
-    end
+  defp do_chunk_string(string, size) do
+    {chunk, rest} = String.split_at(string, size)
+    [chunk] ++ do_chunk_string(rest, size)
   end
 end
