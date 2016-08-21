@@ -1,4 +1,8 @@
 defmodule Xml do
+  @moduledoc """
+  Helper functions for xml
+  """
+  
   require Record
   Record.defrecord :xmlAttribute, Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")
   Record.defrecord :xmlElement,   Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl")
@@ -13,35 +17,35 @@ defmodule Xml do
   end
   
   @spec all(document, xpath) :: [document]
-  def all(node, path) do
-    for child_element <- xpath(node, path) do
+  def all(xml_node, path) do
+    for child_element <- xpath(xml_node, path) do
       child_element
     end
   end
 
   @spec first(document, xpath) :: document | nil
-  def first(node, path), do: node |> xpath(path) |> take_one
+  def first(xml_node, path), do: xml_node |> xpath(path) |> take_one
   defp take_one([head | _]), do: head
   defp take_one(_), do: nil
 
   @spec node_name(document) :: String.t | nil
   def node_name(nil), do: nil
-  def node_name(node), do: elem(node, 1)
+  def node_name(xml_node), do: elem(xml_node, 1)
 
   @spec attr(document, String.t) :: String.t | nil
-  def attr(node, name), do: node |> xpath("./@#{name}") |> extract_attr
+  def attr(xml_node, name), do: xml_node |> xpath("./@#{name}") |> extract_attr
   defp extract_attr([xmlAttribute(value: value)]), do: List.to_string(value)
   defp extract_attr(_), do: nil
 
   @spec text(document) :: String.t | nil
-  def text(node), do: node |> xpath("./text()") |> extract_text
+  def text(xml_node), do: xml_node |> xpath("./text()") |> extract_text
   defp extract_text([xmlText(value: value)]), do: List.to_string(value)
   defp extract_text(_x), do: nil
 
   @spec xpath(document, String.t) :: [document]
   defp xpath(nil, _), do: []
-  defp xpath(node, path) do
-    :xmerl_xpath.string(to_char_list(path), node)
+  defp xpath(xml_node, path) do
+    :xmerl_xpath.string(to_char_list(path), xml_node)
   end
   
 end

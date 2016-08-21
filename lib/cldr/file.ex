@@ -19,7 +19,10 @@ defmodule Cldr.File do
   @currencies_file Path.join(Cldr.data_dir(), @currencies)
   @number_systems_file Path.join(Cldr.data_dir(), @number_systems)
     
-  {:ok, data} = File.read!(@currencies_file) |> Poison.decode
+  {:ok, data} = @currencies_file
+  |> File.read!
+  |> Poison.decode
+  
   @currency_data data["supplemental"]["currencyData"]["fractions"]
   def read(:currency_data) do
     @currency_data
@@ -35,20 +38,23 @@ defmodule Cldr.File do
   end
   
   def read(:number_systems) do
-    systems = read_cldr_data(@number_systems_file)
-    Enum.map(systems["supplemental"]["numberingSystems"], fn {system, meta} ->
+    systems = read_cldr_data(@number_systems_file)["supplemental"]["numberingSystems"]
+    systems_list = Enum.map(systems, fn {system, meta} ->
       {system, %Cldr.Number.System{
         name:       system,
         type:       String.to_atom(meta["_type"]),
         digits:     meta["_digits"],
         rules:      split_rules(meta["_rules"])
       }}
-    end) |> Enum.into(%{})
+    end) 
+    systems_list |> Enum.into(%{})
   end
   
+  @lint {~r/Refactor/, false}
   def read(:decimal_formats) do
     formats = Enum.map Cldr.Config.known_locales, fn (locale) ->
-      number_systems = Number.System.number_systems_for(locale) 
+      number_systems = locale
+        |> Number.System.number_systems_for
         |> Enum.map(fn {_k, v} -> v.name end) |> Enum.uniq
       
       number_formats = Enum.reduce number_systems, %{}, fn (number_system, formats) ->
@@ -69,7 +75,8 @@ defmodule Cldr.File do
   
   def read(:number_systems, locale) do
     numbers = read(:numbers, locale)
-    Map.merge(%{"default" => numbers["defaultNumberingSystem"]}, numbers["otherNumberingSystems"])
+    %{"default" => numbers["defaultNumberingSystem"]}
+    |> Map.merge(numbers["otherNumberingSystems"])
     |> Enum.map(fn {type, system} -> {String.to_atom(type), read(:number_systems)[system]} end)
     |> Enum.into(%{})
   end
@@ -81,6 +88,7 @@ defmodule Cldr.File do
     numbers["main"][locale]["numbers"]
   end
   
+  @lint {~r/Refactor/, false}
   def read(:currency, locale) do
     path = Path.join(Cldr.numbers_locale_dir(), [locale, "/currencies.json"])
     currencies = read_cldr_data(path)
@@ -113,11 +121,15 @@ defmodule Cldr.File do
   def read(:list_patterns, locale) do
     path = Path.join(Cldr.data_dir(), ["cldr-misc-#{Config.full_or_modern}/main/", 
       locale, "/listPatterns.json"])
-    patterns = read_cldr_data(path)
-    Enum.map(patterns["main"][locale]["listPatterns"], fn {"listPattern-type-" <> type, data} ->
-      type_name = String.replace(type, "-", "_") |> String.to_atom
+    pattern_list = read_cldr_data(path)["main"][locale]["listPatterns"]
+    patterns = Enum.map(pattern_list, fn {"listPattern-type-" <> type, data} ->
+      type_name = type
+      |> String.replace("-", "_") 
+      |> String.to_atom
+      
       {type_name, data}
-    end) |> Enum.into(%{})
+    end) 
+    patterns |> Enum.into(%{})
   end
   
   @count_types [:one, :two, :few, :many, :other]
@@ -132,13 +144,16 @@ defmodule Cldr.File do
   end
   
   defp read_cldr_data(file) do
-    {:ok, data} = File.read!(file) 
+    {:ok, data} = file
+    |> File.read!
     |> Poison.decode
     data
   end
   
   defp split_rules(rules) when is_nil(rules), do: nil
   defp split_rules(rules) do
-    String.split(rules, "/") |> Enum.map(fn (elem) -> String.replace(elem, "_","-") end)
+    rules
+    |> String.split("/") 
+    |> Enum.map(fn (elem) -> String.replace(elem, "_","-") end)
   end
 end

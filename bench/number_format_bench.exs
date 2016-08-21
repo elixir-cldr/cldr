@@ -2,10 +2,19 @@ defmodule Number.Format.Test do
   use Benchfella
   
   bench "Format uncompiled number" do
-    Cldr.Number.to_string 12345.6789, format: "##"
+    Cldr.Number.to_string 12345.6789, format: "#,##0.####"
   end
   
-  bench "Format compiled number" do
-    Cldr.Number.to_string 12345.6789, format: "#"
+  bench "Format compiled number {en, latn}" do
+    Cldr.Number.to_string 12345.6789, format: "#,##0.###"
+  end
+  
+  bench "Format compiled number {fr, latn}" do
+    Cldr.Number.to_string 12345.6789, format: "#,##0.###", locale: "fr"
+  end
+  
+  @decimal Decimal.new(12345.6789)
+  bench "Decimal.to_string" do
+    Decimal.to_string(@decimal, :normal)
   end
 end

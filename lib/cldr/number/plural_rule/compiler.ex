@@ -11,7 +11,9 @@ defmodule Cldr.Number.PluralRule.Compiler do
   Using a leex lexer, tokenize a rule definition
   """
   def tokenize(definition) when is_binary(definition) do
-    String.to_charlist(definition) |> :plural_rules_lexer.string
+    definition
+    |> String.to_charlist
+    |> :plural_rules_lexer.string
   end
   
   @doc """

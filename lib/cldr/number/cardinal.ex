@@ -1,5 +1,9 @@
-defmodule Cldr.Number.Ordinal do
-  use Cldr.Number.PluralRule, :ordinal
+defmodule Cldr.Number.Cardinal do
+  @moduledoc """
+  Manages the rules for a cardinal number.
+  """
+  
+  use Cldr.Number.PluralRule, :cardinal
   
   @type operand :: non_neg_integer
   
@@ -10,9 +14,10 @@ defmodule Cldr.Number.Ordinal do
   Enum.each @configured_locales, fn (locale) ->
     function_body = @rules[locale] |> rules_to_condition_statement(__MODULE__)
     function = quote do
+      @lint {Credo.Check.Refactor.FunctionArity, false}
       defp do_plural_rule(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)
     end
     if System.get_env("DEBUG"), do: IO.puts Macro.to_string(function)
     Code.eval_quoted(function, [], __ENV__)
   end
-end
+end 

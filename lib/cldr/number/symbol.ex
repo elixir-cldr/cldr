@@ -1,5 +1,10 @@
 defmodule Cldr.Number.Symbol do
-  import Cldr.Helpers
+  @moduledoc """
+  Functions to manage the symbol definitions for a locale and 
+  number system.
+  """
+  
+  import Cldr.Map
   alias Cldr.File
   alias Cldr.Number
   

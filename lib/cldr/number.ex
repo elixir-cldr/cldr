@@ -81,7 +81,7 @@ defmodule Cldr.Number do
   import Cldr.Macros
   import Cldr.Number.String
   import Cldr.Number.Format, only: [format_from: 2]
-  import Cldr.Number.System, only: [transliterate: 3]
+  import Cldr.Number.Transliterate, only: [transliterate: 3]
   import Cldr.Number.Symbol, only: [number_symbols_for: 2, 
                                     minimum_grouping_digits_for: 1]
   
@@ -107,7 +107,8 @@ defmodule Cldr.Number do
   
   @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options \\ @default_options) do
-    options = normalize_options(options, @default_options)
+    options = options
+    |> normalize_options(@default_options)
     |> detect_negative_number(number)
     
     if options[:format] do
@@ -116,7 +117,8 @@ defmodule Cldr.Number do
       to_string(number, format, options)
     else
       options = options |> Keyword.delete(:format)
-      format = format_from(options[:locale], options[:number_system]) 
+      format = options[:locale] 
+        |> format_from(options[:number_system]) 
         |> Map.get(options[:as])
       to_string(number, format, options)
     end
@@ -127,9 +129,6 @@ defmodule Cldr.Number do
   # parse and analyse the format on each invokation.  There
   # are around 74 Cldr defined decimal formats so this isn't
   # to burdensome on the compiler of the BEAM.
-  #
-  # TODO:  Is it worth precompiling even further using "en"
-  # locale?
   Enum.each Cldr.Number.Format.decimal_format_list(), fn format ->
     meta = Compiler.decode(format)
     defp to_string(number, unquote(format), options) do
@@ -151,17 +150,18 @@ defmodule Cldr.Number do
     meta = meta 
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
     
-    to_decimal(number)
+    number
+    |> to_decimal
     |> multiply_by_factor(meta[:multiplier])
     |> round_to_nearest(meta[:rounding], options[:rounding_mode])
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeroes(:integer, meta[:integer_digits])
     |> adjust_trailing_zeroes(:fraction, meta[:fractional_digits])
-    |> apply_grouping(meta[:grouping], options[:locale])
+    |> apply_grouping(meta[:grouping], options[:locale]) # 20 µs/op
     |> reassemble_number_string
-    |> transliterate(options[:locale], options[:number_system])
+    |> transliterate(options[:locale], options[:number_system]) # 80 µs/op
     |> apply_padding(meta[:padding_length], meta[:padding_char])
-    |> assemble_format(number, meta[:format], options)
+    |> assemble_format(number, meta[:format], options) # 10 µs/op
   end
 
   # When formatting a currency we need to adjust the number of fractional
@@ -192,11 +192,14 @@ defmodule Cldr.Number do
   # the sign only determines which pattern we use (positive
   # or negative)
   defp to_decimal(number = %Decimal{}) do
-    number |> Decimal.abs()
+    number 
+    |> Decimal.abs()
   end
   
   defp to_decimal(number) do
-    Decimal.new(number) |> Decimal.abs()
+    number
+    |> Decimal.new
+    |> Decimal.abs()
   end
   
   # If the format includes a % (percent) or permille then we
@@ -217,7 +220,8 @@ defmodule Cldr.Number do
   end
   
   defp round_to_nearest(number, rounding, rounding_mode) do
-    Decimal.div(number, rounding)
+    number
+    |> Decimal.div(rounding)
     |> Decimal.round(0, rounding_mode)
     |> Decimal.mult(rounding)
   end
@@ -290,23 +294,31 @@ defmodule Cldr.Number do
   end
   
   defp do_grouping(string, groups, string_length, min_grouping, :reverse) do
-    String.reverse(string) 
+    string
+    |> String.reverse
     |> do_grouping(groups, string_length, min_grouping)
     |> String.reverse
   end
   
   # The case when there is only one grouping.
   defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) when first == rest  do
-    chunk_string(string, first)
+    string
+    |> chunk_string(first)
     |> Enum.join(Compiler.placeholder(:group))
   end
   
   # The case when there are two different groupings. This applies only to
   # The integer part, it can never be true for the fraction part.
+  @lint false
   defp do_grouping(string, %{first: first, rest: rest}, _, _, :forward) do
     [first_group | other_groups] = chunk_string(string, first)
-    other_groups = Enum.join(other_groups) |> chunk_string(rest)
-    [first_group] ++ other_groups |> Enum.join(Compiler.placeholder(:group))
+    
+    other_groups = other_groups
+    |> Enum.join 
+    |> chunk_string(rest)
+    
+    ([first_group] ++ other_groups)
+    |> Enum.join(Compiler.placeholder(:group))
   end
 
   # Put the parts of the number back together again
@@ -333,6 +345,7 @@ defmodule Cldr.Number do
   # whether the number is positive or negative (as indicated
   # by options[:sign]) we assemble the parts and transliterate
   # the currency sign, percent and permille characters.
+  @lint {~r/Refactor/, false}
   defp assemble_format(number_string, number, format, options) do
     format = format[options[:pattern]]
     locale = options[:locale]

@@ -88,14 +88,14 @@ defmodule Cldr.Number.Format do
       "¤ #,##0.00;¤ #,##0.00-", "¤ #,##0.00;¤ -#,##0.00",
       "¤ #0.00", "‎¤#,##0.00", "‎¤#,##0.00;‎(¤#,##0.00)"]
   """
-  @decimal_format_list Enum.map(@decimal_formats, 
-    fn {_locale, formats} -> Map.values(formats) end)
-      |> Enum.map(&(hd(&1)))
-      |> Enum.map(&(Map.values(&1)))
-      |> List.flatten
-      |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
-      |> Enum.uniq
-      |> Enum.sort
+  @decimal_format_list @decimal_formats
+  |> Enum.map(fn {_locale, formats} -> Map.values(formats) end)
+  |> Enum.map(&(hd(&1)))
+  |> Enum.map(&(Map.values(&1)))
+  |> List.flatten
+  |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
+  |> Enum.uniq
+  |> Enum.sort
     
   @spec decimal_format_list :: [format]
   def decimal_format_list do

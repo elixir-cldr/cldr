@@ -75,7 +75,8 @@ defmodule Cldr.List do
   # For when there are two elements only
   def to_string([first, last], locale, pattern_type) do
     pattern = list_patterns_for(locale)[pattern_type]["2"]
-    String.replace(pattern, "{0}", Kernel.to_string(first)) 
+    pattern
+    |> String.replace("{0}", Kernel.to_string(first)) 
     |> String.replace("{1}", last)
   end
   
@@ -84,10 +85,12 @@ defmodule Cldr.List do
     first_pattern = list_patterns_for(locale)[pattern_type]["start"]
     last_pattern = list_patterns_for(locale)[pattern_type]["end"]
     
-    last = String.replace(last_pattern, "{0}", Kernel.to_string(middle)) 
+    last = last_pattern
+    |> String.replace("{0}", Kernel.to_string(middle)) 
     |> String.replace("{1}", Kernel.to_string(last))
     
-    String.replace(first_pattern, "{0}", Kernel.to_string(first))
+    first_pattern
+    |> String.replace("{0}", Kernel.to_string(first))
     |> String.replace("{1}", last)
   end
   
@@ -95,7 +98,8 @@ defmodule Cldr.List do
   def to_string([first | rest], locale, pattern_type) do
     first_pattern = list_patterns_for(locale)[pattern_type]["start"]
     
-    String.replace(first_pattern, "{0}", Kernel.to_string(first))
+    first_pattern
+    |> String.replace("{0}", Kernel.to_string(first))
     |> String.replace("{1}", do_to_string(rest, locale, pattern_type))
   end
   
@@ -103,7 +107,8 @@ defmodule Cldr.List do
   defp do_to_string([first, last], locale, pattern_type) do
     last_pattern = list_patterns_for(locale)[pattern_type]["end"]
   
-    String.replace(last_pattern, "{0}", Kernel.to_string(first))
+    last_pattern
+    |> String.replace("{0}", Kernel.to_string(first))
     |> String.replace("{1}", Kernel.to_string(last))
   end
   
@@ -111,7 +116,8 @@ defmodule Cldr.List do
   defp do_to_string([first | rest], locale, pattern_type) do
     middle_pattern = list_patterns_for(locale)[pattern_type]["middle"]
   
-    String.replace(middle_pattern, "{0}", Kernel.to_string(first))
+    middle_pattern
+    |> String.replace("{0}", Kernel.to_string(first))
     |> String.replace("{1}", do_to_string(rest, locale, pattern_type))
   end
 end

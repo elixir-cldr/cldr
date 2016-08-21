@@ -67,6 +67,14 @@ defmodule Cldr.Config do
   end
   
   @doc """
+  Return the path name of the CLDR supplemental data directory.
+  """
+  @supplemental_dir Path.join(@data_dir, "/cldr-core/supplemental")
+  def supplemental_dir do
+    @supplemental_dir
+  end
+  
+  @doc """
   Return the configured `Gettext` module name or `nil`.
   """
   @spec gettext :: atom
@@ -117,7 +125,9 @@ defmodule Cldr.Config do
   ignored.
   """
   @locales_path Path.join(@data_dir, "cldr-core/availableLocales.json")
-  {:ok, locales} = File.read!(@locales_path) |> Poison.decode
+  {:ok, locales} = @locales_path
+  |> File.read!
+  |> Poison.decode
   @all_locales locales["availableLocales"][@full_or_modern]
   @spec all_locales :: [String.t]
   def all_locales do
@@ -155,7 +165,9 @@ defmodule Cldr.Config do
   """
   @spec known_locales :: [String.t]
   def known_locales do
-    MapSet.intersection(MapSet.new(requested_locales()), MapSet.new(all_locales())) 
+    requested_locales()
+    |> MapSet.new()
+    |> MapSet.intersection(MapSet.new(all_locales())) 
     |> MapSet.to_list
     |> Enum.sort
   end
@@ -167,6 +179,7 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
+  @lint false
   @spec requested_locales :: [String.t]
   def requested_locales do
     (configured_locales() ++ gettext_locales() ++ [default_locale()])
@@ -218,12 +231,13 @@ defmodule Cldr.Config do
   @wildcard_matchers ["*", "+", "."]
   @spec expand_locales([String.t]) :: [String.t]
   def expand_locales(locales) do
-    Enum.map(locales, fn locale -> 
+    locale_list = Enum.map(locales, fn locale -> 
       if String.contains?(locale, @wildcard_matchers) do
         Enum.filter(@all_locales, &Regex.match?(Regex.compile!(locale), &1))
       else
         locale
       end
-    end) |> List.flatten |> Enum.uniq
+    end) 
+    locale_list |> List.flatten |> Enum.uniq
   end
 end

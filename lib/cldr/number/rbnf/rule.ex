@@ -1,4 +1,8 @@
 defmodule Cldr.Rbnf.Rule do
+  @moduledoc """
+  Tokenizer for an RBNF rule.
+  """
+  
   defstruct [:ruleset, :name, :radix, :definition, :range]
   alias Cldr.Rbnf.Rule
  
@@ -8,7 +12,9 @@ defmodule Cldr.Rbnf.Rule do
   Using a leex lexer, tokenize a rule definition
   """
   def tokenize(definition) when is_binary(definition) do
-    String.to_charlist(definition) |> :rbnf.string
+    definition
+    |> String.to_charlist
+    |> :rbnf.string
   end
   
   def tokenize(%Rule{definition: definition} = _rule) do

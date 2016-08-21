@@ -1,7 +1,13 @@
 defmodule Cldr.Number.PluralRule do
+  @moduledoc """
+  Macro to define plural rule methods on a module.
+  
+  Used to generate functions for `Cldr.Number.Ordinal` and `
+  Cldr.Number.Cardinal`
+  """
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
-      raise ArgumentError, "Invalid option #{inspect opts}.  :cardinal or :ordinal are the only valid options"
+      raise ArgumentError, "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
     end
     
     plurals_filename = if opts == :cardinal, do: "plurals", else: "ordinals"
@@ -12,15 +18,19 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Number.PluralRule.Compiler 
       import Cldr.Number.PluralRule.Transformer
       
-      {:ok, json} = Path.join(__DIR__, "/../../data/cldr-core/supplemental/#{unquote(plurals_filename)}.json") 
-        |> File.read! 
-        |> Poison.decode
+      {:ok, json} = Cldr.supplemental_dir()
+      |> Path.join("/#{unquote(plurals_filename)}.json") 
+      |> File.read! 
+      |> Poison.decode
       @rules json["supplemental"]["plurals-type-#{unquote(plurals_type)}"]
   
       @doc """
       The locales for which cardinal rules are defined
       """
-      @rules_locales Map.keys(@rules) |> Enum.sort
+      @rules_locales @rules
+      |> Map.keys
+      |> Enum.sort
+      
       def known_locales do
         @rules_locales
       end
@@ -33,7 +43,9 @@ defmodule Cldr.Number.PluralRule do
       don't have their own plural rules so this list is the intersection
       of Cldr's configured locales and those that have rules.
       """
-      @configured_locales  MapSet.intersection(MapSet.new(@rules_locales), MapSet.new(Cldr.known_locales())) 
+      @configured_locales @rules_locales
+      |> MapSet.new
+      |> MapSet.intersection(MapSet.new(Cldr.known_locales())) 
       |> MapSet.to_list
       |> Enum.sort
   
@@ -92,19 +104,22 @@ defmodule Cldr.Number.PluralRule do
         v = 0; w = 0; f = 0; t = 0
         do_plural_rule(locale, n, i, v, w, f, t)
       end
-  
+      
+      @lint {Credo.Check.Refactor.PipeChainStart, false}
       def plural_rule(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
-        n = abs(number) |> Float.round(rounding)
-        i = trunc(n)
-        v = rounding
-        t = fraction_as_integer(n - i, rounding)
-        w = number_of_integer_digits(t)
-        f = t * :math.pow(10, v - w) |> trunc
-        do_plural_rule(locale, n, i, v, w, f, t)
+        plural_rule(Decimal.new(number), locale, rounding)
+        # n = Float.round(abs(number), rounding)
+        # i = trunc(n)
+        # v = rounding
+        # t = fraction_as_integer(n - i, rounding)
+        # w = number_of_integer_digits(t)
+        # f = trunc(t * :math.pow(10, v - w))
+        # do_plural_rule(locale, n, i, v, w, f, t)
       end
   
-      # For the case where its a Decimal we guard against a map (which is the underlying representation of
-      # a Decimal).  Don't use rounding because the precision is specified for Decimals.
+      # For the case where its a Decimal we guard against a map (which is the
+      # underlying representation of a Decimal).  Don't use rounding because
+      # the precision is specified for Decimals.
       def plural_rule(%Decimal{} = number, locale, rounding) when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
@@ -116,7 +131,8 @@ defmodule Cldr.Number.PluralRule do
         v = abs(n.exp)
     
         # f visible fractional digits in n, with trailing zeros.
-        f = Decimal.sub(n, i) 
+        f = n
+        |> Decimal.sub(i) 
         |> Decimal.mult(Decimal.new(:math.pow(10, v))) 
         |> Decimal.round(0, :floor) 
         |> Decimal.to_integer

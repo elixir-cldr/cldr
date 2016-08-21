@@ -1,5 +1,9 @@
 # http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
 defmodule Cldr.Number.Math do
+  @moduledoc """
+  Math helper functions for number formatting
+  """
+  
   @default_rounding 3
     
   @doc """
@@ -45,7 +49,9 @@ defmodule Cldr.Number.Math do
   @decimal_10 Decimal.new(10)
   def fraction_as_integer(fraction, rounding) when is_map(fraction) do
     if Decimal.cmp(fraction, Decimal.new(1)) == :gt do
-      Decimal.sub(fraction, Decimal.round(fraction, 0, :floor)) |> fraction_as_integer(rounding)
+      fraction
+      |> Decimal.sub(Decimal.round(fraction, 0, :floor)) 
+      |> fraction_as_integer(rounding)
     else
       do_fraction_as_integer(fraction, rounding)
     end
@@ -78,12 +84,14 @@ defmodule Cldr.Number.Math do
   end
   
   def number_of_integer_digits(number) when is_float(number) do
-    trunc(number)
+    number
+    |> trunc
     |> do_number_of_integer_digits(0)
   end
   
   def number_of_integer_digits(number) when is_map(number) do
-    Decimal.round(number, 0, :floor)
+    number
+    |> Decimal.round(0, :floor)
     |> Decimal.to_integer
     |> do_number_of_integer_digits(0)
   end
@@ -103,7 +111,9 @@ defmodule Cldr.Number.Math do
     if rem(number, 10) != 0 do
       number
     else
-      div(number,10) |> remove_trailing_zeroes()
+      number
+      |> div(10) 
+      |> remove_trailing_zeroes()
     end
   end
   
@@ -181,7 +191,11 @@ defmodule Cldr.Number.Math do
   end
   
   def mod(number, modulus) when is_map(number) and is_map(modulus) do
-    modulo = Decimal.div(number, modulus) |> Decimal.round(0, :floor) |> Decimal.mult(modulus)
+    modulo = number
+    |> Decimal.div(modulus) 
+    |> Decimal.round(0, :floor) 
+    |> Decimal.mult(modulus)
+    
     Decimal.sub(number, modulo)
   end
   
@@ -198,10 +212,14 @@ defmodule Cldr.Number.Math do
   end
   
   defp do_fraction_as_integer(fraction, rounding) when is_float(fraction) do
-    if (truncated_fraction = trunc(fraction)) == fraction do
+    truncated_fraction = trunc(fraction)
+    if truncated_fraction == fraction do
       truncated_fraction
     else
-      Float.round(fraction, rounding) * 10 |> do_fraction_as_integer(rounding)
+      fraction
+      |> Float.round(rounding)
+      |> Kernel.*(10) 
+      |> do_fraction_as_integer(rounding)
     end
   end
   
@@ -210,7 +228,10 @@ defmodule Cldr.Number.Math do
     if Decimal.equal?(truncated_fraction, fraction) do
       truncated_fraction |> Decimal.to_integer
     else
-      Decimal.round(fraction, rounding) |> Decimal.mult(@decimal_10) |> do_fraction_as_integer(rounding)
+      fraction
+      |> Decimal.round(rounding) 
+      |> Decimal.mult(@decimal_10) 
+      |> do_fraction_as_integer(rounding)
     end
   end
   
@@ -218,7 +239,9 @@ defmodule Cldr.Number.Math do
     if number == 0 do
       count
     else
-      div(number, 10) |> do_number_of_integer_digits(count + 1)
+      number
+      |> div(10) 
+      |> do_number_of_integer_digits(count + 1)
     end
   end
 end 

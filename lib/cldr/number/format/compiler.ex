@@ -141,7 +141,9 @@ defmodule Cldr.Number.Format.Compiler do
   Using a leex lexer, tokenize a rule definition
   """
   def tokenize(definition) when is_binary(definition) do
-    String.to_charlist(definition) |> :decimal_formats_lexer.string
+    definition
+    |> String.to_charlist
+    |> :decimal_formats_lexer.string
   end
   
   @doc """
@@ -387,7 +389,8 @@ defmodule Cldr.Number.Format.Compiler do
   """
   defp fraction_grouping(format) do
     [group | _drop] = String.split(format, @grouping_separator)
-    if (group_size = String.length(group)) == 0 do
+    group_size = String.length(group)
+    if group_size == 0 do
       %{first: @max_integer_digits, rest: @max_integer_digits}
     else
       %{first: group_size, rest: group_size}
@@ -508,6 +511,7 @@ defmodule Cldr.Number.Format.Compiler do
   * In a pattern, digits '1' through '9' specify rounding, but otherwise
     behave identically to digit '0'.
   """
+  @lint false
   @default_rounding Decimal.new(0)
   defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
     format = integer_format <> @decimal_separator <> fraction_format

@@ -1,13 +1,15 @@
-# During compilation we want to look up the configured locales
-# and generate the functions needed for only those locales.
-
-# For any other recognized locale we need a way to either fallback
-# to a known locale, or error exit (configurable)
 defmodule Cldr.Rbnf do
+  @moduledoc """
+  During compilation we want to look up the configured locales
+  and generate the functions needed for only those locales.
+
+  For any other recognized locale we need a way to either fallback
+  to a known locale, or error exit (configurable)
+  """
   import Xml
   alias Cldr.Rbnf.Rule
   defdelegate parse(filename), to: Xml
-  @rbnf_dir Path.join(__DIR__, "/../../data/common/rbnf")
+  @rbnf_dir Path.join(__DIR__, "/../../../data/common/rbnf")
   
   @spec rbnf_dir :: String.t
   def rbnf_dir do
@@ -28,20 +30,22 @@ defmodule Cldr.Rbnf do
   
   @spec rulegroups(Xml.xml_node, String.t) :: [String.t]
   def rulegroups(xml, path \\ "//rulesetGrouping") do
-    Enum.map(all(xml, path), fn(node) -> attr(node, "type") end)
+    Enum.map(all(xml, path), fn(xml_node) -> attr(xml_node, "type") end)
   end
   
   @spec rulesets(Xml.xml_node, binary) :: list([type: String.t, access: String.t])
   def rulesets(xml, rulegroup) do
     path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset"
-    Enum.map(all(xml, path), fn(node) -> [attr(node, "type"), attr(node, "access") || "public"] end)
+    Enum.map(all(xml, path), fn(xml_node) -> [attr(xml_node, "type"), attr(xml_node, "access") || "public"] end)
   end
   
   @spec rules(Xml.xml_node, String.t, String.t) :: [%Rule{}]
   def rules(xml, rulegroup, ruleset) do
     path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset[@type='#{ruleset}']/rbnfrule"
-    Enum.map(all(xml, path), fn(node) -> 
-      %Rule{name: attr(node, "value"), radix: attr(node, "radix"), definition: text(node)}
+    xml
+    |> all(path)
+    |> Enum.map(fn(xml_node) -> 
+      %Rule{name: attr(xml_node, "value"), radix: attr(xml_node, "radix"), definition: text(xml_node)}
     end)
     |> set_range
   end

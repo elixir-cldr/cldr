@@ -1,11 +1,27 @@
 defmodule Cldr do
+  @moduledoc """
+  Cldr provides functions to localise numbers, currencies, lists and
+  dates/times to an appropriate locale as defined by the CLDR data 
+  maintained by the ICU.
+  
+  The most common functions are:
+  
+  * `Cldr.Number.to_string/2` for formatting numbers
+  
+  * `Cldr.Currency.to_string/2` for formatting currencies
+  
+  * `Cldr.List.to_string/2` for formatting lists
+  """
+  
   alias Cldr.Config
   
   @type locale :: String.t
   
   @warn_if_greater_than 100
   @known_locale_count Enum.count(Config.known_locales)
-  IO.puts "Generating functions for #{@known_locale_count} locales #{inspect Config.known_locales, limit: 5} with default #{inspect Config.default_locale}"
+  IO.puts "Generating functions for #{@known_locale_count} locales " <>
+    "#{inspect Config.known_locales, limit: 5} with " <>
+    "default #{inspect Config.default_locale}"
   if @known_locale_count > @warn_if_greater_than do
     IO.puts "Please be patient, generating functions for many locales can take some time"
   end
@@ -19,7 +35,12 @@ defmodule Cldr do
   @data_dir Config.data_dir()
   def data_dir do
     @data_dir
-  end   
+  end
+  
+  @supplemental_dir Config.supplemental_dir()
+  def supplemental_dir do
+    @supplemental_dir
+  end
   
   @doc """
   Return the default locale name.

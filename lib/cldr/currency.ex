@@ -1,4 +1,8 @@
 defmodule Cldr.Currency do
+  @moduledoc """
+  Currency functions for CLDR.
+  """
+  
   alias Cldr.File
   
   @type format :: :standard | 
