@@ -302,10 +302,11 @@ defmodule Cldr.Number do
   end
   
   # The case when there is only one grouping. Always true for fraction part.
+  @group_separator Compiler.placeholder(:group)
   defp do_grouping(string, %{first: first, rest: rest}, _, _, direction) when first == rest do
     string
     |> chunk_string(first, direction)
-    |> Enum.join(Compiler.placeholder(:group))
+    |> Enum.join(@group_separator)
   end
 
   # The case when there are two different groupings. This applies only to
@@ -322,8 +323,9 @@ defmodule Cldr.Number do
   end
   
   # When there is both an integer and fraction parts
+  @decimal_separator Compiler.placeholder(:decimal)
   defp reassemble_number_string(number) do
-    number["integer"] <> Compiler.placeholder(:decimal) <> number["fraction"]
+    number["integer"] <>  @decimal_separator <> number["fraction"]
   end
    
   # Pad the number to the format length

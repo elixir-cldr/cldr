@@ -9,6 +9,10 @@ defmodule Number.Format.Test do
     Cldr.Number.to_string 12345.6789, format: "#,##0.###"
   end
   
+  bench "Format compiled currency {en, latn}" do
+    Cldr.Number.to_string 12345.6789, format: "#,##0.00 ¤", currency: "AUD"
+  end
+  
   bench "Format compiled number {fr, latn}" do
     Cldr.Number.to_string 12345.6789, format: "#,##0.###", locale: "fr"
   end
