@@ -63,8 +63,7 @@ defmodule Cldr.Number.String do
     remainder = rem(len, size)
     if remainder > 0 do
       {head, last} = String.split_at(string, len - remainder)
-      chunks = do_chunk_string(head, size)
-      chunks ++ [last]
+      do_chunk_string(head, size) ++ [last]
     else
       do_chunk_string(string, size)
     end
@@ -75,8 +74,7 @@ defmodule Cldr.Number.String do
     remainder = rem(len, size)
     if remainder > 0 do
       {head, last} = String.split_at(string, remainder)
-      chunks = do_chunk_string(last, size)
-      [head] ++ chunks
+      [head] ++ do_chunk_string(last, size)
     else
       do_chunk_string(string, size)
     end

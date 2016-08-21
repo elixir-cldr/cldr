@@ -130,17 +130,25 @@ defmodule Cldr.Number do
   # are around 74 Cldr defined decimal formats so this isn't
   # to burdensome on the compiler of the BEAM.
   Enum.each Cldr.Number.Format.decimal_format_list(), fn format ->
-    meta = Compiler.decode(format)
-    defp to_string(number, unquote(format), options) do
-      do_to_string(number, unquote(Macro.escape(meta)), options)
+    case Compiler.decode(format) do
+    {:ok, meta} ->
+      defp to_string(number, unquote(format), options) do
+        do_to_string(number, unquote(Macro.escape(meta)), options)
+      end
+    {:error, message} ->
+      {:error, message}
     end
   end
   
   # For formats not precompiled we need to compile first
   # and then process
   defp to_string(number, format, options) do
-    meta = Compiler.decode(format)
-    do_to_string(number, meta, options)
+    case Compiler.decode(format) do
+    {:ok, meta} ->
+      do_to_string(number, meta, options)
+    {:error, message} ->
+      {:error, message}
+    end
   end
   
   # Now we have the number to be formatted, the meta data that 
@@ -309,7 +317,6 @@ defmodule Cldr.Number do
   end
 
   # Put the parts of the number back together again
-  # TODO: Not yet handling the exponent
   defp reassemble_number_string(%{"fraction" => ""} = number) do
     number["integer"]
   end
@@ -335,6 +342,17 @@ defmodule Cldr.Number do
   @lint {~r/Refactor/, false}
   defp assemble_format(number_string, number, format, options) do
     format = format[options[:pattern]]
+    format_length = length(format)
+    do_assemble_format(number_string, number, format, options, format_length)
+  end
+  
+  # If the format length is 1 (one) then it can only be the number format
+  # and therefore we don't have to do the reduction.
+  def do_assemble_format(number_string, _number, _format, _options, 1) do
+    number_string
+  end
+  
+  def do_assemble_format(number_string, number, format, options, _length) do
     system = options[:number_system]
     locale = options[:locale]
     symbols = number_symbols_for(locale, system)

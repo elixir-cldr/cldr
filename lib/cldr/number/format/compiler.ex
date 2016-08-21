@@ -186,9 +186,9 @@ defmodule Cldr.Number.Format.Compiler do
   def decode(definition) do
     case parse(definition) do
     {:ok, format} ->
-      analyze(format)
-    {:error, {_line, _parser, [message, [context]]}} ->
-      {:error, "Decimal format compiler: #{message}#{context}"}
+      {:ok, analyze(format)}
+    {:error, {_line, _parser, [message, context]}} ->
+      {:error, "Decimal format compiler: #{message}#{Enum.join(context)}"}
     end
   end
   
