@@ -168,6 +168,13 @@ defmodule Cldr.Number.Format.Compiler do
     tokens |> :decimal_formats_parser.parse
   end
   
+  def parse("") do
+    {:error, "empty format string cannot be compiled"}
+  end
+  
+  def parse(nil) do
+    {:error, "no format string or token list provided"}
+  end
   @doc """
   Parse a number format definition and analyze it.
 
