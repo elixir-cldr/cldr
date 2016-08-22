@@ -98,6 +98,7 @@ defmodule Cldr.Number do
     :accounting |
     :scientific
 
+  @empty_string ""
   @default_options [
     as:            :standard,
     currency:      nil,
@@ -412,13 +413,20 @@ defmodule Cldr.Number do
     end
   end
 
+  # Calculate the padding by subtracting the length of the number
+  # string from the padding length.  If padding is specified then it
+  # can never create negative padding becau
   defp padding_string(%{padding_length: 0}, _number_string) do
-    ""
+    @empty_string
   end
 
   defp padding_string(meta, number_string) do
     pad_length = meta[:padding_length] - String.length(number_string)
-    String.duplicate(meta[:padding_char], pad_length)
+    if pad_length > 0 do
+      String.duplicate(meta[:padding_char], pad_length)
+    else
+      @empty_string
+    end
   end
 
   # Extract the appropriate currency symbol based upon how many currency
@@ -427,7 +435,7 @@ defmodule Cldr.Number do
   #   ¤¤     ISO currency symbol (constant)
   #   ¤¤¤    Appropriate currency display name for the currency, based on the
   #          plural rules in effect for the locale
-  #   ¤¤¤¤¤  Narrow currency symbol.
+  #   ¤¤¤¤   Narrow currency symbol.
   defp currency_symbol(%Cldr.Currency{} = currency, _number, 1, _locale) do
     currency.symbol
   end

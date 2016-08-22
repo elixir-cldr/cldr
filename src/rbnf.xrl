@@ -8,7 +8,6 @@
 %
 %   iex> :rbnf.string(rules_set_as_a_char_list)
 %
-% Note the part about being a char_list since thats what Erlang expects.
 
 Definitions.
 
@@ -30,14 +29,14 @@ Whitespace              = [\s\n\t]
 
 Rules.
 
-% We're using a common parser for both the rule declaration and its definition.
+% We're using a common lexer for both the rule declaration and its definition.
 % This part is for the declarations.
 {Plural_rules}            : {token,{plural_rules,TokenLine,TokenChars}}.
 
 % This part is for the definitions.
 {Number_format}           : {token,{number_format,TokenLine,TokenChars}}.
 {Rule_name}               : {token,{rule_name,TokenLine,TokenChars}}.
-{Conditional_start}       : {token,{conditional_start,TokenLine,TokenChars}}.       
+{Conditional_start}       : {token,{conditional_start,TokenLine,TokenChars}}.
 {Conditional_end}         : {token,{conditional_end,TokenLine,TokenChars}}.
 {Greater_than}            : {token,{modulo_call,TokenLine,TokenChars}}.
 {Less_than}               : {token,{quotient_call,TokenLine,TokenChars}}.
