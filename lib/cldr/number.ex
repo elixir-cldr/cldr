@@ -86,7 +86,9 @@ defmodule Cldr.Number do
                                     minimum_grouping_digits_for: 1]
 
   alias Cldr.Number.Format.Compiler
+  alias Cldr.Number.Math
   alias Cldr.Currency
+  alias Cldr.Number.Math
 
   @type format_type ::
     :standard |
@@ -151,10 +153,12 @@ defmodule Cldr.Number do
   defp do_to_string(number, meta, options) do
     meta = meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
+    |> adjust_fraction_for_significant_digits(number, meta[:significant_digits])
 
     number
     |> to_decimal
     |> multiply_by_factor(meta[:multiplier])
+    |> round_to_significant_digits(meta[:significant_digits])
     |> round_to_nearest(meta[:rounding], options[:rounding_mode])
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeroes(:integer, meta[:integer_digits])
@@ -189,6 +193,35 @@ defmodule Cldr.Number do
              rounding: rounding}
   end
 
+  # If we round to sigificant digits then the format won't (usually)
+  # have any fractional part specified and if we don't do something
+  # then we're truncating the number - not really what is intended
+  # for significant digits display.
+
+  # For no significant digits
+  defp adjust_fraction_for_significant_digits(meta, _number,
+      %{max: 0, min: 0}) do
+    meta
+  end
+
+  # No fractional digits for an integer
+  defp adjust_fraction_for_significant_digits(meta, number,
+      %{max: _max, min: _min}) when is_integer(number) do
+    meta
+  end
+
+  # Decimal version of an integer - exponent > 0
+  defp adjust_fraction_for_significant_digits(meta, %Decimal{exp: exp},
+      %{max: _max, min: _min}) when exp >= 0 do
+    meta
+  end
+
+  # For all float or Decimal fraction
+  defp adjust_fraction_for_significant_digits(meta, _number,
+      %{max: _max, min: _min}) do
+    %{meta | fractional_digits: %{max: 10, min: 1}}
+  end
+
   # Convert the number to a decimal since it preserves precision
   # better when we round.  Then use the absolute value since
   # the sign only determines which pattern we use (positive
@@ -213,6 +246,25 @@ defmodule Cldr.Number do
 
   defp multiply_by_factor(number, factor) do
     Decimal.mult(number, factor)
+  end
+
+  # Round to significant digits.  This is different to rounding
+  # to decimal places and is a more expensive mathematical
+  # calculation.  Although the specification allows for minimum
+  # and maximum, I haven't found an example of where minimum is a
+  # useful rounding value since maximum already removes trailing
+  # insignificant zeroes.
+  #
+  # Also note that this implementation allows for both significatn
+  # digit rounding as we as decimal precision rounding.  Its likely
+  # not a good idea to combine the two in a format mask and results
+  # are unspecified if you do.
+  defp round_to_significant_digits(number, %{min: 0, max: 0}) do
+    number
+  end
+
+  defp round_to_significant_digits(number, %{min: _min, max: max}) do
+    Math.round_significant(number, max)
   end
 
   # A format can include a rounding specification which we apply

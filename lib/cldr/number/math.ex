@@ -89,7 +89,7 @@ defmodule Cldr.Number.Math do
     |> do_number_of_integer_digits(0)
   end
 
-  def number_of_integer_digits(number) when is_map(number) do
+  def number_of_integer_digits(%Decimal{} = number) do
     number
     |> Decimal.round(0, :floor)
     |> Decimal.to_integer
@@ -235,13 +235,99 @@ defmodule Cldr.Number.Math do
     end
   end
 
+  defp do_number_of_integer_digits(number, count) when number == 0 do
+    count
+  end
+
   defp do_number_of_integer_digits(number, count) do
-    if number == 0 do
-      count
-    else
-      number
-      |> div(10)
-      |> do_number_of_integer_digits(count + 1)
+    number
+    |> div(10)
+    |> do_number_of_integer_digits(count + 1)
+  end
+
+  @docp """
+  Many thanks to:
+  http://stackoverflow.com/questions/202302/rounding-to-an-arbitrary-number-of-significant-digits
+  """
+  def round_significant(num, n) when is_float(num) or is_integer(num) do
+    num = if num < 0, do: -num, else: num
+    d = Float.ceil(:math.log10(num))
+    power = n - d
+
+    magnitude = :math.pow(10, power)
+    shifted = Float.round(num * magnitude)
+    shifted / magnitude
+  end
+
+  def round_significant(%Decimal{sign: sign} = num, n) when sign < 0 do
+    round_significant(Decimal.abs(num), n)
+  end
+
+  def round_significant(%Decimal{sign: sign} = num, n) when sign > 0 do
+    d = num |> log10 |> Decimal.round(0, :ceiling)
+    power = n |> Decimal.new |> Decimal.sub(d)
+
+    magnitude = pow(Decimal.new(10), power)
+    shifted = num |> Decimal.mult(magnitude) |> Decimal.round
+    Decimal.div(shifted, magnitude)
+  end
+
+  @doc """
+  Return the log10 of a number.
+
+  For Decimals the number if converted to a float then the
+  BIF :math.log10 is called and the result converted back
+  to a decimal.  This is definitely not optimal.
+
+  ## Example
+
+    iex> Cldr.Number.Math.log10(100)
+    2.0
+
+    iex> Cldr.Number.Math.log10(123)
+    2.089905111439398
+  """
+  def log10(number) when is_number(number) do
+    :math.log10(number)
+  end
+
+  def log10(%Decimal{} = number) do
+   to_float(number) |> :math.log10 |> Decimal.new
+  end
+
+  @doc """
+  Return the `number` raised to the `n`th power.
+
+  ## Example
+
+      iex> Cldr.Number.Math.pow(10,2)
+      100.0
+
+      iex> Cldr.Number.Math.pow(Decimal.new(10),2)
+      #Decimal<100>
+  """
+  def pow(number, n) when is_number(number) and is_number(n) do
+    :math.pow(number, n)
+  end
+
+  def pow(%Decimal{} = number, n) when is_integer(n) do
+    Enum.reduce 1..(n - 1), number, fn _count, acc ->
+      Decimal.mult(acc, number)
+    end
+  end
+
+  def pow(%Decimal{} = number, %Decimal{sign: sign} = n) when sign < 0 do
+    p = pow(number, Decimal.abs(n))
+    Decimal.div(Decimal.new(1), p)
+  end
+
+  def pow(%Decimal{} = number, %Decimal{sign: sign} = n) when sign > 0 do
+    pow(number, Decimal.to_integer(n))
+  end
+
+  def pow(number, n) when is_number(number) and is_integer(n) do
+    Enum.reduce 1..(n - 1), number, fn _count, acc ->
+      acc * number
     end
   end
 end

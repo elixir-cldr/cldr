@@ -1,4 +1,4 @@
-defmodule Cldr.Test do
+defmodule Doc.Test do
   use ExUnit.Case
   doctest Cldr
   doctest Cldr.Config
@@ -8,6 +8,5 @@ defmodule Cldr.Test do
   doctest Cldr.Number.Format
   doctest Cldr.Number.System
   doctest Cldr.Number.Math
-  
-end
 
+end

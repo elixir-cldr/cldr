@@ -1,5 +1,5 @@
 defmodule DecimalFormatCompiler.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias Cldr.Number.Format
   
   @ltr_marker <<226, 128, 142>>

@@ -106,10 +106,10 @@ defmodule Cldr.Number.Format.Compiler do
   @default_pad_char     " "
 
   @max_integer_digits   trunc(:math.pow(2, 32))
-  @min_integer_digits   0
+  @min_integer_digits   1
 
   @max_fraction_digits  @max_integer_digits
-  @min_fraction_digits  @min_integer_digits
+  @min_fraction_digits  0
 
   @digits_pattern       Regex.compile!(@digits)
   @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <>
@@ -235,7 +235,7 @@ defmodule Cldr.Number.Format.Compiler do
     if captures = Regex.named_captures(@digits_match, integer_format) do
       String.length(captures["digits"])
     else
-      0
+      @min_integer_digits
     end
   end
 
@@ -247,7 +247,7 @@ defmodule Cldr.Number.Format.Compiler do
     if captures = Regex.named_captures(@digits_match, fraction_format) do
       String.length(captures["digits"])
     else
-      0
+      @min_fraction_digits
     end
   end
 
@@ -475,9 +475,9 @@ defmodule Cldr.Number.Format.Compiler do
     if captures = Regex.named_captures(@significant_digits_match, integer_format) do
       minimum = String.length(captures["ats"])
       maximim = minimum + String.length(captures["hashes"])
-      %{minimum: minimum, maximum: maximim}
+      %{min: minimum, max: maximim}
     else
-      %{minimum: 0, maximum: 0}
+      %{min: 0, max: 0}
     end
   end
 
