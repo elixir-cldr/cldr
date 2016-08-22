@@ -85,10 +85,10 @@ defmodule Cldr.Number do
   import Cldr.Number.Symbol, only: [number_symbols_for: 2,
                                     minimum_grouping_digits_for: 1]
 
-  alias Cldr.Number.Format.Compiler
-  alias Cldr.Number.Math
   alias Cldr.Currency
+  alias Cldr.Number
   alias Cldr.Number.Math
+  alias Cldr.Number.Format.Compiler
 
   @type format_type ::
     :standard |
@@ -126,7 +126,7 @@ defmodule Cldr.Number do
   # parse and analyse the format on each invokation.  There
   # are around 74 Cldr defined decimal formats so this isn't
   # to burdensome on the compiler of the BEAM.
-  Enum.each Cldr.Number.Format.decimal_format_list(), fn format ->
+  Enum.each Number.Format.decimal_format_list(), fn format ->
     case Compiler.decode(format) do
     {:ok, meta} ->
       defp to_string(number, unquote(format), options) do
@@ -210,7 +210,7 @@ defmodule Cldr.Number do
     meta
   end
 
-  # Decimal version of an integer - exponent > 0
+  # Decimal version of an integer => exponent > 0
   defp adjust_fraction_for_significant_digits(meta, %Decimal{exp: exp},
       %{max: _max, min: _min}) when exp >= 0 do
     meta
@@ -436,20 +436,20 @@ defmodule Cldr.Number do
   #   ¤¤¤    Appropriate currency display name for the currency, based on the
   #          plural rules in effect for the locale
   #   ¤¤¤¤   Narrow currency symbol.
-  defp currency_symbol(%Cldr.Currency{} = currency, _number, 1, _locale) do
+  defp currency_symbol(%Currency{} = currency, _number, 1, _locale) do
     currency.symbol
   end
 
-  defp currency_symbol(%Cldr.Currency{} = currency, _number, 2, _locale) do
+  defp currency_symbol(%Currency{} = currency, _number, 2, _locale) do
     currency.code
   end
 
-  defp currency_symbol(%Cldr.Currency{} = currency, number, 3, locale) do
-    selector = Cldr.Number.Cardinal.plural_rule(number, locale)
+  defp currency_symbol(%Currency{} = currency, number, 3, locale) do
+    selector = Number.Cardinal.plural_rule(number, locale)
     currency.count[selector] || currency.count[:other]
   end
 
-  defp currency_symbol(%Cldr.Currency{} = currency, _number, 4, _locale) do
+  defp currency_symbol(%Currency{} = currency, _number, 4, _locale) do
     currency.narrow_symbol || currency.symbol
   end
 
