@@ -29,9 +29,18 @@ defmodule Cldr.Number.Format.Test do
       {1000, "1000",             [format: "#,##0.##",     locale: "pl"]},
       {10000, "10 000",          [format: "#,##0.##",     locale: "pl"]},
 
+      # Secondary grouping
+      {1234567, "12,34,567",     [format: "#,##,###"]},
+
       # Padding
       {123,  "$xx123.00",        [format: "$*x#,##0.00"]},
       {1234, "$1,234.00",        [format: "$*x#,##0.00"]},
+
+      # Currency
+      {123.4, "123.40 A$",        [format: "#,##0.00 ¤", currency: "AUD"]},
+      {123.4, "123.40 AUD",      [format: "#,##0.00 ¤¤", currency: "AUD"]},
+      {123.4, "123.40 Australian dollars", [format: "#,##0.00 ¤¤¤", currency: "AUD"]},
+      {123.4, "123.40 $",        [format: "#,##0.00 ¤¤¤¤", currency: "AUD"]},
 
       # Rounding
       {1234.21, "1,234.20",      [format: "#,##0.05"]},

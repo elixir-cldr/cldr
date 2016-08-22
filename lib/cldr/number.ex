@@ -442,7 +442,7 @@ defmodule Cldr.Number do
     currency.count[selector] || currency.count[:other]
   end
 
-  defp currency_symbol(%Cldr.Currency{} = currency, _number, 5, _locale) do
+  defp currency_symbol(%Cldr.Currency{} = currency, _number, 4, _locale) do
     currency.narrow_symbol || currency.symbol
   end
 

@@ -5,30 +5,30 @@
 % If there is no negative pattern then build the default one
 negative(_Positive) ->
   {negative, [{minus, "-"}, {format, same_as_positive}]}.
-  
+
 % Append list items.  Consolidate literals if possible into
 % a single list element.
 append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
   [{literal, list_to_binary([Literal1, Literal2])}] ++ Rest;
 append(A, B) when is_list(A) and is_list(B) ->
   A ++ B.
-  
+
 format(F) ->
   [{format, F}].
-  
+
 % Doesn't matter what the negative format is
 % its always the same as the positive one
 % with potentially different suffix and prefix
 neg_format(_F) ->
   [{format, same_as_positive}].
-  
+
 pad(V) ->
   [{pad, unwrap(V)}].
-  
+
 % Return a token value
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
-  
+
 -file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
@@ -286,7 +286,7 @@ yeccpars2_0(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_0(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_0(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(S, format, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
@@ -327,7 +327,7 @@ yeccpars2_3(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_3(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_3(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_3(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_3(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
@@ -360,7 +360,7 @@ yeccpars2_5(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_5(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_5(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_5(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_5(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
@@ -419,7 +419,7 @@ yeccpars2_15(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_15(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_15(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_15(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_15(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
@@ -492,7 +492,7 @@ yeccpars2_28(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_28(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_28(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_28(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_28(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
@@ -530,7 +530,7 @@ yeccpars2_31(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_31(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_31(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_31(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_31(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
@@ -564,7 +564,7 @@ yeccpars2_33(S, currency_2, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
 yeccpars2_33(S, currency_3, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_33(S, currency_5, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_33(S, currency_4, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
 yeccpars2_33(S, literal, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
