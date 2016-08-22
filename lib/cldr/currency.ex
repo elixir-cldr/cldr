@@ -42,7 +42,7 @@ defmodule Cldr.Currency do
   @doc """
   Returns a list of all known currency codes.
 
-  Example:
+  ## Example
 
       iex> Cldr.Currency.known_currencies |> Enum.count
       297
@@ -55,7 +55,7 @@ defmodule Cldr.Currency do
   @doc """
   Returns a boolean indicating if the supplied currency code is known.
 
-  Examples:
+  ## Examples
 
       iex> Cldr.Currency.known_currency? "AUD"
       true
@@ -73,7 +73,7 @@ defmodule Cldr.Currency do
 
   The currency code is a string representation of an ISO 4217 currency code.
 
-  Examples:
+  ## Examples
 
       iex> Cldr.Currency.for_code("AUD")
       %Cldr.Currency{cash_digits: 2, cash_rounding: 0, code: "AUD",
