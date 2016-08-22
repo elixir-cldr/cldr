@@ -5,6 +5,7 @@ defmodule Doc.Test do
   doctest Cldr.File
   doctest Cldr.List
   doctest Cldr.Currency
+  doctest Cldr.Number.String
   doctest Cldr.Number.Format
   doctest Cldr.Number.System
   doctest Cldr.Number.Math

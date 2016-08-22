@@ -51,9 +51,15 @@ defmodule Cldr.Number.String do
 
       iex> Cldr.Number.String.chunk_string("1234", 4)
       ["1234"]
+
+      iex> Cldr.Number.String.chunk_string("1234", 3)
+      ["123","4"]
+
+      iex> Cldr.Number.String.chunk_string("1234", 3, :reverse)
+      ["1", "234"]
   """
   @spec chunk_string(String.t, integer, :forward | :reverse) :: [String.t]
-
+  def chunk_string(string, size, direction \\ :forward)
   def chunk_string("", _size, _) do
     [""]
   end
