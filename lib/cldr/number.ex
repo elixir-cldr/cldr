@@ -357,9 +357,9 @@ defmodule Cldr.Number do
 
   # The case when there are two different groupings. This applies only to
   # The integer part, it can never be true for the fraction part.
-  defp do_grouping(string, %{first: first, rest: rest}, string_length, _, :reverse) do
+  defp do_grouping(string, %{first: first, rest: rest}, string_length, _, :reverse = direction) do
     {rest_of_string, first_group} = String.split_at(string, string_length - first)
-    other_groups = chunk_string(rest_of_string, rest, :reverse)
+    other_groups = chunk_string(rest_of_string, rest, direction)
     Enum.join(other_groups ++ [first_group], Compiler.placeholder(:group))
   end
 
