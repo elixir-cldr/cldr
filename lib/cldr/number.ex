@@ -163,11 +163,10 @@ defmodule Cldr.Number do
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeroes(:integer, meta[:integer_digits])
     |> adjust_trailing_zeroes(:fraction, meta[:fractional_digits])
-    |> apply_grouping(meta[:grouping], options[:locale]) # 20 µs/op
+    |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
-    |> transliterate(options[:locale], options[:number_system]) # 80 µs/op
-    |> apply_padding(meta[:padding_length], meta[:padding_char])
-    |> assemble_format(number, meta[:format], options) # 10 µs/op
+    |> transliterate(options[:locale], options[:number_system])
+    |> assemble_format(number, meta, options)
   end
 
   # When formatting a currency we need to adjust the number of fractional
@@ -374,33 +373,24 @@ defmodule Cldr.Number do
     number["integer"] <>  @decimal_separator <> number["fraction"]
   end
 
-  # Pad the number to the format length
-  defp apply_padding(number, 0, _char) do
-    number
-  end
-
-  defp apply_padding(number, length, char) do
-    String.pad_leading(number, length, char)
-  end
-
   # Now we can assemble the final format.  Based upon
   # whether the number is positive or negative (as indicated
   # by options[:sign]) we assemble the parts and transliterate
   # the currency sign, percent and permille characters.
-  defp assemble_format(number_string, number, format, options) do
-    format = format[options[:pattern]]
+  defp assemble_format(number_string, number, meta, options) do
+    format = meta[:format][options[:pattern]]
     format_length = length(format)
-    do_assemble_format(number_string, number, format, options, format_length)
+    do_assemble_format(number_string, number, meta, format, options, format_length)
   end
 
   # If the format length is 1 (one) then it can only be the number format
   # and therefore we don't have to do the reduction.
-  def do_assemble_format(number_string, _number, _format, _options, 1) do
+  def do_assemble_format(number_string, _number, _meta, _options, 1) do
     number_string
   end
 
   @lint false
-  def do_assemble_format(number_string, number, format, options, _length) do
+  def do_assemble_format(number_string, number, meta, format, options, _length) do
     system = options[:number_system]
     locale = options[:locale]
     symbols = number_symbols_for(locale, system)
@@ -408,7 +398,7 @@ defmodule Cldr.Number do
     Enum.reduce format, "", fn (token, string) ->
       string <> case token do
         {:format, _format}  -> number_string
-        {:pad, _}           -> ""
+        {:pad, _}           -> padding_string(meta, number_string)
         {:plus, _}          -> symbols.plus_sign
         {:minus, _}         -> symbols.minus_sign
         {:currency, type}   ->
@@ -420,6 +410,15 @@ defmodule Cldr.Number do
         {:quote_char, char} -> char
       end
     end
+  end
+
+  defp padding_string(%{padding_length: 0}, _number_string) do
+    ""
+  end
+
+  defp padding_string(meta, number_string) do
+    pad_length = meta[:padding_length] - String.length(number_string)
+    String.duplicate(meta[:padding_char], pad_length)
   end
 
   # Extract the appropriate currency symbol based upon how many currency

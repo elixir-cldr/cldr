@@ -34,6 +34,8 @@ defmodule Cldr.Number.Format.Test do
 
       # Padding
       {123,  "$xx123.00",        [format: "$*x#,##0.00"]},
+      {123,  "xx$123.00",        [format: "*x$#,##0.00"]},
+      {123,  "$123.00xx",        [format: "$#,##0.00*x"]},
       {1234, "$1,234.00",        [format: "$*x#,##0.00"]},
 
       # Currency
