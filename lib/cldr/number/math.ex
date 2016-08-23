@@ -247,7 +247,8 @@ defmodule Cldr.Number.Math do
   http://stackoverflow.com/questions/202302/rounding-to-an-arbitrary-number-of-significant-digits
   """
   def round_significant(num, n) when is_float(num) or is_integer(num) do
-    num = if num < 0, do: -num, else: num
+    sign = if num < 0, do: -1, else: 1
+    num = abs(num)
     d = Float.ceil(:math.log10(num))
     power = n - d
 
@@ -255,7 +256,7 @@ defmodule Cldr.Number.Math do
     shifted = Float.round(num * magnitude)
     rounded = shifted / magnitude
 
-    if is_integer(num) do
+    sign * if is_integer(num) do
       trunc(rounded)
     else
       rounded
@@ -263,7 +264,7 @@ defmodule Cldr.Number.Math do
   end
 
   def round_significant(%Decimal{sign: sign} = num, n) when sign < 0 do
-    round_significant(Decimal.abs(num), n)
+    round_significant(Decimal.abs(num), n) |> Decimal.minus
   end
 
   @ten Decimal.new(10)
@@ -273,7 +274,7 @@ defmodule Cldr.Number.Math do
 
     magnitude = power(@ten, raised)
     shifted = num |> Decimal.mult(magnitude) |> Decimal.round(0)
-    Decimal.div(shifted, magnitude)
+    Decimal.mult(Decimal.div(shifted, magnitude), Decimal.new(sign))
   end
 
   @doc """
@@ -326,6 +327,10 @@ defmodule Cldr.Number.Math do
   @two Decimal.new(2)
 
   # Decimal number and decimal n
+  def power(%Decimal{} = _number, %Decimal{coef: n}) when n == 0 do
+    @one
+  end
+
   def power(%Decimal{} = number, %Decimal{coef: n}) when n == 1 do
     number
   end
@@ -339,6 +344,10 @@ defmodule Cldr.Number.Math do
   end
 
   # Decimal number and integer/float n
+  def power(%Decimal{} = _number, n) when n == 0 do
+    @one
+  end
+
   def power(%Decimal{} = number, n) when n == 1 do
     number
   end
@@ -352,6 +361,10 @@ defmodule Cldr.Number.Math do
   end
 
   # For integers and floats
+  def power(number, n) when n == 0 do
+    if is_integer(number), do: 1, else: 1.0
+  end
+
   def power(number, n) when n == 1 do
     number
   end

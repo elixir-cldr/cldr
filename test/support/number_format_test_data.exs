@@ -57,10 +57,11 @@ defmodule Cldr.Number.Format.Test do
       {-1234, "(1234.00)",       [format: "0.00;(0.00)"]},
 
       # Significant digits format
-      {12345, "12300",          [format: "@@#"]},
+      {12345, "12300",           [format: "@@#"]},
       {0.12345, "0.123",         [format: "@@#"]},
       {3.14159, "3.142",         [format: "@@##"]},
       {1.23004, "1.23",          [format: "@@##"]},
+      {-1.23004, "-1.23",        [format: "@@##"]},
 
       # Test for when padding specified but there is no padding possible
       {123456789, "123456789",   [format: "*x#"]}
