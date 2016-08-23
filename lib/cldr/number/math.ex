@@ -152,16 +152,16 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Calculates the modulo of a number (integer, float, decimal).
+  Calculates the modulo of a number (integer, float or decimal).
 
-  For the case of an integer the result is that of the BIF
-  function `rem/2`. For the other cases the modulo is calculated
-  separately.
+  Note that this function uses `floored division` whereas the builtin `rem`
+  function uses `truncated division`. See `Decimal.rem/2` if you want a
+  `truncated division` function for decimals that will return the same value as
+  the BIF `:math.rem/2`
+
+  See https://en.wikipedia.org/wiki/Modulo_operation
 
   ## Examples
-
-      iex> Cldr.Number.Math.mod(123, 5)
-      3
 
       iex> Cldr.Number.Math.mod(1234.0, 5)
       4.0
@@ -169,37 +169,34 @@ defmodule Cldr.Number.Math do
       iex> Cldr.Number.Math.mod(Decimal.new("1234.456"), 5)
       #Decimal<4.456>
 
-      iex> Cldr.Number.Math.mod(1234.456, 5)
-      4.455999999999904
-
       iex> Cldr.Number.Math.mod(Decimal.new(123.456), Decimal.new(3.4))
       #Decimal<1.056>
 
       iex> Cldr.Number.Math.mod Decimal.new(123.456), 3.4
       #Decimal<1.056>
-
-      iex> Cldr.Number.Math.mod(123.456, 3.4)
-      1.0560000000000116
   """
-  @spec mod(integer | float | %Decimal{}, integer | float | %Decimal{}) :: integer | float | %Decimal{}
-  def mod(number, modulus) when is_integer(number) do
-    rem(number, modulus)
-  end
-
+  @spec mod(float | %Decimal{}, integer | float | %Decimal{}) :: float | %Decimal{}
   def mod(number, modulus) when is_float(number) do
     number - (Float.floor(number / modulus) * modulus)
   end
 
-  def mod(number, modulus) when is_map(number) and is_map(modulus) do
+  def mod(number, modulus) when is_integer(number) do
+    modulo = number
+    |> Kernel./(modulus)
+    |> Float.floor
+    |> Kernel.*(modulus)
+    number - modulo
+  end
+
+  def mod(%Decimal{} = number, %Decimal{} = modulus) do
     modulo = number
     |> Decimal.div(modulus)
     |> Decimal.round(0, :floor)
     |> Decimal.mult(modulus)
-
     Decimal.sub(number, modulo)
   end
 
-  def mod(number, modulus) when is_map(number) and (is_integer(modulus) or is_float(modulus)) do
+  def mod(%Decimal{} = number, modulus) when is_number(modulus) do
     mod(number, Decimal.new(modulus))
   end
 
@@ -256,19 +253,26 @@ defmodule Cldr.Number.Math do
 
     magnitude = :math.pow(10, power)
     shifted = Float.round(num * magnitude)
-    shifted / magnitude
+    rounded = shifted / magnitude
+
+    if is_integer(num) do
+      trunc(rounded)
+    else
+      rounded
+    end
   end
 
   def round_significant(%Decimal{sign: sign} = num, n) when sign < 0 do
     round_significant(Decimal.abs(num), n)
   end
 
+  @ten Decimal.new(10)
   def round_significant(%Decimal{sign: sign} = num, n) when sign > 0 do
     d = num |> log10 |> Decimal.round(0, :ceiling)
-    power = n |> Decimal.new |> Decimal.sub(d)
+    raised = n |> Decimal.new |> Decimal.sub(d)
 
-    magnitude = pow(Decimal.new(10), power)
-    shifted = num |> Decimal.mult(magnitude) |> Decimal.round
+    magnitude = power(@ten, raised)
+    shifted = num |> Decimal.mult(magnitude) |> Decimal.round(0)
     Decimal.div(shifted, magnitude)
   end
 
@@ -296,38 +300,120 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Return the `number` raised to the `n`th power.
+  Raises a number to a power.
 
-  ## Example
+  Raises a number to a power using the the binary method.  For further
+  reading see
+  [this article](http://videlalvaro.github.io/2014/03/the-power-algorithm.html)
 
-      iex> Cldr.Number.Math.pow(10,2)
-      100.0
+  ## Examples
 
-      iex> Cldr.Number.Math.pow(Decimal.new(10),2)
-      #Decimal<100>
+    iex> Cldr.Number.Math.power(10, 2)
+    100
+
+    iex> Cldr.Number.Math.power(10, 3)
+    1000
+
+    iex> Cldr.Number.Math.power(10, 4)
+    10000
+
+    iex> Cldr.Number.Math.power(2, 10)
+    1024
   """
-  def pow(number, n) when is_number(number) and is_number(n) do
-    :math.pow(number, n)
+
+  # For Decimals
+  @one Decimal.new(1)
+  @two Decimal.new(2)
+
+  # Decimal number and decimal n
+  def power(%Decimal{} = number, %Decimal{coef: n}) when n == 1 do
+    number
   end
 
-  def pow(%Decimal{} = number, n) when is_integer(n) do
-    Enum.reduce 1..(n - 1), number, fn _count, acc ->
+  def power(%Decimal{} = number, %Decimal{sign: sign} = n) when sign < 1 do
+    Decimal.div(@one, do_power(number, n, mod(n, @two)))
+  end
+
+  def power(%Decimal{} = number, %Decimal{} = n) do
+    do_power(number, n, mod(n, @two))
+  end
+
+  # Decimal number and integer/float n
+  def power(%Decimal{} = number, n) when n == 1 do
+    number
+  end
+
+  def power(%Decimal{} = number, n) when n > 1 do
+    do_power(number, n, mod(n, 2))
+  end
+
+  def power(%Decimal{} = number, n) when n < 0 do
+    Decimal.div(@one, do_power(number, abs(n), mod(abs(n), 2)))
+  end
+
+  # For integers and floats
+  def power(number, n) when n == 1 do
+    number
+  end
+
+  def power(number, n) when n > 1 do
+    do_power(number, n, mod(n, 2))
+  end
+
+  def power(number, n) when n < 1 do
+     1 / do_power(number, abs(n), mod(abs(n), 2))
+  end
+
+  # Decimal number and decimal n
+  def do_power(%Decimal{} = number, %Decimal{coef: coef}, %Decimal{coef: mod}) when mod == 0 and coef == 2 do
+    Decimal.mult(number, number)
+  end
+
+  def do_power(%Decimal{} = number, %Decimal{coef: coef} = n, %Decimal{coef: mod}) when mod == 0 and coef != 2 do
+    power(power(number, Decimal.div(n, @two)), @two)
+  end
+
+  def do_power(%Decimal{} = number, %Decimal{} = n, _mod) do
+    Decimal.mult(number, power(number, Decimal.sub(n, @one)))
+  end
+
+  # Decimal number but integer n
+  def do_power(%Decimal{} = number, n, mod) when is_number(n) and mod == 0 and n == 2 do
+    Decimal.mult(number, number)
+  end
+
+  def do_power(%Decimal{} = number, n, mod) when is_number(n) and mod == 0 and n != 2 do
+    power(power(number, n / 2), 2)
+  end
+
+  def do_power(%Decimal{} = number, n, _mod) when is_number(n) do
+    Decimal.mult(number, power(number, n - 1))
+  end
+
+  # integer/float number and integer/float n
+  def do_power(number, n, mod) when is_number(n) and mod == 0 and n == 2 do
+    number * number
+  end
+
+  def do_power(number, n, mod)  when is_number(n) and mod == 0 and n != 2 do
+    power(power(number, n / 2), 2)
+  end
+
+  def do_power(number, n, _mod) do
+    number * power(number, n - 1)
+  end
+
+  # Alternative looping strategy
+  def power2(number, n) when is_number(number) and is_number(n) do
+    Enum.reduce 1..(n - 1), number, fn (_i, acc) ->
+      acc * number
+    end
+  end
+
+  def power2(%Decimal{} = number, %Decimal{coef: coef}) do
+    Enum.reduce 1..(coef - 1), number, fn (_i, acc) ->
       Decimal.mult(acc, number)
     end
   end
 
-  def pow(%Decimal{} = number, %Decimal{sign: sign} = n) when sign < 0 do
-    p = pow(number, Decimal.abs(n))
-    Decimal.div(Decimal.new(1), p)
-  end
-
-  def pow(%Decimal{} = number, %Decimal{sign: sign} = n) when sign > 0 do
-    pow(number, Decimal.to_integer(n))
-  end
-
-  def pow(number, n) when is_number(number) and is_integer(n) do
-    Enum.reduce 1..(n - 1), number, fn _count, acc ->
-      acc * number
-    end
-  end
 end
