@@ -309,33 +309,28 @@ defmodule Cldr.Number.Format.Compiler do
   required.  Although the padding length is considered to be the sum of the
   prefix, format and suffix the reality is that prefix and suffix also fill
   part of the format so the padding length is really only the length of the
-  format itself, plus any add-back due to quoted characters (this is because
-  in the output string the quotes aren't included - therefore they need to be
-  considered available for padding space).
-
-  Then we need to consider any padding applicable to the currency format.
+  format itself, not including any quote marks that escape characters. Then
+  we need to consider any padding applicable to the currency format.
 
   The currency placeholder is between 1 and 5 characters.  The substitution can
   be between 1 and an arbitrarily sized string.  Worse, we don't know the
   substitution until runtime so we can't precalculate it.
 
-  Therefore our strategy is to set padding to be the sum of the format length
-  plus any add-backs for a quote character and any quoted character and adjust
-  at runtime for any differences due to the currency symbol.
   """
   defp padding_length(nil, _format) do
     0
   end
 
   defp padding_length(_pad, format) do
-    Enum.reduce format[:positive], 0, fn (element, len) ->
-      len + case element do
-        {:quote, _}         -> 1  # Since its '' in the format
-        {:quoted_char, _}   -> 2  # Since its 'x' in the format
-        {:format, format}   -> String.length(format)
-        _                   -> 0
-      end
-    end
+    String.length(format[:positive][:format])
+    # Enum.reduce format[:positive], 0, fn (element, len) ->
+    #   len + case element do
+    #     {:quote, _}         -> 1  # Since its '' in the format
+    #     {:quoted_char, _}   -> 2  # Since its 'x' in the format
+    #     {:format, format}   -> String.length(format)
+    #     _                   -> 0
+    #   end
+    # end
   end
 
   @docp """

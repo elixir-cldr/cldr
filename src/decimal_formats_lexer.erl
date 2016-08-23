@@ -697,9 +697,8 @@ yyaction(7, TokenLen, YYtcs, TokenLine) ->
 yyaction(8, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
     yyaction_8(TokenChars, TokenLine);
-yyaction(9, TokenLen, YYtcs, TokenLine) ->
-    TokenChars = yypre(YYtcs, TokenLen),
-    yyaction_9(TokenChars, TokenLine);
+yyaction(9, _, _, TokenLine) ->
+    yyaction_9(TokenLine);
 yyaction(10, TokenLen, YYtcs, TokenLine) ->
     TokenChars = yypre(YYtcs, TokenLen),
     yyaction_10(TokenChars, TokenLine);
@@ -750,10 +749,10 @@ yyaction_7(TokenChars, TokenLine) ->
 yyaction_8(TokenChars, TokenLine) ->
      { token, { quoted_char, TokenLine, [lists : nth (2, TokenChars) ] } } .
 
--compile({inline,yyaction_9/2}).
+-compile({inline,yyaction_9/1}).
 -file("src/decimal_formats_lexer.xrl", 27).
-yyaction_9(TokenChars, TokenLine) ->
-     { token, { quote, TokenLine, [lists : nth (2, TokenChars) ] } } .
+yyaction_9(TokenLine) ->
+     { token, { quote, TokenLine, ["'" ] } } .
 
 -compile({inline,yyaction_10/2}).
 -file("src/decimal_formats_lexer.xrl", 28).

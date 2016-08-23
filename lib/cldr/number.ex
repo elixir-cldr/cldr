@@ -398,24 +398,23 @@ defmodule Cldr.Number do
 
     Enum.reduce format, "", fn (token, string) ->
       string <> case token do
-        {:format, _format}  -> number_string
-        {:pad, _}           -> padding_string(meta, number_string)
-        {:plus, _}          -> symbols.plus_sign
-        {:minus, _}         -> symbols.minus_sign
-        {:currency, type}   ->
+        {:format, _format}   -> number_string
+        {:pad, _}            -> padding_string(meta, number_string)
+        {:plus, _}           -> symbols.plus_sign
+        {:minus, _}          -> symbols.minus_sign
+        {:currency, type}    ->
           currency_symbol(options[:currency], number, type, locale)
-        {:percent, _}       -> symbols.percent_sign
-        {:permille, _}      -> symbols.permille
-        {:literal, literal} -> literal
-        {:quote, char}      -> char
-        {:quote_char, char} -> char
+        {:percent, _}        -> symbols.percent_sign
+        {:permille, _}       -> symbols.permille
+        {:literal, literal}  -> literal
+        {:quote, _char}      -> "'"
+        {:quoted_char, char} -> char
       end
     end
   end
 
   # Calculate the padding by subtracting the length of the number
-  # string from the padding length.  If padding is specified then it
-  # can never create negative padding becau
+  # string from the padding length.
   defp padding_string(%{padding_length: 0}, _number_string) do
     @empty_string
   end
