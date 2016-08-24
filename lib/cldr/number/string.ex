@@ -4,6 +4,38 @@ defmodule Cldr.Number.String do
   """
 
   @doc """
+  Returns a regex which matches all latin1 characters
+  """
+  @latin1 ~r/([\x00-\x7F])/
+  def latin1 do
+    @latin1
+  end
+
+  @doc """
+  Returns a regex which matches all non-latin1 characters
+  """
+  @not_latin1 ~r/([^\x00-\x7F])/
+  def not_latin1 do
+    @not_latin1
+  end
+
+  @doc """
+  Replace any non-latin1 characters with a \?
+  """
+  def clean(string) do
+    String.replace(string, @not_latin1, "\\?")
+  end
+
+  @doc """
+  Replaces characters with a string hex representation
+  """
+  def hex_string(string) do
+    String.to_charlist(string)
+    |> Enum.map(&("\\x" <> Integer.to_string(&1)))
+    |> Enum.join
+  end
+
+  @doc """
   Pad a a string (representing a number) with leading "0"'s to the
   specified length.
 
@@ -12,12 +44,12 @@ defmodule Cldr.Number.String do
   * `count` is the final length required of the string
   """
   @spec pad_leading_zeroes(String.t, integer) :: String.t
-  def pad_leading_zeroes(number, count) when count <= 0 do
-    number
+  def pad_leading_zeroes(number_string, count) when count <= 0 do
+    number_string
   end
 
-  def pad_leading_zeroes(number, count) do
-    String.pad_leading(number, count, "0")
+  def pad_leading_zeroes(number_string, count) do
+    String.pad_leading(number_string, count, "0")
   end
 
   @doc """
@@ -29,12 +61,12 @@ defmodule Cldr.Number.String do
   * `count` is the final length required of the string
   """
   @spec pad_trailing_zeroes(String.t, integer) :: String.t
-  def pad_trailing_zeroes(number, count) when count <= 0 do
-    number
+  def pad_trailing_zeroes(number_string, count) when count <= 0 do
+    number_string
   end
 
-  def pad_trailing_zeroes(number, count) do
-    String.pad_trailing(number, count, "0")
+  def pad_trailing_zeroes(number_string, count) do
+    String.pad_trailing(number_string, count, "0")
   end
 
   @doc """
