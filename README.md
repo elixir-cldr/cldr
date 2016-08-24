@@ -1,3 +1,5 @@
+[![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)](http://sweatbox.noexpectations.com.au:8080/job/cldr/)
+
 # Cldr
 
 **Common locale libary for Elixir**
@@ -14,7 +16,7 @@ Data is from the ICU's CLDR project when is downloaded in XML format.  For ease 
 
     java -DCLDR_DIR=. -jar ../tools/tools/java/cldr.jar ldml2json -t main -p true -r true
     java -DCLDR_DIR=. -jar ../tools/tools/java/cldr.jar ldml2json -t supplemental -p true -r true
-    
+
 **Compilation**
 
 A lot of functions are generated during the compilation phase.  If all 511 locales are configured (an unlikely production use case) then compilation can take several minutes.  This is most typically when running `cldr` tests.
