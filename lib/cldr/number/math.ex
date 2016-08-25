@@ -7,6 +7,8 @@ defmodule Cldr.Number.Math do
   @default_rounding 3
   @one Decimal.new(1)
   @two Decimal.new(2)
+  @zero_point_one Decimal.new("0.1")
+  @minus_zero_point_one Decimal.new("-0.1")
 
   @doc """
   Returns the default rounding used by fraction_as_integer/2
@@ -86,21 +88,28 @@ defmodule Cldr.Number.Math do
   # the number is less than zero (negative exponent) and returning 0
   # and similar tricks for larger numbers
   # This is currently the fastest version
+  def number_of_integer_digits(%Decimal{exp: exp} = number) when exp < 0 do
+    number
+    |> Decimal.round(0, :floor)
+    |> Decimal.to_integer
+    |> number_of_integer_digits
+  end
+
   def number_of_integer_digits(%Decimal{} = number) do
     number
     |> Decimal.to_integer
-    |> number_of_integer_digits4
+    |> number_of_integer_digits
   end
 
   def number_of_integer_digits(number) when is_float(number) do
     number
     |> trunc
-    |> Integer.digits
-    |> Enum.count
+    |> number_of_integer_digits
   end
 
   def number_of_integer_digits(number) when is_integer(number) do
-    Integer.digits(number) |> Enum.count
+    Integer.digits(number)
+    |> Enum.count
   end
 
   # Repeated division by 10 solution
@@ -486,4 +495,24 @@ defmodule Cldr.Number.Math do
     end
   end
 
+  @doc """
+  Returns the tuple `{mantissa, exponent}` for a `%Decimal{}` number
+
+  Returns a tuple such that `0 > mantissa < 10` and an exponent such that
+  `mantissa * 10**exponent == number`
+  """
+  def mantissa_exponent(%Decimal{} = number) do
+    exp = number_of_integer_digits(number.coef) - 1
+    mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -exp}
+    if leading_fractional_zeros(number) do
+      {mantissa, -exp}
+    else
+      {mantissa, exp}
+    end
+  end
+
+  defp leading_fractional_zeros(number) do
+    Decimal.cmp(number, @minus_zero_point_one) == :gt &&
+    Decimal.cmp(number, @zero_point_one) == :lt
+  end
 end
