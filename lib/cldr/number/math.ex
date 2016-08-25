@@ -420,6 +420,12 @@ defmodule Cldr.Number.Math do
     number
   end
 
+  # For a decimal we can short cut the multiplcations by just
+  # adjusting the exponent
+  def power(%Decimal{coef: 10, sign: sign, exp: exp}, n) do
+    %Decimal{coef: 10, sign: sign, exp: exp + n - 1}
+  end
+
   def power(%Decimal{} = number, n) when n > 1 do
     do_power(number, n, mod(n, 2))
   end

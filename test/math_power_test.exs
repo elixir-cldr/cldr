@@ -29,4 +29,14 @@ defmodule Math.Power.Test do
       assert p == q
     end
   end
+
+  test "Short cut decimal power of 10 for a positive number" do
+    p = Cldr.Number.Math.power(Decimal.new(10), 2)
+    assert Decimal.cmp(p, Decimal.new(100)) == :eq
+  end
+
+  test "Short cut decimal power of 10 for a negative number" do
+    p = Cldr.Number.Math.power(Decimal.new(10), -2)
+    assert Decimal.cmp(p, Decimal.new(0.01)) == :eq
+  end
 end
