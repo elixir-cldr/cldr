@@ -7,8 +7,7 @@ defmodule Cldr.Number.Math do
   @default_rounding 3
   @one Decimal.new(1)
   @two Decimal.new(2)
-  @zero_point_one Decimal.new("0.1")
-  @minus_zero_point_one Decimal.new("-0.1")
+  @minus_one Decimal.new(-1)
 
   @doc """
   Returns the default rounding used by fraction_as_integer/2
@@ -513,17 +512,21 @@ defmodule Cldr.Number.Math do
   `mantissa * 10**exponent == number`
   """
   def mantissa_exponent(%Decimal{} = number) do
-    exp = number_of_integer_digits(number.coef) - 1
-    mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -exp}
-    if leading_fractional_zeros(number) do
-      {mantissa, -exp}
+    if between_one_and_minus_one(number) do
+      leading_zeros = abs(number.exp) - number_of_integer_digits(number.coef)
+      exp = -number_of_integer_digits(number.coef) + 1
+      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: exp}
+      {mantissa, -(leading_zeros + 1)}
     else
+      exp = number_of_integer_digits(number.coef) - 1
+      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -exp}
       {mantissa, exp}
     end
   end
 
-  defp leading_fractional_zeros(number) do
-    Decimal.cmp(number, @minus_zero_point_one) == :gt &&
-    Decimal.cmp(number, @zero_point_one) == :lt
+  defp between_one_and_minus_one(number) do
+    (Decimal.cmp(number, @minus_one) == :gt && Decimal.cmp(number, @one) == :lt)
+    || Decimal.cmp(number, @one) == :eq
+    || Decimal.cmp(number, @minus_one) == :eq
   end
 end
