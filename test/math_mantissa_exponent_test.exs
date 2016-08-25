@@ -7,7 +7,7 @@ defmodule Math.Mantissa.Exponent.Test do
     test "Validate that mantinssa * 10**exponent == original number for #{value}" do
       {mantissa, exponent} = Cldr.Number.Math.mantissa_exponent(Decimal.new(unquote(Macro.escape(value))))
       calc = Decimal.mult(mantissa, Decimal.new(Cldr.Number.Math.power(10, exponent))) |> Decimal.reduce
-      assert Decimal.to_string(calc, :normal) == Decimal.to_string(Decimal.new(unquote(Macro.escape(value))), :normal)
+      assert Decimal.cmp(calc, Decimal.new(unquote(Macro.escape(value)))) == :eq
     end
   end
 end
