@@ -1,7 +1,7 @@
 defmodule Math.Mantissa.Exponent.Test do
   use ExUnit.Case
 
-  @test [0.00345, 0.0123, 0.1, -0.1, 0.99, 0, 1, 5, 10, 17, 47, 107, 507, 1000, 1007, 2345]
+  @test [0.00345, 0.0123, 0.1, -0.1, -1, 0.99, 0, 1, 5, 10, 17, 47, 107, 507, 1000, 1007, 2345]
 
   Enum.each @test, fn value ->
     test "Validate that mantinssa * 10**exponent == original number for #{value}" do
