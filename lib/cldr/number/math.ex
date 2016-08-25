@@ -81,20 +81,41 @@ defmodule Cldr.Number.Math do
       iex(15)> Cldr.Number.Math.number_of_integer_digits(1234.456)
       4
   """
-
-  # Repeated division by 10 solution
-
-  def number_of_integer_digits(number) when is_integer(number) do
-    do_number_of_integer_digits(number, 0)
+  # Integer.digits |> Enum.count methods
+  # Can be optimised further for decimals by working out if
+  # the number is less than zero (negative exponent) and returning 0
+  # and similar tricks for larger numbers
+  # This is currently the fastest version
+  def number_of_integer_digits(%Decimal{} = number) do
+    number
+    |> Decimal.to_integer
+    |> number_of_integer_digits4
   end
 
   def number_of_integer_digits(number) when is_float(number) do
     number
     |> trunc
+    |> Integer.digits
+    |> Enum.count
+  end
+
+  def number_of_integer_digits(number) when is_integer(number) do
+    Integer.digits(number) |> Enum.count
+  end
+
+  # Repeated division by 10 solution
+
+  def number_of_integer_digits4(number) when is_integer(number) do
+    do_number_of_integer_digits(number, 0)
+  end
+
+  def number_of_integer_digits4(number) when is_float(number) do
+    number
+    |> trunc
     |> do_number_of_integer_digits(0)
   end
 
-  def number_of_integer_digits(%Decimal{} = number) do
+  def number_of_integer_digits4(%Decimal{} = number) do
     number
     |> Decimal.round(0, :floor)
     |> Decimal.to_integer
