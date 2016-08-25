@@ -186,7 +186,10 @@ defmodule Cldr.Number.Math do
       iex> Cldr.Number.Math.remove_trailing_zeroes(1234000)
       1234
   """
-  def remove_trailing_zeroes(number) when is_integer(number) and number == 0, do: number
+  def remove_trailing_zeroes(number) when is_integer(number) and number == 0 do
+    number
+  end
+
   def remove_trailing_zeroes(number) when is_integer(number) do
     if rem(number, 10) != 0 do
       number
@@ -444,11 +447,13 @@ defmodule Cldr.Number.Math do
   end
 
   # Decimal number and decimal n
-  def do_power(%Decimal{} = number, %Decimal{coef: coef}, %Decimal{coef: mod}) when mod == 0 and coef == 2 do
+  def do_power(%Decimal{} = number, %Decimal{coef: coef}, %Decimal{coef: mod})
+  when mod == 0 and coef == 2 do
     Decimal.mult(number, number)
   end
 
-  def do_power(%Decimal{} = number, %Decimal{coef: coef} = n, %Decimal{coef: mod}) when mod == 0 and coef != 2 do
+  def do_power(%Decimal{} = number, %Decimal{coef: coef} = n, %Decimal{coef: mod})
+  when mod == 0 and coef != 2 do
     power(power(number, Decimal.div(n, @two)), @two)
   end
 
@@ -457,24 +462,29 @@ defmodule Cldr.Number.Math do
   end
 
   # Decimal number but integer n
-  def do_power(%Decimal{} = number, n, mod) when is_number(n) and mod == 0 and n == 2 do
+  def do_power(%Decimal{} = number, n, mod)
+  when is_number(n) and mod == 0 and n == 2 do
     Decimal.mult(number, number)
   end
 
-  def do_power(%Decimal{} = number, n, mod) when is_number(n) and mod == 0 and n != 2 do
+  def do_power(%Decimal{} = number, n, mod)
+  when is_number(n) and mod == 0 and n != 2 do
     power(power(number, n / 2), 2)
   end
 
-  def do_power(%Decimal{} = number, n, _mod) when is_number(n) do
+  def do_power(%Decimal{} = number, n, _mod)
+  when is_number(n) do
     Decimal.mult(number, power(number, n - 1))
   end
 
   # integer/float number and integer/float n
-  def do_power(number, n, mod) when is_number(n) and mod == 0 and n == 2 do
+  def do_power(number, n, mod)
+  when is_number(n) and mod == 0 and n == 2 do
     number * number
   end
 
-  def do_power(number, n, mod)  when is_number(n) and mod == 0 and n != 2 do
+  def do_power(number, n, mod)
+  when is_number(n) and mod == 0 and n != 2 do
     power(power(number, n / 2), 2)
   end
 
@@ -483,7 +493,8 @@ defmodule Cldr.Number.Math do
   end
 
   # Alternative looping strategy
-  def power2(number, n) when is_number(number) and is_number(n) do
+  def power2(number, n)
+  when is_number(number) and is_number(n) do
     Enum.reduce 1..(n - 1), number, fn (_i, acc) ->
       acc * number
     end
