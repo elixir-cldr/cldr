@@ -3,7 +3,7 @@ defmodule String.Chunk.Test do
 
   @string "123456789"
 
-  bench "[1] String version forward" do
+  bench "[3] String version forward" do
     Cldr.Number.String.chunk_string(@string, 3, :forward)
   end
 
@@ -11,11 +11,11 @@ defmodule String.Chunk.Test do
     Cldr.Number.String.chunk_string2(@string, 3, :forward)
   end
 
-  bench "[3] List version forward revised" do
+  bench "[1] List version forward revised" do
     Cldr.Number.String.chunk_string3(@string, 3, :forward)
   end
 
-  bench "[1] String version reverse" do
+  bench "[3] String version reverse" do
     Cldr.Number.String.chunk_string(@string, 3, :reverse)
   end
 
@@ -23,7 +23,7 @@ defmodule String.Chunk.Test do
     Cldr.Number.String.chunk_string2(@string, 3, :reverse)
   end
 
-  bench "[3] List version reverse revised" do
+  bench "[1] List version reverse revised" do
     Cldr.Number.String.chunk_string3(@string, 3, :reverse)
   end
 end
