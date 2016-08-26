@@ -1,4 +1,3 @@
-# http://icu-project.org/apiref/icu4c/classRuleBasedNumberFormat.html
 defmodule Cldr.Number.Math do
   @moduledoc """
   Math helper functions for number formatting
@@ -54,7 +53,7 @@ defmodule Cldr.Number.Math do
   end
 
   def fraction_as_integer(fraction, rounding) when is_map(fraction) do
-    if Decimal.cmp(fraction, Decimal.new(1)) == :gt do
+    if Decimal.cmp(fraction, @one) == :gt do
       fraction
       |> Decimal.sub(Decimal.round(fraction, 0, :floor))
       |> fraction_as_integer(rounding)
@@ -256,11 +255,11 @@ defmodule Cldr.Number.Math do
   * decimal must be a `Decimal`
 
   This is very likely to lose precision - lots of numbers won't
-  make the round trip conversion.  Use with care
+  make the round trip conversion.  Use with care,
   """
   @spec to_float(%Decimal{}) :: float
-  def to_float(decimal) do
-    decimal.sign * decimal.coef * 1.0 * :math.pow(10, decimal.exp)
+  def to_float(%Decimal{sign: sign, coef: coef, exp: exp} = decimal) do
+    sign * coef * 1.0 * :math.pow(10, exp)
   end
 
   @doc """
@@ -407,10 +406,11 @@ defmodule Cldr.Number.Math do
 
   * `number` is an integer, a float or a Decimal
 
-  For `integer` and `float` is calls the
+  For `integer` and `float` it calls the
   BIF `:math.log10/1` function.
 
-  For `Decimal` is is rolled by hand.
+  For `Decimal`, `log10` is is rolled by hand using
+  the identify `log10(x) = ln(x) / ln(10)`
 
   ## Examples
 
