@@ -258,7 +258,7 @@ defmodule Cldr.Number.Math do
   make the round trip conversion.  Use with care,
   """
   @spec to_float(%Decimal{}) :: float
-  def to_float(%Decimal{sign: sign, coef: coef, exp: exp} = decimal) do
+  def to_float(%Decimal{sign: sign, coef: coef, exp: exp}) do
     sign * coef * 1.0 * :math.pow(10, exp)
   end
 
