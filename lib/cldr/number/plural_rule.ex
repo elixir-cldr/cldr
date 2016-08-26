@@ -138,7 +138,7 @@ defmodule Cldr.Number.PluralRule do
         |> Decimal.to_integer
 
         #   t visible fractional digits in n, without trailing zeros.
-        t = remove_trailing_zeroes(f)
+        t = remove_trailing_zeros(f)
 
         # w number of visible fraction digits in n, without trailing zeros.
         w = number_of_integer_digits(t)

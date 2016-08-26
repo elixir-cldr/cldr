@@ -1,5 +1,6 @@
 defmodule Decimal.PluralRule.Test do
   use ExUnit.Case
+
   @moduletag :slow
   @sample_types [:decimal]
   @modules      [Cldr.Number.Cardinal, Cldr.Number.Ordinal]
@@ -18,12 +19,10 @@ defmodule Decimal.PluralRule.Test do
           assert unquote(module).plural_rule(unquote(Macro.escape(from)), unquote(locale)) == unquote(category)
           assert unquote(module).plural_rule(unquote(Macro.escape(to)), unquote(locale)) == unquote(category)
         end
-      int ->
-        test "#{inspect module}: Validate number #{inspect int} is in plural category #{inspect category} for locale #{inspect locale}" do
-          assert unquote(module).plural_rule(unquote(Macro.escape(int)), unquote(locale)) == unquote(category)
+      dec ->
+        test "#{inspect module}: Validate number #{inspect dec} is in plural category #{inspect category} for locale #{inspect locale}" do
+          assert unquote(module).plural_rule(unquote(Macro.escape(dec)), unquote(locale)) == unquote(category)
         end
-      _ ->
-        nil
     end
   end
 end

@@ -1,5 +1,6 @@
 defmodule Integer.PluralRule.Test do
   use ExUnit.Case
+
   @moduletag :slow
   @sample_types [:integer]
   @modules      [Cldr.Number.Cardinal, Cldr.Number.Ordinal]

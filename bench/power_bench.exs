@@ -1,9 +1,10 @@
 defmodule Math.Power.Test do
   use Benchfella
+  Code.require_file("power.exs", "./bench/scenarios")
 
   @docp """
   We have two algorithms for implementing `power/2` in the
-  Cldr.Number.Math module.  One is the niave looping version
+  Power.Bench module.  One is the niave looping version
   and the other is the binary method which should be faster.
 
   But it isn't. At least for these tests.
@@ -17,7 +18,7 @@ defmodule Math.Power.Test do
   end
 
   bench "Elixir version of binary method (integer)" do
-    Cldr.Number.Math.power(12, 10)
+    Power.Bench.power(12, 10)
   end
 
   @twelve Decimal.new(12)
@@ -26,19 +27,19 @@ defmodule Math.Power.Test do
 
 
   bench "Iterative loop (integer)" do
-    Cldr.Number.Math.power2(12, 10)
+    Power.Bench.power2(12, 10)
   end
 
   bench "Iterative loop (Decimal)" do
-    Cldr.Number.Math.power2(@twelve, @ten)
+    Power.Bench.power2(@twelve, @ten)
   end
 
   bench "Elixir version of binary method (Decimal)" do
-    Cldr.Number.Math.power(@twelve, @ten)
+    Power.Bench.power(@twelve, @ten)
   end
 
   bench "Elixir version of binary method (Decimal with integer n)" do
-    Cldr.Number.Math.power(@twelve, 10)
+    Power.Bench.power(@twelve, 10)
   end
 
 end
