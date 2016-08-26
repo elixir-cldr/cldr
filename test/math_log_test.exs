@@ -4,7 +4,8 @@ defmodule Math.Log.Test do
   @round 8
   @samples [
     {1,  0},
-    {10, 2.30258509299}
+    {10, 2.30258509299},
+    {1.23004, 0.20704668918075508}
   ]
 
   Enum.each @samples, fn {sample, result} ->

@@ -84,16 +84,17 @@ defmodule Cldr.Number.Math do
       iex(15)> Cldr.Number.Math.number_of_integer_digits(1234.456)
       4
   """
-  # Integer.digits |> Enum.count methods
-  # Can be optimised further for decimals by working out if
-  # the number is less than zero (negative exponent) and returning 0
-  # and similar tricks for larger numbers
-  # This is currently the fastest version
   def number_of_integer_digits(%Decimal{exp: exp} = number) when exp < 0 do
     number
     |> Decimal.round(0, :floor)
     |> Decimal.to_integer
     |> number_of_integer_digits
+  end
+
+  # +/- 0,xxxxx
+  def number_of_integer_digits(number)
+  when is_number(number) and number < 1 and number > -1 do
+    0
   end
 
   def number_of_integer_digits(%Decimal{} = number) do
@@ -320,7 +321,7 @@ defmodule Cldr.Number.Math do
   Many thanks to:
   http://stackoverflow.com/questions/202302/rounding-to-an-arbitrary-number-of-significant-digits
   """
-  def round_significant(num, n) when is_float(num) or is_integer(num) do
+  def round_significant(num, n) when is_number(num) do
     sign = if num < 0, do: -1, else: 1
     num = abs(num)
     d = Float.ceil(:math.log10(num))
@@ -366,11 +367,18 @@ defmodule Cldr.Number.Math do
     4.812184355372417
 
     iex> Cldr.Number.Math.log(Decimal.new(9000))
-    #Decimal<9.104754286918645936507936508>
+    #Decimal<9.103886231350952380952380952>
   """
   def log(number) when is_number(number) do
     :math.log(number)
   end
+
+  # def log(%Decimal{} = number) do
+  #   number
+  #   |> to_float
+  #   |> log
+  #   |> Decimal.new
+  # end
 
   @ln10 Decimal.new(2.30258509299)
   def log(%Decimal{} = number) do
@@ -417,7 +425,7 @@ defmodule Cldr.Number.Math do
     2.089905111439398
 
     iex> Cldr.Number.Math.log10(Decimal.new(9000))
-    #Decimal<3.954144545893743833567929669>
+    #Decimal<3.953767554157656512064441441>
   """
   # For floats and ints
   def log10(number) when is_number(number) do
@@ -581,8 +589,9 @@ defmodule Cldr.Number.Math do
       mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -coef_digits + 1}
       {mantissa, exp}
     else
-      exp = number_of_integer_digits(number.coef) - 1
-      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -exp}
+      coef_digits = number_of_integer_digits(number.coef)
+      exp = coef_digits + number.exp - 1
+      mantissa = Decimal.div(number, power(@ten, exp))
       {mantissa, exp}
     end
   end
