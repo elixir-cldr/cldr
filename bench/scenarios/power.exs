@@ -1,5 +1,6 @@
 defmodule Power.Bench do
   import Cldr.Number.Math, only: [mod: 2]
+
   @default_rounding 3
   @zero Decimal.new(0)
   @one Decimal.new(1)

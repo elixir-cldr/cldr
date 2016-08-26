@@ -41,5 +41,4 @@ defmodule Math.Power.Test do
   bench "Elixir version of binary method (Decimal with integer n)" do
     Power.Bench.power(@twelve, 10)
   end
-
 end

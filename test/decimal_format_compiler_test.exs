@@ -23,4 +23,3 @@ defmodule DecimalFormatCompiler.Test do
     assert {:error, _result} = Format.Compiler.parse(nil)
   end
 end
-
