@@ -591,7 +591,7 @@ defmodule Cldr.Number.Math do
     else
       coef_digits = number_of_integer_digits(number.coef)
       exp = coef_digits + number.exp - 1
-      mantissa = Decimal.div(number, power(@ten, exp))
+      mantissa = %Decimal{sign: number.sign, coef: number.coef, exp: number.exp - exp}
       {mantissa, exp}
     end
   end
