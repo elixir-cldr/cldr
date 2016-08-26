@@ -1,4 +1,3 @@
-ExUnit.configure formatters: [ExUnit.CLIFormatter, JUnitFormatter]
 ExUnit.start [trace: "--trace" in System.argv, timeout: 120_000]
 
 {:ok, files} = File.ls("./test/support")

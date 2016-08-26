@@ -5,9 +5,11 @@ defmodule Cldr.Number.Math do
   """
 
   @default_rounding 3
+  @zero Decimal.new(0)
   @one Decimal.new(1)
   @two Decimal.new(2)
   @minus_one Decimal.new(-1)
+  @ten Decimal.new(10)
 
   @doc """
   Returns the default rounding used by fraction_as_integer/2
@@ -339,7 +341,6 @@ defmodule Cldr.Number.Math do
     round_significant(Decimal.abs(num), n) |> Decimal.minus
   end
 
-  @ten Decimal.new(10)
   def round_significant(%Decimal{sign: sign} = num, n) when sign > 0 do
     d = num |> log10 |> Decimal.round(0, :ceiling)
     raised = n |> Decimal.new |> Decimal.sub(d)
@@ -350,26 +351,81 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
+  Return the natural log of a number.
+
+  * `number` is an integer, a float or a Decimal
+
+  For `integer` and `float` is calls the
+  BIF `:math.log10/1` function.
+
+  For `Decimal` is is rolled by hand.
+
+  ## Examples
+
+    iex> Cldr.Number.Math.log(123)
+    4.812184355372417
+
+    iex> Cldr.Number.Math.log(Decimal.new(9000))
+    #Decimal<9.104754286918645936507936508>
+  """
+  def log(number) when is_number(number) do
+    :math.log(number)
+  end
+
+  @ln10 Decimal.new(2.30258509299)
+  def log(%Decimal{} = number) do
+    {mantissa, exp} = mantissa_exponent(number)
+    exp = Decimal.new(exp)
+    ln1 = Decimal.mult(exp, @ln10)
+
+    sqrt_mantissa = sqrt(mantissa)
+    y = Decimal.div(Decimal.sub(sqrt_mantissa, @one), Decimal.add(sqrt_mantissa, @one))
+    ln2 = y
+    |> log_polynomial([3,5,7])
+    |> Decimal.add(y)
+    |> Decimal.mult(@two)
+
+    Decimal.add(Decimal.mult(@two, ln2), ln1)
+  end
+
+  def log_polynomial(%Decimal{} = value, iterations \\ []) do
+    Enum.reduce iterations, @zero, fn (i, acc) ->
+      i = Decimal.new(i)
+      value
+      |> power(i)
+      |> Decimal.div(i)
+      |> Decimal.add(acc)
+    end
+  end
+
+  @doc """
   Return the log10 of a number.
 
-  For Decimals the number if converted to a float then the
-  BIF :math.log10 is called and the result converted back
-  to a decimal.  This is definitely not optimal.
+  * `number` is an integer, a float or a Decimal
 
-  ## Example
+  For `integer` and `float` is calls the
+  BIF `:math.log10/1` function.
+
+  For `Decimal` is is rolled by hand.
+
+  ## Examples
 
     iex> Cldr.Number.Math.log10(100)
     2.0
 
     iex> Cldr.Number.Math.log10(123)
     2.089905111439398
+
+    iex> Cldr.Number.Math.log10(Decimal.new(9000))
+    #Decimal<3.954144545893743833567929669>
   """
+  # For floats and ints
   def log10(number) when is_number(number) do
     :math.log10(number)
   end
 
   def log10(%Decimal{} = number) do
-   to_float(number) |> :math.log10 |> Decimal.new
+    Decimal.div(log(number), @ln10)
   end
 
   @doc """
@@ -539,18 +595,32 @@ defmodule Cldr.Number.Math do
 
   @doc """
   Newton's method of calculating a sqrt
+
+  We convert the Decimal to a float and take its `sqrt`
+  using `:math.sqrt` only to get an initial estimate.
+  The means typically we are only two iterations from
+  a solution so the slight hack improves performance
+  without sacrificing precions.
   """
-  @precision 0.00005
-  def sqrt(number, precision \\ @precision) do
-    initial_estimate = number / 5
-    do_sqrt(number, initial_estimate, @precision, precision)
+  @decimal_precision Decimal.new(0.0001)
+  def sqrt(%Decimal{} = number, %Decimal{} = precision \\ @decimal_precision) do
+    initial_estimate = number
+    |> to_float
+    |> :math.sqrt
+    |> Decimal.new
+
+    do_sqrt(number, initial_estimate, @decimal_precision, precision)
   end
 
-  defp do_sqrt(number, estimate, old_estimate, precision) do
-    if abs(estimate - old_estimate) <= precision do
+  defp do_sqrt(%Decimal{} = number, %Decimal{} = estimate, %Decimal{} = old_estimate, %Decimal{} = precision) do
+    diff = estimate
+    |> Decimal.sub(old_estimate)
+    |> Decimal.abs
+
+    if Decimal.cmp(diff, old_estimate) == :lt || Decimal.cmp(diff, old_estimate) == :eq do
       estimate
     else
-      new_estimate = (estimate / 2) + (number / (2 * estimate))
+      new_estimate = Decimal.add(Decimal.div(estimate, @two), Decimal.div(number, Decimal.mult(@two, estimate)))
       do_sqrt(number, new_estimate, estimate, precision)
     end
   end
