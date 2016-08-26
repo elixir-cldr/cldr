@@ -168,7 +168,8 @@ defmodule Cldr.Number.Math do
   @doc """
   Check if the `number` is within a `range`.
 
-  `number` can be either an `integer` or `float`.
+  * `number` is either an `integer` or `float`.
+
   When an integer, the comparison is made using the
   standard Elixir `in` operator.
 
@@ -200,12 +201,12 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Calculates the modulo of a number (integer, float or decimal).
+  Calculates the modulo of a number (integer, float or Decimal).
 
   Note that this function uses `floored division` whereas the builtin `rem`
   function uses `truncated division`. See `Decimal.rem/2` if you want a
-  `truncated division` function for decimals that will return the same value as
-  the BIF `:math.rem/2`
+  `truncated division` function for Decimals that will return the same value as
+  the BIF `:math.rem/2` but in Decimal form.
 
   See https://en.wikipedia.org/wiki/Modulo_operation
 
@@ -360,7 +361,7 @@ defmodule Cldr.Number.Math do
   For `integer` and `float` it calls the
   BIF `:math.log10/1` function.
 
-  For `Decimal` is is rolled by hand.
+  For `Decimal` the log is rolled by hand.
 
   ## Examples
 
@@ -558,6 +559,30 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
+  Returns the number of leading zeros in the
+  Decimal fraction.
+
+  * `number` is any Decimal number
+
+  Returns the number of leading zeros in a decimal number
+  that is between `-1..1` (ie, has no integer part).  If the
+  number is outside `-1..1` it retuns a negative number, the
+  `abs` value of which is the number of integer digits in
+  the number.
+
+  ## Examples
+
+      iex> Cldr.Number.Math.number_of_leading_zeros(Decimal.new(0.0001))
+      3
+
+      iex> Cldr.Number.Math.number_of_leading_zeros(Decimal.new(3.0001))
+      -1
+  """
+  def number_of_leading_zeros(%Decimal{coef: coef, exp: exp}) do
+    abs(exp) - number_of_integer_digits(coef)
+  end
+
+  @doc """
   Returns the tuple `{mantissa, exponent}` for a `%Decimal{}` number
   where `mantissa` is a `Decimal` and `exponent` is an integer.
 
@@ -600,7 +625,7 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Newton's method of calculating a square root
+  Caculates the sqrt of a decimal number using Newton's method.
 
     * `number` is a `Decimal`
 
@@ -608,7 +633,7 @@ defmodule Cldr.Number.Math do
   using `:math.sqrt` only to get an initial estimate.
   The means typically we are only two iterations from
   a solution so the slight hack improves performance
-  without sacrificing precions.
+  without sacrificing precision.
 
   ## Examples
 
@@ -625,7 +650,7 @@ defmodule Cldr.Number.Math do
 
   # Get an initial estimate of the sqrt by using the built in `:math.sqrt`
   # function.  This means typically its only two iterations to get the default
-  # precision.
+  # the sqrt at the specified precision.
   def sqrt(%Decimal{} = number, %Decimal{} = precision \\ @decimal_precision) do
     initial_estimate = number
     |> to_float
@@ -642,7 +667,7 @@ defmodule Cldr.Number.Math do
     |> Decimal.abs
 
     if Decimal.cmp(diff, old_estimate) == :lt
-      || Decimal.cmp(diff, old_estimate) == :eq do
+       || Decimal.cmp(diff, old_estimate) == :eq do
       estimate
     else
       new_estimate = Decimal.add(Decimal.div(estimate, @two),
