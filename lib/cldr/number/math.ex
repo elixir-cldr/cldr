@@ -519,10 +519,11 @@ defmodule Cldr.Number.Math do
   """
   def mantissa_exponent(%Decimal{} = number) do
     if between_one_and_minus_one(number) do
-      leading_zeros = abs(number.exp) - number_of_integer_digits(number.coef)
-      exp = -number_of_integer_digits(number.coef) + 1
-      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: exp}
-      {mantissa, -(leading_zeros + 1)}
+      coef_digits = number_of_integer_digits(number.coef)
+      leading_zeros = abs(number.exp) - coef_digits
+      exp = -(leading_zeros + 1)
+      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -coef_digits + 1}
+      {mantissa, exp}
     else
       exp = number_of_integer_digits(number.coef) - 1
       mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -exp}
@@ -534,5 +535,23 @@ defmodule Cldr.Number.Math do
     (Decimal.cmp(number, @minus_one) == :gt && Decimal.cmp(number, @one) == :lt)
     || Decimal.cmp(number, @one) == :eq
     || Decimal.cmp(number, @minus_one) == :eq
+  end
+
+  @doc """
+  Newton's method of calculating a sqrt
+  """
+  @precision 0.00005
+  def sqrt(number, precision \\ @precision) do
+    initial_estimate = number / 5
+    do_sqrt(number, initial_estimate, @precision, precision)
+  end
+
+  defp do_sqrt(number, estimate, old_estimate, precision) do
+    if abs(estimate - old_estimate) <= precision do
+      estimate
+    else
+      new_estimate = (estimate / 2) + (number / (2 * estimate))
+      do_sqrt(number, new_estimate, estimate, precision)
+    end
   end
 end
