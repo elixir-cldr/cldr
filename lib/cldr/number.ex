@@ -338,10 +338,9 @@ defmodule Cldr.Number do
     mantissa_string = mantissa
     |> Decimal.to_string(:normal)
 
-    captures = Compiler.number_match_regex()
+    Compiler.number_match_regex()
     |> Regex.named_captures(mantissa_string)
-
-    Map.put(captures, "exponent", Integer.to_string(exponent))
+    |> Map.put("exponent", Integer.to_string(exponent))
   end
 
   defp output_to_string(number, fraction_digits, rounding_mode) do
@@ -350,6 +349,7 @@ defmodule Cldr.Number do
     |> Decimal.to_string(:normal)
 
     Regex.named_captures(Compiler.number_match_regex(), string)
+    |> Map.put("exponent", "")
   end
 
   # Remove all the trailing zeroes from a fraction and add back what
