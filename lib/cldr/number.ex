@@ -298,13 +298,16 @@ defmodule Cldr.Number do
 
     # Now take care of exponent digit multiples
     # first grouping size is what defines that
-    exponent_mod = rem(exponent, meta[:groups][:integer][:first])
+    exponent_mod = rem(exponent, meta.grouping.integer.first)
     {mantissa, exponent} = adjust_exponent_mod(mantissa, exponent, exponent_mod)
 
     # Lastly we do significant digit rounding on the mantissa
-    mantissa = Math.round_significant(mantissa, meta[:scientific_rounding])
+    mantissa = if meta.scientific_rounding > 0 do
+      Math.round_significant(mantissa, meta.scientific_rounding)
+    else
+      mantissa
+    end
 
-    # And we're done
     {mantissa, exponent}
   end
 
@@ -331,17 +334,14 @@ defmodule Cldr.Number do
   # Output the number to a string - all the other transformations
   # are done on the string version split into its constituent
   # parts
-  defp output_to_string({mantissa, exponent}, fraction_digits, rounding_mode) do
+  defp output_to_string({mantissa, exponent}, _fraction_digits, _rounding_mode) do
     mantissa_string = mantissa
-    |> Decimal.round(fraction_digits[:max], rounding_mode)
     |> Decimal.to_string(:normal)
 
     captures = Compiler.number_match_regex()
     |> Regex.named_captures(mantissa_string)
 
-    o = %{captures | exponent: Integer.to_string(exponent)}
-    IO.puts inspect(o)
-    o
+    Map.put(captures, "exponent", Integer.to_string(exponent))
   end
 
   defp output_to_string(number, fraction_digits, rounding_mode) do
@@ -423,18 +423,25 @@ defmodule Cldr.Number do
   defp do_grouping(string, %{first: first, rest: rest}, string_length, _, :reverse = direction) do
     {rest_of_string, first_group} = String.split_at(string, string_length - first)
     other_groups = chunk_string(rest_of_string, rest, direction)
-    Enum.join(other_groups ++ [first_group], Compiler.placeholder(:group))
+    Enum.join(other_groups ++ [first_group], @group_separator)
   end
 
-  # Put the parts of the number back together again
-  defp reassemble_number_string(%{"fraction" => ""} = number) do
+  @decimal_separator  Compiler.placeholder(:decimal)
+  @exponent_separator Compiler.placeholder(:exponent)
+  defp reassemble_number_string(%{} = number) do
     number["integer"]
+    |> append(number["fraction"], @decimal_separator)
+    |> append(number["exponent"], @exponent_separator)
   end
 
-  # When there is both an integer and fraction parts
-  @decimal_separator Compiler.placeholder(:decimal)
-  defp reassemble_number_string(number) do
-    number["integer"] <>  @decimal_separator <> number["fraction"]
+  # Conditionally add a separator and number component to the output string
+  # if it exists
+  defp append(string, "", _separator) do
+    string
+  end
+
+  defp append(string, part, separator) do
+    string <> separator <> part
   end
 
   # Now we can assemble the final format.  Based upon
@@ -442,7 +449,7 @@ defmodule Cldr.Number do
   # by options[:sign]) we assemble the parts and transliterate
   # the currency sign, percent and permille characters.
   defp assemble_format(number_string, number, meta, options) do
-    format = meta[:format][options[:pattern]]
+    format = meta.format[options[:pattern]]
     format_length = length(format)
     do_assemble_format(number_string, number, meta, format, options, format_length)
   end

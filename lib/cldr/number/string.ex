@@ -92,6 +92,11 @@ defmodule Cldr.Number.String do
   """
   @spec chunk_string(String.t, integer, :forward | :reverse) :: [String.t]
   def chunk_string(string, size, direction \\ :forward)
+
+  def chunk_string(string, 0, _direction) do
+    [string]
+  end
+
   def chunk_string("", _size, _) do
     [""]
   end

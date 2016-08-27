@@ -216,7 +216,7 @@ defmodule Cldr.Number.Format.Compiler do
   """
   defp analyze(format) do
     format_parts = split_format(format)
-    %{
+    meta = %{
       integer_digits:      %{min: required_integer_digits(format_parts),
                              max: @max_integer_digits},
       fractional_digits:   %{min: required_fraction_digits(format_parts),
@@ -225,6 +225,7 @@ defmodule Cldr.Number.Format.Compiler do
       significant_digits:  significant_digits(format_parts),
       exponent_digits:     exponent_digits(format_parts),
       exponent_sign:       exponent_sign(format_parts),
+      scientific_rounding: scientific_rounding(format_parts),
       grouping:            grouping(format_parts),
       rounding:            rounding(format_parts),
       padding_length:      padding_length(format[:positive][:pad], format),
@@ -232,6 +233,18 @@ defmodule Cldr.Number.Format.Compiler do
       multiplier:          multiplier(format),
       format:              format,
     }
+
+    reconcile_significant_and_scientific_digits(meta)
+  end
+
+  # If we have significant digits defined then they take
+  # priority over using the default pattern for significant digits
+  defp reconcile_significant_and_scientific_digits(meta) do
+    if meta.significant_digits > 0 && meta.exponent_digits > 0 do
+      %{meta | scientific_rounding: 0}
+    else
+      meta
+    end
   end
 
   @docp """
@@ -284,6 +297,24 @@ defmodule Cldr.Number.Format.Compiler do
   """
   def exponent_sign(%{"exponent_sign" => ""}), do: false
   def exponent_sign(%{"exponent_sign" => _exponent_sign}), do: true
+
+  @docp """
+  Extract the number of significant digits to round the mantissa
+  to.  If we've already calculated a significant digits number
+  using the "@@###" form then we'll use that instead.
+  """
+  @scientific_match Regex.compile!("(?<scientific_rounding>0[0#]*)?")
+  def scientific_rounding(%{"exponent_digits" => ""}), do: 0
+
+  def scientific_rounding((%{"compact_integer"  => integer_format,
+                             "compact_fraction" => fraction_format})) do
+    format = integer_format <> fraction_format
+    if captures = Regex.named_captures(@scientific_match, format) do
+      String.length(captures["scientific_rounding"])
+    else
+      0
+    end
+  end
 
   @docp """
   Extract the padding length of the format.
@@ -398,7 +429,7 @@ defmodule Cldr.Number.Format.Compiler do
   defp fraction_grouping(format) do
     [group | _drop] = String.split(format, @grouping_separator)
     group_size = String.length(group)
-    if group_size == 0 do
+    if group_size == 1 do
       %{first: @max_integer_digits, rest: @max_integer_digits}
     else
       %{first: group_size, rest: group_size}
@@ -474,8 +505,10 @@ defmodule Cldr.Number.Format.Compiler do
   @significant_digits_match Regex.compile!(@leading_digits
       <> @min_significant_digits <> @max_significant_digits)
 
-  defp significant_digits(%{"compact_integer" => integer_format}) do
-    if captures = Regex.named_captures(@significant_digits_match, integer_format) do
+  defp significant_digits(%{"compact_integer" => integer_format,
+                            "compact_fraction" => fraction_format}) do
+    format = integer_format <> fraction_format
+    if captures = Regex.named_captures(@significant_digits_match, format) do
       minimum = String.length(captures["ats"])
       maximim = minimum + String.length(captures["hashes"])
       %{min: minimum, max: maximim}
