@@ -61,7 +61,7 @@ defmodule Cldr.Config do
   @doc """
   Return the path name of the CLDR data directory.
   """
-  @data_dir Path.join(__DIR__, "/../../data")
+  @data_dir Path.join(__DIR__, "/../../data") |> Path.expand
   def data_dir do
     @data_dir
   end
@@ -156,18 +156,31 @@ defmodule Cldr.Config do
       :all  -> @all_locales
       nil   -> [default_locale()]
       _     -> expand_locales(app_locales)
-    end
+    end |> Enum.sort
   end
 
   @doc """
-  Returns a list of all locales that are configured and avaialable
-  in th CLDR repository.
+  Returns a list of all locales that are configured and available
+  in the CLDR repository.
   """
   @spec known_locales :: [String.t]
   def known_locales do
     requested_locales()
     |> MapSet.new()
     |> MapSet.intersection(MapSet.new(all_locales()))
+    |> MapSet.to_list
+    |> Enum.sort
+  end
+
+  @doc """
+  Returns a list of all locales that are configured but not available
+  in the CLDR repository.
+  """
+  @spec unknown_locales :: [String.t]
+  def unknown_locales do
+    requested_locales()
+    |> MapSet.new()
+    |> MapSet.difference(MapSet.new(all_locales()))
     |> MapSet.to_list
     |> Enum.sort
   end
@@ -184,13 +197,15 @@ defmodule Cldr.Config do
   def requested_locales do
     (configured_locales() ++ gettext_locales() ++ [default_locale()])
     |> Enum.uniq
+    |> Enum.sort
   end
 
   @doc """
   Return the path name of the CLDR number directory
   """
+  @numbers_locale_dir Path.join(@data_dir, "cldr-numbers-#{@full_or_modern}/main")
   def numbers_locale_dir do
-    Path.join(__DIR__, "/../../data/cldr-numbers-#{full_or_modern()}/main")
+    @numbers_locale_dir
   end
 
   @doc """
@@ -228,7 +243,7 @@ defmodule Cldr.Config do
        "fr-PF", "fr-PM", "fr-RE", "fr-RW", "fr-SC", "fr-SN", "fr-SY", "fr-TD",
        "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
   """
-  @wildcard_matchers ["*", "+", "."]
+  @wildcard_matchers ["*", "+", ".", "["]
   @spec expand_locales([String.t]) :: [String.t]
   def expand_locales(locales) do
     locale_list = Enum.map(locales, fn locale ->

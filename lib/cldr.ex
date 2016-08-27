@@ -4,7 +4,7 @@ defmodule Cldr do
   dates/times to an appropriate locale as defined by the CLDR data
   maintained by the ICU.
 
-  The most common functions are:
+  The most commonly used functions are:
 
   * `Cldr.Number.to_string/2` for formatting numbers
 
@@ -17,38 +17,64 @@ defmodule Cldr do
 
   @type locale :: String.t
 
+  if Enum.any?(Config.unknown_locales) do
+    raise CompileError, description:
+      "Some locales are configured that are not known to CLDR. " <>
+      "Compilation cannot continue until the configuration includes only " <>
+      "locales known in CLDR.\n\n" <>
+      "Configured locales: #{inspect Config.requested_locales()}\n" <>
+      "Gettext locales:    #{inspect Config.gettext_locales()}\n" <>
+      "Unknown locales:    " <>
+      "#{IO.ANSI.red()}#{inspect Config.unknown_locales()}" <>
+      "#{IO.ANSI.default_color()}\n"
+  end
+
   @warn_if_greater_than 100
   @known_locale_count Enum.count(Config.known_locales)
-  IO.puts "Generating functions for #{@known_locale_count} locales " <>
+  @locale_string if @known_locale_count > 1, do: "locales ", else: "locale "
+  IO.puts "Generating functions for #{@known_locale_count} " <>
+    @locale_string <>
     "#{inspect Config.known_locales, limit: 5} with " <>
-    "default #{inspect Config.default_locale}"
+    "default #{inspect Config.default_locale()}"
   if @known_locale_count > @warn_if_greater_than do
     IO.puts "Please be patient, generating functions for many locales can take some time"
   end
 
-  # Treat this as the canonical definition of what locales are available
+  @doc """
+  Returns the directory path name where the CLDR json data for numbers
+  is kept.
+  """
   @numbers_locale_dir Config.numbers_locale_dir()
   def numbers_locale_dir do
     @numbers_locale_dir
   end
 
+  @doc """
+  Returns the directory path name where the CLDR json data
+  is kept.
+  """
   @data_dir Config.data_dir()
   def data_dir do
     @data_dir
   end
 
+
+  @doc """
+  Returns the directory path name where the CLDR json supplemental
+  data is kept.
+  """
   @supplemental_dir Config.supplemental_dir()
   def supplemental_dir do
     @supplemental_dir
   end
 
   @doc """
-  Return the default locale name.
+  Returns the default `locale` name.
 
-  Example:
+  ## Example
 
-  iex> Cldr.default_locale()
-  "en"
+      iex> Cldr.default_locale()
+      "en"
   """
   @default_locale Config.default_locale()
   @spec default_locale :: [locale]
@@ -103,16 +129,29 @@ defmodule Cldr do
   end
 
   @doc """
+  Returns a list of the locales that are configured, but
+  not known in CLDR.
+
+  Functions typically raise an exception if a requested locale
+  is not configured and available in CLDR.
+  """
+  @unknown_locales Config.unknown_locales
+  @spec unknown_locales :: [locale] | []
+  def unknown_locales do
+    @unknown_locales
+  end
+
+  @doc """
   Returns a boolean indicating if the specified locale
-  is configured and available in Cldr
+  is configured and available in Cldr.
 
-  Examples:
+  ## Examples
 
-    iex> Cldr.known_locale? "en"
-    true
+      iex> Cldr.known_locale?("en")
+      true
 
-    iex> Cldr.known_locale? "!!"
-    false
+      iex> Cldr.known_locale?("!!")
+      false
   """
   @spec known_locale?(locale) :: boolean
   def known_locale?(locale) when is_binary(locale) do
@@ -124,9 +163,17 @@ defmodule Cldr do
   is available in CLDR.
 
   The return value depends on whether the locale is
-  defined in the CLDR repository.  It does not mean
-  the locale is configured for Cldr.  See also
+  defined in the CLDR repository.  It does not necessarily
+  mean the locale is configured for Cldr.  See also
   `Cldr.known_locale?/1`.
+
+  ## Examples
+
+      iex> Cldr.locale_exists? "en-AU"
+      true
+
+      iex> Cldr.locale_exists? "en-SA"
+      false
   """
   @spec locale_exists?(locale) :: boolean
   def locale_exists?(locale) when is_binary(locale) do
