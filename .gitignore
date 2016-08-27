@@ -1,6 +1,7 @@
 /_build
 /cover
 /deps
+/references
 *.snapshot
 erl_crash.dump
 *.ez

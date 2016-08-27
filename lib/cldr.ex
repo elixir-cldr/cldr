@@ -17,7 +17,7 @@ defmodule Cldr do
 
   @type locale :: String.t
 
-  if Enum.any?(Config.unknown_locales) do
+  if Enum.any?(Config.unknown_locales()) do
     raise CompileError, description:
       "Some locales are configured that are not known to CLDR. " <>
       "Compilation cannot continue until the configuration includes only " <>
@@ -30,14 +30,15 @@ defmodule Cldr do
   end
 
   @warn_if_greater_than 100
-  @known_locale_count Enum.count(Config.known_locales)
+  @known_locale_count Enum.count(Config.known_locales())
   @locale_string if @known_locale_count > 1, do: "locales ", else: "locale "
   IO.puts "Generating functions for #{@known_locale_count} " <>
     @locale_string <>
     "#{inspect Config.known_locales, limit: 5} with " <>
     "default #{inspect Config.default_locale()}"
   if @known_locale_count > @warn_if_greater_than do
-    IO.puts "Please be patient, generating functions for many locales can take some time"
+    IO.puts "Please be patient, generating functions for many locales " <>
+    "can take some time"
   end
 
   @doc """
@@ -132,8 +133,9 @@ defmodule Cldr do
   Returns a list of the locales that are configured, but
   not known in CLDR.
 
-  Functions typically raise an exception if a requested locale
-  is not configured and available in CLDR.
+  Since we check at compile time for any unknown locales
+  and raise and exception this function should always
+  return an empty list.
   """
   @unknown_locales Config.unknown_locales
   @spec unknown_locales :: [locale] | []
