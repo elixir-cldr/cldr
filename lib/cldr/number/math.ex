@@ -19,7 +19,7 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Returns the fractional part of a float, decimal as an integer.
+  Returns the fractional part of a float or Decimal as an integer.
 
   * `number` can be either a `float`, `Decimal` or `integer` although
   an integer has no fraction part and will therefore always return 0.
@@ -251,7 +251,7 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Convert a decimal to a float
+  Convert a Decimal to a float
 
   * decimal must be a `Decimal`
 
@@ -564,7 +564,7 @@ defmodule Cldr.Number.Math do
 
   * `number` is any Decimal number
 
-  Returns the number of leading zeros in a decimal number
+  Returns the number of leading zeros in a Decimal number
   that is between `-1..1` (ie, has no integer part).  If the
   number is outside `-1..1` it retuns a negative number, the
   `abs` value of which is the number of integer digits in
@@ -608,12 +608,12 @@ defmodule Cldr.Number.Math do
       coef_digits = number_of_integer_digits(number.coef)
       leading_zeros = abs(number.exp) - coef_digits
       exp = -(leading_zeros + 1)
-      mantissa = %Decimal{coef: number.coef, sign: number.sign, exp: -coef_digits + 1}
+      mantissa = %Decimal{number | exp: -coef_digits + 1}
       {mantissa, exp}
     else
       coef_digits = number_of_integer_digits(number.coef)
       exp = coef_digits + number.exp - 1
-      mantissa = %Decimal{sign: number.sign, coef: number.coef, exp: number.exp - exp}
+      mantissa = %Decimal{number | exp: number.exp - exp}
       {mantissa, exp}
     end
   end
@@ -625,9 +625,9 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Caculates the sqrt of a decimal number using Newton's method.
+  Caculates the sqrt of a Decimal number using Newton's method.
 
-    * `number` is a `Decimal`
+  * `number` is a `Decimal`
 
   We convert the Decimal to a float and take its `sqrt`
   using `:math.sqrt` only to get an initial estimate.
@@ -670,6 +670,7 @@ defmodule Cldr.Number.Math do
        || Decimal.cmp(diff, old_estimate) == :eq do
       estimate
     else
+      Decimal.div(number, Decimal.mult(@two, estimate))
       new_estimate = Decimal.add(Decimal.div(estimate, @two),
         Decimal.div(number, Decimal.mult(@two, estimate)))
       do_sqrt(number, new_estimate, estimate, precision)
