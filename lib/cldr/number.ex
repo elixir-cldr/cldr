@@ -80,7 +80,7 @@ defmodule Cldr.Number do
   """
   import Cldr.Macros
   import Cldr.Number.String
-  import Cldr.Number.Format, only: [format_from: 2]
+  import Cldr.Number.Format, only: [formats_for: 2]
   import Cldr.Number.Transliterate, only: [transliterate: 3]
   import Cldr.Number.Symbol, only: [number_symbols_for: 2,
                                     minimum_grouping_digits_for: 1]
@@ -467,7 +467,7 @@ defmodule Cldr.Number do
     else
       options = Keyword.delete(options, :format)
       format = options[:locale]
-      |> format_from(options[:number_system])
+      |> formats_for(options[:number_system])
       |> Map.get(options[:as])
       {format, options}
     end
