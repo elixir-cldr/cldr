@@ -43,12 +43,12 @@ defmodule Cldr.Number.String do
 
   * `count` is the final length required of the string
   """
-  @spec pad_leading_zeroes(String.t, integer) :: String.t
-  def pad_leading_zeroes(number_string, count) when count <= 0 do
+  @spec pad_leading_zeros(String.t, integer) :: String.t
+  def pad_leading_zeros(number_string, count) when count <= 0 do
     number_string
   end
 
-  def pad_leading_zeroes(number_string, count) do
+  def pad_leading_zeros(number_string, count) do
     String.pad_leading(number_string, count, "0")
   end
 
@@ -60,12 +60,12 @@ defmodule Cldr.Number.String do
 
   * `count` is the final length required of the string
   """
-  @spec pad_trailing_zeroes(String.t, integer) :: String.t
-  def pad_trailing_zeroes(number_string, count) when count <= 0 do
+  @spec pad_trailing_zeros(String.t, integer) :: String.t
+  def pad_trailing_zeros(number_string, count) when count <= 0 do
     number_string
   end
 
-  def pad_trailing_zeroes(number_string, count) do
+  def pad_trailing_zeros(number_string, count) do
     String.pad_trailing(number_string, count, "0")
   end
 

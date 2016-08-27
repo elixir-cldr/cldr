@@ -66,7 +66,18 @@ defmodule Cldr.Test.Number.Format do
       {-1.23004, "-1.23",        [format: "@@##"]},
 
       # Test for when padding specified but there is no padding possible
-      {123456789, "123456789",   [format: "*x#"]}
+      {123456789, "123456789",   [format: "*x#"]},
+
+      # Scientific formats
+      {0.1234, "1.234E-1",       [format: "#E0"]},
+      {1.234, "1.234E0",         [format: "#E0"]},
+      {12.34, "1.234E1",         [format: "#E0"]},
+      {123.4, "1.234E2",         [format: "#E0"]},
+      {1234, "1.234E3",          [format: "#E0"]}
+
+      # Scientific formats with grouping
+      # {1234, "1.234E3",          [format: "#,###E0"]},
+      # {12.34, "0.012E3",         [format: "#,###E0"]}
     ]
   end
 

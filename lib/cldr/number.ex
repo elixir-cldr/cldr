@@ -96,7 +96,8 @@ defmodule Cldr.Number do
     :long |
     :percent |
     :accounting |
-    :scientific
+    :scientific |
+    :currency
 
   @empty_string ""
   @default_options [
@@ -164,8 +165,8 @@ defmodule Cldr.Number do
     |> round_to_nearest(meta[:rounding], options[:rounding_mode])
     |> adjust_for_exponent(meta, meta[:exponent_digits])
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
-    |> adjust_leading_zeroes(:integer, meta[:integer_digits])
-    |> adjust_trailing_zeroes(:fraction, meta[:fractional_digits])
+    |> adjust_leading_zeros(:integer, meta[:integer_digits])
+    |> adjust_trailing_zeros(:fraction, meta[:fractional_digits])
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
@@ -255,7 +256,7 @@ defmodule Cldr.Number do
   # calculation.  Although the specification allows for minimum
   # and maximum, I haven't found an example of where minimum is a
   # useful rounding value since maximum already removes trailing
-  # insignificant zeroes.
+  # insignificant zeros.
   #
   # Also note that this implementation allows for both significatn
   # digit rounding as we as decimal precision rounding.  Its likely
@@ -298,8 +299,8 @@ defmodule Cldr.Number do
 
     # Now take care of exponent digit multiples
     # first grouping size is what defines that
-    exponent_mod = rem(exponent, meta.grouping.integer.first)
-    {mantissa, exponent} = adjust_exponent_mod(mantissa, exponent, exponent_mod)
+    grouping = meta.grouping.integer.first
+    {mantissa, exponent} = adjust_exponent_mod(mantissa, exponent, grouping)
 
     # Lastly we do significant digit rounding on the mantissa
     mantissa = if meta.scientific_rounding > 0 do
@@ -311,25 +312,37 @@ defmodule Cldr.Number do
     {mantissa, exponent}
   end
 
+
   # Adjust the number of digits in the exponent to match the minimum
   # number of exponent digits
-  defp adjust_exponent(mantissa, exponent, diff) when diff == 0 do
+  defp adjust_exponent(mantissa, exponent, _adjustment) do
     {mantissa, exponent}
   end
 
-  defp adjust_exponent(mantissa, exponent, _diff) do
+  defp adjust_exponent_mod(mantissa, exponent, grouping) when grouping == 0 do
     {mantissa, exponent}
   end
 
-  # Adjust the exponent to be a multiple of the specified group
-  # the size of the first integer grouping is used to define it.
-  defp adjust_exponent_mod(mantissa, exponent, mod) when mod == 0 do
+  defp adjust_exponent_mod(mantissa, exponent, _grouping) do
     {mantissa, exponent}
   end
 
-  defp adjust_exponent_mod(mantissa, exponent, _mod) do
-    {mantissa, exponent}
-  end
+  # defp adjust_exponent_mod(mantissa, exponent, grouping) when exponent < grouping do
+  #   IO.puts "Less than #{inspect exponent}; #{inspect grouping}"
+  #   adjustment = exponent - grouping
+  #   exponent = exponent - adjustment
+  #   mantissa = %{mantissa | exp: mantissa.exp + adjustment}
+  #   {mantissa, exponent}
+  # end
+  #
+  # defp adjust_exponent_mod(mantissa, exponent, grouping) do
+  #   IO.puts "Default"
+  #   adjustment = Math.mod(exponent, grouping) |> trunc
+  #   exponent = exponent - adjustment
+  #   mantissa = %{mantissa | exp: mantissa.exp + adjustment}
+  #   {mantissa, exponent}
+  # end
+
 
   # Output the number to a string - all the other transformations
   # are done on the string version split into its constituent
@@ -349,28 +362,28 @@ defmodule Cldr.Number do
     |> Decimal.to_string(:normal)
 
     Regex.named_captures(Compiler.number_match_regex(), string)
-    |> Map.put("exponent", "")
+    |> Map.put("exponent", @empty_string)
   end
 
-  # Remove all the trailing zeroes from a fraction and add back what
+  # Remove all the trailing zeros from a fraction and add back what
   # is required for the format
-  defp adjust_trailing_zeroes(number, :fraction, fraction_digits) do
+  defp adjust_trailing_zeros(number, :fraction, fraction_digits) do
     fraction = String.trim_trailing(number["fraction"], "0")
-    %{number | "fraction" => pad_trailing_zeroes(fraction, fraction_digits[:min])}
+    %{number | "fraction" => pad_trailing_zeros(fraction, fraction_digits[:min])}
   end
 
-  defp adjust_trailing_zeroes(number, _fraction, _fraction_digits) do
+  defp adjust_trailing_zeros(number, _fraction, _fraction_digits) do
     number
   end
 
-  # Remove all the leading zeroes from an integer and add back what
+  # Remove all the leading zeros from an integer and add back what
   # is required for the format
-  defp adjust_leading_zeroes(number, :integer, integer_digits) do
+  defp adjust_leading_zeros(number, :integer, integer_digits) do
     integer = String.trim_leading(number["integer"], "0")
-    %{number | "integer" => pad_leading_zeroes(integer, integer_digits[:min])}
+    %{number | "integer" => pad_leading_zeros(integer, integer_digits[:min])}
   end
 
-  defp adjust_leading_zeroes(number, _integer, _integer_digits) do
+  defp adjust_leading_zeros(number, _integer, _integer_digits) do
     number
   end
 
@@ -436,7 +449,7 @@ defmodule Cldr.Number do
 
   # Conditionally add a separator and number component to the output string
   # if it exists
-  defp append(string, "", _separator) do
+  defp append(string, @empty_string, _separator) do
     string
   end
 
@@ -466,7 +479,7 @@ defmodule Cldr.Number do
     locale = options[:locale]
     symbols = number_symbols_for(locale, system)
 
-    Enum.reduce format, "", fn (token, string) ->
+    Enum.reduce format, @empty_string, fn (token, string) ->
       string <> case token do
         {:format, _format}   -> number_string
         {:pad, _}            -> padding_string(meta, number_string)

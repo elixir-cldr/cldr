@@ -112,12 +112,12 @@ defmodule Cldr.Number.Format.Compiler do
 
   # Basically no maximum and one minimum integer digit
   # by default
-  @max_integer_digits   trunc(:math.pow(2, 32))
+  @max_integer_digits   0
   @min_integer_digits   1
 
   # Default is a minimum of no fractional digits and
   # a max thats as big as it takes.
-  @max_fraction_digits  @max_integer_digits
+  @max_fraction_digits  0
   @min_fraction_digits  0
 
   @digits_pattern       Regex.compile!(@digits)
