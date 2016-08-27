@@ -94,6 +94,11 @@ defmodule Cldr.Number.Format.Compiler do
 
   import Kernel, except: [length: 1]
 
+  # Placeholders in a pattern that will be replaces with
+  # locale specific symbols at run time.  There is a later
+  # optimization based upon the understanding that these
+  # symbols are also the same as those in the "latn" number
+  # system.
   @decimal_separator    "."
   @grouping_separator   ","
   @exponent_separator   "E"
@@ -105,9 +110,13 @@ defmodule Cldr.Number.Format.Compiler do
   @significant_digit    "@"
   @default_pad_char     " "
 
+  # Basically no maximum and one minimum integer digit
+  # by default
   @max_integer_digits   trunc(:math.pow(2, 32))
   @min_integer_digits   1
 
+  # Default is a minimum of no fractional digits and
+  # a max thats as big as it takes.
   @max_fraction_digits  @max_integer_digits
   @min_fraction_digits  0
 
@@ -115,8 +124,15 @@ defmodule Cldr.Number.Format.Compiler do
   @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <>
     @significant_digit <> @grouping_separator <> "]")
 
+  # Default rounding increment (not the same as rounding decimal
+  # digits.  `0` means no rounding increment to be applied.
+  @default_rounding     Decimal.new(0)
+
   @doc """
-  Returns a map of the number placeholder symbols.
+  Returns a number placeholder symbol.
+
+  * `symbol` is one of `:decimal`, `group`, `:exponent`,
+  `:plus`, `:minus`, `:currency`
 
   These symbols are used in decimal number format
   and are replaced with locale-specific characters
@@ -124,9 +140,11 @@ defmodule Cldr.Number.Format.Compiler do
 
   ## Example
 
-      iex> Cldr.Number.Format.Compiler.placeholders
-      %{decimal: ".", exponent: "E", group: ",", minus: "-", plus: "+"}
+      iex> Cldr.Number.Format.Compiler.placeholder(:plus)
+      "+"
   """
+  @spec placeholder(:decimal | :group | :exponent | :plus | :minus | :currency)
+    :: String.t
 
   def placeholder(:decimal),  do: @decimal_separator
   def placeholder(:group),    do: @grouping_separator
@@ -175,20 +193,12 @@ defmodule Cldr.Number.Format.Compiler do
   def parse(nil) do
     {:error, "no format string or token list provided"}
   end
+
   @doc """
   Parse a number format definition and analyze it.
 
   After parsing, reduce the format to a set of metrics
   that can then be used to format a number.
-
-  ## Example
-
-      iex> Cldr.Number.Format.Compiler.decode("#")
-      %{currency?: false, format: [positive: [format: "#"], negative: nil],
-        grouping: %{first: 0, rest: 0}, length: 1, multiplier: 1,
-        rounding: #Decimal<1>,
-        significant_digits: %{maximum_significant_digits: 0,
-          minimum_significant_digits: 0}}
   """
   def decode(definition) do
     case parse(definition) do
@@ -213,16 +223,13 @@ defmodule Cldr.Number.Format.Compiler do
                              max: optional_fraction_digits(format_parts) +
                                   required_fraction_digits(format_parts)},
       significant_digits:  significant_digits(format_parts),
-      exponent:            exponent(format_parts),
+      exponent_digits:     exponent_digits(format_parts),
       exponent_sign:       exponent_sign(format_parts),
       grouping:            grouping(format_parts),
       rounding:            rounding(format_parts),
       padding_length:      padding_length(format[:positive][:pad], format),
       padding_char:        padding_char(format),
       multiplier:          multiplier(format),
-      currency?:           currency_format?(format),
-      percent?:            percent_format?(format),
-      permille?:           permille_format?(format),
       format:              format,
     }
   end
@@ -267,9 +274,9 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Extract the exponent from the format
   """
-  defp exponent(%{"exponent" => ""}), do: 0
-  defp exponent(%{"exponent" => exp}) do
-    String.to_integer(exp)
+  defp exponent_digits(%{"exponent_digits" => ""}), do: 0
+  defp exponent_digits(%{"exponent_digits" => exp}) do
+    String.length(exp)
   end
 
   @docp """
@@ -315,7 +322,6 @@ defmodule Cldr.Number.Format.Compiler do
   The currency placeholder is between 1 and 5 characters.  The substitution can
   be between 1 and an arbitrarily sized string.  Worse, we don't know the
   substitution until runtime so we can't precalculate it.
-
   """
   defp padding_length(nil, _format) do
     0
@@ -441,6 +447,10 @@ defmodule Cldr.Number.Format.Compiler do
     significant digits, it may not contain a decimal separator, nor the '0'
     pattern character. Patterns such as "@00" or "@.###" would be disallowed.
 
+    -> This implementation takes no special care with regard to mixing
+       significant digits and other formats.  Mixing formats
+       results in unspecified output.
+
   * Any number of '#' characters may be prepended to the left of the
     leftmost '@' character. These have no effect on the minimum and maximum
     significant digits counts, but may be used to position grouping separators.
@@ -455,9 +465,7 @@ defmodule Cldr.Number.Format.Compiler do
     Minimum Significant Digits - 1, and a maximum fraction digit count of
     Maximum Significant Digits - 1. For example, the pattern "@@###E0" is
     equivalent to "0.0###E0".
-
   """
-
   # Build up the regex to extract the '@' and following '#' from the pattern
   @min_significant_digits   "(?<ats>" <> @significant_digit <> "+)"
   @max_significant_digits   "(?<hashes>" <> @digit_omit_zeroes <> "*)?"
@@ -494,18 +502,18 @@ defmodule Cldr.Number.Format.Compiler do
   pattern itself. "#,#50" specifies a rounding increment of 50. "#,##0.05"
   specifies a rounding increment of 0.05.
 
-  * Rounding only affects the string produced by formatting. It does not
-  affect parsing or change any numerical values.
+  * Rounding only affects the string produced by formatting. It does not affect
+    parsing or change any numerical values.
 
   * An implementation may allow the specification of a rounding mode to
-  determine how values are rounded. In the absence of such choices, the default
-  is to round "half-even", as described in IEEE arithmetic. That is, it rounds
-  towards the "nearest neighbor" unless both neighbors are equidistant, in
-  which case, it rounds towards the even neighbor. Behaves as for round
-  "half-up" if the digit to the left of the discarded fraction is odd; behaves
-  as for round "half-down" if it's even. Note that this is the rounding mode
-  that minimizes cumulative error when applied repeatedly over a sequence of
-  calculations.
+    determine how values are rounded. In the absence of such choices, the
+    default is to round "half-even", as described in IEEE arithmetic. That is,
+    it rounds towards the "nearest neighbor" unless both neighbors are
+    equidistant, in which case, it rounds towards the even neighbor. Behaves as
+    for round "half-up" if the digit to the left of the discarded fraction is
+    odd; behaves as for round "half-down" if it's even. Note that this is the
+    rounding mode that minimizes cumulative error when applied repeatedly over
+    a sequence of calculations.
 
   * Some locales use rounding in their currency formats to reflect the smallest
     currency denomination.
@@ -514,7 +522,6 @@ defmodule Cldr.Number.Format.Compiler do
     behave identically to digit '0'.
   """
   @lint false
-  @default_rounding Decimal.new(0)
   defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
     format = integer_format <> @decimal_separator <> fraction_format
     |> String.replace(@rounding_pattern, "")
@@ -527,19 +534,25 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @integer_part  "(?<integer>[0-9,@#]+)"
-  @fraction_part "((\.(?<fraction>[0-9,#]+))?"
-  @exponent_part "([Ee](?<exponent_sign>[+])?(?<exponent>([\+0-9]+)))?)?"
-  @format Regex.compile!(@integer_part <> @fraction_part <> @exponent_part)
+  @doc """
+  A regular expression that can be used to split either a number format
+  or a number itself.
 
+  Since it accepts characters that are not digits (like '#', '@' and
+  ',') it cannot be used to validate a number.  Its only use is to split
+  a number or a format into parts for later processing.
+  """
+
+  @integer_digits  "(?<integer>[@#0-9,]+)"
+  @fraction_digits "([.](?<fraction>[#0-9,]+))?"
+  @exponent        "(E(?<exponent_sign>[+-])?(?<exponent_digits>[0-9]))?"
+  @format Regex.compile!(@integer_digits <> @fraction_digits <> @exponent)
   def number_match_regex do
     @format
   end
 
   @docp """
   Separate the format into the integer, fraction and exponent parts.
-
-  In the lexer the regex is ([@#,]*)?([0-9]+)?(\.[0-9#,]+)?([Ee](\+)?[0-9]+)?
   """
   defp split_format(format) do
     parts = Regex.named_captures(@format, format[:positive][:format])
@@ -559,7 +572,11 @@ defmodule Cldr.Number.Format.Compiler do
     Keyword.has_key? format[:positive], :permille
   end
 
-  defp currency_format?(format) do
-    Keyword.has_key? format[:positive], :currency
-  end
+  # defp currency_format?(format) do
+  #   Keyword.has_key? format[:positive], :currency
+  # end
+
+  # defp scientific_format?(format) do
+  #   Keyword.has_key? format[:positive], :exponent
+  # end
 end

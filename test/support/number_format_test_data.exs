@@ -1,4 +1,4 @@
-defmodule Cldr.Number.Format.Test do
+defmodule Cldr.Test.Number.Format do
   def test_data do
     [
       {1234, "1,234", []},
