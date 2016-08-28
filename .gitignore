@@ -1,6 +1,7 @@
 /_build
 /cover
 /deps
+/doc
 /references
 *.snapshot
 erl_crash.dump

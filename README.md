@@ -1,6 +1,6 @@
-# Cldr
+# Cldr Introduction
 
-[![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)](http://sweatbox.noexpectations.com.au:8080/job/cldr/)
+![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)
 
 **Common locale libary for Elixir**
 

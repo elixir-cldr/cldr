@@ -1,6 +1,6 @@
 defmodule Cldr.Number do
   @moduledoc """
-  ## Cldr formatting for numbers.
+  Cldr formatting for numbers.
 
   Provides the public API for the formatting of numbers based upon
   CLDR's decimal formats specification documentated [Unicode TR35]
@@ -469,12 +469,12 @@ defmodule Cldr.Number do
 
   # If the format length is 1 (one) then it can only be the number format
   # and therefore we don't have to do the reduction.
-  def do_assemble_format(number_string, _number, _meta, _options, 1) do
+  defp do_assemble_format(number_string, _number, _meta, _format, _options, 1) do
     number_string
   end
 
   @lint false
-  def do_assemble_format(number_string, number, meta, format, options, _length) do
+  defp do_assemble_format(number_string, number, meta, format, options, _length) do
     system = options[:number_system]
     locale = options[:locale]
     symbols = number_symbols_for(locale, system)
