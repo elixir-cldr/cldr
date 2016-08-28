@@ -135,7 +135,7 @@ defmodule Cldr.Number do
         do_to_string(number, unquote(Macro.escape(meta)), options)
       end
     {:error, message} ->
-      {:error, message}
+      raise CompileError, description: message
     end
   end
 
