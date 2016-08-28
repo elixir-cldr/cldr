@@ -14,7 +14,9 @@ defmodule Cldr.Mixfile do
      start_permanent: Mix.env == :prod,
      deps: deps(),
      description: description(),
-     package: package()]
+     package: package(),
+     test_coverage: [tool: ExCoveralls]
+   ]
   end
 
   defp description do
@@ -37,11 +39,14 @@ defmodule Cldr.Mixfile do
   end
 
   defp deps do
-    [{:poison, "~> 2.1"},
-     {:decimal, github: "ericmj/decimal" },
-     {:benchfella, "~> 0.3.0", only: :dev},
-     {:credo, "~> 0.4", only: [:dev, :test]},
-     {:ex_doc, "~> 0.12", only: :dev}]
+    [
+      {:poison, "~> 2.1"},
+      {:decimal, github: "ericmj/decimal" },
+      {:benchfella, "~> 0.3.0", only: :dev},
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:ex_doc, "~> 0.12", only: :dev},
+      {:excoveralls, github: "kipcole9/excoveralls", only: :test}
+    ]
   end
 
   defp package do
