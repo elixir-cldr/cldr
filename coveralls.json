@@ -1,6 +1,7 @@
 {
   "skip_files": [
-    "src"
+    "src",
+    "lib/cldr/number/rbnf.ex"
   ],
 
   "coverage_options": {
