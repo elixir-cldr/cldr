@@ -1,7 +1,7 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
 defmodule Cldr.Number.Format.Compiler do
   @moduledoc """
-  ## Number Patterns
+  Number Pattern Compiler
 
   Number patterns affect how numbers are interpreted in a localized context.
   Here are some examples, based on the French locale. The "." shows where the

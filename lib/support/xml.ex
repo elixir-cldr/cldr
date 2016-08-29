@@ -1,7 +1,5 @@
 defmodule Xml do
-  @moduledoc """
-  Helper functions for xml
-  """
+  @moduledoc false
 
   require Record
   Record.defrecord :xmlAttribute, Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")

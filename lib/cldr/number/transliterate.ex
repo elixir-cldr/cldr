@@ -1,6 +1,6 @@
 defmodule Cldr.Number.Transliterate do
   @moduledoc """
-  ## Transliterations for digits and separators.
+  Transliteration for digits and separators.
 
   Transliterating a string is an expensive business.  First the string has to
   be exploded into its component graphemes.  Then for each grapheme we have

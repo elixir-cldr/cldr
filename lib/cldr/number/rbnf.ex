@@ -1,5 +1,7 @@
 defmodule Cldr.Rbnf do
   @moduledoc """
+  Rules Base Number Formatting
+
   During compilation we want to look up the configured locales
   and generate the functions needed for only those locales.
 

@@ -1,7 +1,5 @@
 defmodule Cldr.Macros do
-  @moduledoc """
-  General purpose macros.
-  """
+@moduledoc false
 
   defmacro is_false(value) do
     quote do

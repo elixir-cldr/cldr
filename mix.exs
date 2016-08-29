@@ -32,9 +32,9 @@ defmodule Cldr.Mixfile do
   def docs do
     [
       source_ref: "v#{@version}",
-      main: "readme",
+      main: "1_getting_started",
       extra_section: "GUIDES",
-      extras: ["README.md"] ++ extra_docs()
+      extras: extra_docs()
     ]
   end
 
@@ -62,5 +62,6 @@ defmodule Cldr.Mixfile do
     @doc_dir
    |> File.ls!
    |> Enum.map(&Path.join(@doc_dir, &1))
+   |> Enum.sort
   end
 end
