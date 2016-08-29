@@ -218,7 +218,7 @@ defmodule Cldr.Number.Format.Compiler do
     format_parts = split_format(format)
     meta = %{
       integer_digits:      %{min: required_integer_digits(format_parts),
-                             max: @max_integer_digits},
+                             max: max_integer_digits(format_parts)},
       fractional_digits:   %{min: required_fraction_digits(format_parts),
                              max: optional_fraction_digits(format_parts) +
                                   required_fraction_digits(format_parts)},
@@ -256,6 +256,21 @@ defmodule Cldr.Number.Format.Compiler do
       String.length(captures["digits"])
     else
       @min_integer_digits
+    end
+  end
+
+  @docp """
+  If the pattern starts with a non-digit then its no limit on integer
+  digits.  If the pattern starts with a digit then the maximum number
+  of digits is the length of the integer pattern.  We can assume there
+  are no '#' after digits since thats not permitted by the parser.
+  """
+  @first_is_digit Regex.compile!("^" <> @digits)
+  defp max_integer_digits(%{"compact_integer" => integer_format}) do
+    if Regex.match?(@first_is_digit, integer_format) do
+      String.length(integer_format)
+    else
+      @max_integer_digits
     end
   end
 

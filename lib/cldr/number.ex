@@ -167,6 +167,7 @@ defmodule Cldr.Number do
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeros(:integer, meta[:integer_digits])
     |> adjust_trailing_zeros(:fraction, meta[:fractional_digits])
+    |> set_max_integer_digits(meta[:integer_digits].max)
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
@@ -385,6 +386,22 @@ defmodule Cldr.Number do
 
   defp adjust_leading_zeros(number, _integer, _integer_digits) do
     number
+  end
+
+  # Take the rightmost maximum digits only - this is a truncation from the
+  # right.
+  def set_max_integer_digits(number, maximum_digits) when maximum_digits == 0 do
+    number
+  end
+
+  def set_max_integer_digits(%{"integer" => integer} = number, maximum_digits) do
+    if (length = String.length(integer)) <= maximum_digits do
+      number
+    else
+      offset = length - maximum_digits
+      string = String.slice(integer, offset, maximum_digits)
+      %{number | "integer" => string}
+    end
   end
 
   # Insert the grouping placeholder in the right place in the number.

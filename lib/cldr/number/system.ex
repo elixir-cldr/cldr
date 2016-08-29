@@ -7,6 +7,7 @@ defmodule Cldr.Number.System do
   @default_number_system       "latn"
 
   @type name :: atom
+  @type types :: :default | :native | :traditional | :finance
 
   @moduledoc """
   Cldr Number Systems definitions and reflection methods.
@@ -15,7 +16,7 @@ defmodule Cldr.Number.System do
   @doc """
   Return the default number system type name.
 
-  Currently this is "default".  Note that this is
+  Currently this is `:default`.  Note that this is
   not the number system itself but the type of the
   number system.  It can be used to find the
   default number system for a given locale with
