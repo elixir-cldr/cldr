@@ -45,7 +45,7 @@ defmodule Cldr.Mixfile do
       {:benchfella, "~> 0.3.0", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
-      {:excoveralls, github: "kipcole9/excoveralls", only: :test}
+      {:excoveralls, github: "parroty/excoveralls", branch: "fix/issue_67", only: :test}
     ]
   end
 
