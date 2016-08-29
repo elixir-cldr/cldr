@@ -144,7 +144,7 @@ defmodule Cldr.Number.Format do
 
   def decimal_formats_for(locale, number_system) do
     raise ArgumentError,
-    "Unknown locale #{inspect locale} or number_system #{inspect number_system}."
+    "Unknown locale #{inspect locale} or number system #{inspect number_system}."
   end
 
   @doc """

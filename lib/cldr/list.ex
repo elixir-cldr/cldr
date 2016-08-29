@@ -8,33 +8,51 @@ defmodule Cldr.List do
   If we have a list of days like `["Monday", "Tuesday", "Wednesday"]`
   then we can format that list for a given locale by:
 
-      iex> Cldr.List.to_string ["Monday", "Tuesday", "Wednesday"]
+      iex> Cldr.List.to_string(["Monday", "Tuesday", "Wednesday"], "en")
       "Monday, Tuesday, and Wednesday"
   """
 
-  @doc """
-  Returns the list patterns for a locale.
-
-  List patterns provide rules for combining multiple
-  items into a language format appropriate for a locale.
-
-  ## Example
-
-      iex> Cldr.List.list_patterns_for "en"
-      %{standard: %{"2" => "{0} and {1}", "end" => "{0}, and {1}",
-          "middle" => "{0}, {1}", "start" => "{0}, {1}"},
-        unit: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
-          "start" => "{0}, {1}"},
-        unit_narrow: %{"2" => "{0} {1}", "end" => "{0} {1}", "middle" => "{0} {1}",
-          "start" => "{0} {1}"},
-        unit_short: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
-          "start" => "{0}, {1}"}}
-  """
-  @spec list_patterns_for(Cldr.locale) :: %{}
   Enum.each Cldr.known_locales, fn (locale) ->
     patterns = File.read(:list_patterns, locale)
+    pattern_names = Map.keys(patterns)
+
+    @doc """
+    Returns the list patterns for a locale.
+
+    List patterns provide rules for combining multiple
+    items into a language format appropriate for a locale.
+
+    ## Example
+
+        iex> Cldr.List.list_patterns_for "en"
+        %{standard: %{"2" => "{0} and {1}", "end" => "{0}, and {1}",
+            "middle" => "{0}, {1}", "start" => "{0}, {1}"},
+          unit: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
+            "start" => "{0}, {1}"},
+          unit_narrow: %{"2" => "{0} {1}", "end" => "{0} {1}", "middle" => "{0} {1}",
+            "start" => "{0} {1}"},
+          unit_short: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
+            "start" => "{0}, {1}"}}
+    """
+    @spec list_patterns_for(Cldr.locale) :: Map.t
     def list_patterns_for(unquote(locale)) do
       unquote(Macro.escape(patterns))
+    end
+
+    @doc """
+    Returns the types of list patterns available for a locale.
+
+    Returns a list of `atom`s of of the list format types that are
+    available in CLDR for a locale.
+
+    ## Example
+
+        iex> Cldr.List.list_pattern_types_for("en")
+        [:standard, :unit, :unit_narrow, :unit_short]
+    """
+    @spec list_pattern_types_for(Cldr.locale) :: [atom]
+    def list_pattern_types_for(unquote(locale)) do
+      unquote(pattern_names)
     end
   end
 
@@ -58,6 +76,12 @@ defmodule Cldr.List do
 
       iex> Cldr.List.to_string([1,2,3,4,5,6])
       "1, 2, 3, 4, 5, and 6"
+
+      iex> Cldr.List.to_string(["a"])
+      "a"
+
+      iex> Cldr.List.to_string([1,2])
+      "1 and 2"
   """
   @spec to_string(List.t, Cldr.locale, pattern_type) :: String.t
   def to_string(list, locale \\ Cldr.default_locale(), pattern_type \\ :standard)
@@ -75,9 +99,10 @@ defmodule Cldr.List do
   # For when there are two elements only
   def to_string([first, last], locale, pattern_type) do
     pattern = list_patterns_for(locale)[pattern_type]["2"]
+
     pattern
     |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", last)
+    |> String.replace("{1}", Kernel.to_string(last))
   end
 
   # For when there are three elements only
@@ -91,7 +116,7 @@ defmodule Cldr.List do
 
     first_pattern
     |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", last)
+    |> String.replace("{1}", Kernel.to_string(last))
   end
 
   # For when there are more than 3 elements

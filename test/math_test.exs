@@ -39,6 +39,10 @@ defmodule Math.Test do
     assert Math.power(Decimal.new(4), -2) == Decimal.new(0.0625)
   end
 
+  test "power of decimal where number < 0" do
+    assert Math.power(Decimal.new(-4), 2) == Decimal.new(16)
+  end
+
   test "power of integer when n = 0" do
     assert Math.power(3, 0) === 1
   end
