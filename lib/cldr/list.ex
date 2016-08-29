@@ -1,6 +1,4 @@
 defmodule Cldr.List do
-  alias Cldr.File
-  @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short
   @moduledoc """
   Cldr incudes patterns that enable list to be catenated together
   to form a grammatically correct language construct for a given locale.
@@ -11,6 +9,8 @@ defmodule Cldr.List do
       iex> Cldr.List.to_string(["Monday", "Tuesday", "Wednesday"], "en")
       "Monday, Tuesday, and Wednesday"
   """
+  alias Cldr.File
+  @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short
 
   Enum.each Cldr.known_locales, fn (locale) ->
     patterns = File.read(:list_patterns, locale)
@@ -60,8 +60,11 @@ defmodule Cldr.List do
   Formats a list into a string according to the list pattern rules for a locale.
 
   * `list` is any list of of terms that can be passed through `Kernel.to_string/1`
+
   * `locale` is any configured locale.  See `Cldr.known_locales()`
-  * `pattern_type` is one of `:standard` (default), `:unit`, `:unit_narrow` or `:unit_short`
+
+  * `pattern_type` is one of those returned by
+    `Cldr.List.list_pattern_types_for/1`. The default is `:standard`
 
   ## Examples
 
