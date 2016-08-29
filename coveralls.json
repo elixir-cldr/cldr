@@ -1,6 +1,10 @@
 {
   "skip_files": [
-    "src"
+    "src",
+    "lib/cldr/number/rbnf.ex",
+    "lib/cldr/number/plural_rule/transformer.ex",
+    " lib/support/xml.ex",
+    "lib/cldr/number/plural_rule.ex"
   ],
 
   "coverage_options": {
