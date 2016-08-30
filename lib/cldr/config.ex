@@ -53,6 +53,8 @@ defmodule Cldr.Config do
   Return which set of CLDR repository data we are using:
   the full set or the modern set.
   """
+  @default_locale "en"
+
   @full_or_modern "full"
   def full_or_modern do
     @full_or_modern
@@ -98,9 +100,11 @@ defmodule Cldr.Config do
       app_default ->
         app_default
       gettext_configured?() ->
-        apply(Gettext, :get_locale, [gettext()])
+        Gettext
+        |> apply(:get_locale, [gettext()])
+        |> Enum.map(&String.replace(&1,"_","-"))
       true ->
-        "en"
+        @default_locale
     end
   end
 
@@ -112,7 +116,13 @@ defmodule Cldr.Config do
   """
   @spec gettext_locales :: [String.t]
   def gettext_locales do
-    if gettext_configured?(), do: apply(Gettext, :known_locales), else: []
+    if gettext_configured?() do
+      Gettext
+      |> apply(:known_locales)
+      |> Enum.map(&String.replace(&1,"_","-"))
+    else
+      []
+    end
   end
 
   @doc """
@@ -128,7 +138,7 @@ defmodule Cldr.Config do
   {:ok, locales} = @locales_path
   |> File.read!
   |> Poison.decode
-  @all_locales locales["availableLocales"][@full_or_modern]
+  @all_locales locales["availableLocales"][@full_or_modern] |> Enum.sort
   @spec all_locales :: [String.t]
   def all_locales do
     @all_locales

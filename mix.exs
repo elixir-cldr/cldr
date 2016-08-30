@@ -29,15 +29,6 @@ defmodule Cldr.Mixfile do
     []
   end
 
-  def docs do
-    [
-      source_ref: "v#{@version}",
-      main: "1_getting_started",
-      extra_section: "GUIDES",
-      extras: extra_docs()
-    ]
-  end
-
   defp deps do
     [
       {:poison, "~> 2.1"},
@@ -45,7 +36,7 @@ defmodule Cldr.Mixfile do
       {:benchfella, "~> 0.3.0", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
-      {:excoveralls, github: "parroty/excoveralls", branch: "fix/issue_67", only: :test}
+      {:excoveralls, github: "parroty/excoveralls", only: :test}
     ]
   end
 
@@ -57,11 +48,20 @@ defmodule Cldr.Mixfile do
     ]
   end
 
+  def docs do
+    [
+      source_ref: "v#{@version}",
+      main: "1_getting_started",
+      extra_section: "GUIDES",
+      extras: extra_docs()
+    ]
+  end
+
   @doc_dir "./guides"
   defp extra_docs do
     @doc_dir
-   |> File.ls!
-   |> Enum.map(&Path.join(@doc_dir, &1))
-   |> Enum.sort
+    |> File.ls!
+    |> Enum.map(&Path.join(@doc_dir, &1))
+    |> Enum.sort
   end
 end
