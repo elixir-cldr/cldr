@@ -5,13 +5,14 @@ if Code.ensure_loaded?(Plug) do
     set the `Cldr` locale appropriately.
 
     The language accept header [defines](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
-    as having a locale as having up to 8 characters, with an optional dash ('-')
+    a locale as having up to 8 characters, with an optional dash ('-')
     and up to 8 additional characters for the region code.  This plug extends that
-    syntax to include the complete form of a locale string as defined by the
+    syntax to include a more complete form of a locale string as defined by the
     [Unicode Consortium](http://unicode.org).
 
     The Unicode consortium [defines](http://unicode.org/reports/tr35/#Identifiers)
-    a format that can include locale extensions:
+    a format that can include locale extension "u" and "t".  `Cldr.Plug.Locale`
+    supports only the "u" extensions.
 
     ## Unicode BCP 47 Extensions type "u"
 
@@ -41,7 +42,7 @@ if Code.ensure_loaded?(Plug) do
 
      ## Cldr.Plug.Locale support
 
-    `Cldr.Plug.Locale will support parsing a locale identifier using the
+    `Cldr.Plug.Locale` will support parsing a locale identifier using the
     following formats:
 
     Locale               | Meaning
