@@ -60,6 +60,11 @@ defmodule Cldr.Config do
     @full_or_modern
   end
 
+  @app_home_dir Path.join(__DIR__, "/../..") |> Path.expand
+  def app_home do
+    @app_home_dir
+  end
+
   @doc """
   Return the path name of the CLDR data directory.
   """
