@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Cldr.Download do
   @required_files  ["core.zip", "tools.zip", "keyboards.zip"]
   @download_dir    "downloads"
   @destination_dir Path.join(Cldr.Config.data_dir, @download_dir)
-  @need_utils      ["wget", "java"]
+  @need_utils      ["wget", "java", "find", "rm"]
 
   def run(_) do
     check_utils(@need_utils)

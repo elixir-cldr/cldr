@@ -50,10 +50,12 @@ defmodule Cldr.Downloader do
   end
 
   def convert_to_json(download_dir, destination_dir) do
-    args = ["-DCLDR_DIR=#{download_dir}", "-jar", "tools/java/cldr.jar", "ldml2json",
+    args = ["-DCLDR_DIR=#{download_dir}", "-jar",
+            "#{download_dir}/tools/java/cldr.jar", "ldml2json",
+            "-d", destination_dir,
             "-p", "true", "-r", "true", "-t"]
-    System.cmd("java", args ++ "main", cd: destination_dir)
-    System.cmd("java", args ++ "supplemental", cd: destination_dir)
+    System.cmd("java", args ++ ["main"], cd: destination_dir)
+    System.cmd("java", args ++ ["supplemental"], cd: destination_dir)
   end
 
   def test(:ok, _dir), do: :ok
