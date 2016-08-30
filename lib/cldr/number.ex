@@ -557,8 +557,15 @@ defmodule Cldr.Number do
   end
 
   # Merge options and default options with supplied options always
-  # the winner.
+  # the winner.  If :currency is specified then the default :format
+  # will be format: currency
   defp normalize_options(options, defaults) do
+    options = if options[:currency] && !options[:format] && !options[:as] do
+      options ++ [{:as, :currency}]
+    else
+      options
+    end
+
     options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
 
     if options[:format] do

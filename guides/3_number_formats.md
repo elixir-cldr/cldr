@@ -126,4 +126,14 @@ Differences between decimal formatting and currency formatting
 
   Details of the number formats are described in the
   [Unicode documentation](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
-  """
+
+## CLDR Data Sources
+
+  /data/cldr-numbers-full/main/%{locale}/numbers.json
+  /data/cldr-numbers-full/main/%{locale}/currencies.json
+
+  Plural rules:
+
+  /data/cldr-core/supplemental/ordinals.json
+  /data/cldr-core/supplemental/plurals.json
+
