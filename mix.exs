@@ -36,7 +36,7 @@ defmodule Cldr.Mixfile do
       {:benchfella, "~> 0.3.0", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
-      {:excoveralls, github: "parroty/excoveralls", only: :test}
+      {:excoveralls, "~> 0.5.6", only: :test}
     ]
   end
 
