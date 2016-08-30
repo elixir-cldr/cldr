@@ -29,11 +29,11 @@ defmodule Cldr.File do
   end
 
   @currencies_path Path.join(Cldr.numbers_locale_dir(),
-    [Cldr.default_locale(), "/currencies.json"])
+    [Cldr.get_locale(), "/currencies.json"])
 
   def read(:currency_codes) do
     currencies = read_cldr_data(@currencies_path)
-    currencies["main"][Cldr.default_locale()]["numbers"]["currencies"]
+    currencies["main"][Cldr.get_locale()]["numbers"]["currencies"]
     |> Enum.map(fn {code, _currency} -> code end)
   end
 

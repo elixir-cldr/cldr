@@ -87,7 +87,7 @@ defmodule Cldr.List do
       "1 and 2"
   """
   @spec to_string(List.t, Cldr.locale, pattern_type) :: String.t
-  def to_string(list, locale \\ Cldr.default_locale(), pattern_type \\ :standard)
+  def to_string(list, locale \\ Cldr.get_locale(), pattern_type \\ :standard)
 
   # For when the list is empty
   def to_string([], _locale, _pattern_type) do

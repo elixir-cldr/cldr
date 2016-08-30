@@ -15,10 +15,8 @@ defmodule Cldr do
 
   alias Cldr.Config
 
-  @type locale :: String.t
-
   if Enum.any?(Config.unknown_locales()) do
-    raise CompileError, description:
+    raise Cldr.UnknownLocale,
       "Some locales are configured that are not known to CLDR. " <>
       "Compilation cannot continue until the configuration includes only " <>
       "locales known in CLDR.\n\n" <>
@@ -70,15 +68,38 @@ defmodule Cldr do
   end
 
   @doc """
+  Return the current locale to be used for `Cldr` functions that
+  take an optional locale parameter for which a locale is not supplied.
+  """
+  @spec get_locale :: Locale.t
+  def get_locale do
+    Process.get(:cldr, default_locale())
+  end
+
+  @doc """
+  Set the current locale to be used for `Cldr` functions that
+  take an optional locale parameter for which a locale is not supplied.
+  """
+  @spec set_locale(Locale.t) :: Locale.t
+  def set_locale(locale) when is_binary(locale) do
+    if known_locale?(locale) do
+      Process.put(:cldr, locale)
+      locale
+    else
+      raise Cldr.UnknownLocale, "The locale #{inspect locale} is not known."
+    end
+  end
+
+  @doc """
   Returns the default `locale` name.
 
   ## Example
 
-      iex> Cldr.default_locale()
+      iex> Cldr.get_locale()
       "en"
   """
   @default_locale Config.default_locale()
-  @spec default_locale :: [locale]
+  @spec default_locale :: [Locale.t]
   def default_locale do
     @default_locale
   end
@@ -95,7 +116,7 @@ defmodule Cldr do
   See also: `requested_locales/0` and `known_locales/0`
   """
   @all_locales Config.all_locales
-  @spec all_locales :: [locale]
+  @spec all_locales :: [Locale.t]
   def all_locales do
     @all_locales
   end
@@ -109,7 +130,7 @@ defmodule Cldr do
   See also `known_locales/0` and `all_locales/0`
   """
   @requested_locales Config.requested_locales
-  @spec requested_locales :: [locale] | []
+  @spec requested_locales :: [Locale.t] | []
   def requested_locales do
     @requested_locales
   end
@@ -124,7 +145,7 @@ defmodule Cldr do
   in `Gettext`.
   """
   @known_locales Config.known_locales
-  @spec known_locales :: [locale] | []
+  @spec known_locales :: [Locale.t] | []
   def known_locales do
     @known_locales
   end
@@ -138,7 +159,7 @@ defmodule Cldr do
   return an empty list.
   """
   @unknown_locales Config.unknown_locales
-  @spec unknown_locales :: [locale] | []
+  @spec unknown_locales :: [Locale.t] | []
   def unknown_locales do
     @unknown_locales
   end
@@ -155,7 +176,7 @@ defmodule Cldr do
       iex> Cldr.known_locale?("!!")
       false
   """
-  @spec known_locale?(locale) :: boolean
+  @spec known_locale?(Locale.t) :: boolean
   def known_locale?(locale) when is_binary(locale) do
     !!Enum.find(known_locales(), &(&1 == locale))
   end
@@ -177,7 +198,7 @@ defmodule Cldr do
       iex> Cldr.locale_exists? "en-SA"
       false
   """
-  @spec locale_exists?(locale) :: boolean
+  @spec locale_exists?(Locale.t) :: boolean
   def locale_exists?(locale) when is_binary(locale) do
     !!Enum.find(Config.all_locales(), &(&1 == locale))
   end

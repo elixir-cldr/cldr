@@ -181,7 +181,7 @@ defmodule Cldr.Number.Format do
        standard: "#,##0.###"}
   """
   @spec formats_for(Cldr.locale, atom | String.t) :: Map.t
-  def formats_for(locale \\ Cldr.default_locale(), number_system \\ :default)
+  def formats_for(locale \\ Cldr.get_locale(), number_system \\ :default)
 
   def formats_for(locale, number_system) when is_atom(number_system) do
     system = System.number_systems_for(locale)[number_system].name
@@ -212,7 +212,7 @@ defmodule Cldr.Number.Format do
       [:accounting, :currency, :percent, :scientific, :standard]
   """
   @spec format_types_for(Cldr.locale, atom | String.t) :: [atom]
-  def format_types_for(locale \\ Cldr.default_locale(), number_system \\ :default) do
+  def format_types_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
     formats_for(locale, number_system)
     |> Map.to_list
     |> Enum.reject(fn {k, v} -> is_nil(v) || k == :__struct__ end)
@@ -246,7 +246,7 @@ defmodule Cldr.Number.Format do
       [:default, :native]
   """
   @spec format_system_types_for(Cldr.locale) :: [atom]
-  def format_system_types_for(locale \\ Cldr.default_locale()) do
+  def format_system_types_for(locale \\ Cldr.get_locale()) do
     Cldr.Number.System.number_systems_for(locale)
     |> Map.keys
   end
@@ -268,7 +268,7 @@ defmodule Cldr.Number.Format do
       ["latn"]
   """
   @spec format_system_names_for(Cldr.locale) :: [String.t]
-  def format_system_names_for(locale \\ Cldr.default_locale()) do
+  def format_system_names_for(locale \\ Cldr.get_locale()) do
     Cldr.Number.System.number_system_names_for(locale)
   end
 end

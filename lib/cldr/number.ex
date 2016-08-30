@@ -105,7 +105,7 @@ defmodule Cldr.Number do
     cash:          false,
     rounding_mode: :half_even,
     number_system: :default,
-    locale:        Cldr.default_locale()
+    locale:        Cldr.get_locale()
   ]
 
   @spec to_string(number, [Keyword.t]) :: String.t

@@ -88,7 +88,7 @@ defmodule Cldr.Currency do
       tender: true}
   """
   @spec for_code(code, Cldr.locale) :: %{}
-  def for_code(currency, locale \\ Cldr.default_locale()) do
+  def for_code(currency, locale \\ Cldr.get_locale()) do
     do_for_code(currency, locale)
   end
 
@@ -96,7 +96,7 @@ defmodule Cldr.Currency do
   Returns the currency metadata for a locale.
   """
   @spec for_locale(Cldr.locale) :: %{}
-  def for_locale(locale \\ Cldr.default_locale())
+  def for_locale(locale \\ Cldr.get_locale())
 
   Enum.each Cldr.known_locales(), fn locale ->
     currencies = File.read(:currency, locale)
@@ -111,7 +111,7 @@ defmodule Cldr.Currency do
   end
 
   # @spec to_string(number, code, Cldr.locale, format) :: String.t
-  # def to_string(number, code, locale \\ Cldr.default_locale(), options \\ :standard)
+  # def to_string(number, code, locale \\ Cldr.get_locale(), options \\ :standard)
   #
   # # Use the formal from currencyFormat
   # def to_string(number, code, locale, :standard) do

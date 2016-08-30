@@ -92,7 +92,7 @@ defmodule Cldr.Number.PluralRule do
       in a given locale fits into.  This category can then be used to format the
       number or currency
       """
-      def plural_rule(number, locale \\ Cldr.default_locale(), rounding \\ Cldr.Number.Math.default_rounding())
+      def plural_rule(number, locale \\ Cldr.get_locale(), rounding \\ Cldr.Number.Math.default_rounding())
 
       def plural_rule(string, locale, rounding) when is_binary(string) do
         plural_rule(Decimal.new(string), locale, rounding)
