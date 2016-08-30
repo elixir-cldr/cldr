@@ -13,7 +13,7 @@ defmodule Mix.Tasks.Cldr.Download do
   @shortdoc "Download the latest CLDR data and convert to json"
 
   @download_url    "http://unicode.org/Public/cldr/latest"
-  @required_files  ["core.zip", "tools.zip"]
+  @required_files  ["core.zip", "tools.zip", "keyboards.zip"]
   @download_dir    "downloads"
   @destination_dir Path.join(Cldr.Config.data_dir, @download_dir)
   @need_utils      ["wget", "java"]
@@ -21,6 +21,7 @@ defmodule Mix.Tasks.Cldr.Download do
   def run(_) do
     check_utils(@need_utils)
     Cldr.Downloader.download(@download_url, @required_files, @destination_dir)
+    Cldr.Downloader.convert_to_json(@destination_dir, Cldr.Config.data_dir())
   end
 
   def check_utils(utils) do

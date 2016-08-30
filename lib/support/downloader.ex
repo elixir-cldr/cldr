@@ -9,16 +9,16 @@ defmodule Cldr.Downloader do
   end
 
   def add_dir_to_gitignore(destination_dir) do
-    ignore_path = "/" <> destination_dir
+    ignore_path = destination_dir
     |> String.split("/")
     |> Enum.reverse
-    |> Enum.slice(1, 2)
+    |> Enum.slice(0, 2)
     |> Enum.reverse
     |> Enum.join("/")
-    IO.puts ignore_path
+
     case System.cmd("grep", ["/#{ignore_path}", ".gitignore"]) do
       {_, 1} ->
-        {:ok, file} = File.open ".gitignore", [:append]
+        {:ok, file} = File.open(".gitignore", [:append])
         IO.binwrite(file, "\n#{ignore_path}\n")
         File.close file
       {_, 0} ->
@@ -29,7 +29,7 @@ defmodule Cldr.Downloader do
     end
   end
 
-  def fetch_and_unzip_file(download_url, file, destination_dir) do
+  def fetch_and_unzip_file(download_url, destination_dir, file) do
     url = download_url <> "/" <> file
     case System.cmd("wget", [url, "-q", "-N"], cd: destination_dir) do
     {_, 0} ->
@@ -38,13 +38,22 @@ defmodule Cldr.Downloader do
         {:error, code} ->
           raise RuntimeError, "Could not unzip file #{file}.  Error " <>
           inspect(code) <> " was returned."
-        :ok ->
+        {:ok, files} ->
+          IO.puts "Downloaded #{inspect file} to #{inspect destination_dir} " <>
+          "and unzipped #{Enum.count(files)}"
           :ok
       end
     {_, code} ->
-      raise RuntimeError, "Error donwloading #{inspect file}.  " <>
-      "Exited with code #{inspect code}"
+      raise RuntimeError, "Error downloading #{inspect file}.  " <>
+      "Exited with code #{inspect code} files."
     end
+  end
+
+  def convert_to_json(download_dir, destination_dir) do
+    args = ["-DCLDR_DIR=#{download_dir}", "-jar", "tools/java/cldr.jar", "ldml2json",
+            "-p", "true", "-r", "true", "-t"]
+    System.cmd("java", args ++ "main", cd: destination_dir)
+    System.cmd("java", args ++ "supplemental", cd: destination_dir)
   end
 
   def test(:ok, _dir), do: :ok
