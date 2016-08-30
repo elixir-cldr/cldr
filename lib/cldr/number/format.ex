@@ -33,8 +33,7 @@ defmodule Cldr.Number.Format do
   with the difference between Yen and Euro formatting.
 
   Details of the number formats are described in the
-  [Unicode documentation]
-  (http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
+  [Unicode documentation](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
   """
 
   @type format :: String.t

@@ -56,7 +56,7 @@ defmodule Cldr.Test.Number.Format do
       {0.1234, "12.34%",         [format: "#0.0#%"]},
 
       # Negative number format
-      {-1234, "(1234.00)",       [format: "0.00;(0.00)"]},
+      {-1234, "(1234.00)",       [format: "#.00;(#.00)"]},
 
       # Significant digits format
       {12345, "12300",           [format: "@@#"]},
@@ -73,7 +73,11 @@ defmodule Cldr.Test.Number.Format do
       {1.234, "1.234E0",         [format: "#E0"]},
       {12.34, "1.234E1",         [format: "#E0"]},
       {123.4, "1.234E2",         [format: "#E0"]},
-      {1234, "1.234E3",          [format: "#E0"]}
+      {1234, "1.234E3",          [format: "#E0"]},
+
+      # Maximum digits
+      {1234, "34",               [format: "00"]},
+      {1, "01.00",               [format: "00.00"]}
 
       # Scientific formats with grouping
       # {1234, "1.234E3",          [format: "#,###E0"]},

@@ -3,8 +3,7 @@ defmodule Cldr.Number do
   Cldr formatting for numbers.
 
   Provides the public API for the formatting of numbers based upon
-  CLDR's decimal formats specification documentated [Unicode TR35]
-  (http://unicode.org/reports/tr35/tr35-numbers.html#Number_Formats)
+  CLDR's decimal formats specification documentated [Unicode TR35](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Formats)
 
   ### Non-Scientific Notation Formatting
 
@@ -167,6 +166,7 @@ defmodule Cldr.Number do
     |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
     |> adjust_leading_zeros(:integer, meta[:integer_digits])
     |> adjust_trailing_zeros(:fraction, meta[:fractional_digits])
+    |> set_max_integer_digits(meta[:integer_digits].max)
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string
     |> transliterate(options[:locale], options[:number_system])
@@ -387,6 +387,22 @@ defmodule Cldr.Number do
     number
   end
 
+  # Take the rightmost maximum digits only - this is a truncation from the
+  # right.
+  def set_max_integer_digits(number, maximum_digits) when maximum_digits == 0 do
+    number
+  end
+
+  def set_max_integer_digits(%{"integer" => integer} = number, maximum_digits) do
+    if (length = String.length(integer)) <= maximum_digits do
+      number
+    else
+      offset = length - maximum_digits
+      string = String.slice(integer, offset, maximum_digits)
+      %{number | "integer" => string}
+    end
+  end
+
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
@@ -541,8 +557,15 @@ defmodule Cldr.Number do
   end
 
   # Merge options and default options with supplied options always
-  # the winner.
+  # the winner.  If :currency is specified then the default :format
+  # will be format: currency
   defp normalize_options(options, defaults) do
+    options = if options[:currency] && !options[:format] && !options[:as] do
+      options ++ [{:as, :currency}]
+    else
+      options
+    end
+
     options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
 
     if options[:format] do
