@@ -27,6 +27,9 @@ if Code.ensure_loaded?(Gettext) do
       end
     end
 
+    # What does gettext do with zero?
+    defp gettext_return(:zero, _n),  do: 0
+
     defp gettext_return(:one, _n),   do: 0
     defp gettext_return(:two, _n),   do: 1
     defp gettext_return(:few, _n),   do: 2

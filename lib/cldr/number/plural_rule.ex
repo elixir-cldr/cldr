@@ -72,9 +72,9 @@ defmodule Cldr.Number.PluralRule do
           {:ok, definition} = parse(rule)
 
           # Remove the sample data
-          definition = Enum.map definition, fn {k, v} ->
-            {k, Keyword.delete(v, :integer) |> Keyword.delete(:decimal)}
-          end
+          # definition = Enum.map definition, fn {k, v} ->
+          #   {k, Keyword.delete(v, :integer) |> Keyword.delete(:decimal)}
+          # end
 
           {String.to_atom(category), definition}
         end
