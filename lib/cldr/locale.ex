@@ -4,4 +4,7 @@ defmodule Cldr.Locale do
   """
   @type t :: binary
 
+  def normalize_locale(locale) do
+    String.replace(locale, "_", "-")
+  end
 end
