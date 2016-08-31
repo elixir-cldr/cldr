@@ -1,4 +1,4 @@
-defmodule Cldr.UnknownLocale do
+defmodule Cldr.UnknownLocaleError do
   defexception [:message]
 
   def exception(message) do
