@@ -70,12 +70,6 @@ defmodule Cldr.Number.PluralRule do
       def plural_rules_for(locale) do
         Enum.map plural_rules()[locale], fn({"pluralRule-count-" <> category, rule}) ->
           {:ok, definition} = parse(rule)
-
-          # Remove the sample data
-          # definition = Enum.map definition, fn {k, v} ->
-          #   {k, Keyword.delete(v, :integer) |> Keyword.delete(:decimal)}
-          # end
-
           {String.to_atom(category), definition}
         end
       end
