@@ -23,7 +23,14 @@ defmodule Cldr.Number.String do
   Replace any non-latin1 characters with a \?
   """
   def clean(string) do
-    String.replace(string, @not_latin1, "\\?")
+    for char <- String.graphemes(string) do
+      if Regex.match?(not_latin1(), char) do
+        "U+" <> Base.encode16(char, case: :lower)
+      else
+        char
+      end
+    end
+    |> Enum.join
   end
 
   @doc """
