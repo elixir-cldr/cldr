@@ -59,12 +59,20 @@ defmodule Cldr.File do
 
       number_formats = Enum.reduce number_systems, %{}, fn (number_system, formats) ->
         numbers = read(:numbers, locale)
+        decimal_formats    = numbers["decimalFormats-numberSystem-#{number_system}"]
+        currency_formats   = numbers["currencyFormats-numberSystem-#{number_system}"]
+        scientific_formats = numbers["scientificFormats-numberSystem-#{number_system}"]
+        percent_formats    = numbers["percentFormats-numberSystem-#{number_system}"]
+
         locale_formats = %Number.Format{
-          standard:    numbers["decimalFormats-numberSystem-#{number_system}"]["standard"],
-          currency:    numbers["currencyFormats-numberSystem-#{number_system}"]["standard"],
-          accounting:  numbers["currencyFormats-numberSystem-#{number_system}"]["accounting"],
-          scientific:  numbers["scientificFormats-numberSystem-#{number_system}"]["standard"],
-          percent:     numbers["percentFormats-numberSystem-#{number_system}"]["standard"]
+          standard:       decimal_formats["standard"],
+          decimal_long:   decimal_formats["long"]["decimalFormat"],
+          decimal_short:  decimal_formats["short"]["decimalFormat"],
+          currency:       currency_formats["standard"],
+          currency_short: currency_formats["short"]["standard"],
+          accounting:     currency_formats["accounting"],
+          scientific:     scientific_formats["standard"],
+          percent:        percent_formats["standard"]
         }
         Map.merge formats, %{String.to_atom(number_system) => locale_formats}
       end

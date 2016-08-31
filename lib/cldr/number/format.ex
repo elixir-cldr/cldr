@@ -37,7 +37,8 @@ defmodule Cldr.Number.Format do
   """
 
   @type format :: String.t
-  @format_types [:standard, :currency, :accounting, :scientific, :percent]
+  @format_types [:standard, :currency, :accounting, :scientific, :percent,
+                :decimal_long, :decimal_short, :currency_short]
 
   defstruct @format_types
   defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
@@ -73,24 +74,29 @@ defmodule Cldr.Number.Format do
 
   ## Example
 
-      iex(1)> Cldr.Number.Format.decimal_format_list
-      ["#", "#,##,##0%", "#,##,##0.###", "#,##,##0.00¤",
-      "#,##,##0.00¤;(#,##,##0.00¤)", "#,##,##0 %", "#,##0%",
-      "#,##0.###", "#,##0.00 ¤", "#,##0.00 ¤;(#,##0.00 ¤)",
-      "#,##0.00¤", "#,##0.00¤;(#,##0.00¤)", "#,##0 %", "#0%",
-      "#0.######", "#0.00 ¤", "#E0", "%#,##0", "% #,##0",
-      "0.000000E+000", "[#E0]", "¤#,##,##0.00",
-      "¤#,##,##0.00;(¤#,##,##0.00)", "¤#,##0.00",
-      "¤#,##0.00;(¤#,##0.00)", "¤#,##0.00;¤-#,##0.00",
-      "¤#,##0.00;¤- #,##0.00", "¤ #,##,##0.00", "¤ #,##0.00",
-      "¤ #,##0.00;(¤ #,##0.00)", "¤ #,##0.00;¤-#,##0.00",
-      "¤ #,##0.00;¤ #,##0.00-", "¤ #,##0.00;¤ -#,##0.00",
-      "¤ #0.00", "‎¤#,##0.00", "‎¤#,##0.00;‎(¤#,##0.00)"]
+      Cldr.Number.Format.decimal_format_list ["#", "#,##,##0%",
+      #=> "#,##,##0.###", "#,##,##0.00¤", "#,##,##0.00¤;(#,##,##0.00¤)",
+      "#,##,##0 %", "#,##0%", "#,##0.###", "#,##0.00 ¤",
+      "#,##0.00 ¤;(#,##0.00 ¤)", "#,##0.00¤", "#,##0.00¤;(#,##0.00¤)",
+      "#,##0 %", "#0%", "#0.######", "#0.00 ¤", "#E0", "%#,##0", "% #,##0",
+      "0", "0.000000E+000", "0000 M ¤", "0000¤", "000G ¤", "000K ¤", "000M ¤",
+      "000T ¤", "000mM ¤", "000m ¤", "000 Bio'.' ¤", "000 Bln ¤", "000 Bn ¤",
+      "000 B ¤", "000 E ¤", "000 K ¤", "000 MRD ¤", "000 Md ¤", "000 Mio'.' ¤",
+      "000 Mio ¤", "000 Mld ¤", "000 Mln ¤", "000 Mn ¤", "000 Mrd'.' ¤",
+      "000 Mrd ¤", "000 Mr ¤", "000 M ¤", "000 NT ¤", "000 N ¤", "000 Tn ¤",
+      "000 Tr ¤", ...]
   """
+  # Take the list of formats for all locales.  There is one map per
+  # locale. Take the values of the members of the map.  Note that some
+  # of the values are themselves also a map (:short and :long formats) so
+  # we take their values too.  Then flatten the list, remove the nil entries
+  # and the struct header.  Remove duplicates and sort.  We're done.
   @decimal_format_list @decimal_formats
   |> Enum.map(fn {_locale, formats} -> Map.values(formats) end)
   |> Enum.map(&(hd(&1)))
   |> Enum.map(&(Map.values(&1)))
+  |> List.flatten
+  |> Enum.map(fn item -> if is_map(item), do: Map.values(item), else: item end)
   |> List.flatten
   |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
   |> Enum.uniq
@@ -109,19 +115,84 @@ defmodule Cldr.Number.Format do
 
   ## Examples
 
-      iex(2)> Cldr.Number.Format.decimal_formats_for "en"
-      %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
-      percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
+      iex> Cldr.Number.Format.decimal_formats_for("en")
+      %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
+       currency: "¤#,##0.00",
+       currency_short: %{"1000-count-one" => "¤0K",
+         "1000-count-other" => "¤0K",
+         "10000-count-one" => "¤00K",
+         "10000-count-other" => "¤00K",
+         "100000-count-one" => "¤000K",
+         "100000-count-other" => "¤000K",
+         "1000000-count-one" => "¤0M",
+         "1000000-count-other" => "¤0M",
+         "10000000-count-one" => "¤00M",
+         "10000000-count-other" => "¤00M",
+         "100000000-count-one" => "¤000M",
+         "100000000-count-other" => "¤000M",
+         "1000000000-count-one" => "¤0B",
+         "1000000000-count-other" => "¤0B",
+         "10000000000-count-one" => "¤00B",
+         "10000000000-count-other" => "¤00B",
+         "100000000000-count-one" => "¤000B",
+         "100000000000-count-other" => "¤000B",
+         "1000000000000-count-one" => "¤0T",
+         "1000000000000-count-other" => "¤0T",
+         "10000000000000-count-one" => "¤00T",
+         "10000000000000-count-other" => "¤00T",
+         "100000000000000-count-one" => "¤000T",
+         "100000000000000-count-other" => "¤000T"},
+       decimal_long: %{"1000-count-one" => "0 thousand",
+         "1000-count-other" => "0 thousand",
+         "10000-count-one" => "00 thousand",
+         "10000-count-other" => "00 thousand",
+         "100000-count-one" => "000 thousand",
+         "100000-count-other" => "000 thousand",
+         "1000000-count-one" => "0 million",
+         "1000000-count-other" => "0 million",
+         "10000000-count-one" => "00 million",
+         "10000000-count-other" => "00 million",
+         "100000000-count-one" => "000 million",
+         "100000000-count-other" => "000 million",
+         "1000000000-count-one" => "0 billion",
+         "1000000000-count-other" => "0 billion",
+         "10000000000-count-one" => "00 billion",
+         "10000000000-count-other" => "00 billion",
+         "100000000000-count-one" => "000 billion",
+         "100000000000-count-other" => "000 billion",
+         "1000000000000-count-one" => "0 trillion",
+         "1000000000000-count-other" => "0 trillion",
+         "10000000000000-count-one" => "00 trillion",
+         "10000000000000-count-other" => "00 trillion",
+         "100000000000000-count-one" => "000 trillion",
+         "100000000000000-count-other" => "000 trillion"},
+       decimal_short: %{"1000-count-one" => "0K",
+         "1000-count-other" => "0K",
+         "10000-count-one" => "00K",
+         "10000-count-other" => "00K",
+         "100000-count-one" => "000K",
+         "100000-count-other" => "000K",
+         "1000000-count-one" => "0M",
+         "1000000-count-other" => "0M",
+         "10000000-count-one" => "00M",
+         "10000000-count-other" => "00M",
+         "100000000-count-one" => "000M",
+         "100000000-count-other" => "000M",
+         "1000000000-count-one" => "0B",
+         "1000000000-count-other" => "0B",
+         "10000000000-count-one" => "00B",
+         "10000000000-count-other" => "00B",
+         "100000000000-count-one" => "000B",
+         "100000000000-count-other" => "000B",
+         "1000000000000-count-one" => "0T",
+         "1000000000000-count-other" => "0T",
+         "10000000000000-count-one" => "00T",
+         "10000000000000-count-other" => "00T",
+         "100000000000000-count-one" => "000T",
+         "100000000000000-count-other" => "000T"},
+       percent: "#,##0%",
+       scientific: "#E0", standard: "#,##0.###"}}
 
-      iex(1)> Cldr.Number.Format.decimal_formats_for "th"
-      %{latn: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
-      percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"},
-      thai: %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
-      percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}}
-
-      iex(2)> Cldr.Number.Format.decimal_formats_for "th", :thai
-      %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)", currency: "¤#,##0.00",
-      percent: "#,##0%", scientific: "#E0", standard: "#,##0.###"}
   """
   @spec decimal_formats_for(Cldr.locale) :: Map.t
   @spec decimal_formats_for(Cldr.locale, Cldr.Number.System.name) :: Map.t
@@ -158,27 +229,92 @@ defmodule Cldr.Number.Format do
     `:native`. See `Cldr.Number.Format.format_types_for/1` for the number
     system types available for a given `locale`.
 
-    * a `String.t` in which case it is used to look up the number system
+    * a `binary` in which case it is used to look up the number system
     directly (for exmple `"latn"` which is common for western european
     languages). See `Cldr.Number.Format.decimal_formats_for/1` for the
     available formats for a `locale`.
 
-  ## Examples
-
-      iex> Cldr.Number.Format.formats_for "en", "latn"
-      %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
-       currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
-       standard: "#,##0.###"}
-
-      iex> Cldr.Number.Format.formats_for "en", :default
-      %Cldr.Number.Format{accounting: "¤#,##0.00;(¤#,##0.00)",
-       currency: "¤#,##0.00", percent: "#,##0%", scientific: "#E0",
-       standard: "#,##0.###"}
+  ## Example
 
       iex> Cldr.Number.Format.formats_for "fr", :native
       %Cldr.Number.Format{accounting: "#,##0.00 ¤;(#,##0.00 ¤)",
-       currency: "#,##0.00 ¤", percent: "#,##0 %", scientific: "#E0",
-       standard: "#,##0.###"}
+        currency: "#,##0.00 ¤",
+        currency_short: %{"1000-count-one" => "0 k ¤",
+          "1000-count-other" => "0 k ¤",
+          "10000-count-one" => "00 k ¤",
+          "10000-count-other" => "00 k ¤",
+          "100000-count-one" => "000 k ¤",
+          "100000-count-other" => "000 k ¤",
+          "1000000-count-one" => "0 M ¤",
+          "1000000-count-other" => "0 M ¤",
+          "10000000-count-one" => "00 M ¤",
+          "10000000-count-other" => "00 M ¤",
+          "100000000-count-one" => "000 M ¤",
+          "100000000-count-other" => "000 M ¤",
+          "1000000000-count-one" => "0 Md ¤",
+          "1000000000-count-other" => "0 Md ¤",
+          "10000000000-count-one" => "00 Md ¤",
+          "10000000000-count-other" => "00 Md ¤",
+          "100000000000-count-one" => "000 Md ¤",
+          "100000000000-count-other" => "000 Md ¤",
+          "1000000000000-count-one" => "0 Bn ¤",
+          "1000000000000-count-other" => "0 Bn ¤",
+          "10000000000000-count-one" => "00 Bn ¤",
+          "10000000000000-count-other" => "00 Bn ¤",
+          "100000000000000-count-one" => "000 Bn ¤",
+          "100000000000000-count-other" => "000 Bn ¤"},
+        decimal_long: %{"1000-count-one" => "0 millier",
+          "1000-count-other" => "0 mille",
+          "10000-count-one" => "00 mille",
+          "10000-count-other" => "00 mille",
+          "100000-count-one" => "000 mille",
+          "100000-count-other" => "000 mille",
+          "1000000-count-one" => "0 million",
+          "1000000-count-other" => "0 millions",
+          "10000000-count-one" => "00 million",
+          "10000000-count-other" => "00 millions",
+          "100000000-count-one" => "000 million",
+          "100000000-count-other" => "000 millions",
+          "1000000000-count-one" => "0 milliard",
+          "1000000000-count-other" => "0 milliards",
+          "10000000000-count-one" => "00 milliard",
+          "10000000000-count-other" => "00 milliards",
+          "100000000000-count-one" => "000 milliards",
+          "100000000000-count-other" => "000 milliards",
+          "1000000000000-count-one" => "0 billion",
+          "1000000000000-count-other" => "0 billions",
+          "10000000000000-count-one" => "00 billions",
+          "10000000000000-count-other" => "00 billions",
+          "100000000000000-count-one" => "000 billions",
+          "100000000000000-count-other" => "000 billions"},
+        decimal_short: %{"1000-count-one" => "0 k",
+          "1000-count-other" => "0 k",
+          "10000-count-one" => "00 k",
+          "10000-count-other" => "00 k",
+          "100000-count-one" => "000 k",
+          "100000-count-other" => "000 k",
+          "1000000-count-one" => "0 M",
+          "1000000-count-other" => "0 M",
+          "10000000-count-one" => "00 M",
+          "10000000-count-other" => "00 M",
+          "100000000-count-one" => "000 M",
+          "100000000-count-other" => "000 M",
+          "1000000000-count-one" => "0 Md",
+          "1000000000-count-other" => "0 Md",
+          "10000000000-count-one" => "00 Md",
+          "10000000000-count-other" => "00 Md",
+          "100000000000-count-one" => "000 Md",
+          "100000000000-count-other" => "000 Md",
+          "1000000000000-count-one" => "0 Bn",
+          "1000000000000-count-other" => "0 Bn",
+          "10000000000000-count-one" => "00 Bn",
+          "10000000000000-count-other" => "00 Bn",
+          "100000000000000-count-one" => "000 Bn",
+          "100000000000000-count-other" => "000 Bn"},
+        percent: "#,##0 %",
+        scientific: "#E0",
+        standard: "#,##0.###"}
+
   """
   @spec formats_for(Cldr.locale, atom | String.t) :: Map.t
   def formats_for(locale \\ Cldr.get_locale(), number_system \\ :default)
@@ -208,8 +344,9 @@ defmodule Cldr.Number.Format do
 
   ## Example
 
-      iex(34)> Cldr.Number.Format.format_types_for
-      [:accounting, :currency, :percent, :scientific, :standard]
+      iex> Cldr.Number.Format.format_types_for
+      [:accounting, :currency, :currency_short, :decimal_long,
+      :decimal_short, :percent, :scientific, :standard]
   """
   @spec format_types_for(Cldr.locale, atom | String.t) :: [atom]
   def format_types_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
