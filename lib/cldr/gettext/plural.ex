@@ -32,12 +32,9 @@ if Code.ensure_loaded?(Gettext) do
     defp gettext_return(:few, _n),   do: 2
     defp gettext_return(:many, _n),  do: 3
 
-    # Many languages just have :one and :other so it
-    # makes sense to return "1" from :other when there are
-    # only 2 forms.  This is to align better with what is
-    # probably being defined in the Gettext .po files.
-    defp gettext_return(:other, 2),  do: 1
-    defp gettext_return(:other, _n), do: 4
+    # Since :other is the catch-all it should
+    # return a number 1 greater than the others
+    defp gettext_return(:other, n),  do: n - 1
 
     defp normalize_locale(locale) do
       String.replace(locale, "_", "-")
