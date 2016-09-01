@@ -276,6 +276,10 @@ defmodule Cldr.Config do
   end
 
   @spec normalize_short_format(Map.t) :: List.t
+  def normalize_short_format(nil) do
+    nil
+  end
+
   def normalize_short_format(format) do
     format
     |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range,"-")) end)
