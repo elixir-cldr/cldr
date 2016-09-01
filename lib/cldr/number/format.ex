@@ -37,10 +37,10 @@ defmodule Cldr.Number.Format do
   """
 
   @type format :: String.t
-  @format_types [:standard, :currency, :accounting, :scientific, :percent,
+  @format_styles [:standard, :currency, :accounting, :scientific, :percent,
                 :decimal_long, :decimal_short, :currency_short]
 
-  defstruct @format_types
+  defstruct @format_styles
   defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
   alias Cldr.File
   alias Cldr.Number.System
@@ -143,11 +143,11 @@ defmodule Cldr.Number.Format do
   end
 
   def decimal_formats_for(locale) do
-    raise ArgumentError, "Unknown locale #{inspect locale}."
+    raise Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}."
   end
 
   def decimal_formats_for(locale, number_system) do
-    raise ArgumentError,
+    raise Cldr.UnknownLocaleError,
     "Unknown locale #{inspect locale} or number system #{inspect number_system}."
   end
 
@@ -208,25 +208,25 @@ defmodule Cldr.Number.Format do
   end
 
   @doc """
-  Returns the format types available for a `locale`.
+  Returns the format styles available for a `locale`.
 
   * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
 
-  Format types standardise the access to a format task defined for a common
+  Format styles standardise the access to a format defined for a common
   use.  These types are `:standard`, `:currency`, `:accounting`, `:scientific`
-  and :percent.
+  and :percent, :currency_short, :decimal_short, :decimal_long.
 
   These types can be used when formatting a number for output.  For example
-  `Cldr.Number.to_string(123.456, as: :percent)`.
+  `Cldr.Number.to_string(123.456, format: :percent)`.
 
   ## Example
 
-      iex> Cldr.Number.Format.format_types_for
+      iex> Cldr.Number.Format.format_styles_for("en")
       [:accounting, :currency, :currency_short, :decimal_long,
       :decimal_short, :percent, :scientific, :standard]
   """
-  @spec format_types_for(Cldr.locale, atom | String.t) :: [atom]
-  def format_types_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
+  @spec format_styles_for(Cldr.locale, atom | String.t) :: [atom]
+  def format_styles_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
     formats_for(locale, number_system)
     |> Map.to_list
     |> Enum.reject(fn {k, v} -> is_nil(v) || k == :__struct__ end)
@@ -250,13 +250,13 @@ defmodule Cldr.Number.Format do
 
   ## Examples
 
-      iex(10)> Cldr.Number.Format.format_system_types_for "pl"
+      iex> Cldr.Number.Format.format_system_types_for "pl"
       [:default, :native]
 
-      iex(11)> Cldr.Number.Format.format_system_types_for "ru"
+      iex> Cldr.Number.Format.format_system_types_for "ru"
       [:default, :native]
 
-      iex(12)> Cldr.Number.Format.format_system_types_for "th"
+      iex> Cldr.Number.Format.format_system_types_for "th"
       [:default, :native]
   """
   @spec format_system_types_for(Cldr.locale) :: [atom]

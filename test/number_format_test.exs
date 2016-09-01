@@ -14,7 +14,7 @@ defmodule Number.Format.Test do
   end
 
   test "a currency format with no currency returns an error" do
-    assert {:error, _message} = Cldr.Number.to_string(1234, as: :currency)
+    assert {:error, _message} = Cldr.Number.to_string(1234, format: :currency)
   end
 
   test "minimum_grouping digits delegates to Cldr.Number.Symbol" do
@@ -34,18 +34,27 @@ defmodule Number.Format.Test do
   end
 
   test "that there is an exception if we get formats for an unknown locale" do
-    assert_raise ArgumentError, ~r/Unknown locale/, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/Unknown locale/, fn ->
       Format.decimal_formats_for("zzz")
     end
   end
 
   test "that there is an exception if we get formats for an unknown locale and number system" do
-    assert_raise ArgumentError, ~r/Unknown locale.*number system/, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/Unknown locale.*number system/, fn ->
       Format.decimal_formats_for("zzz", "zulu")
     end
   end
 
   test "that we get default formats_for" do
     assert Format.formats_for.__struct__ == Cldr.Number.Format
+  end
+
+  test "that when there is no format defined for a number system we get an error return" do
+    assert Cldr.Number.to_string(1234, locale: "he", number_system: "hebr") ==
+    {:error,
+     "The locale \"he\" with number system \"hebr\" does not define a format " <>
+     ":standard.  This usually happens when the number system is " <>
+     ":algorithmic rather than :numeric.  Either change options[:number_system] " <>
+     "or define a format string like format: \"#,##0.00\""}
   end
 end

@@ -1,5 +1,16 @@
 defmodule Cldr.Number.System do
+  @moduledoc """
+  A number system defines the digits (if they exist in this number system) or
+  or rules (if the number system does not have decimal digits).
+
+  The system name is also used as a key to define the separators that are used
+  when formatting a number is this number_system. See
+  `Cldr.Number.Symbol.number_symbols_for/2`.
+  """
+
   alias Cldr.File
+  alias Cldr.Number
+  alias Cldr.Number.Symbol
 
   defstruct [:name, :type, :digits, :rules]
 
@@ -8,10 +19,6 @@ defmodule Cldr.Number.System do
 
   @type name :: atom
   @type types :: :default | :native | :traditional | :finance
-
-  @moduledoc """
-  Cldr Number Systems definitions and reflection methods.
-  """
 
   @doc """
   Return the default number system type name.
@@ -118,11 +125,11 @@ defmodule Cldr.Number.System do
   end
 
   def number_systems_for(locale) do
-    raise ArgumentError, "Locale #{inspect locale} is not known."
+    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} is not known."
   end
 
   def number_system_names_for(locale) do
-    raise ArgumentError, "Locale #{inspect locale} is not known."
+    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} is not known."
   end
 
   def number_system_for(locale, system_type) when is_atom(system_type) do
@@ -131,7 +138,7 @@ defmodule Cldr.Number.System do
 
   def number_system_for(locale, system_name) do
     locale
-    |> Cldr.Number.System.number_systems_for
+    |> Number.System.number_systems_for
     |> Map.values
     |> Enum.uniq
     |> Enum.filter(&(&1.name == system_name))
@@ -151,7 +158,7 @@ defmodule Cldr.Number.System do
   @lint {Credo.Check.Refactor.Nesting, false}
   def number_systems_like(locale, number_system) do
     digits = number_system_for(locale, number_system).digits
-    symbols = Cldr.Number.Symbol.number_symbols_for(locale, number_system)
+    symbols = Symbol.number_symbols_for(locale, number_system)
 
     likes = Enum.map(Cldr.known_locales(), fn this_locale ->
       Enum.reduce number_system_names_for(locale), [], fn this_system, acc ->
@@ -160,7 +167,7 @@ defmodule Cldr.Number.System do
           acc
         system ->
           these_digits = system.digits
-          these_symbols = Cldr.Number.Symbol.number_symbols_for(this_locale, this_system)
+          these_symbols = Symbol.number_symbols_for(this_locale, this_system)
           if digits == these_digits && symbols == these_symbols do
             acc ++ {this_locale, this_system}
           end

@@ -104,7 +104,7 @@ defmodule Cldr.Number do
 
   @empty_string ""
   @default_options [
-    as:            :standard,
+    format:        :standard,
     currency:      nil,
     cash:          false,
     rounding_mode: :half_even,
@@ -112,6 +112,103 @@ defmodule Cldr.Number do
     locale:        Cldr.get_locale()
   ]
 
+  @doc """
+  Returns a number formatted according to a pattern and options.
+
+  * `number` is an integer, float or Decimal to be formatted
+
+  * `options` is a keyword list defining how the number is to be formatted. The
+    valid options are:
+
+    * `format`: the format style or a format string defining how the number is
+      formatted. See `Cldr.Number.Format` for how formats can be constructed.
+      See `Cldr.Number.Format.format_styles_for/1` to see what format styles
+      are available for a locale. The default `format` is `:standard`.
+
+    * `currency`: is the currency for which the number is formatted. For
+      available currencies see Cldr.Currency.known_currencies/0`. This option
+      is required if `format` is set to `:currency`.  If `currency` is set
+      and no `format` is set, `format` will be set to `:currency` as well.
+
+    * `cash`: a boolean which indicates whether a number being formatted as a
+      `:currency` is to be considered a cash value or not. Currencies can be
+      rounded differently depending on whether `cash` is `true` or `false`.
+
+    * `rounding_mode`: determines how a number is rounded to meet the precision
+      of the format requested. The available rounding modes are `:down`,
+      :half_up, :half_even, :ceiling, :floor, :half_down, :up. The default is
+      `:half_even`.
+
+    * `number_system`: determines which of the number systems for a locale
+      should be used to define the separators and digits for the formatted
+      number. If `number_system` is an `atom` then `number_system` is
+      interpreted as a number system. See
+      Cldr.Number.System.number_systems_for/1`. If the `number_system` is
+      `binary` then it is interpreted as a number system name. See
+      `Cldr.Number.System.number_system_names_for/1`. The default is `:default`.
+
+    * `locale`: determines the locale in which the number is formatted. See
+      `Cldr.known_locales/0`. THe default is `Cldr.get_locale()` which is the
+      locale currently in affect for this `Process` and which is set by
+      `Cldr.put_locale/1`.
+
+  ## Examples
+
+      iex> Cldr.Number.to_string 12345
+      "12,345"
+
+      iex> Cldr.Number.to_string 12345, locale: "fr"
+      "12 345"
+
+      iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
+      "12 345,00 $US"
+
+      iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+      "1.2345E4"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
+      "THB12,345.00"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
+      "THB12,345.00"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
+      "THB๑๒,๓๔๕.๐๐"
+
+  ## Errors
+
+  An error tuple `{:error, "message"}` will be returned if an error is detected.
+  The two most likely causes of an error return are:
+
+    * A format cannot be compiled. In this case the error tuple will look like:
+
+      iex> Cldr.Number.to_string(12345, format: "0#")
+      {:error, "Decimal format compiler: syntax error before: \"#\""}
+
+    * A currency was not specific for a format type of `format: :currency` or
+      `format: :accounting` or any other format that specifies a currency
+      symbol placeholder. In this case the error return looks like:
+
+      iex> Cldr.Number.to_string(12345, format: :accounting)
+      {:error,
+       "currency format \"¤#,##0.00;(¤#,##0.00)\" requires that options[:currency] be specified"}
+
+    * The format style requested is not defined for the `locale` and
+       `number_system`.  This happens typically when the number system is
+       :algorithmic rather than the more common :numeric.  In this case the
+       error return looks like:
+
+       iex> Number.to_string(1234, locale: "he", number_system: "hebr")
+       {:error,
+        "The locale \"he\" with number system \"hebr\" does not define a format :standard.  This usually happens when the number system is :algorithmic rather than :numeric.  Either change options[:number_system] or define a format string like format: \"#,##0.00\""}
+
+  ## Exceptions
+
+  An exception `Cldr.UnknownLocaleError` will be raised if the specific locale
+  is not known to `Cldr`.
+
+
+  """
   @spec to_string(number, [Keyword.t]) :: String.t
   def to_string(number, options \\ @default_options) do
     {format, options} = options
@@ -124,6 +221,17 @@ defmodule Cldr.Number do
     else
       to_string(number, format, options)
     end
+  end
+
+  defp to_string(_number, nil, options) do
+    {:error,
+      "The locale #{inspect options[:locale]} with number system " <>
+      "#{inspect options[:number_system]} does not define a format " <>
+      "#{inspect options[:format]}.  This usually happens when the number " <>
+      "system is :algorithmic rather than :numeric.  Either change " <>
+      "options[:number_system] or define a format string like " <>
+      "format: \"#,##0.00\""
+    }
   end
 
   # For formats not precompiled we need to compile first
@@ -548,21 +656,20 @@ defmodule Cldr.Number do
   # the winner.  If :currency is specified then the default :format
   # will be format: currency
   defp normalize_options(options, defaults) do
-    options = if options[:currency] && !options[:format] && !options[:as] do
-      options ++ [{:as, :currency}]
+    options = if options[:currency] && !options[:format] do
+      options ++ [{:format, :currency}]
     else
       options
     end
 
     options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
 
-    if options[:format] do
-      {options[:format], Keyword.delete(options, :as)}
+    if is_binary(options[:format]) do
+      {options[:format], Keyword.delete(options, :format)}
     else
-      options = Keyword.delete(options, :format)
       format = options[:locale]
       |> formats_for(options[:number_system])
-      |> Map.get(options[:as])
+      |> Map.get(options[:format])
       {format, options}
     end
   end
@@ -582,6 +689,6 @@ defmodule Cldr.Number do
   end
 
   defp currency_format?(format) do
-    String.contains?(format, Compiler.placeholder(:currency))
+    format && String.contains?(format, Compiler.placeholder(:currency))
   end
 end
