@@ -77,6 +77,7 @@ defmodule Cldr.Number do
   ignore min/max integer/fraction digits, or it may use them to the extent
   possible.
   """
+
   import Cldr.Macros
   import Cldr.Number.String
   import Cldr.Number.Format, only: [formats_for: 2]
@@ -88,6 +89,9 @@ defmodule Cldr.Number do
   alias Cldr.Number
   alias Cldr.Number.Math
   alias Cldr.Number.Format.Compiler
+
+  use Number.Generate.DecimalFormats
+  use Number.Generate.ShortFormats
 
   @type format_type ::
     :standard |
@@ -119,22 +123,6 @@ defmodule Cldr.Number do
       "options[:currency] be specified"}
     else
       to_string(number, format, options)
-    end
-  end
-
-  # Compile the known decimal formats extracted from the
-  # current configuration of Cldr.  This avoids having to tokenize
-  # parse and analyse the format on each invokation.  There
-  # are around 74 Cldr defined decimal formats so this isn't
-  # to burdensome on the compiler of the BEAM.
-  Enum.each Number.Format.decimal_format_list(), fn format ->
-    case Compiler.decode(format) do
-    {:ok, meta} ->
-      defp to_string(number, unquote(format), options) do
-        do_to_string(number, unquote(Macro.escape(meta)), options)
-      end
-    {:error, message} ->
-      raise CompileError, description: message
     end
   end
 
