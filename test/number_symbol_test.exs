@@ -3,15 +3,15 @@ defmodule Number.Symbol.Test do
 
   test "that we can get number symbols for a known locale" do
     assert Cldr.Number.Symbol.number_symbols_for("en", "latn") ==
-    %{decimal: ".", exponential: "E", group: ",", infinity: "∞",
-                  list: ";", minus_sign: "-", nan: "NaN", per_mille: "‰",
-                  percent_sign: "%", plus_sign: "+",
-                  superscripting_exponent: "×",
-                  time_separator: ":"}
+          %Cldr.Number.Symbol{decimal: ".", exponential: "E", group: ",",
+                infinity: "∞", list: ";", minus_sign: "-", nan: "NaN",
+                per_mille: "‰", percent_sign: "%", plus_sign: "+",
+                superscripting_exponent: "×", time_separator: ":"}
+
   end
 
   test "that we raise an error if we get minimum digits for an invalid locale" do
-    assert_raise ArgumentError, ~r/Unknown locale/, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/Unknown locale/, fn ->
       Cldr.Number.Symbol.minimum_grouping_digits_for("zzzzz")
     end
   end
