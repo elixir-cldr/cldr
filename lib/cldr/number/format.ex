@@ -91,17 +91,7 @@ defmodule Cldr.Number.Format do
   # of the values are themselves also a map (:short and :long formats) so
   # we take their values too.  Then flatten the list, remove the nil entries
   # and the struct header.  Remove duplicates and sort.  We're done.
-  @decimal_format_list @decimal_formats
-  |> Enum.map(fn {_locale, formats} -> Map.values(formats) end)
-  |> Enum.map(&(hd(&1)))
-  |> Enum.map(&(Map.values(&1)))
-  |> List.flatten
-  |> Enum.map(fn item -> if is_map(item), do: Map.values(item), else: item end)
-  |> List.flatten
-  |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
-  |> Enum.uniq
-  |> Enum.sort
-
+  @decimal_format_list File.read(:decimal_format_list)
   @spec decimal_format_list :: [format]
   def decimal_format_list do
     @decimal_format_list

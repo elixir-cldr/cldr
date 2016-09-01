@@ -274,4 +274,30 @@ defmodule Cldr.Config do
     end)
     locale_list |> List.flatten |> Enum.uniq
   end
+
+  @spec normalize_short_format(Map.t) :: List.t
+  def normalize_short_format(format) do
+    format
+    |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range,"-")) end)
+    |> Enum.map(&flatten_short_formats/1)
+    |> Enum.sort
+  end
+
+  @spec flatten_short_formats({binary, [] | String.t}) :: tuple
+  def flatten_short_formats({range, rules}) when is_list(rules) do
+    formats = Enum.map rules, fn {name, format} ->
+      plural_type = name
+      |> String.split("-")
+      |> Enum.reverse
+      |> List.first
+      |> String.to_atom
+
+      {plural_type, format}
+    end
+    {range, formats}
+  end
+
+  def flatten_short_formats(formats) do
+    formats
+  end
 end

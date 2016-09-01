@@ -2,6 +2,8 @@ ExUnit.start [trace: "--trace" in System.argv, timeout: 120_000]
 
 {:ok, files} = File.ls("./test/support")
 
-Enum.each files, fn(file) ->
+for file <- files,
+  Path.extname(file) in [".ex", ".exs"]
+do
   Code.require_file "support/#{file}", __DIR__
 end

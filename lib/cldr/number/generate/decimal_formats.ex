@@ -1,4 +1,9 @@
 defmodule Cldr.Number.Generate.DecimalFormats do
+  @docp """
+  Module to precompile known decimal formats that are then
+  wrapped in functions to optimize performance at runtime.
+  """
+
   defmacro __using__(_options \\ []) do
     def_compiled_formats()
   end
