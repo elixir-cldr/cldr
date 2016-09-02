@@ -47,15 +47,13 @@ defmodule Cldr.Number.Generate.ShortFormats do
   def def_do_to_string do
     for locale  <- Cldr.known_locales(),
         number_system <- System.number_system_names_for(locale),
-        style   <- Format.short_format_styles_for(locale, number_system),
-        format  <- Format.formats_for(locale, number_system) |> Map.get(style)
+        style   <- Format.short_format_styles_for(locale, number_system)
     do
-      range = String.to_integer(elem(format, 0))
+      formats = Format.formats_for(locale, number_system) |> Map.get(style)
       quote do
         @spec do_to_short_string(number, atom, Locale.t, binary, Keyword.t) :: List.t
-        def do_to_short_string(number, unquote(style), unquote(locale),
-        unquote(number_system), options) when number <= unquote(range) do
-          IO.puts "do_to_string for range #{inspect unquote(range)}"
+        def do_to_short_string(number, unquote(style), unquote(locale), unquote(number_system), options) do
+          unquote(formats)
         end
       end
     end
