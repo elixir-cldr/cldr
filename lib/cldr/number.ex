@@ -90,7 +90,10 @@ defmodule Cldr.Number do
   alias Cldr.Number.Math
   alias Cldr.Number.Format.Compiler
 
+  # Compiles known decimal formats and creates functions to process them
   use Number.Generate.DecimalFormats
+
+  # Creates functions to process short formats
   use Number.Generate.ShortFormats
 
   @type format_type ::
@@ -408,7 +411,6 @@ defmodule Cldr.Number do
 
     {mantissa, exponent}
   end
-
 
   # Adjust the number of digits in the exponent to match the minimum
   # number of exponent digits

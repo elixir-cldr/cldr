@@ -246,7 +246,7 @@ defmodule Cldr.Number.Format do
 
   ## Example
 
-      iex> Number.Format.short_format_styles_for("he")
+      iex> Cldr.Number.Format.short_format_styles_for("he")
       [:currency_short, :decimal_long, :decimal_short]
   """
   def short_format_styles_for(locale, number_system \\ :default) do

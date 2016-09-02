@@ -10,6 +10,16 @@ defmodule Cldr.Number.Generate.ShortFormats do
     def_to_string() ++ def_do_to_string()
   end
 
+  @docp """
+  Generates one function for each type of short format (currently there
+  are three defined:  :decimal_short, :decimal_long, :currency_short).
+  The function signature matches that of the other `to_string/3` functions
+  defined in Cldr.Number.  However these functions retain a format as an
+  atom which means these short forms will dispatch to the functions defined
+  below.  This lets us preserve the internal api which is
+  `to_string(number, format, options)` but branch to the specific functions
+  that then decompose each of the different short formats.
+  """
   defp def_to_string do
     for style <- Format.short_format_styles() do
       quote do
@@ -26,6 +36,14 @@ defmodule Cldr.Number.Generate.ShortFormats do
     end
   end
 
+  @docp """
+  Generates one function for the cartesian product of local, number_system,
+  style and format.  Thats about 2 * 3 * 10 functions per locale.  There are
+  511 locales in total used in testing which so far means compilation never
+  ends.  In development (7 locales) and most production environments (< 30
+  locales) this would not appear to be an issue.  But a better solution is
+  required.
+  """
   def def_do_to_string do
     for locale  <- Cldr.known_locales(),
         number_system <- System.number_system_names_for(locale),
@@ -34,8 +52,9 @@ defmodule Cldr.Number.Generate.ShortFormats do
     do
       range = String.to_integer(elem(format, 0))
       quote do
-        def do_to_short_string(number, unquote(style), unquote(locale), unquote(number_system), options)
-        when number <= unquote(range) do
+        @spec do_to_short_string(number, atom, Locale.t, binary, Keyword.t) :: List.t
+        def do_to_short_string(number, unquote(style), unquote(locale),
+        unquote(number_system), options) when number <= unquote(range) do
           IO.puts "do_to_string for range #{inspect unquote(range)}"
         end
       end
