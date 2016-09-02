@@ -37,13 +37,18 @@ defmodule Cldr.Number.Format do
   """
 
   @type format :: String.t
-  @format_styles [:standard, :currency, :accounting, :scientific, :percent,
-                :decimal_long, :decimal_short, :currency_short]
+  @short_format_styles [:decimal_long, :decimal_short, :currency_short]
+  @format_styles [:standard, :currency, :accounting, :scientific, :percent] ++
+                  @short_format_styles
 
   defstruct @format_styles
   defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
   alias Cldr.File
   alias Cldr.Number.System
+
+  def short_format_styles do
+    @short_format_styles
+  end
 
   @doc """
   The decimal formats in configured locales.
@@ -232,6 +237,28 @@ defmodule Cldr.Number.Format do
     |> Enum.reject(fn {k, v} -> is_nil(v) || k == :__struct__ end)
     |> Enum.into(%{})
     |> Map.keys
+  end
+
+  @doc """
+  Returns the short formats available for a locale.
+
+  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
+
+  ## Example
+
+      iex> Number.Format.short_format_styles_for("he")
+      [:currency_short, :decimal_long, :decimal_short]
+  """
+  def short_format_styles_for(locale, number_system \\ :default) do
+    formats = locale
+    |> format_styles_for(number_system)
+    |> MapSet.new
+
+    short_formats = @short_format_styles
+    |> MapSet.new
+
+    MapSet.intersection(formats, short_formats)
+    |> MapSet.to_list
   end
 
 

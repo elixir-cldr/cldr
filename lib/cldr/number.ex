@@ -95,8 +95,9 @@ defmodule Cldr.Number do
 
   @type format_type ::
     :standard |
-    :short |
-    :long |
+    :decimal_short |
+    :decimal_long |
+    :currencu_short |
     :percent |
     :accounting |
     :scientific |
@@ -655,6 +656,7 @@ defmodule Cldr.Number do
   # Merge options and default options with supplied options always
   # the winner.  If :currency is specified then the default :format
   # will be format: currency
+  @short_format_styles Number.Format.short_format_styles()
   defp normalize_options(options, defaults) do
     options = if options[:currency] && !options[:format] do
       options ++ [{:format, :currency}]
@@ -664,13 +666,16 @@ defmodule Cldr.Number do
 
     options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
 
-    if is_binary(options[:format]) do
-      {options[:format], Keyword.delete(options, :format)}
-    else
-      format = options[:locale]
-      |> formats_for(options[:number_system])
-      |> Map.get(options[:format])
-      {format, options}
+    case format = options[:format] do
+     format when is_binary(format) ->
+       {format, options}
+     format when is_atom(format) and format in @short_format_styles ->
+       {format, options}
+     _ ->
+       format = options[:locale]
+       |> formats_for(options[:number_system])
+       |> Map.get(options[:format])
+       {format, options}
     end
   end
 
@@ -688,7 +693,11 @@ defmodule Cldr.Number do
     {format, Keyword.put(options, :pattern, :positive)}
   end
 
-  defp currency_format?(format) do
+  defp currency_format?(format) when is_atom(format) do
+    format == :currency_short
+  end
+
+  defp currency_format?(format) when is_binary(format) do
     format && String.contains?(format, Compiler.placeholder(:currency))
   end
 end

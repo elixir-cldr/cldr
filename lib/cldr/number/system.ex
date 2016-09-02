@@ -145,6 +145,15 @@ defmodule Cldr.Number.System do
     |> List.first
   end
 
+  def system_name_from(system_name, locale \\ Cldr.get_locale())
+  def system_name_from(system_name, locale) when is_atom(system_name) do
+    number_systems_for(locale)[system_name].name
+  end
+
+  def system_name_from(system_name, _locale) when is_binary(system_name) do
+    system_name
+  end
+
   @doc """
   Locale and number systems that have the same digits and separators as the
   supplied one.
