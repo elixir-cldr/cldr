@@ -52,9 +52,6 @@ defmodule Number.Format.Test do
   test "that when there is no format defined for a number system we get an error return" do
     assert Cldr.Number.to_string(1234, locale: "he", number_system: "hebr") ==
     {:error,
-     "The locale \"he\" with number system \"hebr\" does not define a format " <>
-     ":standard.  This usually happens when the number system is " <>
-     ":algorithmic rather than :numeric.  Either change options[:number_system] " <>
-     "or define a format string like format: \"#,##0.00\""}
+      "The locale \"he\" with number system \"hebr\" does not define a format :standard."}
   end
 end
