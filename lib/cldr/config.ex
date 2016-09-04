@@ -283,6 +283,7 @@ defmodule Cldr.Config do
   def normalize_short_format(format) do
     format
     |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range,"-")) end)
+    |> Enum.map(fn {range, rules} -> {String.to_integer(range), rules} end)
     |> Enum.map(&flatten_short_formats/1)
     |> Enum.sort
   end

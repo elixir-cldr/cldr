@@ -1,6 +1,6 @@
 defmodule Cldr.Downloader do
   def download(base_url, required_files, destination_dir) do
-    test File.mkdir(destination_dir), destination_dir
+    ensure File.mkdir(destination_dir), destination_dir
     add_dir_to_gitignore(destination_dir)
 
     required_files
@@ -58,9 +58,9 @@ defmodule Cldr.Downloader do
     System.cmd("java", args ++ ["supplemental"], cd: destination_dir)
   end
 
-  def test(:ok, _dir), do: :ok
-  def test({:error, :eexist}, _dir), do: :ok
-  def test(error, dir) do
+  def ensure(:ok, _dir), do: :ok
+  def ensure({:error, :eexist}, _dir), do: :ok
+  def ensure(error, dir) do
     raise RuntimeError, "#{inspect error}: Could not create #{inspect dir}"
   end
 end
