@@ -38,9 +38,7 @@ Without any specific configuration Cldr will support the "en" locale only.  To s
 
 Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
 
-If you are also using `Gettext` then you can tell `Cldr` to use that module to inform `Cldr` about which locales you wish to configure.  By default `Cldr` will use the `full` dataset of Cldr.  If you prefer you can configure the `:modern` set instead.
-
-For more configuration information see [the configuration guide](2_config,html)
+If you are also using `Gettext` then you can tell `Cldr` to use that module to inform `Cldr` about which locales you wish to configure.  By default `Cldr` will use the `:full` dataset of Cldr.  If you prefer you can configure the `:modern` set instead.
 
 ## Formatting Numbers
 
@@ -58,7 +56,7 @@ The `Cldr.Number` module provides number formatting.  The public API for number 
       iex(4)> Cldr.Number.to_string 12345, format: "#E0"
       "1.2345E4"
 
-See the [Number Formatting](3_number_formats.html) guide for further information or in `iex` type `h Cldr.Number` and `h Cldr.Number.to_string`
+See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
 
 ## Formatting Lists
 
@@ -73,7 +71,7 @@ The `Cldr.List` module provides list formatting.  The public API for list format
       iex> Cldr.List.to_string(["a", "b", "c"], locale: "fr")
       "a, b et c"
 
-See the [List Formatting](4_list_formats.html) guide for further information or in or in `iex` type `h Cldr.List` and `h Cldr.List.to_string`
+Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
 ## Formatting Dates, Times, Units and Other Stuff
 
@@ -87,18 +85,18 @@ There is an experimentation plurals module for Gettext called `Cldr.Gettext.Plur
       use Gettext, plural_forms: Cldr.Gettext.Plural
     end
 
-`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if for some reason it can't resolve the plurality.
+`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.
 
 ## Phoenix Integration
 
-There is an imcomplete (ie development not finished) implemenation of a `Plug` intended to parse the HTTP `accept-language` header into `Cldr` compatible locale and number system.  Since it's not development complete it definitely won't work yet.  Comments and ideas (and code) are, however, welcome.
+There is an imcomplete (ie development not finished) implemenation of a `Plug` intended to parse the HTTP `accept-language` header into `Cldr` compatible locale and number system.  Since it's not development complete it definitely won't work yet.  Comments and ideas (and pull requests) are, however, welcome.
 
 ## About Locale strings
 
 Note that `Cldr` defines locale string according to the Unicode standard:
 
 * Language codes are two lowercase letters (ie "en", not "EN")
-* Potentially one or more modifiers separated by "-" (dash), not a "_" __(underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "_" into "-" for compatibility.
+* Potentially one or more modifiers separated by "-" (dash), not a "_" (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "_" into "-" for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example "pt-BR" is the locale referring to Brazilian Portugese.
 * In `Cldr` a locale is always a `binary` and never an `atom`.  Locale strings are often passed around in HTTP headers and converting to atoms creates an attack vector we can do without.
 * The locales known to `Cldr` can be retrieved by `Cldr.known_locales` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales` to get the locales available in the CLDR data repository.
@@ -106,3 +104,5 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 ## Testing
 
 Tests cover the full 511 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+
+Tests are run on Elixir 1.3.2 and on master (currently 1.4.0-dev)
