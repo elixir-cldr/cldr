@@ -88,7 +88,6 @@ defmodule Cldr.Test.Number.Format do
       {1234, "1K",               [format: :short]},
       {12345, "12K",             [format: :short]},
       {1234.5, "1K",             [format: :short]},
-      {Decimal.new(1234), "1K",  [format: :short]},
       {12345678, "12M",          [format: :short]},
       {1234567890, "1B",         [format: :short]},
       {1234567890000, "1T",      [format: :short]},
