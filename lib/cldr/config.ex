@@ -10,13 +10,13 @@ defmodule Cldr.Config do
   within the CLDR repository will be available for use.  There
   are currently 511 locales defined in CLDR.
 
-      config :cldr,
+      config :ex_cldr,
         locales: ["en", "fr"]
 
   It's also possible to use the locales from a Gettext
   configuration:
 
-      config :cldr,
+      config :ex_cldr,
         locales: ["en", "fr"]
         gettext: App.Gettext
 
@@ -27,7 +27,7 @@ defmodule Cldr.Config do
   useful when dealing with locales that have many regional variants
   like English (over 100!) and French.  For example:
 
-      config :cldr,
+      config :ex_cldr,
         locales: ["fr-*", "en-[A-Z]+"]
 
   will configure all French locales and all English locales that have
@@ -37,7 +37,7 @@ defmodule Cldr.Config do
   As a special case, all locales in CLDR can be configured
   by using the keyword `:all`.  For example:
 
-      config :cldr,
+      config :ex_cldr,
         locales: :all
 
   *Configuring all locales is not recommended*. Doing so
@@ -52,7 +52,7 @@ defmodule Cldr.Config do
   `Cldr` uses the `full` set.  To use the `modern` set, configure the
   `:dataset` configuration key.  For example:
 
-      config :cldr,
+      config :ex_cldr,
         locales: ["en", "fr"]
         dataset: :modern
   """
@@ -73,7 +73,7 @@ defmodule Cldr.Config do
   """
   @full_or_modern "full"
   def full_or_modern do
-    Application.get_env(:cldr, :dataset) || @full_or_modern
+    Application.get_env(:ex_cldr, :dataset) || @full_or_modern
   end
 
   @doc """
@@ -105,7 +105,7 @@ defmodule Cldr.Config do
   """
   @spec gettext :: atom
   def gettext do
-    Application.get_env(:cldr, :gettext)
+    Application.get_env(:ex_cldr, :gettext)
   end
 
   @doc """
@@ -119,7 +119,7 @@ defmodule Cldr.Config do
   """
   @spec default_locale :: Locale.t
   def default_locale do
-    app_default = Application.get_env(:cldr, :default_locale)
+    app_default = Application.get_env(:ex_cldr, :default_locale)
     cond do
       app_default ->
         app_default
@@ -186,7 +186,7 @@ defmodule Cldr.Config do
   """
   @spec configured_locales :: [Locale.t]
   def configured_locales do
-    case app_locales = Application.get_env(:cldr, :locales) do
+    case app_locales = Application.get_env(:ex_cldr, :locales) do
       :all  -> @all_locales
       nil   -> [default_locale()]
       _     -> expand_locales(app_locales)

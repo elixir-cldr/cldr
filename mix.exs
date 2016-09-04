@@ -44,7 +44,8 @@ defmodule Cldr.Mixfile do
     [
       maintainers: ["Kip Cole"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/kipcole9/cldr"}
+      links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
+      files: ["lib", "data", "guides", "mix.exs", "README*"]
     ]
   end
 

@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Cldr.Download do
   @download_url    "http://unicode.org/Public/cldr/latest"
   @required_files  ["core.zip", "tools.zip", "keyboards.zip"]
   @download_dir    "downloads"
-  @destination_dir Path.join(Cldr.Config.data_dir(), @download_dir)
+  @destination_dir Path.join(Cldr.Config.app_home(), @download_dir)
   @need_utils      ["wget", "java", "find", "rm"]
 
   def run(_) do
