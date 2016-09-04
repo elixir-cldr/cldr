@@ -231,10 +231,7 @@ defmodule Cldr.Number do
     {:error,
       "The locale #{inspect options[:locale]} with number system " <>
       "#{inspect options[:number_system]} does not define a format " <>
-      "#{inspect options[:format]}.  This usually happens when the number " <>
-      "system is :algorithmic rather than :numeric.  Either change " <>
-      "options[:number_system] or define a format string like " <>
-      "format: \"#,##0.00\""
+      "#{inspect options[:format]}."
     }
   end
 
@@ -662,6 +659,18 @@ defmodule Cldr.Number do
   defp normalize_options(options, defaults) do
     options = if options[:currency] && !options[:format] do
       options ++ [{:format, :currency}]
+    else
+      options
+    end
+
+    options = if options[:format] == :short && options[:currency] do
+      options = Keyword.delete(options, :format) |> Keyword.put(:format, :currency_short)
+    else
+      options
+    end
+
+    options = if options[:format] == :short && !options[:currency] do
+      options = Keyword.delete(options, :format) |> Keyword.put(:format, :decimal_short)
     else
       options
     end
