@@ -34,7 +34,7 @@ defmodule Number.Format.Test do
   end
 
   test "that there is an exception if we get formats for an unknown locale" do
-    assert_raise Cldr.UnknownLocaleError, ~r/Unknown locale/, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale \"zzzzz\" is not known./, fn ->
       Format.decimal_formats_for("zzz")
     end
   end
