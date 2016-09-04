@@ -79,13 +79,13 @@ Not currently supported, but they're next on the development priority list.
 
 ## Gettext Integration
 
-There is an experimentation plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by
+There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by
 
     defmodule MyApp.Gettext do
       use Gettext, plural_forms: Cldr.Gettext.Plural
     end
 
-`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.
+`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
 
 ## Phoenix Integration
 
