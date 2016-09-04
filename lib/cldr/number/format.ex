@@ -148,7 +148,7 @@ defmodule Cldr.Number.Format do
   end
 
   def decimal_formats_for(locale) do
-    raise Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}."
+    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
   end
 
   def decimal_formats_for(locale, number_system) do

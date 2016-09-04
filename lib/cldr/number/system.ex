@@ -125,11 +125,11 @@ defmodule Cldr.Number.System do
   end
 
   def number_systems_for(locale) do
-    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} is not known."
+    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
   end
 
   def number_system_names_for(locale) do
-    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} is not known."
+    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
   end
 
   def number_system_for(locale, system_type) when is_atom(system_type) do

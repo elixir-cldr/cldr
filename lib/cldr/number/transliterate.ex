@@ -156,7 +156,7 @@ defmodule Cldr.Number.Transliterate do
   end
 
   def transliterate(_digit, locale, number_system) do
-    raise ArgumentError, """
+    raise Cldr.UnknownLocaleError, """
     Locale #{inspect locale} or number system #{inspect number_system}
     (or the combination of the two) is not known.
     """

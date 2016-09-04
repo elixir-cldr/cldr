@@ -99,7 +99,7 @@ defmodule Cldr.File do
     |> read
     |> Enum.map(fn {_locale, formats} -> Map.values(formats) end)
     |> Enum.map(&(hd(&1)))
-    |> Enum.map(&(Map.values(&1)))
+    |> Enum.flat_map(&(Map.values(&1)))
     |> List.flatten
     |> Enum.map(&extract_formats/1)
     |> List.flatten

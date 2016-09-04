@@ -10,14 +10,14 @@ defmodule Number.System.Test do
 
   test "that number_systems_for raises when the locale is not known" do
     locale = "zzz"
-    assert_raise Cldr.UnknownLocaleError, ~r/Locale "zzz" is not known./, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale "zzz" is not known./, fn ->
       Cldr.Number.System.number_systems_for(locale)
     end
   end
 
   test "that number_system_names_for raises when the locale is not known" do
     locale = "zzz"
-    assert_raise Cldr.UnknownLocaleError, ~r/Locale "zzz" is not known./, fn ->
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale "zzz" is not known./, fn ->
       Cldr.Number.System.number_system_names_for(locale)
     end
   end

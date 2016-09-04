@@ -221,7 +221,7 @@ defmodule Cldr.Number do
 
     if currency_format?(format) && !Keyword.get(options, :currency) do
       {:error, "currency format #{inspect format} requires that " <>
-      "options[:currency] be specified"}
+        "options[:currency] be specified"}
     else
       to_string(number, format, options)
     end

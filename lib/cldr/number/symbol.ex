@@ -116,10 +116,10 @@ defmodule Cldr.Number.Symbol do
   end
 
   def number_symbols_for(locale) do
-    raise Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}."
+    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
   end
 
   def minimum_grouping_digits_for(locale) do
-    raise Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}."
+    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
   end
 end

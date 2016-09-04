@@ -3,7 +3,8 @@ defmodule Cldr.Gettext.Plural do
   Defines a Plural module for Gettext that uses the `Cldr` plural rules.
   """
 
-  # @behaviour Gettext.Plural
+  @behaviour Gettext.Plural
+
   alias Cldr.Number.Cardinal
   alias Cldr.Locale
 
@@ -29,9 +30,9 @@ defmodule Cldr.Gettext.Plural do
 
 
   defp gettext_return(:zero, _n),  do: 0
-  defp gettext_return(:one, _n),   do: 1
-  defp gettext_return(:two, _n),   do: 2
-  defp gettext_return(:few, _n),   do: 3
+  defp gettext_return(:one,  _n),  do: 1
+  defp gettext_return(:two,  _n),  do: 2
+  defp gettext_return(:few,  _n),  do: 3
   defp gettext_return(:many, _n),  do: 4
 
   # Since :other is the catch-all it should

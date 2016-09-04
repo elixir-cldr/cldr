@@ -47,23 +47,38 @@ defmodule Cldr.Config do
   The `Cldr` test configuration does configure all locales in order
   to ensure good test coverage.  This is done at the expense
   of significant compile time.
+
+  CLDR includes two sets of data:  the `full` and the `modern`.  By default
+  `Cldr` uses the `full` set.  To use the `modern` set, configure the
+  `:dataset` configuration key.  For example:
+
+      config :cldr,
+        locales: ["en", "fr"]
+        dataset: :modern
   """
 
-  @doc """
-  Return which set of CLDR repository data we are using:
-  the full set or the modern set.
-  """
   alias Cldr.Locale
 
   @type t :: binary
 
   @default_locale "en"
 
+
+  @doc """
+  Return which set of CLDR repository data we are using:
+  the full set or the modern set.
+
+  If the configuration key `:dataset` is set then use
+  that value, otherwise defaults to `full`.
+  """
   @full_or_modern "full"
   def full_or_modern do
-    @full_or_modern
+    Application.get_env(:cldr, :dataset) || @full_or_modern
   end
 
+  @doc """
+  Return the root path of the cldr application
+  """
   @app_home_dir Path.join(__DIR__, "/../..") |> Path.expand
   def app_home do
     @app_home_dir
@@ -275,11 +290,13 @@ defmodule Cldr.Config do
     locale_list |> List.flatten |> Enum.uniq
   end
 
+  @doc false
   @spec normalize_short_format(Map.t) :: List.t
   def normalize_short_format(nil) do
     nil
   end
 
+  @doc false
   def normalize_short_format(format) do
     format
     |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range,"-")) end)
@@ -288,6 +305,7 @@ defmodule Cldr.Config do
     |> Enum.sort
   end
 
+  @doc false
   @spec flatten_short_formats({binary, [] | String.t}) :: tuple
   def flatten_short_formats({range, rules}) when is_list(rules) do
     formats = Enum.map rules, fn {name, format} ->
@@ -302,6 +320,7 @@ defmodule Cldr.Config do
     {range, formats}
   end
 
+  @doc false
   def flatten_short_formats(formats) do
     formats
   end
