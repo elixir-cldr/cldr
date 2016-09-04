@@ -1,4 +1,4 @@
-# Read Me
+# Elixir Cldr
 ![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr) ![Deps Status](https://beta.hexfaktor.org/badge/all/github/kipcole9/cldr.svg)
 
 ## Getting Started
@@ -11,11 +11,11 @@ Add `cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:cldr, "~> 0.0.1"}
+        {:ex_cldr, "~> 0.0.1"}
       ]
     end
 
-then retrieve `cldr` from [hex](http://hex.pm):
+then retrieve `ex_cldr` from [hex](http://hex.pm):
 
     mix deps.get
     mix deps.compile
@@ -23,17 +23,17 @@ then retrieve `cldr` from [hex](http://hex.pm):
 Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release:
 
     def application do
-      [applications: [:cldr]]
+      [applications: [:ex_cldr]]
     end
 
 ## Quick Configuration
 
 Without any specific configuration Cldr will support the "en" locale only.  To support additional locales update your `config.exs` file (or the relevant environment version).
 
-    config :cldr,
+    config :ex_cldr,
       default_locale: "en",
       locales: ["fr-*", "pt-BR", "en", "pl", "ru", "th", "he"],
-      gettext: Cldr.Gettext,
+      gettext: MyApp.Gettext,
       dataset: :full
 
 Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
@@ -75,16 +75,34 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 See the [List Formatting](4_list_formats.html) guide for further information or in or in `iex` type `h Cldr.List` and `h Cldr.List.to_string`
 
-## Formatting Dates, Times, Units
+## Formatting Dates, Times, Units and Other Stuff
 
 Not currently supported, but they're next on the development priority list.
 
+## Gettext Integration
+
+There is an experimentation plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by
+
+    defmodule MyApp.Gettext do
+      use Gettext, plural_forms: Cldr.Gettext.Plural
+    end
+
+`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if for some reason it can't resolve the plurality.
+
+## Phoenix Integration
+
+There is an imcomplete (ie development not finished) implemenation of a `Plug` intended to parse the HTTP `accept-language` header into `Cldr` compatible locale and number system.  Since it's not development complete it definitely won't work yet.  Comments and ideas (and code) are, however, welcome.
+
 ## About Locale strings
 
-Note that `Cldr` defines locales according to the Unicode standard:
+Note that `Cldr` defines locale string according to the Unicode standard:
 
 * Language codes are two lowercase letters (ie "en", not "EN")
-* Potentially one of more modifiers separated by "-" (dash), not a "_" (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "_" into "-" for compatibility.
+* Potentially one or more modifiers separated by "-" (dash), not a "_" __(underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "_" into "-" for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example "pt-BR" is the locale referring to Brazilian Portugese.
 * In `Cldr` a locale is always a `binary` and never an `atom`.  Locale strings are often passed around in HTTP headers and converting to atoms creates an attack vector we can do without.
 * The locales known to `Cldr` can be retrieved by `Cldr.known_locales` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales` to get the locales available in the CLDR data repository.
+
+## Testing
+
+Tests cover the full 511 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.

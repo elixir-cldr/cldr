@@ -2,7 +2,7 @@
   "bunt": {:hex, :bunt, "0.1.6", "5d95a6882f73f3b9969fdfd1953798046664e6f77ec4e486e6fafc7caad97c6f", [:mix], []},
   "certifi": {:hex, :certifi, "0.4.0", "a7966efb868b179023618d29a407548f70c52466bf1849b9e8ebd0e34b7ea11f", [:rebar3], []},
   "credo": {:hex, :credo, "0.4.11", "03a64e9d53309b7132556284dda0be57ba1013885725124cfea7748d740c6170", [:mix], [{:bunt, "~> 0.1.6", [hex: :bunt, optional: false]}]},
-  "decimal": {:git, "https://github.com/ericmj/decimal.git", "2d0e5f2ffb45d377f6a25a642bc27a0f56e2e3d3", []},
+  "decimal": {:hex, :decimal, "1.1.2", "79a769d4657b2d537b51ef3c02d29ab7141d2b486b516c109642d453ee08e00c", [:mix], []},
   "earmark": {:hex, :earmark, "1.0.1", "2c2cd903bfdc3de3f189bd9a8d4569a075b88a8981ded9a0d95672f6e2b63141", [:mix], []},
   "ex_doc": {:hex, :ex_doc, "0.13.0", "aa2f8fe4c6136a2f7cfc0a7e06805f82530e91df00e2bff4b4362002b43ada65", [:mix], [{:earmark, "~> 1.0", [hex: :earmark, optional: false]}]},
   "excoveralls": {:hex, :excoveralls, "0.5.6", "35a903f6f78619ee7f951448dddfbef094b3a0d8581657afaf66465bc930468e", [:mix], [{:exjsx, "~> 3.0", [hex: :exjsx, optional: false]}, {:hackney, ">= 0.12.0", [hex: :hackney, optional: false]}]},

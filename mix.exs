@@ -4,7 +4,7 @@ defmodule Cldr.Mixfile do
   @version "0.0.1-dev"
 
   def project do
-    [app: :cldr,
+    [app: :ex_cldr,
      version: @version,
      elixir: "~> 1.3",
      name: "Cldr",
@@ -32,7 +32,7 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.1"},
-      {:decimal, github: "ericmj/decimal" },
+      {:decimal, "~> 1.1"},
       {:benchfella, "~> 0.3.0", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},

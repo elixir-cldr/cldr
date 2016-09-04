@@ -50,6 +50,7 @@ defmodule Cldr.List do
   @spec to_string(List.t, Keyword.t) :: String.t
 
   # For when the list is empty
+  def to_string(list, options \\ [])
   def to_string([], _options) do
     ""
   end
