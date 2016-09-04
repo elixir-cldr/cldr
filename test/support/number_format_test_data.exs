@@ -77,11 +77,26 @@ defmodule Cldr.Test.Number.Format do
 
       # Maximum digits
       {1234, "34",               [format: "00"]},
-      {1, "01.00",               [format: "00.00"]}
+      {1, "01.00",               [format: "00.00"]},
 
       # Scientific formats with grouping
       # {1234, "1.234E3",          [format: "#,###E0"]},
       # {12.34, "0.012E3",         [format: "#,###E0"]}
+
+      # Short formats
+      {123, "123",               [format: :short]},
+      {1234, "1K",               [format: :short]},
+      {12345, "12K",             [format: :short]},
+      {1234.5, "1K",             [format: :short]},
+      {Decimal.new(1234), "1K",  [format: :short]},
+      {12345678, "12M",          [format: :short]},
+      {1234567890, "1B",         [format: :short]},
+      {1234567890000, "1T",      [format: :short]},
+
+      {1234, "1 thousand",       [format: :long]},
+      {1234567890, "1 billion",  [format: :long]},
+
+      {1234, "$1.23K",           [format: :short, currency: "USD"]}
     ]
   end
 

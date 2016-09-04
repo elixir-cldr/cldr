@@ -675,6 +675,12 @@ defmodule Cldr.Number do
       options
     end
 
+    options = if options[:format] == :long && !options[:currency] do
+      options = Keyword.delete(options, :format) |> Keyword.put(:format, :decimal_long)
+    else
+      options
+    end
+
     options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
 
     case format = options[:format] do
