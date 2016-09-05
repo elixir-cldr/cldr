@@ -93,11 +93,11 @@ defmodule Cldr.Number do
   # Compiles known decimal formats and creates functions to process them
   use Number.Generate.DecimalFormats
 
-  # Function to process the long currency format
-  use Number.Generate.CurrencyFormats
-
   # Creates functions to process short formats
   use Number.Generate.ShortFormats
+
+  # Function to process the long currency format
+  use Number.Generate.CurrencyFormats
 
   @type format_type ::
     :standard |
@@ -111,6 +111,7 @@ defmodule Cldr.Number do
     :currency
 
   @empty_string ""
+
   @default_options [
     format:        :standard,
     currency:      nil,
@@ -132,6 +133,12 @@ defmodule Cldr.Number do
       formatted. See `Cldr.Number.Format` for how formats can be constructed.
       See `Cldr.Number.Format.format_styles_for/1` to see what format styles
       are available for a locale. The default `format` is `:standard`.
+
+    * If `:format` is set to `:long` or `:short` then the formatting depends on
+      whether `:currency` is specified. If not specified then the number is
+      formatted as `:decimal_long` or `:decimal_short. If `:currency` is
+      specified the number is formatted at `:currency_long` or
+      `:currency_short`.
 
     * `currency`: is the currency for which the number is formatted. For
       available currencies see Cldr.Currency.known_currencies/0`. This option
@@ -177,11 +184,26 @@ defmodule Cldr.Number do
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
       "THB12,345.00"
 
+      iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
+      "(THB12,345.00)"
+
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
       "THB12,345.00"
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
       "THB๑๒,๓๔๕.๐๐"
+
+      iex> Number.to_string 1244.30, format: :long
+      "1 thousand"
+
+      iex> Number.to_string 1244.30, format: :long, currency: "USD"
+      "1,244.30 US dollars"
+
+      iex> Number.to_string 1244.30, format: :short
+      "1K"
+
+      iex> Number.to_string 1244.30, format: :short, currency: "EUR"
+      "€1.24K"
 
   ## Errors
 
@@ -415,6 +437,7 @@ defmodule Cldr.Number do
 
   # Adjust the number of digits in the exponent to match the minimum
   # number of exponent digits
+  # TODO: Not yet implemented
   defp adjust_exponent(mantissa, exponent, _adjustment) do
     {mantissa, exponent}
   end

@@ -1,7 +1,8 @@
 defmodule Cldr.Number.Generate.ShortFormats do
   @moduledoc """
   Generates a set of functions to process the various
-  :short and :long formats for numbers.
+  :short and :long formats for numbers (except for the :long format for
+  a :currency)
   """
 
   @docp """
@@ -30,14 +31,14 @@ defmodule Cldr.Number.Generate.ShortFormats do
   end
 
   @docp """
-  Generates one function for each type of short format (currently there
-  are three defined:  :decimal_short, :decimal_long, :currency_short).
-  The function signature matches that of the other `to_string/3` functions
-  defined in Cldr.Number.  However these functions retain a format as an
-  atom which means these short forms will dispatch to the functions defined
-  below.  This lets us preserve the internal api which is
-  `to_string(number, format, options)` but branch to the specific functions
-  that then decompose each of the different short formats.
+  Generates one function for each type of short format (currently
+  there are four defined: :decimal_short, :decimal_long, :currency_short and
+  :currency_long) except :currency_long. The function signature matches that of
+  the other `to_string/3` functions defined in Cldr.Number. However these
+  functions retain a format as an atom which means these short forms will
+  dispatch to the functions defined below. This lets us preserve the internal
+  api which is `to_string(number, format, options)` but branch to the specific
+  functions that then decompose each of the different short formats.
   """
   defp def_to_string do
     for style <- Format.short_format_styles() do
@@ -56,24 +57,16 @@ defmodule Cldr.Number.Generate.ShortFormats do
   end
 
   @docp """
-  Generates one function for the cartesian product of local, number_system,
-  style and format.  Thats about 2 * 3 * 10 functions per locale.  There are
-  511 locales in total used in testing which so far means compilation never
-  ends.  In development (7 locales) and most production environments (< 30
-  locales) this would not appear to be an issue.  But a better solution is
-  required.
+  One function for each short format except :currency_long
   """
   defp def_do_to_string do
-    for locale  <- Cldr.known_locales(),
-        number_system <- System.number_system_names_for(locale),
-        style   <- Format.short_format_styles_for(locale, number_system)
-    do
-      formats = Format.formats_for(locale, number_system) |> Map.get(style)
+    for style <- Format.short_format_styles() -- [:currency_long] do
       quote do
         @spec do_to_short_string(number, atom, Locale.t, binary, Keyword.t) :: List.t
-        def do_to_short_string(number, unquote(style), unquote(locale), unquote(number_system), options) do
-          format = ShortFormats.choose_format(number, unquote(formats), options)
-          number = ShortFormats.normalise_number(number, format)
+        def do_to_short_string(number, unquote(style), locale, number_system, options) do
+          formats = Format.formats_for(locale, number_system) |> Map.get(unquote(style))
+          format  = ShortFormats.choose_format(number, formats, options)
+          number  = ShortFormats.normalise_number(number, format)
           to_string(number, elem(format,1), options)
         end
       end

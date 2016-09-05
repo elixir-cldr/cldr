@@ -1,7 +1,6 @@
 defmodule Cldr.Number.Generate.CurrencyFormats do
   @moduledoc """
-  Generates a set of functions to process the `format: :long, currency: __`
-  for numbers.
+  Function to format a number in a :long format for a :currency
   """
   alias Cldr.Number.Format
   alias Cldr.Number
@@ -19,7 +18,7 @@ defmodule Cldr.Number.Generate.CurrencyFormats do
           "locale #{inspect locale} and number system #{inspect number_system}."
         end
 
-        count = Number.Cardinal.plural_rule(number, locale, number_system)
+        count = Number.Cardinal.plural_rule(number, locale)
         currency = Currency.for_locale(locale)[options[:currency]]
 
         format = formats[count] || formats[:other]
