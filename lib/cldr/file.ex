@@ -55,7 +55,7 @@ defmodule Cldr.File do
   @lint {~r/Refactor/, false}
   @spec read(:decimal_formats) :: Map.t
   def read(:decimal_formats) do
-    import Config, only: [normalize_short_format: 1]
+    import Config, only: [normalize_short_format: 1, currency_long_format: 1]
 
     formats = Enum.map Config.known_locales, fn (locale) ->
       number_systems = locale
@@ -79,11 +79,11 @@ defmodule Cldr.File do
           decimal_short:  normalize_short_format(decimal_short_format),
           currency:       currency_formats["standard"],
           currency_short: normalize_short_format(currency_short_format),
+          currency_long:  currency_long_format(currency_formats),
           accounting:     currency_formats["accounting"],
           scientific:     scientific_formats["standard"],
           percent:        percent_formats["standard"]
         }
-
         Map.merge formats, %{String.to_atom(number_system) => locale_formats}
       end
       {locale, number_formats}
@@ -214,10 +214,18 @@ defmodule Cldr.File do
   # A short format is a tuple with the first element being the
   # range and the second being a list of plural rule keyed format.
   # We want to return only the formats.
-  defp extract_formats({_range, list}) do
+  defp extract_formats({_range, list}) when is_list(list) do
     Keyword.values(list)
   end
 
+  # In this case its a currency_long format which is in Unit format
+  # not decimal format so we ignore is when collecting decimal formats
+  defp extract_formats({range, _list}) when is_atom(range) do
+    nil
+  end
+
+  # And if its not a tuple (for a short list) or an atom (for a
+  # currency_long) then just return it
   defp extract_formats(short_format) do
     short_format
   end

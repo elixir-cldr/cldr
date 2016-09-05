@@ -93,6 +93,9 @@ defmodule Cldr.Number do
   # Compiles known decimal formats and creates functions to process them
   use Number.Generate.DecimalFormats
 
+  # Function to process the long currency format
+  use Number.Generate.CurrencyFormats
+
   # Creates functions to process short formats
   use Number.Generate.ShortFormats
 
@@ -100,7 +103,8 @@ defmodule Cldr.Number do
     :standard |
     :decimal_short |
     :decimal_long |
-    :currencu_short |
+    :currency_short |
+    :currency_long |
     :percent |
     :accounting |
     :scientific |
@@ -665,6 +669,12 @@ defmodule Cldr.Number do
 
     options = if options[:format] == :short && options[:currency] do
       options = Keyword.delete(options, :format) |> Keyword.put(:format, :currency_short)
+    else
+      options
+    end
+
+    options = if options[:format] == :long && options[:currency] do
+      options = Keyword.delete(options, :format) |> Keyword.put(:format, :currency_long)
     else
       options
     end

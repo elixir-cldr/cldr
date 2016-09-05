@@ -95,12 +95,14 @@ defmodule Cldr.Test.Number.Format do
       {1234, "1 thousand",       [format: :long]},
       {1234567890, "1 billion",  [format: :long]},
 
-      {1234, "$1.23K",           [format: :short, currency: "USD"]}
+      {1234, "$1.23K",           [format: :short, currency: "USD"]},
+      {12345, "12,345.00 US dollars", [format: :long, currency: "USD"]},
+      {12, "12.00 Thai baht",    [format: :long, currency: "THB"]},
+      {12, "12,00 bahts thaïlandais", [format: :long, currency: "THB", locale: "fr"]}
     ]
   end
 
   def sanitize(string) do
-    String.replace(string, "€", "<<e>>")
-    |> String.replace("¥", "<<y>>")
+    Cldr.Number.String.clean(string)
   end
 end

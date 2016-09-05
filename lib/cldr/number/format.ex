@@ -37,9 +37,11 @@ defmodule Cldr.Number.Format do
   """
 
   @type format :: String.t
-  @short_format_styles [:decimal_long, :decimal_short, :currency_short]
-  @format_styles [:standard, :currency, :accounting, :scientific, :percent] ++
-                  @short_format_styles
+  @short_format_styles [:decimal_long, :decimal_short, :currency_short,
+                        :currency_long]
+
+  @format_styles       [:standard, :currency, :accounting, :scientific,
+                        :percent] ++ @short_format_styles
 
   defstruct @format_styles
   defdelegate minimum_grouping_digits_for(locale), to: Cldr.Number.Symbol
@@ -227,8 +229,8 @@ defmodule Cldr.Number.Format do
   ## Example
 
       iex> Cldr.Number.Format.format_styles_for("en")
-      [:accounting, :currency, :currency_short, :decimal_long,
-      :decimal_short, :percent, :scientific, :standard]
+      [:accounting, :currency, :currency_long, :currency_short,
+      :decimal_long, :decimal_short, :percent, :scientific, :standard]
   """
   @spec format_styles_for(Cldr.locale, atom | String.t) :: [atom]
   def format_styles_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
@@ -254,7 +256,7 @@ defmodule Cldr.Number.Format do
     |> format_styles_for(number_system)
     |> MapSet.new
 
-    short_formats = @short_format_styles
+    short_formats = (@short_format_styles -- [:currency_long])
     |> MapSet.new
 
     MapSet.intersection(formats, short_formats)

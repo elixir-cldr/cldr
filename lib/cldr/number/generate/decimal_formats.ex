@@ -1,5 +1,5 @@
 defmodule Cldr.Number.Generate.DecimalFormats do
-  @docp """
+  @doc """
   Module to precompile known decimal formats that are then
   wrapped in functions to optimize performance at runtime.
   """

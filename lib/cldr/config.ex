@@ -324,4 +324,19 @@ defmodule Cldr.Config do
   def flatten_short_formats(formats) do
     formats
   end
+
+  # Here we get the entire currency format section but we only want
+  # the section that is marked as a set of "unitPattern-count-___".
+  @doc false
+  @pattern_count "unitPattern-count-"
+  @pattern_regex Regex.compile!(@pattern_count)
+  def currency_long_format(nil), do: nil
+  def currency_long_format(formats) do
+    formats
+    |> Enum.filter(fn {k, _v} -> Regex.match?(@pattern_regex, k) end)
+    |> Enum.map(fn {k, v} ->
+         @pattern_count <> count = k
+         {String.to_existing_atom(count), v}
+       end)
+  end
 end
