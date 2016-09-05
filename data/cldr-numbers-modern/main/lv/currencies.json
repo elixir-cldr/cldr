@@ -1607,10 +1607,16 @@
           },
           "XAG": {
             "displayName": "sudrabs",
+            "displayName-count-zero": "unces sudrabs",
+            "displayName-count-one": "unces sudrabs",
+            "displayName-count-other": "unces sudrabs",
             "symbol": "XAG"
           },
           "XAU": {
             "displayName": "zelts",
+            "displayName-count-zero": "unces zelts",
+            "displayName-count-one": "unces zelts",
+            "displayName-count-other": "unces zelts",
             "symbol": "XAU"
           },
           "XBA": {
@@ -1671,6 +1677,9 @@
           },
           "XPD": {
             "displayName": "pallādijs",
+            "displayName-count-zero": "unces pallādijs",
+            "displayName-count-one": "unces pallādijs",
+            "displayName-count-other": "unces pallādijs",
             "symbol": "XPD"
           },
           "XPF": {
@@ -1682,6 +1691,9 @@
           },
           "XPT": {
             "displayName": "platīns",
+            "displayName-count-zero": "unces platīns",
+            "displayName-count-one": "unces platīns",
+            "displayName-count-other": "unces platīns",
             "symbol": "XPT"
           },
           "XRE": {

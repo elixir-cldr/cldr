@@ -104,10 +104,16 @@
           },
           "ARL": {
             "displayName": "ARL",
+            "displayName-count-one": "argentinski pezos lej",
+            "displayName-count-few": "argentinski pezos lej",
+            "displayName-count-other": "argentinski pezos lej",
             "symbol": "ARL"
           },
           "ARM": {
             "displayName": "ARM",
+            "displayName-count-one": "argentinski pezo monedo nacional",
+            "displayName-count-few": "argentinski pezos moneda nacional",
+            "displayName-count-other": "argentinskih pezosa moneda nacional",
             "symbol": "ARM"
           },
           "ARP": {
@@ -177,7 +183,10 @@
             "symbol-alt-narrow": "KM"
           },
           "BAN": {
-            "displayName": "BAN",
+            "displayName": "Bosansko-hercegovački novi dinar",
+            "displayName-count-one": "bosansko-hercegovački novi dinar",
+            "displayName-count-few": "bosansko-hercegovački novi dinari",
+            "displayName-count-other": "bosansko-hercegovački novi dinar",
             "symbol": "BAN"
           },
           "BBD": {
@@ -225,7 +234,10 @@
             "symbol": "BGL"
           },
           "BGM": {
-            "displayName": "BGM",
+            "displayName": "Bugarski socijalistički lev",
+            "displayName-count-one": "bugarski socijalistički lev",
+            "displayName-count-few": "bugarska socijalistička leva",
+            "displayName-count-other": "bugarskih socijalističkih leva",
             "symbol": "BGM"
           },
           "BGN": {
@@ -441,7 +453,10 @@
             "symbol": "CHW"
           },
           "CLE": {
-            "displayName": "CLE",
+            "displayName": "Čileanski eskudo",
+            "displayName-count-one": "čileanski eskudo",
+            "displayName-count-few": "čileanska eskuda",
+            "displayName-count-other": "čileanskih eskuda",
             "symbol": "CLE"
           },
           "CLF": {
@@ -458,6 +473,12 @@
             "displayName-count-other": "čileanskih pezosa",
             "symbol": "CLP",
             "symbol-alt-narrow": "$"
+          },
+          "CNX": {
+            "displayName": "Dolar kineske narodne banke",
+            "displayName-count-one": "dolar kineske narodne banke",
+            "displayName-count-few": "dolari kineske narodne banke",
+            "displayName-count-other": "dolar kineske narodne banke"
           },
           "CNY": {
             "displayName": "Kineski juan",
@@ -476,7 +497,10 @@
             "symbol-alt-narrow": "$"
           },
           "COU": {
-            "displayName": "COU",
+            "displayName": "unidad de valor real",
+            "displayName-count-one": "unidad de valor real",
+            "displayName-count-few": "unidad de valor reala",
+            "displayName-count-other": "unidad de valor reala",
             "symbol": "COU"
           },
           "CRC": {
@@ -1140,11 +1164,17 @@
             "symbol": "MAF"
           },
           "MCF": {
-            "displayName": "MCF",
+            "displayName": "Monegaskaški franak",
+            "displayName-count-one": "monegaskaški franak",
+            "displayName-count-few": "monegaskaška franka",
+            "displayName-count-other": "monegaskaških franaka",
             "symbol": "MCF"
           },
           "MDC": {
-            "displayName": "MDC",
+            "displayName": "moldavski kupon",
+            "displayName-count-one": "moldovanski kupon",
+            "displayName-count-few": "moldovanska kupona",
+            "displayName-count-other": "moldovanskih kupona",
             "symbol": "MDC"
           },
           "MDL": {
@@ -2070,7 +2100,10 @@
             "symbol": "YUN"
           },
           "YUR": {
-            "displayName": "YUR",
+            "displayName": "Jugoslovenski reformirani dinar",
+            "displayName-count-one": "jugoslovenski reformirani dinar",
+            "displayName-count-few": "jugoslovenska reformirana dinara",
+            "displayName-count-other": "jugoslovenskih reformiranih dinara",
             "symbol": "YUR"
           },
           "ZAL": {

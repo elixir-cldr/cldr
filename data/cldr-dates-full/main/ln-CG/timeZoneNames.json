@@ -1381,6 +1381,33 @@
                 "exemplarCity": "Unknown"
               }
             }
+          },
+          "metazone": {
+            "Africa_Central": {
+              "long": {
+                "standard": "Ntángo ya Lubumbashi"
+              }
+            },
+            "Africa_Eastern": {
+              "long": {
+                "standard": "Ntángo ya Afríka ya Ɛ́sita"
+              }
+            },
+            "Africa_Southern": {
+              "long": {
+                "standard": "Ntángo ya Afríka ya Sidi"
+              }
+            },
+            "GMT": {
+              "long": {
+                "standard": "Ntángo ya Londoni"
+              }
+            },
+            "Seychelles": {
+              "long": {
+                "standard": "Ntángo ya Seyshel"
+              }
+            }
           }
         }
       }

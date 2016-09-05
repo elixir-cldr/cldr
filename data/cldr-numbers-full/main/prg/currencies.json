@@ -196,7 +196,10 @@
             "symbol": "BRE"
           },
           "BRL": {
-            "displayName": "BRL",
+            "displayName": "Brazīlijas reals",
+            "displayName-count-zero": "Brazīlijas realin",
+            "displayName-count-one": "Brazīlijas reals",
+            "displayName-count-other": "Brazīlijas realai",
             "symbol": "R$",
             "symbol-alt-narrow": "R$"
           },
@@ -279,7 +282,10 @@
             "symbol-alt-narrow": "$"
           },
           "CNY": {
-            "displayName": "CNY",
+            "displayName": "Kīnas juāns",
+            "displayName-count-zero": "Kīnas juānan",
+            "displayName-count-one": "Kīnas juāns",
+            "displayName-count-other": "Kīnas juānai",
             "symbol": "CN¥",
             "symbol-alt-narrow": "¥"
           },
@@ -393,7 +399,10 @@
             "symbol": "ETB"
           },
           "EUR": {
-            "displayName": "EUR",
+            "displayName": "eurō",
+            "displayName-count-zero": "eurō",
+            "displayName-count-one": "eurō",
+            "displayName-count-other": "eurō",
             "symbol": "€",
             "symbol-alt-narrow": "€"
           },
@@ -416,7 +425,10 @@
             "symbol": "FRF"
           },
           "GBP": {
-            "displayName": "GBP",
+            "displayName": "punds sterlings",
+            "displayName-count-zero": "pundan sterlingan",
+            "displayName-count-one": "punds sterlings",
+            "displayName-count-other": "pundai sterlingai",
             "symbol": "£",
             "symbol-alt-narrow": "£"
           },
@@ -528,7 +540,10 @@
             "symbol-alt-narrow": "₪"
           },
           "INR": {
-            "displayName": "INR",
+            "displayName": "Īndijas rūpija",
+            "displayName-count-zero": "Īndijas rūpijan",
+            "displayName-count-one": "Īndijas rūpija",
+            "displayName-count-other": "Īndijas rūpijas",
             "symbol": "₹",
             "symbol-alt-narrow": "₹"
           },
@@ -559,7 +574,10 @@
             "symbol": "JOD"
           },
           "JPY": {
-            "displayName": "JPY",
+            "displayName": "Japānijas jāns",
+            "displayName-count-zero": "Japānijas jānan",
+            "displayName-count-one": "Japānijas jāns",
+            "displayName-count-other": "Japānijas jānai",
             "symbol": "JP¥",
             "symbol-alt-narrow": "¥"
           },
@@ -892,7 +910,10 @@
             "symbol": "RSD"
           },
           "RUB": {
-            "displayName": "RUB",
+            "displayName": "Russis rūbels",
+            "displayName-count-zero": "Russis rūblin",
+            "displayName-count-one": "Russis rūbels",
+            "displayName-count-other": "Russis rūblai",
             "symbol": "RUB",
             "symbol-alt-narrow": "₽"
           },
@@ -1074,7 +1095,10 @@
             "symbol": "UGX"
           },
           "USD": {
-            "displayName": "USD",
+            "displayName": "APW dālars",
+            "displayName-count-zero": "APW dālaran",
+            "displayName-count-one": "APW dālars",
+            "displayName-count-other": "APW dālarai",
             "symbol": "US$",
             "symbol-alt-narrow": "$"
           },
@@ -1211,7 +1235,10 @@
             "symbol": "XUA"
           },
           "XXX": {
-            "displayName": "XXX",
+            "displayName": "niwaistā walūta",
+            "displayName-count-zero": "(niwaistā walūta)",
+            "displayName-count-one": "(niwaistā walūtas aīnibi)",
+            "displayName-count-other": "(niwaistā walūta)",
             "symbol": "XXX"
           },
           "YDD": {

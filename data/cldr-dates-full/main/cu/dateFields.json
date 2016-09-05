@@ -11,10 +11,10 @@
       "dates": {
         "fields": {
           "era": {
-            "displayName": "Era"
+            "displayName": "вѣ́къ"
           },
           "year": {
-            "displayName": "Year",
+            "displayName": "лѣ́то",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -26,7 +26,7 @@
             }
           },
           "year-short": {
-            "displayName": "Year",
+            "displayName": "л.",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -38,7 +38,7 @@
             }
           },
           "year-narrow": {
-            "displayName": "Year",
+            "displayName": "л.",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -50,7 +50,7 @@
             }
           },
           "quarter": {
-            "displayName": "Quarter",
+            "displayName": "че́тверть",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
@@ -62,7 +62,7 @@
             }
           },
           "quarter-short": {
-            "displayName": "Quarter",
+            "displayName": "чеⷡ҇",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
@@ -74,7 +74,7 @@
             }
           },
           "quarter-narrow": {
-            "displayName": "Quarter",
+            "displayName": "чеⷡ҇",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
@@ -86,7 +86,7 @@
             }
           },
           "month": {
-            "displayName": "Month",
+            "displayName": "мѣ́сѧцъ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -98,7 +98,7 @@
             }
           },
           "month-short": {
-            "displayName": "Month",
+            "displayName": "мцⷭ҇ъ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -110,7 +110,7 @@
             }
           },
           "month-narrow": {
-            "displayName": "Month",
+            "displayName": "мцⷭ҇ъ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -122,7 +122,7 @@
             }
           },
           "week": {
-            "displayName": "Week",
+            "displayName": "седми́ца",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -134,7 +134,7 @@
             }
           },
           "week-short": {
-            "displayName": "Week",
+            "displayName": "сеⷣ",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -146,7 +146,7 @@
             }
           },
           "week-narrow": {
-            "displayName": "Week",
+            "displayName": "сеⷣ",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -158,10 +158,10 @@
             }
           },
           "day": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "де́нь",
+            "relative-type--1": "вчера̀",
+            "relative-type-0": "дне́сь",
+            "relative-type-1": "наꙋ́трїе",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -170,10 +170,10 @@
             }
           },
           "day-short": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "деⷩ҇",
+            "relative-type--1": "вчера̀",
+            "relative-type-0": "дне́сь",
+            "relative-type-1": "наꙋ́трїе",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -182,10 +182,10 @@
             }
           },
           "day-narrow": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "деⷩ҇",
+            "relative-type--1": "вчера̀",
+            "relative-type-0": "дне́сь",
+            "relative-type-1": "наꙋ́трїе",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -194,7 +194,7 @@
             }
           },
           "weekday": {
-            "displayName": "Day of the Week"
+            "displayName": "де́нь седми́цы"
           },
           "sun": {
             "relative-type--1": "last Sunday",
@@ -302,10 +302,10 @@
             "relative-type-1": "next Saturday"
           },
           "dayperiod": {
-            "displayName": "Dayperiod"
+            "displayName": "ДП/ПП"
           },
           "hour": {
-            "displayName": "Hour",
+            "displayName": "ча́съ",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -314,7 +314,7 @@
             }
           },
           "hour-short": {
-            "displayName": "Hour",
+            "displayName": "чаⷭ҇",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -323,7 +323,7 @@
             }
           },
           "hour-narrow": {
-            "displayName": "Hour",
+            "displayName": "чаⷭ҇",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -332,7 +332,7 @@
             }
           },
           "minute": {
-            "displayName": "Minute",
+            "displayName": "минꙋ́та",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -341,7 +341,7 @@
             }
           },
           "minute-short": {
-            "displayName": "Minute",
+            "displayName": "миⷩ҇",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -350,7 +350,7 @@
             }
           },
           "minute-narrow": {
-            "displayName": "Minute",
+            "displayName": "миⷩ҇",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -359,7 +359,7 @@
             }
           },
           "second": {
-            "displayName": "Second",
+            "displayName": "секꙋ́нда",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -369,7 +369,7 @@
             }
           },
           "second-short": {
-            "displayName": "Second",
+            "displayName": "сеⷦ҇",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -379,7 +379,7 @@
             }
           },
           "second-narrow": {
-            "displayName": "Second",
+            "displayName": "сеⷦ҇",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -389,7 +389,7 @@
             }
           },
           "zone": {
-            "displayName": "Zone"
+            "displayName": "по́ѧсъ часовѡ́мъ"
           }
         }
       }

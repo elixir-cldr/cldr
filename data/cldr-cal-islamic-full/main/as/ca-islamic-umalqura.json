@@ -263,16 +263,16 @@
               }
             },
             "dateFormats": {
-              "full": "G y MMMM d, EEEE",
-              "long": "G y MMMM d",
-              "medium": "G y MMM d",
-              "short": "GGGGG y-MM-dd"
+              "full": "EEEE, d MMMM, y G",
+              "long": "d MMMM, y G",
+              "medium": "dd-MM-y G",
+              "short": "d-M-y GGGGG"
             },
             "timeFormats": {
-              "full": "HH:mm:ss zzzz",
-              "long": "HH:mm:ss z",
-              "medium": "HH:mm:ss",
-              "short": "HH:mm"
+              "full": "h.mm.ss a zzzz",
+              "long": "h.mm.ss a z",
+              "medium": "h.mm.ss a",
+              "short": "h.mm. a"
             },
             "dateTimeFormats": {
               "full": "{1} {0}",

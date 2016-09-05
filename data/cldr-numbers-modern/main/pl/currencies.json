@@ -543,7 +543,7 @@
             "displayName-count-many": "koron duńskich",
             "displayName-count-other": "korony duńskiej",
             "symbol": "DKK",
-            "symbol-alt-narrow": "kr"
+            "symbol-alt-narrow": "ISK"
           },
           "DOP": {
             "displayName": "peso dominikańskie",
@@ -679,7 +679,8 @@
             "displayName-count-many": "lari gruzińskich",
             "displayName-count-other": "lari gruzińskiego",
             "symbol": "GEL",
-            "symbol-alt-narrow": "₾"
+            "symbol-alt-narrow": "₾",
+            "symbol-alt-variant": "₾"
           },
           "GHC": {
             "displayName": "cedi ghańskie (1979–2007)",
@@ -1854,11 +1855,11 @@
             "symbol": "XAU"
           },
           "XBA": {
-            "displayName": "XBA",
+            "displayName": "jednostka emisji euroobligacji",
             "symbol": "XBA"
           },
           "XBB": {
-            "displayName": "XBB",
+            "displayName": "europejska jednostka monetarna",
             "symbol": "XBB"
           },
           "XBC": {

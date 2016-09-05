@@ -162,7 +162,7 @@
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "m",
             "unitPattern-count-one": "{0} m",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
@@ -173,13 +173,13 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "d",
             "unitPattern-count-one": "{0} d",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "h",
             "unitPattern-count-one": "{0} h",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
@@ -191,7 +191,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "s",
             "unitPattern-count-one": "{0} s",
             "unitPattern-count-other": "{0} s",
             "perUnitPattern": "{0}/s"
@@ -738,7 +738,7 @@
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "m",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
@@ -748,12 +748,12 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "d",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "h",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
@@ -763,7 +763,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "s",
             "unitPattern-count-other": "{0} s",
             "perUnitPattern": "{0}/s"
           },
@@ -1309,7 +1309,7 @@
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "m",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
@@ -1319,12 +1319,12 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "d",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "h",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
@@ -1334,7 +1334,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "s",
             "unitPattern-count-other": "{0} s",
             "perUnitPattern": "{0}/s"
           },

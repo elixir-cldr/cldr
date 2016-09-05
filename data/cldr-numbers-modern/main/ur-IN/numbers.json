@@ -22,11 +22,11 @@
           "percentSign": "%",
           "plusSign": "‎+‎",
           "minusSign": "‎-‎",
-          "exponential": "×۱۰^",
+          "exponential": "ق",
           "superscriptingExponent": "×",
           "perMille": "‰",
           "infinity": "∞",
-          "nan": "NaN",
+          "nan": "یہ عدد نہیں",
           "timeSeparator": "٫"
         },
         "symbols-numberSystem-latn": {

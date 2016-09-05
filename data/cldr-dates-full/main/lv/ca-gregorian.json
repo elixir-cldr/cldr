@@ -302,9 +302,9 @@
               },
               "eraNarrow": {
                 "0": "p.m.ē.",
-                "0-alt-variant": "BCE",
+                "0-alt-variant": "pmē",
                 "1": "m.ē.",
-                "1-alt-variant": "CE"
+                "1-alt-variant": "mē"
               }
             },
             "dateFormats": {

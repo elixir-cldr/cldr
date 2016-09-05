@@ -273,16 +273,16 @@
               }
             },
             "dateFormats": {
-              "full": "G y MMMM d, EEEE",
-              "long": "G y MMMM d",
-              "medium": "G y MMM d",
-              "short": "GGGGG y-MM-dd"
+              "full": "G y نچی ییل d نچی MMMM EEEE کونی",
+              "long": "d نچی MMMM y G",
+              "medium": "d MMM y G",
+              "short": "GGGGG y/M/d"
             },
             "timeFormats": {
-              "full": "HH:mm:ss zzzz",
-              "long": "HH:mm:ss z",
-              "medium": "HH:mm:ss",
-              "short": "HH:mm"
+              "full": "H:mm:ss (zzzz)",
+              "long": "H:mm:ss (z)",
+              "medium": "H:mm:ss",
+              "short": "H:mm"
             },
             "dateTimeFormats": {
               "full": "{1} {0}",
@@ -308,12 +308,12 @@
                 "hms": "h:mm:ss a",
                 "Hms": "HH:mm:ss",
                 "M": "L",
-                "Md": "MM-dd",
+                "Md": "M/d",
                 "MEd": "MM-dd, E",
                 "MMM": "LLL",
                 "MMMd": "MMM d",
                 "MMMEd": "MMM d, E",
-                "MMMMd": "MMMM d",
+                "MMMMd": "d نچی MMMM",
                 "ms": "mm:ss",
                 "y": "G y",
                 "yyyy": "G y",

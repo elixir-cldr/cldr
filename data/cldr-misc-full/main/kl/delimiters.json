@@ -9,10 +9,10 @@
         "language": "kl"
       },
       "delimiters": {
-        "quotationStart": "“",
-        "quotationEnd": "”",
-        "alternateQuotationStart": "‘",
-        "alternateQuotationEnd": "’"
+        "quotationStart": "»",
+        "quotationEnd": "«",
+        "alternateQuotationStart": "›",
+        "alternateQuotationEnd": "‹"
       }
     }
   }

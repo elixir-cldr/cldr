@@ -133,13 +133,13 @@
             "days": {
               "format": {
                 "abbreviated": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýb",
+                  "mon": "db",
+                  "tue": "sb",
+                  "wed": "çb",
+                  "thu": "pb",
+                  "fri": "an",
+                  "sat": "şb"
                 },
                 "narrow": {
                   "sun": "Ý",
@@ -151,33 +151,33 @@
                   "sat": "Ş"
                 },
                 "short": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýb",
+                  "mon": "db",
+                  "tue": "sb",
+                  "wed": "çb",
+                  "thu": "pb",
+                  "fri": "an",
+                  "sat": "şb"
                 },
                 "wide": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýekşenbe",
+                  "mon": "duşenbe",
+                  "tue": "sişenbe",
+                  "wed": "çarşenbe",
+                  "thu": "penşenbe",
+                  "fri": "anna",
+                  "sat": "şenbe"
                 }
               },
               "stand-alone": {
                 "abbreviated": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýb",
+                  "mon": "db",
+                  "tue": "sb",
+                  "wed": "çb",
+                  "thu": "pb",
+                  "fri": "an",
+                  "sat": "şb"
                 },
                 "narrow": {
                   "sun": "Ý",
@@ -189,22 +189,22 @@
                   "sat": "Ş"
                 },
                 "short": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýb",
+                  "mon": "db",
+                  "tue": "sb",
+                  "wed": "çb",
+                  "thu": "pb",
+                  "fri": "an",
+                  "sat": "şb"
                 },
                 "wide": {
-                  "sun": "Sun",
-                  "mon": "Mon",
-                  "tue": "Tue",
-                  "wed": "Wed",
-                  "thu": "Thu",
-                  "fri": "Fri",
-                  "sat": "Sat"
+                  "sun": "ýekşenbe",
+                  "mon": "duşenbe",
+                  "tue": "sişenbe",
+                  "wed": "çarşenbe",
+                  "thu": "penşenbe",
+                  "fri": "anna",
+                  "sat": "şenbe"
                 }
               }
             },

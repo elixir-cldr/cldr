@@ -302,9 +302,9 @@
               },
               "eraNarrow": {
                 "0": "f.k.",
-                "0-alt-variant": "f.l.t.",
+                "0-alt-variant": "f.v.t.",
                 "1": "e.k.",
-                "1-alt-variant": "l.t."
+                "1-alt-variant": "v.t."
               }
             },
             "dateFormats": {

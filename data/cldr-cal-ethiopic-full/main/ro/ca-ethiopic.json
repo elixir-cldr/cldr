@@ -14,19 +14,19 @@
             "months": {
               "format": {
                 "abbreviated": {
-                  "1": "Meskerem",
-                  "2": "Tekemt",
-                  "3": "Hedar",
-                  "4": "Tahsas",
-                  "5": "Ter",
-                  "6": "Yekatit",
-                  "7": "Megabit",
-                  "8": "Miazia",
-                  "9": "Genbot",
-                  "10": "Sene",
-                  "11": "Hamle",
-                  "12": "Nehasse",
-                  "13": "Pagumen"
+                  "1": "meskerem",
+                  "2": "taqemt",
+                  "3": "hedar",
+                  "4": "tahsas",
+                  "5": "ter",
+                  "6": "yekatit",
+                  "7": "megabit",
+                  "8": "miazia",
+                  "9": "genbot",
+                  "10": "sene",
+                  "11": "hamle",
+                  "12": "nehase",
+                  "13": "pagumen"
                 },
                 "narrow": {
                   "1": "1",
@@ -44,36 +44,36 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Meskerem",
-                  "2": "Tekemt",
-                  "3": "Hedar",
-                  "4": "Tahsas",
-                  "5": "Ter",
-                  "6": "Yekatit",
-                  "7": "Megabit",
-                  "8": "Miazia",
-                  "9": "Genbot",
-                  "10": "Sene",
-                  "11": "Hamle",
-                  "12": "Nehasse",
-                  "13": "Pagumen"
+                  "1": "meskerem",
+                  "2": "taqemt",
+                  "3": "hedar",
+                  "4": "tahsas",
+                  "5": "ter",
+                  "6": "yekatit",
+                  "7": "megabit",
+                  "8": "miazia",
+                  "9": "genbot",
+                  "10": "sene",
+                  "11": "hamle",
+                  "12": "nehase",
+                  "13": "pagumen"
                 }
               },
               "stand-alone": {
                 "abbreviated": {
-                  "1": "Meskerem",
-                  "2": "Tekemt",
-                  "3": "Hedar",
-                  "4": "Tahsas",
-                  "5": "Ter",
-                  "6": "Yekatit",
-                  "7": "Megabit",
-                  "8": "Miazia",
-                  "9": "Genbot",
-                  "10": "Sene",
-                  "11": "Hamle",
-                  "12": "Nehasse",
-                  "13": "Pagumen"
+                  "1": "meskerem",
+                  "2": "taqemt",
+                  "3": "hedar",
+                  "4": "tahsas",
+                  "5": "ter",
+                  "6": "yekatit",
+                  "7": "megabit",
+                  "8": "miazia",
+                  "9": "genbot",
+                  "10": "sene",
+                  "11": "hamle",
+                  "12": "nehase",
+                  "13": "pagumen"
                 },
                 "narrow": {
                   "1": "1",
@@ -91,19 +91,19 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Meskerem",
-                  "2": "Tekemt",
-                  "3": "Hedar",
-                  "4": "Tahsas",
-                  "5": "Ter",
-                  "6": "Yekatit",
-                  "7": "Megabit",
-                  "8": "Miazia",
-                  "9": "Genbot",
-                  "10": "Sene",
-                  "11": "Hamle",
-                  "12": "Nehasse",
-                  "13": "Pagumen"
+                  "1": "meskerem",
+                  "2": "taqemt",
+                  "3": "hedar",
+                  "4": "tahsas",
+                  "5": "ter",
+                  "6": "yekatit",
+                  "7": "megabit",
+                  "8": "miazia",
+                  "9": "genbot",
+                  "10": "sene",
+                  "11": "hamle",
+                  "12": "nehase",
+                  "13": "pagumen"
                 }
               }
             },

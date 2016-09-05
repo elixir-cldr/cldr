@@ -32,7 +32,7 @@
           "decimal": ".",
           "group": ",",
           "list": ";",
-          "percentSign": "%",
+          "percentSign": "٪",
           "plusSign": "‎+",
           "minusSign": "‎-",
           "exponential": "E",
@@ -155,6 +155,7 @@
               "100000000000000-count-other": "¤ 000T"
             }
           },
+          "unitPattern-count-one": "{0} {1}",
           "unitPattern-count-other": "{0} {1}"
         },
         "currencyFormats-numberSystem-latn": {
@@ -188,6 +189,7 @@
               "100000000000000-count-other": "¤ 000T"
             }
           },
+          "unitPattern-count-one": "{0} {1}",
           "unitPattern-count-other": "{0} {1}"
         },
         "miscPatterns-numberSystem-arab": {

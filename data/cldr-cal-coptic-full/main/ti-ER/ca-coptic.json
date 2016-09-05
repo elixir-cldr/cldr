@@ -346,7 +346,7 @@
                 "Year": "{1} {0}"
               },
               "intervalFormats": {
-                "intervalFormatFallback": "{0} – {1}",
+                "intervalFormatFallback": "{0} - {1}",
                 "d": {
                   "d": "d–d"
                 },
@@ -390,50 +390,50 @@
                   "M": "MM-dd – MM-dd"
                 },
                 "MEd": {
-                  "d": "MM-dd, E – MM-dd, E",
-                  "M": "MM-dd, E – MM-dd, E"
+                  "d": "E፡ MM-dd – E፡ MM-dd",
+                  "M": "E፡ MM-dd – E፡ MM-dd"
                 },
                 "MMM": {
-                  "M": "LLL–LLL"
+                  "M": "MMM–MMM"
                 },
                 "MMMd": {
                   "d": "MMM d–d",
                   "M": "MMM d – MMM d"
                 },
                 "MMMEd": {
-                  "d": "MMM d, E – MMM d, E",
-                  "M": "MMM d, E – MMM d, E"
+                  "d": "E፡ MMM d – E፡ MMM d",
+                  "M": "E፡ MMM d – E፡ MMM d"
                 },
                 "y": {
                   "y": "G y–y"
                 },
                 "yM": {
-                  "M": "GGGGG y-MM – y-MM",
-                  "y": "GGGGG y-MM – y-MM"
+                  "M": "y-MM – y-MM",
+                  "y": "y-MM – y-MM"
                 },
                 "yMd": {
-                  "d": "GGGGG y-MM-dd – y-MM-dd",
-                  "M": "GGGGG y-MM-dd – y-MM-dd",
-                  "y": "GGGGG y-MM-dd – y-MM-dd"
+                  "d": "y-MM-dd – y-MM-dd",
+                  "M": "y-MM-dd – y-MM-dd",
+                  "y": "y-MM-dd – y-MM-dd"
                 },
                 "yMEd": {
-                  "d": "GGGGG y-MM-dd, E – y-MM-dd, E",
-                  "M": "GGGGG y-MM-dd, E – y-MM-dd, E",
-                  "y": "GGGGG y-MM-dd, E – y-MM-dd, E"
+                  "d": "E፡ y-MM-dd – E፡ y-MM-dd",
+                  "M": "E፡ y-MM-dd – E፡ y-MM-dd",
+                  "y": "E፡ y-MM-dd – E፡ y-MM-dd"
                 },
                 "yMMM": {
-                  "M": "G y MMM–MMM",
-                  "y": "G y MMM – y MMM"
+                  "M": "y MMM–MMM",
+                  "y": "y MMM – y MMM"
                 },
                 "yMMMd": {
-                  "d": "G y MMM d–d",
-                  "M": "G y MMM d – MMM d",
-                  "y": "G y MMM d – y MMM d"
+                  "d": "y MMM d–d",
+                  "M": "y MMM d – MMM d",
+                  "y": "y MMM d – y MMM d"
                 },
                 "yMMMEd": {
-                  "d": "G y MMM d, E – MMM d, E",
-                  "M": "G y MMM d, E – MMM d, E",
-                  "y": "G y MMM d, E – y MMM d, E"
+                  "d": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G",
+                  "M": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G",
+                  "y": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G"
                 },
                 "yMMMM": {
                   "M": "G y MMMM–MMMM",

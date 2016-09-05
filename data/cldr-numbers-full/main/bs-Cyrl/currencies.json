@@ -39,6 +39,11 @@
             "displayName-count-other": "авганистански авгани",
             "symbol": "AFN"
           },
+          "ALK": {
+            "displayName-count-one": "стари албански лек",
+            "displayName-count-few": "стара албанска лека",
+            "displayName-count-other": "старих албанских лека"
+          },
           "ALL": {
             "displayName": "Албански лек",
             "displayName-count-one": "албански лек",
@@ -98,10 +103,16 @@
           },
           "ARL": {
             "displayName": "ARL",
+            "displayName-count-one": "аргентински пезос леј",
+            "displayName-count-few": "аргентинска пезос леја",
+            "displayName-count-other": "аргентинских пезос леја",
             "symbol": "ARL"
           },
           "ARM": {
             "displayName": "ARM",
+            "displayName-count-one": "аргентински пезос монедо национал",
+            "displayName-count-few": "аргентинска пезос монеда национал",
+            "displayName-count-other": "аргентинских пезос монеда национала",
             "symbol": "ARM"
           },
           "ARP": {
@@ -172,6 +183,9 @@
           },
           "BAN": {
             "displayName": "BAN",
+            "displayName-count-one": "босанско-херцеговачки нови динар",
+            "displayName-count-few": "босанско-херцеговачка нова динара",
+            "displayName-count-other": "босанско-херцеговачких нових динара",
             "symbol": "BAN"
           },
           "BBD": {
@@ -220,6 +234,9 @@
           },
           "BGM": {
             "displayName": "BGM",
+            "displayName-count-one": "бугарски социјалистички лев",
+            "displayName-count-few": "бугарска социјалистичка лева",
+            "displayName-count-other": "бугарских социјалистичких лева",
             "symbol": "BGM"
           },
           "BGN": {
@@ -231,6 +248,9 @@
           },
           "BGO": {
             "displayName": "BGO",
+            "displayName-count-one": "стари бугарски лев",
+            "displayName-count-few": "стара бугарска лева",
+            "displayName-count-other": "старих бугарских лева",
             "symbol": "BGO"
           },
           "BHD": {
@@ -273,6 +293,9 @@
           },
           "BOL": {
             "displayName": "BOL",
+            "displayName-count-one": "стари боливијски боливијано",
+            "displayName-count-few": "стара боливијска боливијана",
+            "displayName-count-other": "старих боливијских боливијана",
             "symbol": "BOL"
           },
           "BOP": {
@@ -334,6 +357,9 @@
           },
           "BRZ": {
             "displayName": "BRZ",
+            "displayName-count-one": "стари бразилски крузеиро",
+            "displayName-count-few": "стара бразилска крузеира",
+            "displayName-count-other": "старих бразилских крузеира",
             "symbol": "BRZ"
           },
           "BSD": {
@@ -427,6 +453,9 @@
           },
           "CLE": {
             "displayName": "CLE",
+            "displayName-count-one": "чилеански ескудо",
+            "displayName-count-few": "чилеанска ескуда",
+            "displayName-count-other": "чилеанских ескуда",
             "symbol": "CLE"
           },
           "CLF": {
@@ -443,6 +472,11 @@
             "displayName-count-other": "чилеански пезоси",
             "symbol": "CLP",
             "symbol-alt-narrow": "$"
+          },
+          "CNX": {
+            "displayName-count-one": "долар кинеске народне банке",
+            "displayName-count-few": "долара кинеске народне банке",
+            "displayName-count-other": "долара кинеске народне банке"
           },
           "CNY": {
             "displayName": "Кинески јуан ренминби",
@@ -973,10 +1007,16 @@
           },
           "KRH": {
             "displayName": "KRH",
+            "displayName-count-one": "јужнокорејски хван",
+            "displayName-count-few": "јужнокорејска хвана",
+            "displayName-count-other": "јужнокорејских хвана",
             "symbol": "KRH"
           },
           "KRO": {
             "displayName": "KRO",
+            "displayName-count-one": "стари јужнокорејски вон",
+            "displayName-count-few": "стара јужнокорејска вона",
+            "displayName-count-other": "старих јужнокорејских вона",
             "symbol": "KRO"
           },
           "KRW": {
@@ -1123,10 +1163,16 @@
           },
           "MCF": {
             "displayName": "MCF",
+            "displayName-count-one": "монегаскански франак",
+            "displayName-count-few": "монегасканска франка",
+            "displayName-count-other": "монегасканских франака",
             "symbol": "MCF"
           },
           "MDC": {
             "displayName": "MDC",
+            "displayName-count-one": "молдовански купон",
+            "displayName-count-few": "молдованска купона",
+            "displayName-count-other": "молдованских купона",
             "symbol": "MDC"
           },
           "MDL": {
@@ -1160,6 +1206,9 @@
           },
           "MKN": {
             "displayName": "MKN",
+            "displayName-count-one": "стари македонски денар",
+            "displayName-count-few": "стара македонска денара",
+            "displayName-count-other": "старих македонских денара",
             "symbol": "MKN"
           },
           "MLF": {
@@ -1849,6 +1898,9 @@
           },
           "VNN": {
             "displayName": "VNN",
+            "displayName-count-one": "стари вијетнамски донг",
+            "displayName-count-few": "стара вијетнамска донга",
+            "displayName-count-other": "старих вијетнамских донга",
             "symbol": "VNN"
           },
           "VUV": {
@@ -2044,6 +2096,9 @@
           },
           "YUR": {
             "displayName": "YUR",
+            "displayName-count-one": "југословенски реформирани динар",
+            "displayName-count-few": "југословенска реформирана динара",
+            "displayName-count-other": "југословенских реформираних динара",
             "symbol": "YUR"
           },
           "ZAL": {
@@ -2103,6 +2158,9 @@
           },
           "ZWR": {
             "displayName": "Зимбабвеански долар (2008)",
+            "displayName-count-one": "зимбабвејски долар (2008)",
+            "displayName-count-few": "зимбабвејска долара (2008)",
+            "displayName-count-other": "зимбабвејских долара (2008)",
             "symbol": "ZWR"
           }
         }

@@ -16,8 +16,8 @@
         },
         "minimumGroupingDigits": "1",
         "symbols-numberSystem-latn": {
-          "decimal": ".",
-          "group": ",",
+          "decimal": ",",
+          "group": " ",
           "list": ";",
           "percentSign": "%",
           "plusSign": "+",
@@ -68,7 +68,7 @@
           "standard": "#E0"
         },
         "percentFormats-numberSystem-latn": {
-          "standard": "#,##0%"
+          "standard": "#,##0 %"
         },
         "currencyFormats-numberSystem-latn": {
           "currencySpacing": {
@@ -83,8 +83,8 @@
               "insertBetween": " "
             }
           },
-          "standard": "¤ #,##0.00",
-          "accounting": "¤ #,##0.00",
+          "standard": "#,##0.00 ¤",
+          "accounting": "#,##0.00 ¤",
           "short": {
             "standard": {
               "1000-count-other": "¤ 0K",

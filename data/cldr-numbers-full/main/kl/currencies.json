@@ -341,7 +341,9 @@
             "symbol": "DJF"
           },
           "DKK": {
-            "displayName": "DKK",
+            "displayName": "danmarkimut koruuni",
+            "displayName-count-one": "danskinut koruuni",
+            "displayName-count-other": "danmarkimut koruuni",
             "symbol": "kr.",
             "symbol-alt-narrow": "kr"
           },
@@ -807,8 +809,10 @@
             "symbol": "NLG"
           },
           "NOK": {
-            "displayName": "NOK",
-            "symbol": "NOK",
+            "displayName": "norskit koruuni",
+            "displayName-count-one": "norskit koruuni",
+            "displayName-count-other": "norskit koruuni",
+            "symbol": "Nkr",
             "symbol-alt-narrow": "kr"
           },
           "NPR": {
@@ -934,8 +938,10 @@
             "symbol": "SDP"
           },
           "SEK": {
-            "displayName": "SEK",
-            "symbol": "SEK",
+            "displayName": "svenskit koruuni",
+            "displayName-count-one": "svenskit koruuni",
+            "displayName-count-other": "svenskit koruuni",
+            "symbol": "Skr",
             "symbol-alt-narrow": "kr"
           },
           "SGD": {

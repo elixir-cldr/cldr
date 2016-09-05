@@ -121,8 +121,8 @@
                 },
                 "narrow": {
                   "sun": "S",
-                  "mon": "V",
-                  "tue": "M",
+                  "mon": "M",
+                  "tue": "D",
                   "wed": "G",
                   "thu": "D",
                   "fri": "B",
@@ -138,13 +138,13 @@
                   "sat": "láv"
                 },
                 "wide": {
-                  "sun": "sotnabeaivi",
-                  "mon": "vuossárga",
-                  "tue": "maŋŋebárga",
-                  "wed": "gaskavahkku",
-                  "thu": "duorasdat",
-                  "fri": "bearjadat",
-                  "sat": "lávvardat"
+                  "sun": "aejlege",
+                  "mon": "måanta",
+                  "tue": "däjsta",
+                  "wed": "gaskevahkoe",
+                  "thu": "dåarsta",
+                  "fri": "bearjadahke",
+                  "sat": "laavadahke"
                 }
               },
               "stand-alone": {
@@ -159,8 +159,8 @@
                 },
                 "narrow": {
                   "sun": "S",
-                  "mon": "V",
-                  "tue": "M",
+                  "mon": "M",
+                  "tue": "D",
                   "wed": "G",
                   "thu": "D",
                   "fri": "B",
@@ -176,13 +176,13 @@
                   "sat": "láv"
                 },
                 "wide": {
-                  "sun": "sotnabeaivi",
-                  "mon": "vuossárga",
-                  "tue": "maŋŋebárga",
-                  "wed": "gaskavahkku",
-                  "thu": "duorasdat",
-                  "fri": "bearjadat",
-                  "sat": "lávvardat"
+                  "sun": "aejlege",
+                  "mon": "måanta",
+                  "tue": "däjsta",
+                  "wed": "gaskevahkoe",
+                  "thu": "dåarsta",
+                  "fri": "bearjadahke",
+                  "sat": "laavadahke"
                 }
               }
             },

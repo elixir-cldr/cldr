@@ -15,7 +15,7 @@
             "displayName": "Era"
           },
           "year": {
-            "displayName": "Year",
+            "displayName": "ساڵ",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -27,7 +27,7 @@
             }
           },
           "year-short": {
-            "displayName": "Year",
+            "displayName": "ساڵ",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -39,7 +39,7 @@
             }
           },
           "year-narrow": {
-            "displayName": "Year",
+            "displayName": "ساڵ",
             "relative-type--1": "last year",
             "relative-type-0": "this year",
             "relative-type-1": "next year",
@@ -87,7 +87,7 @@
             }
           },
           "month": {
-            "displayName": "Month",
+            "displayName": "مانگ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -99,7 +99,7 @@
             }
           },
           "month-short": {
-            "displayName": "Month",
+            "displayName": "مانگ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -111,7 +111,7 @@
             }
           },
           "month-narrow": {
-            "displayName": "Month",
+            "displayName": "مانگ",
             "relative-type--1": "last month",
             "relative-type-0": "this month",
             "relative-type-1": "next month",
@@ -123,7 +123,7 @@
             }
           },
           "week": {
-            "displayName": "Week",
+            "displayName": "ھەفتە",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -135,7 +135,7 @@
             }
           },
           "week-short": {
-            "displayName": "Week",
+            "displayName": "ھەفتە",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -147,7 +147,7 @@
             }
           },
           "week-narrow": {
-            "displayName": "Week",
+            "displayName": "ھەفتە",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -159,10 +159,10 @@
             }
           },
           "day": {
-            "displayName": "Day",
+            "displayName": "ڕۆژ",
             "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "relative-type-0": "ئەمڕۆ",
+            "relative-type-1": "سبەی",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -171,10 +171,10 @@
             }
           },
           "day-short": {
-            "displayName": "Day",
+            "displayName": "ڕۆژ",
             "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "relative-type-0": "ئەمڕۆ",
+            "relative-type-1": "سبەی",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -183,10 +183,10 @@
             }
           },
           "day-narrow": {
-            "displayName": "Day",
+            "displayName": "ڕۆژ",
             "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "relative-type-0": "ئەمڕۆ",
+            "relative-type-1": "سبەی",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -195,7 +195,7 @@
             }
           },
           "weekday": {
-            "displayName": "Day of the Week"
+            "displayName": "ڕۆژی ھەفتە"
           },
           "sun": {
             "relative-type--1": "last Sunday",
@@ -306,7 +306,7 @@
             "displayName": "Dayperiod"
           },
           "hour": {
-            "displayName": "Hour",
+            "displayName": "کاتژمێر",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -315,7 +315,7 @@
             }
           },
           "hour-short": {
-            "displayName": "Hour",
+            "displayName": "کاتژمێر",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -324,7 +324,7 @@
             }
           },
           "hour-narrow": {
-            "displayName": "Hour",
+            "displayName": "کاتژمێر",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -333,7 +333,7 @@
             }
           },
           "minute": {
-            "displayName": "Minute",
+            "displayName": "خولەک",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -342,7 +342,7 @@
             }
           },
           "minute-short": {
-            "displayName": "Minute",
+            "displayName": "خولەک",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -351,7 +351,7 @@
             }
           },
           "minute-narrow": {
-            "displayName": "Minute",
+            "displayName": "خولەک",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -360,7 +360,7 @@
             }
           },
           "second": {
-            "displayName": "Second",
+            "displayName": "چرکە",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -370,7 +370,7 @@
             }
           },
           "second-short": {
-            "displayName": "Second",
+            "displayName": "چرکە",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -380,7 +380,7 @@
             }
           },
           "second-narrow": {
-            "displayName": "Second",
+            "displayName": "چرکە",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"

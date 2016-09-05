@@ -27,7 +27,7 @@
           "colNormalization": "Orden con normalización",
           "colNumeric": "Orden numérico",
           "colStrength": "Intensidad de orden",
-          "currency": "moneda",
+          "currency": "divisa",
           "hc": "ciclo horario (12 o 24 horas)",
           "lb": "salto de línea",
           "ms": "sm",

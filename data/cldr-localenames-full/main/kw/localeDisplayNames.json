@@ -15,7 +15,7 @@
           "localeKeyTypePattern": "{0}: {1}"
         },
         "keys": {
-          "calendar": "calendar",
+          "calendar": "kalans",
           "cf": "cf",
           "collation": "collation",
           "currency": "currency",
@@ -32,7 +32,7 @@
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
+            "gregorian": "Kalans gregorek",
             "hebrew": "hebrew",
             "indian": "indian",
             "islamic": "islamic",

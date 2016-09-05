@@ -12,7 +12,7 @@
       "dates": {
         "fields": {
           "era": {
-            "displayName": "Era"
+            "displayName": "ལོ་རིམ།"
           },
           "year": {
             "displayName": "ལོ།",
@@ -123,7 +123,7 @@
             }
           },
           "week": {
-            "displayName": "Week",
+            "displayName": "གཟའ་འཁོར།",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -135,7 +135,7 @@
             }
           },
           "week-short": {
-            "displayName": "Week",
+            "displayName": "གཟའ་འཁོར།",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -147,7 +147,7 @@
             }
           },
           "week-narrow": {
-            "displayName": "Week",
+            "displayName": "གཟའ་འཁོར།",
             "relative-type--1": "last week",
             "relative-type-0": "this week",
             "relative-type-1": "next week",
@@ -201,7 +201,7 @@
             }
           },
           "weekday": {
-            "displayName": "Day of the Week"
+            "displayName": "གཟའ་འཁོར་གཅིག"
           },
           "sun": {
             "relative-type--1": "last Sunday",
@@ -309,7 +309,7 @@
             "relative-type-1": "next Saturday"
           },
           "dayperiod": {
-            "displayName": "Dayperiod"
+            "displayName": "སྔ་དྲོ། ཕྱི་དྲོ།"
           },
           "hour": {
             "displayName": "ཆུ་ཚོད་",

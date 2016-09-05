@@ -930,6 +930,11 @@
             "symbol": "MUR",
             "symbol-alt-narrow": "Rs"
           },
+          "MVP": {
+            "displayName": "మాల్దీవుల రూపాయి",
+            "displayName-count-one": "మాల్దీవుల రూపాయి",
+            "displayName-count-other": "మాల్దీవులు రూపాయిలు"
+          },
           "MVR": {
             "displayName": "మాల్దీవియన్ రుఫియా",
             "displayName-count-one": "మాల్దీవియన్ రుఫియా",
@@ -1435,11 +1440,11 @@
             "symbol": "FCFA"
           },
           "XAG": {
-            "displayName": "XAG",
+            "displayName": "వెండి",
             "symbol": "XAG"
           },
           "XAU": {
-            "displayName": "XAU",
+            "displayName": "బంగారం",
             "symbol": "XAU"
           },
           "XBA": {
@@ -1498,7 +1503,7 @@
             "symbol": "CFPF"
           },
           "XPT": {
-            "displayName": "XPT",
+            "displayName": "ప్లాటినం",
             "symbol": "XPT"
           },
           "XRE": {

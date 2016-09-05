@@ -437,19 +437,19 @@
                   "M": "dd/MM – dd/MM"
                 },
                 "MEd": {
-                  "d": "E dd/MM – E dd/MM",
-                  "M": "E dd/MM – E dd/MM"
+                  "d": "E, dd/MM – E, dd/MM",
+                  "M": "E, dd/MM – E, dd/MM"
                 },
                 "MMM": {
                   "M": "MMM – MMM"
                 },
                 "MMMd": {
-                  "d": "d – d MMM",
-                  "M": "d MMM – d MMM"
+                  "d": "dd – dd MMM",
+                  "M": "dd MMM – dd MMM"
                 },
                 "MMMEd": {
-                  "d": "E d – E d MMM",
-                  "M": "E d MMM – E d MMM"
+                  "d": "E, dd – E, dd MMM",
+                  "M": "E, dd MMM – E, dd MMM"
                 },
                 "y": {
                   "y": "y – y"
@@ -473,9 +473,9 @@
                   "y": "MMM y – MMM y"
                 },
                 "yMMMd": {
-                  "d": "d – d MMM y",
-                  "M": "d MMM – d MMM y",
-                  "y": "d MMM y – d MMM y"
+                  "d": "dd – dd MMM y",
+                  "M": "dd MMM – dd MMM y",
+                  "y": "dd MMM y – dd MMM y"
                 },
                 "yMMMEd": {
                   "d": "E, d – E, d MMM y",

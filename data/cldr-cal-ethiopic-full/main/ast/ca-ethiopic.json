@@ -438,7 +438,7 @@
                   "y": "E, d MMM y – E, d MMM y"
                 },
                 "yMMMM": {
-                  "M": "LLLL – LLLL 'de' y G",
+                  "M": "LLLL – LLLL y G",
                   "y": "LLLL y – LLLL y"
                 }
               }

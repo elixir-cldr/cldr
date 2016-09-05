@@ -13,9 +13,9 @@
           "hourFormat": "+HH:mm;-HH:mm",
           "gmtFormat": "GMT{0}",
           "gmtZeroFormat": "GMT",
-          "regionFormat": "{0}",
-          "regionFormat-type-daylight": "{0} (+1)",
-          "regionFormat-type-standard": "{0} (+0)",
+          "regionFormat": "Kerdā: {0}",
+          "regionFormat-type-daylight": "Daggas kerdā: {0}",
+          "regionFormat-type-standard": "Zēimas kerdā: {0}",
           "fallbackFormat": "{1} ({0})",
           "zone": {
             "America": {
@@ -1378,6 +1378,69 @@
               },
               "Unknown": {
                 "exemplarCity": "Unknown"
+              }
+            }
+          },
+          "metazone": {
+            "America_Central": {
+              "long": {
+                "generic": "Centrālas Amērikas kerdā",
+                "standard": "Centrālas Amērikas zēimas kerdā",
+                "daylight": "Centrālas Amērikas daggas kerdā"
+              }
+            },
+            "America_Eastern": {
+              "long": {
+                "generic": "Dēiniskas Amērikas kerdā",
+                "standard": "Dēiniskas Amērikas zēimas kerdā",
+                "daylight": "Dēiniskas Amērikas daggas kerdā"
+              }
+            },
+            "America_Mountain": {
+              "long": {
+                "generic": "Amērikas gārban kerdā",
+                "standard": "Amērikas gārban zēimas kerdā",
+                "daylight": "Amērikas gārban daggas kerdā"
+              }
+            },
+            "America_Pacific": {
+              "long": {
+                "generic": "Pacīfiskas Amērikas kerdā",
+                "standard": "Pacīfiskas Amērikas zēimas kerdā",
+                "daylight": "Pacīfiskas Amērikas daggas kerdā"
+              }
+            },
+            "Atlantic": {
+              "long": {
+                "generic": "Atlāntiska kerdā",
+                "standard": "Atlāntiska zēimas kerdā",
+                "daylight": "Atlāntiska daggas kerdā"
+              }
+            },
+            "Europe_Central": {
+              "long": {
+                "generic": "Centrālas Eurōpas kerdā",
+                "standard": "Centrālas Eurōpas zēimas kerdā",
+                "daylight": "Centrālas Eurōpas daggas kerdā"
+              }
+            },
+            "Europe_Eastern": {
+              "long": {
+                "generic": "Dēiniskas Eurōpas kerdā",
+                "standard": "Dēiniskas Eurōpas zēimas kerdā",
+                "daylight": "Dēiniskas Eurōpas daggas kerdā"
+              }
+            },
+            "Europe_Western": {
+              "long": {
+                "generic": "Wakkariskas Eurōpas kerdā",
+                "standard": "Wakkariskas Eurōpas zēimas kerdā",
+                "daylight": "Wakkariskas Eurōpas daggas kerdā"
+              }
+            },
+            "GMT": {
+              "long": {
+                "standard": "Greenwich kerdā"
               }
             }
           }

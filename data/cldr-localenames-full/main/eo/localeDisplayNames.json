@@ -32,7 +32,7 @@
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
+            "gregorian": "gregoria kalendaro",
             "hebrew": "hebrew",
             "indian": "indian",
             "islamic": "islamic",
@@ -40,7 +40,7 @@
             "islamic-rgsa": "islamic-rgsa",
             "islamic-tbla": "islamic-tbla",
             "islamic-umalqura": "islamic-umalqura",
-            "iso8601": "iso8601",
+            "iso8601": "kalendaro ISO-8601",
             "japanese": "japanese",
             "persian": "persian",
             "roc": "roc"
@@ -62,7 +62,7 @@
             "reformed": "reformed",
             "search": "search",
             "searchjl": "searchjl",
-            "standard": "standard",
+            "standard": "norma ordigo",
             "stroke": "stroke",
             "traditional": "traditional",
             "unihan": "unihan",
@@ -120,7 +120,7 @@
             "lana": "lana",
             "lanatham": "lanatham",
             "laoo": "laoo",
-            "latn": "latn",
+            "latn": "eŭropaj ciferoj",
             "lepc": "lepc",
             "limb": "limb",
             "mathbold": "mathbold",
@@ -161,9 +161,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
-          "script": "{0}",
-          "territory": "{0}"
+          "language": "Lingvo: {0}",
+          "script": "Skribsistemo: {0}",
+          "territory": "Regiono: {0}"
         }
       }
     }

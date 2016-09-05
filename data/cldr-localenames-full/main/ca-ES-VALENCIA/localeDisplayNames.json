@@ -41,7 +41,7 @@
         "types": {
           "calendar": {
             "buddhist": "calendari budista",
-            "chinese": "calendari xinès",
+            "chinese": "calendari xinés",
             "coptic": "calendari copte",
             "dangi": "calendari dangi",
             "ethiopic": "calendari etíop",
@@ -55,7 +55,7 @@
             "islamic-tbla": "islamic-tbla",
             "islamic-umalqura": "islamic-umalqura",
             "iso8601": "calendari ISO-8601",
-            "japanese": "calendari japonès",
+            "japanese": "calendari japonés",
             "persian": "calendari persa",
             "roc": "calendari de la República de Xina"
           },
@@ -85,13 +85,13 @@
             "yes": "Ordena els caràcters kana de manera diferent"
           },
           "collation": {
-            "big5han": "ordre del xinès tradicional - Big5",
+            "big5han": "ordre del xinés tradicional - Big5",
             "compat": "compat",
             "dictionary": "ordenació de diccionari",
             "ducet": "ordenació Unicode predeterminada",
             "emoji": "emoji",
             "eor": "normes europees d’ordenació",
-            "gb2312han": "ordre del xinès simplificat - GB2312",
+            "gb2312han": "ordre del xinés simplificat - GB2312",
             "phonebook": "ordre de la guia telefònica",
             "phonetic": "Ordenació fonètica",
             "pinyin": "ordre pinyin",

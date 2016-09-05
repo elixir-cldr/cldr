@@ -10,7 +10,7 @@
       },
       "posix": {
         "messages": {
-          "yesstr": "yes:y",
+          "yesstr": "si:s",
           "nostr": "no:n"
         }
       }

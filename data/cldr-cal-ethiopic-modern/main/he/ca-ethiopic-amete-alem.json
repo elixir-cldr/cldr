@@ -345,7 +345,7 @@
                 "MMM": "LLL",
                 "MMMd": "d בMMM",
                 "MMMEd": "E, d בMMM",
-                "MMMMd": "MMMM d",
+                "MMMMd": "MM d",
                 "ms": "mm:ss",
                 "y": "y G",
                 "yyyy": "y G",

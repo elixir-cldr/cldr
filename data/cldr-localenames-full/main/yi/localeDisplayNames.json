@@ -12,7 +12,7 @@
         "localeDisplayPattern": {
           "localePattern": "{0} ({1})",
           "localeSeparator": "{0}, {1}",
-          "localeKeyTypePattern": "{0}: {1}"
+          "localeKeyTypePattern": "{0}:‏ {1}"
         },
         "keys": {
           "calendar": "calendar",

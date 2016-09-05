@@ -83,8 +83,8 @@
             "perUnitPattern": "每平方英寸{0}"
           },
           "concentr-karat": {
-            "displayName": "克拉",
-            "unitPattern-count-other": "{0}克拉"
+            "displayName": "开",
+            "unitPattern-count-other": "{0}开"
           },
           "concentr-milligram-per-deciliter": {
             "displayName": "mg/dL",
@@ -588,7 +588,7 @@
           },
           "acceleration-g-force": {
             "displayName": "G力",
-            "unitPattern-count-other": "{0} G"
+            "unitPattern-count-other": "{0}G力"
           },
           "acceleration-meter-per-second-squared": {
             "displayName": "米/秒²",
@@ -654,8 +654,8 @@
             "perUnitPattern": "{0}/平方英寸"
           },
           "concentr-karat": {
-            "displayName": "克拉",
-            "unitPattern-count-other": "{0}克拉"
+            "displayName": "开",
+            "unitPattern-count-other": "{0}开"
           },
           "concentr-milligram-per-deciliter": {
             "displayName": "mg/dL",
@@ -865,7 +865,7 @@
           },
           "length-picometer": {
             "displayName": "皮米",
-            "unitPattern-count-other": "{0} 皮米"
+            "unitPattern-count-other": "{0}皮米"
           },
           "length-mile": {
             "displayName": "英里",
@@ -873,7 +873,7 @@
           },
           "length-yard": {
             "displayName": "码",
-            "unitPattern-count-other": "{0} 码"
+            "unitPattern-count-other": "{0}码"
           },
           "length-foot": {
             "displayName": "英尺",
@@ -1038,7 +1038,7 @@
             "unitPattern-count-other": "{0}°F"
           },
           "temperature-kelvin": {
-            "displayName": "开",
+            "displayName": "开氏度",
             "unitPattern-count-other": "{0}°K"
           },
           "volume-cubic-kilometer": {
@@ -1225,8 +1225,8 @@
             "perUnitPattern": "{0}/平方英寸"
           },
           "concentr-karat": {
-            "displayName": "克拉",
-            "unitPattern-count-other": "{0}克拉"
+            "displayName": "开",
+            "unitPattern-count-other": "{0}开"
           },
           "concentr-milligram-per-deciliter": {
             "displayName": "mg/dL",
@@ -1436,24 +1436,24 @@
           },
           "length-picometer": {
             "displayName": "皮米",
-            "unitPattern-count-other": "{0}pm"
+            "unitPattern-count-other": "{0}皮米"
           },
           "length-mile": {
             "displayName": "英里",
-            "unitPattern-count-other": "{0}mi"
+            "unitPattern-count-other": "{0}英里"
           },
           "length-yard": {
             "displayName": "码",
-            "unitPattern-count-other": "{0}yd"
+            "unitPattern-count-other": "{0}码"
           },
           "length-foot": {
             "displayName": "英尺",
-            "unitPattern-count-other": "{0}′",
+            "unitPattern-count-other": "{0}英尺",
             "perUnitPattern": "{0}/英尺"
           },
           "length-inch": {
             "displayName": "英寸",
-            "unitPattern-count-other": "{0}″",
+            "unitPattern-count-other": "{0}英寸",
             "perUnitPattern": "{0}/英寸"
           },
           "length-parsec": {
@@ -1462,7 +1462,7 @@
           },
           "length-light-year": {
             "displayName": "光年",
-            "unitPattern-count-other": "{0}ly"
+            "unitPattern-count-other": "{0}光年"
           },
           "length-astronomical-unit": {
             "displayName": "天文单位",
@@ -1609,7 +1609,7 @@
             "unitPattern-count-other": "{0}°F"
           },
           "temperature-kelvin": {
-            "displayName": "开",
+            "displayName": "开氏度",
             "unitPattern-count-other": "{0}°K"
           },
           "volume-cubic-kilometer": {

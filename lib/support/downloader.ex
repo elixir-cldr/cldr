@@ -10,16 +10,14 @@ defmodule Cldr.Downloader do
 
   def add_dir_to_gitignore(destination_dir) do
     ignore_path = destination_dir
-    |> String.split("/")
+    |> String.split(Cldr.Config.app_home())
     |> Enum.reverse
-    |> Enum.slice(0, 2)
-    |> Enum.reverse
-    |> Enum.join("/")
+    |> hd
 
     case System.cmd("grep", ["/#{ignore_path}", ".gitignore"]) do
       {_, 1} ->
         {:ok, file} = File.open(".gitignore", [:append])
-        IO.binwrite(file, "\n#{ignore_path}\n")
+        IO.binwrite(file, "#{ignore_path}\n")
         File.close file
       {_, 0} ->
         :ok
@@ -57,6 +55,15 @@ defmodule Cldr.Downloader do
     System.cmd("java", args ++ ["main"], cd: destination_dir)
     System.cmd("java", args ++ ["supplemental"], cd: destination_dir)
   end
+
+  def remove_package_files(data_dir) do
+    args1 = [data_dir, "-name", "package.json", "-exec", "rm", "-rf", "{}", "\;"]
+    args2 = [data_dir, "-name", "bower.json", "-exec", "rm", "-rf", "{}", "\;"]
+
+    System.cmd("find", args1)
+    System.cmd("find", args2)
+  end
+
 
   def ensure(:ok, _dir), do: :ok
   def ensure({:error, :eexist}, _dir), do: :ok

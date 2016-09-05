@@ -311,7 +311,7 @@
             "relative-type-1": "next Saturday"
           },
           "dayperiod": {
-            "displayName": "Dayperiod"
+            "displayName": "QN/WN"
           },
           "hour": {
             "displayName": "Siegħa",
@@ -350,7 +350,7 @@
             }
           },
           "minute-short": {
-            "displayName": "Minuta",
+            "displayName": "min.",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -359,7 +359,7 @@
             }
           },
           "minute-narrow": {
-            "displayName": "Minuta",
+            "displayName": "m",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -378,7 +378,7 @@
             }
           },
           "second-short": {
-            "displayName": "Sekonda",
+            "displayName": "sek.",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -388,7 +388,7 @@
             }
           },
           "second-narrow": {
-            "displayName": "Sekonda",
+            "displayName": "s",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"

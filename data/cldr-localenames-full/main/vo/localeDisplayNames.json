@@ -161,9 +161,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
+          "language": "Pük: {0}",
           "script": "{0}",
-          "territory": "{0}"
+          "territory": "Topäd: {0}"
         }
       }
     }

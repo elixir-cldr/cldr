@@ -829,7 +829,8 @@
             "displayName-count-many": "Gruzijos lario",
             "displayName-count-other": "Gruzijos larių",
             "symbol": "GEL",
-            "symbol-alt-narrow": "₾"
+            "symbol-alt-narrow": "₾",
+            "symbol-alt-variant": "₾"
           },
           "GHC": {
             "displayName": "Ganos sedis (1979–2007)",

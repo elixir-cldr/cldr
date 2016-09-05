@@ -62,7 +62,7 @@
           "OXENDICT": "OXENDICT",
           "PAMAKA": "PAMAKA",
           "PETR1708": "PETR1708",
-          "PINYIN": "PINYIN",
+          "PINYIN": "romanizovaná mandarínčina",
           "POLYTON": "POLYTON",
           "POSIX": "POSIX",
           "PUTER": "PUTER",
@@ -87,7 +87,7 @@
           "VAIDIKA": "VAIDIKA",
           "VALENCIA": "VALENCIA",
           "VALLADER": "VALLADER",
-          "WADEGILE": "WADEGILE"
+          "WADEGILE": "romanizovaná mandarínčina Wade-Giles"
         }
       }
     }

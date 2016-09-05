@@ -544,11 +544,11 @@
             "symbol": "ERN"
           },
           "ESA": {
-            "displayName": "ESA",
+            "displayName": "פזטה [ESA]",
             "symbol": "ESA"
           },
           "ESB": {
-            "displayName": "ESB",
+            "displayName": "פזטה [ESB]",
             "symbol": "ESB"
           },
           "ESP": {
@@ -1304,7 +1304,7 @@
             "symbol-alt-narrow": "zł"
           },
           "PLZ": {
-            "displayName": "PLZ",
+            "displayName": "זלוטי (1950 – 1995)",
             "symbol": "PLZ"
           },
           "PTE": {
@@ -1849,11 +1849,11 @@
             "symbol": "YER"
           },
           "YUD": {
-            "displayName": "YUD",
+            "displayName": "דינר יגוסלבי חדש",
             "symbol": "YUD"
           },
           "YUM": {
-            "displayName": "YUM",
+            "displayName": "דינר יגוסלבי",
             "symbol": "YUM"
           },
           "YUN": {

@@ -1802,6 +1802,11 @@
                 "daylight": "그린란드 서부 하계 표준시"
               }
             },
+            "Guam": {
+              "long": {
+                "standard": "괌 표준 시간"
+              }
+            },
             "Gulf": {
               "long": {
                 "standard": "걸프만 표준시"
@@ -1930,6 +1935,11 @@
             "Kyrgystan": {
               "long": {
                 "standard": "키르기스스탄 시간"
+              }
+            },
+            "Lanka": {
+              "long": {
+                "standard": "랑카 표준 시간"
               }
             },
             "Line_Islands": {
@@ -2074,6 +2084,11 @@
                 "generic": "페르난도 데 노로냐 시간",
                 "standard": "페르난도 데 노로냐 표준시",
                 "daylight": "페르난도 데 노로냐 하계 표준시"
+              }
+            },
+            "North_Mariana": {
+              "long": {
+                "standard": "북마리아나 제도 표준 시간"
               }
             },
             "Novosibirsk": {

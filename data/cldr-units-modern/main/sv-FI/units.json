@@ -1260,7 +1260,7 @@
             "unitPattern-count-other": "{0}°"
           },
           "temperature-celsius": {
-            "displayName": "°C",
+            "displayName": "grader Celsius",
             "unitPattern-count-one": "{0} °C",
             "unitPattern-count-other": "{0} °C"
           },

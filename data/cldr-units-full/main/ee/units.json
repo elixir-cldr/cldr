@@ -193,7 +193,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "sekend",
             "unitPattern-count-one": "sekend {0} wo",
             "unitPattern-count-other": "sekend {0} wo",
             "perUnitPattern": "{0}/s"
@@ -267,13 +267,15 @@
             "unitPattern-count-other": "{0} Hz"
           },
           "length-kilometer": {
-            "displayName": "km",
-            "unitPattern-count-other": "{0} km",
+            "displayName": "agbadroƒe",
+            "unitPattern-count-one": "agbadroƒe {0}",
+            "unitPattern-count-other": "agbadroƒe {0}",
             "perUnitPattern": "{0}/km"
           },
           "length-meter": {
-            "displayName": "meter",
-            "unitPattern-count-other": "{0} m",
+            "displayName": "abɔ",
+            "unitPattern-count-one": "abɔ {0}",
+            "unitPattern-count-other": "abɔ {0}",
             "perUnitPattern": "{0}/m"
           },
           "length-decimeter": {
@@ -1744,13 +1746,13 @@
           }
         },
         "durationUnit-type-hm": {
-          "durationUnitPattern": "h:mm"
+          "durationUnitPattern": "'ga' h:mm"
         },
         "durationUnit-type-hms": {
-          "durationUnitPattern": "h:mm:ss"
+          "durationUnitPattern": "'ga' h:mm:ss"
         },
         "durationUnit-type-ms": {
-          "durationUnitPattern": "m:ss"
+          "durationUnitPattern": "aɖabaƒoƒo m:ss"
         }
       }
     }

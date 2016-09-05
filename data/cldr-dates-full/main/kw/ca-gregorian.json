@@ -272,10 +272,10 @@
               }
             },
             "dateFormats": {
-              "full": "y MMMM d, EEEE",
-              "long": "y MMMM d",
-              "medium": "y MMM d",
-              "short": "y-MM-dd"
+              "full": "EEEE d MMMM y",
+              "long": "d MMMM y",
+              "medium": "d MMM y",
+              "short": "dd/MM/y"
             },
             "timeFormats": {
               "full": "HH:mm:ss zzzz",

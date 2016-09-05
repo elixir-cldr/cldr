@@ -11,9 +11,9 @@
       },
       "localeDisplayNames": {
         "variants": {
-          "1901": "1901",
+          "1901": "Duitse ortografie van 1901",
           "1994": "1994",
-          "1996": "1996",
+          "1996": "Duitse ortografie van 1996",
           "1606NICT": "1606NICT",
           "1694ACAD": "1694ACAD",
           "1959ACAD": "1959ACAD",
@@ -63,11 +63,11 @@
           "OXENDICT": "OXENDICT",
           "PAMAKA": "PAMAKA",
           "PETR1708": "PETR1708",
-          "PINYIN": "PINYIN",
+          "PINYIN": "pinyin",
           "POLYTON": "POLYTON",
           "POSIX": "POSIX",
           "PUTER": "PUTER",
-          "REVISED": "REVISED",
+          "REVISED": "hersiene ortografie",
           "RIGIK": "RIGIK",
           "ROZAJ": "ROZAJ",
           "RUMGR": "RUMGR",
@@ -88,7 +88,7 @@
           "VAIDIKA": "VAIDIKA",
           "VALENCIA": "VALENCIA",
           "VALLADER": "VALLADER",
-          "WADEGILE": "WADEGILE"
+          "WADEGILE": "Wade-Giles"
         }
       }
     }

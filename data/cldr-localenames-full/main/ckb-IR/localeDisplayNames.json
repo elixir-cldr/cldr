@@ -16,34 +16,34 @@
           "localeKeyTypePattern": "{0}: {1}"
         },
         "keys": {
-          "calendar": "calendar",
+          "calendar": "ڕۆژژمێر",
           "cf": "cf",
-          "collation": "collation",
-          "currency": "currency",
+          "collation": "ڕیزبەندی",
+          "currency": "دراو",
           "hc": "hc",
           "lb": "lb",
           "ms": "ms",
-          "numbers": "numbers"
+          "numbers": "ژمارەکان"
         },
         "types": {
           "calendar": {
             "buddhist": "buddhist",
-            "chinese": "chinese",
+            "chinese": "ڕۆژژمێری چینی",
             "coptic": "coptic",
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
-            "hebrew": "hebrew",
-            "indian": "indian",
-            "islamic": "islamic",
+            "gregorian": "ڕۆژژمێری گورجی",
+            "hebrew": "ڕۆژژمێری عیبری",
+            "indian": "ڕۆژژمێری نەتەوەیی ھیندی",
+            "islamic": "ڕۆژژمێری کۆچیی مانگی",
             "islamic-civil": "islamic-civil",
             "islamic-rgsa": "islamic-rgsa",
             "islamic-tbla": "islamic-tbla",
             "islamic-umalqura": "islamic-umalqura",
             "iso8601": "iso8601",
             "japanese": "japanese",
-            "persian": "persian",
+            "persian": "ڕۆژژمێری کۆچیی ھەتاوی",
             "roc": "roc"
           },
           "cf": {
@@ -87,7 +87,7 @@
           },
           "numbers": {
             "ahom": "ahom",
-            "arab": "arab",
+            "arab": "ژمارە عەربی-ھیندییەکان",
             "arabext": "arabext",
             "armn": "armn",
             "armnlow": "armnlow",
@@ -103,7 +103,7 @@
             "geor": "geor",
             "grek": "grek",
             "greklow": "greklow",
-            "gujr": "gujr",
+            "gujr": "ژمارە گوجەراتییەکان",
             "guru": "guru",
             "hanidec": "hanidec",
             "hans": "hans",
@@ -116,12 +116,12 @@
             "jpan": "jpan",
             "jpanfin": "jpanfin",
             "kali": "kali",
-            "khmr": "khmr",
+            "khmr": "ژمارە خمێرییەکان",
             "knda": "knda",
             "lana": "lana",
             "lanatham": "lanatham",
             "laoo": "laoo",
-            "latn": "latn",
+            "latn": "ژمارە ڕۆژاوایییەکان",
             "lepc": "lepc",
             "limb": "limb",
             "mathbold": "mathbold",
@@ -134,7 +134,7 @@
             "mong": "mong",
             "mroo": "mroo",
             "mtei": "mtei",
-            "mymr": "mymr",
+            "mymr": "ژمارە میانمارییەکان",
             "mymrshan": "mymrshan",
             "mymrtlng": "mymrtlng",
             "nkoo": "nkoo",
@@ -162,9 +162,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
-          "script": "{0}",
-          "territory": "{0}"
+          "language": "زمان: {0}",
+          "script": "خەت: {0}",
+          "territory": "ناوچە: {0}"
         }
       }
     }

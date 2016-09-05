@@ -57,9 +57,9 @@
           },
           "quarter": {
             "displayName": "trimestre",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "relative-type--1": "le trimestre dernier",
+            "relative-type-0": "ce trimestre-ci",
+            "relative-type-1": "le trimestre prochain",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "dans {0} trimestre",
               "relativeTimePattern-count-other": "dans {0} trimestres"
@@ -71,9 +71,9 @@
           },
           "quarter-short": {
             "displayName": "trim.",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "relative-type--1": "le trim. dern.",
+            "relative-type-0": "ce trim.",
+            "relative-type-1": "le trim. proch.",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "dans {0} trim.",
               "relativeTimePattern-count-other": "dans {0} trim."
@@ -85,9 +85,9 @@
           },
           "quarter-narrow": {
             "displayName": "trim.",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "relative-type--1": "tr dern",
+            "relative-type-0": "ce tr",
+            "relative-type-1": "tr proch",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "+{0} trim.",
               "relativeTimePattern-count-other": "+{0} trim."

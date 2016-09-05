@@ -292,9 +292,9 @@
                   "night1": "noche"
                 },
                 "narrow": {
-                  "am": "a.m.",
-                  "noon": "mediodía",
-                  "pm": "p.m.",
+                  "am": "a. m.",
+                  "noon": "m.",
+                  "pm": "p. m.",
                   "morning1": "madrugada",
                   "morning2": "mañana",
                   "evening1": "tarde",

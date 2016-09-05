@@ -15,11 +15,11 @@
           "Numeric": "Numérique",
           "Tone": "Ton",
           "UNGEGN": "UNGEGN",
-          "x-Accents": "Accents",
+          "x-Accents": "accents",
           "x-Fullwidth": "Pleine chasse",
           "x-Halfwidth": "Demi-chasse",
-          "x-Jamo": "Jamo",
-          "x-Pinyin": "Pinyin",
+          "x-Jamo": "jamo",
+          "x-Pinyin": "pinyin",
           "x-Publishing": "Édition"
         }
       }

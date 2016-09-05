@@ -73,7 +73,9 @@
             "symbol": "ARP"
           },
           "ARS": {
-            "displayName": "ARS",
+            "displayName": "Peso y’Argentina",
+            "displayName-count-one": "Peso y’Argentina",
+            "displayName-count-other": "Peso y’Argentina",
             "symbol": "ARS",
             "symbol-alt-narrow": "$"
           },
@@ -168,7 +170,9 @@
             "symbol-alt-narrow": "$"
           },
           "BOB": {
-            "displayName": "BOB",
+            "displayName": "Boliviano",
+            "displayName-count-one": "Boliviano",
+            "displayName-count-other": "Boliviano",
             "symbol": "BOB",
             "symbol-alt-narrow": "Bs"
           },
@@ -197,7 +201,7 @@
             "symbol": "BRE"
           },
           "BRL": {
-            "displayName": "BRL",
+            "displayName": "Real ya Brazil",
             "symbol": "R$",
             "symbol-alt-narrow": "R$"
           },
@@ -275,7 +279,9 @@
             "symbol": "CLF"
           },
           "CLP": {
-            "displayName": "CLP",
+            "displayName": "Peso ya Shili",
+            "displayName-count-one": "Peso ya Shili",
+            "displayName-count-other": "Peso ya Shili",
             "symbol": "CLP",
             "symbol-alt-narrow": "$"
           },
@@ -285,7 +291,9 @@
             "symbol-alt-narrow": "¥"
           },
           "COP": {
-            "displayName": "COP",
+            "displayName": "Peso ya Kolombi",
+            "displayName-count-one": "Peso ya Kolombi",
+            "displayName-count-other": "Peso ya Kolombi",
             "symbol": "COP",
             "symbol-alt-narrow": "$"
           },
@@ -294,7 +302,9 @@
             "symbol": "COU"
           },
           "CRC": {
-            "displayName": "CRC",
+            "displayName": "Colon ya Kosta Rika",
+            "displayName-count-one": "Colon ya Kosta Rika",
+            "displayName-count-other": "Colon ya Kosta Rika",
             "symbol": "CRC",
             "symbol-alt-narrow": "₡"
           },
@@ -312,7 +322,9 @@
             "symbol-alt-narrow": "$"
           },
           "CUP": {
-            "displayName": "CUP",
+            "displayName": "Peso ya Kuba",
+            "displayName-count-one": "Peso ya Kuba",
+            "displayName-count-other": "Peso ya Kuba",
             "symbol": "CUP",
             "symbol-alt-narrow": "$"
           },
@@ -325,7 +337,9 @@
             "symbol": "CYP"
           },
           "CZK": {
-            "displayName": "CZK",
+            "displayName": "Motolé Sheki",
+            "displayName-count-one": "Motolé Sheki",
+            "displayName-count-other": "Motolé Sheki",
             "symbol": "CZK",
             "symbol-alt-narrow": "Kč"
           },
@@ -342,12 +356,16 @@
             "symbol": "DJF"
           },
           "DKK": {
-            "displayName": "DKK",
+            "displayName": "Motolé ya Danemark",
+            "displayName-count-one": "Motolé ya Danemark",
+            "displayName-count-other": "Motolé ya Danemark",
             "symbol": "DKK",
             "symbol-alt-narrow": "kr"
           },
           "DOP": {
-            "displayName": "DOP",
+            "displayName": "Peso Dominikani",
+            "displayName-count-one": "Peso Dominikani",
+            "displayName-count-other": "Peso Dominikani",
             "symbol": "DOP",
             "symbol-alt-narrow": "$"
           },
@@ -435,7 +453,9 @@
             "symbol": "GHC"
           },
           "GHS": {
-            "displayName": "GHS",
+            "displayName": "Cedi",
+            "displayName-count-one": "Cedi",
+            "displayName-count-other": "Cedi",
             "symbol": "GHS"
           },
           "GIP": {
@@ -448,7 +468,9 @@
             "symbol": "GMD"
           },
           "GNF": {
-            "displayName": "GNF",
+            "displayName": "Falánga ya Gine",
+            "displayName-count-one": "Falánga ya Gine",
+            "displayName-count-other": "Falánga ya Gine",
             "symbol": "GNF",
             "symbol-alt-narrow": "FG"
           },
@@ -502,7 +524,9 @@
             "symbol-alt-narrow": "kn"
           },
           "HTG": {
-            "displayName": "HTG",
+            "displayName": "Gurde",
+            "displayName-count-one": "Gurde",
+            "displayName-count-other": "Gurde",
             "symbol": "HTG"
           },
           "HUF": {
@@ -542,7 +566,9 @@
             "symbol": "IRR"
           },
           "ISK": {
-            "displayName": "ISK",
+            "displayName": "Motolé ya Islandi",
+            "displayName-count-one": "Motolé ya Islandi",
+            "displayName-count-other": "Motolé ya Islandi",
             "symbol": "ISK",
             "symbol-alt-narrow": "kr"
           },
@@ -639,7 +665,9 @@
             "symbol": "LSL"
           },
           "LTL": {
-            "displayName": "LTL",
+            "displayName": "Litas ya Litwani",
+            "displayName-count-one": "Litas ya Litwani",
+            "displayName-count-other": "Litas ya Litwani",
             "symbol": "LTL",
             "symbol-alt-narrow": "Lt"
           },
@@ -660,7 +688,9 @@
             "symbol": "LUL"
           },
           "LVL": {
-            "displayName": "LVL",
+            "displayName": "Lats ya Letoni",
+            "displayName-count-one": "Lats ya Letoni",
+            "displayName-count-other": "Lats ya Letoni",
             "symbol": "LVL",
             "symbol-alt-narrow": "Ls"
           },
@@ -753,7 +783,9 @@
             "symbol": "MWK"
           },
           "MXN": {
-            "displayName": "MXN",
+            "displayName": "Peso ya Mexiko",
+            "displayName-count-one": "Peso ya Mexiko",
+            "displayName-count-other": "Peso ya Mexiko",
             "symbol": "MX$",
             "symbol-alt-narrow": "$"
           },
@@ -806,7 +838,9 @@
             "symbol": "NLG"
           },
           "NOK": {
-            "displayName": "NOK",
+            "displayName": "Motolé ya Norvej",
+            "displayName-count-one": "Motolé ya Norvej",
+            "displayName-count-other": "Motolé ya Norvej",
             "symbol": "NOK",
             "symbol-alt-narrow": "kr"
           },
@@ -825,7 +859,9 @@
             "symbol": "OMR"
           },
           "PAB": {
-            "displayName": "PAB",
+            "displayName": "Balboa",
+            "displayName-count-one": "Balboa",
+            "displayName-count-other": "Balboa",
             "symbol": "PAB"
           },
           "PEI": {
@@ -833,7 +869,9 @@
             "symbol": "PEI"
           },
           "PEN": {
-            "displayName": "PEN",
+            "displayName": "Sol Sika",
+            "displayName-count-one": "Sol Sika",
+            "displayName-count-other": "Sol Sika",
             "symbol": "PEN"
           },
           "PES": {
@@ -868,7 +906,9 @@
             "symbol": "PTE"
           },
           "PYG": {
-            "displayName": "PYG",
+            "displayName": "Guarani",
+            "displayName-count-one": "Guarani",
+            "displayName-count-other": "Guarani",
             "symbol": "PYG",
             "symbol-alt-narrow": "₲"
           },
@@ -933,7 +973,9 @@
             "symbol": "SDP"
           },
           "SEK": {
-            "displayName": "SEK",
+            "displayName": "Motolé ya Swédi",
+            "displayName-count-one": "Motolé ya Swédi",
+            "displayName-count-other": "Motolé ya Swédi",
             "symbol": "SEK",
             "symbol-alt-narrow": "kr"
           },

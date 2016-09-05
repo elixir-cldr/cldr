@@ -183,8 +183,9 @@
             "unitPattern-count-other": "{0} bitar"
           },
           "duration-century": {
-            "displayName": "c",
-            "unitPattern-count-other": "{0} c"
+            "displayName": "árh",
+            "unitPattern-count-one": "{0} árh",
+            "unitPattern-count-other": "{0} árh"
           },
           "duration-year": {
             "displayName": "ár",
@@ -208,7 +209,7 @@
             "displayName": "dagar",
             "unitPattern-count-one": "{0} dagur",
             "unitPattern-count-other": "{0} dagar",
-            "perUnitPattern": "{0}/d."
+            "perUnitPattern": "{0} á dagur"
           },
           "duration-hour": {
             "displayName": "klukkustundir",
@@ -220,7 +221,7 @@
             "displayName": "mínútur",
             "unitPattern-count-one": "{0} mínúta",
             "unitPattern-count-other": "{0} mínútur",
-            "perUnitPattern": "{0}/min"
+            "perUnitPattern": "{0} á mínúta"
           },
           "duration-second": {
             "displayName": "sekúndur",
@@ -878,8 +879,9 @@
             "unitPattern-count-other": "{0} bitar"
           },
           "duration-century": {
-            "displayName": "c",
-            "unitPattern-count-other": "{0} c"
+            "displayName": "árh",
+            "unitPattern-count-one": "{0} árh",
+            "unitPattern-count-other": "{0} árh"
           },
           "duration-year": {
             "displayName": "ár",
@@ -897,7 +899,7 @@
             "displayName": "vikur",
             "unitPattern-count-one": "{0} vika",
             "unitPattern-count-other": "{0} vikur",
-            "perUnitPattern": "{0}/w"
+            "perUnitPattern": "{0}/v"
           },
           "duration-day": {
             "displayName": "dagar",
@@ -1430,13 +1432,13 @@
           },
           "angle-arc-minute": {
             "displayName": "bogamín.",
-            "unitPattern-count-one": "{0} bogamín.",
-            "unitPattern-count-other": "{0} bogamín."
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
           },
           "angle-arc-second": {
             "displayName": "bogasek.",
-            "unitPattern-count-one": "{0} bogasek.",
-            "unitPattern-count-other": "{0} bogasek."
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
           },
           "area-square-kilometer": {
             "displayName": "km²",
@@ -1573,14 +1575,15 @@
             "unitPattern-count-other": "{0} bitar"
           },
           "duration-century": {
-            "displayName": "c",
-            "unitPattern-count-other": "{0} c"
+            "displayName": "árh",
+            "unitPattern-count-one": "{0}árh",
+            "unitPattern-count-other": "{0}árh"
           },
           "duration-year": {
             "displayName": "ár",
             "unitPattern-count-one": "{0}á",
             "unitPattern-count-other": "{0}á",
-            "perUnitPattern": "{0}/ári"
+            "perUnitPattern": "{0}/ár"
           },
           "duration-month": {
             "displayName": "mánuður",
@@ -1592,7 +1595,7 @@
             "displayName": "vika",
             "unitPattern-count-one": "{0} v.",
             "unitPattern-count-other": "{0} v.",
-            "perUnitPattern": "{0}/w"
+            "perUnitPattern": "{0}/v"
           },
           "duration-day": {
             "displayName": "dagur",
@@ -1766,7 +1769,7 @@
             "displayName": "tommur",
             "unitPattern-count-one": "{0}″",
             "unitPattern-count-other": "{0}″",
-            "perUnitPattern": "{0}/t."
+            "perUnitPattern": "{0}/tom"
           },
           "length-parsec": {
             "displayName": "parsek",
@@ -1797,9 +1800,9 @@
             "unitPattern-count-other": "{0} sml"
           },
           "length-mile-scandinavian": {
-            "displayName": "sæ. míl.",
-            "unitPattern-count-one": "{0} sæ. míl.",
-            "unitPattern-count-other": "{0} sæ. míl."
+            "displayName": "sænskar mílur",
+            "unitPattern-count-one": "{0} sæ. míl",
+            "unitPattern-count-other": "{0} sæ. míl"
           },
           "light-lux": {
             "displayName": "lúx",

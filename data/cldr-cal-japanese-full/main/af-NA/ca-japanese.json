@@ -999,9 +999,9 @@
               }
             },
             "dateFormats": {
-              "full": "EEEE dd MMMM y G",
-              "long": "dd MMMM y G",
-              "medium": "dd MMM y G",
+              "full": "EEEE d MMMM y G",
+              "long": "d MMMM y G",
+              "medium": "d MMM y G",
               "short": "GGGGG y-MM-dd"
             },
             "timeFormats": {

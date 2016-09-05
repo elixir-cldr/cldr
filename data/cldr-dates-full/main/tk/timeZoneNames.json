@@ -2189,6 +2189,11 @@
                 "generic": "Türkmenistan",
                 "standard": "Türkmenistan, standart wagt",
                 "daylight": "Türkmenistan, tomusky wagt"
+              },
+              "short": {
+                "generic": "TMT",
+                "standard": "TMT",
+                "daylight": "TMST"
               }
             },
             "Tuvalu": {

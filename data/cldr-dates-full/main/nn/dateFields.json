@@ -15,9 +15,9 @@
           },
           "year": {
             "displayName": "år",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "relative-type--1": "i fjor",
+            "relative-type-0": "dette år",
+            "relative-type-1": "neste år",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} år",
               "relativeTimePattern-count-other": "om {0} år"
@@ -29,9 +29,9 @@
           },
           "year-short": {
             "displayName": "år",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "relative-type--1": "i fjor",
+            "relative-type-0": "dette år",
+            "relative-type-1": "neste år",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} år",
               "relativeTimePattern-count-other": "om {0} år"
@@ -43,9 +43,9 @@
           },
           "year-narrow": {
             "displayName": "år",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "relative-type--1": "i fjor",
+            "relative-type-0": "dette år",
+            "relative-type-1": "neste år",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} år",
               "relativeTimePattern-count-other": "om {0} år"
@@ -93,9 +93,9 @@
           },
           "month": {
             "displayName": "månad",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "relative-type--1": "forrige månad",
+            "relative-type-0": "denne månad",
+            "relative-type-1": "neste månad",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} måned",
               "relativeTimePattern-count-other": "om {0} måneder"
@@ -107,9 +107,9 @@
           },
           "month-short": {
             "displayName": "månad",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "relative-type--1": "forrige månad",
+            "relative-type-0": "denne månad",
+            "relative-type-1": "neste månad",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} måneder",
               "relativeTimePattern-count-other": "om {0} måneder"
@@ -121,9 +121,9 @@
           },
           "month-narrow": {
             "displayName": "månad",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "relative-type--1": "forrige månad",
+            "relative-type-0": "denne månad",
+            "relative-type-1": "neste månad",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} måneder",
               "relativeTimePattern-count-other": "om {0} måneder"
@@ -135,9 +135,9 @@
           },
           "week": {
             "displayName": "veke",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "relative-type--1": "forrige veke",
+            "relative-type-0": "denne veke",
+            "relative-type-1": "neste veke",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} uke",
               "relativeTimePattern-count-other": "om {0} uker"
@@ -149,9 +149,9 @@
           },
           "week-short": {
             "displayName": "veke",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "relative-type--1": "forrige veke",
+            "relative-type-0": "denne veke",
+            "relative-type-1": "neste veke",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} uker",
               "relativeTimePattern-count-other": "om {0} uker"
@@ -163,9 +163,9 @@
           },
           "week-narrow": {
             "displayName": "veke",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "relative-type--1": "forrige veke",
+            "relative-type-0": "denne veke",
+            "relative-type-1": "neste veke",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "om {0} uker",
               "relativeTimePattern-count-other": "om {0} uker"
@@ -227,109 +227,109 @@
             "displayName": "vekedag"
           },
           "sun": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "søndag forrige veke",
+            "relative-type-0": "søndag denne veke",
+            "relative-type-1": "søndag neste veke"
           },
           "sun-short": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "søndag forrige veke",
+            "relative-type-0": "søndag denne veke",
+            "relative-type-1": "søndag neste veke"
           },
           "sun-narrow": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "søndag forrige veke",
+            "relative-type-0": "søndag denne veke",
+            "relative-type-1": "søndag neste veke"
           },
           "mon": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "måndag forrige veke",
+            "relative-type-0": "måndag denne veke",
+            "relative-type-1": "måndag neste veke"
           },
           "mon-short": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "måndag forrige veke",
+            "relative-type-0": "måndag denne veke",
+            "relative-type-1": "måndag neste veke"
           },
           "mon-narrow": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "måndag forrige veke",
+            "relative-type-0": "måndag denne veke",
+            "relative-type-1": "måndag neste veke"
           },
           "tue": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "tysdag forrige veke",
+            "relative-type-0": "tysdag denne veke",
+            "relative-type-1": "tysdag neste veke"
           },
           "tue-short": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "tysdag forrige veke",
+            "relative-type-0": "tysdag denne veke",
+            "relative-type-1": "tysdag neste veke"
           },
           "tue-narrow": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "tysdag forrige veke",
+            "relative-type-0": "tysdag denne veke",
+            "relative-type-1": "tysdag neste veke"
           },
           "wed": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "onsdag forrige veke",
+            "relative-type-0": "onsdag denne veke",
+            "relative-type-1": "onsdage neste veke"
           },
           "wed-short": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "onsdag forrige veke",
+            "relative-type-0": "onsdag denne veke",
+            "relative-type-1": "onsdage neste veke"
           },
           "wed-narrow": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "onsdag forrige veke",
+            "relative-type-0": "onsdag denne veke",
+            "relative-type-1": "onsdage neste veke"
           },
           "thu": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "torsdag forrige veke",
+            "relative-type-0": "torsdag denne veke",
+            "relative-type-1": "torsdag neste veke"
           },
           "thu-short": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "torsdag forrige veke",
+            "relative-type-0": "torsdag denne veke",
+            "relative-type-1": "torsdag neste veke"
           },
           "thu-narrow": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "torsdag forrige veke",
+            "relative-type-0": "torsdag denne veke",
+            "relative-type-1": "torsdag neste veke"
           },
           "fri": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "fredag forrige veke",
+            "relative-type-0": "fredag denne veke",
+            "relative-type-1": "fredag neste veke"
           },
           "fri-short": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "fredag forrige veke",
+            "relative-type-0": "fredag denne veke",
+            "relative-type-1": "fredag neste veke"
           },
           "fri-narrow": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "fredag forrige veke",
+            "relative-type-0": "fredag denne veke",
+            "relative-type-1": "fredag neste veke"
           },
           "sat": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "laurdag forrige veke",
+            "relative-type-0": "laurdag denne veke",
+            "relative-type-1": "laurdag neste veke"
           },
           "sat-short": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "laurdag forrige veke",
+            "relative-type-0": "laurdag denne veke",
+            "relative-type-1": "laurdag neste veke"
           },
           "sat-narrow": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "laurdag forrige veke",
+            "relative-type-0": "laurdag denne veke",
+            "relative-type-1": "laurdag neste veke"
           },
           "dayperiod": {
             "displayName": "f.m./e.m.-val"

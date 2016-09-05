@@ -14,19 +14,19 @@
             "months": {
               "format": {
                 "abbreviated": {
-                  "1": "Tout",
-                  "2": "Baba",
-                  "3": "Hator",
-                  "4": "Kiahk",
-                  "5": "Toba",
-                  "6": "Amshir",
-                  "7": "Baramhat",
-                  "8": "Baramouda",
-                  "9": "Bashans",
-                  "10": "Paona",
-                  "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "1": "dzv",
+                  "2": "dzd",
+                  "3": "ted",
+                  "4": "afɔ",
+                  "5": "dam",
+                  "6": "mas",
+                  "7": "sia",
+                  "8": "dea",
+                  "9": "any",
+                  "10": "kel",
+                  "11": "ade",
+                  "12": "dzm",
+                  "13": "foa"
                 },
                 "narrow": {
                   "1": "1",
@@ -44,36 +44,36 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Tout",
-                  "2": "Baba",
-                  "3": "Hator",
-                  "4": "Kiahk",
-                  "5": "Toba",
-                  "6": "Amshir",
-                  "7": "Baramhat",
-                  "8": "Baramouda",
-                  "9": "Bashans",
-                  "10": "Paona",
-                  "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "1": "dzove",
+                  "2": "dzodze",
+                  "3": "tedoxe",
+                  "4": "afɔfiẽ",
+                  "5": "damɛ",
+                  "6": "masa",
+                  "7": "siamlɔm",
+                  "8": "deasiamime",
+                  "9": "anyɔnyɔ",
+                  "10": "kele",
+                  "11": "adeɛmekpɔxe",
+                  "12": "dzome",
+                  "13": "ƒoave"
                 }
               },
               "stand-alone": {
                 "abbreviated": {
-                  "1": "Tout",
-                  "2": "Baba",
-                  "3": "Hator",
-                  "4": "Kiahk",
-                  "5": "Toba",
-                  "6": "Amshir",
-                  "7": "Baramhat",
-                  "8": "Baramouda",
-                  "9": "Bashans",
-                  "10": "Paona",
-                  "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "1": "dzv",
+                  "2": "dzd",
+                  "3": "ted",
+                  "4": "afɔ",
+                  "5": "dam",
+                  "6": "mas",
+                  "7": "sia",
+                  "8": "dea",
+                  "9": "any",
+                  "10": "kel",
+                  "11": "ade",
+                  "12": "dzm",
+                  "13": "foa"
                 },
                 "narrow": {
                   "1": "1",
@@ -91,19 +91,19 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Tout",
-                  "2": "Baba",
-                  "3": "Hator",
-                  "4": "Kiahk",
-                  "5": "Toba",
-                  "6": "Amshir",
-                  "7": "Baramhat",
-                  "8": "Baramouda",
-                  "9": "Bashans",
-                  "10": "Paona",
-                  "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "1": "dzove",
+                  "2": "dzodze",
+                  "3": "tedoxe",
+                  "4": "afɔfiẽ",
+                  "5": "damɛ",
+                  "6": "masa",
+                  "7": "siamlɔm",
+                  "8": "deasiamime",
+                  "9": "anyɔnyɔ",
+                  "10": "kele",
+                  "11": "adeɛmekpɔxe",
+                  "12": "dzome",
+                  "13": "ƒoave"
                 }
               }
             },

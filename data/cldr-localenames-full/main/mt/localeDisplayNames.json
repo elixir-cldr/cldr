@@ -22,7 +22,7 @@
           "hc": "hc",
           "lb": "lb",
           "ms": "ms",
-          "numbers": "numbers"
+          "numbers": "Numri"
         },
         "types": {
           "calendar": {
@@ -52,7 +52,7 @@
           "collation": {
             "big5han": "Ordni Ċiniż Tradizzjonali (Big5)",
             "compat": "compat",
-            "dictionary": "dictionary",
+            "dictionary": "Ordni tad-Dizzjunarju",
             "ducet": "ducet",
             "emoji": "emoji",
             "eor": "eor",

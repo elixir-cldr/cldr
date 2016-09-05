@@ -157,43 +157,43 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ᏧᏕᏘᏴᏓ",
             "unitPattern-count-one": "{0} ᏑᏕᏘᏴᏓ",
             "unitPattern-count-other": "{0} ᏧᏕᏘᏴᏓ",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "ᎢᏯᏅᏓ",
             "unitPattern-count-one": "{0} ᏏᏅᏓ",
             "unitPattern-count-other": "{0} ᎢᏯᏅᏓ",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "ᎢᏳᎾᏙᏓᏆᏍᏗ",
             "unitPattern-count-one": "{0} ᏒᎾᏙᏓᏆᏍᏗ",
             "unitPattern-count-other": "{0} ᎢᏳᎾᏙᏓᏆᏍᏗ",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "ᏧᏒᎯᏓ",
             "unitPattern-count-one": "{0} ᏏᎦ",
             "unitPattern-count-other": "{0} ᏧᏒᎯᏓ",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "ᎢᏧᏣᎶᏓ",
             "unitPattern-count-one": "{0} ᏑᏣᎶᏓ",
             "unitPattern-count-other": "{0} ᎢᏧᏣᎶᏓ",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "ᎢᏧᏔᏬᏍᏔᏅ",
             "unitPattern-count-one": "{0} ᎢᏯᏔᏬᏍᏔᏅ",
             "unitPattern-count-other": "{0} ᎢᏧᏔᏬᏍᏔᏅ",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "ᏗᏎᏢ",
             "unitPattern-count-one": "{0} ᎠᏎᏢ",
             "unitPattern-count-other": "{0} ᏗᏎᏢ",
             "perUnitPattern": "{0}/s"
@@ -735,37 +735,37 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ᏧᏕᏘᏴᏓ",
             "unitPattern-count-other": "{0} y",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "ᎢᏯᏅᏓ",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "ᎢᏳᎾᏙᏓᏆᏍᏗ",
             "unitPattern-count-other": "{0} w",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "ᏧᏒᎯᏓ",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "ᎢᏧᏣᎶᏓ",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "ᎢᏧᏔᏬᏍᏔᏅ",
             "unitPattern-count-other": "{0} min",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "ᏗᏎᏢ",
             "unitPattern-count-other": "{0} s",
             "perUnitPattern": "{0}/s"
           },
@@ -1306,37 +1306,37 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ᏧᏕᏘᏴᏓ",
             "unitPattern-count-other": "{0} y",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "ᎢᏯᏅᏓ",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "ᎢᏳᎾᏙᏓᏆᏍᏗ",
             "unitPattern-count-other": "{0} w",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "ᏧᏒᎯᏓ",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "ᎢᏧᏣᎶᏓ",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "ᎢᏧᏔᏬᏍᏔᏅ",
             "unitPattern-count-other": "{0} min",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "ᏗᏎᏢ",
             "unitPattern-count-other": "{0} s",
             "perUnitPattern": "{0}/s"
           },

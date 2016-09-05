@@ -158,49 +158,49 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "година",
             "unitPattern-count-one": "{0} година",
             "unitPattern-count-few": "{0} године",
             "unitPattern-count-other": "{0} година",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "месец",
             "unitPattern-count-one": "{0} месец",
             "unitPattern-count-few": "{0} месеца",
             "unitPattern-count-other": "{0} месец",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "недеља",
             "unitPattern-count-one": "{0} недеља",
             "unitPattern-count-few": "{0} недеље",
             "unitPattern-count-other": "{0} недеља",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "дан",
             "unitPattern-count-one": "{0} дан",
             "unitPattern-count-few": "{0} дана",
             "unitPattern-count-other": "{0} дан",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "сат",
             "unitPattern-count-one": "{0} сат",
             "unitPattern-count-few": "{0} сата",
             "unitPattern-count-other": "{0} сат",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "минут",
             "unitPattern-count-one": "{0} минут",
             "unitPattern-count-few": "{0} минута",
             "unitPattern-count-other": "{0} минут",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "секунда",
             "unitPattern-count-one": "{0} секунда",
             "unitPattern-count-few": "{0} секунде",
             "unitPattern-count-other": "{0} секунда",
@@ -743,49 +743,49 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "година",
             "unitPattern-count-one": "{0} год",
             "unitPattern-count-few": "{0} год",
             "unitPattern-count-other": "{0} год",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "месец",
             "unitPattern-count-one": "{0} мес",
             "unitPattern-count-few": "{0} мес",
             "unitPattern-count-other": "{0} мес",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "недеља",
             "unitPattern-count-one": "{0} нед",
             "unitPattern-count-few": "{0} нед",
             "unitPattern-count-other": "{0} нед",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "дан",
             "unitPattern-count-one": "{0} дан",
             "unitPattern-count-few": "{0} дана",
             "unitPattern-count-other": "{0} дан",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "сат",
             "unitPattern-count-one": "{0} сат",
             "unitPattern-count-few": "{0} сата",
             "unitPattern-count-other": "{0} сат",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "минут",
             "unitPattern-count-one": "{0} мин",
             "unitPattern-count-few": "{0} мин",
             "unitPattern-count-other": "{0} мин",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "секунда",
             "unitPattern-count-one": "{0} сек",
             "unitPattern-count-few": "{0} сек",
             "unitPattern-count-other": "{0} сек",
@@ -1328,49 +1328,49 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "година",
             "unitPattern-count-one": "{0} год",
             "unitPattern-count-few": "{0} год",
             "unitPattern-count-other": "{0} год",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "месец",
             "unitPattern-count-one": "{0} мес",
             "unitPattern-count-few": "{0} мес",
             "unitPattern-count-other": "{0} мес",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "недеља",
             "unitPattern-count-one": "{0} нед",
             "unitPattern-count-few": "{0} нед",
             "unitPattern-count-other": "{0} нед",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "дан",
             "unitPattern-count-one": "{0} дан",
             "unitPattern-count-few": "{0} дан",
             "unitPattern-count-other": "{0} дан",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "сат",
             "unitPattern-count-one": "{0} сат",
             "unitPattern-count-few": "{0} сат",
             "unitPattern-count-other": "{0} сат",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "минут",
             "unitPattern-count-one": "{0} мин",
             "unitPattern-count-few": "{0} мин",
             "unitPattern-count-other": "{0} мин",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "секунда",
             "unitPattern-count-one": "{0} сек",
             "unitPattern-count-few": "{0} сек",
             "unitPattern-count-other": "{0} сек",

@@ -1583,15 +1583,15 @@
             "unitPattern-count-other": "{0} Bits"
           },
           "duration-century": {
-            "displayName": "Jh.",
-            "unitPattern-count-one": "{0} Jh.",
-            "unitPattern-count-other": "{0} Jh."
+            "displayName": "Jahrh.",
+            "unitPattern-count-one": "{0} Jahrh.",
+            "unitPattern-count-other": "{0} Jahrh."
           },
           "duration-year": {
             "displayName": "J",
             "unitPattern-count-one": "{0} J",
             "unitPattern-count-other": "{0} J",
-            "perUnitPattern": "{0}/J"
+            "perUnitPattern": "{0}/Jahr"
           },
           "duration-month": {
             "displayName": "M",

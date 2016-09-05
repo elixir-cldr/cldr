@@ -17,16 +17,16 @@
                 "abbreviated": {
                   "1": "Muh.",
                   "2": "Saf.",
-                  "3": "Rab. I",
-                  "4": "Rab. II",
-                  "5": "Jum. I",
-                  "6": "Jum. II",
-                  "7": "Raj.",
-                  "8": "Sha.",
+                  "3": "Reb. 1",
+                  "4": "Reb. 2",
+                  "5": "Džum. 1",
+                  "6": "Džum. 2",
+                  "7": "Redž.",
+                  "8": "Ša.",
                   "9": "Ram.",
-                  "10": "Shaw.",
-                  "11": "Dhuʻl-Q.",
-                  "12": "Dhuʻl-H."
+                  "10": "Še.",
+                  "11": "Zul-k.",
+                  "12": "Zul-h."
                 },
                 "narrow": {
                   "1": "1",
@@ -61,16 +61,16 @@
                 "abbreviated": {
                   "1": "Muh.",
                   "2": "Saf.",
-                  "3": "Rab. I",
-                  "4": "Rab. II",
-                  "5": "Jum. I",
-                  "6": "Jum. II",
-                  "7": "Raj.",
-                  "8": "Sha.",
+                  "3": "Reb. 1",
+                  "4": "Reb. 2",
+                  "5": "Džum. 1",
+                  "6": "Džum. 2",
+                  "7": "Redž.",
+                  "8": "Ša.",
                   "9": "Ram.",
-                  "10": "Shaw.",
-                  "11": "Dhuʻl-Q.",
-                  "12": "Dhuʻl-H."
+                  "10": "Še.",
+                  "11": "Zul-k.",
+                  "12": "Zul-h."
                 },
                 "narrow": {
                   "1": "1",
@@ -87,18 +87,18 @@
                   "12": "12"
                 },
                 "wide": {
-                  "1": "Muraham",
-                  "2": "Safar",
-                  "3": "Rabiʻ I",
-                  "4": "Rabiʻ II",
-                  "5": "Jumada I",
-                  "6": "Jumada II",
-                  "7": "Rađab",
+                  "1": "Muharem",
+                  "2": "Safer",
+                  "3": "Rebi 1",
+                  "4": "Rebi 2",
+                  "5": "Džumade 1",
+                  "6": "Džumade 2",
+                  "7": "Redžeb",
                   "8": "Šaʻban",
-                  "9": "Ramadan",
-                  "10": "Šaval",
-                  "11": "Duʻl-Kiʻda",
-                  "12": "Duʻl-hiđa"
+                  "9": "Ramazan",
+                  "10": "Ševal",
+                  "11": "Zul-kade",
+                  "12": "Zul-hidže"
                 }
               }
             },

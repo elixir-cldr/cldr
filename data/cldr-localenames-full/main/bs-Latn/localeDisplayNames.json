@@ -18,21 +18,33 @@
         "keys": {
           "calendar": "Kalendar",
           "cf": "cf",
+          "colAlternate": "Zanemarivanje poredavanja simbola",
+          "colBackwards": "Obrnuto poredavanje po naglasku",
+          "colCaseFirst": "Poredavanje po velikim/malim slovima",
+          "colCaseLevel": "Poredavanje u skladu s veličinom slova",
+          "colHiraganaQuaternary": "Poredavanje po pismu kana",
           "collation": "Sortiranje",
+          "colNormalization": "Normalizirano poredavanje",
+          "colNumeric": "Numeričko poredavanje",
+          "colStrength": "Jačina poredavanja",
           "currency": "Valuta",
           "hc": "Satni ciklus (12 ili 24)",
           "lb": "Stil završetka reda",
           "ms": "Mjerni sistem",
-          "numbers": "Brojevi"
+          "numbers": "Brojevi",
+          "timezone": "Vremenska zona",
+          "va": "Varijanta zemlje/jezika",
+          "variableTop": "Poredaj kao simbole",
+          "x": "Privatna upotreba"
         },
         "types": {
           "calendar": {
             "buddhist": "Budistički kalendar",
             "chinese": "Kineski kalendar",
-            "coptic": "coptic",
+            "coptic": "Koptski kalendar",
             "dangi": "Dangi kalendar",
             "ethiopic": "Etiopski kalendar",
-            "ethiopic-amete-alem": "ethiopic-amete-alem",
+            "ethiopic-amete-alem": "Etiopski kalendar \\\"Amete Alem\\\"",
             "gregorian": "Gregorijanski kalendar",
             "hebrew": "Hebrejski kalendar",
             "indian": "Indijski nacionalni kalendar",
@@ -50,24 +62,61 @@
             "account": "account",
             "standard": "standard"
           },
+          "colAlternate": {
+            "non-ignorable": "Poredaj simbole",
+            "shifted": "Poredaj zanemarujući simbole"
+          },
+          "colBackwards": {
+            "no": "Poredaj naglaske normalno",
+            "yes": "Poredaj naglaske obrnuto"
+          },
+          "colCaseFirst": {
+            "lower": "Prvo poredaj mala slova",
+            "no": "Poredaj po normalnom poretku veličine slova",
+            "upper": "Poredaj prvo velika slova"
+          },
+          "colCaseLevel": {
+            "no": "Poredaj zanemarujući veličinu",
+            "yes": "Poredaj u skladu s veličinom slova"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Poredaj pismo kana zasebno",
+            "yes": "Poredaj pismo kana drugačije"
+          },
           "collation": {
             "big5han": "Tradicionalno kinesko sortiranje",
             "compat": "compat",
-            "dictionary": "dictionary",
+            "dictionary": "rječničko razvrstavanje",
             "ducet": "Standardno Unicode razvrstavanje",
             "emoji": "emoji",
             "eor": "eor",
             "gb2312han": "Pojednostavljeno kinesko sortiranje",
             "phonebook": "Sortiranje kao telefonski imenik",
+            "phonetic": "Fonetski poredak",
             "pinyin": "Pinjin sortiranje",
-            "reformed": "reformed",
+            "reformed": "reformirano razvrstavanje",
             "search": "Općenito pretraživanje",
-            "searchjl": "searchjl",
+            "searchjl": "Pretraživanje po početnom suglasniku hangula",
             "standard": "Standardno razvrstavanje",
             "stroke": "Sortiranje po broju crta",
             "traditional": "Tradicionalno sortiranje",
-            "unihan": "unihan",
-            "zhuyin": "zhuyin"
+            "unihan": "razvrstavanje prema korijenu i potezu",
+            "zhuyin": "zhuyin razvrstavanje"
+          },
+          "colNormalization": {
+            "no": "Poredaj bez normalizacije",
+            "yes": "Poredaj unikod normalizirano"
+          },
+          "colNumeric": {
+            "no": "Poredaj znamenke pojedinačno",
+            "yes": "Poredaj znamenke numerički"
+          },
+          "colStrength": {
+            "identical": "Poredaj sve",
+            "primary": "Poredaj samo po osnovnim slovima",
+            "quaternary": "Poredaj po naglascima/veličini/širini/pismu kana",
+            "secondary": "Poredaj po naglasku",
+            "tertiary": "Poredaj po naglascima/veličini/širini"
           },
           "hc": {
             "h11": "12-satni sistem (0-11)",
@@ -99,6 +148,7 @@
             "cyrl": "cyrl",
             "deva": "brojke pisma devanagari",
             "ethi": "etiopski brojevi",
+            "finance": "Financijski brojevi",
             "fullwide": "Široki brojevi",
             "geor": "gruzijski brojevi",
             "grek": "grčki brojevi",
@@ -131,12 +181,13 @@
             "mathsans": "mathsans",
             "mlym": "malajalamske brojke",
             "modi": "modi",
-            "mong": "mong",
+            "mong": "Mongolske znamenke",
             "mroo": "mroo",
             "mtei": "mtei",
             "mymr": "mijanmarske brojke",
             "mymrshan": "mymrshan",
             "mymrtlng": "mymrtlng",
+            "native": "Izvorne znamenke",
             "nkoo": "nkoo",
             "olck": "olck",
             "orya": "orijske brojke",
@@ -157,7 +208,8 @@
             "thai": "tajlandske brojke",
             "tibt": "tibetske brojke",
             "tirh": "tirh",
-            "vaii": "vaii",
+            "traditional": "Tradicionalni brojevi",
+            "vaii": "Vai znamenke",
             "wara": "wara"
           }
         },

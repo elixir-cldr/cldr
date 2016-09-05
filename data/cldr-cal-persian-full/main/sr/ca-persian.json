@@ -289,13 +289,13 @@
             },
             "eras": {
               "eraNames": {
-                "0": "AP"
+                "0": "АП"
               },
               "eraAbbr": {
-                "0": "AP"
+                "0": "АП"
               },
               "eraNarrow": {
-                "0": "AP"
+                "0": "АП"
               }
             },
             "dateFormats": {

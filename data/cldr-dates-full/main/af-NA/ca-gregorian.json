@@ -297,15 +297,15 @@
               },
               "eraNarrow": {
                 "0": "v.C.",
-                "0-alt-variant": "v.g.j.",
+                "0-alt-variant": "vgj",
                 "1": "n.C.",
-                "1-alt-variant": "g.j."
+                "1-alt-variant": "vg"
               }
             },
             "dateFormats": {
-              "full": "EEEE, dd MMMM y",
-              "long": "dd MMMM y",
-              "medium": "dd MMM y",
+              "full": "EEEE d MMMM y",
+              "long": "d MMMM y",
+              "medium": "d MMM y",
               "short": "y-MM-dd"
             },
             "timeFormats": {

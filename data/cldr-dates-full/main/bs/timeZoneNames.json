@@ -1711,6 +1711,11 @@
                 "generic": "Centralnoevropsko vrijeme",
                 "standard": "Standardno centralnoevropsko vrijeme",
                 "daylight": "Centralnoevropsko ljetno računanje vremena"
+              },
+              "short": {
+                "generic": "CET",
+                "standard": "CET",
+                "daylight": "CEST"
               }
             },
             "Europe_Eastern": {
@@ -1718,6 +1723,11 @@
                 "generic": "Istočnoevropsko vrijeme",
                 "standard": "Standardno istočnoevropsko vrijeme",
                 "daylight": "Istočnoevropsko ljetno računanje vremena"
+              },
+              "short": {
+                "generic": "EET",
+                "standard": "EET",
+                "daylight": "EEST"
               }
             },
             "Europe_Further_Eastern": {
@@ -1730,6 +1740,11 @@
                 "generic": "Zapadnoevropsko vrijeme",
                 "standard": "Standardno zapadnoevropsko vrijeme",
                 "daylight": "Zapadnoevropsko ljetno računanje vremena"
+              },
+              "short": {
+                "generic": "WET",
+                "standard": "WET",
+                "daylight": "WEST"
               }
             },
             "Falkland": {
@@ -1781,6 +1796,9 @@
             "GMT": {
               "long": {
                 "standard": "Vrijeme po Grinviču"
+              },
+              "short": {
+                "standard": "GMT"
               }
             },
             "Greenland_Eastern": {

@@ -608,11 +608,11 @@
           },
           "angle-arc-minute": {
             "displayName": "分",
-            "unitPattern-count-other": "{0} 角分"
+            "unitPattern-count-other": "{0} 分"
           },
           "angle-arc-second": {
             "displayName": "角秒",
-            "unitPattern-count-other": "{0} 角秒"
+            "unitPattern-count-other": "{0} 秒"
           },
           "area-square-kilometer": {
             "displayName": "平方公里",
@@ -671,15 +671,15 @@
           },
           "consumption-liter-per-kilometer": {
             "displayName": "公升/公里",
-            "unitPattern-count-other": "{0} 升/公里"
+            "unitPattern-count-other": "{0} 升每公里"
           },
           "consumption-liter-per-100kilometers": {
             "displayName": "升/100 公里",
-            "unitPattern-count-other": "{0} 升/100 公里"
+            "unitPattern-count-other": "{0} L/100km"
           },
           "consumption-mile-per-gallon": {
             "displayName": "英里/加侖",
-            "unitPattern-count-other": "{0} 英里/加侖"
+            "unitPattern-count-other": "{0} 英里每加侖"
           },
           "consumption-mile-per-gallon-imperial": {
             "displayName": "mpg Imp.",
@@ -1246,7 +1246,7 @@
           },
           "consumption-liter-per-100kilometers": {
             "displayName": "升/100公里",
-            "unitPattern-count-other": "{0}升/100公里"
+            "unitPattern-count-other": "{0}L/100km"
           },
           "consumption-mile-per-gallon": {
             "displayName": "英里/加侖",

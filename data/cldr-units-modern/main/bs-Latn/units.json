@@ -2077,16 +2077,16 @@
           },
           "length-foot": {
             "displayName": "stopa",
-            "unitPattern-count-one": "{0} ft",
-            "unitPattern-count-few": "{0} ft",
-            "unitPattern-count-other": "{0} ft",
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-few": "{0}′",
+            "unitPattern-count-other": "{0}′",
             "perUnitPattern": "{0}/ft"
           },
           "length-inch": {
             "displayName": "inča",
-            "unitPattern-count-one": "{0} in",
-            "unitPattern-count-few": "{0} in",
-            "unitPattern-count-other": "{0} in",
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-few": "{0}″",
+            "unitPattern-count-other": "{0}″",
             "perUnitPattern": "{0}/in"
           },
           "length-parsec": {
@@ -2097,9 +2097,9 @@
           },
           "length-light-year": {
             "displayName": "svjetlosnih godina",
-            "unitPattern-count-one": "{0} gs",
-            "unitPattern-count-few": "{0} gs",
-            "unitPattern-count-other": "{0} gs"
+            "unitPattern-count-one": "{0} ly",
+            "unitPattern-count-few": "{0} ly",
+            "unitPattern-count-other": "{0} ly"
           },
           "length-astronomical-unit": {
             "displayName": "aj",
@@ -2177,9 +2177,9 @@
           },
           "mass-pound": {
             "displayName": "lb",
-            "unitPattern-count-one": "{0} lbs",
-            "unitPattern-count-few": "{0} lbs",
-            "unitPattern-count-other": "{0} lbs",
+            "unitPattern-count-one": "{0} lb",
+            "unitPattern-count-few": "{0} lb",
+            "unitPattern-count-other": "{0} lb",
             "perUnitPattern": "{0}/lb"
           },
           "mass-ounce": {
@@ -2233,9 +2233,9 @@
           },
           "power-horsepower": {
             "displayName": "ks",
-            "unitPattern-count-one": "{0} ks",
-            "unitPattern-count-few": "{0} ks",
-            "unitPattern-count-other": "{0} ks"
+            "unitPattern-count-one": "{0} KS",
+            "unitPattern-count-few": "{0} KS",
+            "unitPattern-count-other": "{0} KS"
           },
           "pressure-hectopascal": {
             "displayName": "hPa",
@@ -2263,9 +2263,9 @@
           },
           "pressure-millibar": {
             "displayName": "mbar",
-            "unitPattern-count-one": "{0} mbar",
-            "unitPattern-count-few": "{0} mbar",
-            "unitPattern-count-other": "{0} mbar"
+            "unitPattern-count-one": "{0} mb",
+            "unitPattern-count-few": "{0} mb",
+            "unitPattern-count-other": "{0} mb"
           },
           "speed-kilometer-per-hour": {
             "displayName": "km/h",

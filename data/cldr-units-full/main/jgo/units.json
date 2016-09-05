@@ -157,13 +157,13 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ŋguꞋ",
             "unitPattern-count-one": "ŋguꞋ {0}",
             "unitPattern-count-other": "ŋguꞋ {0}",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "pɛsaŋ",
             "unitPattern-count-one": "pɛsaŋ {0}",
             "unitPattern-count-other": "pɛsaŋ {0}",
             "perUnitPattern": "{0}/m"
@@ -174,19 +174,19 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "lɛ́Ꞌ",
             "unitPattern-count-one": "{0} lɛ́Ꞌ",
             "unitPattern-count-other": "{0} lɛ́Ꞌ",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "háwa",
             "unitPattern-count-one": "{0} háwa",
             "unitPattern-count-other": "{0} háwa",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "minút",
             "unitPattern-count-one": "{0} minút",
             "unitPattern-count-other": "{0} minút",
             "perUnitPattern": "{0}/min"
@@ -733,12 +733,12 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ŋguꞋ",
             "unitPattern-count-other": "{0} y",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "pɛsaŋ",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
@@ -748,17 +748,17 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "lɛ́Ꞌ",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "háwa",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "minút",
             "unitPattern-count-other": "{0} min",
             "perUnitPattern": "{0}/min"
           },
@@ -1304,12 +1304,12 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ŋguꞋ",
             "unitPattern-count-other": "{0} y",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "pɛsaŋ",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
@@ -1319,17 +1319,17 @@
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "lɛ́Ꞌ",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "háwa",
             "unitPattern-count-other": "{0} h",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "minút",
             "unitPattern-count-other": "{0} min",
             "perUnitPattern": "{0}/min"
           },

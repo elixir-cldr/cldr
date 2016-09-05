@@ -1064,10 +1064,10 @@
               }
             },
             "dateFormats": {
-              "full": "r(U) MMMM d, EEEE",
-              "long": "r(U) MMMM d",
-              "medium": "r MMM d",
-              "short": "r-MM-dd"
+              "full": "E, d.M.y.",
+              "long": "d.M.y.",
+              "medium": "d.M.y.",
+              "short": "d.M.y."
             },
             "timeFormats": {
               "full": "HH:mm:ss zzzz",

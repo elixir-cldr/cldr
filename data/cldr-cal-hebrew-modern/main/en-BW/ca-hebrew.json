@@ -361,6 +361,7 @@
                 "M": "L",
                 "Md": "d MMM",
                 "MEd": "E, d MMM",
+                "MMdd": "dd/MM",
                 "MMM": "LLL",
                 "MMMd": "d MMM",
                 "MMMEd": "E, d MMM",

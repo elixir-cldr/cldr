@@ -90,11 +90,15 @@
             "symbol": "ARA"
           },
           "ARL": {
-            "displayName": "ARL",
+            "displayName": "peso lourd argentin (1970–1983)",
+            "displayName-count-one": "peso lourd argentin (1970–1983)",
+            "displayName-count-other": "pesos lourds argentins (1970–1983)",
             "symbol": "ARL"
           },
           "ARM": {
-            "displayName": "ARM",
+            "displayName": "peso argentin (1881–1970)",
+            "displayName-count-one": "peso argentin (1881–1970)",
+            "displayName-count-other": "pesos argentins (1881–1970)",
             "symbol": "ARM"
           },
           "ARP": {
@@ -244,7 +248,9 @@
             "symbol-alt-narrow": "Bs"
           },
           "BOL": {
-            "displayName": "BOL",
+            "displayName": "boliviano bolivien (1863–1963)",
+            "displayName-count-one": "boliviano bolivien (1863–1963)",
+            "displayName-count-other": "bolivianos boliviens (1863–1963)",
             "symbol": "BOL"
           },
           "BOP": {
@@ -297,7 +303,9 @@
             "symbol": "BRR"
           },
           "BRZ": {
-            "displayName": "BRZ",
+            "displayName": "cruzeiro brésilien (1942–1967)",
+            "displayName-count-one": "cruzeiro brésilien (1942–1967)",
+            "displayName-count-other": "cruzeiros brésiliens (1942–1967)",
             "symbol": "BRZ"
           },
           "BSD": {
@@ -378,7 +386,9 @@
             "symbol": "CHW"
           },
           "CLE": {
-            "displayName": "CLE",
+            "displayName": "escudo chilien",
+            "displayName-count-one": "escudo chilien",
+            "displayName-count-other": "escudos chiliens",
             "symbol": "CLE"
           },
           "CLF": {
@@ -393,6 +403,12 @@
             "displayName-count-other": "pesos chiliens",
             "symbol": "CLP",
             "symbol-alt-narrow": "$"
+          },
+          "CNX": {
+            "displayName": "dollar de la Banque populaire chinoise",
+            "displayName-count-one": "dollar de la Banque populaire chinoise",
+            "displayName-count-other": "dollars de la Banque populaire chinoise",
+            "symbol": "CNX"
           },
           "CNY": {
             "displayName": "yuan renminbi chinois",
@@ -749,6 +765,12 @@
             "displayName-count-other": "livres israéliennes",
             "symbol": "£IL"
           },
+          "ILR": {
+            "displayName": "shekel israélien (1980–1985)",
+            "displayName-count-one": "shekel israélien (1980–1985)",
+            "displayName-count-other": "shekels israéliens (1980–1985)",
+            "symbol": "ILR"
+          },
           "ILS": {
             "displayName": "nouveau shekel israélien",
             "displayName-count-one": "nouveau shekel israélien",
@@ -842,11 +864,15 @@
             "symbol-alt-narrow": "₩"
           },
           "KRH": {
-            "displayName": "KRH",
+            "displayName": "hwan sud-coréen (1953–1962)",
+            "displayName-count-one": "hwan sud-coréen (1953–1962)",
+            "displayName-count-other": "hwans sud-coréens (1953–1962)",
             "symbol": "KRH"
           },
           "KRO": {
-            "displayName": "KRO",
+            "displayName": "won sud-coréen (1945–1953)",
+            "displayName-count-one": "won sud-coréen (1945–1953)",
+            "displayName-count-other": "wons sud-coréens (1945–1953)",
             "symbol": "KRO"
           },
           "KRW": {
@@ -908,7 +934,7 @@
             "displayName": "loti lesothan",
             "displayName-count-one": "loti lesothan",
             "displayName-count-other": "maloti lesothans",
-            "symbol": "LSL"
+            "symbol": "lLS"
           },
           "LTL": {
             "displayName": "litas lituanien",
@@ -970,7 +996,7 @@
             "displayName": "franc marocain",
             "displayName-count-one": "franc marocain",
             "displayName-count-other": "francs marocains",
-            "symbol": "MAF"
+            "symbol": "fMA"
           },
           "MCF": {
             "displayName": "MCF",
@@ -997,7 +1023,7 @@
             "displayName": "franc malgache",
             "displayName-count-one": "franc malgache",
             "displayName-count-other": "francs malgaches",
-            "symbol": "MGF"
+            "symbol": "Fmg"
           },
           "MKD": {
             "displayName": "denar macédonien",
@@ -1059,6 +1085,12 @@
             "displayName-count-other": "roupies mauriciennes",
             "symbol": "MUR",
             "symbol-alt-narrow": "Rs"
+          },
+          "MVP": {
+            "displayName": "roupie maldivienne",
+            "displayName-count-one": "roupie maldivienne",
+            "displayName-count-other": "roupies maldiviennes",
+            "symbol": "MVP"
           },
           "MVR": {
             "displayName": "rufiyaa maldivien",
@@ -1605,7 +1637,9 @@
             "symbol-alt-narrow": "₫"
           },
           "VNN": {
-            "displayName": "VNN",
+            "displayName": "dông vietnamien (1978–1985)",
+            "displayName-count-one": "dông vietnamien (1978–1985)",
+            "displayName-count-other": "dôngs vietnamiens (1978–1985)",
             "symbol": "VNN"
           },
           "VUV": {
@@ -1673,10 +1707,12 @@
             "displayName": "droit de tirage spécial",
             "displayName-count-one": "droit de tirage spécial",
             "displayName-count-other": "droits de tirage spéciaux",
-            "symbol": "XDR"
+            "symbol": "DTS"
           },
           "XEU": {
             "displayName": "unité de compte européenne (ECU)",
+            "displayName-count-one": "unité de compte européenne (ECU)",
+            "displayName-count-other": "unités de compte européennes (ECU)",
             "symbol": "XEU"
           },
           "XFO": {
@@ -1722,7 +1758,9 @@
             "symbol": "XRE"
           },
           "XSU": {
-            "displayName": "XSU",
+            "displayName": "sucre",
+            "displayName-count-one": "sucre",
+            "displayName-count-other": "sucres",
             "symbol": "XSU"
           },
           "XTS": {
@@ -1732,7 +1770,9 @@
             "symbol": "XTS"
           },
           "XUA": {
-            "displayName": "XUA",
+            "displayName": "unité de compte ADB",
+            "displayName-count-one": "unité de compte ADB",
+            "displayName-count-other": "unités de compte ADB",
             "symbol": "XUA"
           },
           "XXX": {

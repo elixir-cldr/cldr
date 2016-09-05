@@ -380,10 +380,10 @@
                 },
                 "h": {
                   "a": "h a – h a",
-                  "h": "h–h a"
+                  "h": "h–h 'ч'. a"
                 },
                 "H": {
-                  "H": "H–H"
+                  "H": "HH–HH 'ч'."
                 },
                 "hm": {
                   "a": "h:mm a – h:mm a",
@@ -405,10 +405,10 @@
                 },
                 "hv": {
                   "a": "h a – h a v",
-                  "h": "h–h a v"
+                  "h": "h–h 'ч'. a, v"
                 },
                 "Hv": {
-                  "H": "H–H v"
+                  "H": "HH–HH 'ч'., v"
                 },
                 "M": {
                   "M": "M–M"
@@ -429,8 +429,8 @@
                   "M": "d MMM – d MMM"
                 },
                 "MMMEd": {
-                  "d": "ccc, d - E, d MMM",
-                  "M": "ccc, d MMM – ccc, d MMM"
+                  "d": "E, d – E, d MMM",
+                  "M": "E, d MMM – E, d MMM"
                 },
                 "MMMM": {
                   "M": "LLLL–LLLL"
@@ -448,27 +448,27 @@
                   "y": "dd.MM.y – dd.MM.y G"
                 },
                 "yMEd": {
-                  "d": "ccc, dd.MM.y – ccc, dd.MM.y G",
-                  "M": "ccc, dd.MM.y – ccc, dd.MM.y G",
-                  "y": "ccc, dd.MM.y – ccc, dd.MM.y G"
+                  "d": "E, dd.MM.y – E, dd.MM.y",
+                  "M": "E, dd.MM.y – E, dd.MM.y",
+                  "y": "E, dd.MM.y – E, dd.MM.y"
                 },
                 "yMMM": {
-                  "M": "LLL–LLL y 'г'. G",
-                  "y": "LLL y – LLL y 'г'. G"
+                  "M": "MMM–MMM y",
+                  "y": "MMM y – MMM y"
                 },
                 "yMMMd": {
-                  "d": "d–d MMM y 'г'. G",
-                  "M": "d MMM – d MMM y 'г'. G",
-                  "y": "d MMM y – d MMM y 'г'. G"
+                  "d": "d–d MMM y",
+                  "M": "d MMM – d MMM y",
+                  "y": "d MMM y – d MMM y"
                 },
                 "yMMMEd": {
-                  "d": "ccc, d – ccc, d MMM y 'г'. G",
-                  "M": "ccc, d MMM – ccc, d MMM y 'г'. G",
-                  "y": "ccc, d MMM y – ccc, d MMM y 'г'. G"
+                  "d": "E, d – E, d MMM y 'г'.",
+                  "M": "E, d MMM – E, d MMM y 'г'.",
+                  "y": "E, d MMM y – E, d MMM y 'г'."
                 },
                 "yMMMM": {
-                  "M": "LLLL–LLLL y 'г'. G",
-                  "y": "LLLL y – LLLL y 'г'. G"
+                  "M": "LLLL–LLLL y",
+                  "y": "LLLL y – LLLL y"
                 }
               }
             }

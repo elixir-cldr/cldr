@@ -1377,7 +1377,35 @@
                 "exemplarCity": "GMT-9"
               },
               "Unknown": {
-                "exemplarCity": "Unknown"
+                "exemplarCity": "Ankoth"
+              }
+            }
+          },
+          "metazone": {
+            "Europe_Central": {
+              "short": {
+                "generic": "CET",
+                "standard": "CET",
+                "daylight": "CEST"
+              }
+            },
+            "Europe_Eastern": {
+              "short": {
+                "generic": "EET",
+                "standard": "EET",
+                "daylight": "EEST"
+              }
+            },
+            "Europe_Western": {
+              "short": {
+                "generic": "WET",
+                "standard": "WET",
+                "daylight": "WEST"
+              }
+            },
+            "GMT": {
+              "short": {
+                "standard": "GMT"
               }
             }
           }

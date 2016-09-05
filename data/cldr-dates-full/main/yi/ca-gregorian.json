@@ -296,11 +296,11 @@
                 "EHm": "E HH:mm",
                 "Ehms": "E h:mm:ss a",
                 "EHms": "E HH:mm:ss",
-                "Gy": "G y",
-                "GyMMM": "G y MMM",
+                "Gy": "y G",
+                "GyMMM": "MMM y G",
                 "GyMMMd": "dטן MMM y G",
                 "GyMMMEd": "E דעם dטן MMM yG",
-                "h": "h a",
+                "h": "‏h a",
                 "H": "HH",
                 "hm": "h:mm a",
                 "Hm": "HH:mm",
@@ -311,7 +311,7 @@
                 "hmv": "h:mm a v",
                 "Hmv": "HH:mm v",
                 "M": "L",
-                "Md": "MM-dd",
+                "Md": "d/M",
                 "MEd": "E, d/M",
                 "MMM": "LLL",
                 "MMMd": "MMM d",
@@ -319,14 +319,14 @@
                 "MMMMd": "MMMM d",
                 "ms": "mm:ss",
                 "y": "y",
-                "yM": "y-MM",
+                "yM": "M.y",
                 "yMd": "d-M-y",
                 "yMEd": "E, d/M/y",
                 "yMM": "MM/y",
                 "yMMM": "MMM y",
                 "yMMMd": "dטן MMM y",
                 "yMMMEd": "E, dטן MMM y",
-                "yMMMM": "y MMMM",
+                "yMMMM": "MMMM y",
                 "yQQQ": "y QQQ",
                 "yQQQQ": "y QQQQ"
               },
@@ -381,7 +381,7 @@
                   "H": "HH–HH v"
                 },
                 "M": {
-                  "M": "MM–MM"
+                  "M": "M–M"
                 },
                 "Md": {
                   "d": "dd/MM – dd/MM",

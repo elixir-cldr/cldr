@@ -178,6 +178,10 @@
           },
           "BEF": {
             "displayName": "belgijski frank",
+            "displayName-count-one": "belgijski frank",
+            "displayName-count-two": "belgijska franka",
+            "displayName-count-few": "belgijski franki",
+            "displayName-count-other": "belgijskih frankov",
             "symbol": "BEF"
           },
           "BEL": {
@@ -478,6 +482,10 @@
           },
           "DEM": {
             "displayName": "nemška marka",
+            "displayName-count-one": "nemška marka",
+            "displayName-count-two": "nemški marki",
+            "displayName-count-few": "nemške marke",
+            "displayName-count-other": "nemških mark",
             "symbol": "DEM"
           },
           "DJF": {
@@ -1445,10 +1453,18 @@
           },
           "SIT": {
             "displayName": "slovenski tolar",
+            "displayName-count-one": "slovenski tolar",
+            "displayName-count-two": "slovenska tolarja",
+            "displayName-count-few": "slovenski tolarji",
+            "displayName-count-other": "slovenskih tolarjev",
             "symbol": "SIT"
           },
           "SKK": {
             "displayName": "slovaška krona",
+            "displayName-count-one": "slovaška krona",
+            "displayName-count-two": "slovaški kroni",
+            "displayName-count-few": "slovaške krone",
+            "displayName-count-other": "slovaških kron",
             "symbol": "SKK"
           },
           "SLL": {

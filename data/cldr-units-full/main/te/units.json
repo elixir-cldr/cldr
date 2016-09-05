@@ -395,8 +395,9 @@
             "unitPattern-count-other": "{0} ఖగోళ ప్రమాణాలు"
           },
           "length-furlong": {
-            "displayName": "fur",
-            "unitPattern-count-other": "{0} fur"
+            "displayName": "ఫర్లాంగులు",
+            "unitPattern-count-one": "{0} ఫర్లాంగు",
+            "unitPattern-count-other": "{0} ఫర్లాంగులు"
           },
           "length-fathom": {
             "displayName": "fm",
@@ -1091,7 +1092,7 @@
             "unitPattern-count-other": "{0} au"
           },
           "length-furlong": {
-            "displayName": "fur",
+            "displayName": "ఫర్లాంగులు",
             "unitPattern-count-other": "{0} fur"
           },
           "length-fathom": {
@@ -1787,7 +1788,7 @@
             "unitPattern-count-other": "{0} au"
           },
           "length-furlong": {
-            "displayName": "fur",
+            "displayName": "ఫర్లాంగులు",
             "unitPattern-count-other": "{0} fur"
           },
           "length-fathom": {
@@ -1838,8 +1839,8 @@
           },
           "mass-ton": {
             "displayName": "టన్నులు",
-            "unitPattern-count-one": "{0} టన్ను",
-            "unitPattern-count-other": "{0} టన్ను"
+            "unitPattern-count-one": "{0} ట",
+            "unitPattern-count-other": "{0} ట"
           },
           "mass-stone": {
             "displayName": "st",

@@ -20,8 +20,8 @@
           "ALALC97": "ALALC97",
           "ALUKU": "ALUKU",
           "AO1990": "AO1990",
-          "AREVELA": "AREVELA",
-          "AREVMDA": "AREVMDA",
+          "AREVELA": "Шығыс-армян",
+          "AREVMDA": "Батыс-армян",
           "BAKU1926": "BAKU1926",
           "BALANKA": "BALANKA",
           "BARLA": "BARLA",
@@ -70,7 +70,7 @@
           "RIGIK": "RIGIK",
           "ROZAJ": "ROZAJ",
           "RUMGR": "RUMGR",
-          "SAAHO": "SAAHO",
+          "SAAHO": "Сахо",
           "SCOTLAND": "SCOTLAND",
           "SCOUSE": "SCOUSE",
           "SIMPLE": "SIMPLE",
@@ -87,7 +87,7 @@
           "VAIDIKA": "VAIDIKA",
           "VALENCIA": "VALENCIA",
           "VALLADER": "VALLADER",
-          "WADEGILE": "WADEGILE"
+          "WADEGILE": "Уейд-Джайлс жүйесі"
         }
       }
     }

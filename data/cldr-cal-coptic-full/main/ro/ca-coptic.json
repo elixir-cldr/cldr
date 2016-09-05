@@ -16,7 +16,7 @@
                 "abbreviated": {
                   "1": "Tout",
                   "2": "Baba",
-                  "3": "Hator",
+                  "3": "Hathor",
                   "4": "Kiahk",
                   "5": "Toba",
                   "6": "Amshir",
@@ -25,8 +25,8 @@
                   "9": "Bashans",
                   "10": "Paona",
                   "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "12": "Mesori",
+                  "13": "El Nasii"
                 },
                 "narrow": {
                   "1": "1",
@@ -46,7 +46,7 @@
                 "wide": {
                   "1": "Tout",
                   "2": "Baba",
-                  "3": "Hator",
+                  "3": "Hathor",
                   "4": "Kiahk",
                   "5": "Toba",
                   "6": "Amshir",
@@ -55,15 +55,15 @@
                   "9": "Bashans",
                   "10": "Paona",
                   "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "12": "Mesori",
+                  "13": "El Nasii"
                 }
               },
               "stand-alone": {
                 "abbreviated": {
                   "1": "Tout",
                   "2": "Baba",
-                  "3": "Hator",
+                  "3": "Hathor",
                   "4": "Kiahk",
                   "5": "Toba",
                   "6": "Amshir",
@@ -72,8 +72,8 @@
                   "9": "Bashans",
                   "10": "Paona",
                   "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "12": "Mesori",
+                  "13": "El Nasii"
                 },
                 "narrow": {
                   "1": "1",
@@ -93,7 +93,7 @@
                 "wide": {
                   "1": "Tout",
                   "2": "Baba",
-                  "3": "Hator",
+                  "3": "Hathor",
                   "4": "Kiahk",
                   "5": "Toba",
                   "6": "Amshir",
@@ -102,8 +102,8 @@
                   "9": "Bashans",
                   "10": "Paona",
                   "11": "Epep",
-                  "12": "Mesra",
-                  "13": "Nasie"
+                  "12": "Mesori",
+                  "13": "El Nasii"
                 }
               }
             },

@@ -32,7 +32,7 @@
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
+            "gregorian": "Gregōriskas kalāndars",
             "hebrew": "hebrew",
             "indian": "indian",
             "islamic": "islamic",
@@ -62,7 +62,7 @@
             "reformed": "reformed",
             "search": "search",
             "searchjl": "searchjl",
-            "standard": "standard",
+            "standard": "sēisnas rikā",
             "stroke": "stroke",
             "traditional": "traditional",
             "unihan": "unihan",
@@ -120,7 +120,7 @@
             "lana": "lana",
             "lanatham": "lanatham",
             "laoo": "laoo",
-            "latn": "latn",
+            "latn": "lātiniskas cipperis",
             "lepc": "lepc",
             "limb": "limb",
             "mathbold": "mathbold",
@@ -161,9 +161,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
-          "script": "{0}",
-          "territory": "{0}"
+          "language": "Bilā: {0}",
+          "script": "Skriptan: {0}",
+          "territory": "Regiōni: {0}"
         }
       }
     }

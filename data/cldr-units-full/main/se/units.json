@@ -666,10 +666,10 @@
             "unitPattern-count-other": "{0} tsp"
           },
           "coordinateUnit": {
-            "east": "{0}E",
-            "north": "{0}N",
-            "south": "{0}S",
-            "west": "{0}W"
+            "east": "{0} nuorti",
+            "north": "{0} davvi",
+            "south": "{0} lulli",
+            "west": "{0} oarji"
           }
         },
         "short": {
@@ -1329,10 +1329,10 @@
             "unitPattern-count-other": "{0} tsp"
           },
           "coordinateUnit": {
-            "east": "{0}E",
-            "north": "{0}N",
-            "south": "{0}S",
-            "west": "{0}W"
+            "east": "{0} N",
+            "north": "{0} D",
+            "south": "{0} L",
+            "west": "{0} O"
           }
         },
         "narrow": {
@@ -1992,10 +1992,10 @@
             "unitPattern-count-other": "{0} tsp"
           },
           "coordinateUnit": {
-            "east": "{0}E",
-            "north": "{0}N",
-            "south": "{0}S",
-            "west": "{0}W"
+            "east": "{0}N",
+            "north": "{0}D",
+            "south": "{0}L",
+            "west": "{0}O"
           }
         },
         "durationUnit-type-hm": {

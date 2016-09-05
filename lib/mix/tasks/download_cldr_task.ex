@@ -22,6 +22,7 @@ defmodule Mix.Tasks.Cldr.Download do
     check_utils(@need_utils)
     Cldr.Downloader.download(@download_url, @required_files, @destination_dir)
     Cldr.Downloader.convert_to_json(@destination_dir, Cldr.Config.data_dir())
+    Cldr.Downloader.remove_package_files(Cldr.Config.data_dir())
   end
 
   def check_utils(utils) do

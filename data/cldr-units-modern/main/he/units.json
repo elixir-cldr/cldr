@@ -255,7 +255,7 @@
             "unitPattern-count-two": "שנתיים",
             "unitPattern-count-many": "{0} שנה",
             "unitPattern-count-other": "{0} שנים",
-            "perUnitPattern": "{0}/שנה"
+            "perUnitPattern": "‏{0} לשנה"
           },
           "duration-month": {
             "displayName": "חודשים",
@@ -1457,7 +1457,7 @@
             "unitPattern-count-two": "{0} אינץ׳",
             "unitPattern-count-many": "{0} אינץ׳",
             "unitPattern-count-other": "{0} אינץ׳",
-            "perUnitPattern": "{0}/in"
+            "perUnitPattern": "{0} in"
           },
           "length-parsec": {
             "displayName": "pc",
@@ -2403,7 +2403,7 @@
             "unitPattern-count-two": "{0} אינץ׳",
             "unitPattern-count-many": "{0} אינץ׳",
             "unitPattern-count-other": "{0} אינץ׳",
-            "perUnitPattern": "{0}/in"
+            "perUnitPattern": "{0} in"
           },
           "length-parsec": {
             "displayName": "pc",
@@ -2841,10 +2841,10 @@
             "unitPattern-count-other": "{0} כפי׳"
           },
           "coordinateUnit": {
-            "east": "{0}מז׳",
-            "north": "{0}צפ׳",
-            "south": "{0}דר׳",
-            "west": "{0}מע׳"
+            "east": "{0}E",
+            "north": "{0}N",
+            "south": "{0}S",
+            "west": "{0}W"
           }
         },
         "durationUnit-type-hm": {

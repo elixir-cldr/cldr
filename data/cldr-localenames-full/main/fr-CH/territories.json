@@ -31,7 +31,7 @@
           "039": "Europe méridionale",
           "053": "Australasie",
           "054": "Mélanésie",
-          "057": "région micronésienne",
+          "057": "Région micronésienne",
           "061": "Polynésie",
           "142": "Asie",
           "143": "Asie centrale",
@@ -197,7 +197,7 @@
           "MG": "Madagascar",
           "MH": "Îles Marshall",
           "MK": "Macédoine",
-          "MK-alt-variant": "Macédoine (ARYM)",
+          "MK-alt-variant": "A.R. yougoslave de Macédoine",
           "ML": "Mali",
           "MM": "Myanmar (Birmanie)",
           "MN": "Mongolie",
@@ -243,7 +243,7 @@
           "PW": "Palaos",
           "PY": "Paraguay",
           "QA": "Qatar",
-          "QO": "régions éloignées de l’Océanie",
+          "QO": "Régions éloignées de l’Océanie",
           "RE": "La Réunion",
           "RO": "Roumanie",
           "RS": "Serbie",
@@ -267,7 +267,7 @@
           "SS": "Soudan du Sud",
           "ST": "Sao Tomé-et-Principe",
           "SV": "El Salvador",
-          "SX": "Saint-Martin (partie néerlandaise)",
+          "SX": "Sint Maarten",
           "SY": "Syrie",
           "SZ": "Swaziland",
           "TA": "Tristan da Cunha",
@@ -310,7 +310,7 @@
           "ZA": "Afrique du Sud",
           "ZM": "Zambie",
           "ZW": "Zimbabwe",
-          "ZZ": "région indéterminée"
+          "ZZ": "Région indéterminée"
         }
       }
     }

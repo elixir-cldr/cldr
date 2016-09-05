@@ -254,35 +254,35 @@
             },
             "eras": {
               "eraNames": {
-                "0": "BCE",
+                "0": "ق.م.",
                 "0-alt-variant": "BCE",
-                "1": "CE",
+                "1": "م.",
                 "1-alt-variant": "CE"
               },
               "eraAbbr": {
-                "0": "BCE",
+                "0": "ق.م.",
                 "0-alt-variant": "BCE",
-                "1": "CE",
+                "1": "م.",
                 "1-alt-variant": "CE"
               },
               "eraNarrow": {
-                "0": "BCE",
+                "0": "ق.م.",
                 "0-alt-variant": "BCE",
-                "1": "CE",
+                "1": "م.",
                 "1-alt-variant": "CE"
               }
             },
             "dateFormats": {
-              "full": "y MMMM d, EEEE",
-              "long": "y MMMM d",
-              "medium": "y MMM d",
-              "short": "y-MM-dd"
+              "full": "y نچی ییل d نچی MMMM EEEE کونی",
+              "long": "d نچی MMMM y",
+              "medium": "d MMM y",
+              "short": "y/M/d"
             },
             "timeFormats": {
-              "full": "HH:mm:ss zzzz",
-              "long": "HH:mm:ss z",
-              "medium": "HH:mm:ss",
-              "short": "HH:mm"
+              "full": "H:mm:ss (zzzz)",
+              "long": "H:mm:ss (z)",
+              "medium": "H:mm:ss",
+              "short": "H:mm"
             },
             "dateTimeFormats": {
               "full": "{1} {0}",
@@ -312,12 +312,12 @@
                 "hmv": "h:mm a v",
                 "Hmv": "HH:mm v",
                 "M": "L",
-                "Md": "MM-dd",
+                "Md": "M/d",
                 "MEd": "MM-dd, E",
                 "MMM": "LLL",
                 "MMMd": "MMM d",
                 "MMMEd": "MMM d, E",
-                "MMMMd": "MMMM d",
+                "MMMMd": "d نچی MMMM",
                 "ms": "mm:ss",
                 "y": "y",
                 "yM": "y-MM",

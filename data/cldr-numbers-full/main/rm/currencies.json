@@ -569,7 +569,8 @@
           "ISJ": {
             "displayName": "veglia cruna islandaisa",
             "displayName-count-one": "veglia cruna islandaisa",
-            "displayName-count-other": "veglia cruna islandaisa"
+            "displayName-count-other": "veglia cruna islandaisa",
+            "symbol": "ISJ"
           },
           "ISK": {
             "displayName": "cruna islandaisa",
@@ -944,7 +945,8 @@
             "displayName-count-one": "rubel russ (nov)",
             "displayName-count-other": "rubel russ (nov)",
             "symbol": "RUB",
-            "symbol-alt-narrow": "₽"
+            "symbol-alt-narrow": "₽",
+            "symbol-alt-variant": "₽"
           },
           "RUR": {
             "displayName": "rubel russ (vegl)",
@@ -1135,7 +1137,7 @@
             "displayName": "dollar dals Stadis Unids da l’America",
             "displayName-count-one": "dollar dals Stadis Unids da l’America",
             "displayName-count-other": "dollar dals Stadis Unids da l’America",
-            "symbol": "US$",
+            "symbol": "$",
             "symbol-alt-narrow": "$"
           },
           "USN": {
@@ -1229,7 +1231,9 @@
             "symbol": "XDR"
           },
           "XEU": {
-            "displayName": "XEU",
+            "displayName": "unitad monetara europeica",
+            "displayName-count-one": "unitad monetara europeica",
+            "displayName-count-other": "unitads monetaras europeicas",
             "symbol": "XEU"
           },
           "XFO": {

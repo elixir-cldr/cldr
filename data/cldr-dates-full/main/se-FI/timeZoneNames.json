@@ -13,7 +13,7 @@
         "timeZoneNames": {
           "hourFormat": "+HH:mm;−HH:mm",
           "gmtFormat": "UTC{0}",
-          "gmtZeroFormat": "UTC",
+          "gmtZeroFormat": "GMT",
           "regionFormat": "{0} áigi",
           "regionFormat-type-daylight": "{0} (+1)",
           "regionFormat-type-standard": "{0} (+0)",

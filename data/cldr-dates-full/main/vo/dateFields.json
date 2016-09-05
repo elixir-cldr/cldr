@@ -11,13 +11,13 @@
       "dates": {
         "fields": {
           "era": {
-            "displayName": "Era"
+            "displayName": "Epoche"
           },
           "year": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "yel",
+            "relative-type--1": "äyelo",
+            "relative-type-0": "ayelo",
+            "relative-type-1": "oyelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} y"
             },
@@ -26,10 +26,10 @@
             }
           },
           "year-short": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "yel",
+            "relative-type--1": "äyelo",
+            "relative-type-0": "ayelo",
+            "relative-type-1": "oyelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} y"
             },
@@ -38,10 +38,10 @@
             }
           },
           "year-narrow": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "yel",
+            "relative-type--1": "äyelo",
+            "relative-type-0": "ayelo",
+            "relative-type-1": "oyelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} y"
             },
@@ -86,10 +86,10 @@
             }
           },
           "month": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "mul",
+            "relative-type--1": "ämulo",
+            "relative-type-0": "amulo",
+            "relative-type-1": "omulo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} m"
             },
@@ -98,10 +98,10 @@
             }
           },
           "month-short": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "mul",
+            "relative-type--1": "ämulo",
+            "relative-type-0": "amulo",
+            "relative-type-1": "omulo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} m"
             },
@@ -110,10 +110,10 @@
             }
           },
           "month-narrow": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "mul",
+            "relative-type--1": "ämulo",
+            "relative-type-0": "amulo",
+            "relative-type-1": "omulo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} m"
             },
@@ -122,10 +122,10 @@
             }
           },
           "week": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "vig",
+            "relative-type--1": "ävigo",
+            "relative-type-0": "avigo",
+            "relative-type-1": "ovigo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} w"
             },
@@ -134,10 +134,10 @@
             }
           },
           "week-short": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "vig",
+            "relative-type--1": "ävigo",
+            "relative-type-0": "avigo",
+            "relative-type-1": "ovigo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} w"
             },
@@ -146,10 +146,10 @@
             }
           },
           "week-narrow": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "vig",
+            "relative-type--1": "ävigo",
+            "relative-type-0": "avigo",
+            "relative-type-1": "ovigo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} w"
             },
@@ -158,10 +158,12 @@
             }
           },
           "day": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "Tag",
+            "relative-type--2": "edelo",
+            "relative-type--1": "ädelo",
+            "relative-type-0": "adelo",
+            "relative-type-1": "odelo",
+            "relative-type-2": "udelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -170,10 +172,12 @@
             }
           },
           "day-short": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "Tag",
+            "relative-type--2": "edelo",
+            "relative-type--1": "ädelo",
+            "relative-type-0": "adelo",
+            "relative-type-1": "odelo",
+            "relative-type-2": "udelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -182,10 +186,12 @@
             }
           },
           "day-narrow": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "Tag",
+            "relative-type--2": "edelo",
+            "relative-type--1": "ädelo",
+            "relative-type-0": "adelo",
+            "relative-type-1": "odelo",
+            "relative-type-2": "udelo",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} d"
             },
@@ -194,7 +200,7 @@
             }
           },
           "weekday": {
-            "displayName": "Day of the Week"
+            "displayName": "vodabel"
           },
           "sun": {
             "relative-type--1": "last Sunday",
@@ -302,10 +308,10 @@
             "relative-type-1": "next Saturday"
           },
           "dayperiod": {
-            "displayName": "Dayperiod"
+            "displayName": "delalaf"
           },
           "hour": {
-            "displayName": "Hour",
+            "displayName": "düp",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -314,7 +320,7 @@
             }
           },
           "hour-short": {
-            "displayName": "Hour",
+            "displayName": "düp",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -323,7 +329,7 @@
             }
           },
           "hour-narrow": {
-            "displayName": "Hour",
+            "displayName": "düp",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} h"
             },
@@ -332,7 +338,7 @@
             }
           },
           "minute": {
-            "displayName": "Minute",
+            "displayName": "minut",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -341,7 +347,7 @@
             }
           },
           "minute-short": {
-            "displayName": "Minute",
+            "displayName": "minut",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -350,7 +356,7 @@
             }
           },
           "minute-narrow": {
-            "displayName": "Minute",
+            "displayName": "minut",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} min"
             },
@@ -359,7 +365,7 @@
             }
           },
           "second": {
-            "displayName": "Second",
+            "displayName": "sekun",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -369,7 +375,7 @@
             }
           },
           "second-short": {
-            "displayName": "Second",
+            "displayName": "sekun",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -379,7 +385,7 @@
             }
           },
           "second-narrow": {
-            "displayName": "Second",
+            "displayName": "sekun",
             "relative-type-0": "now",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "+{0} s"
@@ -389,7 +395,7 @@
             }
           },
           "zone": {
-            "displayName": "Zone"
+            "displayName": "zon"
           }
         }
       }

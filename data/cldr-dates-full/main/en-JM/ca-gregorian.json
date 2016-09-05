@@ -324,7 +324,7 @@
               "full": "EEEE, d MMMM y",
               "long": "d MMMM y",
               "medium": "d MMM y",
-              "short": "dd/MM/y"
+              "short": "d/M/yy"
             },
             "timeFormats": {
               "full": "h:mm:ss a zzzz",
@@ -360,8 +360,8 @@
                 "hmv": "h:mm a v",
                 "Hmv": "HH:mm v",
                 "M": "L",
-                "Md": "dd/MM",
-                "MEd": "E, dd/MM",
+                "Md": "d/M",
+                "MEd": "E, d/M",
                 "MMdd": "dd/MM",
                 "MMM": "LLL",
                 "MMMd": "d MMM",
@@ -371,7 +371,7 @@
                 "y": "y",
                 "yM": "MM/y",
                 "yMd": "dd/MM/y",
-                "yMEd": "E, dd/MM/y",
+                "yMEd": "E, d/M/y",
                 "yMMM": "MMM y",
                 "yMMMd": "d MMM y",
                 "yMMMEd": "E, d MMM y",
@@ -433,12 +433,12 @@
                   "M": "M – M"
                 },
                 "Md": {
-                  "d": "dd/MM – dd/MM",
-                  "M": "dd/MM – dd/MM"
+                  "d": "d/M – d/M",
+                  "M": "d/M – d/M"
                 },
                 "MEd": {
-                  "d": "E dd/MM – E dd/MM",
-                  "M": "E dd/MM – E dd/MM"
+                  "d": "E, d/M – E, d/M",
+                  "M": "E, d/M – E, d/M"
                 },
                 "MMM": {
                   "M": "MMM – MMM"
@@ -459,14 +459,14 @@
                   "y": "MM/y – MM/y"
                 },
                 "yMd": {
-                  "d": "dd/MM/y – dd/MM/y",
-                  "M": "dd/MM/y – dd/MM/y",
-                  "y": "dd/MM/y – dd/MM/y"
+                  "d": "d/M/y – d/M/y",
+                  "M": "d/M/y – d/M/y",
+                  "y": "d/M/y – d/M/y"
                 },
                 "yMEd": {
-                  "d": "E, dd/MM/y – E, dd/MM/y",
-                  "M": "E, dd/MM/y – E, dd/MM/y",
-                  "y": "E, dd/MM/y – E, dd/MM/y"
+                  "d": "E, d/M/y – E, d/M/y",
+                  "M": "E, d/M/y – E, d/M/y",
+                  "y": "E, d/M/y – E, d/M/y"
                 },
                 "yMMM": {
                   "M": "MMM – MMM y",

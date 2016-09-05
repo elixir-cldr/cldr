@@ -144,7 +144,7 @@
           "GU": "Gvamo",
           "GW": "Gvineo-Bisaŭo",
           "GY": "Gujano",
-          "HK": "HK",
+          "HK": "Honkongo",
           "HK-alt-short": "HK",
           "HM": "Herda kaj Makdonaldaj Insuloj",
           "HN": "Honduro",
@@ -263,7 +263,7 @@
           "SN": "Senegalo",
           "SO": "Somalujo",
           "SR": "Surinamo",
-          "SS": "SS",
+          "SS": "Sud-Sudano",
           "ST": "Sao-Tomeo kaj Principeo",
           "SV": "Salvadoro",
           "SX": "SX",
@@ -309,7 +309,7 @@
           "ZA": "Sud-Afriko",
           "ZM": "Zambio",
           "ZW": "Zimbabvo",
-          "ZZ": "ZZ"
+          "ZZ": "nekonata regiono"
         }
       }
     }

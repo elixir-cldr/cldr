@@ -15,14 +15,14 @@
           "localeKeyTypePattern": "{0}: {1}"
         },
         "keys": {
-          "calendar": "calendar",
+          "calendar": "ullorsiut",
           "cf": "cf",
           "collation": "collation",
-          "currency": "currency",
+          "currency": "akissaat",
           "hc": "hc",
           "lb": "lb",
           "ms": "ms",
-          "numbers": "numbers"
+          "numbers": "normu"
         },
         "types": {
           "calendar": {
@@ -32,7 +32,7 @@
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
+            "gregorian": "gregorianskit ullorsiutaat",
             "hebrew": "hebrew",
             "indian": "indian",
             "islamic": "islamic",
@@ -98,7 +98,7 @@
             "cyrl": "cyrl",
             "deva": "deva",
             "ethi": "ethi",
-            "fullwide": "fullwide",
+            "fullwide": "atitooq atugartuut normu",
             "geor": "geor",
             "grek": "grek",
             "greklow": "greklow",
@@ -120,7 +120,7 @@
             "lana": "lana",
             "lanatham": "lanatham",
             "laoo": "laoo",
-            "latn": "latn",
+            "latn": "atugartuut normu",
             "lepc": "lepc",
             "limb": "limb",
             "mathbold": "mathbold",
@@ -140,8 +140,8 @@
             "olck": "olck",
             "orya": "orya",
             "osma": "osma",
-            "roman": "roman",
-            "romanlow": "romanlow",
+            "roman": "ruumamiut-kisitsisaat",
+            "romanlow": "naqippoq ruumamiut-kisitsisaat",
             "saur": "saur",
             "shrd": "shrd",
             "sind": "sind",
@@ -161,9 +161,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
-          "script": "{0}",
-          "territory": "{0}"
+          "language": "oqaatsit: {0}",
+          "script": "allaqqitaq: {0}",
+          "territory": "nunap imartaa nunataalu: {0}"
         }
       }
     }

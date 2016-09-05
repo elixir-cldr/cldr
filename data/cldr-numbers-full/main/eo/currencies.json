@@ -81,8 +81,10 @@
             "symbol": "ATS"
           },
           "AUD": {
-            "displayName": "AUD",
-            "symbol": "A$",
+            "displayName": "Aŭstralia dolaro",
+            "displayName-count-one": "aŭstralia dolaro",
+            "displayName-count-other": "aŭstraliaj dolaroj",
+            "symbol": "AU$",
             "symbol-alt-narrow": "$"
           },
           "AWG": {
@@ -196,7 +198,9 @@
             "symbol": "BRE"
           },
           "BRL": {
-            "displayName": "BRL",
+            "displayName": "Brazila realo",
+            "displayName-count-one": "brazila realo",
+            "displayName-count-other": "brazilaj realoj",
             "symbol": "R$",
             "symbol-alt-narrow": "R$"
           },
@@ -245,7 +249,9 @@
             "symbol-alt-narrow": "$"
           },
           "CAD": {
-            "displayName": "CAD",
+            "displayName": "Kanada dolaro",
+            "displayName-count-one": "kanada dolaro",
+            "displayName-count-other": "kanadaj dolaroj",
             "symbol": "CA$",
             "symbol-alt-narrow": "$"
           },
@@ -258,7 +264,9 @@
             "symbol": "CHE"
           },
           "CHF": {
-            "displayName": "CHF",
+            "displayName": "Svisa franko",
+            "displayName-count-one": "svisa franko",
+            "displayName-count-other": "svisaj frankoj",
             "symbol": "CHF"
           },
           "CHW": {
@@ -279,7 +287,9 @@
             "symbol-alt-narrow": "$"
           },
           "CNY": {
-            "displayName": "CNY",
+            "displayName": "Ĉina juano",
+            "displayName-count-one": "ĉina juano",
+            "displayName-count-other": "ĉinaj juanoj",
             "symbol": "CN¥",
             "symbol-alt-narrow": "¥"
           },
@@ -341,7 +351,9 @@
             "symbol": "DJF"
           },
           "DKK": {
-            "displayName": "DKK",
+            "displayName": "Dana krono",
+            "displayName-count-one": "dana krono",
+            "displayName-count-other": "danaj kronoj",
             "symbol": "DKK",
             "symbol-alt-narrow": "kr"
           },
@@ -393,7 +405,9 @@
             "symbol": "ETB"
           },
           "EUR": {
-            "displayName": "EUR",
+            "displayName": "Eŭro",
+            "displayName-count-one": "eŭro",
+            "displayName-count-other": "eŭroj",
             "symbol": "€",
             "symbol-alt-narrow": "€"
           },
@@ -416,7 +430,9 @@
             "symbol": "FRF"
           },
           "GBP": {
-            "displayName": "GBP",
+            "displayName": "Brita pundo",
+            "displayName-count-one": "brita pundo",
+            "displayName-count-other": "britaj pundoj",
             "symbol": "£",
             "symbol-alt-narrow": "£"
           },
@@ -482,7 +498,9 @@
             "symbol-alt-narrow": "$"
           },
           "HKD": {
-            "displayName": "HKD",
+            "displayName": "Honkonga dolaro",
+            "displayName-count-one": "honkonga dolaro",
+            "displayName-count-other": "honkongaj dolaroj",
             "symbol": "HK$",
             "symbol-alt-narrow": "$"
           },
@@ -510,7 +528,9 @@
             "symbol-alt-narrow": "Ft"
           },
           "IDR": {
-            "displayName": "IDR",
+            "displayName": "Indonezia rupio",
+            "displayName-count-one": "Indonezia rupio",
+            "displayName-count-other": "Indoneziaj rupioj",
             "symbol": "IDR",
             "symbol-alt-narrow": "Rp"
           },
@@ -528,7 +548,9 @@
             "symbol-alt-narrow": "₪"
           },
           "INR": {
-            "displayName": "INR",
+            "displayName": "Barata rupio",
+            "displayName-count-one": "barata rupio",
+            "displayName-count-other": "barataj rupioj",
             "symbol": "₹",
             "symbol-alt-narrow": "₹"
           },
@@ -559,7 +581,9 @@
             "symbol": "JOD"
           },
           "JPY": {
-            "displayName": "JPY",
+            "displayName": "Japana eno",
+            "displayName-count-one": "japana eno",
+            "displayName-count-other": "japanaj enoj",
             "symbol": "JP¥",
             "symbol-alt-narrow": "¥"
           },
@@ -595,7 +619,9 @@
             "symbol": "KRO"
           },
           "KRW": {
-            "displayName": "KRW",
+            "displayName": "Sud-korea ŭono",
+            "displayName-count-one": "sud-korea ŭono",
+            "displayName-count-other": "sud-koreaj ŭonoj",
             "symbol": "₩",
             "symbol-alt-narrow": "₩"
           },
@@ -752,7 +778,9 @@
             "symbol": "MWK"
           },
           "MXN": {
-            "displayName": "MXN",
+            "displayName": "Meksika peso",
+            "displayName-count-one": "meksika peso",
+            "displayName-count-other": "meksikaj pesoj",
             "symbol": "MX$",
             "symbol-alt-narrow": "$"
           },
@@ -805,7 +833,9 @@
             "symbol": "NLG"
           },
           "NOK": {
-            "displayName": "NOK",
+            "displayName": "Norvega krono",
+            "displayName-count-one": "norvega krono",
+            "displayName-count-other": "norvegaj kronoj",
             "symbol": "NOK",
             "symbol-alt-narrow": "kr"
           },
@@ -854,7 +884,9 @@
             "symbol-alt-narrow": "Rs"
           },
           "PLN": {
-            "displayName": "PLN",
+            "displayName": "Pola zloto",
+            "displayName-count-one": "pola zloto",
+            "displayName-count-other": "polaj zlotoj",
             "symbol": "PLN",
             "symbol-alt-narrow": "zł"
           },
@@ -892,7 +924,9 @@
             "symbol": "RSD"
           },
           "RUB": {
-            "displayName": "RUB",
+            "displayName": "Rusa rublo",
+            "displayName-count-one": "rusa rublo",
+            "displayName-count-other": "rusaj rubloj",
             "symbol": "RUB",
             "symbol-alt-narrow": "₽"
           },
@@ -907,7 +941,9 @@
             "symbol-alt-narrow": "RF"
           },
           "SAR": {
-            "displayName": "SAR",
+            "displayName": "Sauda rialo",
+            "displayName-count-one": "sauda rialo",
+            "displayName-count-other": "saudaj rialoj",
             "symbol": "SAR"
           },
           "SBD": {
@@ -932,7 +968,9 @@
             "symbol": "SDP"
           },
           "SEK": {
-            "displayName": "SEK",
+            "displayName": "Sveda krono",
+            "displayName-count-one": "sveda krono",
+            "displayName-count-other": "svedaj kronoj",
             "symbol": "SEK",
             "symbol-alt-narrow": "kr"
           },
@@ -999,8 +1037,10 @@
             "symbol": "SZL"
           },
           "THB": {
-            "displayName": "THB",
-            "symbol": "THB",
+            "displayName": "Taja bahto",
+            "displayName-count-one": "taja bahto",
+            "displayName-count-other": "tajaj bahtoj",
+            "symbol": "฿",
             "symbol-alt-narrow": "฿"
           },
           "TJR": {
@@ -1037,8 +1077,10 @@
             "symbol": "TRL"
           },
           "TRY": {
-            "displayName": "TRY",
-            "symbol": "TRY",
+            "displayName": "Turka liro",
+            "displayName-count-one": "turka liro",
+            "displayName-count-other": "turkaj liroj",
+            "symbol": "₺",
             "symbol-alt-narrow": "₺",
             "symbol-alt-variant": "TL"
           },
@@ -1048,9 +1090,11 @@
             "symbol-alt-narrow": "$"
           },
           "TWD": {
-            "displayName": "TWD",
+            "displayName": "Nova tajvana dolaro",
+            "displayName-count-one": "nova tajvana dolaro",
+            "displayName-count-other": "novaj tajvanaj dolaroj",
             "symbol": "NT$",
-            "symbol-alt-narrow": "$"
+            "symbol-alt-narrow": "NT$"
           },
           "TZS": {
             "displayName": "TZS",
@@ -1074,7 +1118,9 @@
             "symbol": "UGX"
           },
           "USD": {
-            "displayName": "USD",
+            "displayName": "Usona dolaro",
+            "displayName-count-one": "usona dolaro",
+            "displayName-count-other": "usonaj dolaroj",
             "symbol": "US$",
             "symbol-alt-narrow": "$"
           },
@@ -1134,11 +1180,11 @@
             "symbol": "FCFA"
           },
           "XAG": {
-            "displayName": "XAG",
+            "displayName": "arĝento",
             "symbol": "XAG"
           },
           "XAU": {
-            "displayName": "XAU",
+            "displayName": "oro",
             "symbol": "XAU"
           },
           "XBA": {
@@ -1146,7 +1192,7 @@
             "symbol": "XBA"
           },
           "XBB": {
-            "displayName": "XBB",
+            "displayName": "eŭropa monunuo",
             "symbol": "XBB"
           },
           "XBC": {
@@ -1171,7 +1217,7 @@
             "symbol": "XEU"
           },
           "XFO": {
-            "displayName": "XFO",
+            "displayName": "franca ora franko",
             "symbol": "XFO"
           },
           "XFU": {
@@ -1183,7 +1229,7 @@
             "symbol": "CFA"
           },
           "XPD": {
-            "displayName": "XPD",
+            "displayName": "paladio",
             "symbol": "XPD"
           },
           "XPF": {
@@ -1191,7 +1237,7 @@
             "symbol": "CFPF"
           },
           "XPT": {
-            "displayName": "XPT",
+            "displayName": "plateno",
             "symbol": "XPT"
           },
           "XRE": {
@@ -1211,7 +1257,9 @@
             "symbol": "XUA"
           },
           "XXX": {
-            "displayName": "XXX",
+            "displayName": "Nekonata valuto",
+            "displayName-count-one": "nekonata monunuo",
+            "displayName-count-other": "nekonataj monunuoj",
             "symbol": "XXX"
           },
           "YDD": {
@@ -1243,7 +1291,9 @@
             "symbol": "ZAL"
           },
           "ZAR": {
-            "displayName": "ZAR",
+            "displayName": "Sud-afrika rando",
+            "displayName-count-one": "sud-afrika rando",
+            "displayName-count-other": "sud-afrikaj randoj",
             "symbol": "ZAR",
             "symbol-alt-narrow": "R"
           },

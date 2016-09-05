@@ -52,7 +52,7 @@
           "LIPAW": "LIPAW",
           "LUNA1918": "LUNA1918",
           "METELKO": "METELKO",
-          "MONOTON": "MONOTON",
+          "MONOTON": "monotonísk",
           "NDYUKA": "NDYUKA",
           "NEDIS": "NEDIS",
           "NEWFOUND": "NEWFOUND",
@@ -62,8 +62,8 @@
           "OXENDICT": "OXENDICT",
           "PAMAKA": "PAMAKA",
           "PETR1708": "PETR1708",
-          "PINYIN": "PINYIN",
-          "POLYTON": "POLYTON",
+          "PINYIN": "pinyin",
+          "POLYTON": "polytonísk",
           "POSIX": "POSIX",
           "PUTER": "PUTER",
           "REVISED": "REVISED",
@@ -87,7 +87,7 @@
           "VAIDIKA": "VAIDIKA",
           "VALENCIA": "VALENCIA",
           "VALLADER": "VALLADER",
-          "WADEGILE": "WADEGILE"
+          "WADEGILE": "Wade-Giles"
         }
       }
     }

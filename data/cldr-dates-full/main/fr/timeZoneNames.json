@@ -1932,6 +1932,11 @@
                 "standard": "heure du Kirghizistan"
               }
             },
+            "Lanka": {
+              "long": {
+                "standard": "heure de Lanka"
+              }
+            },
             "Line_Islands": {
               "long": {
                 "standard": "heure des îles de la Ligne"
@@ -1942,6 +1947,13 @@
                 "generic": "heure de Lord Howe",
                 "standard": "heure normale de Lord Howe",
                 "daylight": "heure d’été de Lord Howe"
+              }
+            },
+            "Macau": {
+              "long": {
+                "generic": "heure de Macao",
+                "standard": "heure normale de Macao",
+                "daylight": "heure d’été de Macao"
               }
             },
             "Macquarie": {

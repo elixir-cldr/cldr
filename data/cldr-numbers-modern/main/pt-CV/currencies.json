@@ -638,7 +638,7 @@
             "symbol-alt-variant": "₾"
           },
           "GHC": {
-            "displayName": "Cedi de Gana (1979–2007)",
+            "displayName": "Cedi do Gana",
             "displayName-count-one": "Cedi de Gana (1979–2007)",
             "displayName-count-other": "Cedis de Gana (1979–2007)",
             "symbol": "GHC"
@@ -1053,7 +1053,7 @@
             "symbol": "MKN"
           },
           "MLF": {
-            "displayName": "Franco de Mali",
+            "displayName": "Franco do Mali",
             "displayName-count-one": "Franco de Mali",
             "displayName-count-other": "Francos de Mali",
             "symbol": "MLF"
@@ -1271,7 +1271,7 @@
             "symbol-alt-narrow": "zł"
           },
           "PLZ": {
-            "displayName": "Zloti polonês (1950–1995)",
+            "displayName": "Zloti polaco (1950–1995)",
             "displayName-count-one": "Zloti polonês (1950–1995)",
             "displayName-count-other": "Zlotis poloneses (1950–1995)",
             "symbol": "PLZ"
@@ -1718,12 +1718,12 @@
           },
           "XDR": {
             "displayName": "Direitos Especiais de Giro",
-            "displayName-count-one": "Direitos de desenho especiais",
-            "displayName-count-other": "Direitos de desenho especiais",
+            "displayName-count-one": "direito especial de saque",
+            "displayName-count-other": "direitos especiais de saque",
             "symbol": "XDR"
           },
           "XEU": {
-            "displayName": "Unidade de Moeda Europeia",
+            "displayName": "Unidade da Moeda Europeia",
             "displayName-count-one": "Unidade de moeda europeia",
             "displayName-count-other": "Unidades de moedas europeias",
             "symbol": "XEU"
@@ -1803,19 +1803,19 @@
             "symbol": "YER"
           },
           "YUD": {
-            "displayName": "Dinar forte iugoslavo (1966–1990)",
+            "displayName": "Dinar forte jugoslavo",
             "displayName-count-one": "Dinar forte iugoslavo",
             "displayName-count-other": "Dinares fortes iugoslavos",
             "symbol": "YUD"
           },
           "YUM": {
-            "displayName": "Dinar noviy iugoslavo (1994–2002)",
+            "displayName": "Super Dinar jugoslavo",
             "displayName-count-one": "Dinar noviy da Iugoslávia",
             "displayName-count-other": "Dinares noviy da Iugoslávia",
             "symbol": "YUM"
           },
           "YUN": {
-            "displayName": "Dinar conversível iugoslavo (1990–1992)",
+            "displayName": "Dinar conversível jugoslavo",
             "displayName-count-one": "Dinar conversível da Iugoslávia",
             "displayName-count-other": "Dinares conversíveis da Iugoslávia",
             "symbol": "YUN"
@@ -1865,7 +1865,7 @@
             "symbol": "ZRZ"
           },
           "ZWD": {
-            "displayName": "Dólar do Zimbábue (1980–2008)",
+            "displayName": "Dólar do Zimbabwe",
             "displayName-count-one": "Dólar do Zimbábue",
             "displayName-count-other": "Dólares do Zimbábue",
             "symbol": "ZWD"

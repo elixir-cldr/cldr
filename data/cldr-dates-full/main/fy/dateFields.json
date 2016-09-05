@@ -56,39 +56,45 @@
             }
           },
           "quarter": {
-            "displayName": "Quarter",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "displayName": "Fearnsjier",
+            "relative-type--1": "foarich fearnsjier",
+            "relative-type-0": "dit fearnsjier",
+            "relative-type-1": "folgjend fearnsjier",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "oer {0} fearnsjier",
+              "relativeTimePattern-count-other": "oer {0} fearnsjier"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "{0} fearnsjier lyn",
+              "relativeTimePattern-count-other": "{0} fearnsjier lyn"
             }
           },
           "quarter-short": {
-            "displayName": "Quarter",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "displayName": "fearnsjier",
+            "relative-type--1": "foarich fearnsjier",
+            "relative-type-0": "dit fearnsjier",
+            "relative-type-1": "folgjend fearnsjier",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "oer {0} fearnsjier",
+              "relativeTimePattern-count-other": "oer {0} fearnsjier"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "{0} fearnsjier lyn",
+              "relativeTimePattern-count-other": "{0} fearnsjier lyn"
             }
           },
           "quarter-narrow": {
-            "displayName": "Quarter",
-            "relative-type--1": "last quarter",
-            "relative-type-0": "this quarter",
-            "relative-type-1": "next quarter",
+            "displayName": "fearnsjier",
+            "relative-type--1": "foarich fearnsjier",
+            "relative-type-0": "dit fearnsjier",
+            "relative-type-1": "folgjend fearnsjier",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "oer {0} fearnsjier",
+              "relativeTimePattern-count-other": "oer {0} fearnsjier"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "{0} fearnsjier lyn",
+              "relativeTimePattern-count-other": "{0} fearnsjier lyn"
             }
           },
           "month": {

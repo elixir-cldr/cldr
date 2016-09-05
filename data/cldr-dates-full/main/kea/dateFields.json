@@ -323,7 +323,7 @@
             }
           },
           "hour-narrow": {
-            "displayName": "ora",
+            "displayName": "o",
             "relativeTime-type-future": {
               "relativeTimePattern-count-other": "di li {0} ora"
             },

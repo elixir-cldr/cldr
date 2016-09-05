@@ -451,7 +451,7 @@
           },
           "second": {
             "displayName": "sekund",
-            "relative-type-0": "now",
+            "relative-type-0": "sada",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "za {0} sekundu",
               "relativeTimePattern-count-few": "za {0} sekunde",
@@ -465,7 +465,7 @@
           },
           "second-short": {
             "displayName": "sek.",
-            "relative-type-0": "now",
+            "relative-type-0": "sada",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "za {0} sek.",
               "relativeTimePattern-count-few": "za {0} sek.",
@@ -479,7 +479,7 @@
           },
           "second-narrow": {
             "displayName": "s",
-            "relative-type-0": "now",
+            "relative-type-0": "sada",
             "relativeTime-type-future": {
               "relativeTimePattern-count-one": "za {0} sek.",
               "relativeTimePattern-count-few": "za {0} sek.",

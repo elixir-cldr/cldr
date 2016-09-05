@@ -289,13 +289,13 @@
             },
             "eras": {
               "eraNames": {
-                "0": "BE"
+                "0": "ພ.ສ."
               },
               "eraAbbr": {
-                "0": "BE"
+                "0": "ພ.ສ."
               },
               "eraNarrow": {
-                "0": "BE"
+                "0": "ພ.ສ."
               }
             },
             "dateFormats": {

@@ -1493,6 +1493,10 @@
           },
           "SKK": {
             "displayName": "словацька крона",
+            "displayName-count-one": "словацька крона",
+            "displayName-count-few": "словацькі крони",
+            "displayName-count-many": "словацьких крон",
+            "displayName-count-other": "словацької крони",
             "symbol": "SKK"
           },
           "SLL": {
@@ -1830,6 +1834,10 @@
           },
           "XDR": {
             "displayName": "спеціальні права запозичення",
+            "displayName-count-one": "СПЗ",
+            "displayName-count-few": "СПЗ",
+            "displayName-count-many": "СПЗ",
+            "displayName-count-other": "СПЗ",
             "symbol": "XDR"
           },
           "XEU": {
@@ -1976,6 +1984,10 @@
           },
           "ZWR": {
             "displayName": "ZWR",
+            "displayName-count-one": "зімбабвійський долар (2008)",
+            "displayName-count-few": "зімбабвійські долари (2008)",
+            "displayName-count-many": "зімбабвійських доларів (2008)",
+            "displayName-count-other": "зімбабвійського долара (2008)",
             "symbol": "ZWR"
           }
         }

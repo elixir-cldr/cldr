@@ -136,7 +136,7 @@
                 "exemplarCity": "Cuiaba"
               },
               "Curacao": {
-                "exemplarCity": "Curacao"
+                "exemplarCity": "Curaçao"
               },
               "Danmarkshavn": {
                 "exemplarCity": "Danmarkshavn"
@@ -477,10 +477,10 @@
                 "exemplarCity": "Kanariøyane"
               },
               "Cape_Verde": {
-                "exemplarCity": "Cape Verde"
+                "exemplarCity": "Kapp Verde"
               },
               "Faeroe": {
-                "exemplarCity": "Faroe"
+                "exemplarCity": "Færøyane"
               },
               "Madeira": {
                 "exemplarCity": "Madeira"
@@ -533,7 +533,7 @@
                 "exemplarCity": "Chisinau"
               },
               "Copenhagen": {
-                "exemplarCity": "Copenhagen"
+                "exemplarCity": "København"
               },
               "Dublin": {
                 "exemplarCity": "Dublin"
@@ -572,7 +572,7 @@
                 "exemplarCity": "London"
               },
               "Luxembourg": {
-                "exemplarCity": "Luxembourg"
+                "exemplarCity": "Luxemburg"
               },
               "Madrid": {
                 "exemplarCity": "Madrid"
@@ -814,7 +814,7 @@
                 "exemplarCity": "Porto-Novo"
               },
               "Sao_Tome": {
-                "exemplarCity": "Sao Tome"
+                "exemplarCity": "São Tomé"
               },
               "Tripoli": {
                 "exemplarCity": "Tripoli"
@@ -903,7 +903,7 @@
                 "exemplarCity": "Hebron"
               },
               "Hong_Kong": {
-                "exemplarCity": "Hong Kong"
+                "exemplarCity": "Hongkong"
               },
               "Hovd": {
                 "exemplarCity": "Hovd"
@@ -999,7 +999,7 @@
                 "exemplarCity": "Riyadh"
               },
               "Saigon": {
-                "exemplarCity": "Ho Chi Minh"
+                "exemplarCity": "Ho Chi Minh-byen"
               },
               "Sakhalin": {
                 "exemplarCity": "Sakhalin"
@@ -1085,7 +1085,7 @@
                 "exemplarCity": "Mahe"
               },
               "Maldives": {
-                "exemplarCity": "Maldives"
+                "exemplarCity": "Maldivane"
               },
               "Mauritius": {
                 "exemplarCity": "Mauritius"
@@ -1094,7 +1094,7 @@
                 "exemplarCity": "Mayotte"
               },
               "Reunion": {
-                "exemplarCity": "Reunion"
+                "exemplarCity": "Réunion"
               }
             },
             "Australia": {
@@ -1454,6 +1454,11 @@
                 "generic": "EET",
                 "standard": "EET",
                 "daylight": "EEST"
+              }
+            },
+            "Europe_Further_Eastern": {
+              "long": {
+                "standard": "Kaliningradtid"
               }
             },
             "Europe_Western": {

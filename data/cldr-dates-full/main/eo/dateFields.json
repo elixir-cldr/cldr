@@ -11,385 +11,433 @@
       "dates": {
         "fields": {
           "era": {
-            "displayName": "Era"
+            "displayName": "erao"
           },
           "year": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "jaro",
+            "relative-type--1": "pasinta jaro",
+            "relative-type-0": "nuna jaro",
+            "relative-type-1": "venonta jaro",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} y"
+              "relativeTimePattern-count-one": "post {0} jaro",
+              "relativeTimePattern-count-other": "post {0} jaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} y"
+              "relativeTimePattern-count-one": "antaŭ {0} jaro",
+              "relativeTimePattern-count-other": "antaŭ {0} jaroj"
             }
           },
           "year-short": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "jaro",
+            "relative-type--1": "pasinta jaro",
+            "relative-type-0": "nuna jaro",
+            "relative-type-1": "venonta jaro",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} y"
+              "relativeTimePattern-count-one": "post {0} jaroj",
+              "relativeTimePattern-count-other": "post {0} jaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} y"
+              "relativeTimePattern-count-one": "antaŭ {0} jaroj",
+              "relativeTimePattern-count-other": "antaŭ {0} jaroj"
             }
           },
           "year-narrow": {
-            "displayName": "Year",
-            "relative-type--1": "last year",
-            "relative-type-0": "this year",
-            "relative-type-1": "next year",
+            "displayName": "jaro",
+            "relative-type--1": "pasinta jaro",
+            "relative-type-0": "nuna jaro",
+            "relative-type-1": "venonta jaro",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} y"
+              "relativeTimePattern-count-one": "post {0} jaroj",
+              "relativeTimePattern-count-other": "post {0} jaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} y"
+              "relativeTimePattern-count-one": "antaŭ {0} jaroj",
+              "relativeTimePattern-count-other": "antaŭ {0} jaroj"
             }
           },
           "quarter": {
-            "displayName": "Quarter",
+            "displayName": "kvaronjaro",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "post {0} kvaronjaro",
+              "relativeTimePattern-count-other": "post {0} kvaronjaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "antaŭ {0} kvaronjaro",
+              "relativeTimePattern-count-other": "antaŭ {0} kvaronjaroj"
             }
           },
           "quarter-short": {
-            "displayName": "Quarter",
+            "displayName": "kvaronjaro",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "post {0} kvaronjaroj",
+              "relativeTimePattern-count-other": "post {0} kvaronjaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "antaŭ {0} kvaronjaroj",
+              "relativeTimePattern-count-other": "antaŭ {0} kvaronjaroj"
             }
           },
           "quarter-narrow": {
-            "displayName": "Quarter",
+            "displayName": "kvaronjaro",
             "relative-type--1": "last quarter",
             "relative-type-0": "this quarter",
             "relative-type-1": "next quarter",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} Q"
+              "relativeTimePattern-count-one": "post {0} kvaronjaroj",
+              "relativeTimePattern-count-other": "post {0} kvaronjaroj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} Q"
+              "relativeTimePattern-count-one": "antaŭ {0} kvaronjaroj",
+              "relativeTimePattern-count-other": "antaŭ {0} kvaronjaroj"
             }
           },
           "month": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "monato",
+            "relative-type--1": "pasinta monato",
+            "relative-type-0": "nuna monato",
+            "relative-type-1": "venonta monato",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} m"
+              "relativeTimePattern-count-one": "post {0} monato",
+              "relativeTimePattern-count-other": "post {0} monatoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} m"
+              "relativeTimePattern-count-one": "antaŭ {0} monato",
+              "relativeTimePattern-count-other": "antaŭ {0} monatoj"
             }
           },
           "month-short": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "monato",
+            "relative-type--1": "pasinta monato",
+            "relative-type-0": "nuna monato",
+            "relative-type-1": "venonta monato",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} m"
+              "relativeTimePattern-count-one": "post {0} monatoj",
+              "relativeTimePattern-count-other": "post {0} monatoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} m"
+              "relativeTimePattern-count-one": "antaŭ {0} monatoj",
+              "relativeTimePattern-count-other": "antaŭ {0} monatoj"
             }
           },
           "month-narrow": {
-            "displayName": "Month",
-            "relative-type--1": "last month",
-            "relative-type-0": "this month",
-            "relative-type-1": "next month",
+            "displayName": "monato",
+            "relative-type--1": "pasinta monato",
+            "relative-type-0": "nuna monato",
+            "relative-type-1": "venonta monato",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} m"
+              "relativeTimePattern-count-one": "post {0} monatoj",
+              "relativeTimePattern-count-other": "post {0} monatoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} m"
+              "relativeTimePattern-count-one": "antaŭ {0} monatoj",
+              "relativeTimePattern-count-other": "antaŭ {0} monatoj"
             }
           },
           "week": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "semajno",
+            "relative-type--1": "pasinta semajno",
+            "relative-type-0": "nuna semajno",
+            "relative-type-1": "venonta semajno",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} w"
+              "relativeTimePattern-count-one": "post {0} semajno",
+              "relativeTimePattern-count-other": "post {0} semajnoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} w"
+              "relativeTimePattern-count-one": "antaŭ {0} semajno",
+              "relativeTimePattern-count-other": "antaŭ {0} semajnoj"
             }
           },
           "week-short": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "semajno",
+            "relative-type--1": "pasinta semajno",
+            "relative-type-0": "nuna semajno",
+            "relative-type-1": "venonta semajno",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} w"
+              "relativeTimePattern-count-one": "post {0} semajnoj",
+              "relativeTimePattern-count-other": "post {0} semajnoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} w"
+              "relativeTimePattern-count-one": "antaŭ {0} semajnoj",
+              "relativeTimePattern-count-other": "antaŭ {0} semajnoj"
             }
           },
           "week-narrow": {
-            "displayName": "Week",
-            "relative-type--1": "last week",
-            "relative-type-0": "this week",
-            "relative-type-1": "next week",
+            "displayName": "semajno",
+            "relative-type--1": "pasinta semajno",
+            "relative-type-0": "nuna semajno",
+            "relative-type-1": "venonta semajno",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} w"
+              "relativeTimePattern-count-one": "post {0} semajnoj",
+              "relativeTimePattern-count-other": "post {0} semajnoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} w"
+              "relativeTimePattern-count-one": "antaŭ {0} semajnoj",
+              "relativeTimePattern-count-other": "antaŭ {0} semajnoj"
             }
           },
           "day": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "tago",
+            "relative-type--1": "hieraŭ",
+            "relative-type-0": "hodiaŭ",
+            "relative-type-1": "morgaŭ",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} d"
+              "relativeTimePattern-count-one": "post {0} tago",
+              "relativeTimePattern-count-other": "post {0} tagoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} d"
+              "relativeTimePattern-count-one": "antaŭ {0} tago",
+              "relativeTimePattern-count-other": "antaŭ {0} tagoj"
             }
           },
           "day-short": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "tago",
+            "relative-type--1": "hieraŭ",
+            "relative-type-0": "hodiaŭ",
+            "relative-type-1": "morgaŭ",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} d"
+              "relativeTimePattern-count-one": "post {0} tagoj",
+              "relativeTimePattern-count-other": "post {0} tagoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} d"
+              "relativeTimePattern-count-one": "antaŭ {0} tagoj",
+              "relativeTimePattern-count-other": "antaŭ {0} tagoj"
             }
           },
           "day-narrow": {
-            "displayName": "Day",
-            "relative-type--1": "yesterday",
-            "relative-type-0": "today",
-            "relative-type-1": "tomorrow",
+            "displayName": "tago",
+            "relative-type--1": "hieraŭ",
+            "relative-type-0": "hodiaŭ",
+            "relative-type-1": "morgaŭ",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} d"
+              "relativeTimePattern-count-one": "post {0} tagoj",
+              "relativeTimePattern-count-other": "post {0} tagoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} d"
+              "relativeTimePattern-count-one": "antaŭ {0} tagoj",
+              "relativeTimePattern-count-other": "antaŭ {0} tagoj"
             }
           },
           "weekday": {
-            "displayName": "Day of the Week"
+            "displayName": "tago de la semajno"
           },
           "sun": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "pasinta dimanĉo",
+            "relative-type-0": "ĉi tiu dimanĉo",
+            "relative-type-1": "venonta dimanĉo"
           },
           "sun-short": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "pasinta dimanĉo",
+            "relative-type-0": "ĉi tiu dimanĉo",
+            "relative-type-1": "venonta dimanĉo"
           },
           "sun-narrow": {
-            "relative-type--1": "last Sunday",
-            "relative-type-0": "this Sunday",
-            "relative-type-1": "next Sunday"
+            "relative-type--1": "pasinta dimanĉo",
+            "relative-type-0": "ĉi tiu dimanĉo",
+            "relative-type-1": "venonta dimanĉo"
           },
           "mon": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "pasinta lundo",
+            "relative-type-0": "ĉi tiu lundo",
+            "relative-type-1": "venonta lundo"
           },
           "mon-short": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "pasinta lundo",
+            "relative-type-0": "ĉi tiu lundo",
+            "relative-type-1": "venonta lundo"
           },
           "mon-narrow": {
-            "relative-type--1": "last Monday",
-            "relative-type-0": "this Monday",
-            "relative-type-1": "next Monday"
+            "relative-type--1": "pasinta lundo",
+            "relative-type-0": "ĉi tiu lundo",
+            "relative-type-1": "venonta lundo"
           },
           "tue": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "pasinta mardo",
+            "relative-type-0": "ĉi tiu mardo",
+            "relative-type-1": "venonta mardo"
           },
           "tue-short": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "pasinta mardo",
+            "relative-type-0": "ĉi tiu mardo",
+            "relative-type-1": "venonta mardo"
           },
           "tue-narrow": {
-            "relative-type--1": "last Tuesday",
-            "relative-type-0": "this Tuesday",
-            "relative-type-1": "next Tuesday"
+            "relative-type--1": "pasinta mardo",
+            "relative-type-0": "ĉi tiu mardo",
+            "relative-type-1": "venonta mardo"
           },
           "wed": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "pasinta merkredo",
+            "relative-type-0": "ĉi tiu merkredo",
+            "relative-type-1": "venonta merkredo"
           },
           "wed-short": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "pasinta merkredo",
+            "relative-type-0": "ĉi tiu merkredo",
+            "relative-type-1": "venonta merkredo"
           },
           "wed-narrow": {
-            "relative-type--1": "last Wednesday",
-            "relative-type-0": "this Wednesday",
-            "relative-type-1": "next Wednesday"
+            "relative-type--1": "pasinta merkredo",
+            "relative-type-0": "ĉi tiu merkredo",
+            "relative-type-1": "venonta merkredo"
           },
           "thu": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "pasinta ĵaŭdo",
+            "relative-type-0": "ĉi tiu ĵaŭdo",
+            "relative-type-1": "venonta ĵaŭdo"
           },
           "thu-short": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "pasinta ĵaŭdo",
+            "relative-type-0": "ĉi tiu ĵaŭdo",
+            "relative-type-1": "venonta ĵaŭdo"
           },
           "thu-narrow": {
-            "relative-type--1": "last Thursday",
-            "relative-type-0": "this Thursday",
-            "relative-type-1": "next Thursday"
+            "relative-type--1": "pasinta ĵaŭdo",
+            "relative-type-0": "ĉi tiu ĵaŭdo",
+            "relative-type-1": "venonta ĵaŭdo"
           },
           "fri": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "pasinta vendredo",
+            "relative-type-0": "ĉi tiu vendredo",
+            "relative-type-1": "venonta vendredo"
           },
           "fri-short": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "pasinta vendredo",
+            "relative-type-0": "ĉi tiu vendredo",
+            "relative-type-1": "venonta vendredo"
           },
           "fri-narrow": {
-            "relative-type--1": "last Friday",
-            "relative-type-0": "this Friday",
-            "relative-type-1": "next Friday"
+            "relative-type--1": "pasinta vendredo",
+            "relative-type-0": "ĉi tiu vendredo",
+            "relative-type-1": "venonta vendredo"
           },
           "sat": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "pasinta sabato",
+            "relative-type-0": "ĉi tiu sabato",
+            "relative-type-1": "venonta sabato"
           },
           "sat-short": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "pasinta sabato",
+            "relative-type-0": "ĉi tiu sabato",
+            "relative-type-1": "venonta sabato"
           },
           "sat-narrow": {
-            "relative-type--1": "last Saturday",
-            "relative-type-0": "this Saturday",
-            "relative-type-1": "next Saturday"
+            "relative-type--1": "pasinta sabato",
+            "relative-type-0": "ĉi tiu sabato",
+            "relative-type-1": "venonta sabato"
           },
           "dayperiod": {
-            "displayName": "Dayperiod"
+            "displayName": "atm/ptm"
           },
           "hour": {
-            "displayName": "Hour",
+            "displayName": "horo",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} h"
+              "relativeTimePattern-count-one": "post {0} horo",
+              "relativeTimePattern-count-other": "post {0} horoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} h"
+              "relativeTimePattern-count-one": "antaŭ {0} horo",
+              "relativeTimePattern-count-other": "antaŭ {0} horoj"
             }
           },
           "hour-short": {
-            "displayName": "Hour",
+            "displayName": "horo",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} h"
+              "relativeTimePattern-count-one": "post {0} horoj",
+              "relativeTimePattern-count-other": "post {0} horoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} h"
+              "relativeTimePattern-count-one": "antaŭ {0} horoj",
+              "relativeTimePattern-count-other": "antaŭ {0} horoj"
             }
           },
           "hour-narrow": {
-            "displayName": "Hour",
+            "displayName": "h",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} h"
+              "relativeTimePattern-count-one": "post {0} horoj",
+              "relativeTimePattern-count-other": "post {0} horoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} h"
+              "relativeTimePattern-count-one": "antaŭ {0} horoj",
+              "relativeTimePattern-count-other": "antaŭ {0} horoj"
             }
           },
           "minute": {
-            "displayName": "Minute",
+            "displayName": "minuto",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} min"
+              "relativeTimePattern-count-one": "post {0} minuto",
+              "relativeTimePattern-count-other": "post {0} minutoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} min"
+              "relativeTimePattern-count-one": "antaŭ {0} minuto",
+              "relativeTimePattern-count-other": "antaŭ {0} minutoj"
             }
           },
           "minute-short": {
-            "displayName": "Minute",
+            "displayName": "minuto",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} min"
+              "relativeTimePattern-count-one": "post {0} minutoj",
+              "relativeTimePattern-count-other": "post {0} minutoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} min"
+              "relativeTimePattern-count-one": "antaŭ {0} minutoj",
+              "relativeTimePattern-count-other": "antaŭ {0} minutoj"
             }
           },
           "minute-narrow": {
-            "displayName": "Minute",
+            "displayName": "m",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} min"
+              "relativeTimePattern-count-one": "post {0} minutoj",
+              "relativeTimePattern-count-other": "post {0} minutoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} min"
+              "relativeTimePattern-count-one": "antaŭ {0} minutoj",
+              "relativeTimePattern-count-other": "antaŭ {0} minutoj"
             }
           },
           "second": {
-            "displayName": "Second",
+            "displayName": "sekundo",
             "relative-type-0": "now",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} s"
+              "relativeTimePattern-count-one": "post {0} sekundo",
+              "relativeTimePattern-count-other": "post {0} sekundoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} s"
+              "relativeTimePattern-count-one": "antaŭ {0} sekundo",
+              "relativeTimePattern-count-other": "antaŭ {0} sekundoj"
             }
           },
           "second-short": {
-            "displayName": "Second",
+            "displayName": "sekundo",
             "relative-type-0": "now",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} s"
+              "relativeTimePattern-count-one": "post {0} sekundoj",
+              "relativeTimePattern-count-other": "post {0} sekundoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} s"
+              "relativeTimePattern-count-one": "antaŭ {0} sekundoj",
+              "relativeTimePattern-count-other": "antaŭ {0} sekundoj"
             }
           },
           "second-narrow": {
-            "displayName": "Second",
+            "displayName": "s",
             "relative-type-0": "now",
             "relativeTime-type-future": {
-              "relativeTimePattern-count-other": "+{0} s"
+              "relativeTimePattern-count-one": "post {0} sekundoj",
+              "relativeTimePattern-count-other": "post {0} sekundoj"
             },
             "relativeTime-type-past": {
-              "relativeTimePattern-count-other": "-{0} s"
+              "relativeTimePattern-count-one": "antaŭ {0} sekundoj",
+              "relativeTimePattern-count-other": "antaŭ {0} sekundoj"
             }
           },
           "zone": {
-            "displayName": "Zone"
+            "displayName": "horzono"
           }
         }
       }

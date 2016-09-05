@@ -316,7 +316,7 @@
                 "MMM": "LLL",
                 "MMMd": "MMM d",
                 "MMMEd": "MMM d, E",
-                "MMMMd": "MMMM d",
+                "MMMMd": "d 'ta'’ MMMM",
                 "ms": "mm:ss",
                 "y": "y",
                 "yM": "y-MM",
@@ -325,7 +325,7 @@
                 "yMMM": "y MMM",
                 "yMMMd": "y MMM d",
                 "yMMMEd": "y MMM d, E",
-                "yMMMM": "y MMMM",
+                "yMMMM": "MMMM 'ta'’ y",
                 "yQQQ": "y QQQ",
                 "yQQQQ": "y QQQQ"
               },
@@ -343,13 +343,13 @@
                 "Year": "{1} {0}"
               },
               "intervalFormats": {
-                "intervalFormatFallback": "{0} – {1}",
+                "intervalFormatFallback": "{0} - {1}",
                 "d": {
                   "d": "d–d"
                 },
                 "h": {
                   "a": "h a – h a",
-                  "h": "h–h a"
+                  "h": "h – h a"
                 },
                 "H": {
                   "H": "HH–HH"
@@ -380,57 +380,57 @@
                   "H": "HH–HH v"
                 },
                 "M": {
-                  "M": "MM–MM"
+                  "M": "M–M"
                 },
                 "Md": {
-                  "d": "MM-dd – MM-dd",
-                  "M": "MM-dd – MM-dd"
+                  "d": "dd/MM – dd/MM",
+                  "M": "dd/MM – dd/MM"
                 },
                 "MEd": {
-                  "d": "MM-dd, E – MM-dd, E",
-                  "M": "MM-dd, E – MM-dd, E"
+                  "d": "E, dd/MM – E, dd/MM",
+                  "M": "E, dd/MM – E, dd/MM"
                 },
                 "MMM": {
-                  "M": "LLL–LLL"
+                  "M": "MMM – MMM"
                 },
                 "MMMd": {
-                  "d": "MMM d–d",
-                  "M": "MMM d – MMM d"
+                  "d": "d 'ta'’ - d 'ta'’ MMM",
+                  "M": "d 'ta'’ MMM – d 'ta'’ MMM"
                 },
                 "MMMEd": {
-                  "d": "MMM d, E – MMM d, E",
-                  "M": "MMM d, E – MMM d, E"
+                  "d": "E, d 'ta'’ - E, d 'ta'’ MMM",
+                  "M": "E, d 'ta'’ MMM – E, d 'ta'’ MMM"
                 },
                 "y": {
-                  "y": "y–y"
+                  "y": "y – y"
                 },
                 "yM": {
-                  "M": "y-MM – y-MM",
-                  "y": "y-MM – y-MM"
+                  "M": "MM/y – MM/y",
+                  "y": "MM/y – MM/y"
                 },
                 "yMd": {
-                  "d": "y-MM-dd – y-MM-dd",
-                  "M": "y-MM-dd – y-MM-dd",
-                  "y": "y-MM-dd – y-MM-dd"
+                  "d": "dd/MM/y – dd/MM/y",
+                  "M": "dd/MM/y – dd/MM/y",
+                  "y": "dd/MM/y – dd/MM/y"
                 },
                 "yMEd": {
-                  "d": "y-MM-dd, E – y-MM-dd, E",
-                  "M": "y-MM-dd, E – y-MM-dd, E",
-                  "y": "y-MM-dd, E – y-MM-dd, E"
+                  "d": "E, dd/MM/y – E, dd/MM/y",
+                  "M": "E, dd/MM/y – E, dd/MM/y",
+                  "y": "E, dd/MM/y – E, dd/MM/y"
                 },
                 "yMMM": {
-                  "M": "y MMM–MMM",
-                  "y": "y MMM – y MMM"
+                  "M": "MMM–MMM y",
+                  "y": "MMM y – MMM y"
                 },
                 "yMMMd": {
-                  "d": "y MMM d–d",
-                  "M": "y MMM d – MMM d",
-                  "y": "y MMM d – y MMM d"
+                  "d": "d 'ta'’-d 'ta'’ MMM y",
+                  "M": "d 'ta'’ MMM – d 'ta'’ MMM y",
+                  "y": "d 'ta'’ MMM y – d 'ta'’ MMM y"
                 },
                 "yMMMEd": {
-                  "d": "y MMM d, E – MMM d, E",
-                  "M": "y MMM d, E – MMM d, E",
-                  "y": "y MMM d, E – y MMM d, E"
+                  "d": "E, d 'ta'’ - E, d 'ta'’ MMM y",
+                  "M": "E, d 'ta'’ MMM – E, d 'ta'’ MMM y",
+                  "y": "E, d 'ta'’ MMM y – E, d 'ta'’ MMM y"
                 },
                 "yMMMM": {
                   "M": "y MMMM–MMMM",

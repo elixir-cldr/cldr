@@ -157,22 +157,24 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
-            "unitPattern-count-other": "{0} y",
+            "displayName": "yels",
+            "unitPattern-count-one": "yel {0}",
+            "unitPattern-count-other": "yels {0}",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
-            "unitPattern-count-other": "{0} m",
+            "displayName": "muls",
+            "unitPattern-count-one": "mul {0}",
+            "unitPattern-count-other": "muls {0}",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "vigs",
             "unitPattern-count-other": "{0} w",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "dels",
             "unitPattern-count-other": "{0} d",
             "perUnitPattern": "{0}/d"
           },

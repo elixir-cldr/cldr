@@ -968,10 +968,10 @@
               }
             },
             "dateFormats": {
-              "full": "G y MMMM d, EEEE",
-              "long": "G y MMMM d",
-              "medium": "G y MMM d",
-              "short": "GGGGG y-MM-dd"
+              "full": "EEEE dd MMMM y G",
+              "long": "dd MMMM y G",
+              "medium": "MMM dd, y G",
+              "short": "dd/MM/yy GGGGG"
             },
             "timeFormats": {
               "full": "HH:mm:ss zzzz",

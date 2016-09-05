@@ -196,7 +196,8 @@
             "symbol": "BRE"
           },
           "BRL": {
-            "displayName": "BRL",
+            "displayName": "бразі́льскїй реа́лъ",
+            "displayName-count-other": "бразі́льскагѡ реа́ла",
             "symbol": "R$",
             "symbol-alt-narrow": "R$"
           },
@@ -235,7 +236,8 @@
             "symbol": "BYB"
           },
           "BYR": {
-            "displayName": "BYR",
+            "displayName": "бѣлорꙋ́сскїй рꙋ́бль",
+            "displayName-count-other": "бѣлорꙋ́сскагѡ рꙋблѧ̀",
             "symbol": "BYR",
             "symbol-alt-narrow": "р."
           },
@@ -279,7 +281,8 @@
             "symbol-alt-narrow": "$"
           },
           "CNY": {
-            "displayName": "CNY",
+            "displayName": "хи́нскїй ю҆а́нь",
+            "displayName-count-other": "хи́нскагѡ ю҆а́нѧ",
             "symbol": "CN¥",
             "symbol-alt-narrow": "¥"
           },
@@ -393,7 +396,8 @@
             "symbol": "ETB"
           },
           "EUR": {
-            "displayName": "EUR",
+            "displayName": "є҆́ѵрѡ",
+            "displayName-count-other": "є҆́ѵра",
             "symbol": "€",
             "symbol-alt-narrow": "€"
           },
@@ -416,7 +420,8 @@
             "symbol": "FRF"
           },
           "GBP": {
-            "displayName": "GBP",
+            "displayName": "а҆нглі́йскїй фꙋ́нтъ сте́рлингѡвъ",
+            "displayName-count-other": "а҆нглі́йскагѡ фꙋ́нта сте́рлингѡвъ",
             "symbol": "£",
             "symbol-alt-narrow": "£"
           },
@@ -528,7 +533,8 @@
             "symbol-alt-narrow": "₪"
           },
           "INR": {
-            "displayName": "INR",
+            "displayName": "і҆нді́йскаѧ рꙋ́пїѧ",
+            "displayName-count-other": "і҆нді́йскїѧ рꙋ́пїи",
             "symbol": "₹",
             "symbol-alt-narrow": "₹"
           },
@@ -559,7 +565,8 @@
             "symbol": "JOD"
           },
           "JPY": {
-            "displayName": "JPY",
+            "displayName": "ꙗ҆пѡ́нскаѧ і҆е́на",
+            "displayName-count-other": "ꙗ҆пѡ́нскїѧ і҆е́ны",
             "symbol": "JP¥",
             "symbol-alt-narrow": "¥"
           },
@@ -568,7 +575,8 @@
             "symbol": "KES"
           },
           "KGS": {
-            "displayName": "KGS",
+            "displayName": "кирги́зскїй сꙋ́мъ",
+            "displayName-count-other": "кирги́зскагѡ сꙋ́ма",
             "symbol": "KGS"
           },
           "KHR": {
@@ -609,8 +617,9 @@
             "symbol-alt-narrow": "$"
           },
           "KZT": {
-            "displayName": "KZT",
-            "symbol": "KZT",
+            "displayName": "каза́хскаѧ деньга̀",
+            "displayName-count-other": "каза́хскїѧ деньгѝ",
+            "symbol": "₸",
             "symbol-alt-narrow": "₸"
           },
           "LAK": {
@@ -892,7 +901,8 @@
             "symbol": "RSD"
           },
           "RUB": {
-            "displayName": "RUB",
+            "displayName": "рѡссі́йскїй рꙋ́бль",
+            "displayName-count-other": "рѡссі́йскагѡ рꙋблѧ̀",
             "symbol": "₽",
             "symbol-alt-narrow": "₽"
           },
@@ -1057,8 +1067,9 @@
             "symbol": "TZS"
           },
           "UAH": {
-            "displayName": "UAH",
-            "symbol": "UAH",
+            "displayName": "ᲂу҆краи́нскаѧ гри́вна",
+            "displayName-count-other": "ᲂу҆краи́нскїѧ гри́вны",
+            "symbol": "₴",
             "symbol-alt-narrow": "₴"
           },
           "UAK": {
@@ -1074,8 +1085,9 @@
             "symbol": "UGX"
           },
           "USD": {
-            "displayName": "USD",
-            "symbol": "US$",
+            "displayName": "а҆мерїка́нскїй до́лларъ",
+            "displayName-count-other": "а҆мерїка́нскагѡ до́ллара",
+            "symbol": "$",
             "symbol-alt-narrow": "$"
           },
           "USN": {
@@ -1211,7 +1223,8 @@
             "symbol": "XUA"
           },
           "XXX": {
-            "displayName": "XXX",
+            "displayName": "невѣ́домое пла́тное сре́дство",
+            "displayName-count-other": "невѣ́домагѡ пла́тнагѡ сре́дства",
             "symbol": "XXX"
           },
           "YDD": {

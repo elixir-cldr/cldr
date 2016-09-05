@@ -157,27 +157,27 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ómakȟa",
             "unitPattern-count-other": "ómakȟa {0}",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "Wíyawapi",
             "unitPattern-count-other": "Wíyawapi {0}",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "okó",
             "unitPattern-count-other": "okó {0}",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "-čháŋ",
             "unitPattern-count-other": "{0}-čháŋ",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "Owápȟe",
             "unitPattern-count-other": "Owápȟe {0}",
             "perUnitPattern": "{0}/h"
           },
@@ -187,7 +187,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "Okpí",
             "unitPattern-count-other": "Okpí {0}",
             "perUnitPattern": "{0}/s"
           },
@@ -295,20 +295,20 @@
             "unitPattern-count-other": "{0} pm"
           },
           "length-mile": {
-            "displayName": "mi",
+            "displayName": "makhíyutȟapi",
             "unitPattern-count-other": "makhíyutȟapi {0}"
           },
           "length-yard": {
-            "displayName": "yd",
+            "displayName": "čhaéglepi",
             "unitPattern-count-other": "čhaéglepi {0}"
           },
           "length-foot": {
-            "displayName": "ft",
+            "displayName": "siíyutȟapi",
             "unitPattern-count-other": "siíyutȟapi {0}",
             "perUnitPattern": "{0}/ft"
           },
           "length-inch": {
-            "displayName": "in",
+            "displayName": "oíyutȟe čísčila",
             "unitPattern-count-other": "oíyutȟe čísčila {0}",
             "perUnitPattern": "{0}/in"
           },
@@ -375,7 +375,7 @@
             "unitPattern-count-other": "{0} st"
           },
           "mass-pound": {
-            "displayName": "lb",
+            "displayName": "tkeíyutȟapi",
             "unitPattern-count-other": "tkeíyutȟapi {0}",
             "perUnitPattern": "{0}/lb"
           },
@@ -728,27 +728,27 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ómakȟa",
             "unitPattern-count-other": "ómakȟa {0}",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "Wíyawapi",
             "unitPattern-count-other": "Wíyawapi {0}",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "okó",
             "unitPattern-count-other": "okó {0}",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "-čháŋ",
             "unitPattern-count-other": "{0}-čháŋ",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "Owápȟe",
             "unitPattern-count-other": "Owápȟe {0}",
             "perUnitPattern": "{0}/h"
           },
@@ -758,7 +758,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "Okpí",
             "unitPattern-count-other": "Okpí {0}",
             "perUnitPattern": "{0}/s"
           },
@@ -866,20 +866,20 @@
             "unitPattern-count-other": "{0} pm"
           },
           "length-mile": {
-            "displayName": "mi",
+            "displayName": "makhíyutȟapi",
             "unitPattern-count-other": "makhíyutȟapi {0}"
           },
           "length-yard": {
-            "displayName": "yd",
+            "displayName": "čhaéglepi",
             "unitPattern-count-other": "čhaéglepi {0}"
           },
           "length-foot": {
-            "displayName": "ft",
+            "displayName": "siíyutȟapi",
             "unitPattern-count-other": "siíyutȟapi {0}",
             "perUnitPattern": "{0}/ft"
           },
           "length-inch": {
-            "displayName": "in",
+            "displayName": "oíyutȟe čísčila",
             "unitPattern-count-other": "oíyutȟe čísčila {0}",
             "perUnitPattern": "{0}/in"
           },
@@ -946,7 +946,7 @@
             "unitPattern-count-other": "{0} st"
           },
           "mass-pound": {
-            "displayName": "lb",
+            "displayName": "tkeíyutȟapi",
             "unitPattern-count-other": "tkeíyutȟapi {0}",
             "perUnitPattern": "{0}/lb"
           },
@@ -1299,27 +1299,27 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "ómakȟa",
             "unitPattern-count-other": "ómakȟa {0}",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "Wíyawapi",
             "unitPattern-count-other": "Wí {0}",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "okó",
             "unitPattern-count-other": "okó {0}",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "-čháŋ",
             "unitPattern-count-other": "{0}-čháŋ",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "Owápȟe",
             "unitPattern-count-other": "Owápȟe {0}",
             "perUnitPattern": "{0}/h"
           },
@@ -1329,7 +1329,7 @@
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "Okpí",
             "unitPattern-count-other": "Okpí {0}",
             "perUnitPattern": "{0}/s"
           },
@@ -1437,20 +1437,20 @@
             "unitPattern-count-other": "{0} pm"
           },
           "length-mile": {
-            "displayName": "mi",
+            "displayName": "makhíyutȟapi",
             "unitPattern-count-other": "{0} makh"
           },
           "length-yard": {
-            "displayName": "yd",
+            "displayName": "čhaéglepi",
             "unitPattern-count-other": "čhaéglepi {0}"
           },
           "length-foot": {
-            "displayName": "ft",
+            "displayName": "siíyutȟapi",
             "unitPattern-count-other": "siíyutȟapi {0}",
             "perUnitPattern": "{0}/ft"
           },
           "length-inch": {
-            "displayName": "in",
+            "displayName": "oíyutȟe čísčila",
             "unitPattern-count-other": "{0}″",
             "perUnitPattern": "{0}/in"
           },
@@ -1517,7 +1517,7 @@
             "unitPattern-count-other": "{0} st"
           },
           "mass-pound": {
-            "displayName": "lb",
+            "displayName": "tkeíyutȟapi",
             "unitPattern-count-other": "{0}#",
             "perUnitPattern": "{0}/lb"
           },

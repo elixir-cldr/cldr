@@ -15,14 +15,14 @@
           "localeKeyTypePattern": "{0}: {1}"
         },
         "keys": {
-          "calendar": "calendar",
+          "calendar": "Manáka",
           "cf": "cf",
           "collation": "collation",
-          "currency": "currency",
+          "currency": "Mbɔ́ngɔ",
           "hc": "hc",
           "lb": "lb",
           "ms": "ms",
-          "numbers": "numbers"
+          "numbers": "Mamɛlɔ"
         },
         "types": {
           "calendar": {
@@ -32,7 +32,7 @@
             "dangi": "dangi",
             "ethiopic": "ethiopic",
             "ethiopic-amete-alem": "ethiopic-amete-alem",
-            "gregorian": "gregorian",
+            "gregorian": "Manáka ma Gregɔr",
             "hebrew": "hebrew",
             "indian": "indian",
             "islamic": "islamic",
@@ -161,9 +161,9 @@
           }
         },
         "codePatterns": {
-          "language": "{0}",
+          "language": "lokótá {0}",
           "script": "{0}",
-          "territory": "{0}"
+          "territory": "ndámbo na mokili {0}"
         }
       }
     }

@@ -1107,7 +1107,9 @@
             "symbol": "MVR"
           },
           "MWK": {
-            "displayName": "MWK",
+            "displayName": "malawiga kwacha",
+            "displayName-count-one": "malawiga kwacha",
+            "displayName-count-other": "malawiga kwacha",
             "symbol": "MWK"
           },
           "MXN": {
@@ -1141,11 +1143,13 @@
             "symbol": "MZM"
           },
           "MZN": {
-            "displayName": "MZN",
+            "displayName": "mozambikga metikal",
             "symbol": "MZN"
           },
           "NAD": {
-            "displayName": "NAD",
+            "displayName": "namibiaga dollar",
+            "displayName-count-one": "namibiaga dollar",
+            "displayName-count-other": "namibiaga dollar",
             "symbol": "NAD",
             "symbol-alt-narrow": "$"
           },
@@ -1419,7 +1423,9 @@
             "symbol": "SRG"
           },
           "SSP": {
-            "displayName": "SSP",
+            "displayName": "anyiehe sudanga pound",
+            "displayName-count-one": "anyiehe sudanga pound",
+            "displayName-count-other": "anyiehe sudanga pound",
             "symbol": "SSP",
             "symbol-alt-narrow": "£"
           },

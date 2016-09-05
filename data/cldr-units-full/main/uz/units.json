@@ -377,7 +377,7 @@
             "displayName": "dyum",
             "unitPattern-count-one": "{0} dyum",
             "unitPattern-count-other": "{0} dyum",
-            "perUnitPattern": "{0}/dy"
+            "perUnitPattern": "{0}/duym"
           },
           "length-parsec": {
             "displayName": "parsek",

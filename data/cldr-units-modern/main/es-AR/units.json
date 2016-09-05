@@ -291,9 +291,9 @@
             "unitPattern-count-other": "{0} julios"
           },
           "energy-kilowatt-hour": {
-            "displayName": "kilovatios-hora",
-            "unitPattern-count-one": "{0} kilovatio-hora",
-            "unitPattern-count-other": "{0} kilovatios-hora"
+            "displayName": "kilovatios hora",
+            "unitPattern-count-one": "{0} kilovatio hora",
+            "unitPattern-count-other": "{0} kilovatios hora"
           },
           "frequency-gigahertz": {
             "displayName": "gigahercios",
@@ -502,9 +502,9 @@
             "unitPattern-count-other": "{0} milivatios"
           },
           "power-horsepower": {
-            "displayName": "caballos de vapor",
+            "displayName": "caballos de fuerza",
             "unitPattern-count-one": "{0} caballo de vapor",
-            "unitPattern-count-other": "{0} caballos de vapor"
+            "unitPattern-count-other": "{0} caballos de fuerza"
           },
           "pressure-hectopascal": {
             "displayName": "hectopascales",

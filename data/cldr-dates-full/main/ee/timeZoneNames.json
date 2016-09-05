@@ -175,7 +175,7 @@
                 "exemplarCity": "Glaise Bay nutomegaƒoƒome"
               },
               "Godthab": {
-                "exemplarCity": "Nuuk"
+                "exemplarCity": "Godthab nutomegaƒoƒome"
               },
               "Goose_Bay": {
                 "exemplarCity": "Guse Bay nutomegaƒoƒome"
@@ -193,7 +193,7 @@
                 "exemplarCity": "Guatemala nutomegaƒoƒome"
               },
               "Guayaquil": {
-                "exemplarCity": "Guayaquil"
+                "exemplarCity": "Guayakuil nutomegaƒoƒome"
               },
               "Guyana": {
                 "exemplarCity": "Gayana nutomegaƒoƒome"
@@ -269,7 +269,7 @@
                 "exemplarCity": "Louisville nutomegaƒoƒome"
               },
               "Lower_Princes": {
-                "exemplarCity": "Lower Prince’s Quarter"
+                "exemplarCity": "Lowa Prins Kɔta nutomegaƒoƒome"
               },
               "Maceio": {
                 "exemplarCity": "Maseio nutomegaƒoƒome"
@@ -397,7 +397,7 @@
                 "exemplarCity": "Santarem nutomegaƒoƒome"
               },
               "Santiago": {
-                "exemplarCity": "Santiago"
+                "exemplarCity": "Santiago nutomegaƒoƒome"
               },
               "Santo_Domingo": {
                 "exemplarCity": "Santo Domingo nutomegaƒoƒome"
@@ -536,6 +536,9 @@
                 "exemplarCity": "Kopenhagen nutomegaƒoƒome"
               },
               "Dublin": {
+                "long": {
+                  "daylight": "Irelanɖ dzomeŋɔli gaƒoƒome"
+                },
                 "exemplarCity": "Dublin nutomegaƒoƒome"
               },
               "Gibraltar": {
@@ -560,22 +563,25 @@
                 "exemplarCity": "Kaliningrad nutomegaƒoƒome"
               },
               "Kiev": {
-                "exemplarCity": "Kiev"
+                "exemplarCity": "Kiev nutmegaƒoƒome"
               },
               "Lisbon": {
-                "exemplarCity": "Lisbon"
+                "exemplarCity": "Lisbon nutomegaƒoƒome"
               },
               "Ljubljana": {
                 "exemplarCity": "Lubliana nutomegaƒoƒome"
               },
               "London": {
-                "exemplarCity": "London"
+                "long": {
+                  "daylight": "Britain dzomeŋɔli gaƒoƒome"
+                },
+                "exemplarCity": "London nutomegaƒoƒome"
               },
               "Luxembourg": {
                 "exemplarCity": "Lazembɔg nutomegaƒoƒome"
               },
               "Madrid": {
-                "exemplarCity": "Madrid"
+                "exemplarCity": "Madrid nutomegaƒoƒome"
               },
               "Malta": {
                 "exemplarCity": "Malta nutomegaƒoƒome"
@@ -685,7 +691,7 @@
                 "exemplarCity": "Asmara nutomegaƒoƒome"
               },
               "Bamako": {
-                "exemplarCity": "Bamako"
+                "exemplarCity": "Bamako nutomegaƒoƒome"
               },
               "Bangui": {
                 "exemplarCity": "Bangui nutomegaƒoƒome"
@@ -939,7 +945,7 @@
                 "exemplarCity": "Krasnoyarsk nutomegaƒoƒome"
               },
               "Kuala_Lumpur": {
-                "exemplarCity": "Kuala Lumpur"
+                "exemplarCity": "Kuala Lumpur nutomegaƒoƒome"
               },
               "Kuching": {
                 "exemplarCity": "Kutsing nutomegaƒoƒome"
@@ -1011,7 +1017,7 @@
                 "exemplarCity": "Seoul nutomegaƒoƒome"
               },
               "Shanghai": {
-                "exemplarCity": "Shanghai"
+                "exemplarCity": "Shanghai nutomegaƒoƒome"
               },
               "Singapore": {
                 "exemplarCity": "Singapore nutomegaƒoƒome"
@@ -1023,7 +1029,7 @@
                 "exemplarCity": "Taipei nutomegaƒoƒome"
               },
               "Tashkent": {
-                "exemplarCity": "Tashkent"
+                "exemplarCity": "Tashkent nutomegaƒoƒome"
               },
               "Tbilisi": {
                 "exemplarCity": "Tbilisi nutomegaƒoƒome"
@@ -1382,6 +1388,13 @@
             }
           },
           "metazone": {
+            "Acre": {
+              "long": {
+                "generic": "Eker gaƒoƒome",
+                "standard": "Eker gaƒoƒoɖoanyime",
+                "daylight": "Eker dzomeŋɔli gaƒoƒome"
+              }
+            },
             "Africa_Central": {
               "long": {
                 "standard": "Titina Afrika gaƒoƒome"
@@ -1418,6 +1431,27 @@
                 "daylight": "WAST"
               }
             },
+            "Alaska": {
+              "long": {
+                "generic": "Alaska gaƒoƒome",
+                "standard": "Alaska gaƒoƒoɖoanyime",
+                "daylight": "Alaska ŋkekeme gaƒoƒome"
+              }
+            },
+            "Almaty": {
+              "long": {
+                "generic": "Almati gaƒoƒome",
+                "standard": "Almati gaƒoƒoɖoanyime",
+                "daylight": "Almati dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Amazon": {
+              "long": {
+                "generic": "Amazon gaƒoƒome",
+                "standard": "Amazon gaƒoƒoɖoanyime",
+                "daylight": "Amazon dzomeŋɔli gaƒoƒome"
+              }
+            },
             "America_Central": {
               "long": {
                 "generic": "Titina America gaƒoƒome",
@@ -1446,11 +1480,53 @@
                 "daylight": "Pacific ŋkekme gaƒoƒome"
               }
             },
+            "Anadyr": {
+              "long": {
+                "generic": "Anadir gaƒoƒome",
+                "standard": "Anadir gaƒoƒoɖoanyime",
+                "daylight": "Anadir ŋkekeme gaƒoƒome"
+              }
+            },
+            "Aqtau": {
+              "long": {
+                "generic": "Aktau gaƒoƒome",
+                "standard": "Aktau gaƒoƒoɖoanyime",
+                "daylight": "Aktau dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Aqtobe": {
+              "long": {
+                "generic": "Aktobe gaƒoƒome",
+                "standard": "Aktobe gaƒoƒoɖoanyime",
+                "daylight": "Akttobe gaƒoƒome"
+              }
+            },
             "Arabian": {
               "long": {
                 "generic": "Arabia gaƒoƒome",
                 "standard": "Arabia gaƒoƒoɖoanyime",
                 "daylight": "Arabia ŋkekeme gaƒoƒome"
+              }
+            },
+            "Argentina": {
+              "long": {
+                "generic": "Argentina gaƒoƒome",
+                "standard": "Argentina gaƒoƒoɖoanyime",
+                "daylight": "Argentina dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Argentina_Western": {
+              "long": {
+                "generic": "Ɣetoɖoƒe Argentina gaƒoƒome",
+                "standard": "Ɣetoɖoƒe Argentina gaƒoƒoɖoanyime",
+                "daylight": "Ɣetoɖoƒe Argentina dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Armenia": {
+              "long": {
+                "generic": "Armenia gaƒoƒome",
+                "standard": "Armenia gaƒoƒoɖoanyime",
+                "daylight": "Armenia dzomeŋɔli gaƒoƒome"
               }
             },
             "Atlantic": {
@@ -1488,11 +1564,84 @@
                 "daylight": "Ɣetoɖoƒe Australia ŋkekeme gaƒoƒome"
               }
             },
+            "Azerbaijan": {
+              "long": {
+                "generic": "Azerbaidzan gaƒoƒome",
+                "standard": "Azerbaidzan gaƒoƒoɖoanyime",
+                "daylight": "Azerbaidzan dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Azores": {
+              "long": {
+                "generic": "Azores gaƒoƒome",
+                "standard": "Azores gaƒoƒoɖoanyime",
+                "daylight": "Azores dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Bolivia": {
+              "long": {
+                "standard": "Bolivia gaƒoƒome"
+              }
+            },
+            "Brasilia": {
+              "long": {
+                "generic": "Brasilia gaƒoƒome",
+                "standard": "Brasilia gaƒoƒoɖoanyime",
+                "daylight": "Brasilia dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Cape_Verde": {
+              "long": {
+                "generic": "Kep Verde gaƒoƒome",
+                "standard": "Kep Verde gaƒoƒoɖoanyime",
+                "daylight": "Kep Verde dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Chile": {
+              "long": {
+                "generic": "Tsile gaƒoƒo me",
+                "standard": "Tsile gaƒoƒoɖoanyime",
+                "daylight": "Tsile dzomeŋɔli gaƒoƒome"
+              }
+            },
             "China": {
               "long": {
                 "generic": "China gaƒoƒome",
                 "standard": "China gaƒoƒoɖoanyime",
                 "daylight": "China ŋkekeme gaƒoƒome"
+              }
+            },
+            "Choibalsan": {
+              "long": {
+                "generic": "Tsoibalsan gaƒoƒome",
+                "standard": "Tsoibalsan gaƒoƒoɖoanyime",
+                "daylight": "Tsoibalsan dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Colombia": {
+              "long": {
+                "generic": "Kolombia gaƒoƒome",
+                "standard": "Kolombia gaƒoƒoɖoanyime",
+                "daylight": "Kolombia dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Cuba": {
+              "long": {
+                "generic": "Kuba gaƒoƒome",
+                "standard": "Kuba gaƒoƒoɖoanyime",
+                "daylight": "Kuba ŋkekeme gaƒoƒome"
+              }
+            },
+            "Easter": {
+              "long": {
+                "generic": "Easter Ƒudomekpodukɔ ƒe gaƒoƒome",
+                "standard": "Easter Ƒudomekpodukɔ ƒe gaƒoƒoɖoanyime",
+                "daylight": "Easter Ƒudomekpodukɔ ƒe dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Ecuador": {
+              "long": {
+                "standard": "Ikuedɔ dzomeŋɔli gaƒoƒome"
               }
             },
             "Europe_Central": {
@@ -1516,9 +1665,85 @@
                 "daylight": "Ɣetoɖoƒe Europe ŋkekeme gaƒoƒome"
               }
             },
+            "Falkland": {
+              "long": {
+                "generic": "Fɔlklanɖ Ƒudomekpodukɔ ƒe gaƒoƒome",
+                "standard": "Fɔlklanɖ Ƒudomekpodukɔ ƒe gaƒoƒoɖoanyime",
+                "daylight": "Fɔlklanɖ Ƒudomekpodukɔ ƒe dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "French_Guiana": {
+              "long": {
+                "standard": "Frentsi Guiana gaƒoƒome"
+              }
+            },
+            "Galapagos": {
+              "long": {
+                "standard": "Galapagos gaƒoƒome"
+              }
+            },
+            "Georgia": {
+              "long": {
+                "generic": "Dzɔdzia gaƒoƒome",
+                "standard": "Dzɔdzia gaƒoƒoɖoanyime",
+                "daylight": "Dzɔdzia dzomeŋɔli gaƒoƒome"
+              }
+            },
             "GMT": {
               "long": {
                 "standard": "Greenwich gaƒoƒome"
+              }
+            },
+            "Greenland_Eastern": {
+              "long": {
+                "generic": "Ɣedzeƒe Grinlanɖ gaƒoƒome",
+                "standard": "Ɣedzeƒe Grinlanɖ gaƒoƒoɖoanyime",
+                "daylight": "Ɣedzeƒe Grinlanɖ dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Greenland_Western": {
+              "long": {
+                "generic": "Ɣetoɖoƒe Grinlanɖ gaƒoƒome",
+                "standard": "Ɣetoɖoƒe Grinlanɖ gaƒoƒoɖoanyime",
+                "daylight": "Ɣetoɖoƒe Grinlanɖ dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Gulf": {
+              "long": {
+                "standard": "Gulf gaƒoƒome"
+              }
+            },
+            "Guyana": {
+              "long": {
+                "standard": "Gayana gaƒoƒome"
+              }
+            },
+            "Hawaii_Aleutian": {
+              "long": {
+                "generic": "Hawaii-Aleutia gaƒoƒome",
+                "standard": "Hawaii-Aleutia gaƒoƒoɖoanyime",
+                "daylight": "Hawaii-Aleutia ŋkekeme gaƒoƒome"
+              }
+            },
+            "Hong_Kong": {
+              "long": {
+                "generic": "Hɔng Kɔng gaƒoƒome",
+                "standard": "Hɔng Kɔng gaƒoƒoɖoanyi me",
+                "daylight": "Hɔng Kɔng dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Hovd": {
+              "long": {
+                "generic": "Hoved gaƒoƒome",
+                "standard": "Hoved gaƒoƒoɖoanyime",
+                "daylight": "Hoved dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Irkutsk": {
+              "long": {
+                "generic": "Irkusk gaƒoƒome",
+                "standard": "Irkusk gaƒoƒoɖoanyime",
+                "daylight": "Irkusk dzomeŋɔli gaƒoƒome"
               }
             },
             "Israel": {
@@ -1535,11 +1760,68 @@
                 "daylight": "Japan ŋkekeme gaƒoƒome"
               }
             },
+            "Kamchatka": {
+              "long": {
+                "generic": "Petropavlovsk-Kamtsatski gaƒoƒome",
+                "standard": "Petropavlovsk-Kamtsatski gaƒoƒoɖoanyime",
+                "daylight": "Petropavlovsk-Kamtsatski ŋkekeme gaƒoƒome"
+              }
+            },
+            "Kazakhstan_Eastern": {
+              "long": {
+                "standard": "Ɣedzeƒe Kazakstan gaƒoƒome"
+              }
+            },
+            "Kazakhstan_Western": {
+              "long": {
+                "standard": "Ɣetoɖoƒe Kazakstan gaƒoƒome"
+              }
+            },
             "Korea": {
               "long": {
                 "generic": "Korea gaƒoƒome",
                 "standard": "Korea gaƒoƒoɖoanyime",
                 "daylight": "Korea ŋkekeme gaƒoƒome"
+              }
+            },
+            "Krasnoyarsk": {
+              "long": {
+                "generic": "Krasnoyarsk gaƒoƒome",
+                "standard": "Krasnoyarsk gaƒoƒoɖoanyime",
+                "daylight": "Krasnoyarsk dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Kyrgystan": {
+              "long": {
+                "standard": "Kirgistan gaƒoƒome"
+              }
+            },
+            "Macau": {
+              "long": {
+                "generic": "Makau gaƒoƒome",
+                "standard": "Makau gaƒoƒoɖoanyime",
+                "daylight": "Makau ŋkekeme gaƒoƒome"
+              }
+            },
+            "Magadan": {
+              "long": {
+                "generic": "Magadan gaƒoƒome",
+                "standard": "Magadan gaƒoƒoɖoanyime",
+                "daylight": "Magadan dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Mauritius": {
+              "long": {
+                "generic": "Mɔritius gaƒoƒome",
+                "standard": "Mɔritius gaƒoƒoɖoanyime",
+                "daylight": "Mɔritius dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Mongolia": {
+              "long": {
+                "generic": "Ulan Batɔ gaƒoƒome",
+                "standard": "Ulan Batɔ gaƒoƒoɖoanyime",
+                "daylight": "Ulan Batɔ dzomeŋɔli gaƒoƒome"
               }
             },
             "Moscow": {
@@ -1549,9 +1831,155 @@
                 "daylight": "Moscow ŋkekeme gaƒoƒome"
               }
             },
+            "Newfoundland": {
+              "long": {
+                "generic": "Niufaunɖlanɖ gaƒoƒome",
+                "standard": "Niufaunɖlanɖ gaƒoƒoɖoanyime",
+                "daylight": "Niufaunɖlanɖ ŋkekeme gaƒoƒome"
+              }
+            },
+            "Noronha": {
+              "long": {
+                "generic": "Fernando de Noronha gaƒoƒome",
+                "standard": "Fernando de Noronha gaƒoƒoɖoanyime",
+                "daylight": "Fernando de Noronha dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Novosibirsk": {
+              "long": {
+                "generic": "Novosibirsk gaƒoƒome",
+                "standard": "Novosibirsk gaƒoƒoɖoanyime",
+                "daylight": "Novosibirsk dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Omsk": {
+              "long": {
+                "generic": "Omsk gaƒoƒome",
+                "standard": "Omsk gaƒoƒoɖoanyime",
+                "daylight": "Omsk dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Paraguay": {
+              "long": {
+                "generic": "Paraguai gaƒoƒome",
+                "standard": "Paraguai gaƒoƒoɖoanyime",
+                "daylight": "Paraguai dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Peru": {
+              "long": {
+                "generic": "Peru gaƒoƒome",
+                "standard": "Peru gaƒoƒoɖoanyime",
+                "daylight": "Peru dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Pierre_Miquelon": {
+              "long": {
+                "generic": "Saint Pierre kple Mikuelon gaƒoƒome",
+                "standard": "Saint Pierre kple Mikuelon gaƒoƒoɖoanyime",
+                "daylight": "Saint Pierre kple Mikuelon ŋkekeme gaƒoƒome"
+              }
+            },
+            "Qyzylorda": {
+              "long": {
+                "generic": "Kizilɔrda gaƒoƒome",
+                "standard": "Kizilɔrda gaƒoƒoɖoanyime",
+                "daylight": "Kizilɔrda dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Reunion": {
+              "long": {
+                "standard": "Reunion gaƒoƒome"
+              }
+            },
+            "Sakhalin": {
+              "long": {
+                "generic": "Sahalin gaƒoƒome",
+                "standard": "Sakhalin gaƒoƒoɖoanyime",
+                "daylight": "Sahalin dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Samara": {
+              "long": {
+                "generic": "Samara gaƒoƒome",
+                "standard": "Samara gaƒoƒoɖoanyime",
+                "daylight": "Samara ŋkekeme gaƒoƒome"
+              }
+            },
+            "Seychelles": {
+              "long": {
+                "standard": "Sɛtsels gaƒoƒome"
+              }
+            },
             "Suriname": {
               "long": {
                 "standard": "Suriname gaƒoƒome"
+              }
+            },
+            "Taipei": {
+              "long": {
+                "generic": "Taipei gaƒoƒome",
+                "standard": "Taipei gaƒoƒoɖoanyime",
+                "daylight": "Taipei ŋkekeme gaƒoƒome"
+              }
+            },
+            "Tajikistan": {
+              "long": {
+                "standard": "Tadzikistan gaƒoƒome"
+              }
+            },
+            "Turkmenistan": {
+              "long": {
+                "generic": "Tɛkmenistan gaƒoƒome",
+                "standard": "Tɛkmenistan gaƒoƒoɖoanyime",
+                "daylight": "Tɛkmenistan dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Uruguay": {
+              "long": {
+                "generic": "Uruguai gaƒoƒome",
+                "standard": "Uruguai gaƒoƒoɖoanyime",
+                "daylight": "Uruguai dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Uzbekistan": {
+              "long": {
+                "generic": "Uzbekistan gaƒoƒome",
+                "standard": "Uzbekistan gaƒoƒoɖoanyime",
+                "daylight": "Uzbekistan dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Venezuela": {
+              "long": {
+                "standard": "Venezuela gaƒoƒome"
+              }
+            },
+            "Vladivostok": {
+              "long": {
+                "generic": "Vladivostok gaƒoƒome",
+                "standard": "Vladivostok gaƒoƒoɖoanyime",
+                "daylight": "Vladivostok dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Volgograd": {
+              "long": {
+                "generic": "Vogograd gaƒoƒome",
+                "standard": "Vogograd gaƒoƒoɖoanyime",
+                "daylight": "Vogograd dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Yakutsk": {
+              "long": {
+                "generic": "Yakutsk gaƒoƒome",
+                "standard": "Yakutsk gaƒoƒoɖoanyime",
+                "daylight": "Yakutsk dzomeŋɔli gaƒoƒome"
+              }
+            },
+            "Yekaterinburg": {
+              "long": {
+                "generic": "Yekateringburg gaƒoƒome",
+                "standard": "Yekateringburg gaƒoƒoɖoanyime",
+                "daylight": "Yekaterinburg dzomeŋɔli gaƒoƒome"
               }
             }
           }

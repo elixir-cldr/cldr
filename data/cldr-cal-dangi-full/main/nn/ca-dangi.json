@@ -171,13 +171,13 @@
               },
               "stand-alone": {
                 "abbreviated": {
-                  "sun": "sø.",
-                  "mon": "må.",
-                  "tue": "ty.",
-                  "wed": "on.",
-                  "thu": "to.",
-                  "fri": "fr.",
-                  "sat": "la."
+                  "sun": "søn",
+                  "mon": "mån",
+                  "tue": "tys",
+                  "wed": "ons",
+                  "thu": "tor",
+                  "fri": "fre",
+                  "sat": "lau"
                 },
                 "narrow": {
                   "sun": "S",

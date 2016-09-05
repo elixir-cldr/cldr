@@ -302,9 +302,9 @@
               },
               "eraNarrow": {
                 "0": "pr. Kr.",
-                "0-alt-variant": "pr. m. e.",
+                "0-alt-variant": "prme",
                 "1": "po Kr.",
-                "1-alt-variant": "mūsų eroje"
+                "1-alt-variant": "pome"
               }
             },
             "dateFormats": {

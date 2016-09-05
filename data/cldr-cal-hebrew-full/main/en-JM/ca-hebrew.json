@@ -379,7 +379,7 @@
                 "yyyy": "y G",
                 "yyyyM": "MM/y GGGGG",
                 "yyyyMd": "dd/MM/y GGGGG",
-                "yyyyMEd": "E, dd/MM/y GGGGG",
+                "yyyyMEd": "E, d/M/y G",
                 "yyyyMMM": "MMM y G",
                 "yyyyMMMd": "d MMM y G",
                 "yyyyMMMEd": "E, d MMM y G",

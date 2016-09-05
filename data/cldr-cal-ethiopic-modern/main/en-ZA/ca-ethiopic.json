@@ -429,54 +429,54 @@
                   "M": "M – M"
                 },
                 "Md": {
-                  "d": "dd/MM – dd/MM",
-                  "M": "dd/MM – dd/MM"
+                  "d": "MM/dd – MM/dd",
+                  "M": "MM/dd – MM/dd"
                 },
                 "MEd": {
-                  "d": "E dd/MM – E dd/MM",
-                  "M": "E dd/MM – E dd/MM"
+                  "d": "E MM/dd – E MM/dd",
+                  "M": "E MM/dd – E MM/dd"
                 },
                 "MMM": {
                   "M": "MMM – MMM"
                 },
                 "MMMd": {
-                  "d": "d – d MMM",
-                  "M": "d MMM – d MMM"
+                  "d": "dd – dd MMM",
+                  "M": "dd MMM – dd MMM"
                 },
                 "MMMEd": {
-                  "d": "E d – E d MMM",
-                  "M": "E d MMM – E d MMM"
+                  "d": "E dd – E dd MMM",
+                  "M": "E dd MMM – E dd MMM"
                 },
                 "y": {
-                  "y": "y – y G"
+                  "y": "G y – y"
                 },
                 "yM": {
-                  "M": "MM/y – MM/y GGGGG",
-                  "y": "MM/y – MM/y GGGGG"
+                  "M": "G y/MM – y/MM",
+                  "y": "G y/MM – y/MM"
                 },
                 "yMd": {
-                  "d": "dd/MM/y – dd/MM/y GGGGG",
-                  "M": "dd/MM/y – dd/MM/y GGGGG",
-                  "y": "dd/MM/y – dd/MM/y GGGGG"
+                  "d": "G y/MM/dd – y/MM/dd",
+                  "M": "G y/MM/dd – y/MM/dd",
+                  "y": "G y/MM/dd – y/MM/dd"
                 },
                 "yMEd": {
-                  "d": "E, dd/MM/y – E, dd/MM/y GGGGG",
-                  "M": "E, dd/MM/y – E, dd/MM/y GGGGG",
-                  "y": "E, dd/MM/y – E, dd/MM/y GGGGG"
+                  "d": "E y/MM/dd – E y/MM/dd",
+                  "M": "E y/MM/dd – E y/MM/dd",
+                  "y": "E y/MM/dd – E y/MM/dd"
                 },
                 "yMMM": {
                   "M": "MMM – MMM y G",
                   "y": "MMM y – MMM y G"
                 },
                 "yMMMd": {
-                  "d": "d – d MMM y G",
-                  "M": "d MMM – d MMM y G",
-                  "y": "d MMM y – d MMM y G"
+                  "d": "dd – dd MMM y G",
+                  "M": "dd MMM – dd MMM y G",
+                  "y": "dd MMM y – dd MMM y G"
                 },
                 "yMMMEd": {
-                  "d": "E, d – E, d MMM y G",
-                  "M": "E, d MMM – E, d MMM y G",
-                  "y": "E, d MMM y – E, d MMM y G"
+                  "d": "E, dd – E, dd MMM y G",
+                  "M": "E, dd MMM – E, dd MMM y G",
+                  "y": "E, dd MMM y – E, dd MMM y G"
                 },
                 "yMMMM": {
                   "M": "MMMM – MMMM y G",

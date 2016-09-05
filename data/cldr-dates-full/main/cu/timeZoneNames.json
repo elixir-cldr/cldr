@@ -13,9 +13,9 @@
           "hourFormat": "+HH:mm;-HH:mm",
           "gmtFormat": "GMT{0}",
           "gmtZeroFormat": "GMT",
-          "regionFormat": "{0}",
-          "regionFormat-type-daylight": "{0} (+1)",
-          "regionFormat-type-standard": "{0} (+0)",
+          "regionFormat": "{0} (вре́мѧ)",
+          "regionFormat-type-daylight": "{0} (лѣ́тнее вре́мѧ)",
+          "regionFormat-type-standard": "{0} (зи́мнее вре́мѧ)",
           "fallbackFormat": "{1} ({0})",
           "zone": {
             "America": {
@@ -557,10 +557,10 @@
                 "exemplarCity": "Jersey"
               },
               "Kaliningrad": {
-                "exemplarCity": "Kaliningrad"
+                "exemplarCity": "калинингра́дъ"
               },
               "Kiev": {
-                "exemplarCity": "Kiev"
+                "exemplarCity": "кі́евъ"
               },
               "Lisbon": {
                 "exemplarCity": "Lisbon"
@@ -584,13 +584,13 @@
                 "exemplarCity": "Mariehamn"
               },
               "Minsk": {
-                "exemplarCity": "Minsk"
+                "exemplarCity": "ми́нскъ"
               },
               "Monaco": {
                 "exemplarCity": "Monaco"
               },
               "Moscow": {
-                "exemplarCity": "Moscow"
+                "exemplarCity": "москва̀"
               },
               "Oslo": {
                 "exemplarCity": "Oslo"
@@ -611,7 +611,7 @@
                 "exemplarCity": "Rome"
               },
               "Samara": {
-                "exemplarCity": "Samara"
+                "exemplarCity": "сама́ра"
               },
               "San_Marino": {
                 "exemplarCity": "San Marino"
@@ -620,7 +620,7 @@
                 "exemplarCity": "Sarajevo"
               },
               "Simferopol": {
-                "exemplarCity": "Simferopol"
+                "exemplarCity": "сѷмферꙋ́поль"
               },
               "Skopje": {
                 "exemplarCity": "Skopje"
@@ -638,7 +638,7 @@
                 "exemplarCity": "Tirane"
               },
               "Uzhgorod": {
-                "exemplarCity": "Uzhgorod"
+                "exemplarCity": "ᲂу҆́жградъ"
               },
               "Vaduz": {
                 "exemplarCity": "Vaduz"
@@ -653,7 +653,7 @@
                 "exemplarCity": "Vilnius"
               },
               "Volgograd": {
-                "exemplarCity": "Volgograd"
+                "exemplarCity": "волгогра́дъ"
               },
               "Warsaw": {
                 "exemplarCity": "Warsaw"
@@ -662,7 +662,7 @@
                 "exemplarCity": "Zagreb"
               },
               "Zaporozhye": {
-                "exemplarCity": "Zaporozhye"
+                "exemplarCity": "запра́жїе"
               },
               "Zurich": {
                 "exemplarCity": "Zurich"
@@ -831,19 +831,19 @@
                 "exemplarCity": "Aden"
               },
               "Almaty": {
-                "exemplarCity": "Almaty"
+                "exemplarCity": "а҆лматы̀"
               },
               "Amman": {
                 "exemplarCity": "Amman"
               },
               "Anadyr": {
-                "exemplarCity": "Anadyr"
+                "exemplarCity": "а҆на́дырь"
               },
               "Aqtau": {
-                "exemplarCity": "Aqtau"
+                "exemplarCity": "а҆кта́ꙋ"
               },
               "Aqtobe": {
-                "exemplarCity": "Aqtobe"
+                "exemplarCity": "а҆ктю́бинскъ"
               },
               "Ashgabat": {
                 "exemplarCity": "Ashgabat"
@@ -864,7 +864,7 @@
                 "exemplarCity": "Beirut"
               },
               "Bishkek": {
-                "exemplarCity": "Bishkek"
+                "exemplarCity": "бишке́къ"
               },
               "Brunei": {
                 "exemplarCity": "Brunei"
@@ -873,7 +873,7 @@
                 "exemplarCity": "Kolkata"
               },
               "Chita": {
-                "exemplarCity": "Chita"
+                "exemplarCity": "чита̀"
               },
               "Choibalsan": {
                 "exemplarCity": "Choibalsan"
@@ -909,7 +909,7 @@
                 "exemplarCity": "Hovd"
               },
               "Irkutsk": {
-                "exemplarCity": "Irkutsk"
+                "exemplarCity": "и҆ркꙋ́тскъ"
               },
               "Jakarta": {
                 "exemplarCity": "Jakarta"
@@ -924,7 +924,7 @@
                 "exemplarCity": "Kabul"
               },
               "Kamchatka": {
-                "exemplarCity": "Kamchatka"
+                "exemplarCity": "петропа́ѵловскъ_камча́тскїй"
               },
               "Karachi": {
                 "exemplarCity": "Karachi"
@@ -933,10 +933,10 @@
                 "exemplarCity": "Kathmandu"
               },
               "Khandyga": {
-                "exemplarCity": "Khandyga"
+                "exemplarCity": "ха́ндыга"
               },
               "Krasnoyarsk": {
-                "exemplarCity": "Krasnoyarsk"
+                "exemplarCity": "красноѧ́рскъ"
               },
               "Kuala_Lumpur": {
                 "exemplarCity": "Kuala Lumpur"
@@ -951,7 +951,7 @@
                 "exemplarCity": "Macau"
               },
               "Magadan": {
-                "exemplarCity": "Magadan"
+                "exemplarCity": "магада́нъ"
               },
               "Makassar": {
                 "exemplarCity": "Makassar"
@@ -966,16 +966,16 @@
                 "exemplarCity": "Nicosia"
               },
               "Novokuznetsk": {
-                "exemplarCity": "Novokuznetsk"
+                "exemplarCity": "новокꙋзне́цкъ"
               },
               "Novosibirsk": {
-                "exemplarCity": "Novosibirsk"
+                "exemplarCity": "новосиби́рскъ"
               },
               "Omsk": {
-                "exemplarCity": "Omsk"
+                "exemplarCity": "ѻ҆́мскъ"
               },
               "Oral": {
-                "exemplarCity": "Oral"
+                "exemplarCity": "ᲂу҆ра́льскъ"
               },
               "Phnom_Penh": {
                 "exemplarCity": "Phnom Penh"
@@ -990,7 +990,7 @@
                 "exemplarCity": "Qatar"
               },
               "Qyzylorda": {
-                "exemplarCity": "Qyzylorda"
+                "exemplarCity": "кызылѻрда̀"
               },
               "Rangoon": {
                 "exemplarCity": "Rangoon"
@@ -1002,7 +1002,7 @@
                 "exemplarCity": "Ho Chi Minh"
               },
               "Sakhalin": {
-                "exemplarCity": "Sakhalin"
+                "exemplarCity": "сахали́нъ"
               },
               "Samarkand": {
                 "exemplarCity": "Samarkand"
@@ -1017,7 +1017,7 @@
                 "exemplarCity": "Singapore"
               },
               "Srednekolymsk": {
-                "exemplarCity": "Srednekolymsk"
+                "exemplarCity": "среднеколы́мскъ"
               },
               "Taipei": {
                 "exemplarCity": "Taipei"
@@ -1044,19 +1044,19 @@
                 "exemplarCity": "Urumqi"
               },
               "Ust-Nera": {
-                "exemplarCity": "Ust-Nera"
+                "exemplarCity": "ᲂу҆́сть_не́ра"
               },
               "Vientiane": {
                 "exemplarCity": "Vientiane"
               },
               "Vladivostok": {
-                "exemplarCity": "Vladivostok"
+                "exemplarCity": "владивосто́къ"
               },
               "Yakutsk": {
-                "exemplarCity": "Yakutsk"
+                "exemplarCity": "ꙗ҆кꙋ́тскъ"
               },
               "Yekaterinburg": {
-                "exemplarCity": "Yekaterinburg"
+                "exemplarCity": "є҆катерїнбꙋ́ргъ"
               },
               "Yerevan": {
                 "exemplarCity": "Yerevan"
@@ -1377,7 +1377,167 @@
                 "exemplarCity": "GMT-9"
               },
               "Unknown": {
-                "exemplarCity": "Unknown"
+                "exemplarCity": "невѣ́домый гра́дъ"
+              }
+            }
+          },
+          "metazone": {
+            "America_Central": {
+              "long": {
+                "generic": "среднеамерїка́нское вре́мѧ",
+                "standard": "среднеамерїка́нское зи́мнее вре́мѧ",
+                "daylight": "среднеамерїка́нское лѣ́тнее вре́мѧ"
+              }
+            },
+            "America_Eastern": {
+              "long": {
+                "generic": "восточноамерїка́нское вре́мѧ",
+                "standard": "восточноамерїка́нское зи́мнее вре́мѧ",
+                "daylight": "восточноамерїка́нское лѣ́тнее вре́мѧ"
+              }
+            },
+            "America_Mountain": {
+              "long": {
+                "generic": "а҆мерїка́нское наго́рнее вре́мѧ",
+                "standard": "а҆мерїка́нское наго́рнее зи́мнее вре́мѧ",
+                "daylight": "а҆мерїка́нское наго́рнее лѣ́тнее вре́мѧ"
+              }
+            },
+            "America_Pacific": {
+              "long": {
+                "generic": "тихоѻкеа́нское вре́мѧ",
+                "standard": "тихоѻкеа́нское зи́мнее вре́мѧ",
+                "daylight": "тихоѻкеа́нское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Atlantic": {
+              "long": {
+                "generic": "а҆тланті́ческое вре́мѧ",
+                "standard": "а҆тланті́ческое зи́мнее вре́мѧ",
+                "daylight": "а҆тланті́ческое лѣ́тнее вре́мѧ"
+              }
+            },
+            "Europe_Central": {
+              "long": {
+                "generic": "среднеєѵрѡпе́йское вре́мѧ",
+                "standard": "среднеєѵрѡпе́йское зи́мнее вре́мѧ",
+                "daylight": "среднеєѵрѡпе́йское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Europe_Eastern": {
+              "long": {
+                "generic": "восточноєѵрѡпе́йское вре́мѧ",
+                "standard": "восточноєѵрѡпе́йское зи́мнее вре́мѧ",
+                "daylight": "восточноєѵрѡпе́йское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Europe_Further_Eastern": {
+              "long": {
+                "standard": "вре́мѧ въ калинингра́дѣ и҆ ми́нскѣ"
+              }
+            },
+            "Europe_Western": {
+              "long": {
+                "generic": "западноєѵрѡпе́йское вре́мѧ",
+                "standard": "западноєѵрѡпе́йское зи́мнее вре́мѧ",
+                "daylight": "западноєѵрѡпе́йское лѣ́тнее вре́мѧ"
+              }
+            },
+            "GMT": {
+              "long": {
+                "standard": "сре́днее вре́мѧ по грі́нꙋичꙋ"
+              }
+            },
+            "Irkutsk": {
+              "long": {
+                "generic": "и҆ркꙋ́тское вре́мѧ",
+                "standard": "и҆ркꙋ́тское зи́мнее вре́мѧ",
+                "daylight": "и҆ркꙋ́тское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Kazakhstan_Eastern": {
+              "long": {
+                "standard": "восто́чный казахста́нъ"
+              }
+            },
+            "Kazakhstan_Western": {
+              "long": {
+                "standard": "за́падный казахста́нъ"
+              }
+            },
+            "Krasnoyarsk": {
+              "long": {
+                "generic": "красноѧ́рское вре́мѧ",
+                "standard": "красноѧ́рское зи́мнее вре́мѧ",
+                "daylight": "красноѧ́рское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Kyrgystan": {
+              "long": {
+                "standard": "кирги́зїа"
+              }
+            },
+            "Magadan": {
+              "long": {
+                "generic": "магада́нское вре́мѧ",
+                "standard": "магада́нское зи́мнее вре́мѧ",
+                "daylight": "магада́нское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Moscow": {
+              "long": {
+                "generic": "моско́вское вре́мѧ",
+                "standard": "моско́вское зи́мнее вре́мѧ",
+                "daylight": "моско́вское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Novosibirsk": {
+              "long": {
+                "generic": "новосиби́рское вре́мѧ",
+                "standard": "новосиби́рское зи́мнее вре́мѧ",
+                "daylight": "новосиби́рское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Omsk": {
+              "long": {
+                "generic": "ѻ҆́мское вре́мѧ",
+                "standard": "ѻ҆́мское зи́мнее вре́мѧ",
+                "daylight": "ѻ҆́мское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Sakhalin": {
+              "long": {
+                "generic": "вре́мѧ на сахали́нѣ",
+                "standard": "зи́мнее вре́мѧ на сахали́нѣ",
+                "daylight": "лѣ́тнее вре́мѧ на сахали́нѣ"
+              }
+            },
+            "Vladivostok": {
+              "long": {
+                "generic": "владивосто́цкое вре́мѧ",
+                "standard": "владивосто́цкое зи́мнее вре́мѧ",
+                "daylight": "владивосто́цкое лѣ́тнее вре́мѧ"
+              }
+            },
+            "Volgograd": {
+              "long": {
+                "generic": "волгогра́дское вре́мѧ",
+                "standard": "волгогра́дское зи́мнее вре́мѧ",
+                "daylight": "волгогра́дское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Yakutsk": {
+              "long": {
+                "generic": "ꙗ҆кꙋ́тское вре́мѧ",
+                "standard": "ꙗ҆кꙋ́тское зи́мнее вре́мѧ",
+                "daylight": "ꙗ҆кꙋ́тское лѣ́тнее вре́мѧ"
+              }
+            },
+            "Yekaterinburg": {
+              "long": {
+                "generic": "є҆катерїнбꙋ́ржское вре́мѧ",
+                "standard": "є҆катерїнбꙋ́ржское зи́мнее вре́мѧ",
+                "daylight": "є҆катерїнбꙋ́ржское лѣ́тнее вре́мѧ"
               }
             }
           }

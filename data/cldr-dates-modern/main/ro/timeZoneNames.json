@@ -1432,6 +1432,13 @@
                 "daylight": "Ora de vară din Alaska"
               }
             },
+            "Almaty": {
+              "long": {
+                "generic": "Ora Almaty",
+                "standard": "Ora standard Almaty",
+                "daylight": "Ora de vară Almaty"
+              }
+            },
             "Amazon": {
               "long": {
                 "generic": "Ora Amazonului",
@@ -1479,6 +1486,20 @@
                 "generic": "Ora din Apia",
                 "standard": "Ora standard din Apia",
                 "daylight": "Ora de vară din Apia"
+              }
+            },
+            "Aqtau": {
+              "long": {
+                "generic": "Ora Aqtau",
+                "standard": "Ora standard Aqtau",
+                "daylight": "Ora de vară a zonei Aqtau"
+              }
+            },
+            "Aqtobe": {
+              "long": {
+                "generic": "Ora Aqtobe",
+                "standard": "Ora standard Aqtobe",
+                "daylight": "Ora de vară a zonei Aqtobe"
               }
             },
             "Arabian": {

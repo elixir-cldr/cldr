@@ -1005,10 +1005,10 @@
               }
             },
             "dateFormats": {
-              "full": "EEEE, MMMM d 'lia' y G",
-              "long": "MMMM d 'lia' y G",
-              "medium": "MMM d 'lia', y G",
-              "short": "M/d/y GGGGG"
+              "full": "EEEE, MMMM dd 'lia', G y",
+              "long": "MMMM d 'lia', G y",
+              "medium": "MMM d 'lia', G y",
+              "short": "dd-MM-GGGGG yy"
             },
             "timeFormats": {
               "full": "HH:mm:ss zzzz",
@@ -1044,7 +1044,7 @@
                 "MEd": "E, M/d",
                 "MMM": "LLL",
                 "MMMd": "MMM d 'lia'",
-                "MMMEd": "E, MMM d 'lia'",
+                "MMMEd": "E MMM d 'lia'",
                 "MMMMd": "MMMM d 'lia'",
                 "MMMMEd": "E, MMMM d 'lia'",
                 "ms": "'aɖabaƒoƒo' mm:ss",

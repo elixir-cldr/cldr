@@ -11,9 +11,9 @@
       },
       "localeDisplayNames": {
         "measurementSystemNames": {
-          "metric": "Metric",
-          "UK": "UK",
-          "US": "US"
+          "metric": "مەتریک",
+          "UK": "بریتانی",
+          "US": "ئەمەریکی"
         }
       }
     }

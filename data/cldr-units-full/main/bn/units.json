@@ -426,13 +426,13 @@
             "displayName": "কিলোগ্রাম",
             "unitPattern-count-one": "{0} কিলোগ্রাম",
             "unitPattern-count-other": "{0} কিলোগ্রাম",
-            "perUnitPattern": "{0}/kg"
+            "perUnitPattern": "{0} প্রতি/কিলোগ্রাম"
           },
           "mass-gram": {
             "displayName": "গ্রাম",
             "unitPattern-count-one": "{0} গ্রাম",
             "unitPattern-count-other": "{0} গ্রাম",
-            "perUnitPattern": "{0}/g"
+            "perUnitPattern": "{0} প্রতি/গ্রাম"
           },
           "mass-milligram": {
             "displayName": "মিলিগ্রাম",
@@ -758,7 +758,7 @@
             "displayName": "বর্গ মিটার",
             "unitPattern-count-one": "{0} বর্গ মিটার",
             "unitPattern-count-other": "{0} বর্গ মিটার",
-            "perUnitPattern": "{0}/m²"
+            "perUnitPattern": "{0} প্রতি বর্গ মিটার"
           },
           "area-square-centimeter": {
             "displayName": "cm²",
@@ -1122,7 +1122,7 @@
             "displayName": "কিলোগ্রাম",
             "unitPattern-count-one": "{0} কেজি",
             "unitPattern-count-other": "{0} কেজি",
-            "perUnitPattern": "{0}/kg"
+            "perUnitPattern": "{0} প্রতি/কেজি"
           },
           "mass-gram": {
             "displayName": "গ্রাম",
@@ -1396,7 +1396,7 @@
           },
           "coordinateUnit": {
             "east": "{0}E",
-            "north": "{0}N",
+            "north": "{0} উ",
             "south": "{0}দ",
             "west": "{0}প"
           }
@@ -1454,7 +1454,7 @@
             "displayName": "বর্গ মিটার",
             "unitPattern-count-one": "{0} m²",
             "unitPattern-count-other": "{0} m²",
-            "perUnitPattern": "{0}/m²"
+            "perUnitPattern": "{0} প্রতি বর্গ মিটার"
           },
           "area-square-centimeter": {
             "displayName": "cm²",
@@ -1818,7 +1818,7 @@
             "displayName": "কিলোগ্রাম",
             "unitPattern-count-one": "{0} কেজি",
             "unitPattern-count-other": "{0} কেজি",
-            "perUnitPattern": "{0}/kg"
+            "perUnitPattern": "{0} প্রতি/কেজি"
           },
           "mass-gram": {
             "displayName": "গ্রাম",
@@ -2092,7 +2092,7 @@
           },
           "coordinateUnit": {
             "east": "{0}E",
-            "north": "{0}N",
+            "north": "{0} উ",
             "south": "{0}S",
             "west": "{0}W"
           }

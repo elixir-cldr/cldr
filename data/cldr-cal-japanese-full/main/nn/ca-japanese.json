@@ -58,18 +58,18 @@
               },
               "stand-alone": {
                 "abbreviated": {
-                  "1": "jan.",
-                  "2": "feb.",
-                  "3": "mars",
-                  "4": "apr.",
+                  "1": "jan",
+                  "2": "feb",
+                  "3": "mar",
+                  "4": "apr",
                   "5": "mai",
-                  "6": "juni",
-                  "7": "juli",
-                  "8": "aug.",
-                  "9": "sep.",
-                  "10": "okt.",
-                  "11": "nov.",
-                  "12": "des."
+                  "6": "jun",
+                  "7": "jul",
+                  "8": "aug",
+                  "9": "sep",
+                  "10": "okt",
+                  "11": "nov",
+                  "12": "des"
                 },
                 "narrow": {
                   "1": "J",
@@ -142,13 +142,13 @@
               },
               "stand-alone": {
                 "abbreviated": {
-                  "sun": "sø.",
-                  "mon": "må.",
-                  "tue": "ty.",
-                  "wed": "on.",
-                  "thu": "to.",
-                  "fri": "fr.",
-                  "sat": "la."
+                  "sun": "søn",
+                  "mon": "mån",
+                  "tue": "tys",
+                  "wed": "ons",
+                  "thu": "tor",
+                  "fri": "fre",
+                  "sat": "lau"
                 },
                 "narrow": {
                   "sun": "S",

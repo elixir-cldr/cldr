@@ -289,13 +289,13 @@
             },
             "eras": {
               "eraNames": {
-                "0": "BE"
+                "0": "ព.ស."
               },
               "eraAbbr": {
-                "0": "BE"
+                "0": "ព.ស."
               },
               "eraNarrow": {
-                "0": "BE"
+                "0": "ព.ស."
               }
             },
             "dateFormats": {

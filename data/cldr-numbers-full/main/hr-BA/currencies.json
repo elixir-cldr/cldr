@@ -358,7 +358,10 @@
             "symbol": "BRR"
           },
           "BRZ": {
-            "displayName": "BRZ",
+            "displayName": "stari brazilski kruzeiro",
+            "displayName-count-one": "stari brazilski kruzeiro",
+            "displayName-count-few": "stara brazilska kruzeira",
+            "displayName-count-other": "starih brazilskih kruzeira",
             "symbol": "BRZ"
           },
           "BSD": {
@@ -1166,7 +1169,10 @@
             "symbol": "MAF"
           },
           "MCF": {
-            "displayName": "MCF",
+            "displayName": "monegaški franak",
+            "displayName-count-one": "monegaški franak",
+            "displayName-count-few": "monegaška franka",
+            "displayName-count-other": "monegaških franaka",
             "symbol": "MCF"
           },
           "MDC": {

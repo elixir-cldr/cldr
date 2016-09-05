@@ -14,7 +14,7 @@
           "Adlm": "Adlm",
           "Aghb": "Aghb",
           "Ahom": "Ahom",
-          "Arab": "Arab",
+          "Arab": "འ་ལ་པོའི་སྐད་ཡིག་།",
           "Armi": "Armi",
           "Armn": "Armn",
           "Avst": "Avst",
@@ -36,8 +36,8 @@
           "Cher": "Cher",
           "Copt": "Copt",
           "Cprt": "Cprt",
-          "Cyrl": "Cyrl",
-          "Deva": "Deva",
+          "Cyrl": "གོ་སའི་ལ་ཧྥུ་སྐད་ཡིག་།",
+          "Deva": "དེ་བ་ནཱ་ག་རཱི་སྐད་ཡིག",
           "Dsrt": "Dsrt",
           "Dupl": "Dupl",
           "Egyp": "Egyp",
@@ -48,7 +48,7 @@
           "Goth": "Goth",
           "Gran": "Gran",
           "Grek": "Grek",
-          "Gujr": "Gujr",
+          "Gujr": "གུཇ་རཱཏི་སྐད།",
           "Guru": "Guru",
           "Hanb": "Hanb",
           "Hang": "Hang",
@@ -79,7 +79,7 @@
           "Kthi": "Kthi",
           "Lana": "Lana",
           "Laoo": "Laoo",
-          "Latn": "Latn",
+          "Latn": "ལ་ཏིན་སྐད་ཡིག་།",
           "Lepc": "Lepc",
           "Limb": "Limb",
           "Lina": "Lina",
@@ -100,7 +100,7 @@
           "Mroo": "Mroo",
           "Mtei": "Mtei",
           "Mult": "Mult",
-          "Mymr": "Mymr",
+          "Mymr": "འབར་མའི་སྐད་ཡིག",
           "Narb": "Narb",
           "Nbat": "Nbat",
           "Newa": "Newa",
@@ -210,7 +210,7 @@
           "Zsym": "Zsym",
           "Zxxx": "སྙན་བརྒྱུད། ཡིག་རིགས་སུ་མ་བཀོད་པའི་ཟིན་ཐོ།",
           "Zyyy": "Zyyy",
-          "Zzzz": "Zzzz"
+          "Zzzz": "མིའི་ཤེས་རྟོགས་མ་བྱུང་བ། ཡང་ན་ཆད་ལྷག་ཅན་གྱི་ཟིན་བྲིས།"
         }
       }
     }

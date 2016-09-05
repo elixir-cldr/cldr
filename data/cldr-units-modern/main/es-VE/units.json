@@ -246,23 +246,23 @@
             "unitPattern-count-other": "{0} nanosegundos"
           },
           "electric-ampere": {
-            "displayName": "amperios",
-            "unitPattern-count-one": "{0} amperio",
-            "unitPattern-count-other": "{0} amperios"
+            "displayName": "amperes",
+            "unitPattern-count-one": "{0} ampere",
+            "unitPattern-count-other": "{0} amperes"
           },
           "electric-milliampere": {
-            "displayName": "miliamperios",
-            "unitPattern-count-one": "{0} miliamperio",
-            "unitPattern-count-other": "{0} miliamperios"
+            "displayName": "miliamperes",
+            "unitPattern-count-one": "{0} miliampere",
+            "unitPattern-count-other": "{0} miliamperes"
           },
           "electric-ohm": {
             "displayName": "ohmios",
-            "unitPattern-count-one": "{0} ohmio",
+            "unitPattern-count-one": "{0} ohm",
             "unitPattern-count-other": "{0} ohmios"
           },
           "electric-volt": {
             "displayName": "voltios",
-            "unitPattern-count-one": "{0} voltio",
+            "unitPattern-count-one": "{0} volt",
             "unitPattern-count-other": "{0} voltios"
           },
           "energy-kilocalorie": {
@@ -281,19 +281,19 @@
             "unitPattern-count-other": "{0} calorías"
           },
           "energy-kilojoule": {
-            "displayName": "kilojulios",
-            "unitPattern-count-one": "{0} kilojulio",
-            "unitPattern-count-other": "{0} kilojulios"
+            "displayName": "kilojoules",
+            "unitPattern-count-one": "{0} kilojule",
+            "unitPattern-count-other": "{0} kilojules"
           },
           "energy-joule": {
-            "displayName": "julios",
-            "unitPattern-count-one": "{0} julio",
-            "unitPattern-count-other": "{0} julios"
+            "displayName": "joules",
+            "unitPattern-count-one": "{0} joule",
+            "unitPattern-count-other": "{0} joules"
           },
           "energy-kilowatt-hour": {
-            "displayName": "kilovatios-hora",
-            "unitPattern-count-one": "{0} kilovatio-hora",
-            "unitPattern-count-other": "{0} kilovatios-hora"
+            "displayName": "kilovatios hora",
+            "unitPattern-count-one": "{0} kilovatio hora",
+            "unitPattern-count-other": "{0} kilovatios hora"
           },
           "frequency-gigahertz": {
             "displayName": "gigahercios",
@@ -502,9 +502,9 @@
             "unitPattern-count-other": "{0} milivatios"
           },
           "power-horsepower": {
-            "displayName": "caballos de vapor",
+            "displayName": "caballos de fuerza",
             "unitPattern-count-one": "{0} caballo de vapor",
-            "unitPattern-count-other": "{0} caballos de vapor"
+            "unitPattern-count-other": "{0} caballos de fuerza"
           },
           "pressure-hectopascal": {
             "displayName": "hectopascales",

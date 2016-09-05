@@ -360,8 +360,8 @@
                 "hmv": "h:mm a v",
                 "Hmv": "HH:mm v",
                 "M": "L",
-                "Md": "dd/MM",
-                "MEd": "E, dd/MM",
+                "Md": "d/M",
+                "MEd": "E, d/M",
                 "MMdd": "dd/MM",
                 "MMM": "LLL",
                 "MMMd": "d MMM",
@@ -370,9 +370,9 @@
                 "MMMMEd": "E, d MMMM",
                 "ms": "mm:ss",
                 "y": "y",
-                "yM": "MM/y",
+                "yM": "M/y",
                 "yMd": "d/M/y",
-                "yMEd": "E, dd/MM/y",
+                "yMEd": "E, d/M/y",
                 "yMMM": "MMM y",
                 "yMMMd": "d MMM y",
                 "yMMMEd": "E, d MMM y",
@@ -456,8 +456,8 @@
                   "y": "y – y"
                 },
                 "yM": {
-                  "M": "MM/y – MM/y",
-                  "y": "MM/y – MM/y"
+                  "M": "M/y – M/y",
+                  "y": "M/y – M/y"
                 },
                 "yMd": {
                   "d": "d/M/y – d/M/y",

@@ -62,7 +62,7 @@
           "OXENDICT": "OXENDICT",
           "PAMAKA": "PAMAKA",
           "PETR1708": "PETR1708",
-          "PINYIN": "PINYIN",
+          "PINYIN": "pinyin",
           "POLYTON": "polytonisk rettskriving",
           "POSIX": "dataspråk",
           "PUTER": "PUTER",
@@ -87,7 +87,7 @@
           "VAIDIKA": "VAIDIKA",
           "VALENCIA": "valensisk dialekt",
           "VALLADER": "VALLADER",
-          "WADEGILE": "WADEGILE"
+          "WADEGILE": "wade-giles"
         }
       }
     }

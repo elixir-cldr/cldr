@@ -816,6 +816,7 @@
           },
           "consumption-liter-per-100kilometers": {
             "displayName": "لیٹر/100 کلو میٹر",
+            "unitPattern-count-one": "{0} L/100km",
             "unitPattern-count-other": "{0} L/100km"
           },
           "consumption-mile-per-gallon": {

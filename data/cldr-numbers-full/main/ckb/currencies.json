@@ -23,7 +23,7 @@
             "symbol": "AFA"
           },
           "AFN": {
-            "displayName": "AFN",
+            "displayName": "ئەفغانیی ئەفغانستان",
             "symbol": "AFN"
           },
           "ALL": {
@@ -149,7 +149,7 @@
             "symbol": "BGO"
           },
           "BHD": {
-            "displayName": "BHD",
+            "displayName": "دیناری بەحرەینی",
             "symbol": "BHD"
           },
           "BIF": {
@@ -240,7 +240,7 @@
             "symbol-alt-narrow": "р."
           },
           "BZD": {
-            "displayName": "BZD",
+            "displayName": "دۆلاری بەلیزی",
             "symbol": "BZD",
             "symbol-alt-narrow": "$"
           },
@@ -351,7 +351,7 @@
             "symbol-alt-narrow": "$"
           },
           "DZD": {
-            "displayName": "DZD",
+            "displayName": "دیناری جەزائیری",
             "symbol": "DZD"
           },
           "ECS": {
@@ -393,7 +393,7 @@
             "symbol": "ETB"
           },
           "EUR": {
-            "displayName": "EUR",
+            "displayName": "یورۆ",
             "symbol": "€",
             "symbol-alt-narrow": "€"
           },
@@ -533,11 +533,11 @@
             "symbol-alt-narrow": "₹"
           },
           "IQD": {
-            "displayName": "IQD",
+            "displayName": "دیناری عێراقی",
             "symbol": "IQD"
           },
           "IRR": {
-            "displayName": "IRR",
+            "displayName": "ڕیاڵی ئێرانی",
             "symbol": "IRR"
           },
           "ISK": {
@@ -555,7 +555,7 @@
             "symbol-alt-narrow": "$"
           },
           "JOD": {
-            "displayName": "JOD",
+            "displayName": "دیناری ئوردنی",
             "symbol": "JOD"
           },
           "JPY": {
@@ -600,7 +600,7 @@
             "symbol-alt-narrow": "₩"
           },
           "KWD": {
-            "displayName": "KWD",
+            "displayName": "دیناری کووەیتی",
             "symbol": "KWD"
           },
           "KYD": {
@@ -820,7 +820,7 @@
             "symbol-alt-narrow": "$"
           },
           "OMR": {
-            "displayName": "OMR",
+            "displayName": "ڕیاڵی عومانی",
             "symbol": "OMR"
           },
           "PAB": {
@@ -872,7 +872,7 @@
             "symbol-alt-narrow": "₲"
           },
           "QAR": {
-            "displayName": "QAR",
+            "displayName": "ڕیاڵی قەتەری",
             "symbol": "QAR"
           },
           "RHD": {
@@ -907,7 +907,7 @@
             "symbol-alt-narrow": "RF"
           },
           "SAR": {
-            "displayName": "SAR",
+            "displayName": "ڕیاڵی سەعوودی",
             "symbol": "SAR"
           },
           "SBD": {
@@ -1020,7 +1020,7 @@
             "symbol": "TMT"
           },
           "TND": {
-            "displayName": "TND",
+            "displayName": "دیناری توونس",
             "symbol": "TND"
           },
           "TOP": {
@@ -1037,13 +1037,13 @@
             "symbol": "TRL"
           },
           "TRY": {
-            "displayName": "TRY",
+            "displayName": "لیرەی تورکیا",
             "symbol": "TRY",
             "symbol-alt-narrow": "₺",
             "symbol-alt-variant": "TL"
           },
           "TTD": {
-            "displayName": "TTD",
+            "displayName": "دۆلاری ترینیداد و تۆباگۆ",
             "symbol": "TTD",
             "symbol-alt-narrow": "$"
           },
@@ -1138,7 +1138,7 @@
             "symbol": "XAG"
           },
           "XAU": {
-            "displayName": "XAU",
+            "displayName": "زێڕ",
             "symbol": "XAU"
           },
           "XBA": {

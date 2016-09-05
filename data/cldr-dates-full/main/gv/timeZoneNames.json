@@ -1380,6 +1380,34 @@
                 "exemplarCity": "Unknown"
               }
             }
+          },
+          "metazone": {
+            "Europe_Central": {
+              "short": {
+                "generic": "CET",
+                "standard": "CET",
+                "daylight": "CEST"
+              }
+            },
+            "Europe_Eastern": {
+              "short": {
+                "generic": "EET",
+                "standard": "EET",
+                "daylight": "EEST"
+              }
+            },
+            "Europe_Western": {
+              "short": {
+                "generic": "WET",
+                "standard": "WET",
+                "daylight": "WEST"
+              }
+            },
+            "GMT": {
+              "short": {
+                "standard": "GMT"
+              }
+            }
           }
         }
       }

@@ -36,7 +36,7 @@
           "timezone": "時區",
           "va": "區域變異",
           "variableTop": "以符號排序",
-          "x": "私人使用"
+          "x": "專用區"
         },
         "types": {
           "calendar": {
@@ -182,7 +182,7 @@
             "mathsans": "mathsans",
             "mlym": "馬拉雅拉姆數字",
             "modi": "modi",
-            "mong": "蒙古數字",
+            "mong": "蒙古文位數",
             "mroo": "mroo",
             "mtei": "曼尼普爾數字",
             "mymr": "緬甸數字",

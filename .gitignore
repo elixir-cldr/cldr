@@ -8,4 +8,4 @@ erl_crash.dump
 *.ez
 *.tar
 .DS_Store
-/data/downloads
+/downloads

@@ -419,10 +419,10 @@
                 "exemplarCity": "San Bartolomé"
               },
               "St_Johns": {
-                "exemplarCity": "St. John’s"
+                "exemplarCity": "San Juan de Terranova"
               },
               "St_Kitts": {
-                "exemplarCity": "St. Kitts"
+                "exemplarCity": "San Cristóbal"
               },
               "St_Lucia": {
                 "exemplarCity": "Santa Lucía"
@@ -1258,7 +1258,7 @@
                 "exemplarCity": "Chuuk"
               },
               "Wake": {
-                "exemplarCity": "Wake"
+                "exemplarCity": "Isla Wake"
               },
               "Wallis": {
                 "exemplarCity": "Wallis"
@@ -1611,7 +1611,7 @@
             },
             "Chamorro": {
               "long": {
-                "standard": "hora estándar de Chamorro"
+                "standard": "hora de Chamorro"
               }
             },
             "Chatham": {
@@ -1649,12 +1649,12 @@
             },
             "Christmas": {
               "long": {
-                "standard": "hora de la Isla de Navidad"
+                "standard": "hora de la isla Christmas"
               }
             },
             "Cocos": {
               "long": {
-                "standard": "hora de las Islas Cocos"
+                "standard": "hora de las islas Cocos"
               }
             },
             "Colombia": {
@@ -1813,9 +1813,9 @@
             },
             "Hawaii_Aleutian": {
               "long": {
-                "generic": "hora de Hawái-Aleutiano",
-                "standard": "hora estándar de Hawái-Aleutiano",
-                "daylight": "hora de verano de Hawái-Aleutiano"
+                "generic": "hora de Hawái-Aleutianas",
+                "standard": "hora estándar de Hawái-Aleutianas",
+                "daylight": "hora de verano de Hawái-Aleutianas"
               }
             },
             "Hong_Kong": {
@@ -1834,7 +1834,7 @@
             },
             "India": {
               "long": {
-                "standard": "hora estándar de la India"
+                "standard": "hora de India"
               }
             },
             "Indian_Ocean": {

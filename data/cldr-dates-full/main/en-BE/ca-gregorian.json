@@ -464,9 +464,9 @@
                   "y": "dd/MM/y – dd/MM/y"
                 },
                 "yMEd": {
-                  "d": "E, dd/MM/y – E, dd/MM/y",
-                  "M": "E, dd/MM/y – E, dd/MM/y",
-                  "y": "E, dd/MM/y – E, dd/MM/y"
+                  "d": "E dd/MM/y – E dd/MM/y",
+                  "M": "E dd/MM/y – E dd/MM/y",
+                  "y": "E dd/MM/y – E dd/MM/y"
                 },
                 "yMMM": {
                   "M": "MMM – MMM y",

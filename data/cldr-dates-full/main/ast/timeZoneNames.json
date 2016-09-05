@@ -1751,6 +1751,11 @@
                 "generic": "Hora d’Europa Central",
                 "standard": "Hora estándar d’Europa Central",
                 "daylight": "Hora braniega d’Europa Central"
+              },
+              "short": {
+                "generic": "CET",
+                "standard": "CET",
+                "daylight": "CEST"
               }
             },
             "Europe_Eastern": {
@@ -1758,6 +1763,11 @@
                 "generic": "Hora d’Europa del Este",
                 "standard": "Hora estándar d’Europa del Este",
                 "daylight": "Hora braniega d’Europa del Este"
+              },
+              "short": {
+                "generic": "EET",
+                "standard": "EET",
+                "daylight": "EEST"
               }
             },
             "Europe_Further_Eastern": {
@@ -1770,6 +1780,11 @@
                 "generic": "Hora d’Europa Occidental",
                 "standard": "Hora estándar d’Europa Occidental",
                 "daylight": "Hora braniega d’Europa Occidental"
+              },
+              "short": {
+                "generic": "WET",
+                "standard": "WET",
+                "daylight": "WEST"
               }
             },
             "Falkland": {

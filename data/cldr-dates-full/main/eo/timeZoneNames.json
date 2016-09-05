@@ -10,12 +10,12 @@
       },
       "dates": {
         "timeZoneNames": {
-          "hourFormat": "+HH:mm;-HH:mm",
-          "gmtFormat": "GMT{0}",
-          "gmtZeroFormat": "GMT",
-          "regionFormat": "{0}",
-          "regionFormat-type-daylight": "{0} (+1)",
-          "regionFormat-type-standard": "{0} (+0)",
+          "hourFormat": "+HH:mm;−HH:mm",
+          "gmtFormat": "UTC{0}",
+          "gmtZeroFormat": "UTC",
+          "regionFormat": "tempo de {0}",
+          "regionFormat-type-daylight": "somera tempo de {0}",
+          "regionFormat-type-standard": "norma tempo de {0}",
           "fallbackFormat": "{1} ({0})",
           "zone": {
             "America": {
@@ -1377,7 +1377,187 @@
                 "exemplarCity": "GMT-9"
               },
               "Unknown": {
-                "exemplarCity": "Unknown"
+                "exemplarCity": "nekonata urbo"
+              }
+            }
+          },
+          "metazone": {
+            "Africa_Central": {
+              "long": {
+                "standard": "centra afrika tempo"
+              }
+            },
+            "Africa_Eastern": {
+              "long": {
+                "standard": "orienta afrika tempo"
+              }
+            },
+            "Africa_Southern": {
+              "long": {
+                "standard": "suda afrika tempo"
+              }
+            },
+            "Africa_Western": {
+              "long": {
+                "generic": "okcidenta afrika tempo",
+                "standard": "okcidenta afrika norma tempo",
+                "daylight": "okcidenta afrika somera tempo"
+              }
+            },
+            "America_Central": {
+              "long": {
+                "generic": "centra nord-amerika tempo",
+                "standard": "centra nord-amerika norma tempo",
+                "daylight": "centra nord-amerika somera tempo"
+              }
+            },
+            "America_Eastern": {
+              "long": {
+                "generic": "orienta nord-amerika tempo",
+                "standard": "orienta nord-amerika norma tempo",
+                "daylight": "orienta nord-amerika somera tempo"
+              }
+            },
+            "America_Mountain": {
+              "long": {
+                "generic": "monta nord-amerika tempo",
+                "standard": "monta nord-amerika norma tempo",
+                "daylight": "monta nord-amerika somera tempo"
+              }
+            },
+            "America_Pacific": {
+              "long": {
+                "generic": "pacifika nord-amerika tempo",
+                "standard": "pacifika nord-amerika norma tempo",
+                "daylight": "pacifika nord-amerika somera tempo"
+              }
+            },
+            "Arabian": {
+              "long": {
+                "generic": "araba tempo",
+                "standard": "araba norma tempo",
+                "daylight": "araba somera tempo"
+              }
+            },
+            "Atlantic": {
+              "long": {
+                "generic": "atlantika nord-amerika tempo",
+                "standard": "atlantika nord-amerika norma tempo",
+                "daylight": "atlantika nord-amerika somera tempo"
+              }
+            },
+            "Australia_Central": {
+              "long": {
+                "generic": "centra aŭstralia tempo",
+                "standard": "centra aŭstralia norma tempo",
+                "daylight": "centra aŭstralia somera tempo"
+              }
+            },
+            "Australia_CentralWestern": {
+              "long": {
+                "generic": "centrokcidenta aŭstralia tempo",
+                "standard": "centrokcidenta aŭstralia norma tempo",
+                "daylight": "centrokcidenta aŭstralia somera tempo"
+              }
+            },
+            "Australia_Eastern": {
+              "long": {
+                "generic": "orienta aŭstralia tempo",
+                "standard": "orienta aŭstralia norma tempo",
+                "daylight": "orienta aŭstralia somera tempo"
+              }
+            },
+            "Australia_Western": {
+              "long": {
+                "generic": "okcidenta aŭstralia tempo",
+                "standard": "okcidenta aŭstralia norma tempo",
+                "daylight": "okcidenta aŭstralia somera tempo"
+              }
+            },
+            "China": {
+              "long": {
+                "generic": "ĉina tempo",
+                "standard": "ĉina norma tempo",
+                "daylight": "ĉina somera tempo"
+              }
+            },
+            "Europe_Central": {
+              "long": {
+                "generic": "centra eŭropa tempo",
+                "standard": "centra eŭropa norma tempo",
+                "daylight": "centra eŭropa somera tempo"
+              }
+            },
+            "Europe_Eastern": {
+              "long": {
+                "generic": "orienta eŭropa tempo",
+                "standard": "orienta eŭropa norma tempo",
+                "daylight": "orienta eŭropa somera tempo"
+              }
+            },
+            "Europe_Western": {
+              "long": {
+                "generic": "okcidenta eŭropa tempo",
+                "standard": "okcidenta eŭropa norma tempo",
+                "daylight": "okcidenta eŭropa somera tempo"
+              }
+            },
+            "GMT": {
+              "long": {
+                "standard": "universala tempo kunordigita"
+              }
+            },
+            "India": {
+              "long": {
+                "standard": "barata tempo"
+              }
+            },
+            "Indochina": {
+              "long": {
+                "standard": "hindoĉina tempo"
+              }
+            },
+            "Indonesia_Central": {
+              "long": {
+                "standard": "centra indonezia tempo"
+              }
+            },
+            "Indonesia_Eastern": {
+              "long": {
+                "standard": "orienta indonezia tempo"
+              }
+            },
+            "Indonesia_Western": {
+              "long": {
+                "standard": "okcidenta indonezia tempo"
+              }
+            },
+            "Israel": {
+              "long": {
+                "generic": "israela tempo",
+                "standard": "israela norma tempo",
+                "daylight": "israela somera tempo"
+              }
+            },
+            "Japan": {
+              "long": {
+                "generic": "japana tempo",
+                "standard": "japana norma tempo",
+                "daylight": "japana somera tempo"
+              }
+            },
+            "Korea": {
+              "long": {
+                "generic": "korea tempo",
+                "standard": "korea norma tempo",
+                "daylight": "korea somera tempo"
+              }
+            },
+            "Moscow": {
+              "long": {
+                "generic": "moskva tempo",
+                "standard": "moskva norma tempo",
+                "daylight": "moskva somera tempo"
               }
             }
           }

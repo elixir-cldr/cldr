@@ -409,8 +409,8 @@
                   "m": "vah:mm至h:mm"
                 },
                 "Hmv": {
-                  "H": "HH:mm–HH:mm v",
-                  "m": "HH:mm–HH:mm v"
+                  "H": "v HH:mm–HH:mm",
+                  "m": "v HH:mm–HH:mm"
                 },
                 "hv": {
                   "a": "vah时至ah时",

@@ -247,29 +247,29 @@
                   "pm": "n.m."
                 },
                 "wide": {
-                  "am": "v.m.",
-                  "pm": "n.m."
+                  "am": "Vormittag",
+                  "pm": "Namittag"
                 }
               }
             },
             "eras": {
               "eraNames": {
                 "0": "v. Chr.",
-                "0-alt-variant": "BCE",
+                "0-alt-variant": "vor der gewöhnlichen Zeitrechnung",
                 "1": "n. Chr.",
-                "1-alt-variant": "CE"
+                "1-alt-variant": "der gewöhnlichen Zeitrechnung"
               },
               "eraAbbr": {
                 "0": "v. Chr.",
-                "0-alt-variant": "BCE",
+                "0-alt-variant": "v. d. Z.",
                 "1": "n. Chr.",
-                "1-alt-variant": "CE"
+                "1-alt-variant": "d. Z."
               },
               "eraNarrow": {
                 "0": "v. Chr.",
-                "0-alt-variant": "BCE",
+                "0-alt-variant": "vdZ",
                 "1": "n. Chr.",
-                "1-alt-variant": "CE"
+                "1-alt-variant": "dZ"
               }
             },
             "dateFormats": {

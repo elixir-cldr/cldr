@@ -646,6 +646,8 @@
           },
           "speed-knot": {
             "displayName": "kn",
+            "unitPattern-count-one": "{0} kn",
+            "unitPattern-count-few": "{0} kn",
             "unitPattern-count-other": "{0} kn"
           },
           "temperature-generic": {
@@ -1465,6 +1467,8 @@
           },
           "speed-knot": {
             "displayName": "kn",
+            "unitPattern-count-one": "{0} kn",
+            "unitPattern-count-few": "{0} kn",
             "unitPattern-count-other": "{0} kn"
           },
           "temperature-generic": {
@@ -2284,6 +2288,8 @@
           },
           "speed-knot": {
             "displayName": "kn",
+            "unitPattern-count-one": "{0} kn",
+            "unitPattern-count-few": "{0} kn",
             "unitPattern-count-other": "{0} kn"
           },
           "temperature-generic": {

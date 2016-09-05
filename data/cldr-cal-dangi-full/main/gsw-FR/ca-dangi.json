@@ -276,8 +276,8 @@
                   "pm": "n.m."
                 },
                 "wide": {
-                  "am": "v.m.",
-                  "pm": "n.m."
+                  "am": "Vormittag",
+                  "pm": "Namittag"
                 }
               }
             },

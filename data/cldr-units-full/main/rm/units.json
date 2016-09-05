@@ -157,50 +157,51 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "onns",
             "unitPattern-count-one": "{0} onn",
             "unitPattern-count-other": "{0} onns",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "mais",
             "unitPattern-count-one": "{0} mais",
             "unitPattern-count-other": "{0} mais",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "emnas",
             "unitPattern-count-one": "{0} emna",
             "unitPattern-count-other": "{0} emnas",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "dis",
             "unitPattern-count-one": "{0} di",
             "unitPattern-count-other": "{0} dis",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "uras",
             "unitPattern-count-one": "{0} ura",
             "unitPattern-count-other": "{0} uras",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "minutas",
             "unitPattern-count-one": "{0} minuta",
             "unitPattern-count-other": "{0} minutas",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "secundas",
             "unitPattern-count-one": "{0} secunda",
             "unitPattern-count-other": "{0} secundas",
             "perUnitPattern": "{0}/s"
           },
           "duration-millisecond": {
-            "displayName": "ms",
-            "unitPattern-count-other": "{0} ms"
+            "displayName": "millisecundas",
+            "unitPattern-count-one": "{0} millisecunda",
+            "unitPattern-count-other": "{0} millisecundas"
           },
           "duration-microsecond": {
             "displayName": "μs",
@@ -267,13 +268,15 @@
             "unitPattern-count-other": "{0} Hz"
           },
           "length-kilometer": {
-            "displayName": "km",
-            "unitPattern-count-other": "{0} km",
+            "displayName": "kilometers",
+            "unitPattern-count-one": "{0} kilometer",
+            "unitPattern-count-other": "{0} kilometers",
             "perUnitPattern": "{0}/km"
           },
           "length-meter": {
-            "displayName": "meter",
-            "unitPattern-count-other": "{0} m",
+            "displayName": "meters",
+            "unitPattern-count-one": "{0} meter",
+            "unitPattern-count-other": "{0} meters",
             "perUnitPattern": "{0}/m"
           },
           "length-decimeter": {
@@ -281,13 +284,15 @@
             "unitPattern-count-other": "{0} dm"
           },
           "length-centimeter": {
-            "displayName": "cm",
-            "unitPattern-count-other": "{0} cm",
+            "displayName": "centimeters",
+            "unitPattern-count-one": "{0} centimeter",
+            "unitPattern-count-other": "{0} centimeters",
             "perUnitPattern": "{0}/cm"
           },
           "length-millimeter": {
-            "displayName": "mm",
-            "unitPattern-count-other": "{0} mm"
+            "displayName": "millimeters",
+            "unitPattern-count-one": "{0} millimeter",
+            "unitPattern-count-other": "{0} millimeters"
           },
           "length-micrometer": {
             "displayName": "µm",
@@ -356,13 +361,15 @@
             "unitPattern-count-other": "{0} t"
           },
           "mass-kilogram": {
-            "displayName": "kg",
-            "unitPattern-count-other": "{0} kg",
+            "displayName": "kilograms",
+            "unitPattern-count-one": "{0} kilogram",
+            "unitPattern-count-other": "{0} kilograms",
             "perUnitPattern": "{0}/kg"
           },
           "mass-gram": {
-            "displayName": "gram",
-            "unitPattern-count-other": "{0} g",
+            "displayName": "grams",
+            "unitPattern-count-one": "{0} gram",
+            "unitPattern-count-other": "{0} grams",
             "perUnitPattern": "{0}/g"
           },
           "mass-milligram": {
@@ -444,8 +451,9 @@
             "unitPattern-count-other": "{0} mbar"
           },
           "speed-kilometer-per-hour": {
-            "displayName": "km/h",
-            "unitPattern-count-other": "{0} km/h"
+            "displayName": "kilometers per ura",
+            "unitPattern-count-one": "{0} kilometer per ura",
+            "unitPattern-count-other": "{0} kilometers per ura"
           },
           "speed-meter-per-second": {
             "displayName": "m/s",
@@ -464,8 +472,9 @@
             "unitPattern-count-other": "{0}°"
           },
           "temperature-celsius": {
-            "displayName": "°C",
-            "unitPattern-count-other": "{0}°C"
+            "displayName": "grads celsius",
+            "unitPattern-count-one": "{0} grad celsius",
+            "unitPattern-count-other": "{0} grads celsius"
           },
           "temperature-fahrenheit": {
             "displayName": "°F",
@@ -514,8 +523,9 @@
             "unitPattern-count-other": "{0} hL"
           },
           "volume-liter": {
-            "displayName": "liter",
-            "unitPattern-count-other": "{0} l",
+            "displayName": "liters",
+            "unitPattern-count-one": "{0} liter",
+            "unitPattern-count-other": "{0} liters",
             "perUnitPattern": "{0}/l"
           },
           "volume-deciliter": {
@@ -735,49 +745,50 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "onns",
             "unitPattern-count-one": "{0} onn",
             "unitPattern-count-other": "{0} onns",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "mais",
             "unitPattern-count-one": "{0} mais",
             "unitPattern-count-other": "{0} mais",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "emnas",
             "unitPattern-count-one": "{0} emna",
             "unitPattern-count-other": "{0} emnas",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "dis",
             "unitPattern-count-one": "{0} di",
             "unitPattern-count-other": "{0} dis",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "uras",
             "unitPattern-count-one": "{0} ura",
             "unitPattern-count-other": "{0} uras",
             "perUnitPattern": "{0}/h"
           },
           "duration-minute": {
-            "displayName": "min",
+            "displayName": "minutas",
             "unitPattern-count-one": "{0} min.",
             "unitPattern-count-other": "{0} mins.",
             "perUnitPattern": "{0}/min"
           },
           "duration-second": {
-            "displayName": "sec",
+            "displayName": "secundas",
             "unitPattern-count-one": "{0} sec.",
             "unitPattern-count-other": "{0} secs.",
             "perUnitPattern": "{0}/s"
           },
           "duration-millisecond": {
             "displayName": "ms",
+            "unitPattern-count-one": "{0} ms",
             "unitPattern-count-other": "{0} ms"
           },
           "duration-microsecond": {
@@ -846,11 +857,13 @@
           },
           "length-kilometer": {
             "displayName": "km",
+            "unitPattern-count-one": "{0} km",
             "unitPattern-count-other": "{0} km",
             "perUnitPattern": "{0}/km"
           },
           "length-meter": {
-            "displayName": "meter",
+            "displayName": "meters",
+            "unitPattern-count-one": "{0} m",
             "unitPattern-count-other": "{0} m",
             "perUnitPattern": "{0}/m"
           },
@@ -860,11 +873,13 @@
           },
           "length-centimeter": {
             "displayName": "cm",
+            "unitPattern-count-one": "{0} cm",
             "unitPattern-count-other": "{0} cm",
             "perUnitPattern": "{0}/cm"
           },
           "length-millimeter": {
             "displayName": "mm",
+            "unitPattern-count-one": "{0} mm",
             "unitPattern-count-other": "{0} mm"
           },
           "length-micrometer": {
@@ -935,11 +950,13 @@
           },
           "mass-kilogram": {
             "displayName": "kg",
+            "unitPattern-count-one": "{0} kg",
             "unitPattern-count-other": "{0} kg",
             "perUnitPattern": "{0}/kg"
           },
           "mass-gram": {
-            "displayName": "gram",
+            "displayName": "grams",
+            "unitPattern-count-one": "{0} g",
             "unitPattern-count-other": "{0} g",
             "perUnitPattern": "{0}/g"
           },
@@ -1023,6 +1040,7 @@
           },
           "speed-kilometer-per-hour": {
             "displayName": "km/h",
+            "unitPattern-count-one": "{0} km/h",
             "unitPattern-count-other": "{0} km/h"
           },
           "speed-meter-per-second": {
@@ -1043,7 +1061,8 @@
           },
           "temperature-celsius": {
             "displayName": "°C",
-            "unitPattern-count-other": "{0}°C"
+            "unitPattern-count-one": "{0} °C",
+            "unitPattern-count-other": "{0} °C"
           },
           "temperature-fahrenheit": {
             "displayName": "°F",
@@ -1092,7 +1111,8 @@
             "unitPattern-count-other": "{0} hL"
           },
           "volume-liter": {
-            "displayName": "liter",
+            "displayName": "liters",
+            "unitPattern-count-one": "{0} l",
             "unitPattern-count-other": "{0} l",
             "perUnitPattern": "{0}/l"
           },
@@ -1313,31 +1333,31 @@
             "unitPattern-count-other": "{0} c"
           },
           "duration-year": {
-            "displayName": "yr",
+            "displayName": "onn",
             "unitPattern-count-one": "{0} onns",
             "unitPattern-count-other": "{0} onns",
             "perUnitPattern": "{0}/y"
           },
           "duration-month": {
-            "displayName": "mon",
+            "displayName": "mais",
             "unitPattern-count-one": "{0} mais",
             "unitPattern-count-other": "{0} mais",
             "perUnitPattern": "{0}/m"
           },
           "duration-week": {
-            "displayName": "wk",
+            "displayName": "emna",
             "unitPattern-count-one": "{0} emnas",
             "unitPattern-count-other": "{0} emnas",
             "perUnitPattern": "{0}/w"
           },
           "duration-day": {
-            "displayName": "day",
+            "displayName": "di",
             "unitPattern-count-one": "{0} dis",
             "unitPattern-count-other": "{0} dis",
             "perUnitPattern": "{0}/d"
           },
           "duration-hour": {
-            "displayName": "hr",
+            "displayName": "ura",
             "unitPattern-count-one": "{0} uras",
             "unitPattern-count-other": "{0} uras",
             "perUnitPattern": "{0}/h"
@@ -1356,7 +1376,8 @@
           },
           "duration-millisecond": {
             "displayName": "ms",
-            "unitPattern-count-other": "{0} ms"
+            "unitPattern-count-one": "{0}ms",
+            "unitPattern-count-other": "{0}ms"
           },
           "duration-microsecond": {
             "displayName": "μs",
@@ -1424,12 +1445,14 @@
           },
           "length-kilometer": {
             "displayName": "km",
-            "unitPattern-count-other": "{0} km",
+            "unitPattern-count-one": "{0}km",
+            "unitPattern-count-other": "{0}km",
             "perUnitPattern": "{0}/km"
           },
           "length-meter": {
             "displayName": "meter",
-            "unitPattern-count-other": "{0} m",
+            "unitPattern-count-one": "{0}m",
+            "unitPattern-count-other": "{0}m",
             "perUnitPattern": "{0}/m"
           },
           "length-decimeter": {
@@ -1438,12 +1461,14 @@
           },
           "length-centimeter": {
             "displayName": "cm",
-            "unitPattern-count-other": "{0} cm",
+            "unitPattern-count-one": "{0}cm",
+            "unitPattern-count-other": "{0}cm",
             "perUnitPattern": "{0}/cm"
           },
           "length-millimeter": {
             "displayName": "mm",
-            "unitPattern-count-other": "{0} mm"
+            "unitPattern-count-one": "{0}mm",
+            "unitPattern-count-other": "{0}mm"
           },
           "length-micrometer": {
             "displayName": "µm",
@@ -1513,11 +1538,13 @@
           },
           "mass-kilogram": {
             "displayName": "kg",
+            "unitPattern-count-one": "{0} kg",
             "unitPattern-count-other": "{0} kg",
             "perUnitPattern": "{0}/kg"
           },
           "mass-gram": {
             "displayName": "gram",
+            "unitPattern-count-one": "{0} g",
             "unitPattern-count-other": "{0} g",
             "perUnitPattern": "{0}/g"
           },
@@ -1601,6 +1628,7 @@
           },
           "speed-kilometer-per-hour": {
             "displayName": "km/h",
+            "unitPattern-count-one": "{0} km/h",
             "unitPattern-count-other": "{0} km/h"
           },
           "speed-meter-per-second": {
@@ -1621,6 +1649,7 @@
           },
           "temperature-celsius": {
             "displayName": "°C",
+            "unitPattern-count-one": "{0}°C",
             "unitPattern-count-other": "{0}°C"
           },
           "temperature-fahrenheit": {
@@ -1671,6 +1700,7 @@
           },
           "volume-liter": {
             "displayName": "liter",
+            "unitPattern-count-one": "{0} l",
             "unitPattern-count-other": "{0} l",
             "perUnitPattern": "{0}/l"
           },

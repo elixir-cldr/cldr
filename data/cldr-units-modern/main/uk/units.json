@@ -82,7 +82,7 @@
             "unitPattern-count-few": "{0} квадратні метри",
             "unitPattern-count-many": "{0} квадратних метрів",
             "unitPattern-count-other": "{0} квадратного метра",
-            "perUnitPattern": "{0}/м²"
+            "perUnitPattern": "{0} на квадратний метр"
           },
           "area-square-centimeter": {
             "displayName": "квадратні сантиметри",
@@ -126,7 +126,7 @@
             "unitPattern-count-few": "{0} квадратні дюйми",
             "unitPattern-count-many": "{0} квадратних дюймів",
             "unitPattern-count-other": "{0} квадратного дюйма",
-            "perUnitPattern": "{0}/дюйм²"
+            "perUnitPattern": "{0} квадратний дюйм"
           },
           "concentr-karat": {
             "displayName": "карати",
@@ -263,7 +263,7 @@
             "unitPattern-count-few": "{0} місяці",
             "unitPattern-count-many": "{0} місяців",
             "unitPattern-count-other": "{0} місяця",
-            "perUnitPattern": "{0}/міс."
+            "perUnitPattern": "{0} на місяць"
           },
           "duration-week": {
             "displayName": "тижні",
@@ -295,7 +295,7 @@
             "unitPattern-count-few": "{0} хвилини",
             "unitPattern-count-many": "{0} хвилин",
             "unitPattern-count-other": "{0} хвилини",
-            "perUnitPattern": "{0}/хв"
+            "perUnitPattern": "{0} на хв"
           },
           "duration-second": {
             "displayName": "секунди",
@@ -453,7 +453,7 @@
             "unitPattern-count-few": "{0} сантиметри",
             "unitPattern-count-many": "{0} сантиметрів",
             "unitPattern-count-other": "{0} сантиметра",
-            "perUnitPattern": "{0}/см"
+            "perUnitPattern": "{0} на сантиметр"
           },
           "length-millimeter": {
             "displayName": "міліметри",
@@ -503,7 +503,7 @@
             "unitPattern-count-few": "{0} фути",
             "unitPattern-count-many": "{0} футів",
             "unitPattern-count-other": "{0} фута",
-            "perUnitPattern": "{0}/фут"
+            "perUnitPattern": "{0} на фут"
           },
           "length-inch": {
             "displayName": "дюйми",

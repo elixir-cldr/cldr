@@ -124,7 +124,7 @@
             "unitPattern-count-other": "{0} milltir sgwâr"
           },
           "area-acre": {
-            "displayName": "acre",
+            "displayName": "erw",
             "unitPattern-count-zero": "{0} erw",
             "unitPattern-count-one": "{0} erw",
             "unitPattern-count-two": "{0} erw",
@@ -490,8 +490,13 @@
             "unitPattern-count-other": "{0} joule"
           },
           "energy-kilowatt-hour": {
-            "displayName": "kWh",
-            "unitPattern-count-other": "{0} kWh"
+            "displayName": "cilowat oriau",
+            "unitPattern-count-zero": "{0} cilowat awr",
+            "unitPattern-count-one": "{0} cilowat awr",
+            "unitPattern-count-two": "{0} gilowat awr",
+            "unitPattern-count-few": "{0} chilowat awr",
+            "unitPattern-count-many": "{0} chilowat awr",
+            "unitPattern-count-other": "{0} cilowat awr"
           },
           "frequency-gigahertz": {
             "displayName": "gigaherts",
@@ -810,12 +815,12 @@
           },
           "mass-carat": {
             "displayName": "caratau",
-            "unitPattern-count-zero": "{0} CD",
-            "unitPattern-count-one": "{0} CD",
-            "unitPattern-count-two": "{0} CD",
-            "unitPattern-count-few": "{0} CD",
-            "unitPattern-count-many": "{0} CD",
-            "unitPattern-count-other": "{0} CD"
+            "unitPattern-count-zero": "{0} carat",
+            "unitPattern-count-one": "{0} carat",
+            "unitPattern-count-two": "{0} garat",
+            "unitPattern-count-few": "{0} charat",
+            "unitPattern-count-many": "{0} charat",
+            "unitPattern-count-other": "{0} carat"
           },
           "power-gigawatt": {
             "displayName": "gigawatiau",
@@ -1127,13 +1132,13 @@
             "unitPattern-count-other": "{0} cwpanaid metrig"
           },
           "volume-acre-foot": {
-            "displayName": "erw tr",
-            "unitPattern-count-zero": "{0} erw tr",
-            "unitPattern-count-one": "{0} erw tr",
-            "unitPattern-count-two": "{0} erw tr",
-            "unitPattern-count-few": "{0} erw tr",
-            "unitPattern-count-many": "{0} erw tr",
-            "unitPattern-count-other": "{0} erw tr"
+            "displayName": "erw-droedfeddi",
+            "unitPattern-count-zero": "{0} erw-droedfedd",
+            "unitPattern-count-one": "{0} erw-droedfedd",
+            "unitPattern-count-two": "{0} erw-droedfedd",
+            "unitPattern-count-few": "{0} erw-droedfedd",
+            "unitPattern-count-many": "{0} erw-droedfedd",
+            "unitPattern-count-other": "{0} erw-droedfedd"
           },
           "volume-bushel": {
             "displayName": "bwsielau",
@@ -1306,7 +1311,7 @@
             "unitPattern-count-other": "{0} ha"
           },
           "area-square-meter": {
-            "displayName": "m²",
+            "displayName": "meterau²",
             "unitPattern-count-zero": "{0} m²",
             "unitPattern-count-one": "{0} m²",
             "unitPattern-count-two": "{0} m²",
@@ -1335,7 +1340,7 @@
             "unitPattern-count-other": "{0} mi²"
           },
           "area-acre": {
-            "displayName": "acre",
+            "displayName": "erw",
             "unitPattern-count-zero": "{0} erw",
             "unitPattern-count-one": "{0} erw",
             "unitPattern-count-two": "{0} erw",
@@ -1344,7 +1349,7 @@
             "unitPattern-count-other": "{0} erw"
           },
           "area-square-yard": {
-            "displayName": "yd²",
+            "displayName": "llath²",
             "unitPattern-count-zero": "{0} llath²",
             "unitPattern-count-one": "{0} llath²",
             "unitPattern-count-two": "{0} llath²",
@@ -1570,7 +1575,7 @@
             "unitPattern-count-few": "{0} awr",
             "unitPattern-count-many": "{0} awr",
             "unitPattern-count-other": "{0} awr",
-            "perUnitPattern": "{0}/h"
+            "perUnitPattern": "{0} ya"
           },
           "duration-minute": {
             "displayName": "mun",
@@ -1620,7 +1625,7 @@
             "unitPattern-count-other": "{0} ns"
           },
           "electric-ampere": {
-            "displayName": "amp",
+            "displayName": "ampau",
             "unitPattern-count-zero": "{0} A",
             "unitPattern-count-one": "{0} A",
             "unitPattern-count-two": "{0} A",
@@ -1629,7 +1634,7 @@
             "unitPattern-count-other": "{0} A"
           },
           "electric-milliampere": {
-            "displayName": "mA",
+            "displayName": "miliampau",
             "unitPattern-count-zero": "{0} mA",
             "unitPattern-count-one": "{0} mA",
             "unitPattern-count-two": "{0} mA",
@@ -1701,8 +1706,13 @@
             "unitPattern-count-other": "{0} J"
           },
           "energy-kilowatt-hour": {
-            "displayName": "kWh",
-            "unitPattern-count-other": "{0} kWh"
+            "displayName": "kW-awr",
+            "unitPattern-count-zero": "{0} kW-awr",
+            "unitPattern-count-one": "{0} kW-awr",
+            "unitPattern-count-two": "{0} kW-awr",
+            "unitPattern-count-few": "{0} kW-awr",
+            "unitPattern-count-many": "{0} kW-awr",
+            "unitPattern-count-other": "{0} kW-awr"
           },
           "frequency-gigahertz": {
             "displayName": "GHz",
@@ -2420,10 +2430,10 @@
             "unitPattern-count-other": "{0} tsp"
           },
           "coordinateUnit": {
-            "east": "{0}E",
-            "north": "{0}N",
-            "south": "{0}S",
-            "west": "{0}W"
+            "east": "{0}dn",
+            "north": "{0}g",
+            "south": "{0}d",
+            "west": "{0}gn"
           }
         },
         "narrow": {
@@ -2550,7 +2560,7 @@
             "unitPattern-count-other": "{0}erw"
           },
           "area-square-yard": {
-            "displayName": "yd²",
+            "displayName": "llath²",
             "unitPattern-count-zero": "{0} llath²",
             "unitPattern-count-one": "{0} llath²",
             "unitPattern-count-two": "{0} llath²",
@@ -2907,8 +2917,13 @@
             "unitPattern-count-other": "{0}J"
           },
           "energy-kilowatt-hour": {
-            "displayName": "kWh",
-            "unitPattern-count-other": "{0} kWh"
+            "displayName": "kW-awr",
+            "unitPattern-count-zero": "{0} kW-awr",
+            "unitPattern-count-one": "{0} kW-awr",
+            "unitPattern-count-two": "{0} kW-awr",
+            "unitPattern-count-few": "{0} kW-awr",
+            "unitPattern-count-many": "{0} kW-awr",
+            "unitPattern-count-other": "{0} kW-awr"
           },
           "frequency-gigahertz": {
             "displayName": "GHz",
@@ -3626,10 +3641,10 @@
             "unitPattern-count-other": "{0} tsp"
           },
           "coordinateUnit": {
-            "east": "{0}E",
-            "north": "{0}N",
-            "south": "{0}S",
-            "west": "{0}W"
+            "east": "{0}dn",
+            "north": "{0}g",
+            "south": "{0}d",
+            "west": "{0}gn"
           }
         },
         "durationUnit-type-hm": {

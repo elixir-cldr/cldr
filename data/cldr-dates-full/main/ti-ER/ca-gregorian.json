@@ -347,7 +347,7 @@
                 "Year": "{1} {0}"
               },
               "intervalFormats": {
-                "intervalFormatFallback": "{0} – {1}",
+                "intervalFormatFallback": "{0} - {1}",
                 "d": {
                   "d": "d–d"
                 },
@@ -391,19 +391,19 @@
                   "M": "MM-dd – MM-dd"
                 },
                 "MEd": {
-                  "d": "MM-dd, E – MM-dd, E",
-                  "M": "MM-dd, E – MM-dd, E"
+                  "d": "E፡ MM-dd – E፡ MM-dd",
+                  "M": "E፡ MM-dd – E፡ MM-dd"
                 },
                 "MMM": {
-                  "M": "LLL–LLL"
+                  "M": "MMM–MMM"
                 },
                 "MMMd": {
                   "d": "MMM d–d",
                   "M": "MMM d – MMM d"
                 },
                 "MMMEd": {
-                  "d": "MMM d, E – MMM d, E",
-                  "M": "MMM d, E – MMM d, E"
+                  "d": "E፡ MMM d – E፡ MMM d",
+                  "M": "E፡ MMM d – E፡ MMM d"
                 },
                 "y": {
                   "y": "y–y"
@@ -418,9 +418,9 @@
                   "y": "y-MM-dd – y-MM-dd"
                 },
                 "yMEd": {
-                  "d": "y-MM-dd, E – y-MM-dd, E",
-                  "M": "y-MM-dd, E – y-MM-dd, E",
-                  "y": "y-MM-dd, E – y-MM-dd, E"
+                  "d": "E፡ y-MM-dd – E፡ y-MM-dd",
+                  "M": "E፡ y-MM-dd – E፡ y-MM-dd",
+                  "y": "E፡ y-MM-dd – E፡ y-MM-dd"
                 },
                 "yMMM": {
                   "M": "y MMM–MMM",
@@ -432,9 +432,9 @@
                   "y": "y MMM d – y MMM d"
                 },
                 "yMMMEd": {
-                  "d": "y MMM d, E – MMM d, E",
-                  "M": "y MMM d, E – MMM d, E",
-                  "y": "y MMM d, E – y MMM d, E"
+                  "d": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G",
+                  "M": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G",
+                  "y": "E፡ dd MMM መዓልቲ y G – E፡ dd MMM መዓልቲ y G"
                 },
                 "yMMMM": {
                   "M": "y MMMM–MMMM",

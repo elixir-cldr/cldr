@@ -34,6 +34,10 @@
             "displayName-count-other": "αφγάνι Αφγανιστάν",
             "symbol": "AFN"
           },
+          "ALK": {
+            "displayName-count-one": "Παλαιό λεκ Αλβανίας",
+            "displayName-count-other": "Παλαιά λεκ Αλβανίας"
+          },
           "ALL": {
             "displayName": "Λεκ Αλβανίας",
             "displayName-count-one": "λεκ Αλβανίας",
@@ -83,6 +87,8 @@
           },
           "ARL": {
             "displayName": "ARL",
+            "displayName-count-one": "Πέσο λέι Αργετινής",
+            "displayName-count-other": "Πέσο λέι Αργετινής",
             "symbol": "ARL"
           },
           "ARM": {
@@ -148,6 +154,8 @@
           },
           "BAN": {
             "displayName": "BAN",
+            "displayName-count-one": "Νέο δινάριο Βοσνίας-Ερζεγοβίνης",
+            "displayName-count-other": "Νέα δινάρια Βοσνίας-Ερζεγοβίνης",
             "symbol": "BAN"
           },
           "BBD": {
@@ -190,6 +198,8 @@
           },
           "BGM": {
             "displayName": "BGM",
+            "displayName-count-one": "Σοσιαλιστικό λεβ Βουλγαρίας",
+            "displayName-count-other": "Σοσιαλιστικά λεβ Βουλγαρίας",
             "symbol": "BGM"
           },
           "BGN": {
@@ -200,6 +210,8 @@
           },
           "BGO": {
             "displayName": "BGO",
+            "displayName-count-one": "Παλαιό λεβ Βουλγαρίας",
+            "displayName-count-other": "Παλαιά λεβ Βουλγαρίας",
             "symbol": "BGO"
           },
           "BHD": {
@@ -237,6 +249,8 @@
           },
           "BOL": {
             "displayName": "BOL",
+            "displayName-count-one": "Παλαιό βολιβιάνο Βολιβίας",
+            "displayName-count-other": "Παλαιά βολιβιάνο Βολιβίας",
             "symbol": "BOL"
           },
           "BOP": {
@@ -290,6 +304,8 @@
           },
           "BRZ": {
             "displayName": "BRZ",
+            "displayName-count-one": "Παλαιό κρουζέιρο Βραζιλίας",
+            "displayName-count-other": "Παλαιά κρουζέιρο Βραζιλίας",
             "symbol": "BRZ"
           },
           "BSD": {
@@ -370,7 +386,9 @@
             "symbol": "CHW"
           },
           "CLE": {
-            "displayName": "CLE",
+            "displayName": "Εσκούδο Χιλής",
+            "displayName-count-one": "Εσκούδο Χιλής",
+            "displayName-count-other": "Εσκούδο Χιλής",
             "symbol": "CLE"
           },
           "CLF": {
@@ -385,6 +403,10 @@
             "displayName-count-other": "πέσο Χιλής",
             "symbol": "CLP",
             "symbol-alt-narrow": "$"
+          },
+          "CNX": {
+            "displayName-count-one": "Δολάριο Λαϊκής Τράπεζας Κίνας",
+            "displayName-count-other": "Δολάρια Λαϊκής Τράπεζας Κίνας"
           },
           "CNY": {
             "displayName": "Γουάν Κίνας",
@@ -848,6 +870,8 @@
           },
           "KRO": {
             "displayName": "KRO",
+            "displayName-count-one": "Παλιό γον Νότιας Κορέας",
+            "displayName-count-other": "Παλιά γον Νότιας Κορέας",
             "symbol": "KRO"
           },
           "KRW": {
@@ -971,10 +995,14 @@
           },
           "MCF": {
             "displayName": "MCF",
+            "displayName-count-one": "Φράγκο Μονακό",
+            "displayName-count-other": "Φράγκα Μονακό",
             "symbol": "MCF"
           },
           "MDC": {
             "displayName": "MDC",
+            "displayName-count-one": "Κούπον Μολδαβίας",
+            "displayName-count-other": "Κούπον Μολδαβίας",
             "symbol": "MDC"
           },
           "MDL": {
@@ -1004,6 +1032,8 @@
           },
           "MKN": {
             "displayName": "MKN",
+            "displayName-count-one": "Παλιό δηνάριο ΠΓΔΜ",
+            "displayName-count-other": "Παλιά δηνάρια ΠΓΔΜ",
             "symbol": "MKN"
           },
           "MLF": {
@@ -1599,6 +1629,8 @@
           },
           "VNN": {
             "displayName": "VNN",
+            "displayName-count-one": "Παλαιό ντονγκ Βιετνάμ",
+            "displayName-count-other": "Παλαιά ντονγκ Βιετνάμ",
             "symbol": "VNN"
           },
           "VUV": {
@@ -1704,6 +1736,8 @@
           },
           "XRE": {
             "displayName": "XRE",
+            "displayName-count-one": "Ταμείο RINET",
+            "displayName-count-other": "Ταμείο RINET",
             "symbol": "XRE"
           },
           "XSU": {
@@ -1756,6 +1790,8 @@
           },
           "YUR": {
             "displayName": "YUR",
+            "displayName-count-one": "Αναμορφωμένο δηνάριο Γιουγκοσλαβίας",
+            "displayName-count-other": "Αναμορφωμένα δηνάρια Γιουγκοσλαβίας",
             "symbol": "YUR"
           },
           "ZAL": {
@@ -1810,6 +1846,8 @@
           },
           "ZWR": {
             "displayName": "ZWR",
+            "displayName-count-one": "Δολάριο Ζιμπάμπουε (2008)",
+            "displayName-count-other": "Δολάρια Ζιμπάμπουε (2008)",
             "symbol": "ZWR"
           }
         }

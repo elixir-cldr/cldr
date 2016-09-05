@@ -14,20 +14,20 @@
             "months": {
               "format": {
                 "abbreviated": {
-                  "1": "Tishri",
-                  "2": "Heshvan",
-                  "3": "Kislev",
-                  "4": "Tevet",
-                  "5": "Shevat",
-                  "6": "Adar I",
-                  "7": "Adar",
-                  "7-yeartype-leap": "Adar II",
-                  "8": "Nisan",
-                  "9": "Iyar",
-                  "10": "Sivan",
-                  "11": "Tamuz",
-                  "12": "Av",
-                  "13": "Elul"
+                  "1": "dzove",
+                  "2": "dzodze",
+                  "3": "tedoxe",
+                  "4": "afɔfiẽ",
+                  "5": "damɛ",
+                  "6": "masa",
+                  "7": "siamlɔm",
+                  "7-yeartype-leap": "siamlɔm",
+                  "8": "deasiamime",
+                  "9": "anyɔnyɔ",
+                  "10": "kele",
+                  "11": "adeɛmekpɔxe",
+                  "12": "dzome",
+                  "13": "ƒoave"
                 },
                 "narrow": {
                   "1": "1",
@@ -46,38 +46,38 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Tishri",
-                  "2": "Heshvan",
-                  "3": "Kislev",
-                  "4": "Tevet",
-                  "5": "Shevat",
-                  "6": "Adar I",
-                  "7": "Adar",
-                  "7-yeartype-leap": "Adar II",
-                  "8": "Nisan",
-                  "9": "Iyar",
-                  "10": "Sivan",
-                  "11": "Tamuz",
-                  "12": "Av",
-                  "13": "Elul"
+                  "1": "dzove",
+                  "2": "dzodze",
+                  "3": "tedoxe",
+                  "4": "afɔfiẽ",
+                  "5": "damɛ",
+                  "6": "masa",
+                  "7": "siamlɔm",
+                  "7-yeartype-leap": "siamlɔm",
+                  "8": "deasiamime",
+                  "9": "anyɔnyɔ",
+                  "10": "kele",
+                  "11": "adeɛmekpɔxe",
+                  "12": "dzome",
+                  "13": "ƒoave"
                 }
               },
               "stand-alone": {
                 "abbreviated": {
-                  "1": "Tishri",
-                  "2": "Heshvan",
-                  "3": "Kislev",
-                  "4": "Tevet",
-                  "5": "Shevat",
-                  "6": "Adar I",
-                  "7": "Adar",
-                  "7-yeartype-leap": "Adar II",
-                  "8": "Nisan",
-                  "9": "Iyar",
-                  "10": "Sivan",
-                  "11": "Tamuz",
-                  "12": "Av",
-                  "13": "Elul"
+                  "1": "dzv",
+                  "2": "dzd",
+                  "3": "ted",
+                  "4": "afɔ",
+                  "5": "dam",
+                  "6": "mas",
+                  "7": "sia",
+                  "7-yeartype-leap": "sia",
+                  "8": "dea",
+                  "9": "any",
+                  "10": "kel",
+                  "11": "ade",
+                  "12": "dzm",
+                  "13": "foa"
                 },
                 "narrow": {
                   "1": "1",
@@ -96,20 +96,20 @@
                   "13": "13"
                 },
                 "wide": {
-                  "1": "Tishri",
-                  "2": "Heshvan",
-                  "3": "Kislev",
-                  "4": "Tevet",
-                  "5": "Shevat",
-                  "6": "Adar I",
-                  "7": "Adar",
-                  "7-yeartype-leap": "Adar II",
-                  "8": "Nisan",
-                  "9": "Iyar",
-                  "10": "Sivan",
-                  "11": "Tamuz",
-                  "12": "Av",
-                  "13": "Elul"
+                  "1": "dzove",
+                  "2": "dzodze",
+                  "3": "tedoxe",
+                  "4": "afɔfiẽ",
+                  "5": "damɛ",
+                  "6": "masa",
+                  "7": "siamlɔm",
+                  "7-yeartype-leap": "siamlɔm",
+                  "8": "dasiamime",
+                  "9": "anyɔnyɔ",
+                  "10": "kele",
+                  "11": "adeɛmekpɔxe",
+                  "12": "dzome",
+                  "13": "ƒoave"
                 }
               }
             },
@@ -301,13 +301,13 @@
             },
             "eras": {
               "eraNames": {
-                "0": "AM"
+                "0": "ŋdi"
               },
               "eraAbbr": {
-                "0": "AM"
+                "0": "ŋdi"
               },
               "eraNarrow": {
-                "0": "AM"
+                "0": "ŋdi"
               }
             },
             "dateFormats": {

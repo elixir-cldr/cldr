@@ -444,6 +444,8 @@
           },
           "EEK": {
             "displayName": "Eistnesk króna",
+            "displayName-count-one": "eistnesk króna",
+            "displayName-count-other": "eistnesku krónur",
             "symbol": "EEK"
           },
           "EGP": {
@@ -993,7 +995,9 @@
             "symbol-alt-narrow": "₦"
           },
           "NIC": {
-            "displayName": "NIC",
+            "displayName": "Níkarögsk kordóva (1988–1991)",
+            "displayName-count-one": "Níkarögsk kordóva (1988–1991)",
+            "displayName-count-other": "Níkaragskar kordóvur (1988–1991)",
             "symbol": "NIC"
           },
           "NIO": {
@@ -1441,11 +1445,15 @@
             "symbol": "FCFA"
           },
           "XAG": {
-            "displayName": "XAG",
+            "displayName": "unse silfur",
+            "displayName-count-one": "unse silfur",
+            "displayName-count-other": "unse silfur",
             "symbol": "XAG"
           },
           "XAU": {
-            "displayName": "XAU",
+            "displayName": "unse gull",
+            "displayName-count-one": "unse gull",
+            "displayName-count-other": "unse gull",
             "symbol": "XAU"
           },
           "XBA": {
@@ -1494,7 +1502,9 @@
             "symbol": "CFA"
           },
           "XPD": {
-            "displayName": "XPD",
+            "displayName": "unse palladín",
+            "displayName-count-one": "unse palladín",
+            "displayName-count-other": "unse palladín",
             "symbol": "XPD"
           },
           "XPF": {
@@ -1504,7 +1514,9 @@
             "symbol": "CFPF"
           },
           "XPT": {
-            "displayName": "XPT",
+            "displayName": "unse platína",
+            "displayName-count-one": "unse platína",
+            "displayName-count-other": "unse platína",
             "symbol": "XPT"
           },
           "XRE": {

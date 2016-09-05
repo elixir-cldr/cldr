@@ -1575,15 +1575,15 @@
             "unitPattern-count-other": "{0} bits"
           },
           "duration-century": {
-            "displayName": "segles",
-            "unitPattern-count-one": "{0} segles",
-            "unitPattern-count-other": "{0} segles"
+            "displayName": "s.",
+            "unitPattern-count-one": "{0} s.",
+            "unitPattern-count-other": "{0} s."
           },
           "duration-year": {
             "displayName": "anys",
             "unitPattern-count-one": "{0} any",
             "unitPattern-count-other": "{0} anys",
-            "perUnitPattern": "{0}/a"
+            "perUnitPattern": "{0}/any"
           },
           "duration-month": {
             "displayName": "mes",

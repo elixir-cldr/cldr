@@ -1381,6 +1381,13 @@
                 "exemplarCity": "Unknown"
               }
             }
+          },
+          "metazone": {
+            "Afghanistan": {
+              "long": {
+                "standard": "افغانستان وقتی"
+              }
+            }
           }
         }
       }
