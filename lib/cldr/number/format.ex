@@ -263,6 +263,20 @@ defmodule Cldr.Number.Format do
     |> MapSet.to_list
   end
 
+  @doc """
+  Returns the decimal format styles that are supported by
+  `Cldr.Number.Formatter.Decimal`.
+
+  ## Example
+
+
+  """
+  def decimal_format_styles_for(locale, number_system \\ :default) do
+    format_styles_for(locale, number_system)
+      -- short_format_styles_for(locale, number_system)
+      -- [:currency_long]
+  end
+
 
   @doc """
   Returns the number system types available for a `locale`

@@ -77,13 +77,13 @@ defmodule Cldr.Number.PluralRule do
       # Plural Operand Meanings as defined in CLDR plural rules and used
       # in the generated code
       #
-      #   Symbol  Value
-      #   n       absolute value of the source number (integer and decimals).
-      #   i       integer digits of n.
-      #   v       number of visible fraction digits in n, with trailing zeros.
-      #   w       number of visible fraction digits in n, without trailing zeros.
-      #   f       visible fractional digits in n, with trailing zeros.
-      #   t       visible fractional digits in n, without trailing zeros.
+      # Symbol  Value
+      # n       absolute value of the source number (integer and decimals).
+      # i       integer digits of n.
+      # v       number of visible fraction digits in n, with trailing zeros.
+      # w       number of visible fraction digits in n, without trailing zeros.
+      # f       visible fractional digits in n, with trailing zeros.
+      # t       visible fractional digits in n, without trailing zeros.
 
       @doc """
       Lookup the plural cardinal category for a given number in a given locale
@@ -98,6 +98,7 @@ defmodule Cldr.Number.PluralRule do
         plural_rule(Decimal.new(string), locale, rounding)
       end
 
+      # Plural rule for an integer
       def plural_rule(number, locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
@@ -105,6 +106,7 @@ defmodule Cldr.Number.PluralRule do
         do_plural_rule(locale, n, i, v, w, f, t)
       end
 
+      # Plural rule for a float
       @lint {Credo.Check.Refactor.PipeChainStart, false}
       def plural_rule(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
         plural_rule(Decimal.new(number), locale, rounding)
@@ -117,9 +119,7 @@ defmodule Cldr.Number.PluralRule do
         # do_plural_rule(locale, n, i, v, w, f, t)
       end
 
-      # For the case where its a Decimal we guard against a map (which is the
-      # underlying representation of a Decimal).  Don't use rounding because
-      # the precision is specified for Decimals.
+      # Plural rule for a %Decimal{}
       def plural_rule(%Decimal{} = number, locale, rounding) when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
