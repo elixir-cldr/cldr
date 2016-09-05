@@ -691,25 +691,29 @@ defmodule Cldr.Number do
     end
 
     options = if options[:format] == :short && options[:currency] do
-      options = Keyword.delete(options, :format) |> Keyword.put(:format, :currency_short)
+      options = Keyword.delete(options, :format)
+      |> Keyword.put(:format, :currency_short)
     else
       options
     end
 
     options = if options[:format] == :long && options[:currency] do
-      options = Keyword.delete(options, :format) |> Keyword.put(:format, :currency_long)
+      options = Keyword.delete(options, :format)
+      |> Keyword.put(:format, :currency_long)
     else
       options
     end
 
     options = if options[:format] == :short && !options[:currency] do
-      options = Keyword.delete(options, :format) |> Keyword.put(:format, :decimal_short)
+      options = Keyword.delete(options, :format)
+      |> Keyword.put(:format, :decimal_short)
     else
       options
     end
 
     options = if options[:format] == :long && !options[:currency] do
-      options = Keyword.delete(options, :format) |> Keyword.put(:format, :decimal_long)
+      options = Keyword.delete(options, :format)
+      |> Keyword.put(:format, :decimal_long)
     else
       options
     end
