@@ -75,6 +75,10 @@ defmodule Cldr.Test.Number.Format do
       {123.4, "1.234E2",         [format: "#E0"]},
       {1234, "1.234E3",          [format: "#E0"]},
 
+      # Scientific with exponent sign
+      {1234, "1.234E+3",          [format: "#E+0"]},
+      {0.000012456, "1.2456E-5",  [format: "#E+0"]},
+
       # Maximum digits
       {1234, "34",               [format: "00"]},
       {1, "01.00",               [format: "00.00"]},

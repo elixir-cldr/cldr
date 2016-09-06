@@ -99,7 +99,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> adjust_trailing_zeros(:fraction, meta[:fractional_digits])
     |> set_max_integer_digits(meta[:integer_digits].max)
     |> apply_grouping(meta[:grouping], options[:locale])
-    |> reassemble_number_string
+    |> reassemble_number_string(meta)
     |> transliterate(options[:locale], options[:number_system])
     |> assemble_format(number, meta, options)
   end
@@ -388,19 +388,31 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   @decimal_separator  Compiler.placeholder(:decimal)
   @exponent_separator Compiler.placeholder(:exponent)
-  defp reassemble_number_string(%{} = number) do
+  @exponent_sign      Compiler.placeholder(:exponent_sign)
+  defp reassemble_number_string(%{} = number, meta) do
     number["integer"]
-    |> append(number["fraction"], @decimal_separator)
-    |> append(number["exponent"], @exponent_separator)
+    |> append(number["fraction"], @decimal_separator, meta)
+    |> append(number["exponent"], @exponent_separator, meta.exponent_sign)
   end
 
   # Conditionally add a separator and number component to the output string
   # if it exists
-  defp append(string, @empty_string, _separator) do
+  defp append(string, @empty_string, _separator, _meta) do
     string
   end
 
-  defp append(string, part, separator) do
+  # When the exponent is negative then there is no special formatting.  If
+  # however the exponent is positive, then we insert a '+' if there is
+  # an exponent sign requested.
+  defp append(string, part, @exponent_separator = separator, true) do
+    if String.starts_with?(part, "-") do
+      string <> separator <> part
+    else
+      string <> separator <> @exponent_sign <> part
+    end
+  end
+
+  defp append(string, part, separator, _meta) do
     string <> separator <> part
   end
 

@@ -143,15 +143,16 @@ defmodule Cldr.Number.Format.Compiler do
       iex> Cldr.Number.Format.Compiler.placeholder(:plus)
       "+"
   """
-  @spec placeholder(:decimal | :group | :exponent | :plus | :minus | :currency)
-    :: String.t
+  @spec placeholder(:decimal | :group | :exponent | :exponent_sign |
+                    :plus | :minus | :currency) :: String.t
 
-  def placeholder(:decimal),  do: @decimal_separator
-  def placeholder(:group),    do: @grouping_separator
-  def placeholder(:exponent), do: @exponent_separator
-  def placeholder(:plus),     do: @plus_placeholder
-  def placeholder(:minus),    do: @minus_placeholder
-  def placeholder(:currency), do: @currency_placeholder
+  def placeholder(:decimal),        do: @decimal_separator
+  def placeholder(:group),          do: @grouping_separator
+  def placeholder(:exponent),       do: @exponent_separator
+  def placeholder(:plus),           do: @plus_placeholder
+  def placeholder(:minus),          do: @minus_placeholder
+  def placeholder(:currency),       do: @currency_placeholder
+  def placeholder(:exponent_sign),  do: @plus_placeholder
 
   @doc """
   Scan a number format definition
