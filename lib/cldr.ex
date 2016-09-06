@@ -16,7 +16,7 @@ defmodule Cldr do
   alias Cldr.Config
 
   if Enum.any?(Config.unknown_locales()) do
-    raise Cldr.UnknownLocale,
+    raise Cldr.UnknownLocaleError,
       "Some locales are configured that are not known to CLDR. " <>
       "Compilation cannot continue until the configuration includes only " <>
       "locales known in CLDR.\n\n" <>

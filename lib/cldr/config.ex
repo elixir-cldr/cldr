@@ -142,7 +142,7 @@ defmodule Cldr.Config do
   def gettext_locales do
     if gettext_configured?() do
       Gettext
-      |> apply(:known_locales)
+      |> apply(:known_locales, [gettext()])
       |> Enum.map(&String.replace(&1,"_","-"))
     else
       []
