@@ -1,18 +1,21 @@
 # Source Data from CLDR
 
-What is the source data
-where does it come from
-how is it processed
-how do you upgrade
+Data is from the ICU's CLDR project when is downloaded in XML format.  For ease of consumption it is then converted to `json` format and stored in the `/data` directory of the `ex_cldr` project which is typically in your project `/deps` directory.
 
-## Source Data
+## Downloading updates to CLDR
 
-Data is from the ICU's CLDR project when is downloaded in XML format.  For ease of consumption it is then converted to `json` format with the following commands:
+A `Mix` task, `cldr.download` is available for downloading the latest CLDR repository.  This task performs the following:
 
-```bash
-java -DCLDR_DIR=. -jar tools/java/cldr.jar ldml2json -t main -p true -r true
-java -DCLDR_DIR=. -jar tools/java/cldr.jar ldml2json -t supplemental -p true -r true
-```
-## Compilation
+* Download the CLDR latest repository into the `/downloads` directory of `/deps/cldr`
 
-A lot of functions are generated during the compilation phase.  If all 511 locales are configured (an unlikely production use case) then compilation can take several minutes.  This is most typically when running `cldr` tests.
+* Adds `/downloads` to `.gitignore`
+
+* `unzip`s the downloaded files
+
+* Uses the downloaded java app `ldml2json` app to translate the xml files to json in the `/deps/cldr/data` directory
+
+* Removes redundant `package.json` and `bower.json` files from the `/deps/cldr/data` directory
+
+## Note
+
+This `Mix` tasks is intended primarily for the use of the `Cldr` maintainer and not intended for general use.

@@ -1,10 +1,10 @@
 defmodule Mix.Tasks.Cldr.Download do
   @moduledoc """
   Downloads the latest version of the CLDR repository and then
-  unzips the resulting files.  The data is stored in the `./data/downloads`
-  directory of the `Cldr` package.
+  unzips the resulting files.  The data is stored in the `./downloads`
+  directory of the `ex_cldr` package.
 
-  The `./data/downloads` directory is created if it does not exist.  It is
+  The `./downloads` directory is created if it does not exist.  It is
   also added to the project's `.gitignore` file.
   """
 
@@ -18,6 +18,10 @@ defmodule Mix.Tasks.Cldr.Download do
   @destination_dir Path.join(Cldr.Config.app_home(), @download_dir)
   @need_utils      ["wget", "java", "find", "rm"]
 
+  @doc """
+  Runs the `cldr.download` Mix task to download and process udpates to the
+  CLDR data repository.
+  """
   def run(_) do
     check_utils(@need_utils)
     Cldr.Downloader.download(@download_url, @required_files, @destination_dir)
@@ -25,7 +29,7 @@ defmodule Mix.Tasks.Cldr.Download do
     Cldr.Downloader.remove_package_files(Cldr.Config.data_dir())
   end
 
-  def check_utils(utils) do
+  defp check_utils(utils) do
     Enum.each utils, fn util ->
       case System.cmd("which", [util]) do
         {_path, 0} ->

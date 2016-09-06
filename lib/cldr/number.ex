@@ -141,7 +141,7 @@ defmodule Cldr.Number do
       should be used to define the separators and digits for the formatted
       number. If `number_system` is an `atom` then `number_system` is
       interpreted as a number system. See
-      Cldr.Number.System.number_systems_for/1`. If the `number_system` is
+      `Cldr.Number.System.number_systems_for/1`. If the `number_system` is
       `binary` then it is interpreted as a number system name. See
       `Cldr.Number.System.number_system_names_for/1`. The default is `:default`.
 
@@ -195,25 +195,33 @@ defmodule Cldr.Number do
 
     * A format cannot be compiled. In this case the error tuple will look like:
 
+  ```
       iex> Cldr.Number.to_string(12345, format: "0#")
-      {:error, "Decimal format compiler: syntax error before: \"#\""}
+      {:error,
+       "Decimal format compiler: syntax error before: \"#\"}
+  ```
 
     * A currency was not specific for a format type of `format: :currency` or
       `format: :accounting` or any other format that specifies a currency
       symbol placeholder. In this case the error return looks like:
 
+  ```
       iex> Cldr.Number.to_string(12345, format: :accounting)
       {:error,
        "currency format \"¤#,##0.00;(¤#,##0.00)\" requires that options[:currency] be specified"}
+  ```
+
 
     * The format style requested is not defined for the `locale` and
       `number_system`. This happens typically when the number system is
       :algorithmic rather than the more common :numeric. In this case the error
       return looks like:
 
+  ```
       iex> Number.to_string(1234, locale: "he", number_system: "hebr")
       {:error,
        "The locale \"he\" with number system \"hebr\" does not define a format :standard.  This usually happens when the number system is :algorithmic rather than :numeric.  Either change options[:number_system] or define a format string like format: \"#,##0.00\""}
+  ```
 
   ## Exceptions
 

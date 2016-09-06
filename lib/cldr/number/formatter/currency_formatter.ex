@@ -1,6 +1,6 @@
 defmodule Cldr.Number.Formatter.Currency do
   @moduledoc """
-  Format a number in a :long format for a :currency.
+  Format a number in a `:long` format for a :currency.
 
   This formatter implements formatting a currency in a long form. This
   is not the same as decimal formatting with a currency placeholder.

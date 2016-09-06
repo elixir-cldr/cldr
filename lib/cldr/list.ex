@@ -120,6 +120,8 @@ defmodule Cldr.List do
     |> String.replace("{1}", do_to_string(rest, locale, pattern_type))
   end
 
+  @spec list_patterns_for(Cldr.locale) :: Map.t
+  @spec list_pattern_styles_for(Cldr.locale) :: [atom]
   Enum.each Cldr.known_locales, fn (locale) ->
     patterns = File.read(:list_patterns, locale)
     pattern_names = Map.keys(patterns)
@@ -142,7 +144,6 @@ defmodule Cldr.List do
           unit_short: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
             "start" => "{0}, {1}"}}
     """
-    @spec list_patterns_for(Cldr.locale) :: Map.t
     def list_patterns_for(unquote(locale)) do
       unquote(Macro.escape(patterns))
     end
@@ -158,7 +159,6 @@ defmodule Cldr.List do
         iex> Cldr.List.list_pattern_styles_for("en")
         [:standard, :unit, :unit_narrow, :unit_short]
     """
-    @spec list_pattern_styles_for(Cldr.locale) :: [atom]
     def list_pattern_styles_for(unquote(locale)) do
       unquote(pattern_names)
     end
