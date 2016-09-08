@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Cldr.Download do
 
   use Mix.Task
 
-  @shortdoc "Download the latest CLDR data and convert to json"
+  @shortdoc "Download the latest CLDR data from Unicode and convert to json"
 
   @download_url    "http://unicode.org/Public/cldr/latest"
   @required_files  ["core.zip", "tools.zip", "keyboards.zip"]

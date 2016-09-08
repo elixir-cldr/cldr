@@ -9,3 +9,5 @@ erl_crash.dump
 *.tar
 .DS_Store
 /downloads
+/priv/locales
+/data/consolidated
