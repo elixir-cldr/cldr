@@ -47,34 +47,14 @@ defmodule Cldr.Config do
   The `Cldr` test configuration does configure all locales in order
   to ensure good test coverage.  This is done at the expense
   of significant compile time.
-
-  CLDR includes two sets of data:  the `full` and the `modern`.  By default
-  `Cldr` uses the `full` set.  To use the `modern` set, configure the
-  `:dataset` configuration key.  For example:
-
-      config :ex_cldr,
-        locales: ["en", "fr"]
-        dataset: :modern
   """
 
   alias Cldr.Locale
 
   @type t :: binary
 
-  @default_locale "en"
-
-
-  @doc """
-  Return which set of CLDR repository data we are using:
-  the full set or the modern set.
-
-  If the configuration key `:dataset` is set then use
-  that value, otherwise defaults to `full`.
-  """
-  @full_or_modern "full"
-  def full_or_modern do
-    Application.get_env(:ex_cldr, :dataset) || @full_or_modern
-  end
+  @default_locale   "en"
+  @default_data_dir "./priv/cldr"
 
   @doc """
   Return the root path of the cldr application
@@ -87,7 +67,9 @@ defmodule Cldr.Config do
   @doc """
   Return the path name of the CLDR data directory.
   """
-  @data_dir Path.join(__DIR__, "/../../data") |> Path.expand
+  @data_dir (Application.get_env(:cldr, :data_dir) || @default_data_dir)
+  |> Path.expand
+
   def data_dir do
     @data_dir
   end
@@ -95,7 +77,7 @@ defmodule Cldr.Config do
   @doc """
   Return the path name of the CLDR supplemental data directory.
   """
-  @supplemental_dir Path.join(@data_dir, "/cldr-core/supplemental")
+  @supplemental_dir Path.join(@data_dir, "/supplemental")
   def supplemental_dir do
     @supplemental_dir
   end
@@ -158,11 +140,13 @@ defmodule Cldr.Config do
   Any configured locales that are not present in this list will be
   ignored.
   """
-  @locales_path Path.join(@data_dir, "cldr-core/availableLocales.json")
-  {:ok, locales} = @locales_path
+  @locales_path Path.join(@data_dir, "availableLocales.json")
+  locales = @locales_path
   |> File.read!
-  |> Poison.decode
-  @all_locales locales["availableLocales"][@full_or_modern] |> Enum.sort
+  |> Poison.decode!
+  |> Cldr.Map.underscore_keys
+  |> Cldr.Map.atomize_keys
+  @all_locales locales.available_locales.full |> Enum.sort
   @spec all_locales :: [Locale.t]
   def all_locales do
     @all_locales
@@ -235,14 +219,6 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the path name of the CLDR number directory
-  """
-  @numbers_locale_dir Path.join(@data_dir, "cldr-numbers-#{@full_or_modern}/main")
-  def numbers_locale_dir do
-    @numbers_locale_dir
-  end
-
-  @doc """
   Returns true if a `Gettext` module is configured in Cldr and
   the `Gettext` module is available.
 
@@ -299,7 +275,7 @@ defmodule Cldr.Config do
   @doc false
   def normalize_short_format(format) do
     format
-    |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range,"-")) end)
+    |> Enum.group_by(fn {range, _rules} -> List.first(String.split(Atom.to_string(range),"_")) end)
     |> Enum.map(fn {range, rules} -> {String.to_integer(range), rules} end)
     |> Enum.map(&flatten_short_formats/1)
     |> Enum.sort
@@ -310,7 +286,8 @@ defmodule Cldr.Config do
   def flatten_short_formats({range, rules}) when is_list(rules) do
     formats = Enum.map rules, fn {name, format} ->
       plural_type = name
-      |> String.split("-")
+      |> Atom.to_string
+      |> String.split("_")
       |> Enum.reverse
       |> List.first
       |> String.to_atom
@@ -333,10 +310,28 @@ defmodule Cldr.Config do
   def currency_long_format(nil), do: nil
   def currency_long_format(formats) do
     formats
+    |> Cldr.Map.stringify_keys
     |> Enum.filter(fn {k, _v} -> Regex.match?(@pattern_regex, k) end)
     |> Enum.map(fn {k, v} ->
          @pattern_count <> count = k
          {String.to_existing_atom(count), v}
        end)
+  end
+
+  def locale_path(locale) do
+    Path.join(data_dir(), ["locales/", "#{locale}.json"])
+  end
+
+  def read_cldr_data(file) do
+    file
+    |> File.read!
+    |> Poison.decode!
+    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.atomize_keys
+  end
+
+  def get_locale(locale) do
+    locale_path(locale)
+    |> read_cldr_data
   end
 end

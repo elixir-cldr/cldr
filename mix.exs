@@ -15,7 +15,8 @@ defmodule Cldr.Mixfile do
      deps: deps(),
      description: description(),
      package: package(),
-     test_coverage: [tool: ExCoveralls]
+     test_coverage: [tool: ExCoveralls],
+     aliases: aliases()
    ]
   end
 
@@ -57,6 +58,12 @@ defmodule Cldr.Mixfile do
       main: "1_getting_started",
       extra_section: "GUIDES",
       extras: extra_docs()
+    ]
+  end
+
+  def aliases do
+    [
+      "cldr.update": ["cldr.download", "cldr.consolidate", "cldr.install"]
     ]
   end
 

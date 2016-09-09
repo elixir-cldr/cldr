@@ -8,6 +8,17 @@ erl_crash.dump
 *.ez
 *.tar
 .DS_Store
-/downloads
-/priv/cldr/locales
+
+# The directory where the consolidated locale
+# json files are stored during development
 /data/consolidated
+
+# The locales installed in the package
+# which are used only for testing
+/priv/cldr/locales
+
+# The xml downloaded from Unicode
+/downloads
+
+# Ignore the generated json files
+/data

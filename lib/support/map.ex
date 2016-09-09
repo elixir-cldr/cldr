@@ -11,6 +11,7 @@ defmodule Cldr.Map do
   def underscore_keys(map = %{}) do
     map
     |> Enum.map(fn {k, v} -> {Macro.underscore(k), underscore_keys(v)} end)
+    |> Enum.map(fn {k, v} -> {String.replace(k, "-", "_"), v} end)
     |> Enum.into(%{})
   end
 
@@ -30,6 +31,21 @@ defmodule Cldr.Map do
   end
 
   def atomize_keys(not_a_map) do
+    not_a_map
+  end
+
+  @doc """
+  Convert map atom keys to strings
+  """
+  def stringify_keys(nil), do: nil
+
+  def stringify_keys(map = %{}) do
+    map
+    |> Enum.map(fn {k, v} -> {Atom.to_string(k), stringify_keys(v)} end)
+    |> Enum.into(%{})
+  end
+
+  def stringify_keys(not_a_map) do
     not_a_map
   end
 

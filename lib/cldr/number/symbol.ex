@@ -16,7 +16,7 @@ defmodule Cldr.Number.Symbol do
   Enum.each Cldr.known_locales, fn (locale) ->
     numbers = File.read(:numbers, locale)
     number_system_names = Number.System.number_system_names_for(locale)
-    minimum_grouping_digits = String.to_integer(numbers["minimumGroupingDigits"])
+    minimum_grouping_digits = String.to_integer(numbers[:minimum_grouping_digits])
 
     @doc """
     Returns the minimum number of grouping digits for a locale.

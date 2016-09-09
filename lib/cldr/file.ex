@@ -14,42 +14,39 @@ defmodule Cldr.File do
 
   alias Cldr.{Config, Number, Locale, Currency}
 
-  @supplemental_path "/cldr-core/supplemental"
-  @currencies        [@supplemental_path, "/currencyData.json"]
-  @number_systems    [@supplemental_path, "/numberingSystems.json"]
+  @supplemental_path  "/supplemental"
+  @currencies         [@supplemental_path, "/currencyData.json"]
+  @number_systems     [@supplemental_path, "/numberingSystems.json"]
 
-  @currencies_file Path.join(Cldr.data_dir(), @currencies)
+  @currencies_file     Path.join(Cldr.data_dir(), @currencies)
   @number_systems_file Path.join(Cldr.data_dir(), @number_systems)
 
-  {:ok, data} = @currencies_file
-  |> File.read!
-  |> Poison.decode
+  @currency_data  Cldr.Config.read_cldr_data(@currencies_file)
+  |> get_in([:supplemental, :currency_data, :fractions])
 
-  @currency_data data["supplemental"]["currencyData"]["fractions"]
   def read(:currency_data) do
     @currency_data
   end
 
-  @currencies_path Path.join(Cldr.numbers_locale_dir(),
-    [Cldr.get_locale(), "/currencies.json"])
-
   def read(:currency_codes) do
-    currencies = read_cldr_data(@currencies_path)
-    currencies["main"][Cldr.get_locale()]["numbers"]["currencies"]
-    |> Enum.map(fn {code, _currency} -> code end)
+    Cldr.get_locale()
+    |> Cldr.Config.get_locale
+    |> get_in([:main, String.to_atom(Cldr.get_locale()), :numbers, :currencies])
+    |> Map.keys
   end
 
   def read(:number_systems) do
-    systems = read_cldr_data(@number_systems_file)["supplemental"]["numberingSystems"]
-    systems_list = Enum.map(systems, fn {system, meta} ->
+    Cldr.Config.read_cldr_data(@number_systems_file)
+    |> get_in([:supplemental, :numbering_systems])
+    |> Enum.map(fn {system, meta} ->
       {system, %Number.System{
         name:       system,
-        type:       String.to_atom(meta["_type"]),
-        digits:     meta["_digits"],
-        rules:      split_rules(meta["_rules"])
+        type:       meta[:"_type"],
+        digits:     meta[:"_digits"],
+        rules:      split_rules(meta[:"_rules"])
       }}
     end)
-    systems_list |> Enum.into(%{})
+    |> Enum.into(%{})
   end
 
   @lint {~r/Refactor/, false}
@@ -64,27 +61,31 @@ defmodule Cldr.File do
 
       number_formats = Enum.reduce number_systems, %{}, fn (number_system, formats) ->
         numbers = read(:numbers, locale)
-        decimal_formats    = numbers["decimalFormats-numberSystem-#{number_system}"]
-        currency_formats   = numbers["currencyFormats-numberSystem-#{number_system}"]
-        scientific_formats = numbers["scientificFormats-numberSystem-#{number_system}"]
-        percent_formats    = numbers["percentFormats-numberSystem-#{number_system}"]
+        decimal_formats    = numbers[String.to_atom("decimal_formats_number_system_#{number_system}")]
+        currency_formats   = numbers[String.to_atom("currency_formats_number_system_#{number_system}")]
+        scientific_formats = numbers[String.to_atom("scientific_formats_number_system_#{number_system}")]
+        percent_formats    = numbers[String.to_atom("percent_formats_number_system_#{number_system}")]
 
-        decimal_long_format   = decimal_formats["long"]["decimalFormat"]
-        decimal_short_format  = decimal_formats["short"]["decimalFormat"]
-        currency_short_format = currency_formats["short"]["standard"]
+        if number_system == :hebr do
+          IO.puts inspect(Map.keys(numbers))
+        end
+
+        decimal_long_format   = decimal_formats.long.decimal_format
+        decimal_short_format  = decimal_formats.short.decimal_format
+        currency_short_format = currency_formats.short.standard
 
         locale_formats = %Number.Format{
-          standard:       decimal_formats["standard"],
+          standard:       decimal_formats.standard,
           decimal_long:   normalize_short_format(decimal_long_format),
           decimal_short:  normalize_short_format(decimal_short_format),
-          currency:       currency_formats["standard"],
+          currency:       currency_formats.standard,
           currency_short: normalize_short_format(currency_short_format),
           currency_long:  currency_long_format(currency_formats),
-          accounting:     currency_formats["accounting"],
-          scientific:     scientific_formats["standard"],
-          percent:        percent_formats["standard"]
+          accounting:     currency_formats.accounting,
+          scientific:     scientific_formats.standard,
+          percent:        percent_formats.standard
         }
-        Map.merge formats, %{String.to_atom(number_system) => locale_formats}
+        Map.merge formats, %{number_system => locale_formats}
       end
       {locale, number_formats}
     end
@@ -109,14 +110,25 @@ defmodule Cldr.File do
   end
 
   @doc """
+  Returns a list of the locales in the CLDR repository.
+  """
+  @locales_path Path.join(Cldr.data_dir(), "cldr-core/availableLocales.json")
+  @spec read(:locales, binary) :: Map.t
+  def read(:locales) do
+    locales = Cldr.Config.read_cldr_data(@locales_path)
+    locales.available_locales.full
+  end
+
+  @doc """
   Returns a map of the known number systems for a `locale`.
   """
   @spec read(:number_systems, Locale.t) :: Map.t
   def read(:number_systems, locale) do
     numbers = read(:numbers, locale)
-    %{"default" => numbers["defaultNumberingSystem"]}
-    |> Map.merge(numbers["otherNumberingSystems"])
-    |> Enum.map(fn {type, system} -> {String.to_atom(type), read(:number_systems)[system]} end)
+    %{default: numbers.default_numbering_system}
+    |> Map.merge(numbers.other_numbering_systems)
+    |> Enum.map(fn {type, system} ->
+        {type, read(:number_systems)[String.to_atom(system)]} end)
     |> Enum.into(%{})
   end
 
@@ -126,10 +138,9 @@ defmodule Cldr.File do
   """
   @spec read(:nummbers, Locale.t) :: %{}
   def read(:numbers, locale) do
-    path = Path.join([Config.data_dir(), "cldr-numbers-#{Config.full_or_modern()}",
-      "main", locale, "numbers.json"])
-    numbers = read_cldr_data(path)
-    numbers["main"][locale]["numbers"]
+    locale
+    |> Cldr.Config.get_locale
+    |> get_in([:main, String.to_atom(locale), :numbers])
   end
 
   @doc """
@@ -138,21 +149,21 @@ defmodule Cldr.File do
   @lint {~r/Refactor/, false}
   @spec read(:currency, Locale.t) :: Map.t
   def read(:currency, locale) do
-    path = Path.join(Cldr.numbers_locale_dir(), [locale, "/currencies.json"])
-    currencies = read_cldr_data(path)
-    currencies["main"][locale]["numbers"]["currencies"]
+    locale
+    |> Cldr.Config.get_locale
+    |> get_in([:main, String.to_atom(locale), :numbers, :currencies])
     |> Enum.map(fn {code, currency} ->
-      rounding = Map.merge(@currency_data["DEFAULT"], (@currency_data[code] || %{}))
+      rounding = Map.merge(@currency_data[:default], (@currency_data[code] || %{}))
       currency_map = %Cldr.Currency{
         code:          code,
-        name:          currency["displayName"],
-        symbol:        currency["symbol"],
-        narrow_symbol: currency["symbol-alt-narrow"],
-        tender:        String.to_atom(rounding["_tender"] || "true"),
-        digits:        String.to_integer(rounding["_digits"]),
-        rounding:      String.to_integer(rounding["_rounding"]),
-        cash_digits:   String.to_integer(rounding["_cashDigits"] || rounding["_digits"]),
-        cash_rounding: String.to_integer(rounding["_cashRounding"] || rounding["_rounding"]),
+        name:          currency[:display_name],
+        symbol:        currency[:symbol],
+        narrow_symbol: currency[:symbol_alt_narrow],
+        tender:        String.to_atom(rounding[:_tender] || "true"),
+        digits:        String.to_integer(rounding[:"_digits"]),
+        rounding:      String.to_integer(rounding[:"_rounding"]),
+        cash_digits:   String.to_integer(rounding[:"_cashDigits"] || rounding[:"_digits"]),
+        cash_rounding: String.to_integer(rounding[:"_cashRounding"] || rounding[:"_rounding"]),
         count:         read(:currency_counts, currency)
       }
       {code, currency_map}
@@ -160,29 +171,19 @@ defmodule Cldr.File do
     |> Enum.into(%{})
   end
 
-  @doc """
-  Returns a list of the locales in the CLDR repository.
-  """
-  @locales_path Path.join(Cldr.data_dir(), "cldr-core/availableLocales.json")
-  @spec read(:locales, binary) :: Map.t
-  def read(:locales, full_or_modern) do
-    locales = read_cldr_data(@locales_path)
-    locales["availableLocales"][full_or_modern]
-  end
-
   @spec read(:list_patterns, Locale.t) :: Map.t
   def read(:list_patterns, locale) do
-    path = Path.join(Cldr.data_dir(), ["cldr-misc-#{Config.full_or_modern}/main/",
-      locale, "/listPatterns.json"])
-    pattern_list = read_cldr_data(path)["main"][locale]["listPatterns"]
-    patterns = Enum.map(pattern_list, fn {"listPattern-type-" <> type, data} ->
-      type_name = type
-      |> String.replace("-", "_")
-      |> String.to_atom
+    locale
+    |> Cldr.Config.get_locale
+    |> get_in([:main, String.to_atom(locale), :list_patterns])
+    |> Cldr.Map.stringify_keys
+    |> Enum.map(fn {"list_pattern_type_" <> type, data} ->
+        type_name = type
+        |> String.to_atom
 
-      {type_name, data}
-    end)
-    patterns |> Enum.into(%{})
+        {type_name, data}
+      end)
+    |> Enum.into(%{})
   end
 
   @count_types [:zero, :one, :two, :few, :many, :other]
@@ -197,18 +198,11 @@ defmodule Cldr.File do
     end
   end
 
-  defp read_cldr_data(file) do
-    {:ok, data} = file
-    |> File.read!
-    |> Poison.decode
-    data
-  end
-
   defp split_rules(rules) when is_nil(rules), do: nil
   defp split_rules(rules) do
     rules
     |> String.split("/")
-    |> Enum.map(fn (elem) -> String.replace(elem, "_","-") end)
+    |> Enum.map(&String.replace(&1, "_","-"))
   end
 
   # A short format is a tuple with the first element being the

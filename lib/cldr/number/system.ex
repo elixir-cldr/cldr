@@ -166,7 +166,7 @@ defmodule Cldr.Number.System do
   """
   @lint {Credo.Check.Refactor.Nesting, false}
   def number_systems_like(locale, number_system) do
-    digits = number_system_for(locale, number_system).digits
+    digits = number_system_for(locale, number_system)[:digits]
     symbols = Symbol.number_symbols_for(locale, number_system)
 
     likes = Enum.map(Cldr.known_locales(), fn this_locale ->
@@ -175,6 +175,7 @@ defmodule Cldr.Number.System do
         nil ->
           acc
         system ->
+
           these_digits = system.digits
           these_symbols = Symbol.number_symbols_for(this_locale, this_system)
           if digits == these_digits && symbols == these_symbols do

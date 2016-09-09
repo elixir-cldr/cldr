@@ -24,8 +24,12 @@ defmodule Mix.Tasks.Cldr.Download do
   """
   def run(_) do
     check_utils(@need_utils)
+    IO.puts "Downloading CLDR Repository from the Unicode Consortium."
     Cldr.Downloader.download(@download_url, @required_files, @destination_dir)
+
+    IO.puts "Converting CLDR XML files to json format.  This will take a few minutes."
     Cldr.Downloader.convert_to_json(@destination_dir, Cldr.Config.data_dir())
+
     Cldr.Downloader.remove_package_files(Cldr.Config.data_dir())
   end
 

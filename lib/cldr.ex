@@ -40,15 +40,6 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the directory path name where the CLDR json data for numbers
-  is kept.
-  """
-  @numbers_locale_dir Config.numbers_locale_dir()
-  def numbers_locale_dir do
-    @numbers_locale_dir
-  end
-
-  @doc """
   Returns the directory path name where the CLDR json data
   is kept.
   """
