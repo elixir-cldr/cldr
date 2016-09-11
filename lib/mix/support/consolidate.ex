@@ -4,6 +4,13 @@ defmodule Cldr.Consolidate do
   one locale-specific file in the ./cldr directory
   """
 
+  @cldr_modules ["number_formats", "list_formats", "currencies",
+    "number_systems", "number_symbols", "minimum_grouping_digits"]
+
+  def required_modules do
+    @cldr_modules
+  end
+
   def consolidate_locales do
     ensure_output_dir_exists!(output_dir())
     ensure_output_dir_exists!(locales_dir())
@@ -26,9 +33,6 @@ defmodule Cldr.Consolidate do
       consolidate_locale(locale)
     end
   end
-
-  @cldr_modules ["number_formats", "list_formats", "currencies",
-    "number_systems", "number_symbols", "minimum_grouping_digits"]
 
   def consolidate_locale(locale) do
     cldr_locale_specific_dirs()

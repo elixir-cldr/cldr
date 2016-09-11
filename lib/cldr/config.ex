@@ -286,12 +286,22 @@ defmodule Cldr.Config do
     locale_path(locale)
     |> File.read!
     |> Poison.decode!
+    |> assert_valid_keys!
     |> Cldr.Map.atomize_keys
     |> atomize_number_systems
     |> atomize_decimal_short_formats
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
+  end
+
+  def assert_valid_keys!(content) do
+    for module <- Cldr.Consolidate.required_modules do
+      if !Map.has_key?(content, module) do
+        raise RuntimeError, message: "Locale file is invalid - #{inspect module} is not found."
+      end
+    end
+    content
   end
 
   defp atomize_number_systems(content) do
