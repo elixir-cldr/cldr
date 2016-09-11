@@ -195,6 +195,10 @@ defmodule Cldr.Number.Format.Compiler do
     {:error, "no format string or token list provided"}
   end
 
+  def parse(arg) do
+    raise ArgumentError, message: "Now idea how to compile format: #{inspect arg}"
+  end
+
   @doc """
   Parse a number format definition and analyze it.
 

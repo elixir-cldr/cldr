@@ -8,14 +8,12 @@ defmodule Cldr.Number.System do
   `Cldr.Number.Symbol.number_symbols_for/2`.
   """
 
-  alias Cldr.File
-  alias Cldr.Number
+  alias Cldr.Locale
   alias Cldr.Number.Symbol
 
-  defstruct [:name, :type, :digits, :rules]
-
   @default_number_system_type  :default
-  @default_number_system       "latn"
+  @default_number_system       :latn
+  @number_system_types         [:default, :native, :traditional, :finance]
 
   @type name :: atom
   @type types :: :default | :native | :traditional | :finance
@@ -39,6 +37,13 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
+  Returns a list of the known number system types
+  """
+  def number_system_types do
+    @number_system_types
+  end
+
+  @doc """
   Return a map of all CLDR number systems and definitions.
 
   ## Example
@@ -47,7 +52,13 @@ defmodule Cldr.Number.System do
       74
   """
   @spec number_systems :: %{}
-  @number_systems File.read(:number_systems)
+  @number_systems Path.join(Cldr.Config.data_dir(), "number_systems.json")
+  |> File.read!
+  |> Poison.decode!
+  |> Cldr.Map.atomize_keys
+  |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
+  |> Enum.into(%{})
+
   def number_systems do
     @number_systems
   end
@@ -58,36 +69,28 @@ defmodule Cldr.Number.System do
   ## Example
 
       iex> Cldr.Number.System.number_system_names
-      ["ahom", "arab", "arabext", "armn", "armnlow",
-      "bali", "beng", "brah", "cakm", "cham", "cyrl",
-      "deva", "ethi", "fullwide", "geor", "grek",
-      "greklow", "gujr", "guru", "hanidays", "hanidec",
-      "hans", "hansfin", "hant", "hantfin", "hebr",
-      "hmng", "java", "jpan", "jpanfin", "kali", "khmr",
-      "knda", "lana", "lanatham", "laoo", "latn", "lepc",
-      "limb", "mathbold", "mathdbl", "mathmono",
-      "mathsanb", "mathsans", "mlym", "modi", "mong",
-      "mroo", "mtei", "mymr", "mymrshan", "mymrtlng",
-      "nkoo", "olck", "orya", "osma", "roman", "romanlow",
-      "saur", "shrd", "sind", "sinh", "sora", "sund",
-      "takr", "talu", "taml", "tamldec", "telu", "thai",
-      "tibt", "tirh", "vaii", "wara"]
+      [:ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :brah, :cakm,
+      :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :grek, :greklow, :gujr,
+      :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr,
+      :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham,
+      :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
+      :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan,
+      :mymrtlng, :nkoo, :olck, :orya, :osma, :roman, :romanlow, :saur, :shrd,
+      :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai,
+      :tibt, :tirh, :vaii, :wara]
   """
-  @number_system_names @number_systems
-  |> Map.keys
-  |> Enum.sort
-
+  @number_system_names @number_systems |> Map.keys |> Enum.sort
   @spec number_system_names :: [String.t]
   def number_system_names do
     @number_system_names
   end
 
   @systems_with_digits Enum.reject @number_systems, fn {_name, system} ->
-    is_nil(system.digits)
+    is_nil(system[:digits])
   end
 
   @doc """
-  Number systems that ahve their own digit characters defined.
+  Number systems that have their own digit characters defined.
   """
   def systems_with_digits do
     @systems_with_digits
@@ -99,59 +102,45 @@ defmodule Cldr.Number.System do
   ## Examples
 
       iex> Cldr.Number.System.number_systems_for "en"
-      %{default: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
-      native: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric}}
+      %{default: :latn, native: :latn}
 
       iex> Cldr.Number.System.number_systems_for "th"
-      %{default: %Cldr.Number.System{digits: "0123456789", name: "latn", rules: nil, type: :numeric},
-      native: %Cldr.Number.System{digits: "๐๑๒๓๔๕๖๗๘๙", name: "thai", rules: nil,
-      type: :numeric}}
+      %{default: :latn, native: :thai}
   """
   @spec number_systems_for(Cldr.locale) :: %{}
-  @spec number_system_names_for(Cldr.locale) :: [String.t]
-  Enum.each Cldr.known_locales, fn (locale) ->
-    systems = File.read(:number_systems, locale)
-    names = systems
-    |> Enum.map(fn {_type, system} -> system.name end)
-    |> Enum.uniq
-
-    def number_systems_for(unquote(locale)) do
-      unquote(Macro.escape(systems))
-    end
-
-    def number_system_names_for(unquote(locale)) do
-      unquote(names)
-    end
-  end
-
   def number_systems_for(locale) do
-    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
+    Locale.get_locale(locale)[:number_systems]
   end
 
+  @spec number_system_names_for(Cldr.locale) :: [String.t]
   def number_system_names_for(locale) do
-    raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
-  end
-
-  def number_system_for(locale, system_type) when is_atom(system_type) do
-    number_systems_for(locale)[system_type]
+    Locale.get_locale(locale)[:number_systems]
+    |> Map.values
+    |> Enum.uniq
   end
 
   def number_system_for(locale, system_name) do
-    locale
-    |> Number.System.number_systems_for
-    |> Map.values
-    |> Enum.uniq
-    |> Enum.filter(&(&1.name == system_name))
-    |> List.first
+    system_name = system_name_from(system_name, locale)
+    number_systems()[system_name]
   end
 
   def system_name_from(system_name, locale \\ Cldr.get_locale())
-  def system_name_from(system_name, locale) when is_atom(system_name) do
-    number_systems_for(locale)[system_name].name
+  def system_name_from(system_name, locale) when is_binary(system_name) do
+    try do
+      system_name_from(String.to_existing_atom(system_name), locale)
+    rescue
+      ArgumentError ->
+          raise Cldr.UnknownLocaleError,
+            "The requested number system #{inspect system_name} is not known."
+    end
   end
 
-  def system_name_from(system_name, _locale) when is_binary(system_name) do
-    system_name
+  def system_name_from(system_name, locale) when is_atom(system_name) do
+    if system = number_systems_for(locale)[system_name] do
+      system
+    else
+      system_name
+    end
   end
 
   @doc """
@@ -175,7 +164,6 @@ defmodule Cldr.Number.System do
         nil ->
           acc
         system ->
-
           these_digits = system.digits
           these_symbols = Symbol.number_symbols_for(this_locale, this_system)
           if digits == these_digits && symbols == these_symbols do

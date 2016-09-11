@@ -75,14 +75,6 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the path name of the CLDR supplemental data directory.
-  """
-  @supplemental_dir Path.join(@data_dir, "/supplemental")
-  def supplemental_dir do
-    @supplemental_dir
-  end
-
-  @doc """
   Return the configured `Gettext` module name or `nil`.
   """
   @spec gettext :: atom
@@ -140,13 +132,12 @@ defmodule Cldr.Config do
   Any configured locales that are not present in this list will be
   ignored.
   """
-  @locales_path Path.join(@data_dir, "availableLocales.json")
-  locales = @locales_path
+  @locales_path Path.join(@data_dir, "available_locales.json")
+  @all_locales @locales_path
   |> File.read!
   |> Poison.decode!
-  |> Cldr.Map.underscore_keys
-  |> Cldr.Map.atomize_keys
-  @all_locales locales.available_locales.full |> Enum.sort
+  |> Enum.sort
+
   @spec all_locales :: [Locale.t]
   def all_locales do
     @all_locales
@@ -266,72 +257,100 @@ defmodule Cldr.Config do
     locale_list |> List.flatten |> Enum.uniq
   end
 
-  @doc false
-  @spec normalize_short_format(Map.t) :: List.t
-  def normalize_short_format(nil) do
-    nil
-  end
+  @doc """
+  Returns the location of the json data for a locale.
 
-  @doc false
-  def normalize_short_format(format) do
-    format
-    |> Enum.group_by(fn {range, _rules} -> List.first(String.split(Atom.to_string(range),"_")) end)
-    |> Enum.map(fn {range, rules} -> {String.to_integer(range), rules} end)
-    |> Enum.map(&flatten_short_formats/1)
-    |> Enum.sort
-  end
-
-  @doc false
-  @spec flatten_short_formats({binary, [] | String.t}) :: tuple
-  def flatten_short_formats({range, rules}) when is_list(rules) do
-    formats = Enum.map rules, fn {name, format} ->
-      plural_type = name
-      |> Atom.to_string
-      |> String.split("_")
-      |> Enum.reverse
-      |> List.first
-      |> String.to_atom
-
-      {plural_type, format}
-    end
-    {range, formats}
-  end
-
-  @doc false
-  def flatten_short_formats(formats) do
-    formats
-  end
-
-  # Here we get the entire currency format section but we only want
-  # the section that is marked as a set of "unitPattern-count-___".
-  @doc false
-  @pattern_count "unitPattern-count-"
-  @pattern_regex Regex.compile!(@pattern_count)
-  def currency_long_format(nil), do: nil
-  def currency_long_format(formats) do
-    formats
-    |> Cldr.Map.stringify_keys
-    |> Enum.filter(fn {k, _v} -> Regex.match?(@pattern_regex, k) end)
-    |> Enum.map(fn {k, v} ->
-         @pattern_count <> count = k
-         {String.to_existing_atom(count), v}
-       end)
-  end
-
+  * `locale` is any locale returned from Cldr.known_locales()`
+  """
   def locale_path(locale) do
     Path.join(data_dir(), ["locales/", "#{locale}.json"])
   end
 
-  def read_cldr_data(file) do
-    file
+  @doc """
+  Read the locale json, decode it and make any necessary transformations.
+
+  This is the only place that we read the locale and we only
+  read it once.  All other uses of locale data are references
+  to this data.
+
+  Additionally the intention is that this is read only at compile time
+  and used to construct accessor functions in other modules so that
+  during production run there is no file access or decoding.
+
+  If a locale file is not found then it is installed.
+  """
+  def get_locale(locale) do
+    if !File.exists?(locale_path(locale)) do
+      Cldr.Install.install_locale(locale)
+    end
+    locale_path(locale)
     |> File.read!
     |> Poison.decode!
-    |> Cldr.Map.underscore_keys
     |> Cldr.Map.atomize_keys
+    |> atomize_number_systems
+    |> atomize_decimal_short_formats
+    |> structure_currencies
+    |> structure_symbols
+    |> structure_number_formats
   end
 
-  def get_locale(locale) do
-    locale_path(locale)
-    |> read_cldr_data
+  defp atomize_number_systems(content) do
+    number_systems = content
+    |> Map.get(:number_systems)
+    |> Enum.map(fn {k, v} -> {k, atomize(v)} end)
+    |> Enum.into(%{})
+
+    Map.put(content, :number_systems, number_systems)
+  end
+
+  def structure_currencies(content) do
+    alias Cldr.Currency
+
+    currencies = content.currencies
+    |> Enum.map(fn {code, currency} -> {code, struct(Currency, currency)} end)
+    |> Enum.into(%{})
+
+    Map.put(content, :currencies, currencies)
+  end
+
+  def structure_number_formats(content) do
+    alias Cldr.Number.Format
+
+    formats = content.number_formats
+    |> Enum.map(fn {system, format} -> {system, struct(Format, format)} end)
+    |> Enum.into(%{})
+
+    Map.put(content, :number_formats, formats)
+  end
+
+  def structure_symbols(content) do
+    alias Cldr.Number.Symbol
+
+    symbols = content.number_symbols
+    |> Enum.map(fn
+         {system, nil}    -> {system, nil}
+         {system, symbol} -> {system, struct(Symbol, symbol)}
+       end)
+    |> Enum.into(%{})
+
+    Map.put(content, :number_symbols, symbols)
+  end
+
+  defp atomize_decimal_short_formats(content) do
+    content
+  end
+
+  # Convert to an atom but only if
+  # its a binary.
+  defp atomize(nil) do
+    nil
+  end
+
+  defp atomize(v) when is_binary(v) do
+    String.to_atom(v)
+  end
+
+  defp atomize(v) do
+    v
   end
 end

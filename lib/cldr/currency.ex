@@ -3,8 +3,6 @@ defmodule Cldr.Currency do
   Currency functions for CLDR.
   """
 
-  alias Cldr.File
-
   @type format :: :standard |
     :accounting |
     :short |
@@ -47,9 +45,12 @@ defmodule Cldr.Currency do
       iex> Cldr.Currency.known_currencies |> Enum.count
       297
   """
-  @currency_codes File.read(:currency_codes)
+
   def known_currencies do
-    @currency_codes
+    Cldr.get_locale()
+    |> Cldr.Locale.get_locale
+    |> get_in([:currencies])
+    |> Map.keys
   end
 
   @doc """
@@ -65,6 +66,15 @@ defmodule Cldr.Currency do
   """
   @spec known_currency?(code) :: boolean
   def known_currency?(currency) when is_binary(currency) do
+    try do
+      currency = String.downcase(currency) |> String.to_existing_atom
+      known_currency?(currency)
+    rescue ArgumentError ->
+      false
+    end
+  end
+
+  def known_currency?(currency) when is_atom(currency) do
     !!Enum.find(known_currencies(), &(&1 == currency))
   end
 
@@ -96,40 +106,20 @@ defmodule Cldr.Currency do
   Returns the currency metadata for a locale.
   """
   @spec for_locale(Cldr.locale) :: %{}
-  def for_locale(locale \\ Cldr.get_locale())
-
-  Enum.each Cldr.known_locales(), fn locale ->
-    currencies = File.read(:currency, locale)
-    def for_locale(unquote(locale)) do
-      unquote(Macro.escape(currencies))
-    end
+  def for_locale(locale) do
+    Cldr.Locale.get_locale(locale).currencies
   end
 
   @spec do_for_code(code, Cldr.locale) :: %{}
   defp do_for_code(code, locale) when is_binary(code) do
+    code
+    |> String.downcase
+    |> String.to_existing_atom
+    |> do_for_code(locale)
+  end
+
+  defp do_for_code(code, locale) when is_atom(code) do
     for_locale(locale)[code]
   end
 
-  # @spec to_string(number, code, Cldr.locale, format) :: String.t
-  # def to_string(number, code, locale \\ Cldr.get_locale(), options \\ :standard)
-  #
-  # # Use the formal from currencyFormat
-  # def to_string(number, code, locale, :standard) do
-  #   IO.puts inspect(number)
-  # end
-  #
-  # # Use the accounting format
-  # def to_string(number, code, locale, :accounting) do
-  #   IO.puts inspect(number)
-  # end
-  #
-  # # Use the short format
-  # def to_string(number, code, locale, :short) do
-  #   IO.puts inspect(number)
-  # end
-  #
-  # # Use the format from Decimal format with the text expansion
-  # def to_string(number, code, locale, :long) do
-  #   IO.puts inspect(number)
-  # end
 end

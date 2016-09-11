@@ -76,22 +76,27 @@ defmodule Cldr.Number.Transliterate do
   @spec transliterate(String.t | number, Cldr.locale, String.t) :: String.t
   def transliterate(sequence, locale \\ Cldr.get_locale(), number_system \\ System.default_number_system_type)
 
-  # Maps the system type key to the actual type for transliteration
-  def transliterate(sequence, locale, number_system) when is_atom(number_system) do
-    transliterate(sequence, locale, System.number_system_for(locale, number_system).name)
-  end
-
   # No transliteration required when the digits and separators as the same
   # as the ones we use in formatting.
-  Enum.each System.number_systems_like("en", "latn"), fn {locale, system} ->
+  Enum.each System.number_systems_like("en", :latn), fn {locale, system} ->
     def transliterate(sequence, unquote(locale), unquote(system)) do
       sequence
     end
   end
 
+  # Translate the number system type to a system and invoke the real
+  # transliterator
+  for type <- System.number_system_types do
+    number_system = System.system_name_from(type)
+
+    def transliterate(sequence, locale, unquote(type)) do
+      transliterate(sequence, locale, unquote(number_system))
+    end
+  end
+
   # We can only transliterate if the target {locale, number_system} has defined
   # digits.  Some systems don't have digits, just rules.
-  Enum.each System.systems_with_digits(), fn {name, %{digits: _digits}} ->
+  for {name, %{digits: _digits}} <- System.systems_with_digits do
     def transliterate(sequence, locale, number_system = unquote(name)) do
       sequence
       |> String.graphemes
@@ -101,49 +106,50 @@ defmodule Cldr.Number.Transliterate do
   end
 
   # Functions to transliterate the symbols
-  Enum.each Cldr.known_locales(), fn locale ->
-    Enum.each System.number_system_names_for(locale), fn name ->
-      if Symbol.number_symbols_for(locale, name) do
-        # Mapping for the grouping separator
-        @group Symbol.number_symbols_for(locale, name).group
-        defp transliterate_char(unquote(Compiler.placeholder(:group)), unquote(locale), unquote(name)) do
-          @group
-        end
+  for locale <- Cldr.known_locales,
+      name <- System.number_system_names_for(locale)
+  do
+    if Symbol.number_symbols_for(locale, name) do
+      # Mapping for the grouping separator
+      @group Symbol.number_symbols_for(locale, name).group
+      defp transliterate_char(unquote(Compiler.placeholder(:group)), unquote(locale), unquote(name)) do
+        @group
+      end
 
-        # Mapping for the decimal separator
-        @decimal Symbol.number_symbols_for(locale, name).decimal
-        defp transliterate_char(unquote(Compiler.placeholder(:decimal)), unquote(locale), unquote(name)) do
-          @decimal
-        end
+      # Mapping for the decimal separator
+      @decimal Symbol.number_symbols_for(locale, name).decimal
+      defp transliterate_char(unquote(Compiler.placeholder(:decimal)), unquote(locale), unquote(name)) do
+        @decimal
+      end
 
-        # Mapping for the exponent
-        @exponent Symbol.number_symbols_for(locale, name).exponential
-        defp transliterate_char(unquote(Compiler.placeholder(:exponent)), unquote(locale), unquote(name)) do
-          @exponent
-        end
+      # Mapping for the exponent
+      @exponent Symbol.number_symbols_for(locale, name).exponential
+      defp transliterate_char(unquote(Compiler.placeholder(:exponent)), unquote(locale), unquote(name)) do
+        @exponent
+      end
 
-        # Mapping for the plus sign
-        @plus Symbol.number_symbols_for(locale, name).plus_sign
-        defp transliterate_char(unquote(Compiler.placeholder(:plus)), unquote(locale), unquote(name)) do
-          @plus
-        end
+      # Mapping for the plus sign
+      @plus Symbol.number_symbols_for(locale, name).plus_sign
+      defp transliterate_char(unquote(Compiler.placeholder(:plus)), unquote(locale), unquote(name)) do
+        @plus
+      end
 
-        # Mapping for the minus sign
-        @minus Symbol.number_symbols_for(locale, name).minus_sign
-        defp transliterate_char(unquote(Compiler.placeholder(:minus)), unquote(locale), unquote(name)) do
-          @minus
-        end
+      # Mapping for the minus sign
+      @minus Symbol.number_symbols_for(locale, name).minus_sign
+      defp transliterate_char(unquote(Compiler.placeholder(:minus)), unquote(locale), unquote(name)) do
+        @minus
       end
     end
   end
 
   # Functions to transliterate the digits
-  Enum.each System.systems_with_digits(), fn {name, %{digits: digits}} ->
+  for {name, %{digits: digits}} <- System.systems_with_digits() do
     graphemes = String.graphemes(digits)
 
-    Enum.each 0..9, fn (latin_digit) ->
+    for latin_digit <- 0..9 do
       grapheme = :lists.nth(latin_digit + 1, graphemes)
       latin_char = Integer.to_string(latin_digit)
+
       defp transliterate_char(unquote(latin_char), _locale, unquote(name)) do
         unquote(grapheme)
       end

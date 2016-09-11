@@ -46,12 +46,12 @@ defmodule Cldr.Number.Formatter.Decimal do
   import Cldr.Macros
   import Cldr.Number.String
   import Cldr.Number.Transliterate, only: [transliterate: 3]
-  import Cldr.Number.Symbol,        only: [number_symbols_for: 2,
-                                           minimum_grouping_digits_for: 1]
+  import Cldr.Number.Symbol,        only: [number_symbols_for: 2]
 
   alias Cldr.Currency
   alias Cldr.Number
   alias Cldr.Number.Math
+  alias Cldr.Number.Format
   alias Cldr.Number.Format.Compiler
 
   @empty_string ""
@@ -351,7 +351,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   defp minimum_group_size(%{first: group_size}, locale) do
-    minimum_grouping_digits_for(locale) + group_size
+    Format.minimum_grouping_digits_for(locale) + group_size
   end
 
   # The actual grouping function.  Note there are two directions,

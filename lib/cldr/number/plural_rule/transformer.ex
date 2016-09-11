@@ -63,6 +63,7 @@ defmodule Cldr.Number.PluralRule.Transformer do
   defp rule_to_cond_branch(nil, category) do
      {:->, [], [[true], category]}
   end
+
   defp rule_to_cond_branch(rule_ast, category) do
      {:->, [], [[rule_ast], category]}
   end

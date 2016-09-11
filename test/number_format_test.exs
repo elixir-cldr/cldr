@@ -21,27 +21,19 @@ defmodule Number.Format.Test do
     assert Format.minimum_grouping_digits_for("en") == 1
   end
 
-  test "that we have decimal formats as a map" do
-    assert is_map(Format.decimal_formats())
-  end
-
-  test "that there are many decimal formats" do
-    assert Enum.count(Format.decimal_formats()) > 10
-  end
-
   test "that there are decimal formats for a locale" do
-    assert Map.keys(Format.decimal_formats_for("en")) == [:latn]
+    assert Map.keys(Cldr.Locale.get_locale("en").number_formats) == [:latn]
   end
 
   test "that there is an exception if we get formats for an unknown locale" do
-    assert_raise Cldr.UnknownLocaleError, ~r/The locale \"zzz\" is not known./, fn ->
-      Format.decimal_formats_for("zzz")
+    assert_raise Cldr.UnknownLocaleError, ~r/The requested locale .* is not known/, fn ->
+      Format.formats_for("zzz")
     end
   end
 
   test "that there is an exception if we get formats for an unknown locale and number system" do
-    assert_raise Cldr.UnknownLocaleError, ~r/Unknown locale.*number system/, fn ->
-      Format.decimal_formats_for("zzz", "zulu")
+    assert_raise Cldr.UnknownLocaleError, ~r/The requested number system .* is not known./, fn ->
+      Format.formats_for("zzz", "zulu")
     end
   end
 
@@ -50,8 +42,8 @@ defmodule Number.Format.Test do
   end
 
   test "that when there is no format defined for a number system we get an error return" do
-    assert Cldr.Number.to_string(1234, locale: "he", number_system: "hebr") ==
+    assert Cldr.Number.to_string(1234, locale: "he", number_system: :hebr) ==
     {:error,
-      "The locale \"he\" with number system \"hebr\" does not define a format :standard."}
+      "The locale \"he\" with number system :hebr does not define a format :standard."}
   end
 end

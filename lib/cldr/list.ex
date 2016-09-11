@@ -10,7 +10,6 @@ defmodule Cldr.List do
       "Monday, Tuesday, and Wednesday"
   """
 
-  alias Cldr.File
   @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short
   @default_style :standard
 
@@ -72,7 +71,7 @@ defmodule Cldr.List do
 
   # For when there are two elements only
   defp to_string([first, last], locale, pattern_type) do
-    pattern = list_patterns_for(locale)[pattern_type]["2"]
+    pattern = list_patterns_for(locale)[pattern_type][:"2"]
 
     pattern
     |> String.replace("{0}", Kernel.to_string(first))
@@ -81,8 +80,8 @@ defmodule Cldr.List do
 
   # For when there are three elements only
   defp to_string([first, middle, last], locale, pattern_type) do
-    first_pattern = list_patterns_for(locale)[pattern_type]["start"]
-    last_pattern = list_patterns_for(locale)[pattern_type]["end"]
+    first_pattern = list_patterns_for(locale)[pattern_type][:start]
+    last_pattern = list_patterns_for(locale)[pattern_type][:end]
 
     last = last_pattern
     |> String.replace("{0}", Kernel.to_string(middle))
@@ -95,7 +94,7 @@ defmodule Cldr.List do
 
   # For when there are more than 3 elements
   defp to_string([first | rest], locale, pattern_type) do
-    first_pattern = list_patterns_for(locale)[pattern_type]["start"]
+    first_pattern = list_patterns_for(locale)[pattern_type][:start]
 
     first_pattern
     |> String.replace("{0}", Kernel.to_string(first))
@@ -104,7 +103,7 @@ defmodule Cldr.List do
 
   # When there are only two left (ie last)
   defp do_to_string([first, last], locale, pattern_type) do
-    last_pattern = list_patterns_for(locale)[pattern_type]["end"]
+    last_pattern = list_patterns_for(locale)[pattern_type][:end]
 
     last_pattern
     |> String.replace("{0}", Kernel.to_string(first))
@@ -113,7 +112,7 @@ defmodule Cldr.List do
 
   # For the middle elements
   defp do_to_string([first | rest], locale, pattern_type) do
-    middle_pattern = list_patterns_for(locale)[pattern_type]["middle"]
+    middle_pattern = list_patterns_for(locale)[pattern_type][:middle]
 
     middle_pattern
     |> String.replace("{0}", Kernel.to_string(first))
@@ -123,26 +122,26 @@ defmodule Cldr.List do
   @spec list_patterns_for(Cldr.locale) :: Map.t
   @spec list_pattern_styles_for(Cldr.locale) :: [atom]
   Enum.each Cldr.known_locales, fn (locale) ->
-    patterns = File.read(:list_patterns, locale)
+    patterns = Cldr.Locale.get_locale(locale).list_formats
     pattern_names = Map.keys(patterns)
 
-    @doc """
-    Returns the list patterns for a locale.
+  @doc """
+  Returns the list patterns for a locale.
 
-    List patterns provide rules for combining multiple
-    items into a language format appropriate for a locale.
+  List patterns provide rules for combining multiple
+  items into a language format appropriate for a locale.
 
-    ## Example
+  ## Example
 
-        iex> Cldr.List.list_patterns_for "en"
-        %{standard: %{"2" => "{0} and {1}", "end" => "{0}, and {1}",
-            "middle" => "{0}, {1}", "start" => "{0}, {1}"},
-          unit: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
-            "start" => "{0}, {1}"},
-          unit_narrow: %{"2" => "{0} {1}", "end" => "{0} {1}", "middle" => "{0} {1}",
-            "start" => "{0} {1}"},
-          unit_short: %{"2" => "{0}, {1}", "end" => "{0}, {1}", "middle" => "{0}, {1}",
-            "start" => "{0}, {1}"}}
+      iex> Cldr.List.list_patterns_for "en"
+      %{standard: %{"2": "{0} and {1}", end: "{0}, and {1}",
+         middle: "{0}, {1}", start: "{0}, {1}"},
+       unit: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
+         start: "{0}, {1}"},
+       unit_narrow: %{"2": "{0} {1}", end: "{0} {1}", middle: "{0} {1}",
+         start: "{0} {1}"},
+       unit_short: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
+         start: "{0}, {1}"}}
     """
     def list_patterns_for(unquote(locale)) do
       unquote(Macro.escape(patterns))

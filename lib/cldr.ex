@@ -48,16 +48,6 @@ defmodule Cldr do
     @data_dir
   end
 
-
-  @doc """
-  Returns the directory path name where the CLDR json supplemental
-  data is kept.
-  """
-  @supplemental_dir Config.supplemental_dir()
-  def supplemental_dir do
-    @supplemental_dir
-  end
-
   @doc """
   Return the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
@@ -106,7 +96,7 @@ defmodule Cldr do
 
   See also: `requested_locales/0` and `known_locales/0`
   """
-  @all_locales Config.all_locales
+  @all_locales Config.all_locales()
   @spec all_locales :: [Locale.t]
   def all_locales do
     @all_locales
@@ -120,7 +110,7 @@ defmodule Cldr do
 
   See also `known_locales/0` and `all_locales/0`
   """
-  @requested_locales Config.requested_locales
+  @requested_locales Config.requested_locales()
   @spec requested_locales :: [Locale.t] | []
   def requested_locales do
     @requested_locales
@@ -135,7 +125,7 @@ defmodule Cldr do
   directly in the `config.exs` file or
   in `Gettext`.
   """
-  @known_locales Config.known_locales
+  @known_locales Config.known_locales()
   @spec known_locales :: [Locale.t] | []
   def known_locales do
     @known_locales
@@ -149,7 +139,7 @@ defmodule Cldr do
   and raise and exception this function should always
   return an empty list.
   """
-  @unknown_locales Config.unknown_locales
+  @unknown_locales Config.unknown_locales()
   @spec unknown_locales :: [Locale.t] | []
   def unknown_locales do
     @unknown_locales

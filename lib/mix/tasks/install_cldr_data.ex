@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Cldr.Install do
 
   def run(_) do
     Cldr.Install.install_cldr_core
-    Cldr.Install.install_configured_locales
+    Cldr.Install.install_known_locales
   end
 
 end

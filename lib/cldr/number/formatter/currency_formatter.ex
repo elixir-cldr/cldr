@@ -48,7 +48,7 @@ defmodule Cldr.Number.Formatter.Currency do
     end
 
     count = Number.Cardinal.plural_rule(number, locale)
-    currency = Currency.for_locale(locale)[options[:currency]]
+    currency = Currency.for_code(options[:currency], locale)
 
     format = formats[count] || formats[:other]
     options = Keyword.delete(options, :format) |> Keyword.put(:format, :standard)

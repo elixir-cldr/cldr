@@ -7,22 +7,20 @@ defmodule Cldr.Number.PluralRule do
   """
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
-      raise ArgumentError, "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
+      raise ArgumentError,
+        "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
     end
-
-    plurals_filename = if opts == :cardinal, do: "plurals", else: "ordinals"
-    plurals_type = if opts == :cardinal, do: "cardinal", else: "ordinal"
 
     quote do
       import Cldr.Number.Math
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
-      {:ok, json} = Cldr.supplemental_dir()
-      |> Path.join("/#{unquote(plurals_filename)}.json")
+      @rules Cldr.data_dir()
+      |> Path.join("/plural_rules.json")
       |> File.read!
-      |> Poison.decode
-      @rules json["supplemental"]["plurals-type-#{unquote(plurals_type)}"]
+      |> Poison.decode!
+      |> Map.get(Atom.to_string(unquote(opts)))
 
       @doc """
       The locales for which cardinal rules are defined
@@ -108,7 +106,8 @@ defmodule Cldr.Number.PluralRule do
 
       # Plural rule for a float
       @lint {Credo.Check.Refactor.PipeChainStart, false}
-      def plural_rule(number, locale, rounding) when is_float(number) and is_integer(rounding) and rounding > 0 do
+      def plural_rule(number, locale, rounding)
+      when is_float(number) and is_integer(rounding) and rounding > 0 do
         plural_rule(Decimal.new(number), locale, rounding)
         # n = Float.round(abs(number), rounding)
         # i = trunc(n)
@@ -120,7 +119,8 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a %Decimal{}
-      def plural_rule(%Decimal{} = number, locale, rounding) when is_integer(rounding) and rounding > 0 do
+      def plural_rule(%Decimal{} = number, locale, rounding)
+      when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
 

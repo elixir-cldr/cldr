@@ -82,8 +82,8 @@ defmodule Cldr.Number.Formatter.Short do
 
   @doc false
   defp choose_short_format(number, rules, _options) when is_number(number) do
-    {range, rule} = rules
-    |> Enum.filter(fn {range, _rules} -> range <= number end)
+    [range, rule] = rules
+    |> Enum.filter(fn [range, _rules] -> range <= number end)
     |> Enum.reverse
     |> hd
 
