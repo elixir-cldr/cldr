@@ -37,7 +37,16 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
-  Returns a list of the known number system types
+  Returns a list of the known number system types.
+
+  Note that not all locales support all number system types.
+  `:default` is available for all locales, the other types
+  configured only in certain locales.
+
+  ## Example
+
+      iex> Cldr.Number.System.number_system_types
+      [:default, :native, :traditional, :finance]
   """
   def number_system_types do
     @number_system_types
@@ -97,7 +106,7 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
-  The number systems available for a locale.
+  Returns the number systems available for a locale.
 
   ## Examples
 
@@ -124,6 +133,37 @@ defmodule Cldr.Number.System do
     number_systems()[system_name]
   end
 
+  @doc """
+  Returns a number system name for a given locale and number system reference.
+
+  * `system_name` is any name of name type
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
+
+  Number systems can be references in one of two ways:
+
+  * As a number system type such as :default, :native, :traditional and
+    :finance. This allows references to a number system for a locale in a
+    consistent fashion for a given use
+
+  * WIth the number system name directly, such as :latn, :arab or any of the
+    other 70 or so
+
+  This function dereferences the supplied `system_name` and returns the
+  actual system name.
+
+  ## Examples
+
+      ex> Cldr.Number.System.system_name_from(:default, "en")
+      :latn
+      iex> Cldr.Number.System.system_name_from("latn", "en")
+      :latn
+      iex> Cldr.Number.System.system_name_from(:finance, "en")
+      :finance
+
+  Note that return value is not guaranteed to be a valid
+  number system for the given locale as demonstrated in the third example.
+  """
   def system_name_from(system_name, locale \\ Cldr.get_locale())
   def system_name_from(system_name, locale) when is_binary(system_name) do
     try do
@@ -144,8 +184,8 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
-  Locale and number systems that have the same digits and separators as the
-  supplied one.
+  Returns locale and number systems that have the same digits and
+  separators as the supplied one.
 
   Transliterating between locale & number systems is expensive.  To avoid
   unncessary transliteration we look for locale and number systems that have

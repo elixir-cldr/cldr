@@ -13,6 +13,8 @@ defmodule Cldr.Config do
       config :ex_cldr,
         locales: ["en", "fr"]
 
+  ## Working with Gettext
+
   It's also possible to use the locales from a Gettext
   configuration:
 
@@ -22,6 +24,8 @@ defmodule Cldr.Config do
 
   In which case the combination of locales "en", "fr" and
   whatever is configured for App.Gettext will be generated.
+
+  ## Locale wildcards
 
   Locales can also be configured by using a `regex` which is most
   useful when dealing with locales that have many regional variants
@@ -34,19 +38,39 @@ defmodule Cldr.Config do
   alphabetic regional variants.  The expansion is made using
   `Regex.match?` so any valid regex can be used.
 
+  ## Configuring all locales
+
   As a special case, all locales in CLDR can be configured
   by using the keyword `:all`.  For example:
 
       config :ex_cldr,
         locales: :all
 
-  *Configuring all locales is not recommended*. Doing so
+  **Configuring all locales is not recommended*. Doing so
   imposes a significant compilation load as many functions
-  are created at compmile time for each locale.*
+  are created at compmile time for each locale.**
 
   The `Cldr` test configuration does configure all locales in order
   to ensure good test coverage.  This is done at the expense
   of significant compile time.
+
+  ## Storage location for the locale definiton files
+
+  Locale files are downloaded and installed at compile time based upon the
+  configuration.  These files are only used at compile time, they contain
+  the `json` representation of the locale data.
+
+  By default the locale files are stored in `./priv/cldr/locales`.
+
+  The locale of the locales can be changed in the configuration with the
+  `:data_dir` key.  For eaxmple:
+
+      config :ex_cldr,
+        locales: ["en", "fr"]
+        data_dir: "/apps/data/cldr"
+
+  The directory will be created if it does not exist and an
+  exception will be raised if the directory cannot be created.
   """
 
   alias Cldr.Locale
@@ -289,13 +313,14 @@ defmodule Cldr.Config do
     |> assert_valid_keys!
     |> Cldr.Map.atomize_keys
     |> atomize_number_systems
-    |> atomize_decimal_short_formats
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
   end
 
-  def assert_valid_keys!(content) do
+  # Simple check that the locale content contains what we expect
+  # by checking it has the keys we used when the locale was consolidated.
+  defp assert_valid_keys!(content) do
     for module <- Cldr.Consolidate.required_modules do
       if !Map.has_key?(content, module) do
         raise RuntimeError, message: "Locale file is invalid - #{inspect module} is not found."
@@ -304,6 +329,9 @@ defmodule Cldr.Config do
     content
   end
 
+  # Number systems are stored as atoms, no new
+  # number systems are ever added at runtime so
+  # risk to overflowing the atom table is very low.
   defp atomize_number_systems(content) do
     number_systems = content
     |> Map.get(:number_systems)
@@ -313,7 +341,8 @@ defmodule Cldr.Config do
     Map.put(content, :number_systems, number_systems)
   end
 
-  def structure_currencies(content) do
+  # Put the currency data into a %Currency{} struct
+  defp structure_currencies(content) do
     alias Cldr.Currency
 
     currencies = content.currencies
@@ -323,7 +352,8 @@ defmodule Cldr.Config do
     Map.put(content, :currencies, currencies)
   end
 
-  def structure_number_formats(content) do
+  # Put the number_formats into a %Format{} struct
+  defp structure_number_formats(content) do
     alias Cldr.Number.Format
 
     formats = content.number_formats
@@ -333,7 +363,8 @@ defmodule Cldr.Config do
     Map.put(content, :number_formats, formats)
   end
 
-  def structure_symbols(content) do
+  # Put the symbols into a %Symbol{} struct
+  defp structure_symbols(content) do
     alias Cldr.Number.Symbol
 
     symbols = content.number_symbols
@@ -344,10 +375,6 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
 
     Map.put(content, :number_symbols, symbols)
-  end
-
-  defp atomize_decimal_short_formats(content) do
-    content
   end
 
   # Convert to an atom but only if
