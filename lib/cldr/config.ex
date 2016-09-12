@@ -333,7 +333,7 @@ defmodule Cldr.Config do
   """
   def get_locale(locale) do
     path = locale_path(locale)
-    path = if path, do: path, else: install_locale(locale)
+    {:ok, path} = if path, do: {:ok, path}, else: install_locale(locale)
     path
     |> File.read!
     |> Poison.decode!

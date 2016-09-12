@@ -68,7 +68,7 @@ defmodule Cldr.Install do
         output_file_name = "#{client_locale_dir()}/#{locale_file_name}"
         File.write!(output_file_name, :erlang.list_to_binary(body))
         IO.puts "done."
-
+        {:ok, output_file_name}
       {_, {{_version, code, message}, _headers, _body}} ->
         IO.puts "error!"
         raise RuntimeError,
