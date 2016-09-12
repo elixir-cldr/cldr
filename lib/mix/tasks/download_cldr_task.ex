@@ -15,12 +15,12 @@ defmodule Mix.Tasks.Cldr.Download do
   @download_url    "http://unicode.org/Public/cldr/latest"
   @required_files  ["core.zip", "tools.zip", "keyboards.zip"]
   @download_dir    "downloads"
-  @destination_dir Path.join(Cldr.Config.app_home(), @download_dir)
+  @destination_dir Path.join(Cldr.Config.cldr_home(), @download_dir)
   @need_utils      ["wget", "java", "find", "rm"]
   @data_dir        "./data"
 
   @doc """
-  Runs the `cldr.download` Mix task to download and process udpates to the
+  Runs the `cldr.download` Mix task to download and process updates to the
   CLDR data repository.
   """
   def run(_) do
@@ -31,6 +31,7 @@ defmodule Mix.Tasks.Cldr.Download do
     IO.puts "Converting CLDR XML files to json format.  This will take tens of minutes."
     Cldr.Downloader.convert_to_json(@destination_dir, @data_dir)
 
+    # Remove bower and package json files since we don't need them
     Cldr.Downloader.remove_package_files(@data_dir)
   end
 

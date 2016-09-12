@@ -6,10 +6,9 @@ defmodule Mix.Tasks.Cldr.Install do
 
   use Mix.Task
 
-  @shortdoc "Consolidate cldr json data into a single per-locale set of files"
+  @shortdoc "Install all configured `Cldr` locales."
 
   def run(_) do
-    Cldr.Install.install_cldr_core
     Cldr.Install.install_known_locales
   end
 

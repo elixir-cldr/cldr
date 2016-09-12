@@ -37,7 +37,7 @@ defmodule Cldr.Downloader do
   @gitignore ".gitignore"
   def add_dir_to_gitignore(destination_dir) do
     ignore_path = destination_dir
-    |> String.split(Cldr.Config.app_home())
+    |> String.split(Cldr.Config.cldr_home())
     |> Enum.reverse
     |> hd
 

@@ -83,9 +83,9 @@ defmodule Cldr.Config do
   @doc """
   Return the root path of the cldr application
   """
-  @app_home_dir Path.join(__DIR__, "/../..") |> Path.expand
-  def app_home do
-    @app_home_dir
+  @cldr_home_dir Path.join(__DIR__, "/../..") |> Path.expand
+  def cldr_home do
+    @cldr_home_dir
   end
 
   @doc """
@@ -153,8 +153,8 @@ defmodule Cldr.Config do
   Returns a list of the complete locales list in CLDR, irrespective
   of whether they are configured for use in the application.
 
-  Any configured locales that are not present in this list will be
-  ignored.
+  Any configured locales that are not present in this list will
+  raise an exception at compile time.
   """
   @locales_path Path.join(@data_dir, "available_locales.json")
   @all_locales @locales_path
@@ -174,6 +174,7 @@ defmodule Cldr.Config do
   In order of priority return either:
 
   * The list of locales configured configured in mix.exs if any
+
   * The default locale
 
   If the configured locales is `:all` then all locales
