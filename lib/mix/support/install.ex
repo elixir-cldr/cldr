@@ -47,6 +47,7 @@ defmodule Cldr.Install do
   """
   def install_locale(locale, options \\ []) do
     if !locale_installed?(locale) or options[:force] do
+      ensure_client_dirs_exist!(client_locale_dir())
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
       do_install_locale(locale, locale in Cldr.all_locales())
