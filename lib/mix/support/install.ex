@@ -14,16 +14,19 @@ defmodule Cldr.Install do
   """
 
   @doc """
-  Install all the configured locales
+  Install all the configured locales.
   """
   def install_known_locales do
-    ensure_client_locale_dir_exists!()
+    ensure_client_dirs_exist!(client_locale_dir())
     Enum.each Cldr.known_locales(), &install_locale/1
     :ok
   end
 
+  @doc """
+  Install all available locales.
+  """
   def install_all_locales do
-    ensure_client_locale_dir_exists!()
+    ensure_client_dirs_exist!(client_locale_dir())
     Enum.each Cldr.all_locales(), &install_locale/1
     :ok
   end
@@ -35,7 +38,7 @@ defmodule Cldr.Install do
   The target directory is typically `./priv/cldr/locales`.
   """
   def install_locale(locale) do
-    if !File.exists?(client_locale_file(locale)) do
+    if !Cldr.Config.locale_path(locale) do
       IO.puts "Downloading and installing #{inspect locale} to #{client_locale_dir()}"
     end
   end
@@ -94,28 +97,35 @@ defmodule Cldr.Install do
     Path.join(cldr_locale_dir(), "#{locale}.json")
   end
 
-  defp ensure_client_locale_dir_exists! do
-    ensure_client_data_dir_exists!()
-    case File.mkdir(client_locale_dir()) do
-      :ok ->
-        :ok
-      {:error, :eexist} ->
-        :ok
-      {:error, code} ->
-        raise RuntimeError,
-          message: "Couldn't create #{client_locale_dir()}: #{inspect code}"
-    end
+  # Create the client app locales directory and any directories
+  # that don't exist above it.
+  defp ensure_client_dirs_exist!(dir) do
+    paths = String.split(dir, "/")
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.map(&(String.replace_prefix(&1, "", "/")))
+    do_ensure_client_dirs(paths)
   end
 
-  defp ensure_client_data_dir_exists! do
-    case File.mkdir(client_data_dir()) do
+  defp do_ensure_client_dirs([h | []]) do
+    create_dir(h)
+  end
+
+  defp do_ensure_client_dirs([h | t]) do
+    create_dir(h)
+    do_ensure_client_dirs([h <> hd(t) | tl(t)])
+  end
+
+  defp create_dir(dir) do
+    case File.mkdir(dir) do
       :ok ->
         :ok
       {:error, :eexist} ->
         :ok
+      {:error, :eisdir} ->
+        :ok
       {:error, code} ->
         raise RuntimeError,
-          message: "Couldn't create #{client_data_dir()}: #{inspect code}"
+          message: "Couldn't create #{dir}: #{inspect code}"
     end
   end
 end
