@@ -74,6 +74,7 @@ defmodule Cldr.Config do
   """
 
   alias Cldr.Locale
+  import Cldr.Install, only: [install_locale: 1]
 
   @type t :: binary
 
@@ -299,7 +300,14 @@ defmodule Cldr.Config do
   * `locale` is any locale returned from Cldr.known_locales()`
   """
   def locale_path(locale) do
-    Path.join(data_dir(), ["locales/", "#{locale}.json"])
+    relative_locale_path = ["locales/", "#{locale}.json"]
+    client_path = Path.join(data_dir(), relative_locale_path)
+    cldr_path = Path.join(cldr_data_dir(), relative_locale_path)
+    cond do
+      File.exists?(client_path) -> client_path
+      File.exists?(cldr_path)   -> cldr_path
+      true                      -> nil
+    end
   end
 
   @doc """
@@ -316,10 +324,9 @@ defmodule Cldr.Config do
   If a locale file is not found then it is installed.
   """
   def get_locale(locale) do
-    if !File.exists?(locale_path(locale)) do
-      Cldr.Install.install_locale(locale)
-    end
-    locale_path(locale)
+    path = locale_path(locale)
+    path = if path, do: path, else: install_locale(locale)
+    path
     |> File.read!
     |> Poison.decode!
     |> assert_valid_keys!
