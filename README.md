@@ -11,11 +11,11 @@ Add `cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.2"}
+        {:ex_cldr, "~> 0.0.4"}
       ]
     end
 
-then retrieve `ex_cldr` from [hex](http://hex.pm):
+then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
 
     mix deps.get
     mix deps.compile
@@ -33,21 +33,22 @@ Without any specific configuration Cldr will support the "en" locale only.  To s
     config :ex_cldr,
       default_locale: "en",
       locales: ["fr-*", "pt-BR", "en", "pl", "ru", "th", "he"],
-      gettext: MyApp.Gettext,
-      dataset: :full
+      gettext: MyApp.Gettext
 
 Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
-
-If you are also using `Gettext` then you can tell `Cldr` to use that module to inform `Cldr` about which locales you wish to configure.  By default `Cldr` will use the `:full` dataset of Cldr.  If you prefer you can configure the `:modern` set instead.
 
 ## Downloading Configured Locales
 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
-or from [hex](http://hex.pm).
+or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 511 locales are installed when the repo is cloned into your application
+* If installed from github then all 511 locales are installed when the repo is cloned into your application deps.
 
-* If installed from hex then only a single locale, "en", is installed.  When you configure additional locales these will be downloaded during application compilation
+* If installed from hex then only a single locale, "en", is installed.  When you configure additional locales these will be downloaded during application compilation.
+
+If you add additional locales to your configuration if may be necessary to force recompile of `Cldr` for these locales to be recognised. This can be done by:
+
+    mix deps.compile ex_cldr --force
 
 ## Formatting Numbers
 
@@ -88,7 +89,7 @@ Not currently supported, but they're next on the development priority list.
 
 ## Gettext Integration
 
-There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by
+There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by:
 
     defmodule MyApp.Gettext do
       use Gettext, plural_forms: Cldr.Gettext.Plural
@@ -114,4 +115,9 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 Tests cover the full 511 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.3.2 and on master (currently 1.4.0-dev)
+Tests are run on Elixir 1.3.2 and on master (currently 1.4.0-dev).
+
+**Note that on 1.3.2 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds load tests which, for 511 locales, may not be enough.  This timeout is configurable on Elixir 1.4.0-dev. You can configure it in `config.exs` (or `test.exs`) as follows:
+
+    config :ex_unit,
+      case_load_timeout: 120_000

@@ -8,11 +8,11 @@ Add `cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.1"}
+        {:ex_cldr, "~> 0.0.4"}
       ]
     end
 
-then retrieve `ex_cldr` from [hex](http://hex.pm):
+then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
 
     mix deps.get
     mix deps.compile
@@ -32,8 +32,7 @@ A more complete configuration can include the key `:default_locale`, `:locales`,
     config :ex_cldr,
       default_locale: "en",
       locales: ["fr-*", "pt-BR", "en", "pl", "ru", "th", "he"],
-      gettext: MyApp.Gettext,
-      dataset: :full
+      gettext: MyApp.Gettext
 
 Configures a default locale of `"en"` (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
 

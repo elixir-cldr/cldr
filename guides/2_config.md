@@ -7,8 +7,8 @@ Here's an example configuration that uses all of the available configuration key
      config :cldr,
        default_locale: "en",
        locales: ["fr", "en", "bs", "si", "ak", "th"],
-       gettext: Cldr.Gettext,
-       dataset: :full
+       gettext: MyApp.Gettext,
+       data_dir: "./priv/cldr"
 
 ## Configuration Keys
 
@@ -30,4 +30,4 @@ The configuration keys available for `Cldr` are:
 
  * `gettext`: configures `Cldr` to use a `Gettext` module as a source of defining what locales you want to configure.  Since `Gettext` uses locales with an '\_' in them and `Cldr` uses a '-', `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
- * `dataset`: tells `Cldr` whether to use the CLDR "full" or "modern" repository.  By default `Cldr` will use the `:full` dataset.
+ * `data_dir`: indicates where downloaded locale files will be stored.  The default is `./priv/cldr`._
