@@ -21,9 +21,7 @@ defmodule Cldr.Mixfile do
   end
 
   defp description do
-    """
-    Common Locale Data Repository (CLDR) functions for Elixir.
-    """
+    "Common Locale Data Repository (CLDR) functions for Elixir."
   end
 
   def application do

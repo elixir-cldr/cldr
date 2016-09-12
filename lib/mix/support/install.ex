@@ -35,12 +35,71 @@ defmodule Cldr.Install do
   Download the requested locale from github into the
   client app data directory.
 
-  The target directory is typically `./priv/cldr/locales`.
+  The data directory is typically `./priv/cldr/locales`.
+
+  This function is intended to be invoked during application
+  compilation when a valid locale is configured but is not yet
+  installed in the application.
+
+  An http request to the master github repository for `Cldr` is made
+  to download the correct version of the locale file which is then
+  written to the configured data directory.
   """
-  def install_locale(locale) do
-    if !Cldr.Config.locale_path(locale) do
-      IO.puts "Downloading and installing #{inspect locale} to #{client_locale_dir()}"
+  def install_locale(locale, options \\ []) do
+    if !locale_installed?(locale) or options[:force] do
+      Application.ensure_started(:inets)
+      Application.ensure_started(:ssl)
+      do_install_locale(locale, locale in Cldr.all_locales())
     end
+  end
+
+  def do_install_locale(locale, false) do
+    raise Cldr.UnknownLocaleError,
+      "Requested locale #{inspect locale} is not known."
+  end
+
+  def do_install_locale(locale, true) do
+    IO.write "Downloading and installing locale #{inspect locale} ... "
+    locale_file_name = "#{locale}.json"
+    url = "#{base_url()}#{locale_file_name}" |> String.to_charlist
+
+    case :httpc.request(url) do
+      {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
+        output_file_name = "#{client_locale_dir()}/#{locale_file_name}"
+        File.write!(output_file_name, :erlang.list_to_binary(body))
+        IO.puts "done."
+
+      {_, {{_version, code, message}, _headers, _body}} ->
+        IO.puts "error!"
+        raise RuntimeError,
+          message: "Couldn't download locale #{inspect locale}. " <>
+            "HTTP Error: (#{code}) #{inspect message}\nURL: #{inspect url}"
+    end
+  end
+
+  @doc """
+  Builds the base url to retrieve a locale file from github.
+
+  The url is build using the version number of the `Cldr` application.
+  If the version is a `-dev` version then the locale file is downloaded
+  from the master branch.
+  """
+  @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
+  def base_url do
+    version = Cldr.Mixfile.project[:version]
+    branch = if String.contains?(version, "-dev"), do: "master", else: version
+    @base_url <> branch <> "/priv/cldr/locales/"
+  end
+
+  @doc """
+  Returns a `boolean` indicating if the requested locale is installed.
+
+  No checking of the validity of the `locale` itself is performed.  The
+  check is based upon whether there is a locale file installed in the
+  client application or in `Cldr` itself.
+  """
+  def locale_installed?(locale) do
+    !!Cldr.Config.locale_path(locale)
   end
 
   @doc """
