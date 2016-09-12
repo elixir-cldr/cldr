@@ -87,12 +87,20 @@ defmodule Cldr.Config do
     @cldr_home_dir
   end
 
+  @doc """
+  Return the directory where `Cldr` stores its core data
+  """
+  @cldr_data_dir Path.join(@cldr_home_dir, "/priv/cldr")
+  def cldr_data_dir do
+    @cldr_data_dir
+  end
+
   @default_data_dir if(String.contains?(__DIR__, "deps"),
     do: hd(String.split(__DIR__, "deps")),
     else: @cldr_home_dir) <>("/priv/cldr")
 
   @doc """
-  Return the path name of the CLDR data directory.
+  Return the path name of the CLDR data directory for a client application.
   """
   @data_dir (Application.get_env(:cldr, :data_dir) || @default_data_dir)
   |> Path.expand
@@ -159,7 +167,7 @@ defmodule Cldr.Config do
   Any configured locales that are not present in this list will
   raise an exception at compile time.
   """
-  @locales_path Path.join(@data_dir, "available_locales.json")
+  @locales_path Path.join(@cldr_data_dir, "available_locales.json")
   @all_locales @locales_path
   |> File.read!
   |> Poison.decode!

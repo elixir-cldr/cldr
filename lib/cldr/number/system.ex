@@ -61,7 +61,7 @@ defmodule Cldr.Number.System do
       74
   """
   @spec number_systems :: %{}
-  @number_systems Path.join(Cldr.Config.data_dir(), "number_systems.json")
+  @number_systems Path.join(Cldr.Config.cldr_data_dir(), "number_systems.json")
   |> File.read!
   |> Poison.decode!
   |> Cldr.Map.atomize_keys

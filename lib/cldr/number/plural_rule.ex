@@ -16,7 +16,7 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
-      @rules Cldr.data_dir()
+      @rules Cldr.Config.cldr_data_dir()
       |> Path.join("/plural_rules.json")
       |> File.read!
       |> Poison.decode!
