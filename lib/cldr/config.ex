@@ -63,7 +63,7 @@ defmodule Cldr.Config do
   By default the locale files are stored in `./priv/cldr/locales`.
 
   The locale of the locales can be changed in the configuration with the
-  `:data_dir` key.  For eaxmple:
+  `:data_dir` key.  For example:
 
       config :ex_cldr,
         locales: ["en", "fr"]
@@ -78,7 +78,8 @@ defmodule Cldr.Config do
 
   @type t :: binary
 
-  @default_locale   "en"
+  @default_locale    "en"
+  @cldr_relative_dir "/priv/cldr"
 
   @doc """
   Return the root path of the cldr application
@@ -91,14 +92,20 @@ defmodule Cldr.Config do
   @doc """
   Return the directory where `Cldr` stores its core data
   """
-  @cldr_data_dir Path.join(@cldr_home_dir, "/priv/cldr")
+  @cldr_data_dir Path.join(@cldr_home_dir, @cldr_relative_dir)
   def cldr_data_dir do
     @cldr_data_dir
   end
 
-  @default_data_dir if(String.contains?(__DIR__, "deps"),
+  # We want to know where the cldr data is stored for an app
+  # by default.  But we need to do some trickery depedning
+  # on whether ex_cldr is a dependency in a client app or
+  # whether we're working on cldr itself.  The key is the
+  # assumption that if we're a dependency is a client app then
+  # "deps" is part of the path
+  @default_data_dir if(String.contains?(__DIR__, "/deps/"),
     do: hd(String.split(__DIR__, "deps")),
-    else: @cldr_home_dir) <>("/priv/cldr")
+    else: @cldr_home_dir) <> @cldr_relative_dir
 
   @doc """
   Return the path name of the CLDR data directory for a client application.
@@ -295,14 +302,15 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the location of the json data for a locale.
+  Returns the location of the json data for a locale or `nil`
+  if the locale can't be found.
 
   * `locale` is any locale returned from Cldr.known_locales()`
   """
   def locale_path(locale) do
     relative_locale_path = ["locales/", "#{locale}.json"]
     client_path = Path.join(data_dir(), relative_locale_path)
-    cldr_path = Path.join(cldr_data_dir(), relative_locale_path)
+    cldr_path   = Path.join(cldr_data_dir(), relative_locale_path)
     cond do
       File.exists?(client_path) -> client_path
       File.exists?(cldr_path)   -> cldr_path
@@ -342,7 +350,8 @@ defmodule Cldr.Config do
   defp assert_valid_keys!(content) do
     for module <- Cldr.Consolidate.required_modules do
       if !Map.has_key?(content, module) do
-        raise RuntimeError, message: "Locale file is invalid - #{inspect module} is not found."
+        raise RuntimeError, message:
+          "Locale file is invalid - map key #{inspect module} was not found."
       end
     end
     content
@@ -398,15 +407,7 @@ defmodule Cldr.Config do
 
   # Convert to an atom but only if
   # its a binary.
-  defp atomize(nil) do
-    nil
-  end
-
-  defp atomize(v) when is_binary(v) do
-    String.to_atom(v)
-  end
-
-  defp atomize(v) do
-    v
-  end
+  defp atomize(nil), do: nil
+  defp atomize(v) when is_binary(v), do: String.to_atom(v)
+  defp atomize(v), do: v
 end

@@ -13,6 +13,9 @@ defmodule Cldr.Install do
   installed.
   """
 
+  @doc """
+  Install all the configured locales
+  """
   def install_known_locales do
     ensure_client_locale_dir_exists!()
     Enum.each Cldr.known_locales(), &install_locale/1
@@ -91,7 +94,7 @@ defmodule Cldr.Install do
     Path.join(cldr_locale_dir(), "#{locale}.json")
   end
 
-  def ensure_client_locale_dir_exists! do
+  defp ensure_client_locale_dir_exists! do
     case File.mkdir(client_locale_dir()) do
       :ok ->
         :ok
@@ -103,7 +106,7 @@ defmodule Cldr.Install do
     end
   end
 
-  def ensure_client_data_dir_exists! do
+  defp ensure_client_data_dir_exists! do
     case File.mkdir(client_data_dir()) do
       :ok ->
         :ok
