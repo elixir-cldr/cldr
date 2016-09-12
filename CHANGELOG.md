@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.3 September 12, 2016
+
+### Bug fixes
+
+* Ensures that the client application data directory is created before installing additional locales
+
 ## Changelog for Cldr v0.0.2 September 12, 2016
 
 ### Enhancements
