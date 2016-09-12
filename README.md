@@ -11,7 +11,7 @@ Add `cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.1"}
+        {:ex_cldr, "~> 0.0.2"}
       ]
     end
 
@@ -39,6 +39,15 @@ Without any specific configuration Cldr will support the "en" locale only.  To s
 Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
 
 If you are also using `Gettext` then you can tell `Cldr` to use that module to inform `Cldr` about which locales you wish to configure.  By default `Cldr` will use the `:full` dataset of Cldr.  If you prefer you can configure the `:modern` set instead.
+
+## Downloading Configured Locales
+
+`Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
+or from [hex](http://hex.pm).
+
+* If installed from github then all 511 locales are installed when the repo is cloned into your application
+
+* If installed from hex then only a single locale, "en", is installed.  When you configure additional locales these will be downloaded during application compilation
 
 ## Formatting Numbers
 
