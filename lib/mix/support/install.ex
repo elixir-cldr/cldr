@@ -86,7 +86,7 @@ defmodule Cldr.Install do
   """
   @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
   def base_url do
-    version = Cldr.Mixfile.project[:version]
+    version = "v" <> Cldr.Mixfile.project[:version]
     branch = if String.contains?(version, "-dev"), do: "master", else: version
     @base_url <> branch <> "/priv/cldr/locales/"
   end

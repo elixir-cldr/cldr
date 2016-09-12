@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.0.2-dev"
+  @version "0.0.2"
 
   def project do
     [app: :ex_cldr,
@@ -45,8 +45,14 @@ defmodule Cldr.Mixfile do
       maintainers: ["Kip Cole"],
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
-      files: ["lib", "data", "guides", "bench", "src", "config",
-              "priv", "mix.exs", "test", "README*"]
+      files: [
+        "lib", "guides", "bench", "src", "config",
+        "mix.exs", "test", "README*",
+        "priv/cldr/locales/en.json",
+        "priv/cldr/available_locales.json",
+        "priv/cldr/number_systems.json",
+        "priv/cldr/plural_rules.json"
+      ]
     ]
   end
 
