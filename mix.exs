@@ -47,7 +47,7 @@ defmodule Cldr.Mixfile do
       links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
       files: [
         "lib", "guides", "bench", "src", "config",
-        "mix.exs", "test", "README*", "CHANGELOG*"
+        "mix.exs", "test", "README*", "CHANGELOG*",
         "priv/cldr/locales/en.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
