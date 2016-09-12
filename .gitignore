@@ -9,12 +9,6 @@ erl_crash.dump
 *.tar
 .DS_Store
 
-# The locales installed in the package
-# We force the "en" locale into the repo
-# but all others are ignored and installed
-# on demand during compilation
-/priv/cldr/locales
-
 # The xml downloaded from Unicode
 /downloads
 

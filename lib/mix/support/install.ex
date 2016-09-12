@@ -1,5 +1,17 @@
 defmodule Cldr.Install do
+  @moduledoc """
+  Support for installing locales on demand.
 
+  When installed as a package on from [hex](http://hex.pm), `Cldr` has only
+  the default locale, "en", installed and configured.
+
+  When other locales are added to the configuration `Cldr` will attempt to
+  download the locale from [github](https://github.com/kipcole9/cldr)
+  during compilation.
+
+  If `Cldr` is installed from github directly then all locales are already
+  installed.
+  """
 
   def install_known_locales do
     ensure_client_locale_dir_exists!()
@@ -20,7 +32,9 @@ defmodule Cldr.Install do
   The target directory is typically `./priv/cldr/locales`.
   """
   def install_locale(locale) do
-    IO.puts "Downloading and installing #{inspect locale} to #{client_locale_dir()}"
+    if !File.exists?(client_locale_file(locale)) do
+      IO.puts "Downloading and installing #{inspect locale} to #{client_locale_dir()}"
+    end
   end
 
   @doc """
@@ -40,6 +54,10 @@ defmodule Cldr.Install do
   """
   def client_locale_dir do
     "#{client_data_dir()}/locales"
+  end
+
+  def client_locale_file(locale) do
+    Path.join(client_locale_dir(), "#{locale}.json")
   end
 
   @doc """
