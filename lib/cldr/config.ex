@@ -78,7 +78,6 @@ defmodule Cldr.Config do
   @type t :: binary
 
   @default_locale   "en"
-  @default_data_dir "./priv/cldr"
 
   @doc """
   Return the root path of the cldr application
@@ -87,6 +86,10 @@ defmodule Cldr.Config do
   def cldr_home do
     @cldr_home_dir
   end
+
+  @default_data_dir if(String.contains?(__DIR__, "deps"),
+    do: hd(String.split(__DIR__, "deps")),
+    else: @cldr_home_dir) <>("/priv/cldr")
 
   @doc """
   Return the path name of the CLDR data directory.

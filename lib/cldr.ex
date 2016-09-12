@@ -30,10 +30,10 @@ defmodule Cldr do
   @warn_if_greater_than 100
   @known_locale_count Enum.count(Config.known_locales())
   @locale_string if @known_locale_count > 1, do: "locales ", else: "locale "
-  IO.puts "Generating functions for #{@known_locale_count} " <>
+  IO.puts "Generating Cldr for #{@known_locale_count} " <>
     @locale_string <>
     "#{inspect Config.known_locales, limit: 5} with " <>
-    "default #{inspect Config.default_locale()}"
+    "default locale #{inspect Config.default_locale()}"
   if @known_locale_count > @warn_if_greater_than do
     IO.puts "Please be patient, generating functions for many locales " <>
     "can take some time"
