@@ -95,6 +95,7 @@ defmodule Cldr.Install do
   end
 
   defp ensure_client_locale_dir_exists! do
+    ensure_client_data_dir_exists!()
     case File.mkdir(client_locale_dir()) do
       :ok ->
         :ok
