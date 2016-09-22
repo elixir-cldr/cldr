@@ -67,7 +67,8 @@ defmodule Cldr do
       Process.put(:cldr, locale)
       locale
     else
-      raise Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."
+      raise Cldr.UnknownLocaleError,
+        "The requested locale #{inspect locale} is not known."
     end
   end
 

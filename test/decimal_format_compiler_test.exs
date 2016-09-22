@@ -3,8 +3,6 @@ defmodule DecimalFormatCompiler.Test do
   alias Cldr.Number.Format
   alias Cldr.Number
 
-  @ltr_marker <<226, 128, 142>>
-
   Enum.each Format.decimal_format_list, fn (format) ->
     test "Compile decimal format #{inspect Number.String.clean(format)}" do
       assert {:ok, _result} = Format.Compiler.parse(unquote(format))
