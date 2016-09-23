@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Cldr.Install do
+defmodule Mix.Tasks.Cldr.Install.Locales do
   @moduledoc """
   Installs the cldr core data and configured locales into the application.  By
   default it installs into the ./priv/cldr directory.

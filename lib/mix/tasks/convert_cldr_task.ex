@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Cldr.Download do
+defmodule Mix.Tasks.Cldr.Convert do
   @moduledoc """
   Downloads the latest version of the CLDR repository and then
   unzips the resulting files.  The data is stored in the `./downloads`
@@ -10,13 +10,11 @@ defmodule Mix.Tasks.Cldr.Download do
 
   use Mix.Task
 
-  @shortdoc "Download the latest CLDR data from Unicode and convert to json"
+  @shortdoc "Convert downloaded CLDR data from XML to json"
 
-  @download_url    "http://unicode.org/Public/cldr/latest"
-  @required_files  ["core.zip", "tools.zip", "keyboards.zip"]
   @download_dir    "downloads"
   @destination_dir Path.join(Cldr.Config.cldr_home(), @download_dir)
-  @need_utils      ["wget"]
+  @need_utils      ["java", "find", "rm"]
   @data_dir        "./data"
 
   @doc """
@@ -25,8 +23,11 @@ defmodule Mix.Tasks.Cldr.Download do
   """
   def run(_) do
     check_utils(@need_utils)
-    IO.puts "Downloading CLDR Repository from the Unicode Consortium."
-    Cldr.Downloader.download(@download_url, @required_files, @destination_dir)
+    IO.puts "Converting CLDR XML files to json format.  This will take tens of minutes."
+    Cldr.Downloader.convert_to_json(@destination_dir, @data_dir)
+
+    # Remove bower and package json files since we don't need them
+    Cldr.Downloader.remove_package_files(@data_dir)
   end
 
   defp check_utils(utils) do
