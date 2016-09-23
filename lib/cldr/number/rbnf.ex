@@ -20,7 +20,12 @@ defmodule Cldr.Rbnf do
     @rbnf_dir
   end
 
-  @locales Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".xml"))
+  if File.exists?(@rbnf_dir) do
+    @locales Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".xml"))
+  else
+    @locales []
+  end
+
   @spec locales :: [String.t] | []
   def locales do
     @locales
