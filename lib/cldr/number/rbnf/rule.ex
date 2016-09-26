@@ -3,7 +3,7 @@ defmodule Cldr.Rbnf.Rule do
   Tokenizer for an RBNF rule.
   """
 
-  defstruct [:name, :radix, :definition, :range]
+  defstruct [:base_value, :radix, :definition, :range, :divisor]
   alias Cldr.Rbnf.Rule
 
   @doc """

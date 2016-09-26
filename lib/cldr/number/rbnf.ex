@@ -12,6 +12,7 @@ defmodule Cldr.Rbnf do
   import Xml
   alias Cldr.Rbnf.Rule
 
+  @default_radix 10
   @data_dir "./downloads/common"
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
@@ -32,14 +33,32 @@ defmodule Cldr.Rbnf do
   end
 
   def for_locale(locale) do
-    xml = locale
-    |> locale_path
-    |> Xml.parse
+    if File.exists?(locale_path(locale)) do
+      xml = locale
+      |> locale_path
+      |> Xml.parse
 
-    xml
-    |> rule_groups
-    |> rule_sets_from_groups(xml)
-    |> rules_from_rule_sets(xml)
+      xml
+      |> rule_groups
+      |> rule_sets_from_groups(xml)
+      |> rules_from_rule_sets(xml)
+    else
+      {:error, :rbnf_file_not_found}
+    end
+  end
+
+  # Just checking if any rules actually use the ">" modifier in any
+  # of their base_values.
+  def all_locales do
+    locales()
+    |> Enum.map(&Cldr.Rbnf.for_locale/1)
+    |> Enum.map(&Map.values/1)
+    |> List.flatten
+    |> Enum.map(&(&1.rules))
+    |> List.flatten
+    |> Enum.map(&(&1.base_value))
+    |> Enum.uniq
+    |> Enum.sort
   end
 
   def rule_sets_from_groups(groups, xml) do
@@ -85,11 +104,12 @@ defmodule Cldr.Rbnf do
     xml
     |> all(path)
     |> Enum.map(fn(xml_node) ->
-        %Rule{name:       to_integer(attr(xml_node, "value")),
-              radix:      to_integer(attr(xml_node, "radix")) || 1,
+        %Rule{base_value: to_integer(attr(xml_node, "value")),
+              radix:      to_integer(attr(xml_node, "radix")) || @default_radix,
               definition: remove_trailing_semicolon(text(xml_node))}
        end)
     |> set_range
+    |> set_divisor
   end
 
   def to_integer(nil) do
@@ -117,7 +137,7 @@ defmodule Cldr.Rbnf do
   #
   # Means that rule "0" is applied for values up to but not including "10"
   defp set_range([rule | [next_rule | rest]]) do
-    [%Rule{rule | range: range_from_next_rule(rule.name, next_rule.name)}] ++ set_range([next_rule] ++ rest)
+    [%Rule{rule | range: range_from_next_rule(rule.base_value, next_rule.base_value)}] ++ set_range([next_rule] ++ rest)
   end
 
   defp set_range([rule | []]) do
@@ -130,5 +150,39 @@ defmodule Cldr.Rbnf do
 
   defp range_from_next_rule(_rule, _next_rule) do
     :undefined
+  end
+
+  defp set_divisor([rule]) do
+    [%Rule{rule | divisor: divisor(rule.base_value, rule.radix)}]
+  end
+
+  defp set_divisor([rule | rest]) do
+    [%Rule{rule | divisor: divisor(rule.base_value, rule.radix)} | set_divisor(rest)]
+  end
+
+  # Thanks to twitter-cldr:
+  # https://github.com/twitter/twitter-cldr-rb/blob/master/lib/twitter_cldr/formatters/numbers/rbnf/rule.rb
+  defp divisor(base_value, radix) when is_integer(base_value) and is_integer(radix) do
+    exponent = if base_value > 0 do
+      Float.ceil(:math.log(base_value) / :math.log(radix)) |> trunc
+    else
+      1
+    end
+
+    divisor = if exponent > 0 do
+      :math.pow(radix, exponent) |> trunc
+    else
+      1
+    end
+
+    if divisor > base_value do
+      :math.pow(radix, exponent - 1) |> trunc
+    else
+      divisor
+    end
+  end
+
+  defp divisor(_base_value, _radix) do
+    nil
   end
 end
