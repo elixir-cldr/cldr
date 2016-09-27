@@ -117,6 +117,7 @@ defmodule Cldr.Consolidate do
     |> Cldr.Normalize.Currency.normalize(locale)
     |> Cldr.Normalize.List.normalize(locale)
     |> Cldr.Normalize.NumberSystem.normalize(locale)
+    |> Cldr.Normalize.Rbnf.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
