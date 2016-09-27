@@ -337,21 +337,22 @@ defmodule Cldr.Config do
     path
     |> File.read!
     |> Poison.decode!
-    |> assert_valid_keys!
+    |> assert_valid_keys!(locale)
     |> Cldr.Map.atomize_keys
     |> atomize_number_systems
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
+    |> structure_rbnf
   end
 
   # Simple check that the locale content contains what we expect
   # by checking it has the keys we used when the locale was consolidated.
-  defp assert_valid_keys!(content) do
+  defp assert_valid_keys!(content, locale) do
     for module <- Cldr.Consolidate.required_modules do
       if !Map.has_key?(content, module) and !System.get_env("DEV") do
         raise RuntimeError, message:
-          "Locale file is invalid - map key #{inspect module} was not found."
+          "Locale file #{inspect locale} is invalid - map key #{inspect module} was not found."
       end
     end
     content
@@ -403,6 +404,25 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
 
     Map.put(content, :number_symbols, symbols)
+  end
+
+  # Put the rbnf rules into a %Rule{} struct
+  defp structure_rbnf(content) do
+    rbnf = content.rbnf
+    |> Enum.map(fn {group, sets} -> {group, structure_sets(sets)} end)
+    |> Enum.into(%{})
+
+    Map.put(content, :rbnf, rbnf)
+  end
+
+  defp structure_sets(sets) do
+    alias Cldr.Rbnf.Rule
+
+    Enum.map sets, fn (set) ->
+      Enum.map set.rules, fn (rule) ->
+        struct(Rule, rule)
+      end
+    end
   end
 
   # Convert to an atom but only if

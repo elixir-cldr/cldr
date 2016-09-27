@@ -7,7 +7,7 @@ defmodule Cldr.Normalize.Rbnf do
 
   def normalize_rbnf(content, locale) do
     case rbnf = Cldr.Rbnf.for_locale(locale) do
-      {:error, _} -> content
+      {:error, _} -> Map.put(content, "rbnf", %{})
       _           -> Map.put(content, "rbnf", rbnf)
     end
   end
