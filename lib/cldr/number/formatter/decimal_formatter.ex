@@ -423,29 +423,32 @@ defmodule Cldr.Number.Formatter.Decimal do
   defp assemble_format(number_string, number, meta, options) do
     format = meta.format[options[:pattern]]
     format_length = length(format)
-    do_assemble_format(number_string, number, meta, format, options, format_length)
+
+    number_string
+    |> do_assemble_format(number, meta, format, options, format_length)
+    |> Enum.join
   end
 
   # If the format length is 1 (one) then it can only be the number format
   # and therefore we don't have to do the reduction.
   defp do_assemble_format(number_string, _number, _meta, _format, _options, 1) do
-    number_string
+    [number_string]
   end
 
   @lint false
   defp do_assemble_format(number_string, number, meta, format, options, _length) do
-    system = options[:number_system]
-    locale = options[:locale]
-    symbols = number_symbols_for(locale, system)
+    system   = options[:number_system]
+    locale   = options[:locale]
+    currency = options[:currency]
+    symbols  = number_symbols_for(locale, system)
 
-    Enum.reduce format, @empty_string, fn (token, string) ->
-      string <> case token do
+    Enum.map format, fn (token) ->
+      case token do
         {:format, _format}   -> number_string
         {:pad, _}            -> padding_string(meta, number_string)
         {:plus, _}           -> symbols.plus_sign
         {:minus, _}          -> symbols.minus_sign
-        {:currency, type}    ->
-          currency_symbol(options[:currency], number, type, locale)
+        {:currency, type}    -> currency_symbol(currency, number, type, locale)
         {:percent, _}        -> symbols.percent_sign
         {:permille, _}       -> symbols.permille
         {:literal, literal}  -> literal
@@ -461,6 +464,9 @@ defmodule Cldr.Number.Formatter.Decimal do
     @empty_string
   end
 
+  # We can't make the assumption that the padding character is
+  # an ascii character - it could be any grapheme so we can't use
+  # binary pattern matching.
   defp padding_string(meta, number_string) do
     pad_length = meta[:padding_length] - String.length(number_string)
     if pad_length > 0 do
