@@ -47,18 +47,16 @@ defmodule Cldr.Rbnf do
     end
   end
 
-  # Just checking if any rules actually use the ">" modifier in any
-  # of their base_values.
-  def all_locales do
+  # Returns all the rules in rbnf - helpful for testing
+  # only.
+  @doc false
+  def all_rules do
     locales()
     |> Enum.map(&Cldr.Rbnf.for_locale/1)
     |> Enum.map(&Map.values/1)
     |> List.flatten
     |> Enum.map(&(&1.rules))
     |> List.flatten
-    |> Enum.map(&(&1.base_value))
-    |> Enum.uniq
-    |> Enum.sort
   end
 
   def rule_sets_from_groups(groups, xml) do
