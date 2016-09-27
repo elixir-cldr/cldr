@@ -349,7 +349,7 @@ defmodule Cldr.Config do
   # by checking it has the keys we used when the locale was consolidated.
   defp assert_valid_keys!(content) do
     for module <- Cldr.Consolidate.required_modules do
-      if !Map.has_key?(content, module) do
+      if !Map.has_key?(content, module) and !System.get_env("DEV") do
         raise RuntimeError, message:
           "Locale file is invalid - map key #{inspect module} was not found."
       end

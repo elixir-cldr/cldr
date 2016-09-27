@@ -5,7 +5,9 @@ defmodule Cldr.Consolidate do
   """
 
   @cldr_modules ["number_formats", "list_formats", "currencies",
-                 "number_systems", "number_symbols", "minimum_grouping_digits"]
+                 "number_systems", "number_symbols", "minimum_grouping_digits",
+                 "rbnf"
+                ]
 
   @doc """
   Identifies the top level keys in the consolidated locale file.

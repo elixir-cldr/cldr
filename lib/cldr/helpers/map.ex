@@ -38,7 +38,7 @@ defmodule Cldr.Map do
 
   def atomize_keys(map = %{}) do
     map
-    |> Enum.map(fn {k, v} -> {String.to_atom(k), atomize_keys(v)} end)
+    |> Enum.map(fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
     |> Enum.into(%{})
   end
 
@@ -50,6 +50,17 @@ defmodule Cldr.Map do
 
   def atomize_keys(not_a_map) do
     not_a_map
+  end
+
+  @doc """
+  Atomize one key if it is a binary
+  """
+  def atomize_key(key) when is_atom(key) do
+    key
+  end
+
+  def atomize_key(key) when is_binary(key) do
+    String.to_atom(key)
   end
 
   @doc """
