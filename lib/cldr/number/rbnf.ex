@@ -53,10 +53,9 @@ defmodule Cldr.Rbnf do
   def all_rules do
     locales()
     |> Enum.map(&Cldr.Rbnf.for_locale/1)
-    |> Enum.map(&Map.values/1)
-    |> List.flatten
-    |> Enum.map(&(&1.rules))
-    |> List.flatten
+    |> Enum.flat_map(&Map.values/1) # Get sets from groups
+    |> Enum.flat_map(&Map.values/1) # Get rules from set
+    |> Enum.flat_map(&(&1.rules))   # Get rule definitions from rules
   end
 
   def rule_sets_from_groups(groups, xml) do
@@ -73,13 +72,16 @@ defmodule Cldr.Rbnf do
   end
 
   def rules_from_one_group(group, sets, xml) do
-    Enum.map sets, fn [set, access] ->
-      %{set: set, access: access, rules: rules(xml, group, set)}
+    Enum.reduce sets, %{}, fn [set, access], acc ->
+      Map.put acc, set, %{access: access, rules: rules(xml, group, set)}
     end
   end
 
+  # Rbnf is directly from XML and hence has "_" as a separator
+  # in a locale whereas we use "-" elsewhere
   @spec locale_path(binary) :: String.t
   def locale_path(locale) when is_binary(locale) do
+    locale = String.replace(locale, "-", "_")
     Path.join(rbnf_dir(), "/#{locale}.xml")
   end
 

@@ -418,11 +418,11 @@ defmodule Cldr.Config do
   defp structure_sets(sets) do
     alias Cldr.Rbnf.Rule
 
-    Enum.map sets, fn (set) ->
-      Enum.map set.rules, fn (rule) ->
-        struct(Rule, rule)
-      end
-    end
+    Enum.map(sets, fn {name, set} ->
+      rules = Enum.map(set.rules, fn (rule) -> struct(Rule, rule) end)
+      {name, %{set | rules: rules}}
+    end)
+    |> Enum.into(%{})
   end
 
   # Convert to an atom but only if
