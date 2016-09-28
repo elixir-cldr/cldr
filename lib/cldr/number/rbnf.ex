@@ -47,6 +47,24 @@ defmodule Cldr.Rbnf do
     end
   end
 
+  @doc """
+  Returns a map that mergers all rules by the primary dimension of
+  RuleGroup, within which rbnf rules are keyed by locale.
+
+  This function is primarily intended to support compile-time generation
+  of functions to process rbnf rules.
+  """
+  def for_all_locales do
+    Enum.map(locales(), fn locale ->
+      Enum.map(for_locale(locale), fn {group, sets} ->
+        locale = String.replace(locale, "_", "-")
+        {group, %{locale => sets}}
+      end)
+      |> Enum.into(%{})
+    end)
+    |> Cldr.Map.merge_map_list
+  end
+
   # Returns all the rules in rbnf - helpful for testing
   # only.
   @doc false
@@ -58,20 +76,20 @@ defmodule Cldr.Rbnf do
     |> Enum.flat_map(&(&1.rules))   # Get rule definitions from rules
   end
 
-  def rule_sets_from_groups(groups, xml) do
+  defp rule_sets_from_groups(groups, xml) do
     Enum.reduce groups, %{}, fn group, acc ->
       Map.put(acc, group, rule_sets(xml, group))
     end
   end
 
-  def rules_from_rule_sets(rulesets, xml) do
+  defp rules_from_rule_sets(rulesets, xml) do
     Enum.map(rulesets, fn {group, sets} ->
       {group, rules_from_one_group(group, sets, xml)}
     end)
     |> Enum.into(%{})
   end
 
-  def rules_from_one_group(group, sets, xml) do
+  defp rules_from_one_group(group, sets, xml) do
     Enum.reduce sets, %{}, fn [set, access], acc ->
       Map.put acc, set, %{access: access, rules: rules(xml, group, set)}
     end
@@ -80,18 +98,18 @@ defmodule Cldr.Rbnf do
   # Rbnf is directly from XML and hence has "_" as a separator
   # in a locale whereas we use "-" elsewhere
   @spec locale_path(binary) :: String.t
-  def locale_path(locale) when is_binary(locale) do
+  defp locale_path(locale) when is_binary(locale) do
     locale = String.replace(locale, "-", "_")
     Path.join(rbnf_dir(), "/#{locale}.xml")
   end
 
   @spec rule_groups(Xml.xml_node, String.t) :: [String.t]
-  def rule_groups(xml, path \\ "//rulesetGrouping") do
+  defp rule_groups(xml, path \\ "//rulesetGrouping") do
     Enum.map(all(xml, path), fn(xml_node) -> attr(xml_node, "type") end)
   end
 
   @spec rule_sets(Xml.xml_node, binary) :: list([type: String.t, access: String.t])
-  def rule_sets(xml, rulegroup) do
+  defp rule_sets(xml, rulegroup) do
     path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset"
     Enum.map(all(xml, path), fn(xml_node) ->
       [attr(xml_node, "type"), attr(xml_node, "access") || "public"]
@@ -99,7 +117,7 @@ defmodule Cldr.Rbnf do
   end
 
   @spec rules(Xml.xml_node, String.t, String.t) :: [%Rule{}]
-  def rules(xml, rulegroup, ruleset) do
+  defp rules(xml, rulegroup, ruleset) do
     path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset[@type='#{ruleset}']/rbnfrule"
     xml
     |> all(path)
@@ -112,11 +130,11 @@ defmodule Cldr.Rbnf do
     |> set_divisor
   end
 
-  def to_integer(nil) do
+  defp to_integer(nil) do
     nil
   end
 
-  def to_integer(value) do
+  defp to_integer(value) do
     with {int, ""} <- Integer.parse(value) do
       int
     else
@@ -124,7 +142,7 @@ defmodule Cldr.Rbnf do
     end
   end
 
-  def remove_trailing_semicolon(text) do
+  defp remove_trailing_semicolon(text) do
     String.replace_suffix(text, ";", "")
   end
 

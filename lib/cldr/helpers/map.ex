@@ -85,6 +85,17 @@ defmodule Cldr.Map do
   end
 
   @doc """
+  Returns the result of deep merging a list of maps
+  """
+  def merge_map_list([h | []]) do
+    h
+  end
+
+  def merge_map_list([h | t]) do
+    deep_merge(h, merge_map_list(t))
+  end
+
+  @doc """
   Deep merge two maps
   """
   def deep_merge(left, right) do
