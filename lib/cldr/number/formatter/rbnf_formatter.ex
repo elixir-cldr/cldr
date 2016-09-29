@@ -13,7 +13,7 @@ defmodule Cldr.Number.Formatter.Rbnf do
 
   """
 
-  def to_string(number, format, options) do
+  def to_string(_number, _format, _options \\ []) do
 
   end
 end
