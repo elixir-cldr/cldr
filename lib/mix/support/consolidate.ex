@@ -65,6 +65,8 @@ defmodule Cldr.Consolidate do
   """
   @spec consolidate_locales :: :ok
   def consolidate_locales do
+    alias Experimental.Flow
+
     ensure_output_dir_exists!(consolidated_output_dir())
     ensure_output_dir_exists!(consolidated_locales_dir())
 
@@ -73,11 +75,9 @@ defmodule Cldr.Consolidate do
     save_locales()
 
     all_locales()
-    |> Enum.chunk(8, 8, [])
-    |> Enum.each(fn chunk ->
-         Enum.map(chunk, &Task.async(fn -> consolidate_locale(&1) end))
-         |> Enum.map(&Task.await(&1, 100_000))
-       end)
+    |> Flow.from_enumerable()
+    |> Flow.map(&consolidate_locale/1)
+    |> Enum.to_list
     :ok
   end
 

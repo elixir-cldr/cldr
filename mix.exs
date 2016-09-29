@@ -36,7 +36,8 @@ defmodule Cldr.Mixfile do
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
       {:excoveralls, "~> 0.5.6", only: :test},
-      {:gettext, "~> 0.11.0", only: :dev}
+      {:gettext, "~> 0.11.0", only: :dev},
+      {:gen_stage, "~> 0.4", only: [:dev, :test]}
     ]
   end
 
