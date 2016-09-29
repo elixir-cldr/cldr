@@ -20,12 +20,16 @@ defmodule Cldr.Downloader do
   * `destination_dir` is the directory of the download destination
   """
   def download(base_url, required_files, destination_dir) do
+    alias Experimental.Flow
+
     ensure File.mkdir(destination_dir), destination_dir
     add_dir_to_gitignore(destination_dir)
 
     required_files
-    |> Enum.map(&Task.async(fn -> fetch_and_unzip_file(base_url, destination_dir, &1) end))
-    |> Enum.map(&Task.await(&1, 100_000))
+    |> Flow.from_enumerable()
+    |> Flow.map(&fetch_and_unzip_file(base_url, destination_dir, &1))
+    |> Enum.to_list
+    :ok
   end
 
   @doc """
@@ -98,8 +102,12 @@ defmodule Cldr.Downloader do
             "#{download_dir}/tools/java/cldr.jar", "ldml2json",
             "-d", destination_dir,
             "-p", "true", "-r", "true", "-t"]
-    System.cmd("java", args ++ ["main"])
-    System.cmd("java", args ++ ["supplemental"])
+
+    p1 = Task.async(fn -> System.cmd("java", args ++ ["main"]) end)
+    p2 = Task.async(fn -> System.cmd("java", args ++ ["supplemental"]) end)
+
+    Task.await(p1)
+    Task.await(p2)
   end
 
   def remove_package_files(data_dir) do
