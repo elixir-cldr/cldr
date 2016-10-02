@@ -371,6 +371,7 @@ defmodule Cldr.Config do
   end
 
   # Put the currency data into a %Currency{} struct
+  # and ensure the currency symbol is upcased
   defp structure_currencies(content) do
     alias Cldr.Currency
 
