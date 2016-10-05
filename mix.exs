@@ -47,8 +47,8 @@ defmodule Cldr.Mixfile do
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
       files: [
-        "lib", "guides", "bench", "src", "config",
-        "mix.exs", "test", "README*", "CHANGELOG*",
+        "lib", "guides", "src", "config",
+        "mix.exs", "README*", "CHANGELOG*",
         "priv/cldr/locales/en.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
