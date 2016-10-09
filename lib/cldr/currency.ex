@@ -67,7 +67,7 @@ defmodule Cldr.Currency do
   @spec known_currency?(code) :: boolean
   def known_currency?(currency) when is_binary(currency) do
     try do
-      currency = String.downcase(currency) |> String.to_existing_atom
+      currency = normalize_currency_code(currency)
       known_currency?(currency)
     rescue ArgumentError ->
       false
@@ -110,11 +110,22 @@ defmodule Cldr.Currency do
     Cldr.Locale.get_locale(locale).currencies
   end
 
+  @doc """
+  Normalized the representation of a currency code.
+
+  The normalized form is an ISO4217 code in an atom form.
+  """
+  @spec normalize_currency_code(binary) :: atom
+  def normalize_currency_code(currency) when is_binary(currency) do
+    currency
+    |> String.upcase
+    |> String.to_existing_atom
+  end
+
   @spec do_for_code(code, Cldr.locale) :: %{}
   defp do_for_code(code, locale) when is_binary(code) do
     code
-    |> String.downcase
-    |> String.to_existing_atom
+    |> normalize_currency_code
     |> do_for_code(locale)
   end
 

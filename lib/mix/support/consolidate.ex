@@ -86,9 +86,12 @@ defmodule Cldr.Consolidate do
   """
   @spec consolidate_known_locales :: :ok
   def consolidate_known_locales do
-    for locale <- Cldr.known_locales do
-      consolidate_locale(locale)
-    end
+    alias Experimental.Flow
+
+    Cldr.known_locales()
+    |> Flow.from_enumerable()
+    |> Flow.map(&consolidate_locale/1)
+    |> Enum.to_list
     :ok
   end
 
@@ -235,7 +238,9 @@ defmodule Cldr.Consolidate do
     |> Enum.into(%{})
   end
 
-  defp remove_leading_underscores(v), do: v
+  defp remove_leading_underscores(v) do
+    v
+  end
 
   defp save_file(content, path) do
     File.write!(path, Poison.encode!(content))

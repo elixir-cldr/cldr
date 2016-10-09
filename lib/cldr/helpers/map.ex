@@ -52,15 +52,12 @@ defmodule Cldr.Map do
     not_a_map
   end
 
-  @doc """
-  Atomize one key if it is a binary
-  """
-  def atomize_key(key) when is_atom(key) do
-    key
-  end
-
   def atomize_key(key) when is_binary(key) do
     String.to_atom(key)
+  end
+
+  def atomize_key(key) when is_atom(key) do
+    key
   end
 
   @doc """

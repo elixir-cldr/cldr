@@ -2,7 +2,19 @@
 
 ### Enhancements
 
-* Add new function `Cldr.Number.Math.root/2` which calculate the nth root of a number.
+* Add new function `Cldr.Number.Math.root/2` which calculates the nth root of a number.
+
+## Changelog for Cldr v0.0.4 October 6, 2016
+
+### Bug Fixes
+
+* Remove the test and bench dirs from the hex build
+
+### Enhancements
+
+* Revised the format of the json packaging used to generate `Cldr` functions.  As a result, the keys for currencies are now upcased atoms (previously they were downcased atoms) which more closely mirrors ISO4217
+
+* Generated json for a locale now includes RBNF rule definitions.  These rules are not yet used but serve as the platform for the including RBNF generation in a near future release
 
 ## Changelog for Cldr v0.0.3 September 12, 2016
 
