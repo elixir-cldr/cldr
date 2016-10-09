@@ -441,7 +441,7 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Raises a number to a power.
+  Raises a number to a integer power.
 
   Raises a number to a power using the the binary method. There is one
   exception for Decimal numbers that raise `10` to some power. In this case the
@@ -449,6 +449,8 @@ defmodule Cldr.Number.Math do
 
   For further reading see
   [this article](http://videlalvaro.github.io/2014/03/the-power-algorithm.html)
+
+  > This function works only with integer exponents!
 
   ## Examples
 
@@ -492,7 +494,7 @@ defmodule Cldr.Number.Math do
     number
   end
 
-  # For a decimal we can short cut the multiplcations by just
+  # For a decimal we can short cut the multiplications by just
   # adjusting the exponent when the coefficient is 10
   def power(%Decimal{coef: 10, sign: sign, exp: exp}, n) do
     %Decimal{coef: 10, sign: sign, exp: exp + n - 1}
@@ -689,6 +691,60 @@ defmodule Cldr.Number.Math do
       new_estimate = Decimal.add(Decimal.div(estimate, @two),
         Decimal.div(number, Decimal.mult(@two, estimate)))
       do_sqrt(number, new_estimate, estimate, precision)
+    end
+  end
+
+  @doc """
+  Calculate the nth root of a number.
+
+  * `number` is an integer or a Decimal
+
+  * `nth` is a positive integer
+
+  ## Examples
+
+      iex> Cldr.Number.Math.root Decimal.new(8), 3
+      #Decimal<2.0>
+
+      iex> Cldr.Number.Math.root Decimal.new(16), 4
+      #Decimal<2.0>
+
+      iex> Cldr.Number.Math.root Decimal.new(27), 3
+      #Decimal<3.0>
+  """
+  def root(%Decimal{} = number, nth) when is_integer(nth) and nth > 0 do
+    guess = :math.pow(to_float(number), 1 / nth)
+    |> Decimal.new
+
+    do_root number, Decimal.new(nth), guess
+  end
+
+  def root(number, nth) when is_number(number) and is_integer(nth) and nth > 0 do
+    guess = :math.pow(number, 1 / nth)
+    do_root number, nth, guess
+  end
+
+  @root_precision 0.0001
+  defp do_root(number, nth, root) when is_number(number) do
+    delta = (1 / nth) * (number / :math.pow(root, nth - 1)) - root
+    if delta > @root_precision do
+      do_root(number, nth, root + delta)
+    else
+      root
+    end
+  end
+
+  @decimal_root_precision Decimal.new(@root_precision)
+  defp do_root(%Decimal{} = number, %Decimal{} = nth, %Decimal{} = root) do
+    d1 = Decimal.div(@one, nth)
+    d2 = Decimal.div(number, power(root, Decimal.sub(nth, @one)))
+    d3 = Decimal.sub(d2, root)
+    delta = Decimal.mult(d1, d3)
+
+    if Decimal.cmp(delta, @decimal_root_precision) == :gt do
+      do_root(number, nth, Decimal.add(root, delta))
+    else
+      root
     end
   end
 end

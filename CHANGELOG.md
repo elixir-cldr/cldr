@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.5 October 9, 2016
+
+### Enhancements
+
+* Add new function `Cldr.Number.Math.root/2` which calculate the nth root of a number.
+
 ## Changelog for Cldr v0.0.3 September 12, 2016
 
 ### Bug fixes
