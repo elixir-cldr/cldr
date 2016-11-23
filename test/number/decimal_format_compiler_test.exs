@@ -9,10 +9,6 @@ defmodule DecimalFormatCompiler.Test do
     end
   end
 
-  test "compile fails on bad format" do
-    assert {:error, _result} = Format.Compiler.parse("xxx")
-  end
-
   test "compile fails on empty format" do
     assert {:error, _result} = Format.Compiler.parse("")
   end

@@ -16,6 +16,7 @@ positive_format   ->  prefix number_format suffix : '$1' ++ format('$2') ++ '$3'
 positive_format   ->  prefix number_format : '$1' ++ format('$2').
 positive_format   ->  number_format suffix : format('$1') ++ '$2'.
 positive_format   ->  number_format :  format('$1').
+positive_format   ->  prefix : '$1'.
 
 negative_format   ->  prefix number_format suffix : '$1' ++ neg_format('$2') ++ '$3'.
 negative_format   ->  prefix number_format : '$1' ++ neg_format('$2').

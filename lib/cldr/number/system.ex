@@ -58,7 +58,7 @@ defmodule Cldr.Number.System do
   ## Example
 
       iex> Cldr.Number.System.number_systems |> Enum.count
-      74
+      77
   """
   @spec number_systems :: %{}
   @number_systems Path.join(Cldr.Config.cldr_data_dir(), "number_systems.json")
@@ -78,15 +78,17 @@ defmodule Cldr.Number.System do
   ## Example
 
       iex> Cldr.Number.System.number_system_names
-      [:ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :brah, :cakm,
-      :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :grek, :greklow, :gujr,
-      :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr,
-      :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham,
-      :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
-      :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan,
-      :mymrtlng, :nkoo, :olck, :orya, :osma, :roman, :romanlow, :saur, :shrd,
-      :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai,
-      :tibt, :tirh, :vaii, :wara]
+      [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali,
+      :beng, :bhks, :brah, :cakm, :cham, :cyrl, :deva, :ethi,
+      :fullwide, :geor, :grek, :greklow, :gujr, :guru, :hanidays,
+      :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr, :hmng,
+      :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham,
+      :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono,
+      :mathsanb, :mathsans, :mlym, :modi, :mong, :mroo, :mtei,
+      :mymr, :mymrshan, :mymrtlng, :newa, :nkoo, :olck, :orya,
+      :osma, :roman, :romanlow, :saur, :shrd, :sind, :sinh, :sora,
+      :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
+      :tirh, :vaii, :wara]
   """
   @number_system_names @number_systems |> Map.keys |> Enum.sort
   @spec number_system_names :: [String.t]

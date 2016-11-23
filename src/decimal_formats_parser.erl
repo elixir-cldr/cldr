@@ -1,6 +1,6 @@
 -module(decimal_formats_parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("src/decimal_formats_parser.yrl", 51).
+-file("src/decimal_formats_parser.yrl", 52).
 
 % If there is no negative pattern then build the default one
 negative(_Positive) ->
@@ -29,7 +29,7 @@ pad(V) ->
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
 
--file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -261,7 +261,7 @@ yeccpars2(23=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccpars2(26=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_0(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(27=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_1(S, Cat, Ss, Stack, T, Ts, Tzr);
+%%  yeccpars2_27(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(28=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_28(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(29=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -309,11 +309,10 @@ yeccpars2_0(S, quoted_char, Ss, Stack, T, Ts, Tzr) ->
 yeccpars2_0(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
--dialyzer({nowarn_function, yeccpars2_1/7}).
 yeccpars2_1(S, format, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
-yeccpars2_1(_, _, _, _, T, _, _) ->
- yeccerror(T).
+yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccgoto_positive_format(hd(Ss), Cat, Ss, Stack, T, Ts, Tzr).
 
 yeccpars2_2(S, semicolon, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 26, Ss, Stack, T, Ts, Tzr);
@@ -484,7 +483,11 @@ yeccpars2_25(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 
 %% yeccpars2_26: see yeccpars2_0
 
-%% yeccpars2_27: see yeccpars2_1
+-dialyzer({nowarn_function, yeccpars2_27/7}).
+yeccpars2_27(S, format, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
+yeccpars2_27(_, _, _, _, T, _, _) ->
+ yeccerror(T).
 
 yeccpars2_28(S, currency_1, Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 8, Ss, Stack, T, Ts, Tzr);
@@ -592,6 +595,7 @@ yeccpars2_34(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_34_(Stack),
  yeccgoto_positive_format(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_currency_symbol/7}).
 yeccgoto_currency_symbol(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_currency_symbol(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -609,9 +613,11 @@ yeccgoto_currency_symbol(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_currency_symbol(33=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_decimal_format/7}).
 yeccgoto_decimal_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_literal_elem/7}).
 yeccgoto_literal_elem(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_literal_elem(3, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -629,6 +635,7 @@ yeccgoto_literal_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_literal_elem(33, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_literal_list/7}).
 yeccgoto_literal_list(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(4, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_literal_list(3, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -646,9 +653,11 @@ yeccgoto_literal_list(31, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_literal_list(33, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(4, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_negative_format/7}).
 yeccgoto_negative_format(26=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_29(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_number_format/7}).
 yeccgoto_number_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(3, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_number_format(1, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -658,15 +667,17 @@ yeccgoto_number_format(26, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_number_format(27, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_31(31, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_positive_format/7}).
 yeccgoto_positive_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(2, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_prefix/7}).
 yeccgoto_prefix(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_prefix(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_25(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_prefix(26, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_1(27, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_27(27, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_prefix(28=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_25(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_prefix(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -674,6 +685,7 @@ yeccgoto_prefix(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_prefix(33=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_25(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_suffix/7}).
 yeccgoto_suffix(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_24(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_suffix(28=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -700,7 +712,7 @@ yeccpars2_3_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_7_/1}).
--file("src/decimal_formats_parser.yrl", 33).
+-file("src/decimal_formats_parser.yrl", 34).
 yeccpars2_7_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -708,7 +720,7 @@ yeccpars2_7_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_12_/1}).
--file("src/decimal_formats_parser.yrl", 21).
+-file("src/decimal_formats_parser.yrl", 22).
 yeccpars2_12_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -716,7 +728,7 @@ yeccpars2_12_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_13_/1}).
--file("src/decimal_formats_parser.yrl", 36).
+-file("src/decimal_formats_parser.yrl", 37).
 yeccpars2_13_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -724,7 +736,7 @@ yeccpars2_13_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_14_/1}).
--file("src/decimal_formats_parser.yrl", 38).
+-file("src/decimal_formats_parser.yrl", 39).
 yeccpars2_14_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -732,7 +744,7 @@ yeccpars2_14_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_15_/1}).
--file("src/decimal_formats_parser.yrl", 26).
+-file("src/decimal_formats_parser.yrl", 27).
 yeccpars2_15_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -740,7 +752,7 @@ yeccpars2_15_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_16_/1}).
--file("src/decimal_formats_parser.yrl", 34).
+-file("src/decimal_formats_parser.yrl", 35).
 yeccpars2_16_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -748,7 +760,7 @@ yeccpars2_16_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_17_/1}).
--file("src/decimal_formats_parser.yrl", 35).
+-file("src/decimal_formats_parser.yrl", 36).
 yeccpars2_17_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -756,7 +768,7 @@ yeccpars2_17_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_18_/1}).
--file("src/decimal_formats_parser.yrl", 37).
+-file("src/decimal_formats_parser.yrl", 38).
 yeccpars2_18_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -764,7 +776,7 @@ yeccpars2_18_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_19_/1}).
--file("src/decimal_formats_parser.yrl", 39).
+-file("src/decimal_formats_parser.yrl", 40).
 yeccpars2_19_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -772,7 +784,7 @@ yeccpars2_19_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_20_/1}).
--file("src/decimal_formats_parser.yrl", 40).
+-file("src/decimal_formats_parser.yrl", 41).
 yeccpars2_20_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -780,7 +792,7 @@ yeccpars2_20_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_21_/1}).
--file("src/decimal_formats_parser.yrl", 24).
+-file("src/decimal_formats_parser.yrl", 25).
 yeccpars2_21_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -788,7 +800,7 @@ yeccpars2_21_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_22_/1}).
--file("src/decimal_formats_parser.yrl", 30).
+-file("src/decimal_formats_parser.yrl", 31).
 yeccpars2_22_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -796,7 +808,7 @@ yeccpars2_22_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_23_/1}).
--file("src/decimal_formats_parser.yrl", 23).
+-file("src/decimal_formats_parser.yrl", 24).
 yeccpars2_23_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -812,7 +824,7 @@ yeccpars2_24_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_28_/1}).
--file("src/decimal_formats_parser.yrl", 19).
+-file("src/decimal_formats_parser.yrl", 20).
 yeccpars2_28_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -828,7 +840,7 @@ yeccpars2_29_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_30_/1}).
--file("src/decimal_formats_parser.yrl", 18).
+-file("src/decimal_formats_parser.yrl", 19).
 yeccpars2_30_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -836,7 +848,7 @@ yeccpars2_30_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_31_/1}).
--file("src/decimal_formats_parser.yrl", 17).
+-file("src/decimal_formats_parser.yrl", 18).
 yeccpars2_31_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -844,7 +856,7 @@ yeccpars2_31_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_32_/1}).
--file("src/decimal_formats_parser.yrl", 16).
+-file("src/decimal_formats_parser.yrl", 17).
 yeccpars2_32_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -868,4 +880,4 @@ yeccpars2_34_(__Stack0) ->
   end | __Stack].
 
 
--file("src/decimal_formats_parser.yrl", 79).
+-file("src/decimal_formats_parser.yrl", 80).

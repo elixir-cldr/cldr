@@ -217,10 +217,20 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Extract the metadata from the format.
 
-  The metadata is used to generate the formatted output.
+  The metadata is used to generate the formatted output.  A numeric format
+  is optional and in such cases no analysis is required.
   """
   defp analyze(format) do
-    format_parts = split_format(format)
+    do_analyse(format, format[:positive][:format])
+  end
+
+  defp do_analyse(format, nil) do
+    %{format: format}
+  end
+
+  defp do_analyse(format, positive_format) do
+    format_parts = split_format(positive_format)
+
     meta = %{
       integer_digits:      %{min: required_integer_digits(format_parts),
                              max: max_integer_digits(format_parts)},
@@ -607,8 +617,12 @@ defmodule Cldr.Number.Format.Compiler do
   @docp """
   Separate the format into the integer, fraction and exponent parts.
   """
+  defp split_format(nil) do
+    %{}
+  end
+
   defp split_format(format) do
-    parts = Regex.named_captures(@format, format[:positive][:format])
+    parts = Regex.named_captures(@format, format)
 
     parts
     |> Map.put("compact_integer",

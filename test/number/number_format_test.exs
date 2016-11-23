@@ -9,8 +9,8 @@ defmodule Number.Format.Test do
     end
   end
 
-  test "invalid format returns an error" do
-    assert {:error, _message} = Cldr.Number.to_string(1234, format: "xxx")
+  test "literal-only format returns the literal" do
+    assert Cldr.Number.to_string(1234, format: "xxx") == "xxx"
   end
 
   test "a currency format with no currency returns an error" do

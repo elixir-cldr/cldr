@@ -76,14 +76,14 @@ defmodule Cldr.Number.Formatter.Decimal do
         end
       end
     {:error, message} ->
-      raise CompileError, description: message
+      raise CompileError, description: "#{message} compiling #{inspect format}"
     end
   end
 
   # Now we have the number to be formatted, the meta data that
   # defines the formatting and the options to be applied
   # (which is related to localisation of the final format)
-  defp do_to_string(number, meta, options) do
+  defp do_to_string(number, %{integer_digits: _integer_digits} = meta, options) do
     meta = meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
     |> adjust_fraction_for_significant_digits(number, meta[:significant_digits])
@@ -102,6 +102,10 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> reassemble_number_string(meta)
     |> transliterate(options[:locale], options[:number_system])
     |> assemble_format(number, meta, options)
+  end
+
+  defp do_to_string(number, meta, options) do
+    assemble_format("", number, meta, options)
   end
 
   # When formatting a currency we need to adjust the number of fractional
@@ -131,6 +135,11 @@ defmodule Cldr.Number.Formatter.Decimal do
   # have any fractional part specified and if we don't do something
   # then we're truncating the number - not really what is intended
   # for significant digits display.
+
+  # For when there is no number format
+  defp adjust_fraction_for_significant_digits(meta, _number, nil) do
+    meta
+  end
 
   # For no significant digits
   defp adjust_fraction_for_significant_digits(meta, _number,
@@ -422,21 +431,14 @@ defmodule Cldr.Number.Formatter.Decimal do
   # the currency sign, percent and permille characters.
   defp assemble_format(number_string, number, meta, options) do
     format = meta.format[options[:pattern]]
-    format_length = length(format)
 
     number_string
-    |> do_assemble_format(number, meta, format, options, format_length)
+    |> do_assemble_format(number, meta, format, options)
     |> Enum.join
   end
 
-  # If the format length is 1 (one) then it can only be the number format
-  # and therefore we don't have to do the reduction.
-  defp do_assemble_format(number_string, _number, _meta, _format, _options, 1) do
-    [number_string]
-  end
-
   @lint false
-  defp do_assemble_format(number_string, number, meta, format, options, _length) do
+  defp do_assemble_format(number_string, number, meta, format, options) do
     system   = options[:number_system]
     locale   = options[:locale]
     currency = options[:currency]

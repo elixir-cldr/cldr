@@ -106,8 +106,8 @@ defmodule Cldr.Downloader do
     p1 = Task.async(fn -> System.cmd("java", args ++ ["main"]) end)
     p2 = Task.async(fn -> System.cmd("java", args ++ ["supplemental"]) end)
 
-    Task.await(p1)
-    Task.await(p2)
+    Task.await(p1, :infinity)
+    Task.await(p2, :infinity)
   end
 
   def remove_package_files(data_dir) do

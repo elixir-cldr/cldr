@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.6 November 25, 2016
+
+### Enhancements
+
+* Updated the CLDR repository to 30.0.2 released on 2016-10-17.  See [the CLDR web site](http://cldr.unicode.org/index/downloads/cldr-30) for release details
+
 ## Changelog for Cldr v0.0.5 October 9, 2016
 
 ### Enhancements
