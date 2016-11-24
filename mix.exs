@@ -68,7 +68,7 @@ defmodule Cldr.Mixfile do
 
   def aliases do
     [
-      "cldr.update": ["cldr.download", "cldr.consolidate", "cldr.install"]
+      "cldr.update": ["cldr.download", "cldr.convert", "cldr.consolidate", "cldr.install"]
     ]
   end
 
