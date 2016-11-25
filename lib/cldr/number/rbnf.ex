@@ -105,7 +105,15 @@ defmodule Cldr.Rbnf do
     |> Enum.map(&for_locale/1)
     |> Enum.flat_map(&Map.values/1) # Get sets from groups
     |> Enum.flat_map(&Map.values/1) # Get rules from set
-    |> Enum.flat_map(&(&1.rules))   # Get rule definitions from rules
+    |> Enum.flat_map(&(&1.rules))   # Get the list of rules
+  end
+
+  # Returns a list of unique rule definitions.  Used for testing.
+  @doc false
+  def all_rule_definitions do
+    all_rules()
+    |> Enum.map(&(&1.definition))
+    |> Enum.uniq
   end
 
   defp rule_sets_from_groups(groups, xml) do

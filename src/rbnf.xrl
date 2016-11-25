@@ -11,29 +11,32 @@
 
 Definitions.
 
-Rule_cardinal_start     = \$\(cardinal,
-Rule_ordinal_start      = \$\(ordinal,
-Rule_cardord_end        = \)\$
+Rule_cardinal_start     = (cardinal)
+Rule_ordinal_start      = (ordinal)
 Plural_rules            = (zero\{.+\})?(one\{.+\})?(two\{.+\})?(few\{.+\})?(many\{.+\})?(other\{.+\})?
 
 Rule_name               = (%[%a-zA-Z\-]+)
 Number_format           = ([0#]([0#,]+)?)(\.([0#]+))?([eE]([-+]?[0#]+))?
 Conditional_start       = \[
 Conditional_end         = \]
+Left_paren              = \(
+Right_paren             = \)
 Greater_than            = →
 Less_than               = ←
 Equals                  = =
+Dollar                  = \$
 Semicolon               = ;
-Literal                 = [^→←=\[\]\n\t\$]
-Whitespace              = [\s\n\t]
+Comma                   = ,
+Minus                   = −
+Literal                 = [\p{L}]+
+Whitespace              = [\s\n\t]+
+Others                  = .
 
 Rules.
 
-% We're using a common lexer for both the rule declaration and its definition.
-% This part is for the declarations.
-{Plural_rules}            : {token,{plural_rules,TokenLine,TokenChars}}.
-
 % This part is for the definitions.
+{Rule_cardinal_start}     : {token,{rule_cardinal_start,TokenLine,TokenChars}}.
+{Rule_ordinal_start}      : {token,{rule_ordinal_start,TokenLine,TokenChars}}.
 {Number_format}           : {token,{number_format,TokenLine,TokenChars}}.
 {Rule_name}               : {token,{rule_name,TokenLine,TokenChars}}.
 {Conditional_start}       : {token,{conditional_start,TokenLine,TokenChars}}.
@@ -42,10 +45,15 @@ Rules.
 {Less_than}               : {token,{quotient_call,TokenLine,TokenChars}}.
 {Equals}                  : {token,{rule_call,TokenLine,TokenChars}}.
 {Semicolon}               : {token,{rule_end,TokenLine,TokenChars}}.
-{Rule_cardinal_start}     : {token,{rule_cardinal_start,TokenLine,TokenChars}}.
-{Rule_ordinal_start}      : {token,{rule_ordinal_start,TokenLine,TokenChars}}.
-{Rule_cardord_end}        : {token,{rule_card_ord_end,TokenLine,TokenChars}}.
-{Literal}+                : {token,{literal,TokenLine,TokenChars}}.
-{Whitespace}+             : skip_token.
+{Plural_rules}            : {token,{plural_rules,TokenLine,TokenChars}}.
+{Right_paren}             : {token,{right_paren,TokenLine,TokenChars}}.
+{Left_paren}              : {token,{left_paren,TokenLine,TokenChars}}.
+{Dollar}                  : {token,{dollar,TokenLine,TokenChars}}.
+{Comma}                   : {token,{comma,TokenLine,TokenChars}}.
+{Minus}                   : {token,{minus,TokenLine,TokenChars}}.
+{Literal}                 : {token,{literal,TokenLine,TokenChars}}.
+{Whitespace}              : skip_token.
+{Others}                  : {token,{others,TokenLine,TokenChars}}.
+
 
 Erlang code.
