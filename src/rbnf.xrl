@@ -15,7 +15,7 @@ Rule_cardinal_start     = (cardinal)
 Rule_ordinal_start      = (ordinal)
 Plural_rules            = (zero\{.+\})?(one\{.+\})?(two\{.+\})?(few\{.+\})?(many\{.+\})?(other\{.+\})?
 
-Rule_name               = (%[%a-zA-Z\-]+)
+Rule_name               = (%[%a-zA-Z0-9\-]+)
 Number_format           = ([0#]([0#,]+)?)(\.([0#]+))?([eE]([-+]?[0#]+))?
 Conditional_start       = \[
 Conditional_end         = \]
@@ -27,10 +27,8 @@ Equals                  = =
 Dollar                  = \$
 Semicolon               = ;
 Comma                   = ,
-Minus                   = −
-Literal                 = [\p{L}]+
 Whitespace              = [\s\n\t]+
-Others                  = .
+Literal                 = .
 
 Rules.
 
@@ -50,7 +48,6 @@ Rules.
 {Left_paren}              : {token,{left_paren,TokenLine,TokenChars}}.
 {Dollar}                  : {token,{dollar,TokenLine,TokenChars}}.
 {Comma}                   : {token,{comma,TokenLine,TokenChars}}.
-{Minus}                   : {token,{minus,TokenLine,TokenChars}}.
 {Literal}                 : {token,{literal,TokenLine,TokenChars}}.
 {Whitespace}              : skip_token.
 {Others}                  : {token,{others,TokenLine,TokenChars}}.
