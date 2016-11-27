@@ -5,12 +5,12 @@ defmodule Cldr.Rbnf.Ordinal do
   As CLDR notes, the data is incomplete or non-existent for many languages.  It
   is considered complete for English however.
   """
-  
+
   import Kernel, except: [and: 2]
   alias  Cldr.Rbnf
   use    Cldr.Rbnf.Operations
 
-  @ordinal Rbnf.for_all_locales["OrdinalRules"]
+  @ordinal Rbnf.for_all_locales[:OrdinalRules]
   for {locale, _rule_group} <-  @ordinal do
     for {rule_group, %{access: _access, rules: rules}} <- @ordinal[locale] do
       for rule <- rules do

@@ -338,8 +338,8 @@ defmodule Cldr.Config do
     |> File.read!
     |> Poison.decode!
     |> assert_valid_keys!(locale)
-    |> structure_rbnf
     |> Cldr.Map.atomize_keys
+    |> structure_rbnf
     |> atomize_number_systems
     |> structure_currencies
     |> structure_symbols
@@ -409,21 +409,21 @@ defmodule Cldr.Config do
 
   # Put the rbnf rules into a %Rule{} struct
   defp structure_rbnf(content) do
-    rbnf = content["rbnf"]
+    rbnf = content[:rbnf]
     |> Enum.map(fn {group, sets} ->
       {group, structure_sets(sets)}
     end)
     |> Enum.into(%{})
 
-    Map.put(content, "rbnf", rbnf)
+    Map.put(content, :rbnf, rbnf)
   end
 
   defp structure_sets(sets) do
     alias Cldr.Rbnf.Rule
     Enum.map(sets, fn {name, set} ->
       name = underscore(name)
-      rules = Enum.map(set["rules"], fn (rule) -> struct(Rule, rule) end)
-      {underscore(name), %{set | "rules" => rules}}
+      rules = Enum.map(set[:rules], fn (rule) -> struct(Rule, rule) end)
+      {underscore(name), %{set | rules: rules}}
     end)
     |> Enum.into(%{})
   end

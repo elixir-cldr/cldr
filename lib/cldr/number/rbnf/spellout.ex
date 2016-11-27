@@ -10,7 +10,7 @@ defmodule Cldr.Rbnf.Spellout do
   alias  Cldr.Rbnf
   use    Cldr.Rbnf.Operations
 
-  @spellout Rbnf.for_all_locales["SpelloutRules"]
+  @spellout Rbnf.for_all_locales[:SpelloutRules]
   for {locale, _rule_group} <-  @spellout do
     for {rule_group, %{access: _access, rules: rules}} <- @spellout[locale] do
       for rule <- rules do
