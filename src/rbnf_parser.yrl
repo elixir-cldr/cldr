@@ -1,32 +1,77 @@
-Nonterminals quotient_rule modulo_rule invoke_rule
+Nonterminals quotient_rule modulo_rule invoke_rule cardinal_rule ordinal_rule
+          rule literal rbnf_rule rule_part character.
 
-Terminals rule_cardinal_start rule_ordinal_start format_call
+Terminals rule_cardinal_start rule_ordinal_start number_format
           rule_name conditional_start conditional_end modulo_call
-          quotient_call rule_call rule_end plural_rules right_paren
-          left_paren dollar comma literal others
+          quotient_call rule_call plural_rules right_paren
+          left_paren dollar comma char.
 
 Rootsymbol rbnf_rule.
 
-quotient_rule     ->  quotient_call rule quotient_rule.
-modulo_rule       ->  modulo_call rule modulo_rule.
-invoke_rule       ->  equal rule equal.
+Left      100   rbnf_rule.
+Right     400   modulo_call.
+Right     500   quotient_call.
+Right     600   character.
 
-rule              ->  rule_name.
-rule              ->  format_call.
+rbnf_rule         -> rule_part rbnf_rule : ['$1'] ++ '$2'.
+rbnf_rule         -> rule_part : ['$1'].
 
+rule_part         -> literal : '$1'.
+rule_part         -> quotient_rule : '$1'.
+rule_part         -> modulo_rule : '$1'.
+rule_part         -> invoke_rule : '$1'.
+rule_part         -> cardinal_rule : '$1'.
+rule_part         -> ordinal_rule : '$1'.
+rule_part         -> conditional_start rbnf_rule conditional_end : {conditional, '$2'}.
 
-literal_list      ->  literal literal_list : append('$1', '$2').
-literal_list      ->  literal : '$1'.
+quotient_rule     ->  quotient_call rule quotient_call quotient_call : {quotient, '$2'}.
+quotient_rule     ->  quotient_call rule quotient_call : {quotient, '$2'}.
+quotient_rule     ->  quotient_call quotient_call : {quotient, nil}.
+
+modulo_rule       ->  modulo_call rule modulo_call : {modulo, '$2'}.
+modulo_rule       ->  modulo_call modulo_call modulo_call : {modulo, triple}.
+modulo_rule       ->  modulo_call modulo_call : {modulo, nil}.
+
+invoke_rule       ->  rule_call rule rule_call : {call, '$2'}.
+
+cardinal_rule     ->  dollar left_paren rule_cardinal_start comma
+                      plural_rules right_paren dollar : {cardinal, to_map('$5')}.
+ordinal_rule      ->  dollar left_paren rule_ordinal_start comma
+                      plural_rules right_paren dollar : {ordinal, to_map('$5')}.
+
+rule              ->  rule_name : {rule, unwrap('$1')}.
+rule              ->  number_format : {format, unwrap('$1')}.
+
+literal           ->  character literal : append('$1', '$2').
+literal           ->  character : {literal, unwrap('$1')}.
+
+character         ->  char : '$1'.
+character         ->  comma : '$1'.
+character         ->  number_format : '$1'.
 
 Erlang code.
 
-% Append list items.  Consolidate literals if possible into
-% a single list element.
-append([{literal, Literal1}], [{literal, Literal2} | Rest]) ->
-  [{literal, list_to_binary([Literal1, Literal2])}] ++ Rest;
-append(A, B) when is_list(A) and is_list(B) ->
-  A ++ B.
+% Consolidate characters into a binary
+append({char, _, _} = Char, {literal, Literal}) ->
+  {literal, list_to_binary([unwrap(Char), Literal])};
+append({comma, _, _} = Char, {literal, Literal}) ->
+  {literal, list_to_binary([unwrap(Char), Literal])};
+append({number_format, _, _} = Char, {literal, Literal}) ->
+  {literal, list_to_binary([unwrap(Char), Literal])};
+append({literal, Literal1}, {literal, Literal2}) ->
+  {literal, list_to_binary([Literal2, Literal1])}.
 
-% Return a token value
+% Return a token value as a binary
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
+
+% Convert ordinal and cardinal rules into a map
+to_map(Plurals) ->
+  String = unwrap(Plurals),
+  Parts = binary:split(String, [<<"{">>,<<"}">>], [global, trim]),
+  Proplist = to_proplist(Parts),
+  maps:from_list(Proplist).
+
+% Convert a list into a proplist
+to_proplist([K,V | T]) -> [{erlang:binary_to_atom(K, utf8),V} | to_proplist(T)];
+to_proplist([]) -> [].

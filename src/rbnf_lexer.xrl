@@ -27,15 +27,14 @@ Equals                  = =
 Dollar                  = \$
 Semicolon               = ;
 Comma                   = ,
-Whitespace              = [\s\n\t]+
-Literal                 = .
+Char                    = .
 
 Rules.
 
 % This part is for the definitions.
 {Rule_cardinal_start}     : {token,{rule_cardinal_start,TokenLine,TokenChars}}.
 {Rule_ordinal_start}      : {token,{rule_ordinal_start,TokenLine,TokenChars}}.
-{Number_format}           : {token,{format_call,TokenLine,TokenChars}}.
+{Number_format}           : {token,{number_format,TokenLine,TokenChars}}.
 {Rule_name}               : {token,{rule_name,TokenLine,TokenChars}}.
 {Conditional_start}       : {token,{conditional_start,TokenLine,TokenChars}}.
 {Conditional_end}         : {token,{conditional_end,TokenLine,TokenChars}}.
@@ -48,9 +47,6 @@ Rules.
 {Left_paren}              : {token,{left_paren,TokenLine,TokenChars}}.
 {Dollar}                  : {token,{dollar,TokenLine,TokenChars}}.
 {Comma}                   : {token,{comma,TokenLine,TokenChars}}.
-{Literal}                 : {token,{literal,TokenLine,TokenChars}}.
-{Whitespace}              : skip_token.
-{Others}                  : {token,{others,TokenLine,TokenChars}}.
-
+{Char}                    : {token,{char,TokenLine,TokenChars}}.
 
 Erlang code.
