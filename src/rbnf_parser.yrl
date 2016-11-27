@@ -39,7 +39,7 @@ cardinal_rule     ->  dollar left_paren rule_cardinal_start comma
 ordinal_rule      ->  dollar left_paren rule_ordinal_start comma
                       plural_rules right_paren dollar : {ordinal, to_map('$5')}.
 
-rule              ->  rule_name : {rule, unwrap('$1')}.
+rule              ->  rule_name : {rule, normalize_rule_name('$1')}.
 rule              ->  number_format : {format, unwrap('$1')}.
 
 literal           ->  character literal : append('$1', '$2').
@@ -61,9 +61,22 @@ append({number_format, _, _} = Char, {literal, Literal}) ->
 append({literal, Literal1}, {literal, Literal2}) ->
   {literal, list_to_binary([Literal2, Literal1])}.
 
+normalize_rule_name({_,_,[$%, $% | Name]}) ->
+  unicode:characters_to_binary(underscore(Name));
+normalize_rule_name({_,_,[$% | Name]}) ->
+  unicode:characters_to_binary(underscore(Name)).
+
 % Return a token value as a binary
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
+
+% Substitute "_" for "-"
+underscore([$-| Rest]) ->
+  [$_ | underscore(Rest)];
+underscore([]) ->
+  [];
+underscore([Char | Rest]) ->
+  [Char | underscore(Rest)].
 
 % Convert ordinal and cardinal rules into a map
 to_map(Plurals) ->

@@ -12,9 +12,22 @@ append({number_format, _, _} = Char, {literal, Literal}) ->
 append({literal, Literal1}, {literal, Literal2}) ->
   {literal, list_to_binary([Literal2, Literal1])}.
 
+normalize_rule_name({_,_,[$%, $% | Name]}) ->
+  unicode:characters_to_binary(underscore(Name));
+normalize_rule_name({_,_,[$% | Name]}) ->
+  unicode:characters_to_binary(underscore(Name)).
+
 % Return a token value as a binary
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
+
+% Substitute "_" for "-"
+underscore([$-| Rest]) ->
+  [$_ | underscore(Rest)];
+underscore([]) ->
+  [];
+underscore([Char | Rest]) ->
+  [Char | underscore(Rest)].
 
 % Convert ordinal and cardinal rules into a map
 to_map(Plurals) ->
@@ -200,7 +213,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/rbnf_parser.erl", 203).
+-file("src/rbnf_parser.erl", 216).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -670,7 +683,7 @@ yeccpars2_19_(__Stack0) ->
 yeccpars2_20_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
-   { rule , unwrap ( __1 ) }
+   { rule , normalize_rule_name ( __1 ) }
   end | __Stack].
 
 -compile({inline,yeccpars2_21_/1}).
@@ -770,4 +783,4 @@ yeccpars2_44_(__Stack0) ->
   end | __Stack].
 
 
--file("src/rbnf_parser.yrl", 77).
+-file("src/rbnf_parser.yrl", 90).
