@@ -13,6 +13,7 @@ defmodule Cldr.Rbnf.Rule do
   """
   def tokenize(definition) when is_binary(definition) do
     definition
+    |> String.trim_leading("'")
     |> String.to_charlist
     |> :rbnf_lexer.string
   end

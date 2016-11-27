@@ -7,6 +7,15 @@ defmodule Cldr.Rbnf do
 
   For any other recognized locale we need a way to either fallback
   to a known locale, or error exit (configurable)
+
+  Note that many of the functions in this module rely on having the raw
+  XML RBNF files from the CLDR repository.  The repository can be installed by
+  running:
+
+      mix cldr.download
+
+  Unless you are interested in the muysteries of how the repository is
+  put together this is not recommended.
   """
 
   import Xml
@@ -131,7 +140,7 @@ defmodule Cldr.Rbnf do
 
   defp rules_from_one_group(group, sets, xml) do
     Enum.reduce sets, %{}, fn [set, access], acc ->
-      Map.put acc, set, %{access: access, rules: rules(xml, group, set)}
+      Map.put acc, function_name_from_rule_group(set), %{access: access, rules: rules(xml, group, set)}
     end
   end
 
@@ -242,5 +251,11 @@ defmodule Cldr.Rbnf do
 
   defp divisor(_base_value, _radix) do
     nil
+  end
+
+  defp function_name_from_rule_group(name) do
+    name
+    |> String.replace("-","_")
+    |> String.to_atom
   end
 end

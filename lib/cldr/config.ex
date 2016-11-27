@@ -338,12 +338,12 @@ defmodule Cldr.Config do
     |> File.read!
     |> Poison.decode!
     |> assert_valid_keys!(locale)
+    |> structure_rbnf
     |> Cldr.Map.atomize_keys
     |> atomize_number_systems
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
-    |> structure_rbnf
   end
 
   # Simple check that the locale content contains what we expect
@@ -409,22 +409,30 @@ defmodule Cldr.Config do
 
   # Put the rbnf rules into a %Rule{} struct
   defp structure_rbnf(content) do
-    rbnf = content.rbnf
-    |> Enum.map(fn {group, sets} -> {group, structure_sets(sets)} end)
+    rbnf = content["rbnf"]
+    |> Enum.map(fn {group, sets} ->
+      {group, structure_sets(sets)}
+    end)
     |> Enum.into(%{})
 
-    Map.put(content, :rbnf, rbnf)
+    Map.put(content, "rbnf", rbnf)
   end
 
   defp structure_sets(sets) do
     alias Cldr.Rbnf.Rule
-
     Enum.map(sets, fn {name, set} ->
-      rules = Enum.map(set.rules, fn (rule) -> struct(Rule, rule) end)
-      {name, %{set | rules: rules}}
+      name = underscore(name)
+      rules = Enum.map(set["rules"], fn (rule) -> struct(Rule, rule) end)
+      {underscore(name), %{set | "rules" => rules}}
     end)
     |> Enum.into(%{})
   end
+
+  defp underscore(string) when is_binary(string) do
+    string
+    |> String.replace("-","_")
+  end
+  defp underscore(other), do: other
 
   # Convert to an atom but only if
   # its a binary.

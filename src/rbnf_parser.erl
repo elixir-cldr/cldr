@@ -12,16 +12,19 @@ append({number_format, _, _} = Char, {literal, Literal}) ->
 append({literal, Literal1}, {literal, Literal2}) ->
   {literal, list_to_binary([Literal2, Literal1])}.
 
+% We will turn rule names into functions later on so
+% we normalise the names to a format that is acceptable.
 normalize_rule_name({_,_,[$%, $% | Name]}) ->
-  unicode:characters_to_binary(underscore(Name));
+  erlang:binary_to_atom(unicode:characters_to_binary(underscore(Name)), utf8);
 normalize_rule_name({_,_,[$% | Name]}) ->
-  unicode:characters_to_binary(underscore(Name)).
+  erlang:binary_to_atom(unicode:characters_to_binary(underscore(Name)), utf8).
 
 % Return a token value as a binary
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
 
-% Substitute "_" for "-"
+% Substitute "_" for "-" since we will use these rule names
+% as functions later on.
 underscore([$-| Rest]) ->
   [$_ | underscore(Rest)];
 underscore([]) ->
@@ -213,7 +216,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/rbnf_parser.erl", 216).
+-file("src/rbnf_parser.erl", 219).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -783,4 +786,4 @@ yeccpars2_44_(__Stack0) ->
   end | __Stack].
 
 
--file("src/rbnf_parser.yrl", 90).
+-file("src/rbnf_parser.yrl", 93).
