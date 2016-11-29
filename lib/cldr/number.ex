@@ -93,8 +93,6 @@ defmodule Cldr.Number do
     :scientific |
     :currency
 
-  @empty_string ""
-
   @default_options [
     format:        :standard,
     currency:      nil,
@@ -102,6 +100,13 @@ defmodule Cldr.Number do
     rounding_mode: :half_even,
     number_system: :default,
     locale:        Cldr.get_locale()
+  ]
+
+  @short_format_styles [
+    :currency_short,
+    :currency_long,
+    :decimal_short,
+    :decimal_long
   ]
 
   @doc """
@@ -230,7 +235,7 @@ defmodule Cldr.Number do
   """
 
   # `to_string/2` is the public API to number formatting.  Its basic job is
-  # to retrieve the actually format mask to be used and then invoke
+  # to retrieve the actual format mask to be used and then invoke
   # `to_string/3` on the appropriate module which is the internal API.
 
   @spec to_string(number, [Keyword.t]) :: String.t
@@ -247,66 +252,118 @@ defmodule Cldr.Number do
     end
   end
 
+  # For ordinal numbers
+  defp to_string(number, :ordinal, options) do
+    Cldr.Rbnf.Ordinal.digits_ordinal(number, options[:locale])
+  end
+
+  # For spellout numbers
+  defp to_string(number, :spellout, options) do
+    Cldr.Rbnf.Spellout.spellout_cardinal(number, options[:locale])
+  end
+
+  # For spellout numbers
+  defp to_string(number, :spellout_numbering, options) do
+    Cldr.Rbnf.Spellout.spellout_numbering(number, options[:locale])
+  end
+
+  # For spellout numbers
+  defp to_string(number, :spellout_verbose, options) do
+    Cldr.Rbnf.Spellout.spellout_cardinal_verbose(number, options[:locale])
+  end
+
+  # For spellout years
+  defp to_string(number, :spellout_year, options) do
+    Cldr.Rbnf.Spellout.spellout_numbering_year(number, options[:locale])
+  end
+
+  # For spellout ordinal
+  defp to_string(number, :spellout_ordinal, options) do
+    Cldr.Rbnf.Spellout.spellout_ordinal(number, options[:locale])
+  end
+
+  # For spellout ordinal verbose
+  defp to_string(number, :spellout_ordinal_verbose, options) do
+    Cldr.Rbnf.Spellout.spellout_ordinal_verbose(number, options[:locale])
+  end
+
   # For the :currency_long format only
   defp to_string(number, :currency_long = format, options) do
     Formatter.Currency.to_string(number, format, options)
   end
 
-  # For when there is no format found!
-  defp to_string(_number, nil, options) do
-    {:error,
-      "The locale #{inspect options[:locale]} with number system " <>
-      "#{inspect options[:number_system]} does not define a format " <>
-      "#{inspect options[:format]}."
-    }
-  end
-
   # For all opther short formats
-  defp to_string(number, format, options) when is_atom(format) do
+  defp to_string(number, format, options)
+  when is_atom(format) and format in @short_format_styles do
     Formatter.Short.to_string(number, format, options)
   end
 
   # For all other formats
-  defp to_string(number, format, options) do
+  defp to_string(number, format, options) when is_binary(format) do
     Formatter.Decimal.to_string(number, format, options)
+  end
+
+  # For all other formats.  The known atom-based formats are described
+  # above so this must be a format name expected to be defined by a
+  # locale but its not there.
+  defp to_string(_number, format, options) when is_atom(format) do
+    {:error,
+      "The locale #{inspect options[:locale]} with number system " <>
+      "#{inspect options[:number_system]} does not define a format " <>
+      "#{inspect format}."
+    }
   end
 
   # Merge options and default options with supplied options always
   # the winner.  If :currency is specified then the default :format
   # will be format: currency
-  @short_format_styles Cldr.Number.Format.short_format_styles()
   defp normalize_options(options, defaults) do
-    options = if options[:currency] && !options[:format] do
-      options ++ [{:format, :currency}]
-    else
-      options
-    end
+    options = defaults
+    |> Keyword.merge(options, fn _k, _v1, v2 -> v2 end)
+    |> adjust_for_currency(options[:currency], options[:format])
+    |> resolve_standard_format
+    |> adjust_short_forms
 
-    options = check_options(:short, options[:currency],  :currency_short, options)
-    options = check_options(:long,  options[:currency],  :currency_long, options)
-    options = check_options(:short, !options[:currency], :decimal_short, options)
-    options = check_options(:long,  !options[:currency], :decimal_long, options)
+    {options[:format], options}
+  end
 
-    options = Keyword.merge defaults, options, fn _k, _v1, v2 -> v2 end
+  defp resolve_standard_format(options) do
+    Keyword.put(options, :format, lookup_standard_format(options[:format], options))
+  end
 
-    case format = options[:format] do
-     format when is_binary(format) ->
-       {format, options}
-     format when is_atom(format) and format in @short_format_styles ->
-       {format, options}
-     _ ->
-       format = options[:locale]
-       |> formats_for(options[:number_system])
-       |> Map.get(options[:format])
-       {format, options}
-    end
+  defp adjust_short_forms(options) do
+    options
+    |> check_options(:short, options[:currency],  :currency_short)
+    |> check_options(:long,  options[:currency],  :currency_long)
+    |> check_options(:short, !options[:currency], :decimal_short)
+    |> check_options(:long,  !options[:currency], :decimal_long)
+  end
+
+  defp adjust_for_currency(options, currency, nil) when not is_nil(currency) do
+    options ++ [{:format, :currency}]
+  end
+
+  defp adjust_for_currency(options, _currency, _format) do
+    options
+  end
+
+  defp lookup_standard_format(format, options) when is_atom(format) do
+    lookup = options[:locale]
+    |> formats_for(options[:number_system])
+    |> Map.get(options[:format])
+
+    lookup || format
+  end
+
+  defp lookup_standard_format(format, _options) when is_binary(format) do
+    format
   end
 
   # if the format is :short or :long then we set the full format name
   # based upon whether there is a :currency set in options or not.
-  defp check_options(format, check, finally, options) do
+  defp check_options(options, format, check, finally) do
     if options[:format] == format && check do
-      options = Keyword.delete(options, :format)
+      Keyword.delete(options, :format)
       |> Keyword.put(:format, finally)
     else
       options
@@ -333,5 +390,9 @@ defmodule Cldr.Number do
 
   defp currency_format?(format) when is_binary(format) do
     format && String.contains?(format, Compiler.placeholder(:currency))
+  end
+
+  defp currency_format?(_format) do
+    false
   end
 end

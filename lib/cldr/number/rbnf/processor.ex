@@ -89,6 +89,15 @@ defmodule Cldr.Rbnf.Processor do
     end
   end
 
+  def rule_sets(rule_group_type, locale) do
+    if rule_group = Cldr.Rbnf.for_locale(locale)[rule_group_type] do
+      Enum.filter(rule_group, fn {_name, set} -> set.access == "public" end)
+      |> Enum.map(fn {name, _rules} -> name end)
+    else
+      []
+    end
+  end
+
   defp define_rule("-x", _range, _access, rule_group, locale, rule, parsed) do
     quote do
       def unquote(rule_group)(number, unquote(locale))

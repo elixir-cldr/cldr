@@ -11,4 +11,7 @@ defmodule Cldr.Rbnf.Ordinal do
 
   define_rules(:OrdinalRules, __ENV__)
 
+  def rule_sets(locale) do
+    Cldr.Rbnf.Processor.rule_sets(:OrdinalRules, locale)
+  end
 end
