@@ -307,11 +307,9 @@ defmodule Cldr.Number do
   # above so this must be a format name expected to be defined by a
   # locale but its not there.
   defp to_string(_number, format, options) when is_atom(format) do
-    {:error,
-      "The locale #{inspect options[:locale]} with number system " <>
+    raise Cldr.UnknownFormatError, "The locale #{inspect options[:locale]} with number system " <>
       "#{inspect options[:number_system]} does not define a format " <>
       "#{inspect format}."
-    }
   end
 
   # Merge options and default options with supplied options always
