@@ -17,17 +17,31 @@ defmodule Cldr.Rbnf.Processor do
         string
       end
 
-      defp do_operation(:modulo, number, locale, function, _rule, nil) when number < 0 do
+      defp do_operation(:modulo, number, locale, function, rule, nil)
+      when is_number(number) and number < 0 do
         apply(__MODULE__, function, [abs(number), locale])
       end
 
-      defp do_operation(:modulo, number, locale, function, _rule, nil) do
+      defp do_operation(:modulo, number, locale, function, _rule, nil)
+      when is_integer(number) do
         apply(__MODULE__, function, [number, locale])
+      end
+
+      # For Fractional rules we format the integral part
+      defp do_operation(:modulo, number, locale, function, _rule, nil)
+      when is_float(number) do
+        format_fraction(number, locale)
       end
 
       defp do_operation(:modulo, number, locale, _function, rule, {:rule, rule_name}) do
         mod = number - (div(number, rule.divisor) * rule.divisor)
         apply(__MODULE__, rule_name, [mod, locale])
+      end
+
+      # For Fractional rules we format the fraction as individual digits.
+      defp do_operation(:quotient, number, locale, function, rule, nil)
+      when is_float(number) do
+        apply(__MODULE__, function, [trunc(number), locale])
       end
 
       defp do_operation(:quotient, number, locale, function, rule, nil) do
@@ -66,6 +80,16 @@ defmodule Cldr.Rbnf.Processor do
           ""
         end
       end
+
+      defp format_fraction(number, locale) do
+        fraction = number
+        |> Cldr.Number.Math.fraction_as_integer
+        |> Integer.to_string
+        |> String.split("", trim: true)
+        |> Enum.map(&String.to_integer/1)
+        |> Enum.map(&Cldr.Rbnf.Spellout.spellout_cardinal(&1, locale))
+        |> Enum.join(" ")
+      end
     end
   end
 
@@ -98,10 +122,11 @@ defmodule Cldr.Rbnf.Processor do
     end
   end
 
+
   defp define_rule("-x", _range, _access, rule_group, locale, rule, parsed) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
-      when Kernel.and(is_integer(number), number < 0) do
+      when Kernel.and(is_number(number), number < 0) do
         do_rule(number,
           unquote(locale),
           unquote(rule_group),
@@ -111,8 +136,18 @@ defmodule Cldr.Rbnf.Processor do
     end
   end
 
-  defp define_rule("x.x", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "Improper Fraction rule sets are not implemented"}
+  # Improper fraction rule
+  defp define_rule("x.x", _range, _access, rule_group, locale, rule, parsed) do
+    quote do
+      def unquote(rule_group)(number, unquote(locale))
+      when is_float(number) do
+        do_rule(number,
+          unquote(locale),
+          unquote(rule_group),
+          unquote(Macro.escape(rule)),
+          unquote(Macro.escape(parsed)))
+      end
+    end
   end
 
   defp define_rule("x,x", _range, _access, _rule_group, _locale, _rule, _parsed) do
