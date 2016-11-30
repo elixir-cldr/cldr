@@ -28,4 +28,31 @@ defmodule Rbnf.Test do
     assert Cldr.Rbnf.Spellout.spellout_ordinal(0.1, "en") == "0.1"
   end
 
+  @en "./test/support/rbnf/en/rbnf_test.json"
+  |> File.read!
+  |> Poison.decode!
+
+  @locale "en"
+
+  Enum.each Map.keys(@en), fn rule_group ->
+    module = "Elixir.Cldr.Rbnf.#{rule_group}"
+    |> String.replace("Rules", "")
+    |> String.to_atom
+
+    Enum.each @en[rule_group], fn {rule_set, tests} ->
+      Enum.each tests, fn {test_data, test_result} ->
+        function = rule_set
+        |> String.replace("-","_")
+        |> String.to_atom
+
+        name = "#{module}.#{function}(#{inspect test_data}, #{inspect @locale}) == #{inspect test_result}"
+        |> String.replace("−", "-")
+
+        test name do
+          assert apply(unquote(module), unquote(function), [String.to_integer(unquote(test_data)), unquote(@locale)])
+          == unquote(test_result)
+        end
+      end
+    end
+  end
 end
