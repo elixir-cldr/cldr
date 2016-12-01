@@ -86,11 +86,11 @@ defmodule Cldr.Number.Transliterate do
 
   # Translate the number system type to a system and invoke the real
   # transliterator
-  for type <- System.number_system_types do
-    number_system = System.system_name_from(type)
-
-    def transliterate(sequence, locale, unquote(type)) do
-      transliterate(sequence, locale, unquote(number_system))
+  for locale <- Cldr.known_locales() do
+    for {system_type, number_system} <- Cldr.Number.System.number_systems_for(locale) do
+      def transliterate(sequence, unquote(locale), unquote(system_type)) do
+        transliterate(sequence, unquote(locale), unquote(number_system))
+      end
     end
   end
 

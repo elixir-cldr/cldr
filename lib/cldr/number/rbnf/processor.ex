@@ -7,8 +7,9 @@ defmodule Cldr.Rbnf.Processor do
       defp do_rule(number, locale, function, rule, parsed) do
         parsed
         |> Enum.map(fn {operation, argument} ->
-            # IO.puts "Rule: #{inspect operation} with argument #{inspect argument}"
+            # IO.puts "Rule: #{inspect operation} on #{inspect number} with argument #{inspect argument}"
             do_operation(operation, number, locale, function, rule, argument)
+            # |> IO.inspect
           end)
         |> :erlang.iolist_to_binary
       end
@@ -22,9 +23,15 @@ defmodule Cldr.Rbnf.Processor do
         apply(__MODULE__, function, [abs(number), locale])
       end
 
-      defp do_operation(:modulo, number, locale, function, _rule, nil)
+      defp do_operation(:modulo, number, locale, function, rule, {:format, format})
+      when is_number(number) and number < 0 do
+        Cldr.Number.to_string(abs(number), locale: locale, format: format)
+      end
+
+      defp do_operation(:modulo, number, locale, function, rule, nil)
       when is_integer(number) do
-        apply(__MODULE__, function, [number, locale])
+        mod = number - (div(number, rule.divisor) * rule.divisor)
+        apply(__MODULE__, function, [mod, locale])
       end
 
       # For Fractional rules we format the integral part
@@ -36,6 +43,11 @@ defmodule Cldr.Rbnf.Processor do
       defp do_operation(:modulo, number, locale, _function, rule, {:rule, rule_name}) do
         mod = number - (div(number, rule.divisor) * rule.divisor)
         apply(__MODULE__, rule_name, [mod, locale])
+      end
+
+      defp do_operation(:modulo, number, locale, function, rule, {:format, format}) do
+        mod = number - (div(number, rule.divisor) * rule.divisor)
+        Cldr.Number.to_string(mod, locale: locale, format: format)
       end
 
       # For Fractional rules we format the fraction as individual digits.
@@ -64,12 +76,12 @@ defmodule Cldr.Rbnf.Processor do
 
       defp do_operation(:ordinal, number, locale, _function, _rule, plurals) do
         plural = Cldr.Number.Ordinal.plural_rule(number, locale)
-        Map.get(plurals, plural)
+        Map.get(plurals, plural) || Map.get(plurals, :other)
       end
 
       defp do_operation(:cardinal, number, locale, _function, _rule, plurals) do
         plural = Cldr.Number.Cardinal.plural_rule(number, locale)
-        Map.get(plurals, plural)
+        Map.get(plurals, plural) || Map.get(plurals, :other)
       end
 
       defp do_operation(:conditional, number, locale, function, rule, argument) do
