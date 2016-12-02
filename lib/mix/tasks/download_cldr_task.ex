@@ -17,7 +17,6 @@ defmodule Mix.Tasks.Cldr.Download do
   @download_dir    "downloads"
   @destination_dir Path.join(Cldr.Config.cldr_home(), @download_dir)
   @need_utils      ["wget"]
-  @data_dir        "./data"
 
   @doc """
   Runs the `cldr.download` Mix task to download and process updates to the

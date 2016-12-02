@@ -1,0 +1,99 @@
+[submodule "data/cldr-cal-buddhist-full"]
+	path = data/cldr-cal-buddhist-full
+	url = https://github.com/unicode-cldr/cldr-cal-buddhist-full
+[submodule "data/cldr-cal-dangi-modern"]
+	path = data/cldr-cal-dangi-modern
+	url = https://github.com/unicode-cldr/cldr-cal-dangi-modern
+[submodule "data/cldr-cal-islamic-full"]
+	path = data/cldr-cal-islamic-full
+	url = https://github.com/unicode-cldr/cldr-cal-islamic-full
+[submodule "data/cldr-cal-roc-modern"]
+	path = data/cldr-cal-roc-modern
+	url = https://github.com/unicode-cldr/cldr-cal-roc-modern
+[submodule "data/cldr-misc-modern"]
+	path = data/cldr-misc-modern
+	url = https://github.com/unicode-cldr/cldr-misc-modern
+[submodule "data/cldr-cal-buddhist-modern"]
+	path = data/cldr-cal-buddhist-modern
+	url = https://github.com/unicode-cldr/cldr-cal-buddhist-modern
+[submodule "data/cldr-cal-ethiopic-full"]
+	path = data/cldr-cal-ethiopic-full
+	url = https://github.com/unicode-cldr/cldr-cal-ethiopic-full
+[submodule "data/cldr-cal-islamic-modern"]
+	path = data/cldr-cal-islamic-modern
+	url = https://github.com/unicode-cldr/cldr-cal-islamic-modern
+[submodule "data/cldr-cal-dangi-full"]
+	path = data/cldr-cal-dangi-full
+	url = https://github.com/unicode-cldr/cldr-cal-dangi-full
+[submodule "data/cldr-cal-indian-modern"]
+	path = data/cldr-cal-indian-modern
+	url = https://github.com/unicode-cldr/cldr-cal-indian-modern
+[submodule "data/cldr-cal-roc-full"]
+	path = data/cldr-cal-roc-full
+	url = https://github.com/unicode-cldr/cldr-cal-roc-full
+[submodule "data/cldr-cal-chinese-full"]
+	path = data/cldr-cal-chinese-full
+	url = https://github.com/unicode-cldr/cldr-cal-chinese-full
+[submodule "data/cldr-cal-ethiopic-modern"]
+	path = data/cldr-cal-ethiopic-modern
+	url = https://github.com/unicode-cldr/cldr-cal-ethiopic-modern
+[submodule "data/cldr-cal-japanese-full"]
+	path = data/cldr-cal-japanese-full
+	url = https://github.com/unicode-cldr/cldr-cal-japanese-full
+[submodule "data/cldr-cal-chinese-modern"]
+	path = data/cldr-cal-chinese-modern
+	url = https://github.com/unicode-cldr/cldr-cal-chinese-modern
+[submodule "data/cldr-cal-hebrew-full"]
+	path = data/cldr-cal-hebrew-full
+	url = https://github.com/unicode-cldr/cldr-cal-hebrew-full
+[submodule "data/cldr-cal-coptic-modern"]
+	path = data/cldr-cal-coptic-modern
+	url = https://github.com/unicode-cldr/cldr-cal-coptic-modern
+[submodule "data/cldr-cal-indian-full"]
+	path = data/cldr-cal-indian-full
+	url = https://github.com/unicode-cldr/cldr-cal-indian-full
+[submodule "data/cldr-cal-persian-modern"]
+	path = data/cldr-cal-persian-modern
+	url = https://github.com/unicode-cldr/cldr-cal-persian-modern
+[submodule "data/cldr-cal-hebrew-modern"]
+	path = data/cldr-cal-hebrew-modern
+	url = https://github.com/unicode-cldr/cldr-cal-hebrew-modern
+[submodule "data/cldr-core"]
+	path = data/cldr-core
+	url = https://github.com/unicode-cldr/cldr-core
+[submodule "data/cldr-numbers-full"]
+	path = data/cldr-numbers-full
+	url = https://github.com/unicode-cldr/cldr-numbers-full
+[submodule "data/cldr-dates-full"]
+	path = data/cldr-dates-full
+	url = https://github.com/unicode-cldr/cldr-dates-full
+[submodule "data/cldr-numbers-modern"]
+	path = data/cldr-numbers-modern
+	url = https://github.com/unicode-cldr/cldr-numbers-modern
+[submodule "data/cldr-dates-modern"]
+	path = data/cldr-dates-modern
+	url = https://github.com/unicode-cldr/cldr-dates-modern
+[submodule "data/cldr-units-full"]
+	path = data/cldr-units-full
+	url = https://github.com/unicode-cldr/cldr-units-full
+[submodule "data/cldr-localenames-full"]
+	path = data/cldr-localenames-full
+	url = https://github.com/unicode-cldr/cldr-localenames-full
+[submodule "data/cldr-units-modern"]
+	path = data/cldr-units-modern
+	url = https://github.com/unicode-cldr/cldr-units-modern
+[submodule "data/cldr-localenames-modern"]
+	path = data/cldr-localenames-modern
+	url = https://github.com/unicode-cldr/cldr-localenames-modern
+[submodule "data/cldr-misc-full"]
+	path = data/cldr-misc-full
+	url = https://github.com/unicode-cldr/cldr-misc-full
+[submodule "data/cldr-cal-persian-full"]
+	path = data/cldr-cal-persian-full
+	url = https://github.com/unicode-cldr/cldr-cal-persian-full
+[submodule "data/cldr-cal-coptic-full"]
+	path = data/cldr-cal-coptic-full
+	url = https://github.com/unicode-cldr/cldr-cal-coptic-full
+[submodule "data/cldr-rbnf"]
+	path = data/cldr-rbnf
+	url = https://github.com/unicode-cldr/cldr-rbnf

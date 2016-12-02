@@ -12,7 +12,6 @@ defmodule Cldr.Number.System do
   alias Cldr.Number.Symbol
 
   @default_number_system_type  :default
-  @default_number_system       :latn
   @number_system_types         [:default, :native, :traditional, :finance]
 
   @type name :: atom
@@ -195,7 +194,7 @@ defmodule Cldr.Number.System do
   and number system "latn" since this is what the number formatting routines use
   as placeholders.
   """
-  @lint {Credo.Check.Refactor.Nesting, false}
+  # @lint {Credo.Check.Refactor.Nesting, false}
   def number_systems_like(locale, number_system) do
     digits = number_system_for(locale, number_system)[:digits]
     symbols = Symbol.number_symbols_for(locale, number_system)

@@ -16,11 +16,10 @@ defmodule Cldr.Rbnf.Config do
   put together this is not recommended.
   """
 
-  import Xml
   alias Cldr.Rbnf.Rule
 
   @default_radix 10
-  @data_dir "./downloads/common"
+  @data_dir Cldr.Consolidate.download_data_dir() <> "/cldr-rbnf"
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
   @spec rbnf_dir :: String.t
@@ -29,8 +28,7 @@ defmodule Cldr.Rbnf.Config do
   end
 
   if File.exists?(@rbnf_dir) do
-    @rbnf_locales Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".xml"))
-    |> Enum.map(&String.replace(&1, "_", "-"))
+    @rbnf_locales Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".json"))
   else
     @rbnf_locales []
   end
@@ -72,71 +70,69 @@ defmodule Cldr.Rbnf.Config do
   @spec for_locale(Locale.t) :: %{} | {:error, :rbnf_file_not_found}
   def for_locale(locale) do
     if File.exists?(locale_path(locale)) do
-      xml = locale
+      locale
       |> locale_path
-      |> Xml.parse
-
-      xml
-      |> rule_groups
-      |> rule_sets_from_groups(xml)
-      |> rules_from_rule_sets(xml)
+      |> File.read!
+      |> Poison.decode!
+      |> Map.get("rbnf")
+      |> Map.get("rbnf")
+      |> rules_from_rule_sets
     else
       {:error, :rbnf_file_not_found}
     end
   end
 
-  defp rule_sets_from_groups(groups, xml) do
-    Enum.reduce groups, %{}, fn group, acc ->
-      Map.put(acc, group, rule_sets(xml, group))
-    end
-  end
-
-  defp rules_from_rule_sets(rulesets, xml) do
-    Enum.map(rulesets, fn {group, sets} ->
-      {group, rules_from_one_group(group, sets, xml)}
+  defp rules_from_rule_sets(json) do
+    Enum.map(json, fn {group, sets} ->
+      {String.to_atom(group), rules_from_one_group(sets)}
     end)
     |> Enum.into(%{})
   end
 
-  defp rules_from_one_group(group, sets, xml) do
-    Enum.reduce sets, %{}, fn [set, access], acc ->
-      Map.put acc, function_name_from_rule_group(set), %{access: access, rules: rules(xml, group, set)}
-    end
+  defp rules_from_one_group(sets) do
+    Enum.map(sets, fn {set, rules} ->
+      access = access_from_set(set)
+      {function_name_from(set), %{access: access, rules: rules_from(rules)}}
+    end)
+    |> Enum.into(%{})
   end
 
-  # Rbnf is directly from XML and hence has "_" as a separator
-  # in a locale whereas we use "-" elsewhere
-  @spec locale_path(binary) :: String.t
-  defp locale_path(locale) when is_binary(locale) do
-    locale = String.replace(locale, "-", "_")
-    Path.join(rbnf_dir(), "/#{locale}.xml")
+  defp access_from_set(<<"%%", _rest::binary>>), do: :private
+  defp access_from_set(_), do: :public
+
+  defp rules_from(rules) do
+    Enum.map(rules, fn {name, rule} ->
+      {base_value, radix} = radix_from_name(name)
+      %Rule{base_value: base_value, radix: radix, definition: remove_trailing_semicolon(rule)}
+    end)
+    |> sort_rules
+    |> set_range
+    |> set_divisor
   end
 
-  @spec rule_groups(Xml.xml_node, String.t) :: [String.t]
-  defp rule_groups(xml, path \\ "//rulesetGrouping") do
-    Enum.map(all(xml, path), fn(xml_node) -> attr(xml_node, "type") end)
-  end
-
-  @spec rule_sets(Xml.xml_node, binary) :: list([type: String.t, access: String.t])
-  defp rule_sets(xml, rulegroup) do
-    path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset"
-    Enum.map(all(xml, path), fn(xml_node) ->
-      [attr(xml_node, "type"), attr(xml_node, "access") || "public"]
+  defp sort_rules(rules) do
+    Enum.sort(rules, fn (a, b) ->
+      cond do
+        is_binary(a.base_value)     -> true
+        is_binary(b.base_value)     -> false
+        a.base_value < b.base_value -> true
+        true                        -> false
+      end
     end)
   end
 
-  @spec rules(Xml.xml_node, String.t, String.t) :: [%Rule{}]
-  defp rules(xml, rulegroup, ruleset) do
-    path = "//rulesetGrouping[@type='#{rulegroup}']/ruleset[@type='#{ruleset}']/rbnfrule"
-    xml
-    |> all(path)
-    |> Enum.map(fn(xml_node) ->
-        %Rule{base_value: to_integer(attr(xml_node, "value")),
-              radix:      to_integer(attr(xml_node, "radix")) || @default_radix,
-              definition: remove_trailing_semicolon(text(xml_node))}
-       end)
-    |> set_range
-    |> set_divisor
+  defp radix_from_name(name) do
+    case String.split(name, "/") do
+      [base_value, radix] ->
+        {to_integer(base_value), to_integer(radix)}
+      [base_value] ->
+        {to_integer(base_value), @default_radix}
+    end
+  end
+
+  @spec locale_path(binary) :: String.t
+  defp locale_path(locale) when is_binary(locale) do
+    Path.join(rbnf_dir(), "/#{locale}.json")
   end
 
   defp to_integer(nil) do
@@ -213,8 +209,9 @@ defmodule Cldr.Rbnf.Config do
     nil
   end
 
-  defp function_name_from_rule_group(name) do
-    name
+  defp function_name_from(set) do
+    set
+    |> String.trim_leading("%")
     |> String.replace("-","_")
     |> String.to_atom
   end

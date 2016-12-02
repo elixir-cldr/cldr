@@ -21,8 +21,8 @@ Conditional_start       = \[
 Conditional_end         = \]
 Left_paren              = \(
 Right_paren             = \)
-Greater_than            = →
-Less_than               = ←
+Greater_than            = [→>]
+Less_than               = [←<]
 Equals                  = =
 Dollar                  = \$
 Semicolon               = ;

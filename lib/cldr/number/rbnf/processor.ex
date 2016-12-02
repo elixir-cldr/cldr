@@ -116,10 +116,12 @@ defmodule Cldr.Rbnf.Processor do
 
   defp iterate_rules(rule_group_type, fun) do
     all_rules = Cldr.Rbnf.for_all_locales[rule_group_type]
-    for {locale, _rule_group} <-  all_rules do
-      for {rule_group, %{access: access, rules: rules}} <- all_rules[locale] do
-        for rule <- rules do
-          fun.(rule_group, locale, access, rule)
+    unless is_nil(all_rules) do
+      for {locale, _rule_group} <-  all_rules do
+        for {rule_group, %{access: access, rules: rules}} <- all_rules[locale] do
+          for rule <- rules do
+            fun.(rule_group, locale, access, rule)
+          end
         end
       end
     end
@@ -186,6 +188,20 @@ defmodule Cldr.Rbnf.Processor do
     quote do
       def unquote(rule_group)(number, unquote(locale))
       when is_integer(number) do
+        do_rule(number,
+          unquote(locale),
+          unquote(rule_group),
+          unquote(Macro.escape(rule)),
+          unquote(Macro.escape(parsed)))
+      end
+    end
+  end
+
+  defp define_rule(base_value, "undefined", _access, rule_group, locale, rule, parsed)
+  when is_integer(base_value) do
+    quote do
+      def unquote(rule_group)(number, unquote(locale))
+      when Kernel.and(is_integer(number), number >= unquote(base_value)) do
         do_rule(number,
           unquote(locale),
           unquote(rule_group),

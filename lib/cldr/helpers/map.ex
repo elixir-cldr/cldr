@@ -92,6 +92,10 @@ defmodule Cldr.Map do
     deep_merge(h, merge_map_list(t))
   end
 
+  def merge_map_list([]) do
+    []
+  end
+
   @doc """
   Deep merge two maps
   """
