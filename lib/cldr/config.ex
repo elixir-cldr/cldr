@@ -199,17 +199,24 @@ defmodule Cldr.Config do
   If the configured locales is `:all` then all locales
   in CLDR are configured.
 
-  This is not recommended since all 511 locales take
+  The locale "root" is always added to the list of configured locales since it
+  is required to support some RBNF functions.
+
+  This is not recommended since all 514 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
   @spec configured_locales :: [Locale.t]
   def configured_locales do
-    case app_locales = Application.get_env(:ex_cldr, :locales) do
+    locales = case app_locales = Application.get_env(:ex_cldr, :locales) do
       :all  -> @all_locales
       nil   -> [default_locale()]
       _     -> expand_locales(app_locales)
-    end |> Enum.sort
+    end
+
+    ["root" | locales]
+    |> Enum.uniq
+    |> Enum.sort
   end
 
   @doc """
@@ -245,7 +252,6 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
-  @lint false
   @spec requested_locales :: [Locale.t]
   def requested_locales do
     (configured_locales() ++ gettext_locales() ++ [default_locale()])
