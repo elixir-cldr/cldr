@@ -11,6 +11,8 @@
 
 * Now uses the [Unicode CDLR](https://github.com/unicode-cldr) repository as the source of CLDR json data.  Removed the now-obsolete mix tasks `cldr.download` and `cldr.convert`
 
+* Adds support for RBNF (Rule based number formatting) to output numbers in words, as a year, in roman numerals and in several other locale-depeendent formats
+
 ### Bug Fixes
 
 * Fixed issue #5 so that `Number.to_string/2` will correctly resolve the appropriate number system for the specified locale
