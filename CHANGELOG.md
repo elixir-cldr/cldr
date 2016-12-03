@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.8 December 4, 2016
+
+### Bug Fixes
+
+* Ensure "root" locale is always configured since it is required for some RBNF functions
+
 ## Changelog for Cldr v0.0.7 December 3, 2016
 
 ### Enhancements
