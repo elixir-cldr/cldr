@@ -132,8 +132,8 @@ defmodule Cldr.Number do
       Formats (RBNF).  Further information is found in the module `Cldr.Rbnf`.
       The most commonly used formats in this category are to spell out the
       number in a the locales language.  The applicable formats are `:spellout`,
-      `:ordinal`.  A number can also be formatted as roman numbers by using
-      the format `:roman` or `:roman_lower`.
+      `:spellout_year`, `:ordinal`.  A number can also be formatted as roman
+      numbers by using the format `:roman` or `:roman_lower`.
 
     * `currency`: is the currency for which the number is formatted. For
       available currencies see Cldr.Currency.known_currencies/0`. This option
@@ -205,6 +205,9 @@ defmodule Cldr.Number do
 
       iex> Cldr.Number.to_string 1234, format: :spellout_verbose
       "one thousand two hundred and thirty-four"
+
+      iex> Cldr.Number.to_string 1989, format: :spellout_year
+      "nineteen eighty-nine"
 
       iex> Cldr.Number.to_string 123, format: :ordinal
       "123rd"

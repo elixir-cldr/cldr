@@ -4,6 +4,58 @@ CLDR defines many different ways to format a number for different uses and defin
 
 See `Cldr.Number` and `Cldr.Number.to_string/2`
 
+## Public API
+
+The primary api for number formatting is `Cldr.Number.to_string/2`.  It provides the ability to format numbers in a standard way for configured locales.  It also provides the means for format numbers as a currency, as a short form (like 1k instead of 1,000).  Additionally it provides formats to spell a number in works, format it as roman numerals and output an ordinal number.  Some examples illustrate:
+
+      iex> Cldr.Number.to_string 12345
+      "12,345"
+
+      iex> Cldr.Number.to_string 12345, locale: "fr"
+      "12 345"
+
+      iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
+      "12 345,00 $US"
+
+      iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+      "1.2345E4"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
+      "THB12,345.00"
+
+      iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
+      "(THB12,345.00)"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
+      "THB12,345.00"
+
+      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
+      "THB๑๒,๓๔๕.๐๐"
+
+      iex> Cldr.Number.to_string 1244.30, format: :long
+      "1 thousand"
+
+      iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
+      "1,244.30 US dollars"
+
+      iex> Cldr.Number.to_string 1244.30, format: :short
+      "1K"
+
+      iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
+      "€1.24K"
+
+      iex> Cldr.Number.to_string 1234, format: :spellout
+      "one thousand two hundred thirty-four"
+
+      iex> Cldr.Number.to_string 1234, format: :spellout_verbose
+      "one thousand two hundred and thirty-four"
+
+      iex> Cldr.Number.to_string 123, format: :ordinal
+      "123rd"
+
+      iex(4)> Cldr.Number.to_string 123, format: :roman
+      "CXXIII"
+
 ## Formatting Styles
 
 `Cldr` supports the styles of formatting defined by CLDR being:
@@ -54,4 +106,47 @@ The formats described therein are supported by `Cldr` with some minor omissions 
   | #,##0.00 ¤    | EUR	           | 1 234,57 €  |
 
  See `Cldr.Number` and `Cldr.Number.Formatter.Decimal`.
+
+## Rule Based Number Formats
+
+CLDR provides an additional mechanism for the formatting of numbers.  The two primary purposes of such rules are to support formatting numbers:
+
+* As words.  For example, formatting 123 into "one hundred and twenty-three" for the "en" locale.  The applicable format is `:spellout`
+
+* As a year. In many languages the written form of a year is different to that used for an arbitrary number.  For example, formatting 1989 would result in "nineteen eighty-nine".  The applicable format is :spellout_year
+
+* As an ordinal.  For example, formatting 123 into "123rd".  The applicable format type is `:ordinal`
+
+* As Roman numerals. For example, formatting 123 into "CXXIII".  The applicable formats are `:roman` or `:roman_lower`
+
+There are also many additional methods more specialised to a specific locale that cater for languages with more complex gender and grammar requirements.  Since these rules are specialised to a locale it is not possible to standarise the public API more than described in this section.
+
+The full set of RBNF formats is accessable through the modules `Cldr.Rbnf.Ordinal`, `Cldr.Rbnf.Spellout` and `Cldr.Rbnf.NumberSystems`.
+
+Each of these modules has a set of functions that are generated at compile time that implement the relevant RBNF rules.  The available rules for a given locale can be retrieved by calling `Cldr.Rbnf.Spellout.rule_set(locale)` or the same function on the other modules.  For example:
+
+    iex> Cldr.Rbnf.Ordinal.rule_sets "en"
+    [:digits_ordinal]
+
+    iex> Cldr.Rbnf.Spellout.rule_sets "fr"
+    [:spellout_ordinal_masculine_plural, :spellout_ordinal_masculine,
+     :spellout_ordinal_feminine_plural, :spellout_ordinal_feminine,
+     :spellout_numbering_year, :spellout_numbering, :spellout_cardinal_masculine,
+     :spellout_cardinal_feminine]
+
+These rule-based formats are invoked directly on the required module passing the number and locale.  For example:
+
+    iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "fr"
+    "dix-neuf-cent quatre-vingt-neuf"
+
+    iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "en"
+    "nineteen eighty-nine"
+
+    iex> Cldr.Rbnf.Ordinal.digits_ordinal 1989, "en"
+    "1,989th"
+
+### RBNF Rules with Float numbers
+
+RBNF is primarily oriented towards positive integral numbers.  Whilst the standard caters for negative numbers and fractional numbers the implementation of the rules is incomplete.  Use with care.
+
 
