@@ -118,15 +118,22 @@ defmodule Cldr.Number do
     valid options are:
 
     * `format`: the format style or a format string defining how the number is
-      formatted. See `Cldr.Number.Format` for how formats can be constructed.
-      See `Cldr.Number.Format.format_styles_for/1` to see what format styles
-      are available for a locale. The default `format` is `:standard`.
+      formatted. See `Cldr.Number.Format` for how format strings can be constructed.
+      See `Cldr.Number.Format.format_styles_for/1` to see what standard format styles
+      are available for a locale. ThereThe default `format` is `:standard`.
 
     * If `:format` is set to `:long` or `:short` then the formatting depends on
       whether `:currency` is specified. If not specified then the number is
       formatted as `:decimal_long` or `:decimal_short. If `:currency` is
       specified the number is formatted at `:currency_long` or
       `:currency_short`.
+
+    * `:format` may also be a format defined by CLDR's Rules Based Number
+      Formats (RBNF).  Further information is found in the module `Cldr.Rbnf`.
+      The most commonly used formats in this category are to spell out the
+      number in a the locales language.  The applicable formats are `:spellout`,
+      `:ordinal`.  A number can also be formatted as roman numbers by using
+      the format `:roman` or `:roman_lower`.
 
     * `currency`: is the currency for which the number is formatted. For
       available currencies see Cldr.Currency.known_currencies/0`. This option
@@ -181,17 +188,29 @@ defmodule Cldr.Number do
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
       "THB๑๒,๓๔๕.๐๐"
 
-      iex> Number.to_string 1244.30, format: :long
+      iex> Cldr.Number.to_string 1244.30, format: :long
       "1 thousand"
 
-      iex> Number.to_string 1244.30, format: :long, currency: "USD"
+      iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
       "1,244.30 US dollars"
 
-      iex> Number.to_string 1244.30, format: :short
+      iex> Cldr.Number.to_string 1244.30, format: :short
       "1K"
 
-      iex> Number.to_string 1244.30, format: :short, currency: "EUR"
+      iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
       "€1.24K"
+
+      iex> Cldr.Number.to_string 1234, format: :spellout
+      "one thousand two hundred thirty-four"
+
+      iex> Cldr.Number.to_string 1234, format: :spellout_verbose
+      "one thousand two hundred and thirty-four"
+
+      iex> Cldr.Number.to_string 123, format: :ordinal
+      "123rd"
+
+      iex(4)> Cldr.Number.to_string 123, format: :roman
+      "CXXIII"
 
   ## Errors
 
@@ -285,6 +304,15 @@ defmodule Cldr.Number do
   # For spellout ordinal verbose
   defp to_string(number, :spellout_ordinal_verbose, options) do
     Cldr.Rbnf.Spellout.spellout_ordinal_verbose(number, options[:locale])
+  end
+
+  # For Roman numerals
+  defp to_string(number, :roman, _options) do
+    Cldr.Rbnf.NumberSystem.roman_upper(number, "root")
+  end
+
+  defp to_string(number, :roman_lower, _options) do
+    Cldr.Rbnf.NumberSystem.roman_lower(number, "root")
   end
 
   # For the :currency_long format only

@@ -28,6 +28,26 @@ defmodule Rbnf.Test do
     assert Cldr.Rbnf.Spellout.spellout_ordinal(0.1, "en") == "0.1"
   end
 
+  test "roman numerals" do
+    assert Cldr.Number.to_string(1, format: :roman) == "I"
+    assert Cldr.Number.to_string(2, format: :roman) == "II"
+    assert Cldr.Number.to_string(3, format: :roman) == "III"
+    assert Cldr.Number.to_string(4, format: :roman) == "IV"
+    assert Cldr.Number.to_string(5, format: :roman) == "V"
+    assert Cldr.Number.to_string(6, format: :roman) == "VI"
+    assert Cldr.Number.to_string(7, format: :roman) == "VII"
+    assert Cldr.Number.to_string(8, format: :roman) == "VIII"
+    assert Cldr.Number.to_string(9, format: :roman) == "IX"
+    assert Cldr.Number.to_string(10, format: :roman) == "X"
+    assert Cldr.Number.to_string(11, format: :roman) == "XI"
+    assert Cldr.Number.to_string(20, format: :roman) == "XX"
+    assert Cldr.Number.to_string(50, format: :roman) == "L"
+    assert Cldr.Number.to_string(90, format: :roman) == "XC"
+    assert Cldr.Number.to_string(100, format: :roman) == "C"
+    assert Cldr.Number.to_string(1000, format: :roman) == "M"
+    assert Cldr.Number.to_string(123, format: :roman) == "CXXIII"
+  end
+
 
   # Come back later an investigate why we get different results
   locales = Cldr.known_locales()
