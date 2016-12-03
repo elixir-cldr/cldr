@@ -11,7 +11,4 @@ defmodule Cldr.Rbnf.Spellout do
 
   define_rules(:SpelloutRules, __ENV__)
 
-  def rule_sets(locale) do
-    Cldr.Rbnf.Processor.rule_sets(:SpelloutRules, locale)
-  end
 end

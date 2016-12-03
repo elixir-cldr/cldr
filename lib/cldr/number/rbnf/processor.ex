@@ -102,14 +102,20 @@ defmodule Cldr.Rbnf.Processor do
         |> Enum.map(&Cldr.Rbnf.Spellout.spellout_cardinal(&1, locale))
         |> Enum.join(" ")
       end
+
+      @before_compile Cldr.Rbnf.Processor
     end
   end
 
+  @public_rulesets :public_rulesets
   def define_rules(rule_group_name, env) do
+    Module.register_attribute(env.module, @public_rulesets, [])
     iterate_rules rule_group_name, fn (rule_group, locale, access, rule) ->
       {:ok, parsed} = Cldr.Rbnf.Rule.parse(rule.definition)
 
-      define_rule(rule.base_value, rule.range, access, rule_group, locale, rule, parsed)
+      function_body = rule_body(locale, rule_group, rule, parsed)
+      define_rule(rule.base_value, rule.range, rule_group, locale, function_body)
+      |> add_function_to_exports(access, env.module, locale)
       |> Code.eval_quoted([], env)
     end
   end
@@ -127,116 +133,111 @@ defmodule Cldr.Rbnf.Processor do
     end
   end
 
-  def rule_sets(rule_group_type, locale) do
-    if rule_group = Cldr.Rbnf.for_locale(locale)[rule_group_type] do
-      Enum.filter(rule_group, fn {_name, set} -> set.access == "public" end)
-      |> Enum.map(fn {name, _rules} -> name end)
-    else
-      []
-    end
-  end
-
-
-  defp define_rule("-x", _range, _access, rule_group, locale, rule, parsed) do
+  defp define_rule("-x", _range, rule_group, locale, body) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
-      when Kernel.and(is_number(number), number < 0) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
-      end
+      when Kernel.and(is_number(number), number < 0), do: unquote(body)
     end
   end
 
   # Improper fraction rule
-  defp define_rule("x.x", _range, _access, rule_group, locale, rule, parsed) do
+  defp define_rule("x.x", _range, rule_group, locale, body) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
-      when is_float(number) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
-      end
+        when is_float(number), do: unquote(body)
     end
   end
 
-  defp define_rule("x,x", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "Improper Fraction rule sets are not implemented"}
+  defp define_rule("x,x", range, rule_group, locale, body) do
+    define_rule("x.x", range, rule_group, locale, body)
   end
 
-  defp define_rule("Inf", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "Infinite rule sets are not implemented"}
-  end
-
-  defp define_rule("NaN", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "NaN rule sets are not implemented"}
-  end
-
-  defp define_rule("0.x", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "Proper Fraction rule sets are not implemented"}
-  end
-
-  defp define_rule("x.0", _range, _access, _rule_group, _locale, _rule, _parsed) do
-    {:error, "Master rule sets are not implemented"}
-  end
-
-  defp define_rule(0, "undefined", _access, rule_group, locale, rule, parsed) do
+  defp define_rule(0, "undefined", rule_group, locale, body) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
-      when is_integer(number) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
-      end
+      when is_integer(number), do: unquote(body)
     end
   end
 
-  defp define_rule(base_value, "undefined", _access, rule_group, locale, rule, parsed)
+  defp define_rule(base_value, "undefined", rule_group, locale, body)
   when is_integer(base_value) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
-      when Kernel.and(is_integer(number), number >= unquote(base_value)) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
-      end
+      when Kernel.and(is_integer(number), number >= unquote(base_value)),
+        do: unquote(body)
     end
   end
 
-  defp define_rule(base_value, range, _access, rule_group, locale, rule, parsed)
+  defp define_rule(base_value, range, rule_group, locale, body)
   when is_integer(range) and is_integer(base_value) do
     quote do
       def unquote(rule_group)(number, unquote(locale))
       when Kernel.and(is_integer(number),
-        Kernel.and(number >= unquote(base_value), number < unquote(range))) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
+        Kernel.and(number >= unquote(base_value), number < unquote(range))),
+      do: unquote(body)
+    end
+  end
+
+  defp define_rule(base_value, "undefined", rule_group, locale, body)
+  when is_integer(base_value) do
+    quote do
+      def unquote(rule_group)(number, unquote(locale))
+        when Kernel.and(is_integer(number), number >= unquote(base_value)),
+      do: unquote(body)
+    end
+  end
+
+  defp define_rule("Inf", _range, _rule_group, _locale, _body) do
+    {:error, "Infinite rule sets are not implemented"}
+  end
+
+  defp define_rule("NaN", _range, _rule_group, _locale, _body) do
+    {:error, "NaN rule sets are not implemented"}
+  end
+
+  defp define_rule("0.x", _range, _rule_group, _locale, _body) do
+    {:error, "Proper Fraction rule sets are not implemented"}
+  end
+
+  defp define_rule("x.0", _range, _rule_group, _locale, _body) do
+    {:error, "Master rule sets are not implemented"}
+  end
+
+  # Get the AST of the rule body
+  defp rule_body(locale, rule_group, rule, parsed) do
+    quote do
+      do_rule(number,
+        unquote(locale),
+        unquote(rule_group),
+        unquote(Macro.escape(rule)),
+        unquote(Macro.escape(parsed)))
+    end
+  end
+
+  # Keep track of the public rulesets per locale so we can introspect the
+  # public interface
+  defp add_function_to_exports({:def, _aliases, [{:when, _, [{name, _, _} | _]} | _]} = function,
+      "public", module, locale) do
+    public_rulesets = Module.get_attribute(module, @public_rulesets) || %{}
+    locale_public_rulesets = [name | (Map.get(public_rulesets, locale) || [])]
+
+    Module.put_attribute module, @public_rulesets,
+      Map.put(public_rulesets, locale, Enum.uniq(locale_public_rulesets))
+
+    function
+  end
+
+  defp add_function_to_exports(function, _access, _module, _locale) do
+    function
+  end
+
+  defmacro __before_compile__(env) do
+    quote do
+      def rule_sets(locale) do
+        unquote(Macro.escape(Module.get_attribute(env.module, :public_rulesets)))
+        |> Map.get(locale)
       end
     end
   end
 
-  defp define_rule(base_value, "undefined", _access, rule_group, locale, rule, parsed)
-  when is_integer(base_value) do
-    quote do
-      def unquote(rule_group)(number, unquote(locale))
-      when Kernel.and(is_integer(number), number >= unquote(base_value)) do
-        do_rule(number,
-          unquote(locale),
-          unquote(rule_group),
-          unquote(Macro.escape(rule)),
-          unquote(Macro.escape(parsed)))
-      end
-    end
-  end
 end

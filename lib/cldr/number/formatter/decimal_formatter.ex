@@ -437,7 +437,6 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> Enum.join
   end
 
-  @lint false
   defp do_assemble_format(number_string, number, meta, format, options) do
     system   = options[:number_system]
     locale   = options[:locale]
@@ -494,8 +493,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   defp currency_symbol(%Currency{} = currency, number, 3, locale) do
-    selector = Number.Cardinal.plural_rule(number, locale)
-    currency.count[selector] || currency.count[:other]
+    Number.Cardinal.pluralize(number, locale, currency.count)
   end
 
   defp currency_symbol(%Currency{} = currency, _number, 4, _locale) do

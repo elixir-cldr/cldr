@@ -17,7 +17,6 @@ defmodule Cldr.Number.Cardinal do
       @lint {Credo.Check.Refactor.FunctionArity, false}
       defp do_plural_rule(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)
     end
-    if System.get_env("DEBUG"), do: IO.puts Macro.to_string(function)
     Code.eval_quoted(function, [], __ENV__)
   end
 end

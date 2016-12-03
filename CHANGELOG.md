@@ -1,3 +1,22 @@
+## Changelog for Cldr v0.0.7 December 3, 2016
+
+### Enhancements
+
+* Added `Cldr.Number.Ordinal.pluralize/3` and `Cldr.Number.Ordinal.pluralize/3` which takes a number and uses plural rules to resolve a key used to return a map value.  For example:
+
+```
+  iex> Cldr.Number.Ordinal.pluralize 1, "en", %{one: "one"}
+  "one"
+```
+
+* Now uses the [Unicode CDLR](https://github.com/unicode-cldr) repository as the source of CLDR json data.  Removed the now-obsolete mix tasks `cldr.download` and `cldr.convert`
+
+### Bug Fixes
+
+* Fixed issue #5 so that `Number.to_string/2` will correctly resolve the appropriate number system for the specified locale
+
+* Fixed issue #6 whereby RBNF rulesets which have access "private" were being defined by :def and are now :defp
+
 ## Changelog for Cldr v0.0.6 November 25, 2016
 
 ### Enhancements

@@ -59,6 +59,39 @@ defmodule Cldr.Number.PluralRule do
         @rules
       end
 
+
+      @doc """
+      Pluralize a number using plural rules and a substition map.
+
+      * `number` is an integer or a float
+
+      * `locale` is any locale returned by `Cldr.known_locales()`
+
+      * `substitutions` is a map that maps plural keys to a string.  Per the
+      CLDR defintion of plural rules, the valid substitution keys are `:zero`,
+      `:one`, `:two`, `:few`, `:many` and `:other`.
+
+      See also `Cldr.Ordinal.plural_rule/3` and `Cldr.Cardinal.plural_rule/3`.
+
+      ## Examples
+
+          iex> Cldr.Number.Ordinal.pluralize 1, "en", %{one: "one"}
+          "one"
+
+          iex> Cldr.Number.Ordinal.pluralize 2, "en", %{one: "one"}
+          nil
+
+          iex> Cldr.Number.Ordinal.pluralize 2, "en", %{one: "one", two: "two"}
+          "two"
+      """
+      @default_substitution :other
+      @spec pluralize(number, Locale.t, %{}) :: String.t | nil
+      def pluralize(number, locale \\ Cldr.get_locale(), %{} = substitutions)
+      when is_number(number) do
+        plural = plural_rule(number, locale)
+        substitutions[plural] || substitutions[@default_substitution]
+      end
+
       @doc """
       Return the plural rules for a locale.
 
