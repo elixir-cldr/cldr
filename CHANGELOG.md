@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.10 December 5, 2016
+
+### Bug fixes
+
+* Detecting the version of Cldr at compile time fixed by checking both the mixfile version number if there's no existing ex_cldr app and checking the application spec if there is
+
 ## Changelog for Cldr v0.0.9 December 5, 2016
 
 ### Bug Fixes
