@@ -8,7 +8,7 @@ defmodule Cldr.Config do
   For example the following will configure English and French as
   the available locales.  Note that only locales that are contained
   within the CLDR repository will be available for use.  There
-  are currently 511 locales defined in CLDR.
+  are currently 514 locales defined in CLDR version 30.0.2.
 
       config :ex_cldr,
         locales: ["en", "fr"]
