@@ -108,7 +108,14 @@ defmodule Cldr.Install do
 
   # Returns the version of ex_cldr
   defp app_version do
-    Keyword.get(Application.spec(:ex_cldr), :vsn) |> :erlang.list_to_binary
+    cond do
+      spec = Application.spec(:ex_cldr) ->
+        Keyword.get(spec, :vsn) |> :erlang.list_to_binary
+      Code.ensure_loaded?(Cldr.Mixfile) ->
+        Keyword.get(Cldr.Mixfile.project(), :version)
+      true ->
+        :error
+    end
   end
 
   # Get the git branch name based upon the app version
@@ -118,7 +125,7 @@ defmodule Cldr.Install do
     if String.contains?(version, "-dev") do
       "master"
     else
-      version
+      "v#{version}"
     end
   end
 
