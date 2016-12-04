@@ -32,7 +32,9 @@ defmodule Cldr.Number.Formatter.Short do
       "¥1K"
   """
 
-  @docp """
+  import Cldr.Macros, only: [docp: 1]
+
+  docp """
   Notes from Unicode TR35 on formatting short formats:
 
   To format a number N, the greatest type less than or equal to N is

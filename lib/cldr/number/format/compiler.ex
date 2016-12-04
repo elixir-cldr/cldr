@@ -93,6 +93,7 @@ defmodule Cldr.Number.Format.Compiler do
   """
 
   import Kernel, except: [length: 1]
+  import Cldr.Macros, only: [docp: 1]
 
   # Placeholders in a pattern that will be replaces with
   # locale specific symbols at run time.  There is a later
@@ -117,10 +118,9 @@ defmodule Cldr.Number.Format.Compiler do
 
   # Default is a minimum of no fractional digits and
   # a max thats as big as it takes.
-  @max_fraction_digits  0
+  # @max_fraction_digits  0
   @min_fraction_digits  0
 
-  @digits_pattern       Regex.compile!(@digits)
   @rounding_pattern     Regex.compile!("[" <> @digit_omit_zeroes <>
     @significant_digit <> @grouping_separator <> "]")
 
@@ -214,7 +214,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract the metadata from the format.
 
   The metadata is used to generate the formatted output.  A numeric format
@@ -262,7 +262,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extact how many integer digits are to be displayed.
   """
   @digits_match Regex.compile!("(?<digits>" <> @digits <> "+)")
@@ -274,7 +274,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   If the pattern starts with a non-digit then its no limit on integer
   digits.  If the pattern starts with a digit then the maximum number
   of digits is the length of the integer pattern.  We can assume there
@@ -289,7 +289,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract how many fraction digits must be displayed.
   """
   defp required_fraction_digits(%{"compact_fraction" => nil}), do: 0
@@ -301,7 +301,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract how many additional fraction digits may be displayed.
   """
   @hashes_match Regex.compile!("(?<hashes>[" <> @digit_omit_zeroes <> "]+)")
@@ -314,7 +314,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract the exponent from the format
   """
   defp exponent_digits(%{"exponent_digits" => ""}), do: 0
@@ -322,13 +322,13 @@ defmodule Cldr.Number.Format.Compiler do
     String.length(exp)
   end
 
-  @docp """
+  docp """
   Extract whether a + sign was given the format exponent
   """
   def exponent_sign(%{"exponent_sign" => ""}), do: false
   def exponent_sign(%{"exponent_sign" => _exponent_sign}), do: true
 
-  @docp """
+  docp """
   Extract the number of significant digits to round the mantissa
   to.  If we've already calculated a significant digits number
   using the "@@###" form then we'll use that instead.
@@ -346,7 +346,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract the padding length of the format.
 
   Patterns support padding the result to a specific width. In a pattern the pad
@@ -400,14 +400,14 @@ defmodule Cldr.Number.Format.Compiler do
     # end
   end
 
-  @docp """
+  docp """
   The pad character to be applied if padding is in effect.
   """
   def padding_char(format) do
     format[:positive][:pad] || @default_pad_char
   end
 
-  @docp """
+  docp """
   Return a scale factor depending on the format mask.
 
   We multiply the number by a scale factor if the format
@@ -421,7 +421,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Return the size of the groupings (first and rest) for the format.
 
   An integer format may have zero, one or two groupings - any others
@@ -432,7 +432,7 @@ defmodule Cldr.Number.Format.Compiler do
       fraction: fraction_grouping(fraction_format)}
   end
 
-  @docp """
+  docp """
   Extract the integer grouping
   """
   defp integer_grouping(format) do
@@ -453,7 +453,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract the fraction grouping
   """
   defp fraction_grouping(format) do
@@ -467,7 +467,7 @@ defmodule Cldr.Number.Format.Compiler do
   end
 
 
-  @docp """
+  docp """
   Extracts the significant digit metrics from the format.
 
   There are two ways of controlling how many digits are shows: (a) significant
@@ -547,7 +547,7 @@ defmodule Cldr.Number.Format.Compiler do
     end
   end
 
-  @docp """
+  docp """
   Extract the rounding value from a format.
 
   Patterns support rounding to a specific increment. For example, 1230 rounded
@@ -584,7 +584,6 @@ defmodule Cldr.Number.Format.Compiler do
   * In a pattern, digits '1' through '9' specify rounding, but otherwise
     behave identically to digit '0'.
   """
-  @lint false
   defp rounding(%{"integer" => integer_format, "fraction" => fraction_format}) do
     format = integer_format <> @decimal_separator <> fraction_format
     |> String.replace(@rounding_pattern, "")
@@ -614,7 +613,7 @@ defmodule Cldr.Number.Format.Compiler do
     @format
   end
 
-  @docp """
+  docp """
   Separate the format into the integer, fraction and exponent parts.
   """
   defp split_format(nil) do

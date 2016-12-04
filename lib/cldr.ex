@@ -15,6 +15,12 @@ defmodule Cldr do
 
   alias Cldr.Config
 
+  @version "0.0.8"
+
+  def version do
+    @version
+  end
+
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
       "Some locales are configured that are not known to CLDR. " <>
@@ -43,7 +49,7 @@ defmodule Cldr do
   Returns the directory path name where the CLDR json data
   is kept.
   """
-  @data_dir Config.data_dir()
+  @data_dir Config.client_data_dir()
   def data_dir do
     @data_dir
   end

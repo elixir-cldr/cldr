@@ -1,10 +1,10 @@
 defmodule Number.Format.Test do
   use ExUnit.Case
-  import Cldr.Test.Number.Format, only: [sanitize: 1]
+  import Cldr.Number.String, only: [clean: 1]
   alias Cldr.Number.Format
 
   Enum.each Cldr.Test.Number.Format.test_data(), fn {value, result, args} ->
-    test "formatted #{inspect value} == #{inspect sanitize(result)} with args: #{inspect args}" do
+    test "formatted #{inspect value} == #{inspect clean(result)} with args: #{inspect args}" do
       assert Cldr.Number.to_string(unquote(value), unquote(args)) == unquote(result)
     end
   end

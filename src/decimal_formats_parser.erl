@@ -29,7 +29,7 @@ pad(V) ->
 unwrap({_,_,V}) when is_list(V) -> unicode:characters_to_binary(V);
 unwrap({_,_,V}) -> V.
 
--file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -595,7 +595,6 @@ yeccpars2_34(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_34_(Stack),
  yeccgoto_positive_format(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_currency_symbol/7}).
 yeccgoto_currency_symbol(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_currency_symbol(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -613,11 +612,9 @@ yeccgoto_currency_symbol(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_currency_symbol(33=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_decimal_format/7}).
 yeccgoto_decimal_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_literal_elem/7}).
 yeccgoto_literal_elem(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_literal_elem(3, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -635,7 +632,6 @@ yeccgoto_literal_elem(31, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_literal_elem(33, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_literal_list/7}).
 yeccgoto_literal_list(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(4, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_literal_list(3, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -653,11 +649,9 @@ yeccgoto_literal_list(31, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_literal_list(33, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(4, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_negative_format/7}).
 yeccgoto_negative_format(26=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_29(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_number_format/7}).
 yeccgoto_number_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(3, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_number_format(1, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -667,11 +661,9 @@ yeccgoto_number_format(26, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_number_format(27, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_31(31, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_positive_format/7}).
 yeccgoto_positive_format(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(2, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_prefix/7}).
 yeccgoto_prefix(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_prefix(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -685,7 +677,6 @@ yeccgoto_prefix(31=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_prefix(33=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_25(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
--dialyzer({nowarn_function, yeccgoto_suffix/7}).
 yeccgoto_suffix(3=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_24(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_suffix(28=_S, Cat, Ss, Stack, T, Ts, Tzr) ->

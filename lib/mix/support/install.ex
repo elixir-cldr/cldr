@@ -13,11 +13,12 @@ defmodule Cldr.Install do
   installed.
   """
 
+  import Cldr.Macros, only: [docp: 1]
+
   @doc """
   Install all the configured locales.
   """
   def install_known_locales do
-    ensure_client_dirs_exist!(client_locale_dir())
     Enum.each Cldr.known_locales(), &install_locale/1
     :ok
   end
@@ -26,7 +27,6 @@ defmodule Cldr.Install do
   Install all available locales.
   """
   def install_all_locales do
-    ensure_client_dirs_exist!(client_locale_dir())
     Enum.each Cldr.all_locales(), &install_locale/1
     :ok
   end
@@ -51,45 +51,73 @@ defmodule Cldr.Install do
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
       do_install_locale(locale, locale in Cldr.all_locales())
+    else
+      :already_installed
     end
   end
 
-  def do_install_locale(locale, false) do
+  defp do_install_locale(locale, false) do
     raise Cldr.UnknownLocaleError,
-      "Requested locale #{inspect locale} is not known."
+      "Failed to install the locale #{inspect locale}. The locale is not known."
   end
 
-  def do_install_locale(locale, true) do
-    IO.write "Downloading and installing locale #{inspect locale} ... "
+  defp do_install_locale(locale, true) do
+    require Logger
+
     locale_file_name = "#{locale}.json"
     url = "#{base_url()}#{locale_file_name}" |> String.to_charlist
 
+    output_file_name = [client_locale_dir(), "/", locale_file_name]
+    |> :erlang.iolist_to_binary
+
     case :httpc.request(url) do
       {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
-        output_file_name = "#{client_locale_dir()}/#{locale_file_name}"
-        File.write!(output_file_name, :erlang.list_to_binary(body))
-        IO.puts "done."
+        output_file_name
+        |> File.write!(:erlang.list_to_binary(body))
+
+        Logger.info "Downloaded locale #{inspect locale}"
         {:ok, output_file_name}
       {_, {{_version, code, message}, _headers, _body}} ->
-        IO.puts "error!"
-        raise RuntimeError,
-          message: "Couldn't download locale #{inspect locale}. " <>
-            "HTTP Error: (#{code}) #{inspect message}\nURL: #{inspect url}"
+        Logger.error "Failed to download locale #{inspect locale}. " <>
+          "HTTP Error: (#{code}) #{inspect message}"
+        {:error, code}
+      {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
+        Logger.error "Failed to connect to #{inspect host} to download " <>
+          "locale #{inspect locale}. Reason: #{inspect sys_message}"
+        {:error, sys_message}
     end
   end
 
-  @doc """
+  docp """
   Builds the base url to retrieve a locale file from github.
 
-  The url is build using the version number of the `Cldr` application.
+  The url is built using the version number of the `Cldr` application.
   If the version is a `-dev` version then the locale file is downloaded
   from the master branch.
+
+  This requires that a branch is tagged with the version number before creating
+  a release or publishing to hex.
   """
   @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
-  def base_url do
-    version = "v" <> Cldr.Mixfile.project[:version]
-    branch = if String.contains?(version, "-dev"), do: "master", else: version
-    @base_url <> branch <> "/priv/cldr/locales/"
+  defp base_url do
+    [@base_url, branch_from_version(), "/priv/cldr/locales/"]
+    |> :erlang.iolist_to_binary
+  end
+
+  # Returns the version of ex_cldr
+  defp app_version do
+    Keyword.get(Application.spec(:ex_cldr), :vsn) |> :erlang.list_to_binary
+  end
+
+  # Get the git branch name based upon the app version
+  defp branch_from_version do
+    version = app_version()
+
+    if String.contains?(version, "-dev") do
+      "master"
+    else
+      version
+    end
   end
 
   @doc """
@@ -100,34 +128,49 @@ defmodule Cldr.Install do
   client application or in `Cldr` itself.
   """
   def locale_installed?(locale) do
-    !!Cldr.Config.locale_path(locale)
+    case Cldr.Config.locale_path(locale) do
+      {:ok, _path} -> true
+      _            -> false
+    end
   end
 
   @doc """
-  Returns the directory where the client app stores `Cldr` data
+  Returns the directory where the client app stores `Cldr` data.
+
+  The directory is typically located in `priv/cldr` unless
+  the configuration key `:data_dir` is set to an alternative location.
   """
   def client_data_dir do
-    Cldr.Config.data_dir()
+    Cldr.Config.client_data_dir()
   end
 
   @doc """
   Returns the directory into which locale files are stored
   for a client application.
 
-  The directory is relative to the configured data directory for
-  a client application.  That is typically `./priv/cldr`
-  so that locales typically get stored in `./priv/cldr/locales`.
+  The directory is typically located in `priv/cldr/locales`unless
+  the configuration key `:data_dir` is set to an alternative location.
   """
   def client_locale_dir do
     "#{client_data_dir()}/locales"
   end
 
+  @doc """
+  Returns the full pathname of the locale's json file.
+
+  * `locale` is any locale returned by `Cldr.known_locales{}`
+  """
   def client_locale_file(locale) do
     Path.join(client_locale_dir(), "#{locale}.json")
   end
 
   @doc """
-  Returns the directory where `Cldr` stores the core CLDR data
+  Returns the directory where `Cldr` stores the source core CLDR data
+  used.
+
+  This is the directory within the source repository of Cldr, not the
+  the location of data stored inside a client application.  Client application
+  data is stored in `Cldr.Config.client_data_dir()`
   """
   def cldr_data_dir do
     Path.join(Cldr.Config.cldr_home(), "/priv/cldr")

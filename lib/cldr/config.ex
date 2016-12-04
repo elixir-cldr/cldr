@@ -78,8 +78,13 @@ defmodule Cldr.Config do
 
   @type t :: binary
 
-  @default_locale    "en"
-  @cldr_relative_dir "/priv/cldr"
+  @default_locale "en"
+
+  @cldr_modules [
+    "number_formats", "list_formats", "currencies",
+    "number_systems", "number_symbols", "minimum_grouping_digits",
+    "rbnf"
+  ]
 
   @doc """
   Return the root path of the cldr application
@@ -92,29 +97,29 @@ defmodule Cldr.Config do
   @doc """
   Return the directory where `Cldr` stores its core data
   """
+  @cldr_relative_dir "/priv/cldr"
   @cldr_data_dir Path.join(@cldr_home_dir, @cldr_relative_dir)
   def cldr_data_dir do
     @cldr_data_dir
   end
 
-  # We want to know where the cldr data is stored for an app
-  # by default.  But we need to do some trickery depedning
-  # on whether ex_cldr is a dependency in a client app or
-  # whether we're working on cldr itself.  The key is the
-  # assumption that if we're a dependency is a client app then
-  # "deps" is part of the path
-  @default_data_dir if(String.contains?(__DIR__, "/deps/"),
-    do: hd(String.split(__DIR__, "deps")),
-    else: @cldr_home_dir) <> @cldr_relative_dir
-
   @doc """
   Return the path name of the CLDR data directory for a client application.
   """
-  @data_dir (Application.get_env(:cldr, :data_dir) || @default_data_dir)
+  @locales_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary
+  @client_data_dir Application.get_env(:ex_cldr, :data_dir, @locales_dir)
   |> Path.expand
 
-  def data_dir do
-    @data_dir
+  def client_data_dir do
+    @client_data_dir
+  end
+
+  @doc """
+  Returns the directory where the downloaded CLDR repository files
+  are stored.
+  """
+  def download_data_dir do
+    Path.join(Cldr.Config.cldr_home, "data")
   end
 
   @doc """
@@ -313,14 +318,15 @@ defmodule Cldr.Config do
 
   * `locale` is any locale returned from Cldr.known_locales()`
   """
+  @spec locale_path(String.t) :: {:ok, String.t} | {:error, :not_found}
   def locale_path(locale) do
     relative_locale_path = ["locales/", "#{locale}.json"]
-    client_path = Path.join(data_dir(), relative_locale_path)
+    client_path = Path.join(client_data_dir(), relative_locale_path)
     cldr_path   = Path.join(cldr_data_dir(), relative_locale_path)
     cond do
-      File.exists?(client_path) -> client_path
-      File.exists?(cldr_path)   -> cldr_path
-      true                      -> nil
+      File.exists?(client_path) -> {:ok, client_path}
+      File.exists?(cldr_path)   -> {:ok, cldr_path}
+      true                      -> {:error, :not_found}
     end
   end
 
@@ -338,8 +344,13 @@ defmodule Cldr.Config do
   If a locale file is not found then it is installed.
   """
   def get_locale(locale) do
-    path = locale_path(locale)
-    {:ok, path} = if path, do: {:ok, path}, else: install_locale(locale)
+    {:ok, path} = case locale_path(locale) do
+      {:error, :not_found} -> install_locale(locale)
+      {:ok, path}          -> {:ok, path}
+      error                ->
+        raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
+    end
+
     path
     |> File.read!
     |> Poison.decode!
@@ -355,13 +366,32 @@ defmodule Cldr.Config do
   # Simple check that the locale content contains what we expect
   # by checking it has the keys we used when the locale was consolidated.
   defp assert_valid_keys!(content, locale) do
-    for module <- Cldr.Consolidate.required_modules do
+    for module <- required_modules() do
       if !Map.has_key?(content, module) and !System.get_env("DEV") do
         raise RuntimeError, message:
           "Locale file #{inspect locale} is invalid - map key #{inspect module} was not found."
       end
     end
     content
+  end
+
+  @doc """
+  Identifies the top level keys in the consolidated locale file.
+
+  These keys represent difference dimensions of content in the CLDR
+  repository and serve three purposes:
+
+  1. To structure the content in the locale file
+
+  2. To provide a rudimentary way to validate that some json represents a
+  valid locale file
+
+  3. To all conditional inclusion of CLDR content at compile time to help
+  manage memory footprint.  This capability is not yet built into `Cldr`.
+  """
+  @spec required_modules :: [String.t]
+  def required_modules do
+    @cldr_modules
   end
 
   # Number systems are stored as atoms, no new

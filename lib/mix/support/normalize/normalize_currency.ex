@@ -42,7 +42,7 @@ defmodule Cldr.Normalize.Currency do
     end
   end
 
-  @currency_path Path.join(Cldr.Consolidate.download_data_dir(),
+  @currency_path Path.join(Cldr.Config.download_data_dir(),
     ["cldr-core", "/supplemental", "/currencyData.json"])
 
   def get_currency_data do

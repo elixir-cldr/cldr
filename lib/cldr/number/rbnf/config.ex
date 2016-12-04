@@ -19,7 +19,7 @@ defmodule Cldr.Rbnf.Config do
   alias Cldr.Rbnf.Rule
 
   @default_radix 10
-  @data_dir Cldr.Consolidate.download_data_dir() <> "/cldr-rbnf"
+  @data_dir Path.join(Cldr.Config.cldr_home, "data") <> "/cldr-rbnf"
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
   @spec rbnf_dir :: String.t

@@ -1,3 +1,10 @@
+## Changelog for Cldr v0.0.9 December 5, 2016
+
+### Bug Fixes
+
+* Cldr is intended to download configured locales during compilation is the specified locale is not already installed.  Due to a developer misunderstanding of how the build process works and the treatment of the `priv` dir the download process was failing for packages installed from hex.  The process was not triggered for packages installed from github since all locales are configured in that case. The changes in this release do a much better job of managing the download process and of reflecting any errors that occur during the download.
+
+
 ## Changelog for Cldr v0.0.8 December 4, 2016
 
 ### Bug Fixes

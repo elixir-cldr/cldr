@@ -16,7 +16,8 @@ defmodule Cldr.Mixfile do
      description: description(),
      package: package(),
      test_coverage: [tool: ExCoveralls],
-     aliases: aliases()
+     aliases: aliases(),
+     elixirc_paths: elixirc_paths(Mix.env)
    ]
   end
 
@@ -36,8 +37,7 @@ defmodule Cldr.Mixfile do
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
       {:excoveralls, "~> 0.5.6", only: :test},
-      {:gettext, "~> 0.11.0", only: :dev},
-      {:gen_stage, "~> 0.4", only: [:dev, :test]}
+      {:gettext, "~> 0.11.0", only: :dev}
     ]
   end
 
@@ -80,4 +80,7 @@ defmodule Cldr.Mixfile do
     |> Enum.map(&Path.join(@doc_dir, &1))
     |> Enum.sort
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/**/*"]
+  defp elixirc_paths(_),     do: ["lib"]
 end
