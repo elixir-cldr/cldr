@@ -8,12 +8,17 @@ defmodule Cldr.Test do
     String.replace(string, @dev_dir,"")
   end
 
-  test "that the cldr data directory is correct" do
-    assert strip(Cldr.Config.cldr_data_dir()) == "/cldr/priv/cldr"
+  test "that the cldr source data directory is correct" do
+    assert strip(Cldr.Config.source_data_dir()) == "/cldr/priv/cldr"
   end
 
-  test "that the cldr client data directory is correct" do
+  test "that the client data directory is correct" do
     assert strip(Cldr.Config.client_data_dir()) ==
+      "/cldr/_build/test/lib/ex_cldr/priv/cldr"
+  end
+
+  test "that the cldr data directory is correct" do
+    assert strip(Cldr.Config.cldr_data_dir()) ==
       "/cldr/_build/test/lib/ex_cldr/priv/cldr"
   end
 

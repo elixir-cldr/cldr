@@ -95,10 +95,20 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the directory where `Cldr` stores its core data
+  Return the directory where `Cldr` stores its source core data,  This
+  directory should not be expected to be available other than when developing
+  CLdr since it points to a source directory.
   """
   @cldr_relative_dir "/priv/cldr"
-  @cldr_data_dir Path.join(@cldr_home_dir, @cldr_relative_dir)
+  @source_data_dir Path.join(@cldr_home_dir, @cldr_relative_dir)
+  def source_data_dir do
+    @source_data_dir
+  end
+
+  @doc """
+  Returns the path of the CLDR data directory for the ex_cldr app
+  """
+  @cldr_data_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary
   def cldr_data_dir do
     @cldr_data_dir
   end
@@ -106,12 +116,26 @@ defmodule Cldr.Config do
   @doc """
   Return the path name of the CLDR data directory for a client application.
   """
-  @locales_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary
-  @client_data_dir Application.get_env(:ex_cldr, :data_dir, @locales_dir)
+  @client_data_dir Application.get_env(:ex_cldr, :data_dir, @cldr_data_dir)
   |> Path.expand
 
   def client_data_dir do
     @client_data_dir
+  end
+
+  @doc """
+  Returns the directory where the CLDR locales files are located.
+  """
+  @client_locales_dir @client_data_dir <> "/" <> "locales"
+  def client_locales_dir do
+    @client_locales_dir
+  end
+
+  @doc """
+  Returns the filename that contains the json representation of a locale
+  """
+  def locale_filename(locale) do
+    "#{locale}.json"
   end
 
   @doc """

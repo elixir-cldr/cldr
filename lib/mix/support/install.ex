@@ -14,6 +14,9 @@ defmodule Cldr.Install do
   """
 
   import Cldr.Macros, only: [docp: 1]
+  defdelegate client_data_dir(), to: Cldr.Config
+  defdelegate client_locales_dir(), to: Cldr.Config
+  defdelegate locale_filename(locale), to: Cldr.Config
 
   @doc """
   Install all the configured locales.
@@ -47,7 +50,7 @@ defmodule Cldr.Install do
   """
   def install_locale(locale, options \\ []) do
     if !locale_installed?(locale) or options[:force] do
-      ensure_client_dirs_exist!(client_locale_dir())
+      ensure_client_dirs_exist!(client_locales_dir())
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
       do_install_locale(locale, locale in Cldr.all_locales())
@@ -64,10 +67,9 @@ defmodule Cldr.Install do
   defp do_install_locale(locale, true) do
     require Logger
 
-    locale_file_name = "#{locale}.json"
-    url = "#{base_url()}#{locale_file_name}" |> String.to_charlist
+    url = "#{base_url()}#{locale_filename(locale)}" |> String.to_charlist
 
-    output_file_name = [client_locale_dir(), "/", locale_file_name]
+    output_file_name = [client_locales_dir(), "/", locale_filename(locale)]
     |> :erlang.iolist_to_binary
 
     case :httpc.request(url) do
@@ -135,69 +137,12 @@ defmodule Cldr.Install do
   end
 
   @doc """
-  Returns the directory where the client app stores `Cldr` data.
-
-  The directory is typically located in `priv/cldr` unless
-  the configuration key `:data_dir` is set to an alternative location.
-  """
-  def client_data_dir do
-    Cldr.Config.client_data_dir()
-  end
-
-  @doc """
-  Returns the directory into which locale files are stored
-  for a client application.
-
-  The directory is typically located in `priv/cldr/locales`unless
-  the configuration key `:data_dir` is set to an alternative location.
-  """
-  def client_locale_dir do
-    "#{client_data_dir()}/locales"
-  end
-
-  @doc """
   Returns the full pathname of the locale's json file.
 
   * `locale` is any locale returned by `Cldr.known_locales{}`
   """
   def client_locale_file(locale) do
-    Path.join(client_locale_dir(), "#{locale}.json")
-  end
-
-  @doc """
-  Returns the directory where `Cldr` stores the source core CLDR data
-  used.
-
-  This is the directory within the source repository of Cldr, not the
-  the location of data stored inside a client application.  Client application
-  data is stored in `Cldr.Config.client_data_dir()`
-  """
-  def cldr_data_dir do
-    Path.join(Cldr.Config.cldr_home(), "/priv/cldr")
-  end
-
-  @doc """
-  Returns the directory where `Cldr` stores locales that can be
-  used in a client app.
-
-  Current strategy is to only package the "en" locale in `Cldr`
-  itself and that any other locales are downloaded when configured
-  and the client app is compiled with `Cldr` as a `dep`.
-  """
-  def cldr_locale_dir do
-    Path.join(cldr_data_dir(), "/locales")
-  end
-
-  @doc """
-  Returns the path of the consolidated locale file stored in the `Cldr`
-  package (not the client application).
-
-  Since these consolidated files go in the github repo we consoldiate
-  them into the `Cldr` data directory which is
-  `Cldr.Config.cldr_home() <> /priv/cldr/locales`.
-  """
-  def consolidated_locale_file(locale) do
-    Path.join(cldr_locale_dir(), "#{locale}.json")
+    Path.join(client_locales_dir(), "#{locale}.json")
   end
 
   # Create the client app locales directory and any directories

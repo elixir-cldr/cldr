@@ -5,26 +5,8 @@ if Code.ensure_loaded?(Experimental.Flow) do
     one locale-specific file.
     """
 
-    @doc """
-    Returns the directory where the downloaded CLDR repository files
-    are stored.
-    """
-    def download_data_dir do
-      Cldr.Config.download_data_dir()
-    end
-
-    @doc """
-    Returns the directory where the consolidated `Cldr` content is stored.
-
-    We store the consolidated files in the `./priv/cldr` directory which
-    is part of the github repo and therefore available for download.
-
-    However only the "en" locale is packaged in hex and any other configured
-    locales will be downloaded when the client app is compiled.
-    """
-    def consolidated_output_dir do
-      Cldr.Install.cldr_data_dir()
-    end
+    defdelegate download_data_dir(), to: Cldr.Config
+    defdelegate consolidate_output_dir(), to: Cldr.Config, as: :source_data_dir
 
     @doc """
     Returns the directory where the locale-specific json files are stored.
@@ -83,7 +65,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> level_up_locale(locale)
       |> Cldr.Map.underscore_keys
       |> normalize_content(locale)
-      |> Map.take(@cldr_modules)
+      |> Map.take(Cldr.Config.required_modules())
       |> Cldr.Map.atomize_keys
       |> save_locale(locale)
     end
