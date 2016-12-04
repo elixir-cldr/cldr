@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Cldr.Install.Locales do
   @shortdoc "Install all configured `Cldr` locales."
 
   def run(_) do
-    Cldr.Install.install_known_locales
+    Cldr.Install.install_requested_locales
   end
 
 end

@@ -21,8 +21,8 @@ defmodule Cldr.Install do
   @doc """
   Install all the configured locales.
   """
-  def install_known_locales do
-    Enum.each Cldr.known_locales(), &install_locale/1
+  def install_requested_locales do
+    Enum.each Cldr.Config.requested_locales(), &install_locale/1
     :ok
   end
 
