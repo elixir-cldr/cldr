@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.0.11"
+  @version "0.0.12-dev"
 
   def project do
     [app: :ex_cldr,
@@ -68,9 +68,7 @@ defmodule Cldr.Mixfile do
   end
 
   def aliases do
-    [
-      "cldr.update": ["cldr.download", "cldr.convert", "cldr.consolidate", "cldr.install"]
-    ]
+    [ ]
   end
 
   @doc_dir "./guides"

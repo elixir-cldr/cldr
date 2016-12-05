@@ -11,7 +11,7 @@ Add `cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.7"}
+        {:ex_cldr, "~> 0.0.11"}
       ]
     end
 
@@ -20,7 +20,7 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
     mix deps.get
     mix deps.compile
 
-Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release:
+Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release.  This applies for Elixir versions up to 1.3.x; verion 1.4 will automatically do this for you.
 
     def application do
       [applications: [:ex_cldr]]
@@ -36,6 +36,14 @@ Without any specific configuration Cldr will support the "en" locale only.  To s
       gettext: MyApp.Gettext
 
 Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
+
+### Recompiling after a configuration change
+
+Note that Elixir can't determine dependencies based upon configuration so when you make changes to your Cldr configuration and forced recompilation is required in order for the changes to take affect.  To recompile:
+
+    iex> mix deps.compile ex_cldr --force
+
+Cldr pre-computes a lot of the Cldr functional requirements and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
 
 ## Downloading Configured Locales
 
@@ -83,9 +91,13 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
-## Formatting Dates, Times, Units and Other Stuff
+## Formatting Dates, Times, Units
 
 Not currently supported, but they're next on the development priority list.
+
+* Dates/times expected to ship in January 2017.
+
+* Units planned by March 2017
 
 ## Gettext Integration
 
@@ -106,7 +118,7 @@ There is an imcomplete (ie development not finished) implemenation of a `Plug` i
 Note that `Cldr` defines locale string according to the Unicode standard:
 
 * Language codes are two lowercase letters (ie "en", not "EN")
-* Potentially one or more modifiers separated by "-" (dash), not a "_" (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "_" into "-" for compatibility.
+* Potentially one or more modifiers separated by "-" (dash), not a "\_". (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "\_" into "-" for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example "pt-BR" is the locale referring to Brazilian Portugese.
 * In `Cldr` a locale is always a `binary` and never an `atom`.  Locale strings are often passed around in HTTP headers and converting to atoms creates an attack vector we can do without.
 * The locales known to `Cldr` can be retrieved by `Cldr.known_locales` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales` to get the locales available in the CLDR data repository.
@@ -117,7 +129,7 @@ Tests cover the full 511 locales defined in CLDR. Since `Cldr` attempts to maxim
 
 Tests are run on Elixir 1.3.2 and on master (currently 1.4.0-dev).
 
-**Note that on 1.3.2 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds load tests which, for 511 locales, may not be enough.  This timeout is configurable on Elixir 1.4.0-dev. You can configure it in `config.exs` (or `test.exs`) as follows:
+**Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 
     config :ex_unit,
       case_load_timeout: 120_000
