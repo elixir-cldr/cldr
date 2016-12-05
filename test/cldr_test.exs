@@ -3,33 +3,27 @@ defmodule Cldr.Test do
 
   # If you're testing on your own machine, replace @dev_dir
   # with the repo root directory of your own system
-  # @dev_dir "/Users/kip/Development"
   def strip(string) do
-    String.replace(string, @dev_dir,"")
+    String.replace(string, Cldr.Config.cldr_home(),"")
   end
-  #
-  # test "that the cldr source data directory is correct" do
-  #   assert strip(Cldr.Config.source_data_dir()) == "/cldr/priv/cldr"
-  # end
-  #
-  # test "that the client data directory is correct" do
-  #   assert strip(Cldr.Config.client_data_dir()) ==
-  #     "/cldr/_build/test/lib/ex_cldr/priv/cldr"
-  # end
-  #
-  # test "that the cldr data directory is correct" do
-  #   assert strip(Cldr.Config.cldr_data_dir()) ==
-  #     "/cldr/_build/test/lib/ex_cldr/priv/cldr"
-  # end
-  #
-  test "that the cldr home directory is correct" do
-    IO.puts "CLDR Home: #{inspect Cldr.Config.cldr_home()}"
-    assert strip(Cldr.Config.cldr_home()) == "/cldr"
+
+  test "that the cldr source data directory is correct" do
+    assert strip(Cldr.Config.source_data_dir()) == "/priv/cldr"
   end
-  #
-  # test "that the download data directory is correct" do
-  #   assert strip(Cldr.Config.download_data_dir()) == "/cldr/data"
-  # end
+
+  test "that the client data directory is correct" do
+    assert strip(Cldr.Config.client_data_dir()) ==
+      "/_build/test/lib/ex_cldr/priv/cldr"
+  end
+
+  test "that the cldr data directory is correct" do
+    assert strip(Cldr.Config.cldr_data_dir()) ==
+      "/_build/test/lib/ex_cldr/priv/cldr"
+  end
+
+  test "that the download data directory is correct" do
+    assert strip(Cldr.Config.download_data_dir()) == "/data"
+  end
 
   test "that we have the correct modules (keys) for the json consolidation" do
     assert Cldr.Config.required_modules() ==
