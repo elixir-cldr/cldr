@@ -4,9 +4,9 @@ defmodule Cldr.Test do
   # If you're testing on your own machine, replace @dev_dir
   # with the repo root directory of your own system
   # @dev_dir "/Users/kip/Development"
-  # def strip(string) do
-  #   String.replace(string, @dev_dir,"")
-  # end
+  def strip(string) do
+    String.replace(string, @dev_dir,"")
+  end
   #
   # test "that the cldr source data directory is correct" do
   #   assert strip(Cldr.Config.source_data_dir()) == "/cldr/priv/cldr"
