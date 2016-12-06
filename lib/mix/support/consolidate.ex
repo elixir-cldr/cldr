@@ -6,7 +6,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
     """
 
     defdelegate download_data_dir(), to: Cldr.Config
-    defdelegate consolidate_output_dir(), to: Cldr.Config, as: :source_data_dir
+    defdelegate consolidated_output_dir(), to: Cldr.Config, as: :source_data_dir
 
     @doc """
     Returns the directory where the locale-specific json files are stored.

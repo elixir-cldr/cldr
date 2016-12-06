@@ -1,3 +1,25 @@
+## Changelog for Cldr v0.0.12 December 6, 2016
+
+The last set of bugs have come from areas of the code which depends on different compilation environments:
+
+* Whether `gen_stage` is installed (its used in the locale consolidation process only, and that process isn't relevant to anyone except a Cldr developer)
+
+* Whether all locales are installed or not and hence whether a locale needs to be donwloaded.  Locales are installed at compile time and which locales depends on configuration.
+
+Neither of these test case is easy to test with the standard `ExUnit` assertions for good reasons.  Following advice from José I'll look at what Phoenix does and craft a test harness prior to releasing version 0.1.0.
+
+### Bug fixes
+
+* Fixed compilation error when gen_stage is installed.
+
+* Fixed some formatting issues in README.md
+
+## Changelog for Cldr v0.0.11 December 5, 2016
+
+### Bug fixes
+
+* Fixed a small issue that would prevent locales from downloading if ex_cldr was being run from the github repo
+
 ## Changelog for Cldr v0.0.10 December 5, 2016
 
 ### Bug fixes
