@@ -1,9 +1,3 @@
-## Changelog for Cldr v0.0.13 December 6, 2016
-
-### Bug fixes
-
-* `Cldr.Number.to_string 1234, currency: :AUD` should default to format :currency but it was defaulting to format :standard.
-
 ## Changelog for Cldr v0.0.12 December 6, 2016
 
 The last set of bugs have come from areas of the code which depends on different compilation environments:
@@ -14,11 +8,17 @@ The last set of bugs have come from areas of the code which depends on different
 
 Neither of these test case is easy to test with the standard `ExUnit` assertions for good reasons.  Following advice from José I'll look at what Phoenix does and craft a test harness prior to releasing version 0.1.0.
 
+### Enhancements
+
+* Moved the files related to json consolidation out of the hex package since the process of downloading and transforming the CLDR repository is not a packages responsibility - only a developers.
+
 ### Bug fixes
 
 * Fixed compilation error when gen_stage is installed.
 
-* Fixed some formatting issues in README.md
+* Fixed some formatting issues in README.md and noted that we use now using CLDR 30.0.2
+
+* `Cldr.Number.to_string 1234, currency: :AUD` should default to format `:currency` but it was defaulting to format `:standard`.
 
 ## Changelog for Cldr v0.0.11 December 5, 2016
 

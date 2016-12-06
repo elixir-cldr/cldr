@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.0.13"
+  @version "0.0.12"
 
   def project do
     [app: :ex_cldr,
@@ -80,6 +80,7 @@ defmodule Cldr.Mixfile do
     |> Enum.sort
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/**/*"]
+  defp elixirc_paths(:test), do: ["lib", "mix", "test"]
+  defp elixirc_paths(:dev),  do: ["lib", "mix"]
   defp elixirc_paths(_),     do: ["lib"]
 end

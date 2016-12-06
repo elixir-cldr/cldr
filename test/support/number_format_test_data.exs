@@ -45,7 +45,7 @@ defmodule Cldr.Test.Number.Format do
       {123.4, "123.40 AUD",      [format: "#,##0.00 ¤¤", currency: "AUD"]},
       {123.4, "123.40 Australian dollars", [format: "#,##0.00 ¤¤¤", currency: "AUD"]},
       {123.4, "123.40 $",        [format: "#,##0.00 ¤¤¤¤", currency: "AUD"]},
-      {1234,  "A$1,234.00"       [currency: :AUD]},
+      {1234,  "A$1,234.00",      [currency: :AUD]},
 
       # Rounding
       {1234.21, "1,234.20",      [format: "#,##0.05"]},
