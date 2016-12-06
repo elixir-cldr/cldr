@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.13 December 6, 2016
+
+### Bug fixes
+
+* `Cldr.Number.to_string 1234, currency: :AUD` should default to format :currency but it was defaulting to format :standard.
+
 ## Changelog for Cldr v0.0.12 December 6, 2016
 
 The last set of bugs have come from areas of the code which depends on different compilation environments:

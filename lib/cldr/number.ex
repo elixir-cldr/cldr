@@ -369,7 +369,7 @@ defmodule Cldr.Number do
   end
 
   defp adjust_for_currency(options, currency, nil) when not is_nil(currency) do
-    options ++ [{:format, :currency}]
+    Keyword.put(options, :format, :currency)
   end
 
   defp adjust_for_currency(options, _currency, _format) do
