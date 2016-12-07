@@ -267,7 +267,7 @@ defmodule Cldr.Number do
   Same as the execution of `to_string/2` but raises an exception if an error would be
   returned.
   """
-  @spec to_string!(number, [Keyword.t]) :: String.t
+  @spec to_string!(number, [Keyword.t]) :: Exception.t
   def to_string!(number, options \\ @default_options) do
     case string = to_string(number, options) do
       {:error, {exception, message}} ->

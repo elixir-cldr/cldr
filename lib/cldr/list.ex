@@ -65,6 +65,7 @@ defmodule Cldr.List do
   Formats a list using `to_string/2` but raises if there is
   an error.
   """
+  @spec to_string(List.t, Keyword.t) :: String.t | Exception.t
   def to_string!(list, options \\ []) do
     case string = to_string(list, options) do
       {:error, {exception, message}} ->
