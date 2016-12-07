@@ -55,8 +55,21 @@ defmodule Cldr.List do
   end
 
   def to_string(list, options) do
-    {locale, format} = normalize_options(options)
-    to_string(list, locale, format)
+    case normalize_options(options) do
+      {:error, {_exception, _message}} = error ->
+        error
+      {locale, format} ->
+        to_string(list, locale, format)
+    end
+  end
+
+  def to_string!(list, options \\ []) do
+    case string = to_string(list, options) do
+      {:error, {exception, message}} ->
+        raise exception, message: message
+      _ ->
+        string
+    end
   end
 
   # For when the list is empty
@@ -169,22 +182,28 @@ defmodule Cldr.List do
     locale = options[:locale] || Cldr.get_locale()
     format = options[:format] || @default_style
 
-    verify_locale!(locale)
-    verify_format!(locale, format)
-    {locale, format}
-  end
-
-  defp verify_locale!(locale) do
-    if !Cldr.known_locale?(locale) do
-      raise Cldr.UnknownLocaleError,
-        "The locale #{inspect locale} is not known."
+    with :ok <- verify_locale(locale),
+         :ok <- verify_format(locale, format)
+    do
+      {locale, format}
+    else
+      {:error, {_exception, _message}} = error -> error
     end
   end
 
-  defp verify_format!(locale, format) do
+  defp verify_locale(locale) do
+    if !Cldr.known_locale?(locale) do
+      {:error, {Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."}}
+    else
+      :ok
+    end
+  end
+
+  defp verify_format(locale, format) do
     if !(format in list_pattern_styles_for(locale)) do
-      raise ArgumentError, message:
-        "The list format style #{inspect format} is not known."
+      {:error, {Cldr.UnknownFormatError, "The list format style #{inspect format} is not known."}}
+    else
+      :ok
     end
   end
 end

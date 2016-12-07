@@ -42,8 +42,14 @@ defmodule Number.Format.Test do
   end
 
   test "that when there is no format defined for a number system we get an error return" do
+    assert Cldr.Number.to_string(1234, locale: "he", number_system: :hebr) ==
+      {:error, {Cldr.UnknownFormatError,
+      "The locale \"he\" with number system :hebr does not define a format :standard."}}
+  end
+
+  test "that when there is no format defined for a number system raises" do
     assert_raise Cldr.UnknownFormatError, ~r/The locale .* does not define/, fn ->
-      Cldr.Number.to_string(1234, locale: "he", number_system: :hebr)
+      Cldr.Number.to_string!(1234, locale: "he", number_system: :hebr)
     end
   end
 end

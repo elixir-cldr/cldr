@@ -257,7 +257,7 @@ defmodule Cldr.Number do
   """
 
   # `to_string/2` is the public API to number formatting.  Its basic job is
-  # to retrieve the actual format mask to be used and then invoke
+  # to retrieve the actual format mask to be used and then invoke the private function
   # `to_string/3` on the appropriate module which is the internal API.
 
   @spec to_string(number, [Keyword.t]) :: String.t
@@ -267,10 +267,19 @@ defmodule Cldr.Number do
     |> detect_negative_number(number)
 
     if currency_format?(format) && !Keyword.get(options, :currency) do
-      {:error, "currency format #{inspect format} requires that " <>
-        "options[:currency] be specified"}
+      {:error, {Cldr.FormatError, "currency format #{inspect format} requires that " <>
+        "options[:currency] be specified"}}
     else
       to_string(number, format, options)
+    end
+  end
+
+  def to_string!(number, options \\ @default_options) do
+    case string = to_string(number, options) do
+      {:error, {exception, message}} ->
+        raise exception, message
+      true ->
+        string
     end
   end
 
@@ -338,9 +347,9 @@ defmodule Cldr.Number do
   # above so this must be a format name expected to be defined by a
   # locale but its not there.
   defp to_string(_number, format, options) when is_atom(format) do
-    raise Cldr.UnknownFormatError, "The locale #{inspect options[:locale]} with number system " <>
+    {:error, {Cldr.UnknownFormatError, "The locale #{inspect options[:locale]} with number system " <>
       "#{inspect options[:number_system]} does not define a format " <>
-      "#{inspect format}."
+      "#{inspect format}."}}
   end
 
   # Merge options and default options with supplied options always
