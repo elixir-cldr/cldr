@@ -117,50 +117,50 @@ defmodule Cldr.Number do
   * `options` is a keyword list defining how the number is to be formatted. The
     valid options are:
 
-    * `format`: the format style or a format string defining how the number is
-      formatted. See `Cldr.Number.Format` for how format strings can be constructed.
-      See `Cldr.Number.Format.format_styles_for/1` to see what standard format styles
-      are available for a locale. ThereThe default `format` is `:standard`.
+      * `format`: the format style or a format string defining how the number is
+        formatted. See `Cldr.Number.Format` for how format strings can be constructed.
+        See `Cldr.Number.Format.format_styles_for/1` to return available format styles
+        for a locale. The default `format` is `:standard`.
 
-    * If `:format` is set to `:long` or `:short` then the formatting depends on
-      whether `:currency` is specified. If not specified then the number is
-      formatted as `:decimal_long` or `:decimal_short`. If `:currency` is
-      specified the number is formatted at `:currency_long` or
-      `:currency_short`.
+      * If `:format` is set to `:long` or `:short` then the formatting depends on
+        whether `:currency` is specified. If not specified then the number is
+        formatted as `:decimal_long` or `:decimal_short`. If `:currency` is
+        specified the number is formatted at `:currency_long` or
+        `:currency_short`.
 
-    * `:format` may also be a format defined by CLDR's Rules Based Number
-      Formats (RBNF).  Further information is found in the module `Cldr.Rbnf`.
-      The most commonly used formats in this category are to spell out the
-      number in a the locales language.  The applicable formats are `:spellout`,
-      `:spellout_year`, `:ordinal`.  A number can also be formatted as roman
-      numbers by using the format `:roman` or `:roman_lower`.
+      * `:format` may also be a format defined by CLDR's Rules Based Number
+        Formats (RBNF).  Further information is found in the module `Cldr.Rbnf`.
+        The most commonly used formats in this category are to spell out the
+        number in a the locales language.  The applicable formats are `:spellout`,
+        `:spellout_year`, `:ordinal`.  A number can also be formatted as roman
+        numbers by using the format `:roman` or `:roman_lower`.
 
-    * `currency`: is the currency for which the number is formatted. For
-      available currencies see `Cldr.Currency.known_currencies/0`. This option
-      is required if `format` is set to `:currency`.  If `currency` is set
-      and no `format` is set, `format` will be set to `:currency` as well.
+      * `currency`: is the currency for which the number is formatted. For
+        available currencies see `Cldr.Currency.known_currencies/0`. This option
+        is required if `:format` is set to `:currency`.  If `currency` is set
+        and no `:format` is set, `:format` will be set to `:currency` as well.
 
-    * `cash`: a boolean which indicates whether a number being formatted as a
-      `:currency` is to be considered a cash value or not. Currencies can be
-      rounded differently depending on whether `cash` is `true` or `false`.
+      * `:cash`: a boolean which indicates whether a number being formatted as a
+        `:currency` is to be considered a cash value or not. Currencies can be
+        rounded differently depending on whether `:cash` is `true` or `false`.
 
-    * `rounding_mode`: determines how a number is rounded to meet the precision
-      of the format requested. The available rounding modes are `:down`,
-      :half_up, :half_even, :ceiling, :floor, :half_down, :up. The default is
-      `:half_even`.
+      * `:rounding_mode`: determines how a number is rounded to meet the precision
+        of the format requested. The available rounding modes are `:down`,
+        :half_up, :half_even, :ceiling, :floor, :half_down, :up. The default is
+        `:half_even`.
 
-    * `number_system`: determines which of the number systems for a locale
-      should be used to define the separators and digits for the formatted
-      number. If `number_system` is an `atom` then `number_system` is
-      interpreted as a number system. See
-      `Cldr.Number.System.number_systems_for/1`. If the `number_system` is
-      `binary` then it is interpreted as a number system name. See
-      `Cldr.Number.System.number_system_names_for/1`. The default is `:default`.
+      * `:number_system`: determines which of the number systems for a locale
+        should be used to define the separators and digits for the formatted
+        number. If `number_system` is an `atom` then `number_system` is
+        interpreted as a number system. See
+        `Cldr.Number.System.number_systems_for/1`. If the `:number_system` is
+        `binary` then it is interpreted as a number system name. See
+        `Cldr.Number.System.number_system_names_for/1`. The default is `:default`.
 
-    * `locale`: determines the locale in which the number is formatted. See
-      `Cldr.known_locales/0`. THe default is `Cldr.get_locale()` which is the
-      locale currently in affect for this `Process` and which is set by
-      `Cldr.put_locale/1`.
+      * `:locale`: determines the locale in which the number is formatted. See
+        `Cldr.known_locales/0`. THe default is `Cldr.get_locale()` which is the
+        locale currently in affect for this `Process` and which is set by
+        `Cldr.put_locale/1`.
 
   ## Examples
 
@@ -217,7 +217,7 @@ defmodule Cldr.Number do
 
   ## Errors
 
-  An error tuple `{:error, "message"}` will be returned if an error is detected.
+  An error tuple `{:error, message}` will be returned if an error is detected.
   The two most likely causes of an error return are:
 
     * A format cannot be compiled. In this case the error tuple will look like:
