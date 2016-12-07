@@ -125,25 +125,25 @@ defmodule Cldr.List do
     patterns = Cldr.Locale.get_locale(locale).list_formats
     pattern_names = Map.keys(patterns)
 
-  @doc """
-  Returns the list patterns for a locale.
+    @doc """
+    Returns the list patterns for a locale.
 
-  List patterns provide rules for combining multiple
-  items into a language format appropriate for a locale.
+    List patterns provide rules for combining multiple
+    items into a language format appropriate for a locale.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.List.list_patterns_for "en"
-      %{standard: %{"2": "{0} and {1}", end: "{0}, and {1}",
-         middle: "{0}, {1}", start: "{0}, {1}"},
-       standard_short: %{"2": "{0} and {1}", end: "{0}, and {1}",
-         middle: "{0}, {1}", start: "{0}, {1}"},
-       unit: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
-         start: "{0}, {1}"},
-       unit_narrow: %{"2": "{0} {1}", end: "{0} {1}", middle: "{0} {1}",
-         start: "{0} {1}"},
-       unit_short: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
-         start: "{0}, {1}"}}
+        iex> Cldr.List.list_patterns_for "en"
+        %{standard: %{"2": "{0} and {1}", end: "{0}, and {1}",
+           middle: "{0}, {1}", start: "{0}, {1}"},
+         standard_short: %{"2": "{0} and {1}", end: "{0}, and {1}",
+           middle: "{0}, {1}", start: "{0}, {1}"},
+         unit: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
+           start: "{0}, {1}"},
+         unit_narrow: %{"2": "{0} {1}", end: "{0} {1}", middle: "{0} {1}",
+           start: "{0} {1}"},
+         unit_short: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
+           start: "{0}, {1}"}}
     """
     def list_patterns_for(unquote(locale)) do
       unquote(Macro.escape(patterns))
