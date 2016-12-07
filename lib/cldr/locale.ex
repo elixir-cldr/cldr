@@ -1,8 +1,10 @@
 defmodule Cldr.Locale do
   @moduledoc """
-  Parse and process locale strings as defined by [Unicode](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
+  Parse and process locale json as defined by [Unicode](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
   """
   @type t :: binary
+
+  @spec get_locale(Locale.t) :: Map.t
   Enum.each Cldr.known_locales(), fn locale_name ->
     locale = Cldr.Config.get_locale(locale_name)
 

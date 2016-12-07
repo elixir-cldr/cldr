@@ -1,6 +1,6 @@
 defmodule Cldr.Number.Cardinal do
   @moduledoc """
-  Manages the rules for a cardinal number.
+  Implements cardinal plural rules for numbers.
   """
 
   use Cldr.Number.PluralRule, :cardinal

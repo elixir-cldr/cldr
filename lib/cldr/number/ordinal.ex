@@ -1,6 +1,6 @@
 defmodule Cldr.Number.Ordinal do
   @moduledoc """
-  Manages the rules for ordinal numbers.
+  Implements ordinal plural rules for numbers.
   """
 
   use Cldr.Number.PluralRule, :ordinal

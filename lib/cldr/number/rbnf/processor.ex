@@ -1,4 +1,8 @@
 defmodule Cldr.Rbnf.Processor do
+  @moduledoc """
+  Macro to define the interpreter for the compiled RBNF rules specific to a rule group (Ordinal,
+  Spellout, NumberingSystem)
+  """
   defmacro __using__(_opts) do
     quote location: :keep do
       alias  Cldr.Number

@@ -1,6 +1,8 @@
 defmodule Cldr.Number.Formatter.Short do
   @moduledoc """
-  Formats a number in a `:short` format.  This is best explained by some
+  Formats a number according to the locale-specific `:short` formats
+
+  This is best explained by some
   examples:
 
       iex> Number.to_string 123, format: :short

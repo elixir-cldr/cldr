@@ -1,6 +1,6 @@
 defmodule Cldr.Number.Format do
   @moduledoc """
-  Manages the collection of number patterns defined in Cldr.
+  Functions to manage the collection of number patterns defined in Cldr.
 
   Number patterns affect how numbers are interpreted in a localized context.
   Here are some examples, based on the French locale. The "." shows where the

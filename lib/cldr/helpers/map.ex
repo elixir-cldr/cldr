@@ -1,6 +1,6 @@
 defmodule Cldr.Map do
   @moduledoc """
-  Functions to transform maps
+  Helper functions for transforming maps, keys and values.
   """
 
   @doc """

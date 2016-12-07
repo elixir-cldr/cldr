@@ -1,6 +1,6 @@
 defmodule Cldr.Number do
   @moduledoc """
-  Cldr formatting for numbers.
+  The main public API for the formatting of numbers and currencies.
 
   Provides the public API for the formatting of numbers based upon
   CLDR's decimal formats specification documentated [Unicode TR35](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Formats)

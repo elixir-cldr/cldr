@@ -1,8 +1,6 @@
 defmodule Cldr.Number.Formatter.Decimal do
   @moduledoc """
-  Formats a number according to a format definition, either a standard
-  format defined for a locale or a user defined format supplied as a
-  parameter.
+  Formats a number according to a locale-specific predefined format or a user-defined format.
 
   As a performance optimization, all decimal formats known at compile time are
   compiled into function that roughly halves the time to format a number

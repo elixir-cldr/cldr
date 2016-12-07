@@ -1,7 +1,7 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
 defmodule Cldr.Number.Format.Compiler do
   @moduledoc """
-  Number Pattern Compiler
+  Compiles number patterns with a lexer/parser into patterns for fast runtime interpretation.
 
   Number patterns affect how numbers are interpreted in a localized context.
   Here are some examples, based on the French locale. The "." shows where the

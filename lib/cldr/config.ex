@@ -1,5 +1,7 @@
 defmodule Cldr.Config do
   @moduledoc """
+  Provides the functions to manage the `Cldr` configuration.
+
   Locales are configured for use in `Cldr` by either
   specifying them directly or by using a configured
   `Gettext` module.

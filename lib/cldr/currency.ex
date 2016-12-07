@@ -1,6 +1,6 @@
 defmodule Cldr.Currency do
   @moduledoc """
-  Currency functions for CLDR.
+  Defines a currency structure and a set of functions to manage the validity of a currency code.
   """
 
   @type format :: :standard |
@@ -45,7 +45,6 @@ defmodule Cldr.Currency do
       iex> Cldr.Currency.known_currencies |> Enum.count
       298
   """
-
   def known_currencies do
     Cldr.get_locale()
     |> Cldr.Locale.get_locale
@@ -111,7 +110,7 @@ defmodule Cldr.Currency do
   end
 
   @doc """
-  Normalized the representation of a currency code.
+  Normalizes the representation of a currency code.
 
   The normalized form is an ISO4217 code in an atom form.
   """
