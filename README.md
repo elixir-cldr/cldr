@@ -7,7 +7,7 @@
 
 ## Installation
 
-Add `cldr` as a dependency to your `mix` project:
+Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
@@ -20,7 +20,7 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
     mix deps.get
     mix deps.compile
 
-Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release.  This applies for Elixir versions up to 1.3.x; verion 1.4 will automatically do this for you.
+Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release.  This applies for Elixir versions up to 1.3.x; version 1.4 will automatically do this for you.
 
     def application do
       [applications: [:ex_cldr]]
@@ -39,40 +39,45 @@ Configures a default locale of "en" (which is itself the `Cldr` default).  Addit
 
 ### Recompiling after a configuration change
 
-Note that Elixir can't determine dependencies based upon configuration so when you make changes to your Cldr configuration and forced recompilation is required in order for the changes to take affect.  To recompile:
+Note that Elixir can't determine dependencies based upon configuration so when you make changes to your `Cldr` configuration a forced recompilation is required in order for the changes to take affect.  To recompile:
 
     iex> mix deps.compile ex_cldr --force
 
-Cldr pre-computes a lot of the Cldr functional requirements and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
+`Cldr` pre-computes a lot of the CLDR specification and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
 
 ## Downloading Configured Locales
 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 511 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 514 locales are installed when the repo is cloned into your application deps.
 
-* If installed from hex then only a single locale, "en", is installed.  When you configure additional locales these will be downloaded during application compilation.
-
-If you add additional locales to your configuration if may be necessary to force recompile of `Cldr` for these locales to be recognised. This can be done by:
-
-    mix deps.compile ex_cldr --force
+* If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
 ## Formatting Numbers
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
-      iex> Cldr.Number.to_string 12345
-      "12,345"
+    iex> Cldr.Number.to_string 12345
+    "12,345"
 
-      iex> Cldr.Number.to_string 12345, locale: "fr"
-      "12 345"
+    iex> Cldr.Number.to_string 12345, locale: "fr"
+    "12 345"
 
-      iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
-      "12 345,00 $US"
+    iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
+    "12 345,00 $US"
 
-      iex(4)> Cldr.Number.to_string 12345, format: "#E0"
-      "1.2345E4"
+    iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+    "1.2345E4"
+
+    iex(> Cldr.Number.to_string 1234, format: :roman
+    "MCCXXXIV"
+
+    iex> Cldr.Number.to_string 1234, format: :ordinal
+    "1,234th"
+
+    iex> Cldr.Number.to_string 1234, format: :spellout
+    "one thousand two hundred thirty-four"
 
 See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
 
@@ -80,14 +85,14 @@ See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further informati
 
 The `Cldr.List` module provides list formatting.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
 
-      iex> Cldr.List.to_string(["a", "b", "c"], locale: "en")
-      "a, b, and c"
+    iex> Cldr.List.to_string(["a", "b", "c"], locale: "en")
+    "a, b, and c"
 
-      iex> Cldr.List.to_string(["a", "b", "c"], locale: "en", format: :unit_narrow)
-      "a b c"
+    iex> Cldr.List.to_string(["a", "b", "c"], locale: "en", format: :unit_narrow)
+    "a b c"
 
-      iex> Cldr.List.to_string(["a", "b", "c"], locale: "fr")
-      "a, b et c"
+    iex> Cldr.List.to_string(["a", "b", "c"], locale: "fr")
+    "a, b et c"
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
@@ -125,9 +130,9 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 ## Testing
 
-Tests cover the full 511 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 514 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.3.2 and on master (currently 1.4.0-dev).
+Tests are run on Elixir 1.3.4 and on master (currently 1.4.0-rc.1).
 
 **Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 

@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.13
+
+### Enhancements
+
+* Additional updates to docs content and formatting
+
 ## Changelog for Cldr v0.0.12 December 6, 2016
 
 The last set of bugs have come from areas of the code which depends on different compilation environments:
