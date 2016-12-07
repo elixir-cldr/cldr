@@ -115,7 +115,7 @@ defmodule Cldr.Number.Math do
       4
   """
   @spec number_of_integer_digits(number_or_decimal) :: integer
-  def number_of_integer_digits(%Decimal{exp: exp} = number) when exp < 0 do
+  def number_of_integer_digits(%Decimal{} = number) do
     number
     |> Decimal.round(0, :floor)
     |> Decimal.to_integer
@@ -128,20 +128,18 @@ defmodule Cldr.Number.Math do
     0
   end
 
-  def number_of_integer_digits(%Decimal{} = number) do
-    number
-    |> Decimal.to_integer
-    |> number_of_integer_digits
-  end
-
   def number_of_integer_digits(number) when is_float(number) do
     number
     |> trunc
     |> number_of_integer_digits
   end
 
+  # the abs() is required for Elixir 1.3 since Integer.digits() barfs
+  # on negative numbers which we can get
   def number_of_integer_digits(number) when is_integer(number) do
-    Integer.digits(number)
+    number
+    |> Kernel.abs
+    |> Integer.digits
     |> Enum.count
   end
 
