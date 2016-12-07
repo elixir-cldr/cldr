@@ -4,6 +4,7 @@ defmodule Doc.Test do
   doctest Cldr.Config
   doctest Cldr.List
   doctest Cldr.Currency
+  doctest Cldr.Number
   doctest Cldr.Number.String
   doctest Cldr.Number.Format
   doctest Cldr.Number.System

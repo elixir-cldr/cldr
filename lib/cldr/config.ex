@@ -342,7 +342,7 @@ defmodule Cldr.Config do
   Returns the location of the json data for a locale or `nil`
   if the locale can't be found.
 
-  * `locale` is any locale returned from Cldr.known_locales()`
+  * `locale` is any locale returned from `Cldr.known_locales()`
   """
   @spec locale_path(String.t) :: {:ok, String.t} | {:error, :not_found}
   def locale_path(locale) do

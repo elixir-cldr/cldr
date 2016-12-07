@@ -1,7 +1,7 @@
 defmodule Cldr.Normalize.Number do
   @moduledoc """
-  Takes the `number` part of the locale map and transforms the formats
-  into a more easily processable structure
+  Takes the number part of the locale map and transforms the formats into a more easily
+  processable structure that is then stored in map managed by `Cldr.Locale`
   """
   alias Cldr.Number
 

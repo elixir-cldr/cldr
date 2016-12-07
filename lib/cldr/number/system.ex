@@ -1,5 +1,7 @@
 defmodule Cldr.Number.System do
   @moduledoc """
+  Functions to manage number systems which describe the numbering characteristics for a locale.
+
   A number system defines the digits (if they exist in this number system) or
   or rules (if the number system does not have decimal digits).
 

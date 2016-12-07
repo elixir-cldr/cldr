@@ -1,5 +1,8 @@
 defmodule Cldr.Normalize.Currency do
-
+  @moduledoc """
+  Takes the currency part of the locale map and transforms the formats into a more easily
+  processable structure that is then stored in map managed by `Cldr.Locale`
+  """
   def normalize(content, locale) do
     content
     |> normalize_currencies(locale)

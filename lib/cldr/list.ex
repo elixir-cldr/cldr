@@ -47,8 +47,6 @@ defmodule Cldr.List do
       "1 and 2"
   """
   @spec to_string(List.t, Keyword.t) :: String.t
-
-  # For when the list is empty
   def to_string(list, options \\ [])
   def to_string([], _options) do
     ""
@@ -63,6 +61,10 @@ defmodule Cldr.List do
     end
   end
 
+  @doc """
+  Formats a list using `to_string/2` but raises if there is
+  an error.
+  """
   def to_string!(list, options \\ []) do
     case string = to_string(list, options) do
       {:error, {exception, message}} ->

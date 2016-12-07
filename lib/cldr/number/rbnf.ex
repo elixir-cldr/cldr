@@ -1,6 +1,6 @@
 defmodule Cldr.Rbnf do
   @moduledoc """
-  Rules Base Number Formatting
+  Functions to implement Rules Based Number Formatting (rbnf)
 
   During compilation we want to look up the configured locales
   and generate the functions needed for only those locales.

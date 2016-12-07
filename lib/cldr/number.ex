@@ -124,7 +124,7 @@ defmodule Cldr.Number do
 
     * If `:format` is set to `:long` or `:short` then the formatting depends on
       whether `:currency` is specified. If not specified then the number is
-      formatted as `:decimal_long` or `:decimal_short. If `:currency` is
+      formatted as `:decimal_long` or `:decimal_short`. If `:currency` is
       specified the number is formatted at `:currency_long` or
       `:currency_short`.
 
@@ -136,7 +136,7 @@ defmodule Cldr.Number do
       numbers by using the format `:roman` or `:roman_lower`.
 
     * `currency`: is the currency for which the number is formatted. For
-      available currencies see Cldr.Currency.known_currencies/0`. This option
+      available currencies see `Cldr.Currency.known_currencies/0`. This option
       is required if `format` is set to `:currency`.  If `currency` is set
       and no `format` is set, `format` will be set to `:currency` as well.
 
@@ -225,7 +225,7 @@ defmodule Cldr.Number do
   ```
       iex> Cldr.Number.to_string(12345, format: "0#")
       {:error,
-       "Decimal format compiler: syntax error before: \"#\"}
+       "Decimal format compiler: syntax error before: \\"#\\""}
   ```
 
     * A currency was not specific for a format type of `format: :currency` or
@@ -234,10 +234,9 @@ defmodule Cldr.Number do
 
   ```
       iex> Cldr.Number.to_string(12345, format: :accounting)
-      {:error,
-       "currency format \"¤#,##0.00;(¤#,##0.00)\" requires that options[:currency] be specified"}
+      {:error, {Cldr.FormatError, "currency format \\"¤#,##0.00;(¤#,##0.00)\\" requires that " <>
+      "options[:currency] be specified"}}
   ```
-
 
     * The format style requested is not defined for the `locale` and
       `number_system`. This happens typically when the number system is
@@ -245,22 +244,12 @@ defmodule Cldr.Number do
       return looks like:
 
   ```
-      iex> Number.to_string(1234, locale: "he", number_system: "hebr")
-      {:error,
-       "The locale \"he\" with number system \"hebr\" does not define a format :standard.  This usually happens when the number system is :algorithmic rather than :numeric.  Either change options[:number_system] or define a format string like format: \"#,##0.00\""}
+      iex> Cldr.Number.to_string(1234, locale: "he", number_system: "hebr")
+      {:error, {Cldr.UnknownFormatError,
+      "The locale \\"he\\" with number system \\"hebr\\" does not define a format :standard."}}
   ```
-
-  ## Exceptions
-
-  An exception `Cldr.UnknownLocaleError` will be raised if the specific locale
-  is not known to `Cldr`.
   """
-
-  # `to_string/2` is the public API to number formatting.  Its basic job is
-  # to retrieve the actual format mask to be used and then invoke the private function
-  # `to_string/3` on the appropriate module which is the internal API.
-
-  @spec to_string(number, [Keyword.t]) :: String.t
+  @spec to_string(number, [Keyword.t]) :: String.t | {:error, {atom, String.t}}
   def to_string(number, options \\ @default_options) do
     {format, options} = options
     |> normalize_options(@default_options)
@@ -274,6 +263,11 @@ defmodule Cldr.Number do
     end
   end
 
+  @doc """
+  Same as the execution of `to_string/2` but raises an exception if an error would be
+  returned.
+  """
+  @spec to_string!(number, [Keyword.t]) :: String.t
   def to_string!(number, options \\ @default_options) do
     case string = to_string(number, options) do
       {:error, {exception, message}} ->
