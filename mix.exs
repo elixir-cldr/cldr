@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.0.12"
+  @version "0.0.13-dev"
 
   def project do
     [app: :ex_cldr,
@@ -38,7 +38,7 @@ defmodule Cldr.Mixfile do
       {:ex_doc, "~> 0.12", only: :dev},
       {:excoveralls, "~> 0.5.6", only: :test},
       {:gettext, "~> 0.11.0", only: :dev},
-      {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]},
+      {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]}
     ]
   end
 
