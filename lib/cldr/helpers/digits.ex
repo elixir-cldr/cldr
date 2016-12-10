@@ -230,8 +230,8 @@ defmodule Cldr.Digits do
   end
 
   def to_digits(%Decimal{} = number) do
-    %Decimal{coef: coef, exp: exp, sign: _sign} = Decimal.reduce(number)
-    {digits, _place, sign} = to_digits(coef)
+    %Decimal{coef: coef, exp: exp, sign: sign} = Decimal.reduce(number)
+    {digits, _place, _sign} = to_digits(coef)
     if exp == 0 do
       {digits, exp, sign}
     else
@@ -239,12 +239,35 @@ defmodule Cldr.Digits do
     end
   end
 
+  @doc """
+  Takes a list of digits and coverts them back to a number of the same
+  type as `number`
+  """
+  def to_number(digits, number) when is_integer(number),   do: to_integer(digits)
+  def to_number(digits, number) when is_float(number),     do: to_float(digits)
+  def to_number(digits, %Decimal{}),                       do: to_decimal(digits)
+
+  def to_number(digits, :integer),                         do: to_integer(digits)
+  def to_number(digits, :float),                           do: to_float(digits)
+  def to_number(digits, :decimal),                         do: to_decimal(digits)
+
+  def to_integer({digits, place, sign}) do
+    {int_digits, _fraction_digits} = Enum.split(digits, place)
+    Integer.undigits(int_digits) * sign
+  end
+
+  def to_float({digits, place, sign}) do
+    Integer.undigits(digits) / :math.pow(10, length(digits) - place) * sign
+  end
+
+  def to_decimal({digits, place, sign}) do
+    %Decimal{coef: Integer.undigits(digits), exp: place - length(digits), sign: sign}
+  end
 
   ############################################################################
   # The following functions are Elixir translations of the original paper:
   # "Printing Floating-Point Numbers Quickly and Accurately"
   # See the paper for further explanation
-
 
   docp """
   Set initial values {r, s, m+, m-}

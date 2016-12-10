@@ -107,9 +107,36 @@ defmodule Cldr.Number.Formatter.Decimal do
     assemble_format("", number, meta, options)
   end
 
+  # We work with the absolute value because the formatting of the sign
+  # is done by selecting the "negative format" rather than the "positive format"
+  def absolute_value(%Decimal{} = number) do
+    Decimal.abs(number)
+  end
+
+  def absolute_value(number) do
+    abs(number)
+  end
+
+  # If the format includes a % (percent) or permille then we
+  # adjust the number by a factor.  All other formats the factor
+  # is 1 and hence we avoid the multiplication.
+  defp multiply_by_factor(number, 1 = _factor) do
+    number
+  end
+
+  defp multiply_by_factor(%Decimal{} = number, %{multiplier: factor}) when is_integer(factor) do
+    Decimal.mult(number, Decimal.new(factor))
+  end
+
+  defp multiply_by_factor(number, %{multiplier: factor})
+  when is_number(number) and is_number(factor) do
+    number * factor
+  end
+
   # When formatting a currency we need to adjust the number of fractional
   # digits to match the currency definition.  We also need to adjust the
-  # rounding increment to match the currency definition.
+  # rounding increment to match the currency definition. Note that here
+  # we are just adjusting the meta data, not the number itself
   defp adjust_fraction_for_currency(meta, nil, _cash) do
     meta
   end
@@ -162,30 +189,6 @@ defmodule Cldr.Number.Formatter.Decimal do
     %{meta | fractional_digits: %{max: 10, min: 1}}
   end
 
-  def absolute_value(%Decimal{} = number) do
-    Decimal.abs(number)
-  end
-
-  def absolute_value(number) do
-    abs(number)
-  end
-
-  # If the format includes a % (percent) or permille then we
-  # adjust the number by a factor.  All other formats the factor
-  # is 1 and hence we avoid the multiplication.
-  defp multiply_by_factor(number, 1 = _factor) do
-    number
-  end
-
-  defp multiply_by_factor(%Decimal{} = number, %{multiplier: factor}) when is_integer(factor) do
-    Decimal.mult(number, Decimal.new(factor))
-  end
-
-  defp multiply_by_factor(number, %{multiplier: factor})
-  when is_number(number) and is_number(factor) do
-    number * factor
-  end
-
   # Round to significant digits.  This is different to rounding
   # to decimal places and is a more expensive mathematical
   # calculation.  Although the specification allows for minimum
@@ -194,7 +197,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   # insignificant zeros.
   #
   # Also note that this implementation allows for both significant
-  # digit rounding as we as decimal precision rounding.  Its likely
+  # digit rounding as well as decimal precision rounding.  Its likely
   # not a good idea to combine the two in a format mask and results
   # are unspecified if you do.
   defp round_to_significant_digits(number, %{significant_digits: %{min: 0, max: 0}}) do
@@ -205,8 +208,9 @@ defmodule Cldr.Number.Formatter.Decimal do
     Math.round_significant(number, max)
   end
 
-  # A format can include a rounding specification which we apply
-  # here except if there is no rounding specified.
+  # Round to nearest rounds a number to the nearest increment specified.  For example
+  # if `rounding: 5` then we round to the nearest multiple of 5.  The appropriate rounding
+  # mode is used.
   defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when rounding == 0 do
     number
   end
@@ -216,21 +220,21 @@ defmodule Cldr.Number.Formatter.Decimal do
 
     number
     |> Decimal.div(rounding)
-    |> Decimal.round(0, rounding_mode)
+    |> Math.round(0, rounding_mode)
     |> Decimal.mult(rounding)
   end
 
-  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when is_float(number) do
+  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode) when is_float(number) do
     number
     |> Kernel./(rounding)
-    |> Float.round(0)
+    |> Math.round(0, rounding_mode)
     |> Kernel.*(rounding)
   end
 
-  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when is_integer(number) do
+  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode) when is_integer(number) do
     number
     |> Kernel./(rounding)
-    |> Float.round(0)
+    |> Math.round(0, rounding_mode)
     |> Kernel.*(rounding)
     |> trunc
   end

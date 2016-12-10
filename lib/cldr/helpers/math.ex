@@ -3,24 +3,40 @@ defmodule Cldr.Math do
   Math helper functions for number formatting
   """
   alias Cldr.Digits
+  require Integer
 
+  @type rounding :: :down |
+                    :half_up |
+                    :half_even |
+                    :ceiling |
+                    :floor |
+                    :half_down |
+                    :up
 
   @type number_or_decimal :: number | %Decimal{}
   @type normalised_decimal :: {%Decimal{}, integer}
   @default_rounding 3
+  @default_rounding_mode :half_even
   @zero Decimal.new(0)
   @one Decimal.new(1)
   @two Decimal.new(2)
   @minus_one Decimal.new(-1)
   @ten Decimal.new(10)
-  @ascii_0 48
 
   @doc """
-  Returns the default rounding used by Cldr.
+  Returns the default number of rounding digits
   """
   @spec default_rounding :: integer
   def default_rounding do
     @default_rounding
+  end
+
+  @doc """
+  Returns the default rounding mode for rounding operations
+  """
+  @spec default_rounding_mode :: atom
+  def default_rounding_mode do
+    @default_rounding_mode
   end
 
   @doc """
@@ -453,54 +469,60 @@ defmodule Cldr.Math do
       Cldr.Math.mantissa_exponent(Decimal.new(-46.543))
       {#Decimal<-4.6543>, 1}
   """
-  @spec mantissa_exponent(%Decimal{}) :: normalised_decimal
-  def mantissa_exponent(number, meta \\ %{fractional_digits: %{max: 0}})
-  def mantissa_exponent(%Decimal{} = number, %{fractional_digits: %{max: 0}}) do
+
+  def mantissa_exponent(number, places, mode) do
+    mantissa_exponent(number, %{fractional_digits: %{max: places}, rounding: mode})
+  end
+
+  @spec mantissa_exponent(%Decimal{}, Map.t) :: normalised_decimal
+  def mantissa_exponent(number, meta \\ %{fractional_digits: %{max: @default_rounding},
+      rounding: @default_rounding_mode})
+
+  def mantissa_exponent(%Decimal{} = number, %{fractional_digits: %{max: max}, rounding: mode}) do
+    coef_digits = Digits.number_of_integer_digits(number.coef)
     if between_one_and_minus_one(number) do
-      coef_digits = Digits.number_of_integer_digits(number.coef)
       leading_zeros = abs(number.exp) - coef_digits
       exp = -(leading_zeros + 1)
       mantissa = %Decimal{number | exp: -coef_digits + 1}
-      {Digits.to_tuple(mantissa), exp}
+      |> round(max, mode)
+      {mantissa, exp}
     else
-      coef_digits = Digits.number_of_integer_digits(number.coef)
       exp = coef_digits + number.exp - 1
       mantissa = %Decimal{number | exp: number.exp - exp}
-      {Digits.to_tuple(mantissa), exp}
+      |> round(max, mode)
+      {mantissa, exp}
     end
   end
 
-  def mantissa_exponent(number, %{fractional_digits: %{max: 0}})
+  def mantissa_exponent(number, %{fractional_digits: %{max: max}, rounding: mode})
   when is_float(number) do
     {integer, exp} = to_mantissa_exponent(number)
-
+    coef_digits = Digits.number_of_integer_digits(integer)
     if between_one_and_minus_one(number) do
-      coef_digits = Digits.number_of_integer_digits(integer)
       mantissa = integer / :math.pow(10, coef_digits - 1)
-      {Digits.to_tuple(mantissa), exp - 1}
+      |> round(max, mode)
+      {mantissa, exp - 1}
     else
-      coef_digits = Digits.number_of_integer_digits(integer)
       exp = coef_digits - exp
       mantissa = integer / :math.pow(10, coef_digits - 1)
-      {Digits.to_tuple(mantissa), exp}
+      |> round(max, mode)
+      {mantissa, exp}
     end
   end
 
-  def mantissa_exponent(number, %{fractional_digits: _fractional_digits})
+  def mantissa_exponent(number, %{fractional_digits: %{max: max}, rounding: mode})
   when is_integer(number) do
     coef_digits = Digits.number_of_integer_digits(number)
     exp = coef_digits - 1
-    mantissa = number / exp
+    mantissa = number / :math.pow(10, exp)
+    |> round(max, mode)
     {mantissa, exp}
   end
-
 
   defp to_mantissa_exponent(float) do
     {int_digits, exp, _sign} = Digits.to_digits(float)
     integer = int_digits
-    |> Enum.map(&Kernel.+(&1, @ascii_0))
-    |> List.to_integer
-
+    |> Integer.undigits
     {integer, exp}
   end
 
@@ -630,4 +652,132 @@ defmodule Cldr.Math do
       root
     end
   end
+
+  @doc """
+  Round a number to an arbitrary precision using one of several rounding algorithms.
+
+  Rounding algorithms are based on the definitions given in IEEE 754, but also
+  include 2 additional options (effectively the complementary versions):
+
+  ## Rounding algorithms
+
+  Directed roundings:
+
+  * `:down` - Round towards 0 (truncate), eg 10.9 rounds to 10.0
+
+  * `:up` - Round away from 0, eg 10.1 rounds to 11.0. (Non IEEE algorithm)
+
+  * `:ceiling` - Round toward +∞ - Also known as rounding up or ceiling
+
+  * `:floor` - Round toward -∞ - Also known as rounding down or floor
+
+  Round to nearest:
+
+  * `:half_even` - Round to nearest value, but in a tiebreak, round towards the
+    nearest value with an even (zero) least significant bit, which occurs 50%
+    of the time. This is the default for IEEE binary floating-point and the recommended
+    value for decimal.
+
+  * `:half_up` - Round to nearest value, but in a tiebreak, round away from 0.
+    This is the default algorithm for Erlang's Kernel.round/2
+
+  * `:half_down` - Round to nearest value, but in a tiebreak, round towards 0
+    (Non IEEE algorithm)
+  """
+
+  # The canonical function head that takes a number and returns a number.
+  def round(number, places \\ 0, mode \\ :half_up) when is_integer(places) and is_atom(mode) do
+    number
+    |> Digits.to_digits
+    |> round_digits(%{decimals: places, rounding: mode})
+    |> Digits.to_number(number)
+  end
+
+  # The next function heads operate on decomposed numbers returned
+  # by Digits.to_digits.
+
+  # scientific/decimal rounding are the same, we are just varying which
+  # digit we start counting from to find our rounding poin
+  def round_digits(digits_t, options)
+
+  # Passing true for decimal places avoids rounding and uses whatever is necessary
+  def round_digits(digits_t, %{scientific: true}), do: digits_t
+  def round_digits(digits_t, %{decimals: true}), do: digits_t
+
+  # rounded away all the decimals... return 0
+  def round_digits(_, %{scientific: dp}) when dp <= 0,
+    do: {[0], 1, true}
+  def round_digits({_, place, _}, %{decimals: dp}) when dp + place <= 0,
+    do: {[0], 1, true}
+
+  def round_digits(digits_t = {_, place, _}, options = %{decimals: dp}) do
+    {digits, place, sign} = do_round(digits_t, dp + place - 1, options)
+    {List.flatten(digits), place, sign}
+  end
+
+  def round_digits(digits_t, options = %{scientific: dp}) do
+    {digits, place, sign} = do_round(digits_t, dp, options)
+    {List.flatten(digits), place, sign}
+  end
+
+  defp do_round({digits, place, positive}, round_at, %{rounding: rounding}) do
+      case Enum.split(digits, round_at) do
+        {l, [least_sig | [tie | rest]]} ->
+          case do_incr(l, least_sig, increment?(positive, least_sig, tie, rest, rounding)) do
+            [:rollover | digits] -> {digits, place + 1, positive}
+            digits               -> {digits, place, positive}
+          end
+        {l, [least_sig | []]}           -> {[l, least_sig], place, positive}
+        {l, []}                         -> {l, place, positive}
+      end
+  end
+
+  # Helper functions for round/2-3
+  defp do_incr(l, least_sig, false), do: [l, least_sig]
+  defp do_incr(l, least_sig, true) when least_sig < 9, do: [l, least_sig + 1]
+  # else need to cascade the increment
+  defp do_incr(l, 9, true) do
+    l
+    |> Enum.reverse
+    |> cascade_incr
+    |> Enum.reverse([0])
+  end
+
+  # cascade an increment of decimal digits which could be rolling over 9 -> 0
+  defp cascade_incr([9 | rest]), do: [0 | cascade_incr(rest)]
+  defp cascade_incr([d | rest]), do: [d+1 | rest]
+  defp cascade_incr([]), do: [1, :rollover]
+
+
+  @spec increment?(boolean, non_neg_integer | nil, non_neg_integer | nil, list, rounding) :: non_neg_integer
+  defp increment?(positive, least_sig, tie, rest, round)
+
+  # Directed rounding towards 0 (truncate)
+  defp increment?(_, _ls, _tie, _, :down), do: false
+  # Directed rounding away from 0 (non IEEE option)
+  defp increment?(_, _ls, nil, _, :up), do: false
+  defp increment?(_, _ls, _tie, _, :up), do: true
+
+  # Directed rounding towards +∞ (rounding up / ceiling)
+  defp increment?(true, _ls, tie, _, :ceiling) when tie != nil, do: true
+  defp increment?(_, _ls, _tie, _, :ceiling), do: false
+
+  # Directed rounding towards -∞ (rounding down / floor)
+  defp increment?(false, _ls, tie, _, :floor) when tie != nil, do: true
+  defp increment?(_, _ls, _tie, _, :floor), do: false
+
+  # Round to nearest - tiebreaks by rounding to even
+  # Default IEEE rounding, recommended default for decimal
+  defp increment?(_, ls, 5, [], :half_even) when Integer.is_even(ls), do: false
+  defp increment?(_, _ls, tie, _rest, :half_even) when tie >= 5, do: true
+  defp increment?(_, _ls, _tie, _rest, :half_even), do: false
+
+  # Round to nearest - tiebreaks by rounding away from zero (same as Elixir Kernel.round)
+  defp increment?(_, _ls, tie, _rest, :half_up) when tie >= 5, do: true
+  defp increment?(_, _ls, _tie, _rest, :half_up), do: false
+
+  # Round to nearest - tiebreaks by rounding towards zero (non IEEE option)
+  defp increment?(_, _ls, 5, [], :half_down), do: false
+  defp increment?(_, _ls, tie, _rest, :half_down) when tie >= 5, do: true
+  defp increment?(_, _ls, _tie, _rest, :half_down), do: false
 end

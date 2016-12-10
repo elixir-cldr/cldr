@@ -4,7 +4,7 @@ defmodule Math.Power.Test do
 
   @docp """
   We have two algorithms for implementing `power/2` in the
-  Power.Bench module.  One is the niave looping version
+  Power.Bench module.  One is the naive looping version
   and the other is the binary method which should be faster.
 
   But it isn't. At least for these tests.

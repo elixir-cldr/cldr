@@ -12,9 +12,8 @@ defmodule Cldr.Number.PluralRule do
     end
 
     quote do
-      import Cldr.Math
-      alias Cldr.Math
-      import Cldr.Digits
+      alias  Cldr.Math
+      import Cldr.Digits, only: [number_of_integer_digits: 1, remove_trailing_zeros: 1]
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
@@ -179,7 +178,7 @@ defmodule Cldr.Number.PluralRule do
         w = number_of_integer_digits(t)
 
         i = Decimal.to_integer(i)
-        n = to_float(n)
+        n = Math.to_float(n)
 
         # IO.puts "n: #{inspect n}; i: #{inspect i}; v: #{inspect v}; w: #{inspect w}; f: #{inspect f}; t: #{inspect t}"
         do_plural_rule(locale, n, i, v, w, f, t)
