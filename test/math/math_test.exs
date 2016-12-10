@@ -1,15 +1,16 @@
 defmodule Math.Test do
   use ExUnit.Case
-  alias Cldr.Number.Math
+  alias Cldr.Math
+  alias Cldr.Digits
 
   test "integer number of digits for a decimal integer" do
     decimal = Decimal.new(1234)
-    assert Math.number_of_integer_digits(decimal) == 4
+    assert Digits.number_of_integer_digits(decimal) == 4
   end
 
   test "integer number of digits for a decimal fixnum" do
     decimal = Decimal.new(1234.5678)
-    assert Math.number_of_integer_digits(decimal) == 4
+    assert Digits.number_of_integer_digits(decimal) == 4
   end
 
   test "round significant digits for a decimal integer" do

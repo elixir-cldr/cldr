@@ -46,13 +46,25 @@ defmodule Cldr.Number.Formatter.Decimal do
   import Cldr.Number.Transliterate, only: [transliterate: 3]
   import Cldr.Number.Symbol,        only: [number_symbols_for: 2]
 
-  alias Cldr.Currency
-  alias Cldr.Number
-  alias Cldr.Number.Math
+  alias Cldr.{Currency, Number, Math, Digits}
   alias Cldr.Number.Format
   alias Cldr.Number.Format.Compiler
 
   @empty_string ""
+
+  # Precompile the known formats
+  for format <- Cldr.Number.Format.decimal_format_list() do
+    case Compiler.decode(format) do
+    {:ok, meta} ->
+      quote do
+        def to_string(number, unquote(format), options) do
+          do_to_string(number, unquote(Macro.escape(meta)), options)
+        end
+      end
+    {:error, message} ->
+      raise Cldr.FormatCompileError, message: "#{message} compiling #{inspect format}"
+    end
+  end
 
   # For formats not precompiled we need to compile first
   # and then process.
@@ -61,20 +73,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     {:ok, meta} ->
       do_to_string(number, meta, options)
     {:error, message} ->
-      {:error, message}
-    end
-  end
-
-  for format <- Cldr.Number.Format.decimal_format_list() do
-    case Cldr.Number.Format.Compiler.decode(format) do
-    {:ok, meta} ->
-      quote do
-        def to_string(number, unquote(format), options) do
-          do_to_string(number, unquote(Macro.escape(meta)), options)
-        end
-      end
-    {:error, message} ->
-      raise CompileError, description: "#{message} compiling #{inspect format}"
+      {:error, {Cldr.FormatCompileError, message}}
     end
   end
 
@@ -84,17 +83,17 @@ defmodule Cldr.Number.Formatter.Decimal do
   defp do_to_string(number, %{integer_digits: _integer_digits} = meta, options) do
     meta = meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
-    |> adjust_fraction_for_significant_digits(number, meta[:significant_digits])
+    |> adjust_fraction_for_significant_digits(number)
 
     number
-    |> to_decimal
-    |> multiply_by_factor(meta[:multiplier])
-    |> round_to_significant_digits(meta[:significant_digits])
-    |> round_to_nearest(meta[:rounding], options[:rounding_mode])
-    |> adjust_for_exponent(meta, meta[:exponent_digits])
-    |> output_to_string(meta[:fractional_digits], options[:rounding_mode])
-    |> adjust_leading_zeros(:integer, meta[:integer_digits])
-    |> adjust_trailing_zeros(:fraction, meta[:fractional_digits])
+    |> absolute_value
+    |> multiply_by_factor(meta)
+    |> round_to_significant_digits(meta)
+    |> round_to_nearest(meta, options[:rounding_mode])
+    |> adjust_for_exponent(meta)
+    |> output_to_string(meta, options[:rounding_mode])
+    |> adjust_leading_zeros(:integer, meta)
+    |> adjust_trailing_zeros(:fraction, meta)
     |> set_max_integer_digits(meta[:integer_digits].max)
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string(meta)
@@ -102,6 +101,8 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> assemble_format(number, meta, options)
   end
 
+  # For when the format itself actually has only literal components
+  # and no number format.
   defp do_to_string(number, meta, options) do
     assemble_format("", number, meta, options)
   end
@@ -124,7 +125,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   defp do_adjust_fraction(meta, digits, rounding) do
-    rounding = Decimal.new(:math.pow(10, -digits) * rounding)
+    rounding = :math.pow(10, -digits) * rounding
     %{meta | fractional_digits: %{max: digits, min: digits},
              rounding: rounding}
   end
@@ -135,58 +136,54 @@ defmodule Cldr.Number.Formatter.Decimal do
   # for significant digits display.
 
   # For when there is no number format
-  defp adjust_fraction_for_significant_digits(meta, _number, nil) do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: nil} = meta, _number) do
     meta
   end
 
   # For no significant digits
-  defp adjust_fraction_for_significant_digits(meta, _number,
-      %{max: 0, min: 0}) do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: 0, min: 0}} = meta, _number) do
     meta
   end
 
   # No fractional digits for an integer
-  defp adjust_fraction_for_significant_digits(meta, number,
-      %{max: _max, min: _min}) when is_integer(number) do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta, number)
+  when is_integer(number) do
     meta
   end
 
   # Decimal version of an integer => exponent > 0
-  defp adjust_fraction_for_significant_digits(meta, %Decimal{exp: exp},
-      %{max: _max, min: _min}) when exp >= 0 do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta,
+  %Decimal{exp: exp}) when exp >= 0 do
     meta
   end
 
   # For all float or Decimal fraction
-  defp adjust_fraction_for_significant_digits(meta, _number,
-      %{max: _max, min: _min}) do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta, _number) do
     %{meta | fractional_digits: %{max: 10, min: 1}}
   end
 
-  # Convert the number to a decimal since it preserves precision
-  # better when we round.  Then use the absolute value since
-  # the sign only determines which pattern we use (positive
-  # or negative)
-  defp to_decimal(number = %Decimal{}) do
-    number
-    |> Decimal.abs()
+  def absolute_value(%Decimal{} = number) do
+    Decimal.abs(number)
   end
 
-  defp to_decimal(number) do
-    number
-    |> Decimal.new
-    |> Decimal.abs()
+  def absolute_value(number) do
+    abs(number)
   end
 
   # If the format includes a % (percent) or permille then we
   # adjust the number by a factor.  All other formats the factor
   # is 1 and hence we avoid the multiplication.
-  defp multiply_by_factor(number, %Decimal{coef: 1} = _factor) do
+  defp multiply_by_factor(number, 1 = _factor) do
     number
   end
 
-  defp multiply_by_factor(number, factor) do
-    Decimal.mult(number, factor)
+  defp multiply_by_factor(%Decimal{} = number, %{multiplier: factor}) when is_integer(factor) do
+    Decimal.mult(number, Decimal.new(factor))
+  end
+
+  defp multiply_by_factor(number, %{multiplier: factor})
+  when is_number(number) and is_number(factor) do
+    number * factor
   end
 
   # Round to significant digits.  This is different to rounding
@@ -196,43 +193,60 @@ defmodule Cldr.Number.Formatter.Decimal do
   # useful rounding value since maximum already removes trailing
   # insignificant zeros.
   #
-  # Also note that this implementation allows for both significatn
+  # Also note that this implementation allows for both significant
   # digit rounding as we as decimal precision rounding.  Its likely
   # not a good idea to combine the two in a format mask and results
   # are unspecified if you do.
-  defp round_to_significant_digits(number, %{min: 0, max: 0}) do
+  defp round_to_significant_digits(number, %{significant_digits: %{min: 0, max: 0}}) do
     number
   end
 
-  defp round_to_significant_digits(number, %{min: _min, max: max}) do
+  defp round_to_significant_digits(number, %{significant_digits: %{min: _min, max: max}}) do
     Math.round_significant(number, max)
   end
 
   # A format can include a rounding specification which we apply
   # here except if there is no rounding specified.
-  defp round_to_nearest(number, %Decimal{coef: 0}, _rounding_mode) do
+  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when rounding == 0 do
     number
   end
 
-  defp round_to_nearest(number, rounding, rounding_mode) do
+  defp round_to_nearest(%Decimal{} = number, %{rounding: rounding}, rounding_mode) do
+    rounding = Decimal.new(rounding)
+
     number
     |> Decimal.div(rounding)
     |> Decimal.round(0, rounding_mode)
     |> Decimal.mult(rounding)
   end
 
-  # For a scientific format we need to adjust to a
-  # mantissa * 10^exponent format.
-  defp adjust_for_exponent(number, _meta, exponent_digits)
-  when exponent_digits == 0 do
+  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when is_float(number) do
     number
+    |> Kernel./(rounding)
+    |> Float.round(0)
+    |> Kernel.*(rounding)
   end
 
-  defp adjust_for_exponent(number, meta, exponent_digits) do
-    {mantissa, exponent} = Math.mantissa_exponent(number)
+  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when is_integer(number) do
+    number
+    |> Kernel./(rounding)
+    |> Float.round(0)
+    |> Kernel.*(rounding)
+    |> trunc
+  end
+
+  # For a scientific format we need to adjust to a
+  # mantissa * 10^exponent format.
+  defp adjust_for_exponent(number, %{exponent_digits: exponent_digits})
+  when exponent_digits == 0 do
+    {Digits.to_tuple(number), 0}
+  end
+
+  defp adjust_for_exponent(number, %{exponent_digits: exponent_digits} = meta) do
+    {mantissa, exponent} = Math.mantissa_exponent(number, meta)
 
     # Take care of minimum exponent digits
-    exponent_adjustment = exponent_digits - Math.number_of_integer_digits(exponent)
+    exponent_adjustment = exponent_digits - Digits.number_of_integer_digits(exponent)
     {mantissa, exponent} = adjust_exponent(mantissa, exponent, exponent_adjustment)
 
     # Now take care of exponent digit multiples
@@ -281,47 +295,32 @@ defmodule Cldr.Number.Formatter.Decimal do
   #   {mantissa, exponent}
   # end
 
-
   # Output the number to a string - all the other transformations
   # are done on the string version split into its constituent
   # parts
-  defp output_to_string({mantissa, exponent}, _fraction_digits, _rounding_mode) do
-    mantissa_string = mantissa
-    |> Decimal.to_string(:normal)
-
-    Compiler.number_match_regex()
-    |> Regex.named_captures(mantissa_string)
-    |> Map.put("exponent", Integer.to_string(exponent))
-  end
-
-  defp output_to_string(number, fraction_digits, rounding_mode) do
-    string = number
-    |> Decimal.round(fraction_digits[:max], rounding_mode)
-    |> Decimal.to_string(:normal)
-
-    Regex.named_captures(Compiler.number_match_regex(), string)
-    |> Map.put("exponent", @empty_string)
-  end
-
-  # Remove all the trailing zeros from a fraction and add back what
-  # is required for the format
-  defp adjust_trailing_zeros(number, :fraction, fraction_digits) do
-    fraction = String.trim_trailing(number["fraction"], "0")
-    %{number | "fraction" => pad_trailing_zeros(fraction, fraction_digits[:min])}
-  end
-
-  defp adjust_trailing_zeros(number, _fraction, _fraction_digits) do
-    number
+  defp output_to_string(number, %{fractional_digits: _fraction_digits}, _rounding_mode) do
+    IO.puts inspect(number)
   end
 
   # Remove all the leading zeros from an integer and add back what
   # is required for the format
-  defp adjust_leading_zeros(number, :integer, integer_digits) do
+  defp adjust_leading_zeros(number, :integer, %{integer_digits: integer_digits}) do
     integer = String.trim_leading(number["integer"], "0")
     %{number | "integer" => pad_leading_zeros(integer, integer_digits[:min])}
   end
 
-  defp adjust_leading_zeros(number, _integer, _integer_digits) do
+  defp adjust_leading_zeros(number, _integer, %{integer_digits: _integer_digits}) do
+    number
+  end
+
+  # Remove all the trailing zeros from a fraction and add back what
+  # is required for the format
+  defp adjust_trailing_zeros(number, :fraction, %{fractional_digits: fraction_digits}) do
+    fraction = String.trim_trailing(number["fraction"], "0")
+    %{number | "fraction" => pad_trailing_zeros(fraction, fraction_digits[:min])}
+  end
+
+  defp adjust_trailing_zeros(number, _fraction, %{fractional_digits: _fraction_digits}) do
     number
   end
 

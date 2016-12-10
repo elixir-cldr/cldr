@@ -11,11 +11,11 @@ defmodule Math.Mantissa.Exponent.Test do
       test_value = Decimal.new(unquote(Macro.escape(value)))
 
       # Calculate the mantissa and exponent
-      {mantissa, exponent} = Cldr.Number.Math.mantissa_exponent(test_value)
+      {mantissa, exponent} = Cldr.Math.mantissa_exponent(test_value)
 
       # And then recalculate the decimal value
       calculated_value = @ten
-      |> Cldr.Number.Math.power(exponent)
+      |> Cldr.Math.power(exponent)
       |> Decimal.mult(mantissa)
 
       # And confirm we made the round trip

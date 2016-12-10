@@ -224,8 +224,8 @@ defmodule Cldr.Number do
 
   ```
       iex> Cldr.Number.to_string(12345, format: "0#")
-      {:error,
-       "Decimal format compiler: syntax error before: \\"#\\""}
+      {:error, {Cldr.UnknownFormatError,
+        "Decimal format compiler: syntax error before: \\"#\\""}}
   ```
 
     * A currency was not specific for a format type of `format: :currency` or

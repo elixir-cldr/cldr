@@ -1,4 +1,4 @@
-defmodule Cldr.Math.Round do
+defmodule Cldr.Float do
   @moduledoc """
   Implement rounding of a list of decimal digits to an arbitrary precision
   using one of several rounding algorithms.
@@ -24,6 +24,7 @@ defmodule Cldr.Math.Round do
     (Non IEEE algorithm)
   """
   require Integer
+  alias Cldr.Digits
 
   @type rounding :: :down |
                     :half_up |
@@ -48,7 +49,7 @@ defmodule Cldr.Math.Round do
   * whether there is a non-zero tie break digit
   * if the tie break digit is 5, whether there are further non zero digits
 
-  The various rounding rules are based on IEEE 754 and documented `Cldr.Math.Round`
+  The various rounding rules are based on IEEE 754 and documented in `Cldr.Float`
   """
   def round(digits_t, options)
 
@@ -64,12 +65,26 @@ defmodule Cldr.Math.Round do
 
   # scientific/decimal rounding are the same, we are just varying which
   # digit we start counting from to find our rounding point
-  def round(digits_t, options = %{scientific: dp}),
-    do: do_round(digits_t, dp, options)
+  def round(number, %{} = options) when is_number(number) do
+    number
+    |> Digits.to_digits
+    |> round(options)
+  end
 
-  def round(digits_t = {_, place, _}, options = %{decimals: dp}),
-    do: do_round(digits_t, dp + place - 1, options)
+  def round(number, options) when is_number(number) and is_list(options) do
+    options = Enum.into(options, %{})
+    round(number, options)
+  end
 
+  def round(digits_t, options = %{scientific: dp}) do
+    {digits, place, sign} = do_round(digits_t, dp, options)
+    {List.flatten(digits), place, sign}
+  end
+
+  def round(digits_t = {_, place, _}, options = %{decimals: dp}) do
+    {digits, place, sign} = do_round(digits_t, dp + place - 1, options)
+    {List.flatten(digits), place, sign}
+  end
 
   defp do_round({digits, place, positive}, round_at, %{rounding: rounding}) do
       case Enum.split(digits, round_at) do

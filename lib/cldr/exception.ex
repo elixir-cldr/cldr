@@ -32,3 +32,14 @@ defmodule Cldr.FormatError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.FormatCompileError do
+  @moduledoc """
+  Exception raised when there is an error in the compiling of a number format
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

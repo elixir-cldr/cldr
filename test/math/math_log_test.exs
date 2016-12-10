@@ -10,7 +10,7 @@ defmodule Math.Log.Test do
 
   Enum.each @samples, fn {sample, result} ->
     test "that decimal log(e) is same as bif log(e) for #{inspect sample}" do
-      calc = Cldr.Number.Math.log(Decimal.new(unquote(sample))) |> Decimal.round(@round)
+      calc = Cldr.Math.log(Decimal.new(unquote(sample))) |> Decimal.round(@round)
       sample = Decimal.new(unquote(result)) |> Decimal.round(@round)
       assert Decimal.cmp(calc, sample) == :eq
     end

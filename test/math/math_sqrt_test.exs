@@ -13,13 +13,13 @@ defmodule Math.Sqrt.Test do
 
   Enum.each @roots, fn {value, root} ->
     test "square root of #{inspect value} should be #{root}" do
-      assert Decimal.cmp(Cldr.Number.Math.sqrt(Decimal.new(unquote(value))),Decimal.new(unquote(root))) == :eq
+      assert Decimal.cmp(Cldr.Math.sqrt(Decimal.new(unquote(value))),Decimal.new(unquote(root))) == :eq
     end
   end
 
   test "sqrt of a negative number raises" do
     assert_raise ArgumentError, ~r/bad argument in arithmetic expression/, fn ->
-      Cldr.Number.Math.sqrt(Decimal.new(-5))
+      Cldr.Math.sqrt(Decimal.new(-5))
     end
   end
 end

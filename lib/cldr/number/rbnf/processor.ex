@@ -6,6 +6,7 @@ defmodule Cldr.Rbnf.Processor do
   defmacro __using__(_opts) do
     quote location: :keep do
       alias  Cldr.Number
+      alias  Cldr.Digits
       import Cldr.Rbnf.Processor
 
       defp do_rule(number, locale, function, rule, parsed) do
@@ -99,7 +100,7 @@ defmodule Cldr.Rbnf.Processor do
 
       defp format_fraction(number, locale) do
         fraction = number
-        |> Cldr.Number.Math.fraction_as_integer
+        |> Digits.fraction_as_integer
         |> Integer.to_string
         |> String.split("", trim: true)
         |> Enum.map(&String.to_integer/1)

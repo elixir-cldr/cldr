@@ -14,7 +14,7 @@ defmodule Math.Int.Digits.Test do
 
   Enum.each @digits, fn {num, digits} ->
     test "that #{inspect num} has #{inspect digits} digits" do
-      assert Cldr.Number.Math.number_of_integer_digits(unquote(num)) == unquote(digits)
+      assert Cldr.Digits.number_of_integer_digits(unquote(num)) == unquote(digits)
     end
   end
 end

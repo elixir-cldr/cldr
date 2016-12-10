@@ -1,7 +1,10 @@
-defmodule Cldr.Number.Math do
+defmodule Cldr.Math do
   @moduledoc """
   Math helper functions for number formatting
   """
+  alias Cldr.Digits
+
+
   @type number_or_decimal :: number | %Decimal{}
   @type normalised_decimal :: {%Decimal{}, integer}
   @default_rounding 3
@@ -10,164 +13,14 @@ defmodule Cldr.Number.Math do
   @two Decimal.new(2)
   @minus_one Decimal.new(-1)
   @ten Decimal.new(10)
+  @ascii_0 48
 
   @doc """
   Returns the default rounding used by Cldr.
-
-  This function is used to control `fraction_as_integer/2`
-  and any other Cldr function that takes a `rounding` argument.
   """
   @spec default_rounding :: integer
   def default_rounding do
     @default_rounding
-  end
-
-  @doc """
-  Returns the fractional part of a float or Decimal as an integer.
-
-  * `number` can be either a float, Decimal or integer although an integer has
-    no fraction part and will therefore always return 0.
-
-  * `rounding` is the precision applied on each internal iteration as the
-    fraction is converted to an integer. The default rounding is
-    `default_rounding()`.
-
-  ## Examples
-
-      iex> Cldr.Number.Math.fraction_as_integer(123.456)
-      456
-
-      iex> Cldr.Number.Math.fraction_as_integer(123.456, 2)
-      46
-
-      iex> Cldr.Number.Math.fraction_as_integer(Decimal.new("123.456"), 3)
-      456
-
-      iex> Cldr.Number.Math.fraction_as_integer(1999, 3)
-      0
-  """
-  @spec fraction_as_integer(number_or_decimal, integer) :: integer
-  def fraction_as_integer(fraction, rounding \\ @default_rounding)
-
-  def fraction_as_integer(fraction, rounding)
-  when is_float(fraction) and fraction > 1.0 do
-    fraction_as_integer(fraction - trunc(fraction), rounding)
-  end
-
-  def fraction_as_integer(fraction, rounding) when is_float(fraction) do
-    do_fraction_as_integer(fraction, rounding)
-  end
-
-  def fraction_as_integer(%Decimal{} = fraction, rounding) do
-    if Decimal.cmp(fraction, @one) == :gt do
-      fraction
-      |> Decimal.sub(Decimal.round(fraction, 0, :floor))
-      |> fraction_as_integer(rounding)
-    else
-      do_fraction_as_integer(fraction, rounding)
-    end
-  end
-
-  def fraction_as_integer(fraction, _rounding)
-  when is_integer(fraction) do
-    0
-  end
-
-  defp do_fraction_as_integer(fraction, rounding) when is_float(fraction) do
-    truncated_fraction = trunc(fraction)
-    if truncated_fraction == fraction do
-      truncated_fraction
-    else
-      fraction
-      |> Float.round(rounding)
-      |> Kernel.*(10)
-      |> do_fraction_as_integer(rounding)
-    end
-  end
-
-  defp do_fraction_as_integer(fraction, rounding) when is_map(fraction) do
-    truncated_fraction = Decimal.round(fraction, 0, :floor)
-    if Decimal.equal?(truncated_fraction, fraction) do
-      truncated_fraction |> Decimal.to_integer
-    else
-      fraction
-      |> Decimal.round(rounding)
-      |> Decimal.mult(@ten)
-      |> do_fraction_as_integer(rounding)
-    end
-  end
-
-  @doc """
-  Returns the number of decimal digits in the integer
-  part of a number.
-
-  * `number` can be an integer, float or `Decimal`.
-
-  ## Examples
-
-      iex(10)> Cldr.Number.Math.number_of_integer_digits(1234)
-      4
-
-      iex(11)> Cldr.Number.Math.number_of_integer_digits(Decimal.new("123456789"))
-      9
-
-      iex(15)> Cldr.Number.Math.number_of_integer_digits(1234.456)
-      4
-  """
-  @spec number_of_integer_digits(number_or_decimal) :: integer
-  def number_of_integer_digits(%Decimal{} = number) do
-    number
-    |> Decimal.round(0, :floor)
-    |> Decimal.to_integer
-    |> number_of_integer_digits
-  end
-
-  # +/- 0,xxxxx
-  def number_of_integer_digits(number)
-  when is_number(number) and number < 1 and number > -1 do
-    0
-  end
-
-  def number_of_integer_digits(number) when is_float(number) do
-    number
-    |> trunc
-    |> number_of_integer_digits
-  end
-
-  # the abs() is required for Elixir 1.3 since Integer.digits() barfs
-  # on negative numbers which we can get
-  def number_of_integer_digits(number) when is_integer(number) do
-    number
-    |> Kernel.abs
-    |> Integer.digits
-    |> Enum.count
-  end
-
-  @doc """
-  Remove trailing zeroes from an integer.
-
-  * `number` must be an integer.
-
-  ## Examples
-
-      iex> Cldr.Number.Math.remove_trailing_zeros(1234000)
-      1234
-  """
-  @spec remove_trailing_zeros(integer) :: integer
-  def remove_trailing_zeros(number)
-  when is_integer(number) and number == 0 do
-    number
-  end
-
-  def remove_trailing_zeros(number)
-  when is_integer(number) do
-    if rem(number, 10) != 0 do
-      number
-    else
-      number
-      |> div(10)
-      |> remove_trailing_zeros()
-    end
   end
 
   @doc """
@@ -188,10 +41,10 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.within(2.0, 1..3)
+      iex> Cldr.Math.within(2.0, 1..3)
       true
 
-      iex> Cldr.Number.Math.within(2.1, 1..3)
+      iex> Cldr.Math.within(2.1, 1..3)
       false
   """
   @spec within(number, integer) :: boolean
@@ -218,16 +71,16 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.mod(1234.0, 5)
+      iex> Cldr.Math.mod(1234.0, 5)
       4.0
 
-      iex> Cldr.Number.Math.mod(Decimal.new("1234.456"), 5)
+      iex> Cldr.Math.mod(Decimal.new("1234.456"), 5)
       #Decimal<4.456>
 
-      iex> Cldr.Number.Math.mod(Decimal.new(123.456), Decimal.new(3.4))
+      iex> Cldr.Math.mod(Decimal.new(123.456), Decimal.new(3.4))
       #Decimal<1.056>
 
-      iex> Cldr.Number.Math.mod Decimal.new(123.456), 3.4
+      iex> Cldr.Math.mod Decimal.new(123.456), 3.4
       #Decimal<1.056>
   """
   @spec mod(number_or_decimal, number_or_decimal) ::
@@ -242,6 +95,7 @@ defmodule Cldr.Number.Math do
     |> Kernel./(modulus)
     |> Float.floor
     |> Kernel.*(modulus)
+
     number - modulo
   end
 
@@ -250,6 +104,7 @@ defmodule Cldr.Number.Math do
     |> Decimal.div(modulus)
     |> Decimal.round(0, :floor)
     |> Decimal.mult(modulus)
+
     Decimal.sub(number, modulo)
   end
 
@@ -274,8 +129,8 @@ defmodule Cldr.Number.Math do
   @doc """
   Rounds a number to a specified number of significant digits.
 
-  This is not the same as rounding decimals which is performed
-  by `Decimal.round/2`.
+  This is not the same as rounding fractional digits which is performed
+  by `Decimal.round/2` and `Float.round`
 
   * `number` is a float, integer or Decimal
 
@@ -284,13 +139,13 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.round_significant(3.14159, 3)
+      iex> Cldr.Math.round_significant(3.14159, 3)
       3.14
 
-      iex> Cldr.Number.Math.round_significant(10.3554, 1)
+      iex> Cldr.Math.round_significant(10.3554, 1)
       10.0
 
-      iex> Cldr.Number.Math.round_significant(0.00035, 1)
+      iex> Cldr.Math.round_significant(0.00035, 1)
       0.0004
 
   ## More on significant digits
@@ -347,16 +202,26 @@ defmodule Cldr.Number.Math do
   end
 
   def round_significant(%Decimal{sign: sign} = number, n) when sign < 0 do
-    round_significant(Decimal.abs(number), n) |> Decimal.minus
+    round_significant(Decimal.abs(number), n)
+    |> Decimal.minus
   end
 
   def round_significant(%Decimal{sign: sign} = number, n) when sign > 0 do
-    d = number |> log10 |> Decimal.round(0, :ceiling)
-    raised = n |> Decimal.new |> Decimal.sub(d)
+    d = number
+    |> log10
+    |> Decimal.round(0, :ceiling)
+
+    raised = n
+    |> Decimal.new
+    |> Decimal.sub(d)
 
     magnitude = power(@ten, raised)
-    shifted = number |> Decimal.mult(magnitude) |> Decimal.round(0)
-    Decimal.mult(Decimal.div(shifted, magnitude), Decimal.new(sign))
+    shifted = number
+    |> Decimal.mult(magnitude)
+    |> Decimal.round(0)
+
+    Decimal.div(shifted, magnitude)
+    |> Decimal.mult(Decimal.new(sign))
   end
 
   @doc """
@@ -370,10 +235,10 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.log(123)
+      iex> Cldr.Math.log(123)
       4.812184355372417
 
-      iex> Cldr.Number.Math.log(Decimal.new(9000))
+      iex> Cldr.Math.log(Decimal.new(9000))
       #Decimal<9.103886231350952380952380952>
   """
   @spec log(number_or_decimal) :: number_or_decimal
@@ -389,7 +254,8 @@ defmodule Cldr.Number.Math do
 
     sqrt_mantissa = sqrt(mantissa)
     y = Decimal.div(Decimal.sub(sqrt_mantissa, @one),
-      Decimal.add(sqrt_mantissa, @one))
+                    Decimal.add(sqrt_mantissa, @one))
+
     ln2 = y
     |> log_polynomial([3,5,7])
     |> Decimal.add(y)
@@ -401,6 +267,7 @@ defmodule Cldr.Number.Math do
   defp log_polynomial(%Decimal{} = value, iterations) do
     Enum.reduce iterations, @zero, fn (i, acc) ->
       i = Decimal.new(i)
+
       value
       |> power(i)
       |> Decimal.div(i)
@@ -413,20 +280,20 @@ defmodule Cldr.Number.Math do
 
   * `number` is an integer, a float or a Decimal
 
-  * For integer and float it calls the BIF `:math.log10/1` function.
+    * For integer and float it calls the BIF `:math.log10/1` function.
 
-  * For `Decimal`, `log10` is is rolled by hand using the identify `log10(x) =
+    * For `Decimal`, `log10` is is rolled by hand using the identify `log10(x) =
     ln(x) / ln(10)`
 
   ## Examples
 
-      iex> Cldr.Number.Math.log10(100)
+      iex> Cldr.Math.log10(100)
       2.0
 
-      iex> Cldr.Number.Math.log10(123)
+      iex> Cldr.Math.log10(123)
       2.089905111439398
 
-      iex> Cldr.Number.Math.log10(Decimal.new(9000))
+      iex> Cldr.Math.log10(Decimal.new(9000))
       #Decimal<3.953767554157656512064441441>
   """
   @spec log10(number_or_decimal) :: number_or_decimal
@@ -452,16 +319,16 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.power(10, 2)
+      iex> Cldr.Math.power(10, 2)
       100
 
-      iex> Cldr.Number.Math.power(10, 3)
+      iex> Cldr.Math.power(10, 3)
       1000
 
-      iex> Cldr.Number.Math.power(10, 4)
+      iex> Cldr.Math.power(10, 4)
       10000
 
-      iex> Cldr.Number.Math.power(2, 10)
+      iex> Cldr.Math.power(2, 10)
       1024
   """
 
@@ -570,67 +437,81 @@ defmodule Cldr.Number.Math do
   end
 
   @doc """
-  Returns the number of leading zeros in a
-  Decimal fraction.
-
-  * `number` is any Decimal number
-
-  Returns the number of leading zeros in a Decimal number
-  that is between `-1..1` (ie, has no integer part).  If the
-  number is outside `-1..1` it retuns a negative number, the
-  `abs` value of which is the number of integer digits in
-  the number.
-
-  ## Examples
-
-      iex> Cldr.Number.Math.number_of_leading_zeros(Decimal.new(0.0001))
-      3
-
-      iex> Cldr.Number.Math.number_of_leading_zeros(Decimal.new(3.0001))
-      -1
-  """
-  @spec number_of_leading_zeros(%Decimal{}) :: integer
-  def number_of_leading_zeros(%Decimal{coef: coef, exp: exp}) do
-    abs(exp) - number_of_integer_digits(coef)
-  end
-
-  @doc """
   Returns a tuple representing a Decimal in a normalized form with
   the mantissa in the range `0 < m < 10` and a base 10 exponent.
 
-  * `number` must be a Decimal
+  * `number` is an integer, float or Decimal
 
   ## Examples
 
-      Cldr.Number.Math.mantissa_exponent(Decimal.new(1.23004))
+      Cldr.Math.mantissa_exponent(Decimal.new(1.23004))
       {#Decimal<1.23004>, 0}
 
-      Cldr.Number.Math.mantissa_exponent(Decimal.new(465))
+      Cldr.Math.mantissa_exponent(Decimal.new(465))
       {#Decimal<4.65>, 2}
 
-      Cldr.Number.Math.mantissa_exponent(Decimal.new(-46.543))
+      Cldr.Math.mantissa_exponent(Decimal.new(-46.543))
       {#Decimal<-4.6543>, 1}
   """
   @spec mantissa_exponent(%Decimal{}) :: normalised_decimal
-  def mantissa_exponent(%Decimal{} = number) do
+  def mantissa_exponent(number, meta \\ %{fractional_digits: %{max: 0}})
+  def mantissa_exponent(%Decimal{} = number, %{fractional_digits: %{max: 0}}) do
     if between_one_and_minus_one(number) do
-      coef_digits = number_of_integer_digits(number.coef)
+      coef_digits = Digits.number_of_integer_digits(number.coef)
       leading_zeros = abs(number.exp) - coef_digits
       exp = -(leading_zeros + 1)
       mantissa = %Decimal{number | exp: -coef_digits + 1}
-      {mantissa, exp}
+      {Digits.to_tuple(mantissa), exp}
     else
-      coef_digits = number_of_integer_digits(number.coef)
+      coef_digits = Digits.number_of_integer_digits(number.coef)
       exp = coef_digits + number.exp - 1
       mantissa = %Decimal{number | exp: number.exp - exp}
-      {mantissa, exp}
+      {Digits.to_tuple(mantissa), exp}
     end
   end
 
-  defp between_one_and_minus_one(number) do
+  def mantissa_exponent(number, %{fractional_digits: %{max: 0}})
+  when is_float(number) do
+    {integer, exp} = to_mantissa_exponent(number)
+
+    if between_one_and_minus_one(number) do
+      coef_digits = Digits.number_of_integer_digits(integer)
+      mantissa = integer / :math.pow(10, coef_digits - 1)
+      {Digits.to_tuple(mantissa), exp - 1}
+    else
+      coef_digits = Digits.number_of_integer_digits(integer)
+      exp = coef_digits - exp
+      mantissa = integer / :math.pow(10, coef_digits - 1)
+      {Digits.to_tuple(mantissa), exp}
+    end
+  end
+
+  def mantissa_exponent(number, %{fractional_digits: _fractional_digits})
+  when is_integer(number) do
+    coef_digits = Digits.number_of_integer_digits(number)
+    exp = coef_digits - 1
+    mantissa = number / exp
+    {mantissa, exp}
+  end
+
+
+  defp to_mantissa_exponent(float) do
+    {int_digits, exp, _sign} = Digits.to_digits(float)
+    integer = int_digits
+    |> Enum.map(&Kernel.+(&1, @ascii_0))
+    |> List.to_integer
+
+    {integer, exp}
+  end
+
+  defp between_one_and_minus_one(%Decimal{} = number) do
     (Decimal.cmp(number, @minus_one) == :gt && Decimal.cmp(number, @one) == :lt)
     || Decimal.cmp(number, @one) == :eq
     || Decimal.cmp(number, @minus_one) == :eq
+  end
+
+  defp between_one_and_minus_one(number) do
+    number >= -1.0 and number <= 1.0
   end
 
   @doc """
@@ -646,10 +527,10 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.sqrt(Decimal.new(9))
+      iex> Cldr.Math.sqrt(Decimal.new(9))
       #Decimal<3.0>
 
-      iex> Cldr.Number.Math.sqrt(Decimal.new(9.869))
+      iex> Cldr.Math.sqrt(Decimal.new(9.869))
       #Decimal<3.141496458696078173887197038>
   """
   @precision 0.0001
@@ -673,6 +554,10 @@ defmodule Cldr.Number.Math do
 
     decimal_precision = Decimal.new(precision)
     do_sqrt(number, initial_estimate, @decimal_precision, decimal_precision)
+  end
+
+  def sqrt(number, _precision) do
+    :math.sqrt(number)
   end
 
   defp do_sqrt(%Decimal{} = number, %Decimal{} = estimate,
@@ -701,13 +586,13 @@ defmodule Cldr.Number.Math do
 
   ## Examples
 
-      iex> Cldr.Number.Math.root Decimal.new(8), 3
+      iex> Cldr.Math.root Decimal.new(8), 3
       #Decimal<2.0>
 
-      iex> Cldr.Number.Math.root Decimal.new(16), 4
+      iex> Cldr.Math.root Decimal.new(16), 4
       #Decimal<2.0>
 
-      iex> Cldr.Number.Math.root Decimal.new(27), 3
+      iex> Cldr.Math.root Decimal.new(27), 3
       #Decimal<3.0>
   """
   def root(%Decimal{} = number, nth) when is_integer(nth) and nth > 0 do

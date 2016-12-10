@@ -49,9 +49,9 @@ defmodule Cldr.Number.PluralRule.Transformer do
         {var, [], Elixir} ->
           {var, [], module}
         {:mod, _context, [operand, value]} ->
-          {:mod, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, value]}
+          {:mod, [context: Elixir, import: Elixir.Cldr.Math], [operand, value]}
         {:within, _context, [operand, range]} ->
-          {:within, [context: Elixir, import: Elixir.Cldr.Number.Math], [operand, range]}
+          {:within, [context: Elixir, import: Elixir.Cldr.Math], [operand, range]}
         _ ->
           expr
       end

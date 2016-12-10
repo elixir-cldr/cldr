@@ -126,7 +126,7 @@ defmodule Cldr.Number.Format.Compiler do
 
   # Default rounding increment (not the same as rounding decimal
   # digits.  `0` means no rounding increment to be applied.
-  @default_rounding     Decimal.new(0)
+  @default_rounding     0
 
   @doc """
   Returns a number placeholder symbol.
@@ -415,9 +415,9 @@ defmodule Cldr.Number.Format.Compiler do
   """
   defp multiplier(format) do
     cond do
-      percent_format?(format)   -> Decimal.new(100)
-      permille_format?(format)  -> Decimal.new(1000)
-      true                      -> Decimal.new(1)
+      percent_format?(format)   -> 100
+      permille_format?(format)  -> 1000
+      true                      -> 1
     end
   end
 
@@ -589,10 +589,9 @@ defmodule Cldr.Number.Format.Compiler do
     |> String.replace(@rounding_pattern, "")
     |> String.trim_trailing(@decimal_separator)
 
-    if String.length(format) > 0 do
-      Decimal.new(format)
-    else
-      @default_rounding
+    case Float.parse(format) do
+      :error         -> @default_rounding
+      {rounding, ""} -> rounding
     end
   end
 
