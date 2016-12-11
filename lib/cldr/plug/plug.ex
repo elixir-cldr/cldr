@@ -1,4 +1,4 @@
-if Code.ensure_loaded?(Plug) do
+if Code.ensure_loaded?(Plug) and false do
   defmodule Cldr.Plug.Locale do
     @moduledoc """
     A Phoenix plug that is used to parse the `HTTP Accept-Language header` and

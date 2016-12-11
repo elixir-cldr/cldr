@@ -1,8 +1,16 @@
-## Changelog for Cldr v0.0.13
+## Changelog for Cldr v0.0.14
 
 ### Enhancements
 
 * Additional updates to docs content and formatting
+
+* Significant refactoring of decimal formatting engine
+
+## Changelog for Cldr v0.0.13 December 6, 2016
+
+### Bug fixes
+
+* `Cldr.Plug` is not complete and won't compile if `Plug` is loaded as it will be for Phoenix applications.  For now, `Cldr.Plug` will not be compiled.
 
 ## Changelog for Cldr v0.0.12 December 6, 2016
 
