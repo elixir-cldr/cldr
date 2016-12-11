@@ -1,10 +1,37 @@
 defmodule Cldr.Digits do
+  @moduledoc """
+  Abstract representation of number (integer, float, Decimal) in tuple form
+  and functions for transformations on number parts.
 
+  Representing a number as a list of its digits, and integer representing
+  where the decimal point is placed and an integer representing the sign
+  of the number allow more efficient transforms on the various parts of
+  the number as happens during the formatting of a number for string output.
+  """
 
   use Bitwise
   import Cldr.Macros
   require Integer
   alias Cldr.Math
+
+  @typedoc """
+  Defines a number in a tuple form of three parts:
+
+  * A list of digits (0..9) representing the number
+
+  * A digit representing the place of the decimal points
+  in the number
+
+  * a `1` or `-1` representing the sign of the number
+
+  A number in integer, float or Decimal forma can be converted
+  to digit form with `Digits.to_digits/1`
+
+  THe digits can be converted back to normal form with
+  `Cldr.Digits.to_integer/1`, Cldr.Digits.to_float/1` and
+  `Cldr.Digits.to_decimal/1`.
+  """
+  @type  t :: {[0..9, ...], non_neg_integer, 1 | -1}
 
   @two52 bsl 1, 52
   @two53 bsl 1, 53
@@ -48,7 +75,7 @@ defmodule Cldr.Digits do
   Returns the number of decimal digits in the integer
   part of a number.
 
-  * `number` can be an integer, float or `Decimal` or
+  * `number` is an integer, float or `Decimal` or
   a list (which is assumed to contain digits).
 
   ## Examples
@@ -67,31 +94,13 @@ defmodule Cldr.Digits do
   """
   @spec number_of_integer_digits(Math.number_or_decimal) :: integer
   def number_of_integer_digits(%Decimal{} = number) do
-    number
-    |> Decimal.round(0, :floor)
-    |> Decimal.to_integer
-    |> number_of_integer_digits
+    {_digits, place, _sign} = to_digits(number)
+    place
   end
 
-  # +/- 0,xxxxx
-  def number_of_integer_digits(number)
-  when is_number(number) and number < 1 and number > -1 do
-    0
-  end
-
-  def number_of_integer_digits(number) when is_float(number) do
-    number
-    |> trunc
-    |> number_of_integer_digits
-  end
-
-  # the abs() is required for Elixir 1.3 since Integer.digits() barfs
-  # on negative numbers which we can get
-  def number_of_integer_digits(number) when is_integer(number) do
-    number
-    |> Kernel.abs
-    |> Integer.digits
-    |> Enum.count
+  def number_of_integer_digits(number) when is_number(number) do
+    {_digits, place, _sign} = to_digits(number)
+    place
   end
 
   # A decomposed integer might be charlist or a list of integers
@@ -102,44 +111,54 @@ defmodule Cldr.Digits do
     length(list)
   end
 
-  # Processes a tuple returned by Digits.to_tuple
+  # For a tuple returned by `Digits.to_digits/1`
+  def number_of_integer_digits({integer, place, _sign})
+  when is_list(integer) and is_integer(place) do
+    place
+  end
+
+  # For a tuple returned by `Digits.to_tuple/1`
   def number_of_integer_digits({[], _fraction, _sign}) do
     0
   end
 
-  def number_of_integer_digits({integer, _fraction, _sign}) when is_list(integer) do
+  def number_of_integer_digits({integer, fraction, _sign})
+  when is_list(integer) and is_list(fraction) do
     number_of_integer_digits(integer)
   end
 
   @doc """
-  Remove trailing zeroes from an integer.
+  Remove trailing zeroes from the integer part of a number
+  and returns the integer part without trailing zeros.
 
-  * `number` must be an integer.
+  * `number` is an integer, float or Decimal.
 
   ## Examples
 
       iex> Cldr.Math.remove_trailing_zeros(1234000)
       1234
   """
-  @spec remove_trailing_zeros(integer) :: integer
+  @spec remove_trailing_zeros(Math.number_or_decimal) :: integer
   def remove_trailing_zeros(0) do
     0
   end
 
-  def remove_trailing_zeros(number)
-  when is_integer(number) do
-    if rem(number, 10) != 0 do
-      number
-    else
-      number
-      |> div(10)
-      |> remove_trailing_zeros()
-    end
+  def remove_trailing_zeros(number) when is_number(number) do
+    {integer_digits, _fraction_digits, sign} = to_tuple(number)
+    removed = remove_trailing_zeros(integer_digits)
+    to_integer({removed, length(removed), sign})
   end
 
+  def remove_trailing_zeros(%Decimal{} = number) do
+    {integer_digits, _fraction_digits, sign} = to_tuple(number)
+    removed = remove_trailing_zeros(integer_digits)
+    to_integer({removed, length(removed), sign})
+  end
+
+  # Filters either a charlist or a list of integers.
   def remove_trailing_zeros(number) when is_list(number) do
-    Enum.filter number, fn c ->
-      c >= ?1 and c <= ?9
+    Enum.take_while number, fn c ->
+      (c >= ?1 and c <= ?9) or c > 0
     end
   end
 
@@ -147,25 +166,30 @@ defmodule Cldr.Digits do
   Returns the number of leading zeros in a
   Decimal fraction.
 
-  * `number` is any Decimal number
+  * `number` is an integer, float or Decimal
 
-  Returns the number of leading zeros in a Decimal number
-  that is between `-1..1` (ie, has no integer part).  If the
-  number is outside `-1..1` it retuns a negative number, the
-  `abs` value of which is the number of integer digits in
-  the number.
+  Returns the number of leading zeros in the fractional
+  part of a number.
 
   ## Examples
 
       iex> Cldr.Math.number_of_leading_zeros(Decimal.new(0.0001))
       3
-
-      iex> Cldr.Math.number_of_leading_zeros(Decimal.new(3.0001))
-      -1
   """
   @spec number_of_leading_zeros(%Decimal{}) :: integer
-  def number_of_leading_zeros(%Decimal{coef: coef, exp: exp}) do
-    abs(exp) - number_of_integer_digits(coef)
+  def number_of_leading_zeros(%Decimal{} = number) do
+    {_integer_digits, fraction_digits, _sign} = to_tuple(number)
+    number_of_leading_zeros(fraction_digits)
+  end
+
+  def number_of_leading_zeros(number) when is_number(number) do
+    {_integer_digits, fraction_digits, _sign} = to_tuple(number)
+    number_of_leading_zeros(fraction_digits)
+  end
+
+  def number_of_leading_zeros(number) when is_list(number) do
+    Enum.take_while(number, fn c -> c == ?0  or c == 0 end)
+    |> length
   end
 
   @doc """

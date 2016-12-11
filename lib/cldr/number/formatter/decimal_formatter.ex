@@ -90,11 +90,12 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> multiply_by_factor(meta)
     |> round_to_significant_digits(meta)
     |> round_to_nearest(meta, options[:rounding_mode])
-    |> adjust_for_exponent(meta)
-    |> output_to_string(meta, options[:rounding_mode])
+    |> set_exponent(meta)
+    |> round_fractional_digits(meta, options[:rounding_mode])
+    |> output_to_tuple(meta)
     |> adjust_leading_zeros(:integer, meta)
     |> adjust_trailing_zeros(:fraction, meta)
-    |> set_max_integer_digits(meta[:integer_digits].max)
+    |> set_max_integer_digits(meta)
     |> apply_grouping(meta[:grouping], options[:locale])
     |> reassemble_number_string(meta)
     |> transliterate(options[:locale], options[:number_system])
@@ -163,29 +164,34 @@ defmodule Cldr.Number.Formatter.Decimal do
   # for significant digits display.
 
   # For when there is no number format
-  defp adjust_fraction_for_significant_digits(%{significant_digits: nil} = meta, _number) do
+  defp adjust_fraction_for_significant_digits(
+      %{significant_digits: nil} = meta, _number) do
     meta
   end
 
   # For no significant digits
-  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: 0, min: 0}} = meta, _number) do
+  defp adjust_fraction_for_significant_digits(
+      %{significant_digits: %{max: 0, min: 0}} = meta, _number) do
     meta
   end
 
   # No fractional digits for an integer
-  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta, number)
+  defp adjust_fraction_for_significant_digits(
+      %{significant_digits: %{max: _max, min: _min}} = meta, number)
   when is_integer(number) do
     meta
   end
 
   # Decimal version of an integer => exponent > 0
-  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta,
+  defp adjust_fraction_for_significant_digits(
+      %{significant_digits: %{max: _max, min: _min}} = meta,
   %Decimal{exp: exp}) when exp >= 0 do
     meta
   end
 
   # For all float or Decimal fraction
-  defp adjust_fraction_for_significant_digits(%{significant_digits: %{max: _max, min: _min}} = meta, _number) do
+  defp adjust_fraction_for_significant_digits(
+      %{significant_digits: %{max: _max, min: _min}} = meta, _number) do
     %{meta | fractional_digits: %{max: 10, min: 1}}
   end
 
@@ -211,7 +217,8 @@ defmodule Cldr.Number.Formatter.Decimal do
   # Round to nearest rounds a number to the nearest increment specified.  For example
   # if `rounding: 5` then we round to the nearest multiple of 5.  The appropriate rounding
   # mode is used.
-  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode) when rounding == 0 do
+  defp round_to_nearest(number, %{rounding: rounding}, _rounding_mode)
+  when rounding == 0 do
     number
   end
 
@@ -224,14 +231,16 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> Decimal.mult(rounding)
   end
 
-  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode) when is_float(number) do
+  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode)
+  when is_float(number) do
     number
     |> Kernel./(rounding)
     |> Math.round(0, rounding_mode)
     |> Kernel.*(rounding)
   end
 
-  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode) when is_integer(number) do
+  defp round_to_nearest(number, %{rounding: rounding}, rounding_mode)
+  when is_integer(number) do
     number
     |> Kernel./(rounding)
     |> Math.round(0, rounding_mode)
@@ -241,24 +250,14 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   # For a scientific format we need to adjust to a
   # mantissa * 10^exponent format.
-  defp adjust_for_exponent(number, %{exponent_digits: exponent_digits})
+  defp set_exponent(number, %{exponent_digits: exponent_digits})
   when exponent_digits == 0 do
-    {Digits.to_tuple(number), 0}
+    {number, 0}
   end
 
-  defp adjust_for_exponent(number, %{exponent_digits: exponent_digits} = meta) do
-    {mantissa, exponent} = Math.mantissa_exponent(number, meta)
+  defp set_exponent(number, meta) do
+    {mantissa, exponent} = Math.mantissa_exponent(number)
 
-    # Take care of minimum exponent digits
-    exponent_adjustment = exponent_digits - Digits.number_of_integer_digits(exponent)
-    {mantissa, exponent} = adjust_exponent(mantissa, exponent, exponent_adjustment)
-
-    # Now take care of exponent digit multiples
-    # first grouping size is what defines that
-    grouping = meta.grouping.integer.first
-    {mantissa, exponent} = adjust_exponent_mod(mantissa, exponent, grouping)
-
-    # Lastly we do significant digit rounding on the mantissa
     mantissa = if meta.scientific_rounding > 0 do
       Math.round_significant(mantissa, meta.scientific_rounding)
     else
@@ -268,49 +267,44 @@ defmodule Cldr.Number.Formatter.Decimal do
     {mantissa, exponent}
   end
 
-  # Adjust the number of digits in the exponent to match the minimum
-  # number of exponent digits
-  # TODO: Not yet implemented
-  defp adjust_exponent(mantissa, exponent, _adjustment) do
-    {mantissa, exponent}
+  # Round to get the right number of fractional digits.  This is
+  # applied after setting the exponent since we may have either
+  # the original number or its mantissa form.
+  defp round_fractional_digits({number, exponent},
+      %{fractional_digits: %{max: 0, min: _min}}, _rounding_mode) do
+    {number, exponent}
   end
 
-  defp adjust_exponent_mod(mantissa, exponent, grouping) when grouping == 0 do
-    {mantissa, exponent}
+  defp round_fractional_digits({number, exponent},
+      %{fractional_digits: %{max: max, min: _min}}, rounding_mode) do
+    number = Math.round(number, max, rounding_mode)
+    {number, exponent}
   end
-
-  defp adjust_exponent_mod(mantissa, exponent, _grouping) do
-    {mantissa, exponent}
-  end
-
-  # defp adjust_exponent_mod(mantissa, exponent, grouping) when exponent < grouping do
-  #   IO.puts "Less than #{inspect exponent}; #{inspect grouping}"
-  #   adjustment = exponent - grouping
-  #   exponent = exponent - adjustment
-  #   mantissa = %{mantissa | exp: mantissa.exp + adjustment}
-  #   {mantissa, exponent}
-  # end
-  #
-  # defp adjust_exponent_mod(mantissa, exponent, grouping) do
-  #   IO.puts "Default"
-  #   adjustment = Math.mod(exponent, grouping) |> trunc
-  #   exponent = exponent - adjustment
-  #   mantissa = %{mantissa | exp: mantissa.exp + adjustment}
-  #   {mantissa, exponent}
-  # end
 
   # Output the number to a string - all the other transformations
   # are done on the string version split into its constituent
   # parts
-  defp output_to_string(number, %{fractional_digits: _fraction_digits}, _rounding_mode) do
-    IO.puts inspect(number)
+
+  @ascii_0 48
+  defp output_to_tuple({mantissa, exponent}, _meta) do
+    {integer, fraction, sign} = Digits.to_tuple(mantissa)
+    exponent_sign = if exponent >= 0, do: 1, else: -1
+    integer = Enum.map(integer, &Kernel.+(&1, @ascii_0))
+    fraction = Enum.map(fraction, &Kernel.+(&1, @ascii_0))
+    exponent = if exponent == 0, do: [], else: Integer.to_char_list(abs(exponent))
+    {sign, integer, fraction, exponent_sign, exponent}
   end
 
   # Remove all the leading zeros from an integer and add back what
   # is required for the format
-  defp adjust_leading_zeros(number, :integer, %{integer_digits: integer_digits}) do
-    integer = String.trim_leading(number["integer"], "0")
-    %{number | "integer" => pad_leading_zeros(integer, integer_digits[:min])}
+  defp adjust_leading_zeros({sign, integer, fraction, exponent_sign, exponent},
+      :integer, %{integer_digits: integer_digits}) do
+    integer = if (count = integer_digits[:min] - length(integer)) > 0 do
+      :lists.duplicate(count, '0') ++ integer
+    else
+      integer
+    end
+    {sign, integer, fraction, exponent_sign, exponent}
   end
 
   defp adjust_leading_zeros(number, _integer, %{integer_digits: _integer_digits}) do
@@ -319,45 +313,56 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   # Remove all the trailing zeros from a fraction and add back what
   # is required for the format
-  defp adjust_trailing_zeros(number, :fraction, %{fractional_digits: fraction_digits}) do
-    fraction = String.trim_trailing(number["fraction"], "0")
-    %{number | "fraction" => pad_trailing_zeros(fraction, fraction_digits[:min])}
+  defp adjust_trailing_zeros({sign, integer, fraction, exponent_sign, exponent},
+      :fraction, %{fractional_digits: fraction_digits}) do
+    fraction = do_trailing_zeros(fraction,fraction_digits[:min] - length(fraction))
+    {sign, integer, fraction, exponent_sign, exponent}
   end
 
   defp adjust_trailing_zeros(number, _fraction, %{fractional_digits: _fraction_digits}) do
     number
   end
 
+  defp do_trailing_zeros(fraction, count) when count <= 0 do
+    fraction
+  end
+
+  defp do_trailing_zeros(fraction, count) do
+    fraction ++ :lists.duplicate(count, 0)
+  end
+
   # Take the rightmost maximum digits only - this is a truncation from the
   # right.
-  def set_max_integer_digits(number, maximum_digits) when maximum_digits == 0 do
+  defp set_max_integer_digits(number, %{integer_digits: %{max: max}}) when max == 0 do
     number
   end
 
-  def set_max_integer_digits(%{"integer" => integer} = number, maximum_digits) do
-    if (length = String.length(integer)) <= maximum_digits do
-      number
-    else
-      offset = length - maximum_digits
-      string = String.slice(integer, offset, maximum_digits)
-      %{number | "integer" => string}
-    end
+  defp set_max_integer_digits({sign, integer, fraction, exponent_sign, exponent},
+      %{integer_digits: %{max: max}}) do
+    integer = do_max_integer_digits(integer, max - length(integer))
+    {sign, integer, fraction, exponent_sign, exponent}
+  end
+
+  defp do_max_integer_digits(integer, over) when over <= 0 do
+    integer
+  end
+
+  defp do_max_integer_digits(integer, over) do
+    {_rest, integer} = Enum.split(integer, over)
+    integer
   end
 
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
-  defp apply_grouping(%{"integer" => integer, "fraction" => fraction} = string, groups, locale) do
-    integer = do_grouping(integer, groups[:integer],
-                String.length(integer),
-                minimum_group_size(groups[:integer], locale),
-                :reverse)
+  defp apply_grouping({sign, integer, fraction, exponent_sign, exponent}, groups, locale) do
+    integer  = do_grouping(integer, groups[:integer], length(integer),
+                 minimum_group_size(groups[:integer], locale), :reverse)
 
-    fraction = do_grouping(fraction, groups[:fraction],
-                 String.length(fraction),
-                 minimum_group_size(groups[:fraction], locale))
+    fraction = do_grouping(fraction, groups[:fraction], length(fraction),
+                 minimum_group_size(groups[:fraction], locale), :forward)
 
-    %{string | "integer" => integer, "fraction" => fraction}
+    {sign, integer, fraction, exponent_sign, exponent}
   end
 
   defp minimum_group_size(%{first: group_size}, locale) do
@@ -370,28 +375,37 @@ defmodule Cldr.Number.Formatter.Decimal do
   # the grouping size.  For the fraction part the dangling part is at the
   # end (:forward direction) whereas for the integer part the dangling
   # group is at the beginning (:reverse direction)
-  defp do_grouping(string, groups, string_length, min_grouping, direction \\ :forward)
 
-  # No grouping if the string length (number of digits) is less than the
+  # No grouping if the length (number of digits) is less than the
   # minimum grouping size.
-  defp do_grouping(string, _, string_length, min_grouping, _)
-  when string_length < min_grouping do
-    string
+  defp do_grouping(number, _, length, min_grouping, _) when length < min_grouping do
+    number
   end
 
   # The case when there is only one grouping. Always true for fraction part.
   @group_separator Compiler.placeholder(:group)
-  defp do_grouping(string, %{first: first, rest: rest}, _, _, direction)
-  when first == rest do
-    string
-    |> chunk_string(first, direction)
-    |> Enum.join(@group_separator)
+  defp do_grouping(number, %{first: first, rest: rest}, length, _, :forward) when first == rest do
+    num_groups = div(length, first)
+    split_point = num_groups * first
+    {rest, last_group} = Enum.split(number, split_point)
+
+    [head | tail] = Enum.chunk(rest, first, first) ++ [last_group]
+    [head | Enum.map(tail, fn group -> [@group_separator, group] end)]
+  end
+
+  defp do_grouping(number, %{first: first, rest: rest}, length, _, :reverse) when first == rest do
+    num_groups = div(length, first)
+    split_point = length - (num_groups * first)
+    {first_group, rest} = Enum.split(number, split_point)
+
+    [head | tail] = [first_group] ++ Enum.chunk(rest, first, first)
+    [head | Enum.map(tail, fn group -> [@group_separator, group] end)]
   end
 
   # The case when there are two different groupings. This applies only to
   # The integer part, it can never be true for the fraction part.
-  defp do_grouping(string, %{first: first, rest: rest}, string_length, _, :reverse = direction) do
-    {rest_of_string, first_group} = String.split_at(string, string_length - first)
+  defp do_grouping(string, %{first: first, rest: rest}, length, _, :reverse = direction) do
+    {rest_of_string, first_group} = String.split_at(string, length - first)
     other_groups = chunk_string(rest_of_string, rest, direction)
     Enum.join(other_groups ++ [first_group], @group_separator)
   end
@@ -399,31 +413,17 @@ defmodule Cldr.Number.Formatter.Decimal do
   @decimal_separator  Compiler.placeholder(:decimal)
   @exponent_separator Compiler.placeholder(:exponent)
   @exponent_sign      Compiler.placeholder(:exponent_sign)
-  defp reassemble_number_string(%{} = number, meta) do
-    number["integer"]
-    |> append(number["fraction"], @decimal_separator, meta)
-    |> append(number["exponent"], @exponent_separator, meta.exponent_sign)
-  end
+  defp reassemble_number_string({_sign, integer, fraction, exponent_sign, exponent}, meta) do
+    integer  = if integer  == [],  do: ['0'], else: integer
+    fraction = if fraction == [],  do: fraction, else: [@decimal_separator, fraction]
+    exponent_sign = cond do
+       exponent_sign < 0 -> "-"
+       meta.exponent_sign -> @exponent_sign
+       true -> ''
+     end
+    exponent = if exponent == [],  do: exponent, else: [@exponent_separator, exponent_sign, exponent]
 
-  # Conditionally add a separator and number component to the output string
-  # if it exists
-  defp append(string, @empty_string, _separator, _meta) do
-    string
-  end
-
-  # When the exponent is negative then there is no special formatting.  If
-  # however the exponent is positive, then we insert a '+' if there is
-  # an exponent sign requested.
-  defp append(string, part, @exponent_separator = separator, true) do
-    if String.starts_with?(part, "-") do
-      string <> separator <> part
-    else
-      string <> separator <> @exponent_sign <> part
-    end
-  end
-
-  defp append(string, part, separator, _meta) do
-    string <> separator <> part
+    :erlang.iolist_to_binary([integer, fraction, exponent_sign, exponent])
   end
 
   # Now we can assemble the final format.  Based upon
@@ -435,7 +435,7 @@ defmodule Cldr.Number.Formatter.Decimal do
 
     number_string
     |> do_assemble_format(number, meta, format, options)
-    |> Enum.join
+    |> :erlang.iolist_to_binary
   end
 
   defp do_assemble_format(number_string, number, meta, format, options) do

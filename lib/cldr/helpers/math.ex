@@ -20,7 +20,6 @@ defmodule Cldr.Math do
   @zero Decimal.new(0)
   @one Decimal.new(1)
   @two Decimal.new(2)
-  @minus_one Decimal.new(-1)
   @ten Decimal.new(10)
 
   @doc """
@@ -453,7 +452,7 @@ defmodule Cldr.Math do
   end
 
   @doc """
-  Returns a tuple representing a Decimal in a normalized form with
+  Returns a tuple representing a number in a normalized form with
   the mantissa in the range `0 < m < 10` and a base 10 exponent.
 
   * `number` is an integer, float or Decimal
@@ -470,76 +469,50 @@ defmodule Cldr.Math do
       {#Decimal<-4.6543>, 1}
   """
 
-  def mantissa_exponent(number, places, mode) do
-    mantissa_exponent(number, %{fractional_digits: %{max: places}, rounding: mode})
+  # An integer should be returned as a float mantissa
+  @spec mantissa_exponent(number_or_decimal) :: Digits.t
+  def mantissa_exponent(number) when is_integer(number) do
+    {mantissa_digits, exponent} = mantissa_exponent_digits(number)
+    {Digits.to_float(mantissa_digits), exponent}
   end
 
-  @spec mantissa_exponent(%Decimal{}, Map.t) :: normalised_decimal
-  def mantissa_exponent(number, meta \\ %{fractional_digits: %{max: @default_rounding},
-      rounding: @default_rounding_mode})
-
-  def mantissa_exponent(%Decimal{} = number, %{fractional_digits: %{max: max}, rounding: mode}) do
-    coef_digits = Digits.number_of_integer_digits(number.coef)
-    if between_one_and_minus_one(number) do
-      leading_zeros = abs(number.exp) - coef_digits
-      exp = -(leading_zeros + 1)
-      mantissa = %Decimal{number | exp: -coef_digits + 1}
-      |> round(max, mode)
-      {mantissa, exp}
-    else
-      exp = coef_digits + number.exp - 1
-      mantissa = %Decimal{number | exp: number.exp - exp}
-      |> round(max, mode)
-      {mantissa, exp}
-    end
+  # All other numbers are returned as the same type as the parameter
+  def mantissa_exponent(number) do
+    {mantissa_digits, exponent} = mantissa_exponent_digits(number)
+    {Digits.to_number(mantissa_digits, number), exponent}
   end
 
-  def mantissa_exponent(number, %{fractional_digits: %{max: max}, rounding: mode})
-  when is_float(number) do
-    {integer, exp} = to_mantissa_exponent(number)
-    coef_digits = Digits.number_of_integer_digits(integer)
-    if between_one_and_minus_one(number) do
-      mantissa = integer / :math.pow(10, coef_digits - 1)
-      |> round(max, mode)
-      {mantissa, exp - 1}
-    else
-      exp = coef_digits - exp
-      mantissa = integer / :math.pow(10, coef_digits - 1)
-      |> round(max, mode)
-      {mantissa, exp}
-    end
-  end
+  @doc """
+  Returns a tuple representing a number in a normalized form with
+  the mantissa in the range `0 < m < 10` and a base 10 exponent.
 
-  def mantissa_exponent(number, %{fractional_digits: %{max: max}, rounding: mode})
-  when is_integer(number) do
-    coef_digits = Digits.number_of_integer_digits(number)
-    exp = coef_digits - 1
-    mantissa = number / :math.pow(10, exp)
-    |> round(max, mode)
-    {mantissa, exp}
-  end
+  The mantissa is represented as tuple of the form `Digits.t`.
 
-  defp to_mantissa_exponent(float) do
-    {int_digits, exp, _sign} = Digits.to_digits(float)
-    integer = int_digits
-    |> Integer.undigits
-    {integer, exp}
-  end
+  * `number` is an integer, float or Decimal
 
-  defp between_one_and_minus_one(%Decimal{} = number) do
-    (Decimal.cmp(number, @minus_one) == :gt && Decimal.cmp(number, @one) == :lt)
-    || Decimal.cmp(number, @one) == :eq
-    || Decimal.cmp(number, @minus_one) == :eq
-  end
+  ## Examples
 
-  defp between_one_and_minus_one(number) do
-    number >= -1.0 and number <= 1.0
+      Cldr.Math.mantissa_exponent_digits(Decimal.new(1.23004))
+      {{[1, 2, 3, 0], 1, 1}, 0}
+
+      Cldr.Math.mantissa_exponent_digits(Decimal.new(465))
+      {{[4, 6, 5], 1, 1}, -1}
+
+      Cldr.Math.mantissa_exponent_digits(Decimal.new(-46.543))
+      {{[4, 6, 5, 4], 1, -1}, 1}
+  """
+  @spec mantissa_exponent_digits(number_or_decimal) :: Digits.t
+  def mantissa_exponent_digits(number) do
+    {digits, place, sign} = Digits.to_digits(number)
+    {digits, _place, _sign} = {digits, 1, sign}
+    {{digits, 1, sign}, place - 1}
   end
 
   @doc """
   Calculates the square root of a Decimal number using Newton's method.
 
-  * `number` must be a `Decimal`
+  * `number` is an integer, float or Decimal.  For integer and float,
+  `sqrt` is delegated to the erlang `:math` module.
 
   We convert the Decimal to a float and take its
   `:math.sqrt` only to get an initial estimate.
