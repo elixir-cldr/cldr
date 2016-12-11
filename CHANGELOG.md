@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.13 December 6, 2016
+
+### Bug fixes
+
+* `Cldr.Plug` is not complete and won't compile if `Plug` is loaded as it will be for Phoenix applications.  For now, `Cldr.Plug` will not be compiled.
+
 ## Changelog for Cldr v0.0.12 December 6, 2016
 
 The last set of bugs have come from areas of the code which depends on different compilation environments:
