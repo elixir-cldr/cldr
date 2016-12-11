@@ -504,7 +504,6 @@ defmodule Cldr.Math do
   @spec mantissa_exponent_digits(number_or_decimal) :: Digits.t
   def mantissa_exponent_digits(number) do
     {digits, place, sign} = Digits.to_digits(number)
-    {digits, _place, _sign} = {digits, 1, sign}
     {{digits, 1, sign}, place - 1}
   end
 

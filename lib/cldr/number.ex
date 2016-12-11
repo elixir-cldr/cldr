@@ -224,7 +224,7 @@ defmodule Cldr.Number do
 
   ```
       iex> Cldr.Number.to_string(12345, format: "0#")
-      {:error, {Cldr.UnknownFormatError,
+      {:error, {Cldr.FormatCompileError,
         "Decimal format compiler: syntax error before: \\"#\\""}}
   ```
 

@@ -42,7 +42,6 @@ defmodule Cldr.Number.Formatter.Decimal do
   """
 
   import Cldr.Macros
-  import Cldr.Number.String
   import Cldr.Number.Transliterate, only: [transliterate: 3]
   import Cldr.Number.Symbol,        only: [number_symbols_for: 2]
 
@@ -270,8 +269,16 @@ defmodule Cldr.Number.Formatter.Decimal do
   # Round to get the right number of fractional digits.  This is
   # applied after setting the exponent since we may have either
   # the original number or its mantissa form.
-  defp round_fractional_digits({number, exponent},
-      %{fractional_digits: %{max: 0, min: _min}}, _rounding_mode) do
+  defp round_fractional_digits({number, exponent}, _options, _rounding_mode)
+  when is_integer(number) do
+    {number, exponent}
+  end
+
+  # Don't round if we're in exponential mode.  This is probably incorrect since
+  # we're not following the 'significant digits' processing rule for
+  # exponent numbers.
+  defp round_fractional_digits({number, exponent}, %{exponent_digits: exponent_digits},
+        _rounding_mode) when exponent_digits > 0 do
     {number, exponent}
   end
 
@@ -284,14 +291,12 @@ defmodule Cldr.Number.Formatter.Decimal do
   # Output the number to a string - all the other transformations
   # are done on the string version split into its constituent
   # parts
-
-  @ascii_0 48
   defp output_to_tuple({mantissa, exponent}, _meta) do
     {integer, fraction, sign} = Digits.to_tuple(mantissa)
     exponent_sign = if exponent >= 0, do: 1, else: -1
-    integer = Enum.map(integer, &Kernel.+(&1, @ascii_0))
-    fraction = Enum.map(fraction, &Kernel.+(&1, @ascii_0))
-    exponent = if exponent == 0, do: [], else: Integer.to_char_list(abs(exponent))
+    integer = Enum.map(integer, &Kernel.+(&1, ?0))
+    fraction = Enum.map(fraction, &Kernel.+(&1, ?0))
+    exponent = if exponent == 0, do: [?0], else: Integer.to_char_list(abs(exponent))
     {sign, integer, fraction, exponent_sign, exponent}
   end
 
@@ -300,7 +305,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   defp adjust_leading_zeros({sign, integer, fraction, exponent_sign, exponent},
       :integer, %{integer_digits: integer_digits}) do
     integer = if (count = integer_digits[:min] - length(integer)) > 0 do
-      :lists.duplicate(count, '0') ++ integer
+      :lists.duplicate(count, ?0) ++ integer
     else
       integer
     end
@@ -328,7 +333,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   defp do_trailing_zeros(fraction, count) do
-    fraction ++ :lists.duplicate(count, 0)
+    fraction ++ :lists.duplicate(count, ?0)
   end
 
   # Take the rightmost maximum digits only - this is a truncation from the
@@ -339,7 +344,7 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   defp set_max_integer_digits({sign, integer, fraction, exponent_sign, exponent},
       %{integer_digits: %{max: max}}) do
-    integer = do_max_integer_digits(integer, max - length(integer))
+    integer = do_max_integer_digits(integer, length(integer) - max)
     {sign, integer, fraction, exponent_sign, exponent}
   end
 
@@ -384,46 +389,87 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   # The case when there is only one grouping. Always true for fraction part.
   @group_separator Compiler.placeholder(:group)
+  defp do_grouping(number, %{first: 0, rest: 0}, _, _, _) do
+    number
+  end
+
   defp do_grouping(number, %{first: first, rest: rest}, length, _, :forward) when first == rest do
-    num_groups = div(length, first)
-    split_point = num_groups * first
+    split_point = div(length, first) * first
     {rest, last_group} = Enum.split(number, split_point)
 
-    [head | tail] = Enum.chunk(rest, first, first) ++ [last_group]
-    [head | Enum.map(tail, fn group -> [@group_separator, group] end)]
+    Enum.chunk(rest, first, first)
+    |> add_decimal_separators(@group_separator)
+    |> add_last_group(last_group, @group_separator)
   end
 
   defp do_grouping(number, %{first: first, rest: rest}, length, _, :reverse) when first == rest do
-    num_groups = div(length, first)
-    split_point = length - (num_groups * first)
+    split_point = length - (div(length, first) * first)
     {first_group, rest} = Enum.split(number, split_point)
 
-    [head | tail] = [first_group] ++ Enum.chunk(rest, first, first)
-    [head | Enum.map(tail, fn group -> [@group_separator, group] end)]
+    case [first_group] ++ Enum.chunk(rest, first, first) do
+      [[], tail] ->
+        tail
+      [[] | tail] ->
+        add_decimal_separators(tail, @group_separator)
+      [head | tail] ->
+        [head | add_decimal_separators(tail, @group_separator)]
+    end
   end
 
   # The case when there are two different groupings. This applies only to
   # The integer part, it can never be true for the fraction part.
-  defp do_grouping(string, %{first: first, rest: rest}, length, _, :reverse = direction) do
-    {rest_of_string, first_group} = String.split_at(string, length - first)
-    other_groups = chunk_string(rest_of_string, rest, direction)
-    Enum.join(other_groups ++ [first_group], @group_separator)
+  defp do_grouping(number, %{first: first, rest: rest}, length, _min_grouping, :reverse) do
+    {others, first_group} = Enum.split(number, length - first)
+
+    do_grouping(others, %{first: rest, rest: rest}, length(others), 1, :reverse)
+    |> add_last_group(first_group, @group_separator)
+  end
+
+  def add_decimal_separators([], _separator) do
+    []
+  end
+
+  def add_decimal_separators([last | []], separator) do
+    [separator, last]
+  end
+
+  def add_decimal_separators([first, second | []], separator) do
+    [first, separator, second]
+  end
+
+  def add_decimal_separators([first, second | tail], separator) do
+    [first, separator, second, add_decimal_separators(tail, separator)]
+  end
+
+  defp add_last_group(groups, [], _separator) do
+    groups
+  end
+
+  defp add_last_group(groups, last, separator) do
+    [groups, separator, last]
   end
 
   @decimal_separator  Compiler.placeholder(:decimal)
   @exponent_separator Compiler.placeholder(:exponent)
   @exponent_sign      Compiler.placeholder(:exponent_sign)
+  @minus_placeholder  Compiler.placeholder(:minus)
   defp reassemble_number_string({_sign, integer, fraction, exponent_sign, exponent}, meta) do
     integer  = if integer  == [],  do: ['0'], else: integer
     fraction = if fraction == [],  do: fraction, else: [@decimal_separator, fraction]
-    exponent_sign = cond do
-       exponent_sign < 0 -> "-"
-       meta.exponent_sign -> @exponent_sign
-       true -> ''
-     end
-    exponent = if exponent == [],  do: exponent, else: [@exponent_separator, exponent_sign, exponent]
 
-    :erlang.iolist_to_binary([integer, fraction, exponent_sign, exponent])
+    exponent_sign = cond do
+       exponent_sign < 0  -> @minus_placeholder
+       meta.exponent_sign -> @exponent_sign
+       true               -> ''
+     end
+
+    exponent = if meta.exponent_digits > 0 do
+      [@exponent_separator, exponent_sign, exponent]
+    else
+      []
+    end
+
+    :erlang.iolist_to_binary([integer, fraction, exponent])
   end
 
   # Now we can assemble the final format.  Based upon

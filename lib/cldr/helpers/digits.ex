@@ -94,13 +94,15 @@ defmodule Cldr.Digits do
   """
   @spec number_of_integer_digits(Math.number_or_decimal) :: integer
   def number_of_integer_digits(%Decimal{} = number) do
-    {_digits, place, _sign} = to_digits(number)
-    place
+    number
+    |> to_digits
+    |> number_of_integer_digits
   end
 
   def number_of_integer_digits(number) when is_number(number) do
-    {_digits, place, _sign} = to_digits(number)
-    place
+    number
+    |> to_digits
+    |> number_of_integer_digits
   end
 
   # A decomposed integer might be charlist or a list of integers
@@ -112,6 +114,11 @@ defmodule Cldr.Digits do
   end
 
   # For a tuple returned by `Digits.to_digits/1`
+  def number_of_integer_digits({integer, place, _sign})
+  when is_list(integer) and is_integer(place) and place <= 0 do
+    0
+  end
+
   def number_of_integer_digits({integer, place, _sign})
   when is_list(integer) and is_integer(place) do
     place
@@ -240,7 +247,8 @@ defmodule Cldr.Digits do
   A "compact" representation is returned, so there may be fewer digits returned
   than the decimal point location
   """
-  def to_digits(0.0), do: {[0], 1, true}
+  def to_digits(0.0), do: {[0], 1, 1}
+  def to_digits(0), do: {[0], 1, 1}
   def to_digits(float) when is_number(float) do
     # Find mantissa and exponent from IEEE-754 packed notation
     {frac, exp} = frexp(float)
@@ -256,11 +264,7 @@ defmodule Cldr.Digits do
   def to_digits(%Decimal{} = number) do
     %Decimal{coef: coef, exp: exp, sign: sign} = Decimal.reduce(number)
     {digits, _place, _sign} = to_digits(coef)
-    if exp == 0 do
-      {digits, exp, sign}
-    else
-      {digits, length(digits) + exp, sign}
-    end
+    {digits, length(digits) + exp, sign}
   end
 
   @doc """
@@ -316,9 +320,15 @@ defmodule Cldr.Digits do
     end
   end
 
+  @log_0_approx -60
   def scale(r, s, m_plus, m_minus, low_ok, high_ok, float) do
     # TODO: Benchmark removing the log10 and using the approximation given in original paper?
-    est = trunc(Float.ceil(:math.log10(abs(float)) - 1.0e-10))
+    est = if float == 0 do
+      @log_0_approx
+    else
+      trunc(Float.ceil(:math.log10(abs(float)) - 1.0e-10))
+    end
+
     if est >= 0 do
       fixup(r, s * power_of_10(est), m_plus, m_minus, est, low_ok, high_ok, float)
     else
