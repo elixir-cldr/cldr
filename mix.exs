@@ -38,7 +38,8 @@ defmodule Cldr.Mixfile do
       {:ex_doc, "~> 0.12", only: :dev},
       {:excoveralls, "~> 0.5.6", only: :test},
       {:gettext, "~> 0.11.0", only: :dev},
-      {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]}
+      {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]},
+      {:exprof, "~> 0.2.0", only: [:dev, :test]}
     ]
   end
 

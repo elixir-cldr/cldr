@@ -55,10 +55,8 @@ defmodule Cldr.Number.Formatter.Decimal do
   for format <- Cldr.Number.Format.decimal_format_list() do
     case Compiler.decode(format) do
     {:ok, meta} ->
-      quote do
-        def to_string(number, unquote(format), options) do
-          do_to_string(number, unquote(Macro.escape(meta)), options)
-        end
+      def to_string(number, unquote(format), options) do
+        do_to_string(number, unquote(Macro.escape(meta)), options)
       end
     {:error, message} ->
       raise Cldr.FormatCompileError, message: "#{message} compiling #{inspect format}"

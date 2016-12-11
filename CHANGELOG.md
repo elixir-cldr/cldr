@@ -4,9 +4,11 @@
 
 * Additional updates to docs content and formatting
 
-* Significant refactoring of decimal formatting engine
+* Significant refactoring of decimal formatting engine.  About 10% faster than the previous implementation.  This version works on io_lists rather than strings and there is room for performance optimisation.
 
-## Changelog for Cldr v0.0.13 December 6, 2016
+* Fixed an issue whereby compiled formats weren't being inserted into the AST.  Compiled formats now execute approximately twice as fast as non-compiled formats.  All formats defined in CLDR are compiled so most applications should benefit from the speedup.
+
+## Changelog for Cldr v0.0.13 December 11, 2016
 
 ### Bug fixes
 
