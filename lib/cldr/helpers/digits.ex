@@ -28,7 +28,7 @@ defmodule Cldr.Digits do
   to digit form with `Digits.to_digits/1`
 
   THe digits can be converted back to normal form with
-  `Cldr.Digits.to_integer/1`, Cldr.Digits.to_float/1` and
+  `Cldr.Digits.to_integer/1`, `Cldr.Digits.to_float/1` and
   `Cldr.Digits.to_decimal/1`.
   """
   @type  t :: {[0..9, ...], non_neg_integer, 1 | -1}
