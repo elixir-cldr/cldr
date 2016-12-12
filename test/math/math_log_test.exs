@@ -15,4 +15,11 @@ defmodule Math.Log.Test do
       assert Decimal.cmp(calc, sample) == :eq
     end
   end
+
+  # Testing large decimals that are beyond the precision of a float
+  test "log Decimal.new(\"1.33333333333333333333333333333333\")" do
+    assert Decimal.cmp(
+            Cldr.Math.log(Decimal.new("1.33333333333333333333333333333333")),
+            Decimal.new("0.2876820724291554672132526174")) == :eq
+  end
 end

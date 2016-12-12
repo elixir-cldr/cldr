@@ -249,7 +249,7 @@ defmodule Cldr.Digits do
   """
   def to_digits(0.0), do: {[0], 1, 1}
   def to_digits(0), do: {[0], 1, 1}
-  def to_digits(float) when is_number(float) do
+  def to_digits(float) when is_float(float) do
     # Find mantissa and exponent from IEEE-754 packed notation
     {frac, exp} = frexp(float)
 
@@ -265,6 +265,16 @@ defmodule Cldr.Digits do
     %Decimal{coef: coef, exp: exp, sign: sign} = Decimal.reduce(number)
     {digits, _place, _sign} = to_digits(coef)
     {digits, length(digits) + exp, sign}
+  end
+
+  def to_digits(integer) when is_integer(integer) when integer >= 0 do
+    digits = Integer.digits(integer)
+    {digits, length(digits), 1}
+  end
+
+  def to_digits(integer) when is_integer(integer) do
+    digits = Integer.digits(integer)
+    {digits, length(digits), -1}
   end
 
   @doc """

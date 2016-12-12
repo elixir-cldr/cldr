@@ -1,4 +1,12 @@
-## Changelog for Cldr v0.0.14
+## Changelog for Cldr v0.0.15 December 12, 2016
+
+### Bug fixes
+
+* Fixed a bug whereby Cldr.Math.log would return invalid results for a Decimal with precision greater 64 bits.
+
+* Added poison and decimal to the application section of mix.exs
+
+## Changelog for Cldr v0.0.14 December 11, 2016
 
 ### Enhancements
 
