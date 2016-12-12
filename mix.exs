@@ -26,7 +26,9 @@ defmodule Cldr.Mixfile do
   end
 
   def application do
-    []
+    [
+      applications: [:poison, :decimal]
+    ]
   end
 
   defp deps do
