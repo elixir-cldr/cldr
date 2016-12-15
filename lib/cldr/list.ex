@@ -10,8 +10,12 @@ defmodule Cldr.List do
       "Monday, Tuesday, and Wednesday"
   """
 
+  alias Cldr.Substitution
+
   @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short
   @default_style :standard
+
+  alias Cldr.Substitution
 
   @doc """
   Formats a list into a string according to the list pattern rules for a locale.
@@ -58,6 +62,7 @@ defmodule Cldr.List do
         error
       {locale, format} ->
         to_string(list, locale, format)
+        |> :erlang.iolist_to_binary
     end
   end
 
@@ -89,9 +94,8 @@ defmodule Cldr.List do
   defp to_string([first, last], locale, pattern_type) do
     pattern = list_patterns_for(locale)[pattern_type][:"2"]
 
-    pattern
-    |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", Kernel.to_string(last))
+    Substitution.substitute([first, last], pattern)
+    |> :erlang.iolist_to_binary
   end
 
   # For when there are three elements only
@@ -99,40 +103,29 @@ defmodule Cldr.List do
     first_pattern = list_patterns_for(locale)[pattern_type][:start]
     last_pattern = list_patterns_for(locale)[pattern_type][:end]
 
-    last = last_pattern
-    |> String.replace("{0}", Kernel.to_string(middle))
-    |> String.replace("{1}", Kernel.to_string(last))
-
-    first_pattern
-    |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", Kernel.to_string(last))
+    last = Substitution.substitute([middle, last], last_pattern)
+    Substitution.substitute([first, last], first_pattern)
   end
 
   # For when there are more than 3 elements
   defp to_string([first | rest], locale, pattern_type) do
     first_pattern = list_patterns_for(locale)[pattern_type][:start]
 
-    first_pattern
-    |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", do_to_string(rest, locale, pattern_type))
+    Substitution.substitute([first, do_to_string(rest, locale, pattern_type)], first_pattern)
   end
 
   # When there are only two left (ie last)
   defp do_to_string([first, last], locale, pattern_type) do
     last_pattern = list_patterns_for(locale)[pattern_type][:end]
 
-    last_pattern
-    |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", Kernel.to_string(last))
+    Substitution.substitute([first, last], last_pattern)
   end
 
   # For the middle elements
   defp do_to_string([first | rest], locale, pattern_type) do
     middle_pattern = list_patterns_for(locale)[pattern_type][:middle]
 
-    middle_pattern
-    |> String.replace("{0}", Kernel.to_string(first))
-    |> String.replace("{1}", do_to_string(rest, locale, pattern_type))
+    Substitution.substitute([first, do_to_string(rest, locale, pattern_type)], middle_pattern)
   end
 
   @spec list_patterns_for(Cldr.locale) :: Map.t
@@ -150,16 +143,16 @@ defmodule Cldr.List do
     ## Example
 
         iex> Cldr.List.list_patterns_for "en"
-        %{standard: %{"2": "{0} and {1}", end: "{0}, and {1}",
-           middle: "{0}, {1}", start: "{0}, {1}"},
-         standard_short: %{"2": "{0} and {1}", end: "{0}, and {1}",
-           middle: "{0}, {1}", start: "{0}, {1}"},
-         unit: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
-           start: "{0}, {1}"},
-         unit_narrow: %{"2": "{0} {1}", end: "{0} {1}", middle: "{0} {1}",
-           start: "{0} {1}"},
-         unit_short: %{"2": "{0}, {1}", end: "{0}, {1}", middle: "{0}, {1}",
-           start: "{0}, {1}"}}
+        %{standard: %{"2": [0, " and ", 1], end: [0, ", and ", 1],
+           middle: [0, ", ", 1], start: [0, ", ", 1]},
+         standard_short: %{"2": [0, " and ", 1], end: [0, ", and ", 1],
+           middle: [0, ", ", 1], start: [0, ", ", 1]},
+         unit: %{"2": [0, ", ", 1], end: [0, ", ", 1], middle: [0, ", ", 1],
+           start: [0, ", ", 1]},
+         unit_narrow: %{"2": [0, " ", 1], end: [0, " ", 1],
+           middle: [0, " ", 1], start: [0, " ", 1]},
+         unit_short: %{"2": [0, ", ", 1], end: [0, ", ", 1],
+           middle: [0, ", ", 1], start: [0, ", ", 1]}}
     """
     def list_patterns_for(unquote(locale)) do
       unquote(Macro.escape(patterns))
