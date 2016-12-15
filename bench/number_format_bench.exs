@@ -6,7 +6,7 @@ defmodule Number.Format.Test do
   end
 
   bench "Format compiled number {en, latn}" do
-    Cldr.Number.to_string 12345.6789, format: "#,##0.###"
+    Cldr.Number.to_string 123454321.6789, format: "#,##0.###"
   end
 
   bench "Format compiled currency {en, latn}" do

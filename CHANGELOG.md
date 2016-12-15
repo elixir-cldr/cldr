@@ -1,3 +1,11 @@
+## Changelog for Cldr v0.0.16
+
+### Enhancements
+
+* Improved algorithm for grouping digits in `Cldr.Number.to_string/2` is 30% faster than the previous implementation
+
+* Precompile the list substitution templates used by `Cldr.List.to_string/2` delivers around 100x performance improvement.
+
 ## Changelog for Cldr v0.0.15 December 12, 2016
 
 ### Bug fixes

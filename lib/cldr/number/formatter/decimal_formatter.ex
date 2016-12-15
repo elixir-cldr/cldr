@@ -314,8 +314,6 @@ defmodule Cldr.Number.Formatter.Decimal do
     number
   end
 
-  # Remove all the trailing zeros from a fraction and add back what
-  # is required for the format
   defp adjust_trailing_zeros({sign, integer, fraction, exponent_sign, exponent},
       :fraction, %{fractional_digits: fraction_digits}) do
     fraction = do_trailing_zeros(fraction,fraction_digits[:min] - length(fraction))
@@ -395,8 +393,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     split_point = div(length, first) * first
     {rest, last_group} = Enum.split(number, split_point)
 
-    Enum.chunk(rest, first, first)
-    |> add_decimal_separators(@group_separator)
+    add_separator(rest, first, @group_separator)
     |> add_last_group(last_group, @group_separator)
   end
 
@@ -404,14 +401,8 @@ defmodule Cldr.Number.Formatter.Decimal do
     split_point = length - (div(length, first) * first)
     {first_group, rest} = Enum.split(number, split_point)
 
-    case [first_group] ++ Enum.chunk(rest, first, first) do
-      [[], tail] ->
-        tail
-      [[] | tail] ->
-        add_decimal_separators(tail, @group_separator)
-      [head | tail] ->
-        [head | add_decimal_separators(tail, @group_separator)]
-    end
+    add_separator(rest, first, @group_separator)
+    |> add_first_group(first_group, @group_separator)
   end
 
   # The case when there are two different groupings. This applies only to
@@ -423,20 +414,26 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> add_last_group(first_group, @group_separator)
   end
 
-  def add_decimal_separators([], _separator) do
-    []
+  defp add_separator(group, every, separator) do
+    {_, [_ | rest]} = Enum.reduce group, {1, []}, fn elem, {counter, list} ->
+      list = [elem | list]
+      list = if rem(counter, every) == 0 do
+        [separator | list]
+      else
+        list
+      end
+      {counter + 1, list}
+    end
+
+    Enum.reverse(rest)
   end
 
-  def add_decimal_separators([last | []], separator) do
-    [separator, last]
+  defp add_first_group(groups, [], _separator) do
+    groups
   end
 
-  def add_decimal_separators([first, second | []], separator) do
-    [first, separator, second]
-  end
-
-  def add_decimal_separators([first, second | tail], separator) do
-    [first, separator, second, add_decimal_separators(tail, separator)]
+  defp add_first_group(groups, first, separator) do
+    [first, separator, groups]
   end
 
   defp add_last_group(groups, [], _separator) do
