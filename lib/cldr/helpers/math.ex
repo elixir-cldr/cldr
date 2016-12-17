@@ -138,7 +138,7 @@ defmodule Cldr.Math do
   """
   @spec to_float(%Decimal{}) :: float
   def to_float(%Decimal{sign: sign, coef: coef, exp: exp}) do
-    sign * coef * 1.0 * :math.pow(10, exp)
+    sign * coef * 1.0 * power_of_10(exp)
   end
 
   @doc """
@@ -449,6 +449,16 @@ defmodule Cldr.Math do
 
   defp do_power(number, n, _mod) do
     number * power(number, n - 1)
+  end
+
+  # Precompute powers of 10 up to 10^326
+  # FIXME: duplicating existing function in Float, which only goes up to 15.
+  Enum.reduce 0..326, 1, fn x, acc ->
+    def power_of_10(unquote(x)), do: unquote(acc)
+    acc * 10
+  end
+  def power_of_10(n) when n < 0 do
+    1 / power_of_10(abs(n))
   end
 
   @doc """

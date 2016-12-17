@@ -6,6 +6,12 @@
 
 * Precompile the list substitution templates used by `Cldr.List.to_string/2` delivers around 100x performance improvement.
 
+### Bug fixes
+
+* Fixed number formatting error that occured when a small fraction would round to zero
+
+* Fixed number formatting error that produced "-0" instead of "0" for small fractions that rounded to zero
+
 ## Changelog for Cldr v0.0.15 December 12, 2016
 
 ### Bug fixes

@@ -44,6 +44,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   import Cldr.Macros
   import Cldr.Number.Transliterate, only: [transliterate: 3]
   import Cldr.Number.Symbol,        only: [number_symbols_for: 2]
+  import Cldr.Math,                 only: [power_of_10: 1]
 
   alias Cldr.{Currency, Number, Math, Digits}
   alias Cldr.Number.Format
@@ -150,7 +151,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   defp do_adjust_fraction(meta, digits, rounding) do
-    rounding = :math.pow(10, -digits) * rounding
+    rounding = power_of_10(-digits) * rounding
     %{meta | fractional_digits: %{max: digits, min: digits},
              rounding: rounding}
   end
@@ -397,6 +398,11 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> add_last_group(last_group, @group_separator)
   end
 
+  defp do_grouping(number, %{first: first, rest: rest}, length, _, _direction)
+  when first == rest and length <= first do
+    number
+  end
+
   defp do_grouping(number, %{first: first, rest: rest}, length, _, :reverse) when first == rest do
     split_point = length - (div(length, first) * first)
     {first_group, rest} = Enum.split(number, split_point)
@@ -409,9 +415,12 @@ defmodule Cldr.Number.Formatter.Decimal do
   # The integer part, it can never be true for the fraction part.
   defp do_grouping(number, %{first: first, rest: rest}, length, _min_grouping, :reverse) do
     {others, first_group} = Enum.split(number, length - first)
-
     do_grouping(others, %{first: rest, rest: rest}, length(others), 1, :reverse)
     |> add_last_group(first_group, @group_separator)
+  end
+
+  defp add_separator([], _every, _separator) do
+    []
   end
 
   defp add_separator(group, every, separator) do
@@ -490,7 +499,7 @@ defmodule Cldr.Number.Formatter.Decimal do
         {:format, _format}   -> number_string
         {:pad, _}            -> padding_string(meta, number_string)
         {:plus, _}           -> symbols.plus_sign
-        {:minus, _}          -> symbols.minus_sign
+        {:minus, _}          -> if number_string == "0", do: "", else: symbols.minus_sign
         {:currency, type}    -> currency_symbol(currency, number, type, locale)
         {:percent, _}        -> symbols.percent_sign
         {:permille, _}       -> symbols.permille

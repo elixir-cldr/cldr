@@ -3,6 +3,8 @@ defmodule Cldr.Test.Number.Format do
     [
       {1234, "1,234", []},
       {1234, "1 234", [locale: "fr"]},
+      {0.000123456, "0", []},
+      {-0.000123456, "0", []},
 
       # Data from http://unicode.org/reports/tr35/tr35-numbers.html
 

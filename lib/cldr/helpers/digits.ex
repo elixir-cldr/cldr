@@ -11,6 +11,7 @@ defmodule Cldr.Digits do
 
   use Bitwise
   import Cldr.Macros
+  import Cldr.Math, only: [power_of_10: 1]
   require Integer
   alias Cldr.Math
 
@@ -294,8 +295,12 @@ defmodule Cldr.Digits do
     Integer.undigits(int_digits) * sign
   end
 
+  def to_float({[0], _place, _sign}) do
+    0.0
+  end
+
   def to_float({digits, place, sign}) do
-    Integer.undigits(digits) / :math.pow(10, length(digits) - place) * sign
+    Integer.undigits(digits) / power_of_10(length(digits) - place) * sign
   end
 
   def to_decimal({digits, place, sign}) do
@@ -305,6 +310,7 @@ defmodule Cldr.Digits do
   ############################################################################
   # The following functions are Elixir translations of the original paper:
   # "Printing Floating-Point Numbers Quickly and Accurately"
+  # http://www.cs.tufts.edu/~nr/cs257/archive/florian-loitsch/printf.pdf
   # See the paper for further explanation
 
   docp """
@@ -432,12 +438,5 @@ defmodule Cldr.Digits do
 
   defp sign(float) when float < 0, do: -1
   defp sign(_float), do: 1
-
-  # Precompute powers of 10 up to 10^326
-  # FIXME: duplicating existing function in Float, which only goes up to 15.
-  Enum.reduce 0..326, 1, fn x, acc ->
-    defp power_of_10(unquote(x)), do: unquote(acc)
-    acc * 10
-  end
 
 end
