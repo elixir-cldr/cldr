@@ -10,5 +10,6 @@ defmodule Doc.Test do
   doctest Cldr.Number.Format
   doctest Cldr.Number.System
   doctest Cldr.Number.Format.Compiler
+  doctest Cldr.Number.Formatter.Short
 
 end

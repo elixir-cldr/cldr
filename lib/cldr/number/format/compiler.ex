@@ -246,7 +246,7 @@ defmodule Cldr.Number.Format.Compiler do
       padding_length:      padding_length(format[:positive][:pad], format),
       padding_char:        padding_char(format),
       multiplier:          multiplier(format),
-      format:              format,
+      format:              format
     }
 
     reconcile_significant_and_scientific_digits(meta)

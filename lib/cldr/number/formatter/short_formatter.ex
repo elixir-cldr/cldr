@@ -5,19 +5,19 @@ defmodule Cldr.Number.Formatter.Short do
   This is best explained by some
   examples:
 
-      iex> Number.to_string 123, format: :short
+      iex> Cldr.Number.to_string 123, format: :short
       "123"
 
-      iex(> Number.to_string 1234, format: :short
+      iex> Cldr.Number.to_string 1234, format: :short
       "1K"
 
-      iex> Number.to_string 523456789, format: :short
+      iex> Cldr.Number.to_string 523456789, format: :short
       "523M"
 
-      iex> Number.to_string 7234567890, format: :short
+      iex> Cldr.Number.to_string 7234567890, format: :short
       "7B"
 
-      iex> Number.to_string 7234567890, format: :long
+      iex> Cldr.Number.to_string 7234567890, format: :long
       "7 billion"
 
   These formats are compact representations however they do lose
@@ -27,14 +27,16 @@ defmodule Cldr.Number.Formatter.Short do
   is retrieved from the currency definition itself.  You can see the difference
   in the following examples:
 
-      iex(14)> Number.to_string 1234, format: :short, currency: "EUR"
+      iex> Cldr.Number.to_string 1234, format: :short, currency: "EUR"
       "€1.23K"
 
-      iex(15)> Number.to_string 1234, format: :short, currency: "JPY"
+      iex> Cldr.Number.to_string 1234, format: :short, currency: "JPY"
       "¥1K"
   """
 
   import Cldr.Macros, only: [docp: 1]
+  alias Cldr.Math
+  alias Cldr.Number.{System, Format, Formatter, Cardinal}
 
   docp """
   Notes from Unicode TR35 on formatting short formats:
@@ -43,7 +45,8 @@ defmodule Cldr.Number.Formatter.Short do
   used, with the appropriate plural category. N is divided by the type, after
   removing the number of zeros in the pattern, less 1. APIs supporting this
   format should provide control over the number of significant or fraction
-  digits.
+  digits (note: this implementation does not currently support specifying
+  fractional digits).
 
   If the value is precisely 0, or if the type is less than 1000, then the
   normal number format pattern for that sort of object is supplied. For
@@ -55,8 +58,6 @@ defmodule Cldr.Number.Formatter.Short do
   "0". The result is formatted according to the normal decimal pattern. With no
   fractional digits, that yields "12 K".
   """
-
-  alias Cldr.Number.{System, Format, Formatter}
 
   def to_string(number, style, options) do
     locale = options[:locale]
@@ -85,7 +86,7 @@ defmodule Cldr.Number.Formatter.Short do
   end
 
   @doc false
-  defp choose_short_format(number, rules, _options) when is_number(number) do
+  defp choose_short_format(number, rules, options) when is_number(number) do
     [range, rule] = rules
     |> Enum.filter(fn [range, _rules] -> range <= number end)
     |> Enum.reverse
@@ -95,8 +96,7 @@ defmodule Cldr.Number.Formatter.Short do
     |> trunc
     |> rem(range)
 
-    plural = Cldr.Number.Cardinal.plural_rule(mod)
-    {range, rule[plural] || rule[:other]}
+    {range, Cardinal.pluralize(mod, options[:locale], rule)}
   end
 
   defp choose_short_format(%Decimal{} = number, rules, options) do
@@ -127,9 +127,15 @@ defmodule Cldr.Number.Formatter.Short do
   @doc false
   # TODO: We can precompute these at compile time which would
   # save this lookup
-  @zeros Regex.compile!("(?<zeros>0+)")
   defp adjustment(range, format) do
-    count = Regex.named_captures(@zeros, format)["zeros"] |> String.length
-    range / :math.pow(10, count - 1)
+    count = format
+    |> String.to_char_list
+    |> number_of_zeros
+
+    range / Math.power_of_10(count - 1)
+  end
+
+  defp number_of_zeros(list) do
+    Enum.reduce(list, 0, fn c, acc -> if c == ?0, do: acc + 1, else: acc end)
   end
 end
