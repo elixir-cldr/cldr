@@ -97,9 +97,9 @@ Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
 Not currently supported, but they're next on the development priority list.
 
-* Dates/times expected to ship in January 2017.
+* Units planned by end of December 2016.
 
-* Units planned by March 2017
+* Dates/times expected to ship in January 2017.
 
 ## Gettext Integration
 

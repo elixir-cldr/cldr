@@ -2,13 +2,42 @@
 
 This release is primarily about optmising parts of the number formatting pipeline through a combination of code optimization and additional compile-time calculations.
 
+The comparison below shows that for an integer formatted with the standard format (default) this version is reduced from 42 µs/op to 10 µs/op or about 70% performnce improvement.  However, its worth remembering that this is more than 2 orders of magnitude slower than simply calling `Integer.to_string/1`.
+
+The performance improvements come from hand tuning the pipeline for the default format for integers and floats.  Uncompiled formats are the slowest since they have to pass through the lexing and parsing phases.  For locales other than "en", the overhead of transliterating the digits and symbols adds additional time.  Currency formatting adds about 10% to a normal float time for the lookup of the currency symbol and rounding information as well as assembling the final format.
+
+### v0.0.15 Number.Format.Test
+benchmark name                              iterations   average time
+Decimal.to_string                             10000000   0.51 µs/op
+Format compiled standard format: integer         50000   42.00 µs/op
+Format compiled currency {en, latn}              50000   51.78 µs/op
+Format compiled number {fr, latn}                50000   54.74 µs/op
+Format uncompiled number                         10000   117.74 µs/op
+Significant digits format                        10000   147.83 µs/op
+
+### v0.0.16 Number.Format.Test
+benchmark name                                 iterations   average time
+Format Integer.to_string                        100000000   0.01 µs/op
+Decimal.to_string                                10000000   0.52 µs/op
+Format compiled standard format: integer           100000   10.16 µs/op
+Format compiled number {fr, latn}: integer         100000   29.17 µs/op
+Format compiled number standard format: float       50000   44.10 µs/op
+Format compiled currency {en, latn}                 50000   46.02 µs/op
+Format compiled number {fr, latn}: float            50000   71.21 µs/op
+Significant digits format                           10000   105.23 µs/op
+Format uncompiled format: float                     10000   113.80 µs/op
+
+All tests run on a first generation Macbook which is no speed demon.  The absolute numbers are less important than the relative performance.
+
 ### Enhancements
 
 * Adds support for a `:fractional_digits` option for `Cldr.Number.to_string/2` which overrides the number of fractional digits to be displayed.  The number is rounded to this number of digits before display.
 
+* Add hand-tuned formatting pipeline for integer and floats that use the standard format.  Performance in these circumstances is improved by about 70%.
+
 * Improved algorithm for grouping digits in `Cldr.Number.to_string/2` is 30% faster than the previous implementation
 
-* Precompile the list substitution templates used by `Cldr.List.to_string/2` delivers around 100x performance improvement.
+* Precompile the list substitution templates used by `Cldr.List.to_string/2` delivers around 100x performance improvement.  This affects the format types :currency_long positively as well.
 
 * Precompile the number of 0 digits in a short format which improves performance of short number formatting by 50%
 
