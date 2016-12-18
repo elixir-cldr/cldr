@@ -78,6 +78,51 @@ defmodule Cldr.Number.Formatter.Decimal do
   # Now we have the number to be formatted, the meta data that
   # defines the formatting and the options to be applied
   # (which is related to localisation of the final format)
+
+  # This first version is an optimization for integers using the
+  # standard format since its the most common.
+  @standard_format %{format:
+    [positive: [format: "#,##0.###"], negative: [minus: '-', format: :same_as_positive]]}
+
+  # For negative numbers in the standard format
+  defp do_to_string(number, @standard_format = meta, options)
+  when is_number(number) and number < 0 do
+    system   = options[:number_system]
+    locale   = options[:locale]
+    symbols  = number_symbols_for(locale, system)
+
+    if (number_string = do_to_string(abs(number), meta, options)) == "0" do
+      number_string
+    else
+      system   = options[:number_system]
+      locale   = options[:locale]
+      symbols  = number_symbols_for(locale, system)
+      symbols.minus_sign <> do_to_string(abs(number), meta, options)
+    end
+  end
+
+  defp do_to_string(number, @standard_format = meta, options) when is_integer(number) do
+    number
+    |> output_to_tuple(meta)
+    |> apply_grouping(meta[:grouping], options[:locale])
+    |> reassemble_number_string(meta)
+    |> transliterate(options[:locale], options[:number_system])
+  end
+
+  # Optimization for a float in the standard format
+  defp do_to_string(number, @standard_format = meta, options) when is_float(number) do
+    meta = meta
+    |> adjust_for_fractional_digits(options[:fractional_digits])
+
+    {number, 0}
+    |> round_fractional_digits(meta, options[:rounding_mode])
+    |> output_to_tuple(meta)
+    |> adjust_trailing_zeros(:fraction, meta)
+    |> apply_grouping(meta[:grouping], options[:locale])
+    |> reassemble_number_string(meta)
+    |> transliterate(options[:locale], options[:number_system])
+  end
+
   defp do_to_string(number, %{integer_digits: _integer_digits} = meta, options) do
     meta = meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
@@ -297,9 +342,14 @@ defmodule Cldr.Number.Formatter.Decimal do
     {number, exponent}
   end
 
-  # Output the number to a string - all the other transformations
-  # are done on the string version split into its constituent
+  # Output the number to a tuple - all the other transformations
+  # are done on the tuple version split into its constituent
   # parts
+  defp output_to_tuple(number, _meta) when is_integer(number) do
+    integer = :erlang.integer_to_list(number)
+    {1, integer, [], 1, [?0]}
+  end
+
   defp output_to_tuple({mantissa, exponent}, _meta) do
     {integer, fraction, sign} = Digits.to_tuple(mantissa)
     exponent_sign = if exponent >= 0, do: 1, else: -1
@@ -367,6 +417,13 @@ defmodule Cldr.Number.Formatter.Decimal do
   # Insert the grouping placeholder in the right place in the number.
   # There may be one or two different groupings for the integer part
   # and one grouping for the fraction part.
+  defp apply_grouping({sign, integer, [] = fraction, exponent_sign, exponent}, groups, locale) do
+    integer  = do_grouping(integer, groups[:integer], length(integer),
+                 minimum_group_size(groups[:integer], locale), :reverse)
+
+    {sign, integer, fraction, exponent_sign, exponent}
+  end
+
   defp apply_grouping({sign, integer, fraction, exponent_sign, exponent}, groups, locale) do
     integer  = do_grouping(integer, groups[:integer], length(integer),
                  minimum_group_size(groups[:integer], locale), :reverse)

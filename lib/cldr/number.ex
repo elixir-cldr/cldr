@@ -401,8 +401,7 @@ defmodule Cldr.Number do
   # based upon whether there is a :currency set in options or not.
   defp check_options(options, format, check, finally) do
     if options[:format] == format && check do
-      Keyword.delete(options, :format)
-      |> Keyword.put(:format, finally)
+      Keyword.put(options, :format, finally)
     else
       options
     end
