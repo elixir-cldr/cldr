@@ -14,13 +14,13 @@ defmodule Cldr.Test.Number.Format do
       {1234.567, "1234,567",     [format: "###0.#####",   locale: "fr"]},
       {1234.567, "1234,5670",    [format: "###0.0000#",   locale: "fr"]},
       {1234.567, "01234,5670",   [format: "00000.0000",   locale: "fr"]},
-      {1234.567, "1 234,57 €",   [format: "#,##0.00 ¤",   locale: "fr", currency: "EUR"]},
+      {1234.567, "1 234,57 €",   [format: "#,##0.00 ¤",   locale: "fr", currency: :EUR]},
       {1234.567, "1 235 JPY",    [format: "#,##0.00 ¤",   locale: "fr", currency: "JPY"]},
 
       # Fraction grouping
       {1234.4353244565, "1234,435 324 456 5", [format: "#,###.###,#########", locale: "pl"]},
 
-      # #Special_Pattern_Characters
+      # Special_Pattern_Characters
       {3.1415, "3,14",           [format: "0.00;-0.00",   locale: "fr"]},
       {-3.1415, "-3,14",         [format: "0.00;-0.00",   locale: "fr"]},
 
@@ -46,10 +46,10 @@ defmodule Cldr.Test.Number.Format do
       {123,  "' $xx123.00",      [format: "'' $*x#,##0.00"]},
 
       # Currency
-      {123.4, "123.40 A$",       [format: "#,##0.00 ¤", currency: "AUD"]},
-      {123.4, "123.40 AUD",      [format: "#,##0.00 ¤¤", currency: "AUD"]},
-      {123.4, "123.40 Australian dollars", [format: "#,##0.00 ¤¤¤", currency: "AUD"]},
-      {123.4, "123.40 $",        [format: "#,##0.00 ¤¤¤¤", currency: "AUD"]},
+      {123.4, "123.40 A$",       [format: "#,##0.00 ¤", currency: :AUD]},
+      {123.4, "123.40 AUD",      [format: "#,##0.00 ¤¤", currency: :AUD]},
+      {123.4, "123.40 Australian dollars", [format: "#,##0.00 ¤¤¤", currency: :AUD]},
+      {123.4, "123.40 $",        [format: "#,##0.00 ¤¤¤¤", currency: :AUD]},
       {1234,  "A$1,234.00",      [currency: :AUD]},
 
       # Rounding
@@ -105,10 +105,12 @@ defmodule Cldr.Test.Number.Format do
       {1234, "1 thousand",       [format: :long]},
       {1234567890, "1 billion",  [format: :long]},
 
-      {1234, "$1.23K",           [format: :short, currency: "USD"]},
-      {12345, "12,345.00 US dollars", [format: :long, currency: "USD"]},
-      {12, "12.00 Thai baht",    [format: :long, currency: "THB"]},
-      {12, "12,00 bahts thaïlandais", [format: :long, currency: "THB", locale: "fr"]}
+      {1234, "$1K",              [format: :short, currency: :USD]},
+      {12345, "12,345 US dollars", [format: :long, currency: :USD]},
+      {123,  "A$123",            [format: :short, currency: :AUD]},
+
+      {12, "12 Thai baht",       [format: :long, currency: :THB]},
+      {12, "12 bahts thaïlandais", [format: :long, currency: :THB, locale: "fr"]}
     ]
   end
 

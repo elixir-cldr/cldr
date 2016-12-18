@@ -7,34 +7,32 @@ defmodule Cldr.Number.Formatter.Currency do
 
   To explain the difference, look at the following examples:
 
-      iex> Number.to_string 123, format: :currency, currency: "USD"
+      iex> Cldr.Number.to_string 123, format: :currency, currency: "USD"
       "$123.00"
 
-      iex> Number.to_string 123, format: :long, currency: "USD"
-      "123.00 US dollars"
+      iex> Cldr.Number.to_string 123, format: :long, currency: "USD"
+      "123 US dollars"
 
   In the first example the format is defined by a decimal mask. In this example
   the format mask comes from:
 
-      iex> Cldr.Number.Format.decimal_formats_for("en").latn.currency
+      iex> Cldr.Number.Format.all_formats_for("en").latn.currency
       "¤#,##0.00"
 
   In the second example we are using a format that combines the number with
   a language translation of the currency name.  In this example the format
   comes from:
 
-      iex> Number.Format.decimal_formats_for("en").latn.currency_long
-      [one: "{0} {1}", other: "{0} {1}"]
+      iex> Cldr.Number.Format.all_formats_for("en").latn.currency_long
+      %{one: [0, " ", 1], other: [0, " ", 1]}
 
   Where "{0}" is replaced with the number formatted using the `:standard`
   decimal format and "{1} is replaced with locale-specific name of the
   currency adjusted for the locales plural rules."
   """
 
-  alias Cldr.Number.Format
-  alias Cldr.Number.System
-  alias Cldr.Number
-  alias Cldr.Currency
+  alias Cldr.Number.{Format, System}
+  alias Cldr.{Number, Substitution, Currency}
 
   def to_string(number, :currency_long, options) do
     locale = options[:locale]
@@ -47,16 +45,26 @@ defmodule Cldr.Number.Formatter.Currency do
       "locale #{inspect locale} and number system #{inspect number_system}."
     end
 
-    count = Number.Cardinal.plural_rule(number, locale)
     currency = Currency.for_code(options[:currency], locale)
+    currency_string = Number.Cardinal.pluralize(number, locale, currency.count)
 
-    format = formats[count] || formats[:other]
-    options = Keyword.delete(options, :format) |> Keyword.put(:format, :standard)
-    currency_string = currency.count[count]
+    options = options
+    |> Keyword.put(:format, :standard)
+    |> set_fractional_digits(options[:fractional_digits])
+
     number_string = Number.to_string(number, options)
 
-    format
-    |> String.replace("{0}", number_string)
-    |> String.replace("{1}", currency_string)
+    format = Number.Cardinal.pluralize(number, locale, formats)
+    Substitution.substitute([number_string, currency_string], format)
+    |> :erlang.iolist_to_binary
+  end
+
+  defp set_fractional_digits(options, nil) do
+    options
+    |> Keyword.put(:fractional_digits, 0)
+  end
+
+  defp set_fractional_digits(options, _digits) do
+    options
   end
 end

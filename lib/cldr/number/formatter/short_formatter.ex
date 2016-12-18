@@ -28,6 +28,9 @@ defmodule Cldr.Number.Formatter.Short do
   in the following examples:
 
       iex> Cldr.Number.to_string 1234, format: :short, currency: "EUR"
+      "€1K"
+
+      iex> Cldr.Number.to_string 1234, format: :short, currency: "EUR", fractional_digits: 2
       "€1.23K"
 
       iex> Cldr.Number.to_string 1234, format: :short, currency: "JPY"
@@ -45,8 +48,7 @@ defmodule Cldr.Number.Formatter.Short do
   used, with the appropriate plural category. N is divided by the type, after
   removing the number of zeros in the pattern, less 1. APIs supporting this
   format should provide control over the number of significant or fraction
-  digits (note: this implementation does not currently support specifying
-  fractional digits).
+  digits.
 
   If the value is precisely 0, or if the type is less than 1000, then the
   normal number format pattern for that sort of object is supplied. For
@@ -71,21 +73,37 @@ defmodule Cldr.Number.Formatter.Short do
 
   @spec do_to_short_string(number, atom, Locale.t, binary, Keyword.t) :: List.t
   defp do_to_short_string(number, style, locale, number_system, options) do
-    formats = Format.formats_for(locale, number_system) |> Map.get(style)
-    format  = choose_short_format(number, formats, options)
-    number  = normalise_number(number, format)
-    Formatter.Decimal.to_string(number, elem(format,1), options)
+    formats = Format.formats_for(locale, number_system)
+    |> Map.get(style)
+
+    {number, format} = case choose_short_format(number, formats, options) do
+      {range, [format, number_of_zeros]} ->
+        {normalise_number(number, range, number_of_zeros), format}
+      {_range, format} ->
+        {number, format}
+    end
+
+    Formatter.Decimal.to_string(number, format, digits(options, options[:fractional_digits]))
   end
 
-  @doc false
+  # For short formats the fractional digits should be 0 unless otherwise specified,
+  # even for currencies
+  defp digits(options, nil) do
+    Keyword.put(options, :fractional_digits, 0)
+  end
+
+  defp digits(options, _digits) do
+    options
+  end
+
   defp choose_short_format(number, _rules, options) when is_number(number) and number < 1000 do
     format = options[:locale]
     |> Format.formats_for(options[:number_system])
-    |> Map.get(:standard)
+    |> Map.get(standard_or_currency(options))
+
     {number, format}
   end
 
-  @doc false
   defp choose_short_format(number, rules, options) when is_number(number) do
     [range, rule] = rules
     |> Enum.filter(fn [range, _rules] -> range <= number end)
@@ -106,36 +124,36 @@ defmodule Cldr.Number.Formatter.Short do
     |> choose_short_format(rules, options)
   end
 
-  @doc false
-  @one_thousand Decimal.new(1000)
-  defp normalise_number(%Decimal{} = number, {range, format}) do
-    if Decimal.cmp(number, @one_thousand) == :lt do
-      number
+  defp standard_or_currency(options) do
+    if options[:currency] do
+      :currency
     else
-      Decimal.div(number, Decimal.new(adjustment(range, format)))
+      :standard
     end
   end
 
-  defp normalise_number(number, _format) when number < 1000 do
+  @one_thousand Decimal.new(1000)
+  defp normalise_number(%Decimal{} = number, range, number_of_zeros) do
+    if Decimal.cmp(number, @one_thousand) == :lt do
+      number
+    else
+      Decimal.div(number, Decimal.new(adjustment(range, number_of_zeros)))
+    end
+  end
+
+  defp normalise_number(number, _range, _number_of_zeros) when number < 1000 do
     number
   end
 
-  defp normalise_number(number, {range, format}) do
-    number / adjustment(range, format)
+  defp normalise_number(number, range, number_of_zeros) do
+    number / adjustment(range, number_of_zeros)
   end
 
   @doc false
   # TODO: We can precompute these at compile time which would
   # save this lookup
-  defp adjustment(range, format) do
-    count = format
-    |> String.to_char_list
-    |> number_of_zeros
-
-    range / Math.power_of_10(count - 1)
+  defp adjustment(range, number_of_zeros) do
+    range / Math.power_of_10(number_of_zeros - 1)
   end
 
-  defp number_of_zeros(list) do
-    Enum.reduce(list, 0, fn c, acc -> if c == ?0, do: acc + 1, else: acc end)
-  end
 end

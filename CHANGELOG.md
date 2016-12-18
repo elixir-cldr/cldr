@@ -1,16 +1,24 @@
 ## Changelog for Cldr v0.0.16
 
+This release is primarily about optmising parts of the number formatting pipeline through a combination of code optimization and additional compile-time calculations.
+
 ### Enhancements
+
+* Adds support for a `:fractional_digits` option for `Cldr.Number.to_string/2` which overrides the number of fractional digits to be displayed.  The number is rounded to this number of digits before display.
 
 * Improved algorithm for grouping digits in `Cldr.Number.to_string/2` is 30% faster than the previous implementation
 
 * Precompile the list substitution templates used by `Cldr.List.to_string/2` delivers around 100x performance improvement.
+
+* Precompile the number of 0 digits in a short format which improves performance of short number formatting by 50%
 
 ### Bug fixes
 
 * Fixed number formatting error that occured when a small fraction would round to zero
 
 * Fixed number formatting error that produced "-0" instead of "0" for small fractions that rounded to zero
+
+* Fixed short and long formatting of currencies which would previously display the default currency number of fractional digits.  These now correctly default to zero.
 
 ## Changelog for Cldr v0.0.15 December 12, 2016
 

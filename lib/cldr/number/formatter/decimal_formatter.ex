@@ -60,7 +60,7 @@ defmodule Cldr.Number.Formatter.Decimal do
         do_to_string(number, unquote(Macro.escape(meta)), options)
       end
     {:error, message} ->
-      raise Cldr.FormatCompileError, message: "#{message} compiling #{inspect format}"
+      raise Cldr.FormatCompileError, "#{message} compiling #{inspect format}"
     end
   end
 
@@ -82,6 +82,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     meta = meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
     |> adjust_fraction_for_significant_digits(number)
+    |> adjust_for_fractional_digits(options[:fractional_digits])
 
     number
     |> absolute_value
@@ -191,6 +192,15 @@ defmodule Cldr.Number.Formatter.Decimal do
   defp adjust_fraction_for_significant_digits(
       %{significant_digits: %{max: _max, min: _min}} = meta, _number) do
     %{meta | fractional_digits: %{max: 10, min: 1}}
+  end
+
+  # To allow overriding fractional digits
+  defp adjust_for_fractional_digits(meta, nil) do
+    meta
+  end
+
+  defp adjust_for_fractional_digits(meta, digits) do
+    %{meta | fractional_digits: %{max: digits, min: digits}}
   end
 
   # Round to significant digits.  This is different to rounding

@@ -125,8 +125,8 @@ defmodule Cldr.Number do
       * If `:format` is set to `:long` or `:short` then the formatting depends on
         whether `:currency` is specified. If not specified then the number is
         formatted as `:decimal_long` or `:decimal_short`. If `:currency` is
-        specified the number is formatted at `:currency_long` or
-        `:currency_short`.
+        specified the number is formatted as `:currency_long` or
+        `:currency_short` and `:fractional_digits` is set to 0 as a default.
 
       * `:format` may also be a format defined by CLDR's Rules Based Number
         Formats (RBNF).  Further information is found in the module `Cldr.Rbnf`.
@@ -162,6 +162,12 @@ defmodule Cldr.Number do
         locale currently in affect for this `Process` and which is set by
         `Cldr.put_locale/1`.
 
+      * `:fractional_digits` is set to a positive integer value then the number
+        will be rounded to that number of digits and displayed accordingly overriding
+        settings that would be applied by default.  For example, currencies have
+        fractional digits defined reflecting each currencies minor unit.  Setting
+        `:fractional_digits` will override that setting.
+
   ## Examples
 
       iex> Cldr.Number.to_string 12345
@@ -192,13 +198,13 @@ defmodule Cldr.Number do
       "1 thousand"
 
       iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
-      "1,244.30 US dollars"
+      "1,244 US dollars"
 
       iex> Cldr.Number.to_string 1244.30, format: :short
       "1K"
 
       iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
-      "€1.24K"
+      "€1K"
 
       iex> Cldr.Number.to_string 1234, format: :spellout
       "one thousand two hundred thirty-four"

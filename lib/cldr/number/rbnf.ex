@@ -2,20 +2,12 @@ defmodule Cldr.Rbnf do
   @moduledoc """
   Functions to implement Rules Based Number Formatting (rbnf)
 
-  During compilation we want to look up the configured locales
-  and generate the functions needed for only those locales.
+  During compilation RBNF rules are extracted and generated
+  as function bodies by `Cldr.Rbnf.Ordinal`, `Cldr.Rbnf.Cardinal`
+  and `Cldr.Rbnf.NumberSystem`.
 
-  For any other recognized locale we need a way to either fallback
-  to a known locale, or error exit (configurable)
-
-  Note that many of the functions in this module rely on having the raw
-  XML RBNF files from the CLDR repository.  The repository can be installed by
-  running:
-
-      mix cldr.download
-
-  Unless you are interested in the muysteries of how the repository is
-  put together this is not recommended.
+  The functions in this module would not normally be of common
+  use outside of supporting the compilation phase.
   """
 
   @doc """

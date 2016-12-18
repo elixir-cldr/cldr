@@ -211,6 +211,8 @@ defmodule Cldr.Number.Format.Compiler do
       {:ok, analyze(format)}
     {:error, {_line, _parser, [message, context]}} ->
       {:error, "Decimal format compiler: #{message}#{Enum.join(context)}"}
+    {:error, message} ->
+      {:error, message}
     end
   end
 

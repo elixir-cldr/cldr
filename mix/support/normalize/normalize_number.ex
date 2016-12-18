@@ -91,7 +91,7 @@ defmodule Cldr.Normalize.Number do
       |> Enum.reverse
       |> List.first
 
-      {plural_type, format}
+      {plural_type, [format, number_of_zeros(format)]}
     end
     [range, Enum.into(formats, %{})]
   end
@@ -112,8 +112,14 @@ defmodule Cldr.Normalize.Number do
     |> Enum.filter(fn {k, _v} -> Regex.match?(@pattern_regex, k) end)
     |> Enum.map(fn {k, v} ->
          @pattern_count <> count = k
-         {count, v}
+         {count, Cldr.Substitution.parse(v)}
        end)
     |> Enum.into(%{})
+  end
+
+  defp number_of_zeros(format) do
+    format
+    |> String.to_char_list
+    |> Enum.reduce(0, fn c, acc -> if c == ?0, do: acc + 1, else: acc end)
   end
 end

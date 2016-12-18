@@ -77,6 +77,7 @@ defmodule Cldr.Number.Format do
     |> Enum.map(&decimal_format_list_for/1)
     |> List.flatten
     |> Enum.uniq
+    |> Enum.reject(&is_nil/1)
     |> Enum.sort
   end
 
@@ -99,19 +100,17 @@ defmodule Cldr.Number.Format do
        "¤000T", "¤00B", "¤00K", "¤00M", "¤00T", "¤0B", "¤0K", "¤0M", "¤0T"]
   """
   def decimal_format_list_for(locale) do
-    Locale.get_locale(locale)
-    |> get_in([:number_formats])
-    |> Map.delete(:minimum_grouping)
-    |> Map.values
-    |> Enum.map(fn m ->
-        Map.delete(m, :currency_spacing)
-        |> Map.delete(:currency_long) end)
-    |> hd
-    |> Map.values
+    Cldr.Locale.get_locale(locale)
+    |> get_in([:number_formats])      # Returns a list per number system
+    |> Map.values                     # Returns a consolidated list of %Cldr.Number.Format{}
+    |> Enum.map(&Map.from_struct/1)
+    |> Enum.map(&(Map.delete(&1, :currency_spacing)))
+    |> Enum.map(&(Map.delete(&1, :currency_long)))
+    |> Enum.map(&Map.values/1)
     |> List.flatten
+    |> Enum.reject(&is_integer/1)
     |> Enum.map(&extract_formats/1)
     |> List.flatten
-    |> Enum.reject(&(&1 == Cldr.Number.Format || is_nil(&1)))
     |> Enum.uniq
     |> Enum.sort
   end
@@ -363,15 +362,12 @@ defmodule Cldr.Number.Format do
   end
 
   # Extract number formats from short and long lists
-  defp extract_formats(formats = %{}) do
+  def extract_formats(formats) when is_map(formats) do
     Map.values(formats)
+    |> Enum.map(&hd/1)
   end
 
-  defp extract_formats(format) when is_number(format) do
-    nil
-  end
-
-  defp extract_formats(short_format) do
-    short_format
+  def extract_formats(format) do
+    format
   end
 end

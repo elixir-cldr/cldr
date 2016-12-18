@@ -12,9 +12,7 @@ defmodule Cldr.Rbnf.Processor do
       defp do_rule(number, locale, function, rule, parsed) do
         parsed
         |> Enum.map(fn {operation, argument} ->
-            # IO.puts "Rule: #{inspect operation} on #{inspect number} with argument #{inspect argument}"
             do_operation(operation, number, locale, function, rule, argument)
-            # |> IO.inspect
           end)
         |> :erlang.iolist_to_binary
       end
