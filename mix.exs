@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.0.18"
+  @version "0.0.19"
 
   def project do
     [app: :ex_cldr,
@@ -52,7 +52,7 @@ defmodule Cldr.Mixfile do
       links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
       files: [
         "lib", "src", "guides", "config",
-        "mix.exs", "README*", "CHANGELOG*",
+        "mix.exs", "README*", "CHANGELOG*", "LICENSE*",
         "priv/cldr/locales/en.json",
         "priv/cldr/locales/root.json",
         "priv/cldr/available_locales.json",
