@@ -60,11 +60,10 @@ defmodule Cldr.Number.PluralRule do
         @rules
       end
 
-
       @doc """
       Pluralize a number using plural rules and a substition map.
 
-      * `number` is an integer or a float
+      * `number` is an integer, float or Decimal
 
       * `locale` is any locale returned by `Cldr.known_locales()`
 
@@ -84,11 +83,30 @@ defmodule Cldr.Number.PluralRule do
 
           iex> Cldr.Number.Ordinal.pluralize 2, "en", %{one: "one", two: "two"}
           "two"
+
+          iex> Cldr.Number.Ordinal.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+          "other"
+
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(1), "en", %{one: "one"}
+          "one"
+
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), "en", %{one: "one"}
+          nil
+
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+          "two"
       """
       @default_substitution :other
-      @spec pluralize(number, Locale.t, %{}) :: String.t | nil
-      def pluralize(number, locale \\ Cldr.get_locale(), %{} = substitutions)
-      when is_number(number) do
+      @spec pluralize(Math.number_or_decimal, Locale.t, %{}) :: String.t | nil
+      def pluralize(number, locale, %{} = substitutions) when is_number(number) do
+        do_pluralize(number, locale, substitutions)
+      end
+
+      def pluralize(%Decimal{} = number, locale, %{} = substitutions) do
+        do_pluralize(number, locale, substitutions)
+      end
+
+      defp do_pluralize(number, locale, %{} = substitutions) do
         plural = plural_rule(number, locale)
         substitutions[plural] || substitutions[@default_substitution]
       end

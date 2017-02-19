@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.17 February 20th, 2017
+
+### Bug fixes
+
+* Fixes `Cldr.Number.PluralRule.pluralize/3` by adding support for `%Decimal{}`.  Thanks to @jayjun
+
 ## Changelog for Cldr v0.0.17 February 19th, 2017
 
 ### Bug fixes

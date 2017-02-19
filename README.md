@@ -11,7 +11,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.17"}
+        {:ex_cldr, "~> 0.0.18"}
       ]
     end
 
@@ -132,7 +132,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 Tests cover the full 514 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.3.4 and on master (currently 1.4.2).
+Tests are run on Elixir 1.3.4 and 1.4.2.
 
 **Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 
