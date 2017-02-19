@@ -1,8 +1,27 @@
+## Changelog for Cldr v0.0.17 February 19th, 2017
+
+### Bug fixes
+
+* Removes Ecto as a dependency since it is not required
+
+### Enhancements
+
+* Updated CLDR to version 30.0.2
+
+* Changed the result of `Cldr.version()` to return the version of the `CLDR` data repository being used.  As of now this is a manual update, in the future it will be derived automatically.  Currently the version is `{30,0,2}`.
+
+* Allows configuration-defined number formats that are precompiled.  Precompiled formats execute approximately twice as fast since the lex/parse process is not required.  In your `config.exs` use the key `precompile_number_formats`.
+
+```
+  config :ex_cldr,
+    precompile_number_formats: ["¤¤#,##0.##"]
+```
+
 ## Changelog for Cldr v0.0.16
 
 This release is primarily about optmising parts of the number formatting pipeline through a combination of code optimization and additional compile-time calculations.
 
-The comparison below shows that for an integer formatted with the standard format (default) this version is reduced from 42 µs/op to 10 µs/op or about 70% performnce improvement.  However, its worth remembering that this is more than 2 orders of magnitude slower than simply calling `Integer.to_string/1`.
+The comparison below shows that for an integer formatted with the standard format (default) this version is reduced from 42 µs/op to 10 µs/op or about 70% performnce improvement.  However, its worth remembering that this is more than two orders of magnitude slower than simply calling `Integer.to_string/1`.
 
 The performance improvements come from hand tuning the pipeline for the default format for integers and floats.  Uncompiled formats are the slowest since they have to pass through the lexing and parsing phases.  For locales other than "en", the overhead of transliterating the digits and symbols adds additional time.  Currency formatting adds about 10% to a normal float time for the lookup of the currency symbol and rounding information as well as assembling the final format.
 

@@ -8,7 +8,8 @@ Here's an example configuration that uses all of the available configuration key
        default_locale: "en",
        locales: ["fr", "en", "bs", "si", "ak", "th"],
        gettext: MyApp.Gettext,
-       data_dir: "./priv/cldr"
+       data_dir: "./priv/cldr",
+       precompile_number_formats: ["¤¤#,##0.##"]
 
 ## Configuration Keys
 
@@ -26,8 +27,12 @@ The configuration keys available for `Cldr` are:
           default_locale: "en",
           locales: ["en-*", "fr"]
 
-   will configure all locales that start with `en-` and the locale `fr`.  There is one additional setting which is `:all` which will configure all 514 locales.  **This is highly discouraged** since it will take minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
+   will configure all locales that start with `en-` and the locale `fr`.
+
+   There is one additional setting which is `:all` which will configure all 514 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
  * `gettext`: configures `Cldr` to use a `Gettext` module as a source of defining what locales you want to configure.  Since `Gettext` uses locales with an '\_' in them and `Cldr` uses a '-', `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
  * `data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(:ex_cldr)`.
+
+ * `precompiler_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.

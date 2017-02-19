@@ -15,7 +15,9 @@ defmodule Cldr do
 
   alias Cldr.Config
 
-  @version "0.0.8"
+  # TODO: Resolve this automatically from the repository data
+  # The version of the CLDR data repository.
+  @version {30,0,2}
 
   def version do
     @version

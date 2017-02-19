@@ -1,4 +1,4 @@
--file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/leexinc.hrl", 0).
+-file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/leexinc.hrl", 0).
 %% The source of this file is part of leex distribution, as such it
 %% has the same Copyright as the other files in the leex
 %% distribution. The Copyright is defined in the accompanying file
@@ -15,7 +15,7 @@
 -file("src/plural_rules_lexer.xrl", 56).
 
 -import('Elixir.Decimal', [new/1]).
--file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/leexinc.hrl", 14).
+-file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
 format_error({user,S}) -> S.
@@ -660,4 +660,4 @@ yyaction_17(TokenChars, TokenLine) ->
 yyaction_18() ->
      skip_token .
 
--file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/leexinc.hrl", 290).
+-file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/leexinc.hrl", 290).

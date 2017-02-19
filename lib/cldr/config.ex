@@ -56,6 +56,20 @@ defmodule Cldr.Config do
   to ensure good test coverage.  This is done at the expense
   of significant compile time.
 
+  ## Precompiling configured number formats
+
+  If your application heavily relies on one or more particular user-defined
+  number formats then there is a performance benefit to having them precompiled
+  when your app is compiled (up to double the performance).
+
+  To define the formats to be precompiled specify them in your config file with
+  the key `compile_number_formats`.
+
+  For example:
+
+      config :ex_cldr,
+        compile_number_formats: ["¤¤#,##0.##"]
+
   ## Storage location for the locale definiton files
 
   Locale files are downloaded and installed at compile time based upon the
@@ -388,6 +402,21 @@ defmodule Cldr.Config do
     |> structure_symbols
     |> structure_number_formats
   end
+
+  @doc """
+  Get the configured number formats that should be precompiled at application
+  compilation time.
+
+  ## Example
+
+      iex> Cldr.Config.get_precompile_number_formats
+      []
+  """
+  def get_precompile_number_formats do
+    Application.get_env(:ex_cldr, :precompile_number_formats, [])
+  end
+
+  # ------ Helpers ------
 
   # Simple check that the locale content contains what we expect
   # by checking it has the keys we used when the locale was consolidated.

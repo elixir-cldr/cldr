@@ -100,7 +100,7 @@ Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
 Not currently supported, but they're next on the development priority list.
 
-* Dates/times expected to ship in January 2017.
+* Dates/times on track to ship in March 2017 (delayed from an original January plan).
 
 * Units planned by March 2017
 
@@ -132,7 +132,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 Tests cover the full 514 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.3.4 and on master (currently 1.4.0-rc.1).
+Tests are run on Elixir 1.3.4 and on master (currently 1.4.2).
 
 **Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 

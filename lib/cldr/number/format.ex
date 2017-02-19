@@ -52,7 +52,8 @@ defmodule Cldr.Number.Format do
   end
 
   @doc """
-  Returns the list of decimal formats in the configured locales.
+  Returns the list of decimal formats in the configured locales including
+  the list of locales configured for precompilation in `config.exs`.
 
   This function exists to allow the decimal formatter
   to precompile all the known formats at compile time.
@@ -75,6 +76,7 @@ defmodule Cldr.Number.Format do
   def decimal_format_list do
     Cldr.known_locales()
     |> Enum.map(&decimal_format_list_for/1)
+    |> Kernel.++(Cldr.Config.get_precompile_number_formats)
     |> List.flatten
     |> Enum.uniq
     |> Enum.reject(&is_nil/1)

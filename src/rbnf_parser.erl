@@ -42,7 +42,7 @@ to_map(Plurals) ->
 % Convert a list into a proplist
 to_proplist([K,V | T]) -> [{erlang:binary_to_atom(K, utf8),V} | to_proplist(T)];
 to_proplist([]) -> [].
--file("/usr/local/Cellar/erlang/19.0.2/lib/erlang/lib/parsetools-2.1.2/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/19.1/lib/erlang/lib/parsetools-2.1.3/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -573,6 +573,7 @@ yeccpars2_44(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_44_(Stack),
  yeccgoto_rbnf_rule(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_cardinal_rule/7}).
 yeccgoto_cardinal_rule(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_cardinal_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -580,6 +581,7 @@ yeccgoto_cardinal_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_cardinal_rule(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_9(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_character/7}).
 yeccgoto_character(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_character(1, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -589,6 +591,7 @@ yeccgoto_character(8, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_character(12, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(8, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_invoke_rule/7}).
 yeccgoto_invoke_rule(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_invoke_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -596,6 +599,7 @@ yeccgoto_invoke_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_invoke_rule(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_literal/7}).
 yeccgoto_literal(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_literal(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -605,6 +609,7 @@ yeccgoto_literal(8=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_literal(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_modulo_rule/7}).
 yeccgoto_modulo_rule(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_modulo_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -612,6 +617,7 @@ yeccgoto_modulo_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_modulo_rule(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_ordinal_rule/7}).
 yeccgoto_ordinal_rule(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_ordinal_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -619,6 +625,7 @@ yeccgoto_ordinal_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_ordinal_rule(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_quotient_rule/7}).
 yeccgoto_quotient_rule(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_quotient_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -626,6 +633,7 @@ yeccgoto_quotient_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_quotient_rule(12=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_rbnf_rule/7}).
 yeccgoto_rbnf_rule(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(2, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_rbnf_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -633,6 +641,7 @@ yeccgoto_rbnf_rule(1=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_rbnf_rule(12, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_41(41, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_rule/7}).
 yeccgoto_rule(14, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_26(26, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_rule(16, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -640,6 +649,7 @@ yeccgoto_rule(16, Cat, Ss, Stack, T, Ts, Tzr) ->
 yeccgoto_rule(17, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_18(18, Cat, Ss, Stack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccgoto_rule_part/7}).
 yeccgoto_rule_part(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(1, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_rule_part(1, Cat, Ss, Stack, T, Ts, Tzr) ->

@@ -20,6 +20,7 @@ defmodule Cldr.Profile do
     "transliterate",
     "assemble_format"
   ]
+
   @doc "analyze with profile macro"
   def do_analyze do
     profile do
@@ -30,8 +31,8 @@ defmodule Cldr.Profile do
   @doc "get analysis records and sum them up"
   def run do
     records = do_analyze()
-    # |> Enum.filter(&of_interest?(&1.function))
-    # |> Enum.sort_by(&(&1.time))
+    |> Enum.filter(&of_interest?(&1.function))
+    |> Enum.sort_by(&(&1.time))
     total_percent = Enum.reduce(records, 0.0, &(&1.percent + &2))
     IO.inspect "total = #{total_percent}"
   end
