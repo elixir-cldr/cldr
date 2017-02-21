@@ -171,7 +171,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> get_in(["version"])
     end
 
-    def save_cldr_version do
+    defp save_cldr_version do
       path = Path.join(consolidated_output_dir(), "version.json")
       save_file(cldr_version(), path)
     end
