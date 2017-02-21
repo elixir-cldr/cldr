@@ -1,9 +1,9 @@
 defmodule Cldr.Install do
   @moduledoc """
-  Support for installing locales on demand.
+  Provides functions for installing locales.
 
   When installed as a package on from [hex](http://hex.pm), `Cldr` has only
-  the default locale, "en", installed and configured.
+  the default locales `["en", "root"]` installed and configured.
 
   When other locales are added to the configuration `Cldr` will attempt to
   download the locale from [github](https://github.com/kipcole9/cldr)
@@ -36,7 +36,13 @@ defmodule Cldr.Install do
 
   @doc """
   Download the requested locale from github into the
-  client app data directory.
+  client application's cldr data directory.
+
+  * `locale` is any locale returned by `Cldr.known_locales{}`
+
+  * `options` is a keyword list.  Currently the only supported
+  option is `:force` which defaults to `false`.  If `truthy` the
+  locale will be installed or re-installed.
 
   The data directory is typically `./priv/cldr/locales`.
 
@@ -44,7 +50,7 @@ defmodule Cldr.Install do
   compilation when a valid locale is configured but is not yet
   installed in the application.
 
-  An http request to the master github repository for `Cldr` is made
+  An https request to the master github repository for `Cldr` is made
   to download the correct version of the locale file which is then
   written to the configured data directory.
   """
@@ -59,6 +65,9 @@ defmodule Cldr.Install do
     end
   end
 
+  # Normally a library function shouldn't raise an exception (thats up
+  # to the client app) but we install locales only at compilation time
+  # and an exception then is the appropriate response.
   defp do_install_locale(locale, false) do
     raise Cldr.UnknownLocaleError,
       "Failed to install the locale #{inspect locale}. The locale is not known."
@@ -147,6 +156,8 @@ defmodule Cldr.Install do
   Returns the full pathname of the locale's json file.
 
   * `locale` is any locale returned by `Cldr.known_locales{}`
+
+  No checking of locale validity is performed.
   """
   def client_locale_file(locale) do
     Path.join(client_locales_dir(), "#{locale}.json")
