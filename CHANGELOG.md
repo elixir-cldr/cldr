@@ -2,7 +2,7 @@
 
 ### Enhancements
 
-* `Cldr.version/0` returns the version of the CLDR repository in use.  This is now automatically deterived from the library data.
+* `Cldr.version/0` returns the version of the CLDR repository in use.  This is now automatically derived from the library data.
 
 ## Changelog for Cldr v0.0.17 February 20th, 2017
 
