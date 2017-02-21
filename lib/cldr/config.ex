@@ -148,6 +148,15 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the version string of the CLDR data repository
+  """
+  def version do
+    Path.join(@client_data_dir, "version.json")
+    |> File.read!
+    |> Poison.decode!
+  end
+
+  @doc """
   Returns the filename that contains the json representation of a locale
   """
   def locale_filename(locale) do
