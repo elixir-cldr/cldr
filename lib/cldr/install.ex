@@ -80,7 +80,7 @@ defmodule Cldr.Install do
         Logger.info "Downloaded locale #{inspect locale}"
         {:ok, output_file_name}
       {_, {{_version, code, message}, _headers, _body}} ->
-        Logger.error "Failed to download locale #{inspect locale}. " <>
+        Logger.error "Failed to download locale #{inspect locale} from #{url}. " <>
           "HTTP Error: (#{code}) #{inspect message}"
         {:error, code}
       {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
