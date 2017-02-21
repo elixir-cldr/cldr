@@ -15,14 +15,6 @@ defmodule Cldr do
 
   alias Cldr.Config
 
-  # TODO: Resolve this automatically from the repository data
-  # The version of the CLDR data repository.
-  @version {30,0,2}
-
-  def version do
-    @version
-  end
-
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
       "Some locales are configured that are not known to CLDR. " <>
@@ -54,6 +46,19 @@ defmodule Cldr do
   @data_dir Config.client_data_dir()
   def data_dir do
     @data_dir
+  end
+
+  @doc """
+  Returns the version of the CLDR repository as a tuple
+
+  ## Example
+
+      iex> Cldr.version
+      {"30", "0", "2"}
+  """
+  @version Config.version() |> String.split(".") |> List.to_tuple
+  def version do
+    @version
   end
 
   @doc """

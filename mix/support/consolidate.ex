@@ -29,6 +29,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       ensure_output_dir_exists!(consolidated_output_dir())
       ensure_output_dir_exists!(consolidated_locales_dir())
 
+      save_cldr_version()
       save_plurals()
       save_number_systems()
       save_locales()
@@ -160,6 +161,19 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> File.read!
       |> Poison.decode!
       |> get_in(["availableLocales", "full"])
+    end
+
+    defp cldr_version() do
+      download_data_dir()
+      |> Path.join(["cldr-core", "/package.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["version"])
+    end
+
+    defp save_cldr_version do
+      path = Path.join(consolidated_output_dir(), "version.json")
+      save_file(cldr_version(), path)
     end
 
     defp save_locales do
