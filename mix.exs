@@ -37,7 +37,7 @@ defmodule Cldr.Mixfile do
       {:decimal, "~> 1.1"},
       {:benchfella, "~> 0.3.0", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
-      {:ex_doc, "~> 0.12", only: :dev},
+      {:ex_doc, "~> 0.15", only: :dev},
       {:excoveralls, "~> 0.5.6", only: :test},
       {:gettext, "~> 0.11.0", only: :dev},
       {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]},
