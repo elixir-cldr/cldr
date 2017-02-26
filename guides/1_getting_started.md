@@ -93,13 +93,46 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
-## Formatting Dates, Times, Units
+## Formatting Units
+
+The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.  Some examples:
+
+      iex> Cldr.Unit.to_string 123, :volume_gallon
+      "123 gallons"
+
+      iex> Cldr.Unit.to_string 1234, :volume_gallon, format: :long
+      "1 thousand gallons"
+
+      iex> Cldr.Unit.to_string 1234, :volume_gallon, format: :short
+      "1K gallons"
+
+      iex> Cldr.Unit.to_string 1234, :frequency_megahertz
+      "1,234 megahertz"
+
+      iex> Cldr.Unit.available_units
+      [:volume_gallon, :pressure_pound_per_square_inch, :digital_terabyte,
+       :digital_bit, :digital_gigabit, :digital_kilobit, :volume_pint,
+       :speed_kilometer_per_hour, :concentr_part_per_million, :energy_calorie,
+       :volume_milliliter, :length_fathom, :length_foot, :volume_cubic_yard,
+       :mass_microgram, :length_nautical_mile, :volume_deciliter,
+       :consumption_mile_per_gallon, :volume_bushel, :volume_cubic_centimeter,
+       :length_light_year, :volume_gallon_imperial, :speed_meter_per_second,
+       :power_kilowatt, :power_watt, :length_millimeter, :digital_gigabyte,
+       :duration_nanosecond, :length_centimeter, :volume_cup_metric,
+       :length_kilometer, :angle_degree, :acceleration_g_force, :electric_ampere,
+       :volume_quart, :duration_century, :angle_revolution, :volume_hectoliter,
+       :area_square_meter, :digital_megabyte, :light_lux, :duration_year,
+       :energy_kilocalorie, :frequency_megahertz, :power_horsepower,
+       :volume_cubic_meter, :area_hectare, :frequency_hertz, :length_furlong,
+       :length_astronomical_unit, ...]
+
+See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
+
+## Formatting Dates, Times
 
 Not currently supported, but they're next on the development priority list.
 
-* Units planned by March.
-
-* Dates/times planned by March 2017.
+* Dates/times on track to ship in March 2017 (delayed from an original January plan).
 
 ## Gettext Integration
 

@@ -129,7 +129,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
        :volume_cubic_meter, :area_hectare, :frequency_hertz, :length_furlong,
        :length_astronomical_unit, ...]
 
-Seer `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
+See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
 ## Formatting Dates, Times
 
