@@ -51,7 +51,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
-## Formatting Numbers
+## Localizing & Formatting Numbers
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
@@ -78,7 +78,7 @@ The `Cldr.Number` module provides number formatting.  The public API for number 
 
 See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
 
-## Formatting Lists
+## Localizing Lists
 
 The `Cldr.List` module provides list formatting.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
 
@@ -93,7 +93,7 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
-## Formatting Units
+## Localizing Units
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.  Some examples:
 
@@ -128,7 +128,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Formatting Dates, Times
+## Localizing Dates, Times
 
 Not currently supported, but they're next on the development priority list.
 

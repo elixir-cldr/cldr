@@ -1,4 +1,4 @@
-# List Formatting
+# List Localization
 
 `Cldr` interprets the CLDR rules for list formatting is a locale-specific way.  The list is recursed over and the list elements are passed to `Kernel.to_string/1` therefore the list elements can be anything that can be understood by `Kernel.to_string/1`.
 

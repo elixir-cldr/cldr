@@ -1,4 +1,4 @@
-# Formatting Units
+# Localizing Units
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.
 
@@ -46,7 +46,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Formatting Units
+## Localizing Units
 
 The primary public API, `Cldr.Unit.to_string/3`, supports three arguments:
 
