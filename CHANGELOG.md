@@ -1,4 +1,14 @@
-## Changelog for Cldr v0.0.17 February 21st, 2017
+## Changelog for Cldr v0.0.19 February 26th, 2017
+
+### Enhancements
+
+* Adds `Cldr.Unit` to support CLDR units localization.  See `Cldr.Unit` and `Cldr.Unit.to_string/3`
+
+### Bug Fixes
+
+* Corrects pluralization for locales that have a territory element (like "en-AU").  Plural rules are only defined on base locales (like "en") so when pluralizing we always use the base local to look up the plural rules
+
+## Changelog for Cldr v0.0.18 February 21st, 2017
 
 ### Enhancements
 

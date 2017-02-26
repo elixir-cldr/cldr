@@ -107,8 +107,14 @@ defmodule Cldr.Number.PluralRule do
       end
 
       defp do_pluralize(number, locale, %{} = substitutions) do
-        plural = plural_rule(number, locale)
+        plural = plural_rule(number, base_locale(locale))
         substitutions[plural] || substitutions[@default_substitution]
+      end
+
+      # Plural rules are only defined on the base locale
+      defp base_locale(locale) do
+        [base | rest] = String.split(locale, "-")
+        base
       end
 
       @doc """

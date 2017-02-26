@@ -12,8 +12,20 @@ end
 
 defmodule Cldr.UnknownFormatError do
   @moduledoc """
-  Exception raised when an attempt is made to use a locale not configured
+  Exception raised when an attempt is made to use a locale that is not configured
   in `Cldr`.  `Cldr.known_locales/0` returns the locale names known to `Cldr`.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.UnknownUnitError do
+  @moduledoc """
+  Exception raised when an attempt is made to use a unit that is not known
+  in `Cldr`.
   """
   defexception [:message]
 

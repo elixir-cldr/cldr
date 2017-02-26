@@ -15,8 +15,6 @@ defmodule Cldr.List do
   @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short
   @default_style :standard
 
-  alias Cldr.Substitution
-
   @doc """
   Formats a list into a string according to the list pattern rules for a locale.
 
@@ -70,11 +68,11 @@ defmodule Cldr.List do
   Formats a list using `to_string/2` but raises if there is
   an error.
   """
-  @spec to_string(List.t, Keyword.t) :: String.t | Exception.t
+  @spec to_string!(List.t, Keyword.t) :: String.t | Exception.t
   def to_string!(list, options \\ []) do
     case string = to_string(list, options) do
       {:error, {exception, message}} ->
-        raise exception, message: message
+        raise exception, message
       _ ->
         string
     end

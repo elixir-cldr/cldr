@@ -15,4 +15,5 @@ defmodule Doc.Test do
   doctest Cldr.Rbnf.Ordinal
   doctest Cldr.Rbnf.Spellout
   doctest Cldr.Rbnf.NumberSystem
+  doctest Cldr.Unit
 end

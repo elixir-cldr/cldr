@@ -115,4 +115,29 @@ defmodule Cldr.Map do
   defp deep_resolve(_key, _left, right) do
     right
   end
+
+  def delete_in(%{} = map, keys) when is_list(keys) do
+    Enum.reject(map, fn {k, _v} -> k in keys end)
+    |> Enum.map(fn {k, v} -> {k, delete_in(v, keys)} end)
+    |> Enum.into(%{})
+  end
+
+  def delete_in(map, keys) when is_list(map) and is_binary(keys) do
+    delete_in(map, [keys])
+  end
+
+  def delete_in(map, keys) when is_list(map) do
+    Enum.reject(map, fn {k, _v} -> k in keys end)
+    |> Enum.map(fn {k, v} -> {k, delete_in(v, keys)} end)
+  end
+
+  def delete_in(%{} = map, keys) when is_binary(keys) do
+    delete_in(map, [keys])
+  end
+
+
+
+  def delete_in(other, _keys) do
+    other
+  end
 end

@@ -83,6 +83,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Cldr.Normalize.List.normalize(locale)
       |> Cldr.Normalize.NumberSystem.normalize(locale)
       |> Cldr.Normalize.Rbnf.normalize(locale)
+      |> Cldr.Normalize.Units.normalize(locale)
     end
 
     # Remove the top two levels of the map since they add nothing
