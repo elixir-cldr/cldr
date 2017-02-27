@@ -175,6 +175,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
     defp save_cldr_version do
       path = Path.join(consolidated_output_dir(), "version.json")
       save_file(cldr_version(), path)
+
       Cldr.Assert.package_file_configured!(path)
     end
 

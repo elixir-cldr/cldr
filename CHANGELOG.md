@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.21 ______, 2017
+
+### Bug Fixes
+
+* Ads an assertion to the data consolidation process to ensure that required files are configured in `mix.exs` package files
+
 ## Changelog for Cldr v0.0.20 February 27th, 2017
 
 ### Bug Fixes
