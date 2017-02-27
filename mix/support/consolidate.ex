@@ -175,11 +175,14 @@ if Code.ensure_loaded?(Experimental.Flow) do
     defp save_cldr_version do
       path = Path.join(consolidated_output_dir(), "version.json")
       save_file(cldr_version(), path)
+      Cldr.Assert.package_file_configured!(path)
     end
 
     defp save_locales do
       path = Path.join(consolidated_output_dir(), "available_locales.json")
       save_file(all_locales(), path)
+
+      Cldr.Assert.package_file_configured!(path)
     end
 
     defp save_plurals do
@@ -194,16 +197,22 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> get_in(["supplemental", "plurals-type-ordinal"])
 
       content = %{cardinal: cardinal, ordinal: ordinal}
-      save_file(content, Path.join(consolidated_output_dir(), "plural_rules.json"))
+      path = Path.join(consolidated_output_dir(), "plural_rules.json")
+      save_file(content, path)
+
+      Cldr.Assert.package_file_configured!(path)
     end
 
     defp save_number_systems do
+      path = Path.join(consolidated_output_dir(), "number_systems.json")
       Path.join(download_data_dir(), ["cldr-core", "/supplemental", "/numberingSystems.json"])
       |> File.read!
       |> Poison.decode!
       |> get_in(["supplemental", "numberingSystems"])
       |> remove_leading_underscores
-      |> save_file(Path.join(consolidated_output_dir(), "number_systems.json"))
+      |> save_file(path)
+
+      Cldr.Assert.package_file_configured!(path)
     end
 
     defp remove_leading_underscores(%{} = systems) do
