@@ -57,7 +57,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/locales/root.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
-        "priv/cldr/plural_rules.json"
+        "priv/cldr/plural_rules.json",
+        "priv/cldr/version.json"
       ]
     ]
   end
