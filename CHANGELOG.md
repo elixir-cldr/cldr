@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.0.20 February 27th, 2017
+
+### Bug Fixes
+
+* Adds `version.json` to the package definition, the lack of which was preventing compilation for the hex package (was not an issue with a github installation)
+
 ## Changelog for Cldr v0.0.19 February 26th, 2017
 
 ### Enhancements
