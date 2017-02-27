@@ -176,14 +176,14 @@ if Code.ensure_loaded?(Experimental.Flow) do
       path = Path.join(consolidated_output_dir(), "version.json")
       save_file(cldr_version(), path)
 
-      Cldr.Assert.package_file_configured!(path)
+      assert_package_file_configured!(path)
     end
 
     defp save_locales do
       path = Path.join(consolidated_output_dir(), "available_locales.json")
       save_file(all_locales(), path)
 
-      Cldr.Assert.package_file_configured!(path)
+      assert_package_file_configured!(path)
     end
 
     defp save_plurals do
@@ -201,7 +201,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       path = Path.join(consolidated_output_dir(), "plural_rules.json")
       save_file(content, path)
 
-      Cldr.Assert.package_file_configured!(path)
+      assert_package_file_configured!(path)
     end
 
     defp save_number_systems do
@@ -213,7 +213,18 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> remove_leading_underscores
       |> save_file(path)
 
-      Cldr.Assert.package_file_configured!(path)
+      assert_package_file_configured!(path)
+    end
+
+    def assert_package_file_configured!(path) do
+      [_, path] = String.split(path, "/priv/")
+      path = "priv/" <> path
+
+      if path in Mix.Project.config[:package][:files] do
+        :ok
+      else
+        raise "Path #{path} is not in the package definition"
+      end
     end
 
     defp remove_leading_underscores(%{} = systems) do
