@@ -1,4 +1,8 @@
-## Changelog for Cldr v0.0.21 ______, 2017
+## Changelog for Cldr v0.1.0 March, 23, 2017
+
+### Enhancements
+
+* Updates to CLDR release 31.  There are some minor output differences (for example, ordinal number formatting for negative numbers in the Indonesian locale) therefore the minor version bump.  Further information can be found in the [CLDR Release Notes](http://cldr.unicode.org/index/downloads/cldr-31)
 
 ### Bug Fixes
 

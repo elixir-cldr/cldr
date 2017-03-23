@@ -61,6 +61,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
     * `locale` is any locale defined by `Cldr.all_locales/0`
     """
     def consolidate_locale(locale) do
+      IO.puts "Consolidating locale #{locale}"
       cldr_locale_specific_dirs()
       |> consolidate_locale_content(locale)
       |> level_up_locale(locale)
@@ -112,12 +113,14 @@ if Code.ensure_loaded?(Experimental.Flow) do
     defp locale_specific_content(locale, directory) do
       dir = Path.join(directory, ["main/", locale])
 
-      dir
-      |> File.ls!
-      |> Enum.map(&Path.join(dir, &1))
-      |> Enum.map(&File.read!(&1))
-      |> Enum.map(&Poison.decode!(&1))
-      |> merge_maps
+      with {:ok, files} <- File.ls(dir) do
+        Enum.map(files, &Path.join(dir, &1))
+        |> Enum.map(&File.read!(&1))
+        |> Enum.map(&Poison.decode!(&1))
+        |> merge_maps
+      else
+        {:error, _} -> %{}
+      end
     end
 
     defp cldr_locale_specific_dirs do
@@ -156,12 +159,17 @@ if Code.ensure_loaded?(Experimental.Flow) do
       end
     end
 
+    # As of CLDR 31 there is an available locale es-BZ that has no content and
+    # therefore should not be included
+    @invalid_locales []
+
     def all_locales() do
       download_data_dir()
       |> Path.join(["cldr-core", "/availableLocales.json"])
       |> File.read!
       |> Poison.decode!
       |> get_in(["availableLocales", "full"])
+      |> Kernel.--(@invalid_locales)
     end
 
     defp cldr_version() do

@@ -51,6 +51,10 @@ defmodule Rbnf.Test do
   Cldr.Rbnf.TestSupport.rbnf_tests fn (name, tests, module, function, locale) ->
     test name do
       Enum.each unquote(Macro.escape(tests)), fn {test_data, test_result} ->
+        if apply(unquote(module), unquote(function), [String.to_integer(test_data), unquote(locale)])
+                  != test_result do
+          IO.puts "Test is failing on locale #{unquote(locale)} for value #{test_data}"
+        end
         assert apply(unquote(module), unquote(function), [String.to_integer(test_data), unquote(locale)])
           == test_result
       end

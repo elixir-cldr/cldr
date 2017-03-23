@@ -3,7 +3,7 @@
 
 ## Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, it to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of December 2016, `Cldr` is based upon [CLDR version 30.0.2](http://cldr.unicode.org).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, it to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of March 2017 and Version 0.1.0, `Cldr` is based upon [CLDR version 31.0.0](http://cldr.unicode.org).
 
 ## Installation
 
@@ -11,7 +11,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.0.21"}
+        {:ex_cldr, "~> 0.1.0"}
       ]
     end
 
@@ -50,7 +50,7 @@ Note that Elixir can't determine dependencies based upon configuration so when y
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 514 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 516 locales are installed when the repo is cloned into your application deps.
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
@@ -163,11 +163,23 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 ## Testing
 
-Tests cover the full 514 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.3.4 and 1.4.2.
 
-**Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
+**Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 516 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 
     config :ex_unit,
       case_load_timeout: 120_000
+
+### Updating the CDLR data repository if installing from Github
+
+The CLDR data is maintained in JSON format by the Unicode Consortium on github at https://github.com/unicode-cldr/cldr-json  The appropriate content is maintained as submodules in the `data` directory of this Cldr repository.
+
+To update the CDLR data, `git pull` each of the submodules.  For example:
+
+    git submodule -q foreach git pull -q origin master
+
+After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
+
+    mix cldr.consolidate
