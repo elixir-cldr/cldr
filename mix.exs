@@ -24,7 +24,8 @@ defmodule Cldr.Mixfile do
   defp description do
     """
     Common Locale Data Repository (CLDR) functions for Elixir to localize and format numbers,
-    lists and units with support for over 500 locales for internationalized (i18n) applications.
+    lists and units with support for over 500 locales for internationalized (i18n) and localized
+    (L10N) applications.
     """
   end
 
