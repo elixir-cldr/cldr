@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.1.1 April 8, 2017
+
+### Enhancements
+
+* Improves the validation of currency codes as well as the related tests
+
 ## Changelog for Cldr v0.1.0 March, 23, 2017
 
 ### Enhancements
