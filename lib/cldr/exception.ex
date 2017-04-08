@@ -55,3 +55,14 @@ defmodule Cldr.FormatCompileError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.UnknownCurrencyError do
+  @moduledoc """
+  Exception raised when there is an invalid currncy code
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
