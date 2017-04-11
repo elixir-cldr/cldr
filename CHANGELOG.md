@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.1.2 April 11, 2017
+
+### Enhancements
+
+* Improves the sourcing of avaialable currency codes with a small performance improvement in detecting known currency codes
+
 ## Changelog for Cldr v0.1.1 April 8, 2017
 
 ### Enhancements

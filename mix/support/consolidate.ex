@@ -32,6 +32,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_cldr_version()
       save_plurals()
       save_number_systems()
+      save_currencies()
       save_locales()
 
       all_locales()
@@ -219,6 +220,18 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Poison.decode!
       |> get_in(["supplemental", "numberingSystems"])
       |> remove_leading_underscores
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_currencies do
+      path = Path.join(consolidated_output_dir(), "currencies.json")
+      Path.join(download_data_dir(), ["cldr-numbers-full", "/main", "/en", "/currencies.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["main", "en", "numbers", "currencies"])
+      |> Map.keys
       |> save_file(path)
 
       assert_package_file_configured!(path)

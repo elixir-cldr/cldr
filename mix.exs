@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
 
   def project do
     [app: :ex_cldr,
@@ -62,7 +62,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
         "priv/cldr/plural_rules.json",
-        "priv/cldr/version.json"
+        "priv/cldr/version.json",
+        "priv/cldr/currencies.json"
       ]
     ]
   end

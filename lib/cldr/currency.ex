@@ -46,11 +46,9 @@ defmodule Cldr.Currency do
       iex> Cldr.Currency.known_currencies |> Enum.count
       298
   """
+  @known_currencies Cldr.Config.currency_codes
   def known_currencies do
-    Cldr.get_locale()
-    |> Cldr.Locale.get_locale
-    |> get_in([:currencies])
-    |> Map.keys
+    @known_currencies
   end
 
   @doc """

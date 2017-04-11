@@ -414,6 +414,17 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns a list of the vaid currency codes in upcased atom format
+  """
+  def currency_codes do
+    client_data_dir()
+    |> Path.join("currencies.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Enum.map(&String.to_atom/1)
+  end
+
+  @doc """
   Get the configured number formats that should be precompiled at application
   compilation time.
 
