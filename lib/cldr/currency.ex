@@ -148,19 +148,19 @@ defmodule Cldr.Currency do
   Returns a normalized currency code if the code is valid or an error tuple if not.
 
   Similar to the function `known_currency/1` but whereas that function returns a
-  `boolean` result, this function returns the normalized currency code if the
-  argument is valid.
+  `boolean` result, this function returns an `{:ok, code}` or `{:error, {exception, reason}}`
+  tuple.
 
   ## Examples
 
       iex> Cldr.Currency.validate_currency_code :usd
-      :USD
+      {:ok, :USD}
 
       iex> Cldr.Currency.validate_currency_code "usd"
-      :USD
+      {:ok, :USD}
 
       iex> Cldr.Currency.validate_currency_code "USD"
-      :USD
+      {:ok, :USD}
 
       iex> Cldr.Currency.validate_currency_code "NOPE"
       {:error, {Cldr.UnknownCurrencyError, "Currency \\"NOPE\\" is not known"}}
@@ -175,7 +175,7 @@ defmodule Cldr.Currency do
         error
       _ ->
         if known_currency?(code_atom) do
-          code_atom
+          {:ok, code_atom}
         else
           error_tuple(code_atom)
         end
@@ -238,9 +238,9 @@ defmodule Cldr.Currency do
   """
   @spec for_code(code, Cldr.locale) :: %{}
   def for_code(currency_code, locale \\ Cldr.get_locale()) do
-    case code = validate_currency_code(currency_code) do
+    case validate_currency_code(currency_code) do
       {:error, {_exception, _message}} = error -> error
-      _ -> for_locale(locale)[code]
+      {:ok, code} -> for_locale(locale)[code]
     end
   end
 

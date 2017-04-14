@@ -261,11 +261,10 @@ defmodule Cldr.Number do
     |> normalize_options(@default_options)
     |> detect_negative_number(number)
 
-    if currency_format?(format) && !Keyword.get(options, :currency) do
-      {:error, {Cldr.FormatError, "currency format #{inspect format} requires that " <>
-        "options[:currency] be specified"}}
-    else
+    with :ok <- currency_format_has_code(format, currency_format?(format), options[:currency]) do
       to_string(number, format, options)
+    else
+      {:error, _} = error -> error
     end
   end
 
@@ -346,7 +345,7 @@ defmodule Cldr.Number do
   # For all other formats.  The known atom-based formats are described
   # above so this must be a format name expected to be defined by a
   # locale but its not there.
-  defp to_string(_number, format, options) when is_atom(format) do
+  defp to_string(_number, format, options) when is_atom(format)do
     {:error, {Cldr.UnknownFormatError, "The locale #{inspect options[:locale]} with number system " <>
       "#{inspect options[:number_system]} does not define a format " <>
       "#{inspect format}."}}
@@ -366,7 +365,11 @@ defmodule Cldr.Number do
   end
 
   defp resolve_standard_format(options) do
-    Keyword.put(options, :format, lookup_standard_format(options[:format], options))
+    if options[:format] in @short_format_styles do
+      options
+    else
+      Keyword.put(options, :format, lookup_standard_format(options[:format], options))
+    end
   end
 
   defp adjust_short_forms(options) do
@@ -419,6 +422,22 @@ defmodule Cldr.Number do
 
   defp detect_negative_number({format, options}, _number) do
     {format, Keyword.put(options, :pattern, :positive)}
+  end
+
+  defp currency_format_has_code(format, true, nil) do
+    {:error, {Cldr.FormatError, "currency format #{inspect format} requires that " <>
+      "options[:currency] be specified"}}
+  end
+
+  defp currency_format_has_code(_format, true, currency) do
+    case Cldr.Currency.validate_currency_code(currency) do
+      {:error, _} = error -> error
+      {:ok, _} -> :ok
+    end
+  end
+
+  defp currency_format_has_code(_format, _boolean, _currency) do
+    :ok
   end
 
   defp currency_format?(format) when is_atom(format) do

@@ -101,7 +101,6 @@ defmodule Cldr.Test.Number.Format do
       {12345678, "12M",          [format: :short]},
       {1234567890, "1B",         [format: :short]},
       {1234567890000, "1T",      [format: :short]},
-
       {1234, "1 thousand",       [format: :long]},
       {1234567890, "1 billion",  [format: :long]},
 
@@ -110,7 +109,10 @@ defmodule Cldr.Test.Number.Format do
       {123,  "A$123",            [format: :short, currency: :AUD]},
 
       {12, "12 Thai baht",       [format: :long, currency: :THB]},
-      {12, "12 bahts thaïlandais", [format: :long, currency: :THB, locale: "fr"]}
+      {12, "12 bahts thaïlandais", [format: :long, currency: :THB, locale: "fr"]},
+
+      {2134, "A$2K",             [format: :currency_short, currency: :AUD]},
+      {2134, "2,134 Australian dollars", [format: :currency_long, currency: :AUD]}
     ]
   end
 

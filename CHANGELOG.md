@@ -4,6 +4,8 @@
 
 * Support the creation of custom currencies.  The currency code must follow the ISO4217 format for custom currencies which must start with an 'X' followed by 2 alphabetic characters.
 
+* Improve error handling for `Cldr.Number.to_string/2` to return a standardised error tuple of the form `{:error, {exception_module, binary_message}}`
+
 ## Changelog for Cldr v0.1.2 April 11, 2017
 
 ### Enhancements
