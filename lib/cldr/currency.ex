@@ -39,6 +39,61 @@ defmodule Cldr.Currency do
     :count]
 
   @doc """
+  Returns a `Currency` struct created from the arguments.
+
+  * `currency` is a custom currency code of a format defined in ISO4217
+
+  * `options` is a map of options representing the optional elements of the `%Currency{}` struct
+
+  ## Example
+
+      iex> Cldr.Currency.new(:XAA)
+      {:ok,
+       %Cldr.Currency{cash_digits: 0, cash_rounding: 0, code: :XAA, count: nil,
+        digits: 0, name: "", narrow_symbol: nil, rounding: 0, symbol: "",
+        tender: false}}
+
+      iex> Cldr.Currency.new(:XAA, name: "Custom Name")
+      {:ok,
+       %Cldr.Currency{cash_digits: 0, cash_rounding: 0, code: :XAA, count: nil,
+        digits: 0, name: "Custom Name", narrow_symbol: nil, rounding: 0, symbol: "",
+        tender: false}}
+
+      iex> Cldr.Currency.new(:XBC)
+      {:error, "Currency :XBC is already defined"}
+  """
+  @spec new(binary | atom, map | list) :: t | {:error, binary}
+  @currency_defaults %{
+    name: "",
+    symbol: "",
+    narrow_symbol: nil,
+    digits: 0,
+    rounding: 0,
+    cash_digits: 0,
+    cash_rounding: 0,
+    tender: false
+  }
+  def new(currency, options \\ [])
+
+  def new(currency, options) when is_list(options) do
+    new(currency, Enum.into(options, %{}))
+  end
+
+  def new(currency, options) when is_map(options) do
+    with false <- known_currency?(currency),
+         {:ok, currency_code} <- make_currency_code(currency) do
+      options = @currency_defaults
+      |> Map.merge(options)
+      |> Map.merge(%{code: currency_code})
+
+      {:ok, struct(__MODULE__, options)}
+    else
+      true -> {:error, "Currency #{inspect currency} is already defined"}
+      error -> error
+    end
+  end
+
+  @doc """
   Returns a list of all known currency codes.
 
   ## Example
@@ -57,6 +112,9 @@ defmodule Cldr.Currency do
   * `currency_code` is a `binary` or `atom` representing an ISO4217
   currency code
 
+  * `custom_currencies` is an optional list of custom currencies created by the
+  `Cldr.Currency.new/2` function
+
   ## Examples
 
       iex> Cldr.Currency.known_currency? "AUD"
@@ -64,17 +122,26 @@ defmodule Cldr.Currency do
 
       iex> Cldr.Currency.known_currency? "GGG"
       false
+
+      iex> Cldr.Currency.known_currency? :XCV
+      false
+
+      iex> Cldr.Currency.known_currency? :XCV, [%Cldr.Currency{code: :XCV}]
+      true
   """
-  @spec known_currency?(code) :: boolean
-  def known_currency?(currency_code) when is_binary(currency_code) do
+  @spec known_currency?(code, [__MODULE__, ...]) :: boolean
+  def known_currency?(currency_code, custom_currencies \\ [])
+  def known_currency?(currency_code, custom_currencies) when is_binary(currency_code) do
     case code_atom = normalize_currency_code(currency_code) do
       {:error, {_exception, _message}} -> false
-      _ -> known_currency?(code_atom)
+      _ -> known_currency?(code_atom, custom_currencies)
     end
   end
 
-  def known_currency?(currency_code) when is_atom(currency_code) do
-    !!Enum.find(known_currencies(), &(&1 == currency_code))
+  def known_currency?(currency_code, custom_currencies)
+  when is_atom(currency_code) and is_list(custom_currencies) do
+    !!(Enum.find(known_currencies(), &(&1 == currency_code)) ||
+       Enum.find(custom_currencies, &(&1.code == currency_code)))
   end
 
   @doc """
@@ -116,6 +183,41 @@ defmodule Cldr.Currency do
   end
 
   @doc """
+  Returns a valid normalized ISO4217 format custom currency code or an error.
+
+  Currency codes conform to the ISO4217 standard which means that any
+  custom currency code must start with an "X" followed by two alphabetic
+  characters.
+
+  ## Examples
+
+      iex> Cldr.Currency.make_currency_code("xzz")
+      {:ok, :XZZ}
+
+      iex> Cldr.Currency.make_currency_code("aaa")
+      {:error,
+       "Invalid currency code \\"AAA\\".  Currency codes must start with 'X' followed by 2 alphabetic characters only."}
+
+  Note that since this function creates atoms, its important that this
+  function not be called with arbitrary user input since that risks
+  overflowing the atom table.
+  """
+  @valid_currency_code Regex.compile!("^X[A-Z]{2}$")
+  @spec make_currency_code(binary | atom) :: {:ok, atom} | {:error, binary}
+  def make_currency_code(code) do
+    currency_code = code
+    |> to_string
+    |> String.upcase
+
+    if String.match?(currency_code, @valid_currency_code) do
+      {:ok, String.to_atom(currency_code)}
+    else
+      {:error, "Invalid currency code #{inspect currency_code}.  " <>
+        "Currency codes must start with 'X' followed by 2 alphabetic characters only."}
+    end
+  end
+
+  @doc """
   Returns the currency metadata for the requested currency code.
 
   * `currency_code` is a `binary` or `atom` representation of an ISO 4217 currency code.
@@ -146,7 +248,7 @@ defmodule Cldr.Currency do
   Returns the currency metadata for a locale.
   """
   @spec for_locale(Cldr.locale) :: %{}
-  def for_locale(locale) do
+  def for_locale(locale \\ Cldr.get_locale()) do
     Cldr.Locale.get_locale(locale).currencies
   end
 

@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.1.3 April __, 2017
+
+### Enhancements
+
+* Support the creation of custom currencies.  The currency code must follow the ISO4217 format for custom currencies which must start with an 'X' followed by 2 alphabetic characters.
+
 ## Changelog for Cldr v0.1.2 April 11, 2017
 
 ### Enhancements
