@@ -54,7 +54,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {"31", "0", "0"}
+      {"31", "0", "1"}
   """
   @version Config.version() |> String.split(".") |> List.to_tuple
   def version do

@@ -132,7 +132,7 @@ See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
 Not currently supported, but they're next on the development priority list.
 
-* Dates/times on track to ship in March 2017 (delayed from an original January plan).
+* Dates/times are still under development.
 
 ## Gettext Integration
 
@@ -167,4 +167,5 @@ Tests are run on Elixir 1.3.4 and 1.4.2.
 **Note that on 1.3 it is possible that `ExUnit` will timeout loading the tests.**  There is a fixed limit of 60 seconds to load tests which, for 514 locales, may not be enough.  This timeout is configurable on Elixir 1.4. You can configure it in `config.exs` (or `test.exs`) as follows:
 
     config :ex_unit,
-      case_load_timeout: 120_000
+      case_load_timeout: 120_000,
+      timeout: 120_000

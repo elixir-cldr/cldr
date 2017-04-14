@@ -8,6 +8,8 @@
 
 * Increased test timeout from the default 60,000 to 120,000 since slow machines may not complete the tests in time
 
+* Update to CLDR 30.0.1
+
 ## Changelog for Cldr v0.1.2 April 11, 2017
 
 ### Enhancements
