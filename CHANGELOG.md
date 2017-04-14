@@ -6,6 +6,8 @@
 
 * Improve error handling for `Cldr.Number.to_string/2` to return a standardised error tuple of the form `{:error, {exception_module, binary_message}}`
 
+* Increased test timeout from the default 60,000 to 120,000 since slow machines may not complete the tests in time
+
 ## Changelog for Cldr v0.1.2 April 11, 2017
 
 ### Enhancements
