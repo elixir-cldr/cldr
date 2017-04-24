@@ -99,7 +99,7 @@ defmodule Cldr.Config do
   @cldr_modules [
     "number_formats", "list_formats", "currencies",
     "number_systems", "number_symbols", "minimum_grouping_digits",
-    "rbnf", "units"
+    "rbnf", "units", "date_fields"
   ]
 
   @doc """

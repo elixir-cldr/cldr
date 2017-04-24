@@ -5,6 +5,8 @@ if Code.ensure_loaded?(Experimental.Flow) do
     one locale-specific file.
     """
 
+    alias Cldr.Normalize
+
     defdelegate download_data_dir(), to: Cldr.Config
     defdelegate consolidated_output_dir(), to: Cldr.Config, as: :source_data_dir
 
@@ -73,19 +75,20 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> save_locale(locale)
     end
 
-    defp consolidate_locale_content(locale_dirs, locale) do
+    def consolidate_locale_content(locale_dirs, locale) do
       locale_dirs
       |> Enum.map(&locale_specific_content(locale, &1))
       |> merge_maps
     end
 
     defp normalize_content(content, locale) do
-      Cldr.Normalize.Number.normalize(content, locale)
-      |> Cldr.Normalize.Currency.normalize(locale)
-      |> Cldr.Normalize.List.normalize(locale)
-      |> Cldr.Normalize.NumberSystem.normalize(locale)
-      |> Cldr.Normalize.Rbnf.normalize(locale)
-      |> Cldr.Normalize.Units.normalize(locale)
+      Normalize.Number.normalize(content, locale)
+      |> Normalize.Currency.normalize(locale)
+      |> Normalize.List.normalize(locale)
+      |> Normalize.NumberSystem.normalize(locale)
+      |> Normalize.Rbnf.normalize(locale)
+      |> Normalize.Units.normalize(locale)
+      |> Normalize.DateFields.normalize(locale)
     end
 
     # Remove the top two levels of the map since they add nothing
@@ -124,7 +127,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       end
     end
 
-    defp cldr_locale_specific_dirs do
+    def cldr_locale_specific_dirs do
       cldr_directories()
       |> Enum.filter(&locale_specific_dir?/1)
     end
@@ -133,7 +136,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       String.ends_with?(filename, "-full")
     end
 
-    defp cldr_directories do
+    def cldr_directories do
       download_data_dir()
       |> File.ls!
       |> Enum.filter(&cldr_dir?/1)
