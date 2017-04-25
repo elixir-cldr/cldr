@@ -16,4 +16,5 @@ defmodule Doc.Test do
   doctest Cldr.Rbnf.Spellout
   doctest Cldr.Rbnf.NumberSystem
   doctest Cldr.Unit
+  doctest Cldr.Date.Relative
 end
