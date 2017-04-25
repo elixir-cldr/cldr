@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.2.0 April 25, 2017
+
+### Enhancements
+
+* Adds module `Cldr.Date.Relative` to provide relative date, datetime formatting such as "2 days ago" or "in 1 week" or "yesterday"
+
 ## Changelog for Cldr v0.1.3 April 17, 2017
 
 ### Enhancements

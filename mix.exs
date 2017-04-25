@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.2.0"
 
   def project do
     [app: :ex_cldr,
@@ -24,8 +24,8 @@ defmodule Cldr.Mixfile do
   defp description do
     """
     Common Locale Data Repository (CLDR) functions for Elixir to localize and format numbers,
-    lists and units with support for over 500 locales for internationalized (i18n) and localized
-    (L10N) applications.
+    dates, lists and units with support for over 500 locales for internationalized (i18n) and
+    localized (L10N) applications.
     """
   end
 
