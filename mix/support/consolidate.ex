@@ -24,6 +24,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
     Also formats non-locale-specific CLDR data that is core to `Cldr`
     operation.
     """
+    @max_demand 50
     @spec consolidate_locales :: :ok
     def consolidate_locales do
       alias Experimental.Flow
@@ -38,7 +39,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_locales()
 
       all_locales()
-      |> Flow.from_enumerable()
+      |> Flow.from_enumerable(max_demand: @max_demand)
       |> Flow.map(&consolidate_locale/1)
       |> Enum.to_list
       :ok
@@ -52,7 +53,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       alias Experimental.Flow
 
       Cldr.known_locales()
-      |> Flow.from_enumerable()
+      |> Flow.from_enumerable(max_demand: @max_demand)
       |> Flow.map(&consolidate_locale/1)
       |> Enum.to_list
       :ok
