@@ -153,7 +153,7 @@ defmodule Cldr.Date.Relative do
   end
 
   defp to_string(%DateTime{} = relative, unit, options) do
-    now = options[:relative_to] || DateTime.to_unix(DateTime.utc_now)
+    now = (options[:relative_to] || DateTime.utc_now) |> DateTime.to_unix
     then = DateTime.to_unix(relative)
     seconds = then - now
     do_to_string(seconds, unit, options)

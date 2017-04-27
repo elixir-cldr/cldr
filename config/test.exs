@@ -7,5 +7,5 @@ config :ex_cldr,
   gettext: Cldr.Gettext
 
 config :ex_unit,
-  case_load_timeout: 120_000,
+  case_load_timeout: 220_000,
   timeout: 120_000

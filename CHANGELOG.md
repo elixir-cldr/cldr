@@ -1,8 +1,14 @@
-## Changelog for Cldr v0.2.0 April 25, 2017
+## Changelog for Cldr v0.2.0 April 27, 2017
 
 ### Enhancements
 
-* Adds module `Cldr.Date.Relative` to provide relative date, datetime formatting such as "2 days ago" or "in 1 week" or "yesterday"
+* Adds module `Cldr.Date.Relative` to provide relative date and datetime formatting such as "2 days ago" or "in 1 week" or "yesterday". See `Cldr.Date.Relative`, in particular `Cldr.Date.Relative.to_string/2`
+
+* Supports Elixir 1.4.x only (`Cldr.Date.Relative` uses `Date.utc_today/0` and `DateTime.utc_now` which are not in earlier versions of Elixir).
+
+* Support `Poison` as "~> 2.1 or ~> 3.0"
+
+* Update all dependencies to latest versions
 
 ## Changelog for Cldr v0.1.3 April 17, 2017
 

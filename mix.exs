@@ -6,7 +6,7 @@ defmodule Cldr.Mixfile do
   def project do
     [app: :ex_cldr,
      version: @version,
-     elixir: "~> 1.3",
+     elixir: "~> 1.4",
      name: "Cldr",
      source_url: "https://github.com/kipcole9/cldr",
      docs: docs(),
@@ -37,13 +37,13 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:poison, "~> 2.1"},
+      {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.1"},
       {:benchfella, "~> 0.3.0", only: :dev},
-      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:credo, "~> 0.7", only: [:dev, :test]},
       {:ex_doc, "~> 0.15", only: :dev},
-      {:excoveralls, "~> 0.5.6", only: :test},
-      {:gettext, "~> 0.11.0", only: :dev},
+      {:excoveralls, "~> 0.6.3", only: :test},
+      {:gettext, "~> 0.13.0", only: :dev},
       {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]},
       {:exprof, "~> 0.2.0", optional: true, only: [:dev, :test]}
     ]
