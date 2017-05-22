@@ -10,6 +10,7 @@ Here's an example configuration that uses all of the available configuration key
        gettext: MyApp.Gettext,
        data_dir: "./priv/cldr",
        precompile_number_formats: ["¤¤#,##0.##"]
+       precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
 
 ## Configuration Keys
 
@@ -35,4 +36,6 @@ The configuration keys available for `Cldr` are:
 
  * `data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(:ex_cldr)`.
 
- * `precompiler_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
+ * `precompile_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
+
+ * `precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.

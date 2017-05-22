@@ -46,7 +46,7 @@ defmodule Cldr.Number.Transliterate do
 
   Transliterates the latin digits 0..9 to their equivalents in
   another number system. Also transliterates the decimal and grouping
-  separators as well as the plus and minus sign. Any other character
+  separators as well as the plus, minus and exponent symbols. Any other character
   in the string will be returned "as is".
 
   * `sequence` is the string to be transliterated.
@@ -67,35 +67,26 @@ defmodule Cldr.Number.Transliterate do
 
   ## Examples
 
-      iex> Cldr.Number.System.transliterate("123556")
+      iex> Cldr.Number.Transliterate.transliterate("123556")
       "123556"
 
-      iex> Cldr.Number.System.transliterate("123,556.000", "fr", :default)
+      iex> Cldr.Number.Transliterate.transliterate("123,556.000", "fr", :default)
       "123 556,000"
 
-      iex> Cldr.Number.System.transliterate("123556", "th", :default)
+      iex> Cldr.Number.Transliterate.transliterate("123556", "th", :default)
       "123556"
 
-      iex> Cldr.Number.System.transliterate("123556", "th", "thai")
+      iex> Cldr.Number.Transliterate.transliterate("123556", "th", "thai")
       "๑๒๓๕๕๖"
 
-      iex> Cldr.Number.System.transliterate("123556", "th", :native)
+      iex> Cldr.Number.Transliterate.transliterate("123556", "th", :native)
       "๑๒๓๕๕๖"
 
-      iex> Cldr.Number.System.transliterate("Some number is: 123556", "th", "thai")
+      iex> Cldr.Number.Transliterate.transliterate("Some number is: 123556", "th", "thai")
       "Some number is: ๑๒๓๕๕๖"
-
-      iex(5)> Cldr.Number.System.transliterate(12345, "th", "thai")
-      "๑๒๓๔๕"
-
-      iex(6)> Cldr.Number.System.transliterate(12345.0, "th", "thai")
-      "๑๒๓๔๕.๐"
-
-      iex(7)> Cldr.Number.System.transliterate(Decimal.new(12345.0), "th", "thai")
-      "๑๒๓๔๕.๐"
   """
 
-  @spec transliterate(String.t | number, Cldr.locale, String.t) :: String.t
+  @spec transliterate(String.t, Cldr.locale, String.t) :: String.t
   def transliterate(sequence, locale \\ Cldr.get_locale(), number_system \\ System.default_number_system_type)
 
   # No transliteration required when the digits and separators as the same
@@ -114,6 +105,13 @@ defmodule Cldr.Number.Transliterate do
         transliterate(sequence, unquote(locale), unquote(number_system))
       end
     end
+  end
+
+  # For when the number system is provided as a string. We generate functions using
+  # atom format so we need to convert but only to existing atoms
+  def transliterate(sequence, locale, number_system) when is_binary(number_system) do
+    system = System.system_name_from(number_system, locale)
+    transliterate(sequence, locale, system)
   end
 
   # We can only transliterate if the target {locale, number_system} has defined
@@ -184,10 +182,8 @@ defmodule Cldr.Number.Transliterate do
   end
 
   def transliterate(_digit, locale, number_system) do
-    raise Cldr.UnknownLocaleError, """
-    Locale #{inspect locale} or number system #{inspect number_system}
-    (or the combination of the two) is not known.
-    """
+    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} or number system " <>
+    "#{inspect number_system} (or the combination of the two) is not known."
   end
 
   @doc """
@@ -221,8 +217,8 @@ defmodule Cldr.Number.Transliterate do
          {:ok, to} <- System.number_system_digits(to_system)
     do
       Logger.warn "Transliteration from number system #{inspect from_system} to " <>
-      "#{inspect to_system} requires dynamically generating a transliteration map for " <>
-      "each request which is slow. Please consider configuring this transliteration pair. " <>
+      "#{inspect to_system} requires dynamic generation of a transliteration map for " <>
+      "each function call which is slow. Please consider configuring this transliteration pair. " <>
       "See module docs for `Cldr.Number.Transliteration` for futher information."
 
       map = Config.generate_transliteration_map(from, to)

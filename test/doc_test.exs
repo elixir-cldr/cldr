@@ -9,6 +9,7 @@ defmodule Doc.Test do
   doctest Cldr.Number.String
   doctest Cldr.Number.Format
   doctest Cldr.Number.System
+  doctest Cldr.Number.Transliterate
   doctest Cldr.Number.Format.Compiler
   doctest Cldr.Number.Formatter.Short
   doctest Cldr.Number.Formatter.Currency
@@ -16,5 +17,5 @@ defmodule Doc.Test do
   doctest Cldr.Rbnf.Spellout
   doctest Cldr.Rbnf.NumberSystem
   doctest Cldr.Unit
-  doctest Cldr.Date.Relative
+  doctest Cldr.DateTime.Relative
 end

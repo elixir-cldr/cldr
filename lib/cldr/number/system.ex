@@ -171,10 +171,8 @@ defmodule Cldr.Number.System do
   def system_name_from(system_name, locale) when is_binary(system_name) do
     try do
       system_name_from(String.to_existing_atom(system_name), locale)
-    rescue
-      ArgumentError ->
-          raise Cldr.UnknownLocaleError,
-            "The requested number system #{inspect system_name} is not known."
+    rescue ArgumentError ->
+      raise Cldr.UnknownNumberSystemError, number_system_error(system_name)
     end
   end
 
@@ -230,7 +228,7 @@ defmodule Cldr.Number.System do
     end
   end
 
-  defp number_system_error(system) do
-    "Unknown number system #{inspect system}"
+  defp number_system_error(system_name) do
+    "The requested number system #{inspect system_name} is not known."
   end
 end

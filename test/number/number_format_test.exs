@@ -32,7 +32,7 @@ defmodule Number.Format.Test do
   end
 
   test "that there is an exception if we get formats for an unknown locale and number system" do
-    assert_raise Cldr.UnknownLocaleError, ~r/The requested number system .* is not known./, fn ->
+    assert_raise Cldr.UnknownNumberSystemError, ~r/The requested number system .* is not known./, fn ->
       Format.formats_for("zzz", "zulu")
     end
   end

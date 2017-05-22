@@ -2,11 +2,15 @@
 
 ### Breaking Change
 
-* Module `Cldr.Date.Relative` is renamed to `Cldr.DateTime.Relative`
+* Module `Cldr.Date.Relative` is renamed to `Cldr.DateTime.Relative`.  Since this is a breaking change, a minor version bump to 0.3.0 is made.
 
 ### Enhancements
 
 * Allow configuration of number system digit transliterations that are precompiled. See `Cldr.Number.Transliteration` module docs for further information.
+
+### Bug Fixes
+
+* Fixed a bug whereby `Cldr.Number.Transliterate/3` with a `binary` number system would fail
 
 ## Changelog for Cldr v0.2.1 May 22, 2017
 
@@ -20,7 +24,7 @@
 
 * Adds module `Cldr.Date.Relative` to provide relative date and datetime formatting such as "2 days ago" or "in 1 week" or "yesterday". See `Cldr.Date.Relative`, in particular `Cldr.Date.Relative.to_string/2`
 
-* Supports Elixir 1.4.x only (`Cldr.Date.Relative` uses `Date.utc_today/0` and `DateTime.utc_now` which are not in earlier versions of Elixir).
+* Supports Elixir 1.4.x only (`Cldr.DateTime.Relative` uses `Date.utc_today/0` and `DateTime.utc_now` which are not in earlier versions of Elixir).
 
 * Support `Poison` as "~> 2.1 or ~> 3.0"
 
