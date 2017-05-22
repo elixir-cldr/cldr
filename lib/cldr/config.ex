@@ -437,6 +437,17 @@ defmodule Cldr.Config do
     Application.get_env(:ex_cldr, :precompile_number_formats, [])
   end
 
+  @doc """
+  Generate a transliteration map between two character classes
+  """
+  def generate_transliteration_map(from, to)
+  when is_binary(from) and is_binary(to) do
+    from
+    |> String.graphemes
+    |> Enum.zip(String.graphemes(to))
+    |> Enum.into(%{})
+  end
+
   # ------ Helpers ------
 
   # Simple check that the locale content contains what we expect

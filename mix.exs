@@ -31,7 +31,7 @@ defmodule Cldr.Mixfile do
 
   def application do
     [
-      applications: [:poison, :decimal]
+      applications: [:poison, :decimal, :logger]
     ]
   end
 

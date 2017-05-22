@@ -9,15 +9,37 @@ defmodule Cldr.Number.Transliterate do
 
   Effort is made to short circuit where possible. Transliteration is not
   required for any `{locale, number_system}` that is the same as `{"en",
-  "latn"}` since the implementation usese this for the placeholders during
+  "latn"}` since the implementation uses this combination for the placeholders during
   formatting already. When short circuiting is possible (typically the en-*
   locales with "latn" number_system - the total number of short circuited
-  locales is 211 of the 511 in CLDR) the overall number formatting is twice as
+  locales is 211 of the 516 in CLDR) the overall number formatting is twice as
   fast than when formal transliteration is required.
+
+  ### Configuring precompilation of digit transliterations
+
+  This module includes `Cldr.Number.Transliterate.transliterate_digits/3` which transliterates
+  digits between number systems.  For example from :arabic to :latn.  Since generating a
+  transliteration map is slow, pairs of transliterations can be configured so that the
+  transliteration map is created at compile time and therefore speeding up transliteration at
+  run time.
+
+  To configure these transliteration pairs, add the following to your `config.exs`:
+
+      config :ex_cldr,
+        precompile_transliterations: [{:latn, :arab}, {:arab, :thai}]
+
+  Where each tuple in the list configures one transliteration map.  In this example, two maps are
+  configured: from :latn to :thai and from :arab to :thai.
+
+  A list of configurable number systems is returned by `Cldr.Number.System.systems_with_digits/0`.
+
+  If a transliteration is requested between two number pairs that have not been configured for
+  precompilation, a warning is logged.
   """
   alias Cldr.Number.System
   alias Cldr.Number.Symbol
   alias Cldr.Number.Format.Compiler
+  alias Cldr.Config
 
   @doc """
   Transliterates from latin digits to another number system's digits.
@@ -182,34 +204,38 @@ defmodule Cldr.Number.Transliterate do
       "0123456789"
   """
   @spec transliterate_digits(binary, atom, atom) :: binary
+  for {from_system, to_system} <- Application.get_env(:ex_cldr, :precompile_transliterations, []) do
+    with from = System.number_system_digits!(from_system),
+         to = System.number_system_digits!(to_system),
+         map = Config.generate_transliteration_map(from, to)
+    do
+      def transliterate_digits(digits, unquote(from_system), unquote(to_system)) do
+        do_transliterate_digits(digits, unquote(Macro.escape(map)))
+      end
+    end
+  end
+
+  require Logger
   def transliterate_digits(digits, from_system, to_system) when is_binary(digits) do
-    from_digits = System.systems_with_digits[from_system].digits
-    to_digits = System.systems_with_digits[to_system].digits
+    with {:ok, from} <- System.number_system_digits(from_system),
+         {:ok, to} <- System.number_system_digits(to_system)
+    do
+      Logger.warn "Transliteration from number system #{inspect from_system} to " <>
+      "#{inspect to_system} requires dynamically generating a transliteration map for " <>
+      "each request which is slow. Please consider configuring this transliteration pair. " <>
+      "See module docs for `Cldr.Number.Transliteration` for futher information."
 
-    do_transliterate_digits(digits, from_digits, to_digits)
+      map = Config.generate_transliteration_map(from, to)
+      do_transliterate_digits(digits, map)
+    else
+      {:error, message} -> {:error, message}
+    end
   end
 
-  defp do_transliterate_digits(_digits, nil, _to_digits) do
-    raise ArgumentError, "Invalid 'from' number system"
-  end
-
-  defp do_transliterate_digits(_digits, _from_digits, nil) do
-    raise ArgumentError, "Invalid 'to' number system"
-  end
-
-  defp do_transliterate_digits(digits, from_digits, to_digits) do
-    map = generate_transliteration_map(from_digits, to_digits)
-
+  defp do_transliterate_digits(digits, map) do
     digits
     |> String.graphemes
     |> Enum.map(&Map.get(map, &1, &1))
     |> Enum.join
-  end
-
-  defp generate_transliteration_map(from_digits, to_digits) do
-    from_digits
-    |> String.graphemes
-    |> Enum.zip(String.graphemes(to_digits))
-    |> Enum.into(%{})
   end
 end

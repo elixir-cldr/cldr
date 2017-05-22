@@ -179,11 +179,7 @@ defmodule Cldr.Number.System do
   end
 
   def system_name_from(system_name, locale) when is_atom(system_name) do
-    if system = number_systems_for(locale)[system_name] do
-      system
-    else
-      system_name
-    end
+    number_systems_for(locale)[system_name] || system_name
   end
 
   @doc """
@@ -216,5 +212,25 @@ defmodule Cldr.Number.System do
       end
     end)
     likes |> Enum.reject(&(is_nil(&1) || &1 == []))
+  end
+
+  @doc false
+  def number_system_digits!(system) do
+    case number_system_digits(system) do
+      {:ok, digits} -> digits
+      _ ->  raise Cldr.UnknownNumberSystemError, number_system_error(system)
+    end
+  end
+
+  def number_system_digits(system) do
+    if system = systems_with_digits()[system] do
+      {:ok, system.digits}
+    else
+      {:error, number_system_error(system)}
+    end
+  end
+
+  defp number_system_error(system) do
+    "Unknown number system #{inspect system}"
   end
 end

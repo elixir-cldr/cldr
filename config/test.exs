@@ -4,7 +4,8 @@ use Mix.Config
 config :ex_cldr,
   default_locale: "en",
   locales: :all,
-  gettext: Cldr.Gettext
+  gettext: Cldr.Gettext,
+  precompile_transliterations: [{:latn, :arab}, {:arab, :thai}]
 
 config :ex_unit,
   case_load_timeout: 220_000,
