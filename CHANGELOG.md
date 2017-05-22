@@ -1,3 +1,13 @@
+## Changelog for Cldr v0.3.0 May 22, 2017
+
+### Breaking Change
+
+* Module `Cldr.Date.Relative` is renamed to `Cldr.DateTime.Relative`
+
+### Enhancements
+
+* Allow configuration of number system digit transliterations that are precompiled. See `Cldr.Number.Transliteration` module docs for further information.
+
 ## Changelog for Cldr v0.2.1 May 22, 2017
 
 ### Enhancements
