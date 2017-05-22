@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.2.1 May 22, 2017
+
+### Enhancements
+
+* Added `Cldr.Number.Transliterate/3` to transliterate a binary of digits from one number system to another.
+
 ## Changelog for Cldr v0.2.0 April 27, 2017
 
 ### Enhancements

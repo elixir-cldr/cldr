@@ -167,4 +167,49 @@ defmodule Cldr.Number.Transliterate do
     (or the combination of the two) is not known.
     """
   end
+
+  @doc """
+  Transliterates digits from one number system to another number system
+
+  * `digits` is binary representation of a number
+
+  * `from_system` and `to_system` are number system names in atom form.  See
+  `Cldr.Number.System.systems_with_digits/0` for available number systems.
+
+  ## Example
+
+      iex> Cldr.Number.Transliterate.transliterate_digits "٠١٢٣٤٥٦٧٨٩", :arab, :latn
+      "0123456789"
+  """
+  @spec transliterate_digits(binary, atom, atom) :: binary
+  def transliterate_digits(digits, from_system, to_system) when is_binary(digits) do
+    from_digits = System.systems_with_digits[from_system].digits
+    to_digits = System.systems_with_digits[to_system].digits
+
+    do_transliterate_digits(digits, from_digits, to_digits)
+  end
+
+  defp do_transliterate_digits(_digits, nil, _to_digits) do
+    raise ArgumentError, "Invalid 'from' number system"
+  end
+
+  defp do_transliterate_digits(_digits, _from_digits, nil) do
+    raise ArgumentError, "Invalid 'to' number system"
+  end
+
+  defp do_transliterate_digits(digits, from_digits, to_digits) do
+    map = generate_transliteration_map(from_digits, to_digits)
+
+    digits
+    |> String.graphemes
+    |> Enum.map(&Map.get(map, &1, &1))
+    |> Enum.join
+  end
+
+  defp generate_transliteration_map(from_digits, to_digits) do
+    from_digits
+    |> String.graphemes
+    |> Enum.zip(String.graphemes(to_digits))
+    |> Enum.into(%{})
+  end
 end
