@@ -8,7 +8,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.2.0"}
+        {:ex_cldr, "~> 0.3.0"}
       ]
     end
 

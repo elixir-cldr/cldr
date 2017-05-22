@@ -43,7 +43,7 @@ defmodule Cldr.Mixfile do
       {:credo, "~> 0.7", only: [:dev, :test]},
       {:ex_doc, "~> 0.15", only: :dev},
       {:excoveralls, "~> 0.6.3", only: :test},
-      {:gettext, "~> 0.13.0", only: :dev},
+      {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.9.0", optional: true, only: [:dev, :test]},
       {:exprof, "~> 0.2.0", optional: true, only: [:dev, :test]}
     ]
@@ -53,7 +53,7 @@ defmodule Cldr.Mixfile do
     [
       maintainers: ["Kip Cole"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/kipcole9/cldr"},
+      links: links(),
       files: [
         "lib", "src", "guides", "config",
         "mix.exs", "README*", "CHANGELOG*", "LICENSE*",
@@ -66,6 +66,13 @@ defmodule Cldr.Mixfile do
         "priv/cldr/currencies.json"
       ]
     ]
+  end
+
+  def links do
+    %{
+      "GitHub"    => "https://github.com/kipcole9/cldr",
+      "Changelog" => "https://github.com/kipcole9/cldr/blob/master/CHANGELOG.md"
+    }
   end
 
   def docs do

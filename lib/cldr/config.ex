@@ -321,7 +321,7 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.gettext_configured?
-      false
+      true
   """
   @spec gettext_configured? :: boolean
   def gettext_configured? do
