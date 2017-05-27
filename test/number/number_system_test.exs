@@ -8,20 +8,20 @@ defmodule Number.System.Test do
 
   test "that number_systems_for raises when the locale is not known" do
     locale = "zzz"
-    assert_raise Cldr.UnknownLocaleError, ~r/The requested locale \"zzz\" is not known./, fn ->
-      Cldr.Number.System.number_systems_for(locale)
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale \"zzz\" is not known/, fn ->
+      Cldr.Number.System.number_systems_for!(locale)
     end
   end
 
   test "that number_system_names_for raises when the locale is not known" do
     locale = "zzz"
-    assert_raise Cldr.UnknownLocaleError, ~r/The requested locale .* is not known./, fn ->
-      Cldr.Number.System.number_system_names_for(locale)
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale .* is not known/, fn ->
+      Cldr.Number.System.number_system_names_for!(locale)
     end
   end
 
   test "that number_systems_like returns a list" do
-    likes = Cldr.Number.System.number_systems_like("en", :latn)
+    {:ok, likes} = Cldr.Number.System.number_systems_like("en", :latn)
     assert is_list(likes)
     assert Enum.count(likes) > 100
   end

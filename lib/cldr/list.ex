@@ -129,7 +129,7 @@ defmodule Cldr.List do
   @spec list_patterns_for(Cldr.locale) :: Map.t
   @spec list_pattern_styles_for(Cldr.locale) :: [atom]
   Enum.each Cldr.known_locales, fn (locale) ->
-    patterns = Cldr.Locale.get_locale(locale).list_formats
+    patterns = Cldr.get_locale(locale).list_formats
     pattern_names = Map.keys(patterns)
 
     @doc """
@@ -173,7 +173,7 @@ defmodule Cldr.List do
   end
 
   defp normalize_options(options) do
-    locale = options[:locale] || Cldr.get_locale()
+    locale = options[:locale] || Cldr.get_current_locale()
     format = options[:format] || @default_style
 
     with :ok <- verify_locale(locale),

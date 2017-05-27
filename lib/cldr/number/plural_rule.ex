@@ -97,7 +97,7 @@ defmodule Cldr.Number.PluralRule do
           "two"
       """
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal, Locale.t, %{}) :: String.t | nil
+      @spec pluralize(Math.number_or_decimal, Locale.name, %{}) :: String.t | nil
       def pluralize(number, locale, %{} = substitutions) when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
@@ -148,7 +148,7 @@ defmodule Cldr.Number.PluralRule do
       in a given locale fits into.  This category can then be used to format the
       number or currency
       """
-      def plural_rule(number, locale \\ Cldr.get_locale(), rounding \\ Math.default_rounding())
+      def plural_rule(number, locale \\ Cldr.get_current_locale(), rounding \\ Math.default_rounding())
 
       def plural_rule(string, locale, rounding) when is_binary(string) do
         plural_rule(Decimal.new(string), locale, rounding)

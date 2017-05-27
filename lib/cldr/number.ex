@@ -99,7 +99,7 @@ defmodule Cldr.Number do
     cash:          false,
     rounding_mode: :half_even,
     number_system: :default,
-    locale:        Cldr.get_locale()
+    locale:        Cldr.get_current_locale()
   ]
 
   @short_format_styles [
@@ -345,6 +345,10 @@ defmodule Cldr.Number do
   # For all other formats.  The known atom-based formats are described
   # above so this must be a format name expected to be defined by a
   # locale but its not there.
+  defp to_string(_number, {:error, _} = error, _options) do
+    error
+  end
+
   defp to_string(_number, format, options) when is_atom(format)do
     {:error, {Cldr.UnknownFormatError, "The locale #{inspect options[:locale]} with number system " <>
       "#{inspect options[:number_system]} does not define a format " <>
@@ -389,11 +393,9 @@ defmodule Cldr.Number do
   end
 
   defp lookup_standard_format(format, options) when is_atom(format) do
-    lookup = options[:locale]
-    |> formats_for(options[:number_system])
-    |> Map.get(options[:format])
-
-    lookup || format
+    with {:ok, formats} <- formats_for(options[:locale], options[:number_system]) do
+      Map.get(formats, options[:format]) || format
+    end
   end
 
   defp lookup_standard_format(format, _options) when is_binary(format) do

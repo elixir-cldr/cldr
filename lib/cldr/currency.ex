@@ -237,7 +237,7 @@ defmodule Cldr.Currency do
       tender: true}
   """
   @spec for_code(code, Cldr.locale) :: %{}
-  def for_code(currency_code, locale \\ Cldr.get_locale()) do
+  def for_code(currency_code, locale \\ Cldr.get_current_locale()) do
     case validate_currency_code(currency_code) do
       {:error, {_exception, _message}} = error -> error
       {:ok, code} -> for_locale(locale)[code]
@@ -248,8 +248,8 @@ defmodule Cldr.Currency do
   Returns the currency metadata for a locale.
   """
   @spec for_locale(Cldr.locale) :: %{}
-  def for_locale(locale \\ Cldr.get_locale()) do
-    Cldr.Locale.get_locale(locale).currencies
+  def for_locale(locale \\ Cldr.get_current_locale()) do
+    Cldr.get_locale(locale).currencies
   end
 
   @doc """

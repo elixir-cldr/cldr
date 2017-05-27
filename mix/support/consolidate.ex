@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 if Code.ensure_loaded?(Experimental.Flow) do
   defmodule Cldr.Consolidate do
     @moduledoc """

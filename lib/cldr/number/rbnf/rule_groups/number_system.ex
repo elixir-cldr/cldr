@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Rbnf.NumberSystem do
   @moduledoc """
   Functions to implement the number system rule-based-number-format rules of CLDR.
@@ -10,7 +11,7 @@ defmodule Cldr.Rbnf.NumberSystem do
   The functions on this module are defined at compile time based upon the RBNF rules
   defined in the Unicode CLDR data repository.  Available rules are identified by:
 
-      iex(10)> Cldr.Rbnf.NumberSystem.rule_sets "root"
+      iex> Cldr.Rbnf.NumberSystem.rule_sets "root"
       [:tamil, :roman_upper, :roman_lower, :hebrew_item, :hebrew_0_99, :hebrew,
       :greek_upper, :greek_lower, :georgian, :ethiopic_p1, :ethiopic,
       :cyrillic_lower_1_10, :cyrillic_lower, :armenian_upper, :armenian_lower]

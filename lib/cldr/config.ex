@@ -341,7 +341,7 @@ defmodule Cldr.Config do
       iex> Cldr.Config.expand_locales(["en-A+"])
       ["en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
 
-      iex(15)> Cldr.Config.expand_locales(["fr-*"])
+      iex> Cldr.Config.expand_locales(["fr-*"])
       ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",
        "fr-CG", "fr-CH", "fr-CI", "fr-CM", "fr-DJ", "fr-DZ", "fr-GA", "fr-GF",
        "fr-GN", "fr-GP", "fr-GQ", "fr-HT", "fr-KM", "fr-LU", "fr-MA", "fr-MC",
@@ -411,6 +411,7 @@ defmodule Cldr.Config do
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
+    |> Map.put(:name, locale)
   end
 
   @doc """
@@ -435,17 +436,6 @@ defmodule Cldr.Config do
   """
   def get_precompile_number_formats do
     Application.get_env(:ex_cldr, :precompile_number_formats, [])
-  end
-
-  @doc """
-  Generate a transliteration map between two character classes
-  """
-  def generate_transliteration_map(from, to)
-  when is_binary(from) and is_binary(to) do
-    from
-    |> String.graphemes
-    |> Enum.zip(String.graphemes(to))
-    |> Enum.into(%{})
   end
 
   # ------ Helpers ------

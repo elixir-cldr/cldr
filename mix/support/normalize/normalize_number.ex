@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Normalize.Number do
   @moduledoc """
   Takes the number part of the locale map and transforms the formats into a more easily

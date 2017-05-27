@@ -10,7 +10,7 @@ if Code.ensure_loaded?(Gettext) do
     alias Cldr.Locale
 
     def nplurals(locale) do
-      locale = Locale.normalize_locale(locale)
+      locale = Locale.normalize_locale_name(locale)
       if Cldr.known_locale?(locale) do
         Cardinal.plural_rules_for(locale) |> Enum.count
       else
@@ -19,7 +19,7 @@ if Code.ensure_loaded?(Gettext) do
     end
 
     def plural(locale, n) do
-      locale = Locale.normalize_locale(locale)
+      locale = Locale.normalize_locale_name(locale)
       if Cldr.known_locale?(locale) do
         rule = Cardinal.plural_rule(n, locale)
         n = Cardinal.plural_rules_for(locale) |> Enum.count

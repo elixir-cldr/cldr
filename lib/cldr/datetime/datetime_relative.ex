@@ -5,7 +5,7 @@ defmodule Cldr.DateTime.Relative do
   as "ago" or "in" with an appropriate time unit.  For example, "2 days ago" or
   "in 10 seconds"
   """
-  @default_options [locale: Cldr.get_locale(), format: :default]
+  @default_options [locale: Cldr.get_current_locale(), format: :default]
 
   @second 1
   @minute 60
@@ -131,7 +131,7 @@ defmodule Cldr.DateTime.Relative do
   defp to_string(relative, unit, options)
   when is_integer(relative) and relative in [-1, 0, +1] do
     options[:locale]
-    |> Cldr.Locale.get_locale
+    |> Cldr.get_locale
     |> get_in([:date_fields, unit, options[:format], :relative_ordinal])
     |> Enum.at(relative + 1)
   end
@@ -140,7 +140,7 @@ defmodule Cldr.DateTime.Relative do
   when is_number(relative) and unit in @unit_keys do
     direction = if relative > 0, do: :relative_future, else: :relative_past
     rules = options[:locale]
-    |> Cldr.Locale.get_locale
+    |> Cldr.get_locale
     |> get_in([:date_fields, unit, options[:format], direction])
 
     rule = Cldr.Number.Cardinal.pluralize(trunc(relative), options[:locale], rules)

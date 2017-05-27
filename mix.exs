@@ -40,7 +40,7 @@ defmodule Cldr.Mixfile do
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.1"},
       {:benchfella, "~> 0.3.0", only: :dev},
-      {:credo, "~> 0.7", only: [:dev, :test]},
+      {:credo, "0.8.0-rc6", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.15", only: :dev},
       {:excoveralls, "~> 0.6.3", only: :test},
       {:gettext, "~> 0.13.0", optional: true},

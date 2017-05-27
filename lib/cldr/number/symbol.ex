@@ -26,9 +26,19 @@ defmodule Cldr.Number.Symbol do
          minus_sign: "-", nan: "NaN", per_mille: "‰", percent_sign: "%",
          plus_sign: "+", superscripting_exponent: "×", time_separator: ":"}]
   """
-  @spec number_symbols_for(Locale.t) :: Keyword.t
-  def number_symbols_for(locale) do
-    Locale.get_locale(locale).number_symbols
+  @spec number_symbols_for(Locale.t | Locale.name) :: Keyword.t
+  def number_symbols_for(locale) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> number_symbols_for
+  end
+
+  def number_symbols_for(%{} = locale) do
+    Map.get(locale, :number_symbols)
+  end
+
+  def number_symbols_for({:error, _} = error) do
+    error
   end
 
   @doc """

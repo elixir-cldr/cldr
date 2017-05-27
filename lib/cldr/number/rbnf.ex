@@ -18,7 +18,7 @@ defmodule Cldr.Rbnf do
   """
   def known_locales do
     Enum.filter Cldr.known_locales(), fn (locale) ->
-      Cldr.Locale.get_locale(locale).rbnf != %{}
+      Cldr.get_locale(locale).rbnf != %{}
     end
   end
 
@@ -34,7 +34,7 @@ defmodule Cldr.Rbnf do
   """
   @spec for_locale(Locale.t) :: %{} | nil
   def for_locale(locale) do
-    Cldr.Locale.get_locale(locale).rbnf
+    Cldr.get_locale(locale).rbnf
   end
 
   @doc """

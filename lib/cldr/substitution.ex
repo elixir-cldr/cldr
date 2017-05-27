@@ -5,10 +5,6 @@ defmodule Cldr.Substitution do
   more efficient parameter substituation at runtime.
   """
 
-  def parse("") do
-    []
-  end
-
   @doc """
   Parses a substitution template into a list of tokens to
   allow efficient parameter substitution at runtime.
@@ -33,6 +29,10 @@ defmodule Cldr.Substitution do
   of templates that simplify and speed up parameter substitution at runtime.
   """
   @spec parse(String.t) :: [String.t | integer, ...]
+  def parse("") do
+    []
+  end
+
   def parse(template) when is_binary(template) do
     String.split(template, ~r/{[0-9]}/, include_captures: true, trim: true)
     |> Enum.map(&item_from_token/1)

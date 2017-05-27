@@ -102,8 +102,8 @@ defmodule Cldr.Number.Format do
        "¤000T", "¤00B", "¤00K", "¤00M", "¤00T", "¤0B", "¤0K", "¤0M", "¤0T"]
   """
   def decimal_format_list_for(locale) do
-    Cldr.Locale.get_locale(locale)
-    |> get_in([:number_formats])      # Returns a list per number system
+    Cldr.get_locale(locale)
+    |> Map.get(:number_formats)      # Returns a list per number system
     |> Map.values                     # Returns a consolidated list of %Cldr.Number.Format{}
     |> Enum.map(&Map.from_struct/1)
     |> Enum.map(&(Map.delete(&1, :currency_spacing)))
@@ -148,9 +148,19 @@ defmodule Cldr.Number.Format do
         }
 
   """
-  @spec all_formats_for(Cldr.locale) :: Map.t
-  def all_formats_for(locale) do
-    Locale.get_locale(locale).number_formats
+  @spec all_formats_for(%Locale{} | Locale.name) :: Map.t
+  def all_foramts_for(locale) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> all_formats_for
+  end
+
+  def all_formats_for(%Locale{} = locale) do
+    Map.get(locale, :number_formats)
+  end
+
+  def all_formats_for({:error, _} = error) do
+    error
   end
 
   @doc """
@@ -196,11 +206,25 @@ defmodule Cldr.Number.Format do
 
   """
   @spec formats_for(Cldr.locale, atom | String.t) :: Map.t
-  def formats_for(locale \\ Cldr.get_locale(), number_system \\ :default)
+  def formats_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
 
-  def formats_for(locale, number_system) do
-    system = System.system_name_from(number_system, locale)
-    all_formats_for(locale)[system]
+  def formats_for(locale, number_system) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> formats_for(number_system)
+  end
+
+  def formats_for(%Locale{} = locale, number_system) do
+    case system_name = System.system_name_from(number_system, locale) do
+      {:error, _} = error ->
+        error
+      _ ->
+        {:ok, all_formats_for(locale)[system_name]}
+    end
+  end
+
+  def formats_for({:error, _} = error, _number_system) do
+    error
   end
 
   @doc """
@@ -233,13 +257,28 @@ defmodule Cldr.Number.Format do
       [:accounting, :currency, :currency_long, :currency_short,
       :decimal_long, :decimal_short, :percent, :scientific, :standard]
   """
-  @spec format_styles_for(Cldr.locale, atom | String.t) :: [atom]
-  def format_styles_for(locale \\ Cldr.get_locale(), number_system \\ :default) do
-    formats_for(locale, number_system)
-    |> Map.to_list
-    |> Enum.reject(fn {k, v} -> is_nil(v) || k == :__struct__  || k == :currency_spacing end)
-    |> Enum.into(%{})
-    |> Map.keys
+  @spec format_styles_for(%Locale{} | Locale.name, atom | String.t) :: [atom]
+  def format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
+  def format_styles_for(locale, number_system) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> format_styles_for(number_system)
+  end
+
+  def format_styles_for(%Locale{} = locale, number_system) do
+    with {:ok, formats} <- formats_for(locale, number_system) do
+      formats
+      |> Map.to_list
+      |> Enum.reject(fn {k, v} -> is_nil(v) || k == :__struct__  || k == :currency_spacing end)
+      |> Enum.into(%{})
+      |> Map.keys
+    else
+      {:error, _} = error -> error
+    end
+  end
+
+  def format_styles_for({:error, _} = error, _number_system) do
+    error
   end
 
   @doc """
@@ -265,16 +304,29 @@ defmodule Cldr.Number.Format do
       [:currency_short, :decimal_long, :decimal_short]
   """
   @isnt_really_a_short_format [:currency_long]
-  def short_format_styles_for(locale, number_system \\ :default) do
-    formats = locale
-    |> format_styles_for(number_system)
-    |> MapSet.new
+  @short_formats MapSet.new(@short_format_styles -- @isnt_really_a_short_format)
+  @spec short_format_styles_for(%Locale{} | Locale.name, binary | atom) :: List.t
+  def short_format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
+  def short_format_styles_for(locale, number_system) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> short_format_styles_for(number_system)
+  end
 
-    short_formats = (@short_format_styles -- @isnt_really_a_short_format)
-    |> MapSet.new
+  def short_format_styles_for(%Locale{} = locale, number_system) do
+    case formats = format_styles_for(locale, number_system) do
+    {:error, _} = error ->
+      error
+    _ ->
+      formats
+      |> MapSet.new
+      |> MapSet.intersection(@short_formats)
+      |> MapSet.to_list
+    end
+  end
 
-    MapSet.intersection(formats, short_formats)
-    |> MapSet.to_list
+  def short_format_styles_for({:error, _} = error, _number_system) do
+    error
   end
 
   @doc """
@@ -301,12 +353,27 @@ defmodule Cldr.Number.Format do
       [:accounting, :currency, :currency_long, :percent,
        :scientific, :standard]
   """
-  def decimal_format_styles_for(locale, number_system \\ :default) do
-    format_styles_for(locale, number_system)
-      -- short_format_styles_for(locale, number_system)
-      -- [:currency_long, :currency_spacing]
+  def decimal_format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
+  def decimal_format_styles_for(locale, number_system) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> decimal_format_styles_for(number_system)
   end
 
+  def decimal_format_styles_for(%Locale{} = locale, number_system) do
+    case format_styles_for(locale, number_system) do
+    [_ | _] = styles ->
+      styles
+      -- short_format_styles_for(locale, number_system)
+      -- [:currency_long, :currency_spacing]
+    {:error, _} = error ->
+      error
+    end
+  end
+
+  def decimal_format_styles_for({:error, _} = error, _number_systems) do
+    error
+  end
 
   @doc """
   Returns the number system types available for a `locale`
@@ -332,19 +399,28 @@ defmodule Cldr.Number.Format do
       iex> Cldr.Number.Format.format_system_types_for "th"
       [:default, :native]
   """
-  @spec format_system_types_for(Cldr.locale) :: [atom]
-  def format_system_types_for(locale \\ Cldr.get_locale()) do
-    Cldr.Number.System.number_systems_for(locale)
+  @spec format_system_types_for(Locale.name | %Locale{}) :: [atom]
+  def format_system_types_for(locale \\ Cldr.get_current_locale())
+  def format_system_types_for(locale) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> format_system_types_for
+  end
+
+  def format_system_types_for(%Locale{} = locale) do
+    locale
+    |> System.number_systems_for
     |> Map.keys
+  end
+
+  def format_system_types_for({:error, _} = error) do
+    error
   end
 
   @doc """
   Returns the names of the number systems for the `locale`.
 
   * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
-
-  Delegates to `Cldr.Number.System.number_system_names_for(locale)` and
-  is here for convenience.
 
   ## Examples
 
@@ -355,20 +431,44 @@ defmodule Cldr.Number.Format do
       [:latn]
   """
   @spec format_system_names_for(Cldr.locale) :: [String.t]
-  def format_system_names_for(locale \\ Cldr.get_locale()) do
+  def format_system_names_for(locale \\ Cldr.get_current_locale()) do
     Cldr.Number.System.number_system_names_for(locale)
   end
 
-  def minimum_grouping_digits_for(locale) do
-    get_in(Locale.get_locale(locale), [:minimum_grouping_digits])
+  @doc """
+  Returns the minium grouping digits for a locale.
+
+  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
+
+  ## Examples
+
+      iex> Cldr.Number.Format.minimum_grouping_digits_for("en")
+      1
+  """
+  @spec minimum_grouping_digits_for(%Locale{} | Locale.name) :: non_neg_integer
+  def minimum_grouping_digits_for(locale) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> minimum_grouping_digits_for
+  end
+
+  def minimum_grouping_digits_for(%Locale{} = locale) do
+    Map.get(locale, :minimum_grouping_digits)
+  end
+
+  def minimum_grouping_digits_for({:error, _} = error) do
+    error
   end
 
   # Extract number formats from short and long lists
+  @doc false
   def extract_formats(formats) when is_map(formats) do
-    Map.values(formats)
+    formats
+    |> Map.values
     |> Enum.map(&hd/1)
   end
 
+  @doc false
   def extract_formats(format) do
     format
   end

@@ -132,8 +132,8 @@ defmodule Cldr.Unit do
        :volume_cubic_meter, :area_hectare, :frequency_hertz, :length_furlong,
        :length_astronomical_unit, ...]
   """
-  def available_units(locale \\ Cldr.get_locale(), style \\ @default_style) do
-    Cldr.Locale.get_locale(locale)
+  def available_units(locale \\ Cldr.get_current_locale(), style \\ @default_style) do
+    Cldr.get_locale(locale)
     |> get_in([:units, style])
     |> Map.keys
   end
@@ -151,12 +151,12 @@ defmodule Cldr.Unit do
   end
 
   defp pattern_for(locale, style, unit) do
-    Cldr.Locale.get_locale(locale)
+    Cldr.get_locale(locale)
     |> get_in([:units, style, unit])
   end
 
   defp normalize_options(options) do
-    locale = options[:locale] || Cldr.get_locale()
+    locale = options[:locale] || Cldr.get_current_locale()
     style = options[:style] || @default_style
     options = Keyword.delete(options, :locale) |> Keyword.delete(:style)
 

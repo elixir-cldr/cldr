@@ -109,7 +109,10 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
-  Returns the number systems available for a locale.
+  Returns the number systems available for a locale
+  or `{:error, message}` if the locale is not known.
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
 
   ## Examples
 
@@ -118,22 +121,148 @@ defmodule Cldr.Number.System do
 
       iex> Cldr.Number.System.number_systems_for "th"
       %{default: :latn, native: :thai}
+
+      iex> Cldr.Number.System.number_systems_for "zz"
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known"}}
   """
-  @spec number_systems_for(Cldr.locale) :: %{}
-  def number_systems_for(locale) do
-    Locale.get_locale(locale)[:number_systems]
+  @spec number_systems_for(Locale.name | %Locale{}) :: Map.t
+  def number_systems_for(locale) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> number_systems_for
   end
 
-  @spec number_system_names_for(Cldr.locale) :: [String.t]
-  def number_system_names_for(locale) do
-    Locale.get_locale(locale)[:number_systems]
-    |> Map.values
-    |> Enum.uniq
+  def number_systems_for(%Locale{} = locale) do
+    Map.get(locale, :number_systems)
   end
 
+  def number_systems_for({:error, _} = error) do
+    error
+  end
+
+  @doc """
+  Returns the number systems available for a locale
+  or raises if the locale is not known.
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_systems_for! "en"
+      %{default: :latn, native: :latn}
+
+      iex> Cldr.Number.System.number_systems_for! "th"
+      %{default: :latn, native: :thai}
+  """
+  @spec number_systems_for!(%Locale{}) :: Map.t
+  def number_systems_for!(locale) do
+    case number_systems_for(locale) do
+      {:error, {exception, message}} ->
+        raise exception, message
+      systems ->
+        systems
+    end
+  end
+
+  @doc """
+  Returns the actual number system from a number system type.
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
+
+  * `system_name` is any name of name type returned by
+  `Cldr.Number.System.number_system_types/0`
+
+  This function will decode a number system type into the actual
+  number system.  If the number system provided can't be decoded
+  it is returned as is.
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_for "th", :default
+      %{digits: "0123456789", type: :numeric}
+
+      iex> Cldr.Number.System.number_system_for "th", :native
+      %{digits: "๐๑๒๓๔๕๖๗๘๙", type: :numeric}
+
+      iex> Cldr.Number.System.number_system_for "th", :latn
+      %{digits: "0123456789", type: :numeric}
+
+      iex> Cldr.Number.System.number_system_for "en", :default
+      %{digits: "0123456789", type: :numeric}
+
+      iex> Cldr.Number.System.number_system_for "en", :finance
+      nil
+
+      iex> Cldr.Number.System.number_system_for "en", :native
+      %{digits: "0123456789", type: :numeric}
+  """
   def number_system_for(locale, system_name) do
-    system_name = system_name_from(system_name, locale)
-    number_systems()[system_name]
+    case system_name_from(system_name, locale) do
+      {:error, _} = error ->
+        error
+      system_name ->
+        number_systems()[system_name]
+    end
+  end
+
+  @doc """
+  Returns the names of the number systems available for
+  a locale or an `{:error, message}` tuple if the locale
+  is not known.
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_names_for "en"
+      [:latn]
+
+      iex> Cldr.Number.System.number_system_names_for "th"
+      [:latn, :thai]
+
+      iex> Cldr.Number.System.number_system_names_for "he"
+      [:latn, :hebr]
+
+      iex> Cldr.Number.System.number_system_names_for "zz"
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known"}}
+  """
+  @spec number_system_names_for(%Locale{} | Locale.name) :: [String.t]
+  def number_system_names_for(locale) do
+    case number_systems_for(locale) do
+      {:error, _} = error ->
+        error
+      systems ->
+        systems
+        |> Map.values
+        |> Enum.uniq
+    end
+  end
+
+  @doc """
+  Returns the names of the number systems available for
+  a locale or an `{:error, message}` tuple if the locale
+  is not known.
+
+  * `locale` is any valid locale returned by `Cldr.known_locales()`
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_names_for "en"
+      [:latn]
+
+      iex> Cldr.Number.System.number_system_names_for "th"
+      [:latn, :thai]
+
+      iex> Cldr.Number.System.number_system_names_for "he"
+      [:latn, :hebr]
+  """
+  def number_system_names_for!(locale) do
+    case number_system_names_for(locale) do
+      {:error, {exception, message}} ->
+        raise exception, message
+      names ->
+        names
+    end
   end
 
   @doc """
@@ -159,25 +288,63 @@ defmodule Cldr.Number.System do
 
       ex> Cldr.Number.System.system_name_from(:default, "en")
       :latn
+
       iex> Cldr.Number.System.system_name_from("latn", "en")
       :latn
+
       iex> Cldr.Number.System.system_name_from(:finance, "en")
       :finance
+
+      iex> Cldr.Number.System.system_name_from(:nope, "en")
+      {:error, {Cldr.UnknownNumberSystemError, "sddf"}}
 
   Note that return value is not guaranteed to be a valid
   number system for the given locale as demonstrated in the third example.
   """
-  def system_name_from(system_name, locale \\ Cldr.get_locale())
-  def system_name_from(system_name, locale) when is_binary(system_name) do
+  @spec system_name_from(binary | atom, Locale.name | %Locale{}) :: atom
+  def system_name_from(system_name, locale \\ Cldr.get_current_locale())
+
+  def system_name_from(system_name, locale) when is_binary(locale) do
+    system_name_from(system_name, Cldr.get_locale(locale))
+  end
+
+  def system_name_from(_system_name, {:error, _} = error) do
+    error
+  end
+
+  def system_name_from(system_name, %Locale{} = locale) when is_binary(system_name) do
     try do
       system_name_from(String.to_existing_atom(system_name), locale)
     rescue ArgumentError ->
-      raise Cldr.UnknownNumberSystemError, number_system_error(system_name)
+      {:error, number_system_error(system_name)}
     end
   end
 
-  def system_name_from(system_name, locale) when is_atom(system_name) do
-    number_systems_for(locale)[system_name] || system_name
+  def system_name_from(system_name, %Locale{} = locale) when is_atom(system_name) do
+    number_systems = Map.get(locale, :number_systems)
+    cond do
+      Map.has_key?(number_systems, system_name) ->
+        Map.get(number_systems, system_name)
+      system_name in Map.values(number_systems) ->
+        system_name
+      true ->
+        {:error, number_system_error(system_name)}
+    end
+  end
+
+  @doc """
+  Returns a number system name for a given locale and number system reference
+  and raises if the number system is not available for the given locale.
+
+  See `Cldr.Number.System.system_name_from/2` for further information.
+  """
+  def system_name_from!(system_name, locale \\ Cldr.get_current_locale()) do
+    case system_name_from(system_name, locale) do
+      {:error, {exception, message}} ->
+        raise exception, message
+      name ->
+        name
+    end
   end
 
   @doc """
@@ -190,13 +357,32 @@ defmodule Cldr.Number.System do
   and number system "latn" since this is what the number formatting routines use
   as placeholders.
   """
-  # @lint {Credo.Check.Refactor.Nesting, false}
-  def number_systems_like(locale, number_system) do
-    digits = number_system_for(locale, number_system)[:digits]
-    symbols = Symbol.number_symbols_for(locale, number_system)
+  @spec number_systems_like(%Locale{} | Locale.name, binary | atom) :: {:ok, List.t} | {:error, tuple}
+  def number_systems_like(locale, number_system) when is_binary(locale) do
+    locale
+    |> Cldr.get_locale
+    |> number_systems_like(number_system)
+  end
 
-    likes = Enum.map(Cldr.known_locales(), fn this_locale ->
-      Enum.reduce number_system_names_for(locale), [], fn this_system, acc ->
+  def number_systems_like(%Locale{} = locale, number_system) do
+    with %{digits: digits} <- number_system_for(locale, number_system),
+      %Cldr.Number.Symbol{} = symbols <- Symbol.number_symbols_for(locale, number_system),
+      [_h | _t] = names <- number_system_names_for(locale)
+    do
+      likes = do_number_systems_like(digits, symbols, names)
+      {:ok, likes}
+    else
+      {:error, _} = error -> error
+    end
+  end
+
+  def number_systems_like({:error, _} = error, _number_system) do
+    error
+  end
+
+  defp do_number_systems_like(digits, symbols, names) do
+    Enum.map(Cldr.known_locales(), fn this_locale ->
+      Enum.reduce names, [], fn this_system, acc ->
         case number_system_for(this_locale, this_system) do
         nil ->
           acc
@@ -208,8 +394,7 @@ defmodule Cldr.Number.System do
           end
         end
       end
-    end)
-    likes |> Enum.reject(&(is_nil(&1) || &1 == []))
+    end) |> Enum.reject(&(is_nil(&1) || &1 == []))
   end
 
   @doc false
@@ -220,6 +405,7 @@ defmodule Cldr.Number.System do
     end
   end
 
+  @doc false
   def number_system_digits(system) do
     if system = systems_with_digits()[system] do
       {:ok, system.digits}
@@ -228,7 +414,20 @@ defmodule Cldr.Number.System do
     end
   end
 
-  defp number_system_error(system_name) do
-    "The requested number system #{inspect system_name} is not known."
+  @doc """
+  Generate a transliteration map between two character classes
+  """
+  def generate_transliteration_map(from, to)
+  when is_binary(from) and is_binary(to) do
+    from
+    |> String.graphemes
+    |> Enum.zip(String.graphemes(to))
+    |> Enum.into(%{})
+  end
+
+  @doc false
+  def number_system_error(system_name) do
+    {Cldr.UnknownNumberSystemError,
+      "The number system #{inspect system_name} is not known"}
   end
 end

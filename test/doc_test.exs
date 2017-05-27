@@ -13,6 +13,7 @@ defmodule Doc.Test do
   doctest Cldr.Number.Format.Compiler
   doctest Cldr.Number.Formatter.Short
   doctest Cldr.Number.Formatter.Currency
+  doctest Cldr.Rbnf.Config
   doctest Cldr.Rbnf.Ordinal
   doctest Cldr.Rbnf.Spellout
   doctest Cldr.Rbnf.NumberSystem

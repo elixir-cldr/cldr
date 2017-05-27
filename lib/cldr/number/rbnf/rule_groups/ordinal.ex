@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Rbnf.Ordinal do
   @moduledoc """
   Functions to implement the ordinal rule-based-number-format rules of CLDR.

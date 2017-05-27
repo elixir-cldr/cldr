@@ -14,6 +14,7 @@ defmodule Cldr do
   """
 
   alias Cldr.Config
+  alias Cldr.Locale
 
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
@@ -65,8 +66,8 @@ defmodule Cldr do
   Return the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
   """
-  @spec get_locale :: Locale.t
-  def get_locale do
+  @spec get_current_locale :: Locale.t
+  def get_current_locale do
     Process.get(:cldr, default_locale())
   end
 
@@ -74,14 +75,13 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
   """
-  @spec set_locale(Locale.t) :: Locale.t
-  def set_locale(locale) when is_binary(locale) do
+  @spec set_current_locale(Locale.t) :: Locale.t
+  def set_current_locale(locale) when is_binary(locale) do
     if known_locale?(locale) do
       Process.put(:cldr, locale)
       locale
     else
-      raise Cldr.UnknownLocaleError,
-        "The requested locale #{inspect locale} is not known."
+      {:error, Cldr.Locale.locale_error(locale)}
     end
   end
 
@@ -174,6 +174,27 @@ defmodule Cldr do
   @spec known_locale?(Locale.t) :: boolean
   def known_locale?(locale) when is_binary(locale) do
     !!Enum.find(known_locales(), &(&1 == locale))
+  end
+
+  @doc """
+  Returns the map representation of a locale definition
+
+  A locale is defined by a map of definitions that are used to underpin the generation
+  of a set of functions that provide the public API.
+
+  * `locale` is any locale returned by `Cldr.known_locales/0`
+  """
+  @spec get_locale(Locale.name) :: Map.t
+  Enum.each @known_locales, fn locale_name ->
+    locale = struct(Locale, Config.get_locale(locale_name))
+
+    def get_locale(unquote(locale_name)) do
+      unquote(Macro.escape(locale))
+    end
+  end
+
+  def get_locale(locale_name) do
+    {:error, Locale.locale_error(locale_name)}
   end
 
   @doc """

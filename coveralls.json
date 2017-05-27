@@ -1,9 +1,11 @@
 {
   "skip_files": [
     "src",
+    "mix",
     "lib/cldr/number/rbnf.ex",
+    "lib/cldr/number/rbnf/rule_groups",
+    "lib/cldr/install.ex",
     "lib/cldr/number/plural_rule/transformer.ex",
-    " lib/support/xml.ex",
     "lib/cldr/number/plural_rule.ex"
   ],
 

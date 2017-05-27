@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Rbnf.Spellout do
   @moduledoc """
   Functions to implement the spellout rule-based-number-format rules of CLDR.

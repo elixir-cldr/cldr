@@ -39,6 +39,7 @@ defmodule Cldr.Number.Formatter.Short do
 
   import Cldr.Macros, only: [docp: 1]
   alias Cldr.Math
+  alias Cldr.Locale
   alias Cldr.Number.{System, Format, Formatter, Cardinal}
 
   docp """
@@ -62,28 +63,40 @@ defmodule Cldr.Number.Formatter.Short do
   """
 
   def to_string(number, style, options) do
-    locale = options[:locale]
+    locale = (options[:locale] || Cldr.get_current_locale())
+    |> Cldr.get_locale
 
-    number_system = options[:number_system]
-    |> System.system_name_from(locale)
+    case locale do
+      %Locale{} ->
+        number_system = options[:number_system]
+        |> System.system_name_from(locale)
 
-    number
-    |> do_to_short_string(style, locale, number_system, options)
+        number
+        |> do_to_short_string(style, locale, number_system, options)
+      {:error, _} = error ->
+        error
+    end
   end
 
-  @spec do_to_short_string(number, atom, Locale.t, binary, Keyword.t) :: List.t
-  defp do_to_short_string(number, style, locale, number_system, options) do
-    formats = Format.formats_for(locale, number_system)
-    |> Map.get(style)
+  @spec do_to_short_string(number, atom, %Locale{}, atom, Keyword.t) :: List.t
+  defp do_to_short_string(_number, _style, %Locale{} = _locale, {:error, _} = error, _options) do
+    error
+  end
 
-    {number, format} = case choose_short_format(number, formats, options) do
-      {range, [format, number_of_zeros]} ->
-        {normalise_number(number, range, number_of_zeros), format}
-      {_range, format} ->
-        {number, format}
+  defp do_to_short_string(number, style, %Locale{} = locale, number_system, options) do
+    case Format.formats_for(locale, number_system) do
+      {:ok, formats} ->
+        formats = Map.get(formats, style)
+        {number, format} = case choose_short_format(number, formats, options) do
+          {range, [format, number_of_zeros]} ->
+            {normalise_number(number, range, number_of_zeros), format}
+          {_range, format} ->
+            {number, format}
+        end
+        Formatter.Decimal.to_string(number, format, digits(options, options[:fractional_digits]))
+      {:error, _} = error ->
+        error
     end
-
-    Formatter.Decimal.to_string(number, format, digits(options, options[:fractional_digits]))
   end
 
   # For short formats the fractional digits should be 0 unless otherwise specified,

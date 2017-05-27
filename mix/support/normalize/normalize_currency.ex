@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Normalize.Currency do
   @moduledoc """
   Takes the currency part of the locale map and transforms the formats into a more easily

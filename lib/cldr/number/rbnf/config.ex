@@ -2,18 +2,9 @@ defmodule Cldr.Rbnf.Config do
   @moduledoc """
   Rules Base Number Formatting Configuration management.
 
-  During the process of consolidating the various CLDR XML files into
+  During the process of consolidating the various CLDR files into
   a standard format that is easily digestible for Cldr, these functions
-  are used to do the parsing an normalising of RBNF data.
-
-  Note that many of the functions in this module rely on having the raw
-  XML RBNF files from the CLDR repository.  The repository can be installed by
-  running:
-
-      mix cldr.download
-
-  Unless you are interested in the muysteries of how the repository is
-  put together this is not recommended.
+  are used to do the parsing and normalising of RBNF data.
   """
 
   alias Cldr.Rbnf.Rule
@@ -22,6 +13,14 @@ defmodule Cldr.Rbnf.Config do
   @data_dir Path.join(Cldr.Config.cldr_home, "data") <> "/cldr-rbnf"
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
+  @doc """
+  Returns the directory where the RBNF data is stored
+
+  ## Example
+
+      iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
+      true
+  """
   @spec rbnf_dir :: String.t
   def rbnf_dir do
     @rbnf_dir
@@ -36,9 +35,19 @@ defmodule Cldr.Rbnf.Config do
   @doc """
   Returns a list of the locales for which there is an rbnf rule set
 
-  Relies on the presence of downloaded CLDR data.  This can be achieved
-  by runnuing `mix cldr.download`.  This function is usefully primarily
-  to a Cldr library developer.
+  Relies on the presence of downloaded CLDR data. This function is
+  usefully primarily to a Cldr library developer.
+
+  ## Example
+
+      iex> Cldr.Rbnf.Config.rbnf_locales
+      ["af", "am", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy", "da", "de-CH",
+       "de", "ee", "el", "en", "eo", "es-419", "es", "et", "fa-AF", "fa", "fi", "fil",
+       "fo", "fr-BE", "fr-CH", "fr", "ga", "he", "hi", "hr", "hu", "hy", "id", "is",
+       "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lt", "lv", "mk", "ms", "mt",
+       "my", "nb", "nl", "nn", "pl", "pt-PT", "pt", "ro", "root", "ru", "se", "sk",
+       "sl", "sq", "sr-Latn", "sr", "sv", "ta", "th", "tr", "uk", "vi", "yue",
+       "zh-Hant", "zh"]
   """
   @spec rbnf_locales :: [String.t] | []
   def rbnf_locales do
@@ -51,6 +60,17 @@ defmodule Cldr.Rbnf.Config do
 
   This list is therefore the set of known locales for which
   there are rbnf rules defined.
+
+  ## Example
+
+      iex> Cldr.Rbnf.Config.known_locales
+      ["lo", "eo", "ja", "el", "fo", "hu", "yue", "fil", "sq", "cy", "da", "sv", "ee",
+       "et", "ta", "nl", "vi", "nb", "lv", "id", "pt-PT", "fa-AF", "lt", "my",
+       "sr-Latn", "cs", "ms", "fa", "bg", "es", "en", "af", "mt", "am", "ca", "mk",
+       "ro", "de-CH", "ka", "root", "hr", "nn", "hy", "pt", "se", "he", "ga", "sr",
+       "hi", "ky", "ko", "zh-Hant", "kl", "km", "sk", "ru", "zh", "de", "fi", "it",
+       "be", "pl", "az", "tr", "is", "fr-CH", "es-419", "th", "fr-BE", "fr", "sl",
+       "bs", "uk", "ar"]
   """
   def known_locales do
     MapSet.intersection(MapSet.new(Cldr.known_locales), MapSet.new(rbnf_locales()))
@@ -66,6 +86,11 @@ defmodule Cldr.Rbnf.Config do
   like the majority of `Cldr`.  This is by design since the set of locales
   that have rbnf rules is substantially less than the set of locales
   supported by `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Rbnf.Config.for_locale("en") |> Map.keys
+      [:OrdinalRules, :SpelloutRules]
   """
   @spec for_locale(Locale.t) :: %{} | {:error, :rbnf_file_not_found}
   def for_locale(locale) do

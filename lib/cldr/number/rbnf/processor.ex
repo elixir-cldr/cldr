@@ -1,3 +1,4 @@
+# credo:disable-for-this-file
 defmodule Cldr.Rbnf.Processor do
   @moduledoc """
   Macro to define the interpreter for the compiled RBNF rules specific to a rule group (Ordinal,
@@ -117,7 +118,9 @@ defmodule Cldr.Rbnf.Processor do
       {:ok, parsed} = Cldr.Rbnf.Rule.parse(rule.definition)
 
       function_body = rule_body(locale, rule_group, rule, parsed)
-      define_rule(rule.base_value, rule.range, rule_group, locale, function_body)
+
+      rule.base_value
+      |> define_rule(rule.range, rule_group, locale, function_body)
       |> add_function_to_exports(access, env.module, locale)
       |> Code.eval_quoted([], env)
     end

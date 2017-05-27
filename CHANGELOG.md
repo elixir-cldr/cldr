@@ -1,3 +1,13 @@
+## Changelog for Cldr v0.4.0 ______, 2017
+
+### Breaking Changes
+
+* `Cldr.get_locale/0` is renamed to `Cldr.get_current_locale/0` to better reflect its intent
+
+* `Cldr.set_locale/1` is renamed to `Cldr.set_current_locale/1` to better reflects its intent
+
+* `Cldr.Locale.get_locale/1` has moved to `Cldr` and is now invoked as `Cldr.get_locale/1`.
+
 ## Changelog for Cldr v0.3.0 May 22, 2017
 
 ### Breaking Change
