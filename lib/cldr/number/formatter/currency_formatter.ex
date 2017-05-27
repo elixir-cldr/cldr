@@ -40,7 +40,7 @@ defmodule Cldr.Number.Formatter.Currency do
     number_system = options[:number_system]
     |> System.system_name_from(locale)
 
-    if !(formats = Format.formats_for(locale, number_system).currency_long) do
+    if !(formats = Format.formats_for!(locale, number_system).currency_long) do
       raise ArgumentError, message: "No :currency_long format known for " <>
       "locale #{inspect locale} and number system #{inspect number_system}."
     end

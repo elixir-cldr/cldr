@@ -191,7 +191,7 @@ defmodule Cldr.Number.System do
       %{digits: "0123456789", type: :numeric}
 
       iex> Cldr.Number.System.number_system_for "en", :finance
-      nil
+      {:error, {Cldr.UnknownNumberSystemError, "The number system :finance is not known"}}
 
       iex> Cldr.Number.System.number_system_for "en", :native
       %{digits: "0123456789", type: :numeric}
@@ -292,11 +292,11 @@ defmodule Cldr.Number.System do
       iex> Cldr.Number.System.system_name_from("latn", "en")
       :latn
 
-      iex> Cldr.Number.System.system_name_from(:finance, "en")
-      :finance
+      iex> Cldr.Number.System.system_name_from(:native, "en")
+      :latn
 
       iex> Cldr.Number.System.system_name_from(:nope, "en")
-      {:error, {Cldr.UnknownNumberSystemError, "sddf"}}
+      {:error, {Cldr.UnknownNumberSystemError, "The number system :nope is not known"}}
 
   Note that return value is not guaranteed to be a valid
   number system for the given locale as demonstrated in the third example.
@@ -367,7 +367,7 @@ defmodule Cldr.Number.System do
   def number_systems_like(%Locale{} = locale, number_system) do
     with %{digits: digits} <- number_system_for(locale, number_system),
       %Cldr.Number.Symbol{} = symbols <- Symbol.number_symbols_for(locale, number_system),
-      [_h | _t] = names <- number_system_names_for(locale)
+      [_ | _] = names <- number_system_names_for(locale)
     do
       likes = do_number_systems_like(digits, symbols, names)
       {:ok, likes}
@@ -384,10 +384,9 @@ defmodule Cldr.Number.System do
     Enum.map(Cldr.known_locales(), fn this_locale ->
       Enum.reduce names, [], fn this_system, acc ->
         case number_system_for(this_locale, this_system) do
-        nil ->
+        {:error, _} ->
           acc
-        system ->
-          these_digits = system.digits
+        %{digits: these_digits} ->
           these_symbols = Symbol.number_symbols_for(this_locale, this_system)
           if digits == these_digits && symbols == these_symbols do
             acc ++ {this_locale, this_system}
@@ -397,32 +396,65 @@ defmodule Cldr.Number.System do
     end) |> Enum.reject(&(is_nil(&1) || &1 == []))
   end
 
-  @doc false
-  def number_system_digits!(system) do
-    case number_system_digits(system) do
-      {:ok, digits} -> digits
-      _ ->  raise Cldr.UnknownNumberSystemError, number_system_error(system)
-    end
-  end
+  @doc """
+  Returns `{:ok, digits}` for a number system, or an `{:error, message}` if the
+  number system is not know.
 
-  @doc false
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_digits(:latn)
+      {:ok, "0123456789"}
+
+      iex> Cldr.Number.System.number_system_digits(:nope)
+      {:error, {Cldr.UnknownNumberSystemError, "The number system nil is not known"}}
+  """
   def number_system_digits(system) do
     if system = systems_with_digits()[system] do
-      {:ok, system.digits}
+      {:ok, Map.get(system, :digits)}
     else
       {:error, number_system_error(system)}
     end
   end
 
   @doc """
+  Returns `digits` for a number system, or raises an exception if the
+  number system is not know.
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_digits! :latn
+      "0123456789"
+
+      Cldr.Number.System.number_system_digits! :nope
+      ** (Cldr.UnknownNumberSystemError) The number system :nope is not known
+  """
+  def number_system_digits!(system) do
+    case number_system_digits(system) do
+      {:ok, digits} ->
+        digits
+      _ ->
+        {exception, message} = number_system_error(system)
+        raise exception, message
+    end
+  end
+
+  @doc """
   Generate a transliteration map between two character classes
   """
-  def generate_transliteration_map(from, to)
-  when is_binary(from) and is_binary(to) do
+  def generate_transliteration_map(from, to) when is_binary(from) and is_binary(to) do
+    do_generate_transliteration_map(from, to, String.length(from), String.length(to))
+  end
+
+  defp do_generate_transliteration_map(from, to, from_length, to_length)
+  when from_length == to_length do
     from
     |> String.graphemes
     |> Enum.zip(String.graphemes(to))
     |> Enum.into(%{})
+  end
+
+  defp do_generate_transliteration_map(from, to, _from_length, _to_length) do
+    {:error, {ArgumentError, "#{inspect from} and #{inspect to} aren't the same length"}}
   end
 
   @doc false

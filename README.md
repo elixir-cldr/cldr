@@ -207,7 +207,7 @@ Tests are run on Elixir 1.4.x.  `Cldr` will not run on Elixir version before 1.4
 
 ### Updating the CDLR data repository if installing from Github
 
-The CLDR data is maintained in [JSON format by the Unicode Consortium](https://github.com/unicode-cldr/cldr-json).  The appropriate content is maintained as submodules in the `data` directory of this Cldr repository.
+The CLDR data is maintained in [JSON format by the Unicode Consortium](https://github.com/unicode-cldr/cldr-json).  The appropriate content is maintained as submodules in the `data` directory of this `Cldr` repository.
 
 To update the CDLR data, `git pull` each of the submodules.  For example:
 

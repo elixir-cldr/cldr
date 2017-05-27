@@ -8,6 +8,10 @@
 
 * `Cldr.Locale.get_locale/1` has moved to `Cldr` and is now invoked as `Cldr.get_locale/1`.
 
+* `Cldr.get_locale/1` now returns a type `%Cldr.Locale{}` rather than the previous `Map.t`.  This will affect applications that use the `Access` behaviour or `Enumerable` protocol on a `Locale` since this are not supported on `structs`.
+
+* Functions that used to `raise` on error now do not.  Instead a standard error tuple is returned of the form `{:error, {exception_module, message}}`.  For many of these functions a `bang` version also now exists which will raise on error.  This change reflects the community view that library packages shouldn't raise exceptions.
+
 ## Changelog for Cldr v0.3.0 May 22, 2017
 
 ### Breaking Change

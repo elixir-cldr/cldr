@@ -22,23 +22,23 @@ defmodule Number.Format.Test do
   end
 
   test "that there are decimal formats for a locale" do
-    assert Map.keys(Cldr.Locale.get_locale("en").number_formats) == [:latn]
+    assert Map.keys(Cldr.get_locale("en").number_formats) == [:latn]
   end
 
   test "that there is an exception if we get formats for an unknown locale" do
-    assert_raise Cldr.UnknownLocaleError, ~r/The requested locale .* is not known/, fn ->
-      Format.formats_for("zzz")
+    assert_raise Cldr.UnknownLocaleError, ~r/The locale .* is not known/, fn ->
+      Format.formats_for!("zzz")
     end
   end
 
-  test "that there is an exception if we get formats for an unknown locale and number system" do
-    assert_raise Cldr.UnknownNumberSystemError, ~r/The requested number system .* is not known./, fn ->
-      Format.formats_for("zzz", "zulu")
+  test "that there is an exception if we get formats for an number system" do
+    assert_raise Cldr.UnknownNumberSystemError, "The number system \"zulu\" is not known", fn ->
+      Format.formats_for!("en", "zulu")
     end
   end
 
   test "that we get default formats_for" do
-    assert Format.formats_for.__struct__ == Cldr.Number.Format
+    assert Format.formats_for!.__struct__ == Cldr.Number.Format
   end
 
   test "that when there is no format defined for a number system we get an error return" do

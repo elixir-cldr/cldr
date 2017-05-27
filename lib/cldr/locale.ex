@@ -7,10 +7,6 @@ defmodule Cldr.Locale do
 
   @type name :: binary
 
-  # def get_locale(locale) do
-  #   Cldr.get_locale(locale)
-  # end
-
   def normalize_locale_name(locale_name) do
     String.replace(locale_name, "_", "-")
   end

@@ -111,7 +111,7 @@ defmodule Cldr.Number.Formatter.Short do
 
   defp choose_short_format(number, _rules, options) when is_number(number) and number < 1000 do
     format = options[:locale]
-    |> Format.formats_for(options[:number_system])
+    |> Format.formats_for!(options[:number_system])
     |> Map.get(standard_or_currency(options))
 
     {number, format}

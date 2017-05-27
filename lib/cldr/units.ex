@@ -11,6 +11,7 @@ defmodule Cldr.Unit do
   """
 
   alias Cldr.Substitution
+  alias Cldr.Locale
 
   @unit_styles [:long, :short, :narrow]
   @default_style :long
@@ -134,7 +135,8 @@ defmodule Cldr.Unit do
   """
   def available_units(locale \\ Cldr.get_current_locale(), style \\ @default_style) do
     Cldr.get_locale(locale)
-    |> get_in([:units, style])
+    |> Map.get(:units)
+    |> get_in([style])
     |> Map.keys
   end
 
@@ -150,9 +152,15 @@ defmodule Cldr.Unit do
     @unit_styles
   end
 
+  @doc false
+  def unit_error(unit) do
+    {Cldr.UnknownUnitError, "The unit #{inspect unit} is not known."}
+  end
+
   defp pattern_for(locale, style, unit) do
     Cldr.get_locale(locale)
-    |> get_in([:units, style, unit])
+    |> Map.get(:units)
+    |> get_in([style, unit])
   end
 
   defp normalize_options(options) do
@@ -165,13 +173,13 @@ defmodule Cldr.Unit do
     do
       {locale, style, options}
     else
-      {:error, {_exception, _message}} = error -> error
+      {:error, _} = error -> error
     end
   end
 
   defp verify_locale(locale) do
     if !Cldr.known_locale?(locale) do
-      {:error, {Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."}}
+      {:error, Locale.locale_error(locale)}
     else
       :ok
     end
@@ -179,7 +187,7 @@ defmodule Cldr.Unit do
 
   defp verify_unit(locale, style, unit) do
     if !pattern_for(locale, style, unit) do
-      {:error, {Cldr.UnknownUnitError, "The unit #{inspect unit} is not known."}}
+      {:error, unit_error(unit)}
     else
       :ok
     end
@@ -192,4 +200,5 @@ defmodule Cldr.Unit do
       :ok
     end
   end
+
 end

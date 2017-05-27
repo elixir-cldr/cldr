@@ -90,7 +90,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.get_locale()
+      iex> Cldr.default_locale()
       "en"
   """
   @default_locale Config.default_locale()

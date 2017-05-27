@@ -132,7 +132,8 @@ defmodule Cldr.DateTime.Relative do
   when is_integer(relative) and relative in [-1, 0, +1] do
     options[:locale]
     |> Cldr.get_locale
-    |> get_in([:date_fields, unit, options[:format], :relative_ordinal])
+    |> Map.get(:date_fields)
+    |> get_in([unit, options[:format], :relative_ordinal])
     |> Enum.at(relative + 1)
   end
 
@@ -141,7 +142,8 @@ defmodule Cldr.DateTime.Relative do
     direction = if relative > 0, do: :relative_future, else: :relative_past
     rules = options[:locale]
     |> Cldr.get_locale
-    |> get_in([:date_fields, unit, options[:format], direction])
+    |> Map.get(:date_fields)
+    |> get_in([unit, options[:format], direction])
 
     rule = Cldr.Number.Cardinal.pluralize(trunc(relative), options[:locale], rules)
 
