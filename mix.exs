@@ -71,7 +71,7 @@ defmodule Cldr.Mixfile do
   def links do
     %{
       "GitHub"    => "https://github.com/kipcole9/cldr",
-      "Changelog" => "https://github.com/kipcole9/cldr/blob/master/CHANGELOG.md"
+      "Changelog" => "https://github.com/kipcole9/cldr/blob/v#{@version}/CHANGELOG.md"
     }
   end
 
