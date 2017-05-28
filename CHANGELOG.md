@@ -1,5 +1,7 @@
 ## Changelog for Cldr v0.4.0 ______, 2017
 
+This release introduces some breaking changes as described below.  However the changes do not affect the primary public api of `to_string/2` used in `Cldr.Number`, `Cldr.List`, `Cldr.Unit`except insofaras an error return is now standardised as an `{:error, {exception, nessage}}` tuple.  Therefore chances are that library users won't notice.
+
 ### Breaking Changes
 
 * `Cldr.get_locale/0` is renamed to `Cldr.get_current_locale/0` to better reflect its intent

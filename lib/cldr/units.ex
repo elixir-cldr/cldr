@@ -134,7 +134,8 @@ defmodule Cldr.Unit do
        :length_astronomical_unit, ...]
   """
   def available_units(locale \\ Cldr.get_current_locale(), style \\ @default_style) do
-    Cldr.get_locale(locale)
+    locale
+    |> Cldr.get_locale
     |> Map.get(:units)
     |> get_in([style])
     |> Map.keys
@@ -157,8 +158,13 @@ defmodule Cldr.Unit do
     {Cldr.UnknownUnitError, "The unit #{inspect unit} is not known."}
   end
 
+  def style_error(style) do
+    {Cldr.UnknownFormatError, "The unit style #{inspect style} is not known."}
+  end
+
   defp pattern_for(locale, style, unit) do
-    Cldr.get_locale(locale)
+    locale
+    |> Cldr.get_locale
     |> Map.get(:units)
     |> get_in([style, unit])
   end
@@ -195,7 +201,7 @@ defmodule Cldr.Unit do
 
   defp verify_style(style) do
     if !(style in @unit_styles) do
-      {:error, {Cldr.UnknownFormatError, "The unit style #{inspect style} is not known."}}
+      {:error, style_error(style)}
     else
       :ok
     end
