@@ -355,7 +355,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     exponent_sign = if exponent >= 0, do: 1, else: -1
     integer = Enum.map(integer, &Kernel.+(&1, ?0))
     fraction = Enum.map(fraction, &Kernel.+(&1, ?0))
-    exponent = if exponent == 0, do: [?0], else: Integer.to_char_list(abs(exponent))
+    exponent = if exponent == 0, do: [?0], else: Integer.to_charlist(abs(exponent))
     {sign, integer, fraction, exponent_sign, exponent}
   end
 

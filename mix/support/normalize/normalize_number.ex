@@ -120,7 +120,7 @@ defmodule Cldr.Normalize.Number do
 
   defp number_of_zeros(format) do
     format
-    |> String.to_char_list
+    |> String.to_charlist
     |> Enum.reduce(0, fn c, acc -> if c == ?0, do: acc + 1, else: acc end)
   end
 end
