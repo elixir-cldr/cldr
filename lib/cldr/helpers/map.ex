@@ -135,8 +135,6 @@ defmodule Cldr.Map do
     delete_in(map, [keys])
   end
 
-
-
   def delete_in(other, _keys) do
     other
   end
