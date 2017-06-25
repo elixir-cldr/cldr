@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.4.1 May 29, 2017
+
+### Enhancements
+
+* Replace deprecated calls to `Integer.to_char_list` with `Integer.to_charlist` for Elixir 1.5 compatibility
+
 ## Changelog for Cldr v0.4.0 May 29, 2017
 
 This release introduces some breaking changes as described below.  However the changes do not affect the primary public api of `to_string/2` used in `Cldr.Number`, `Cldr.List`, `Cldr.Unit`except insofaras an error return is now standardised as an `{:error, {exception, nessage}}` tuple.  Therefore chances are that library users won't notice.
