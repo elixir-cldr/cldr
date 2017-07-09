@@ -1,4 +1,4 @@
-## Changelog for Cldr v0.4.2 July, 2017
+## Changelog for Cldr v0.4.2 July 9, 2017
 
 ### Bug Fixes
 
