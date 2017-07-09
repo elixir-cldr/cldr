@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.4.2 July, 2017
+
+### Bug Fixes
+
+* Installation of a new default locale was failing due a compilation order dependency issue.  Fixes #17.
+
 ## Changelog for Cldr v0.4.1 May 29, 2017
 
 ### Enhancements

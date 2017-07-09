@@ -30,7 +30,7 @@ defmodule Cldr.Install do
   Install all available locales.
   """
   def install_all_locales do
-    Enum.each Cldr.all_locales(), &install_locale/1
+    Enum.each Cldr.Config.all_locales(), &install_locale/1
     :ok
   end
 
@@ -59,7 +59,7 @@ defmodule Cldr.Install do
       ensure_client_dirs_exist!(client_locales_dir())
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
-      do_install_locale(locale, locale in Cldr.all_locales())
+      do_install_locale(locale, locale in Cldr.Config.all_locales())
     else
       :already_installed
     end
@@ -76,11 +76,10 @@ defmodule Cldr.Install do
   defp do_install_locale(locale, true) do
     require Logger
 
-    url = "#{base_url()}#{locale_filename(locale)}" |> String.to_charlist
-
     output_file_name = [client_locales_dir(), "/", locale_filename(locale)]
     |> :erlang.iolist_to_binary
 
+    url = String.to_charlist("#{base_url()}#{locale_filename(locale)}")
     case :httpc.request(url) do
       {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
         output_file_name
