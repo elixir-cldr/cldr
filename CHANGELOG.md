@@ -2,7 +2,7 @@
 
 ### Enhancements
 
-* Replace deprecated calls to `Integer.to_char_list` with `Integer.to_charlist` for Elixir 1.5 compatibility
+* Replace the two deprecated calls to `Integer.to_char_list/1` with `Integer.to_charlist/1` for Elixir 1.5 compatibility
 
 ## Changelog for Cldr v0.4.0 May 29, 2017
 
