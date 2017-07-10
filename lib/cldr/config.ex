@@ -411,6 +411,7 @@ defmodule Cldr.Config do
     |> structure_currencies
     |> structure_symbols
     |> structure_number_formats
+    |> structure_date_formats
     |> Map.put(:name, locale)
   end
 
@@ -504,6 +505,13 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
 
     Map.put(content, :number_formats, formats)
+  end
+
+  defp structure_date_formats(content) do
+    dates = content.dates
+    |> Cldr.Map.integerize_keys
+
+    Map.put(content, :dates, dates)
   end
 
   # Put the symbols into a %Symbol{} struct

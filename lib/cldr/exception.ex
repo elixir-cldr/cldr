@@ -36,7 +36,7 @@ end
 
 defmodule Cldr.UnknownUnitError do
   @moduledoc """
-  Exception raised when an attempt is made to use a unit that is not known
+  Exception raised when an attempt is made to use a unit that is not known.
   in `Cldr`.
   """
   defexception [:message]
@@ -59,7 +59,7 @@ end
 
 defmodule Cldr.FormatCompileError do
   @moduledoc """
-  Exception raised when there is an error in the compiling of a number format
+  Exception raised when there is an error in the compiling of a number format.
   """
   defexception [:message]
 
@@ -70,7 +70,18 @@ end
 
 defmodule Cldr.UnknownCurrencyError do
   @moduledoc """
-  Exception raised when there is an invalid currncy code
+  Exception raised when there is an invalid currency code.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidDateFormatType do
+  @moduledoc """
+  Exception raised when there is an invalid date format type.
   """
   defexception [:message]
 

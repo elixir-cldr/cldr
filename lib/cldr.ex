@@ -219,4 +219,21 @@ defmodule Cldr do
     !!Enum.find(Config.all_locales(), &(&1 == locale))
   end
 
+  @doc """
+  Returns an `{:ok, locale}` or {:error, {exception, message}}` tuple
+  depending on whether the locale is valid and exists in the current
+  configuration.
+
+  `valid_locale/1` is like `locale_exists?/1` except that this
+  function returns an `:ok` or `:error` tuple which is useful
+  when building a `with` cascade.
+  """
+  def valid_locale?(locale) when is_binary(locale) do
+    if locale_exists?(locale) do
+      {:ok, locale}
+    else
+      {:error, {Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}"}}
+    end
+  end
+
 end

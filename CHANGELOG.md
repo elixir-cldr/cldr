@@ -1,3 +1,11 @@
+## Changelog for Cldr v0.4.3 July __, 2017
+
+### Enhancements
+
+* Adds `date` and `datetime` formatting with the primary API being `Cldr.Date.to_string/2` and `Cldr.DateTime.to_string/2`
+
+* Adds `Cldr.valid_locale?/1` that returns an `{:ok, locale}` or `{:error, {exception, message}}` that is friendlier to use in a `with` function
+
 ## Changelog for Cldr v0.4.2 July 9, 2017
 
 ### Bug Fixes

@@ -82,6 +82,40 @@ defmodule Cldr.Map do
   end
 
   @doc """
+  Convert map atom or binary keys to integers where possible.
+  """
+  def integerize_keys(nil), do: nil
+
+  def integerize_keys(map = %{}) do
+    Enum.map(map, fn
+      {k, v} when is_atom(k) ->
+        k2 = Atom.to_string(k)
+        if Regex.match?(~r/^[0-9]+$/, k2) do
+          {String.to_integer(k2), integerize_keys(v)}
+        else
+          {k, integerize_keys(v)}
+        end
+      {k, v} when is_binary(k) ->
+        if Regex.match?(~r/^[0-9]+$/, k) do
+          {String.to_integer(k), integerize_keys(v)}
+        else
+          {k, integerize_keys(v)}
+        end
+    end)
+    |> Enum.into(%{})
+  end
+
+  # Walk the list and integerize the keys of
+  # of any map members
+  def integerize_keys([head | rest]) do
+    [integerize_keys(head) | integerize_keys(rest)]
+  end
+
+  def integerize_keys(not_a_map) do
+    not_a_map
+  end
+
+  @doc """
   Returns the result of deep merging a list of maps
   """
   def merge_map_list([h | []]) do
