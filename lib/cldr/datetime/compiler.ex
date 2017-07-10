@@ -3,6 +3,8 @@ defmodule Cldr.DateTime.Compiler do
   Tokenizes and parses Date and DateTime format strings
   """
 
+  alias Cldr.DateTime.Formatter
+
   @doc """
   Scan a number format definition
 
@@ -21,6 +23,10 @@ defmodule Cldr.DateTime.Compiler do
     |> :datetime_format_lexer.string
   end
 
+  def tokenize(%{_numbers: _numbers, _value: value}) do
+    tokenize(value)
+  end
+
   @doc """
   Parse a number format definition
 
@@ -29,27 +35,34 @@ defmodule Cldr.DateTime.Compiler do
 
   ## Example
 
-      iex> Cldr.Number.Format.Compiler.parse "yyyy/MM/dd"
+      iex> Cldr.Number.Format.Compiler.compile "yyyy/MM/dd"
 
   """
-  def parse(tokens) when is_list(tokens) do
-    :datetime_format_parser.parse tokens
-  end
-
-  def parse("") do
+  def compile("") do
     {:error, "empty format string cannot be compiled"}
   end
 
-  def parse(nil) do
+  def compile(nil) do
     {:error, "no format string or token list provided"}
   end
 
-  def parse(definition) when is_binary(definition) do
+  def compile(definition) when is_binary(definition) do
     {:ok, tokens, _end_line} = tokenize(definition)
-    tokens |> :datetime_format_parser.parse
+
+    transforms = Enum.map(tokens, fn {fun, _line, count} ->
+      quote do
+        Formatter.unquote(fun)(var!(date), unquote(count), var!(locale), var!(options))
+      end
+    end)
+
+    {:ok, transforms}
   end
 
-  def parse(arg) do
+  def compile(%{_numbers: _number_system, _value: value}) do
+    compile(value)
+  end
+
+  def compile(arg) do
     raise ArgumentError, message: "No idea how to compile format: #{inspect arg}"
   end
 end

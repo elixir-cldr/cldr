@@ -1,5 +1,5 @@
 defmodule Cldr.Date do
-  alias Cldr.DateTime.Formatter
+  alias Cldr.DateTime.{Format, Formatter, Compiler}
 
   @doc """
   Formats a date according to a format string
@@ -59,9 +59,21 @@ defmodule Cldr.Date do
   # Insert generated functions for each locale and format here which
   # means that the lexing is done at compile time not runtime
   # which will improve performance quite a bit.
+  for format <- Format.date_format_list() do
+    case Compiler.compile(format) do
+      {:ok, transforms} ->
+        defp format(date, unquote(Macro.escape(format)), locale, options) do
+          formatted = unquote(transforms) |> Enum.join
+          {:ok, formatted}
+        end
+
+      {:error, message} ->
+        raise Cldr.FormatCompileError, "#{message} compiling date format: #{inspect format}"
+    end
+  end
 
   defp format(date, format, locale, options) do
-    case Cldr.DateTime.Compiler.tokenize(format) do
+    case Compiler.tokenize(format) do
       {:ok, tokens, _} ->
         formatted =
           tokens
