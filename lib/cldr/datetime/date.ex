@@ -9,7 +9,7 @@ defmodule Cldr.Date do
 
   * `options` is a keyword list of options for formatting.
   """
-  def to_string(date, options \\ [format: :short, locale: Cldr.get_locale()])
+  def to_string(date, options \\ [format: :short, locale: Cldr.get_current_locale()])
   def to_string(date, options) do
     format(date, options[:format], options[:locale], options)
   end
@@ -48,16 +48,16 @@ defmodule Cldr.Date do
     pad(month, 2)
   end
 
-  def month(%{month: momnth}, 3) do
-    abbreviated
+  def month(%{month: month}, 3) do
+    # abbreviated
   end
 
-  def month(%{month: momnth}, 4) do
-    wide
+  def month(%{month: month}, 4) do
+    # wide
   end
 
-  def month(%{month: momnth}, 5) do
-    narrow
+  def month(%{month: month}, 5) do
+    # narrow
   end
 
   def month_standalone(%{month: month}, 1) do
@@ -68,16 +68,16 @@ defmodule Cldr.Date do
     pad(month, 2)
   end
 
-  def month_standalone(%{month: momnth}, 3) do
-    abbreviated
+  def month_standalone(%{month: month}, 3) do
+    # abbreviated
   end
 
-  def month_standalone(%{month: momnth}, 4) do
-    wide
+  def month_standalone(%{month: month}, 4) do
+    # wide
   end
 
-  def month_standalone(%{month: momnth}, 5) do
-    narrow
+  def month_standalone(%{month: month}, 5) do
+    # narrow
   end
 
   defp pad(integer, n) when integer >= 0 do

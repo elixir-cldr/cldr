@@ -84,13 +84,15 @@ if Code.ensure_loaded?(Experimental.Flow) do
     end
 
     defp normalize_content(content, locale) do
-      Normalize.Number.normalize(content, locale)
+      content
+      |> Normalize.Number.normalize(locale)
       |> Normalize.Currency.normalize(locale)
       |> Normalize.List.normalize(locale)
       |> Normalize.NumberSystem.normalize(locale)
       |> Normalize.Rbnf.normalize(locale)
       |> Normalize.Units.normalize(locale)
       |> Normalize.DateFields.normalize(locale)
+      |> Normalize.Date.normalize(locale)
     end
 
     # Remove the top two levels of the map since they add nothing
