@@ -184,8 +184,8 @@ defmodule Cldr.Number.Transliterate do
   end
 
   def transliterate(_digit, locale, number_system) do
-    raise Cldr.UnknownLocaleError, "Locale #{inspect locale} or number system " <>
-    "#{inspect number_system} (or the combination of the two) is not known."
+    raise Cldr.UnknownLocaleError, "Locale/number system #{inspect locale}/ " <>
+    "#{inspect number_system} is not known or the number system does not have digits (it may be algorithmic)"
   end
 
   @doc """

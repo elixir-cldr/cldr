@@ -4,7 +4,6 @@ defmodule Cldr.Normalize.Date do
   Takes the date part of the locale map and transforms the formats into a more easily
   processable structure that is then stored in map managed by `Cldr.Locale`
   """
-  alias Cldr.Substitution
 
   def normalize(content, locale) do
     content
@@ -15,6 +14,8 @@ defmodule Cldr.Normalize.Date do
     dates = content
     |> get_in(["dates"])
     |> Map.delete("fields")
+    |> Cldr.Map.rename_key("_numbers", "number_system")
+    |> Cldr.Map.rename_key("_value", "format")
 
     Map.put(content, "dates", dates)
   end

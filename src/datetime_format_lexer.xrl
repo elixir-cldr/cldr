@@ -46,12 +46,9 @@ ZoneID              = V
 ISO_ZoneZ           = X
 ISO_Zone            = x
 
-% Quote isn't working - it still takes the
-% match on Quoted
 Quote               = ''
-
-Quoted              = '.+'
-Char                = [^GyYuUrqQMLwWdDFeEcabBhkHKmsSzZOvVXx\']
+Quoted              = '[^']+'
+Char                = [^a-zA-Z']
 
 Rules.
 
@@ -95,8 +92,8 @@ Rules.
 {ISO_ZoneZ}+             : {token,{zone_iso_z,TokenLine,count(TokenChars)}}.
 {ISO_Zone}+              : {token,{zone_iso,TokenLine,count(TokenChars)}}.
 
-{Quote}                  : {token,{literal,TokenLine,"'"}}.
 {Quoted}                 : {token,{literal,TokenLine,unquote(TokenChars)}}.
+{Quote}                  : {token,{literal,TokenLine,"'"}}.
 {Char}+                  : {token,{literal,TokenLine,TokenChars}}.
 
 Erlang code.

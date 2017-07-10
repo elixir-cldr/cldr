@@ -11,20 +11,21 @@ defmodule Cldr.Date do
   * `options` is a keyword list of options for formatting.  The valid options are:
     * `format:` `:short` | `:medium` | `:long` | `:full` or a format string.  The default is `:medium`
     * `locale:` any locale returned by `Cldr.known_locales()`.  The default is `Cldr.get_current_locale()`
+    * `number_system:` a number system into which the formatted date digits should be transliterated
 
   ## Examples
 
       iex> Cldr.Date.to_string ~D[2017-07-10], format: :medium
-      {:ok, "10 Jul 2017"}
+      {:ok, "Jul 10, 2017"}
 
       iex> Cldr.Date.to_string ~D[2017-07-10]
-      {:ok, "10 Jul 2017"}
+      {:ok, "Jul 10, 2017"}
 
       iex> Cldr.Date.to_string ~D[2017-07-10], format: :full
-      {:ok, "Monday, 10 July 2017"}
+      {:ok, "Monday, July 10, 2017"}
 
       iex> Cldr.Date.to_string ~D[2017-07-10], format: :short
-      {:ok, "10/7/17"}
+      {:ok, "7/10/17"}
 
       iex> Cldr.Date.to_string ~D[2017-07-10], format: :short, locale: "fr"
       {:ok, "10/07/2017"}
@@ -62,8 +63,12 @@ defmodule Cldr.Date do
   for format <- Format.date_format_list() do
     case Compiler.compile(format) do
       {:ok, transforms} ->
-        defp format(date, unquote(Macro.escape(format)), locale, options) do
-          formatted = unquote(transforms) |> Enum.join
+        defp format(date, unquote(Macro.escape(format)) = f, locale, options) do
+          number_system = if is_map(f), do: f[:number_system], else: options[:number_system]
+          formatted =
+            unquote(transforms)
+            |> Enum.join
+            |> transliterate(locale, number_system)
           {:ok, formatted}
         end
 
@@ -75,10 +80,12 @@ defmodule Cldr.Date do
   defp format(date, format, locale, options) do
     case Compiler.tokenize(format) do
       {:ok, tokens, _} ->
+        number_system = if is_map(format), do: format[:number_system], else: options[:number_system]
         formatted =
           tokens
           |> apply_transforms(date, locale, options)
           |> Enum.join
+          |> transliterate(locale, number_system)
         {:ok, formatted}
       {:error, reason} ->
         {:error, reason}
@@ -91,8 +98,16 @@ defmodule Cldr.Date do
     end
   end
 
+  defp transliterate(formatted, _locale, nil) do
+    formatted
+  end
+
+  defp transliterate(formatted, locale, number_system) do
+    Cldr.Number.Transliterate.transliterate(formatted, locale, number_system)
+  end
+
   defp format_string_from_format(format, locale, calendar) when format in @format_types do
-    cldr_calendar = Cldr.DateTime.type_from_calendar(calendar)
+    cldr_calendar = Cldr.DateTime.Formatter.type_from_calendar(calendar)
 
     format_string =
       locale
@@ -100,6 +115,11 @@ defmodule Cldr.Date do
       |> Map.get(:dates)
       |> get_in([:calendars, cldr_calendar, :date_formats, format])
     {:ok, format_string}
+  end
+
+  defp format_string_from_format(%{number_system: number_system, format: format}, locale, calendar) do
+    {:ok, format_string} = format_string_from_format(format, locale, calendar)
+    {:ok, %{number_system: number_system, format: format_string}}
   end
 
   defp format_string_from_format(format, _locale, _calendar) when is_atom(format) do

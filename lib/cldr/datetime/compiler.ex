@@ -20,10 +20,10 @@ defmodule Cldr.DateTime.Compiler do
   def tokenize(definition) when is_binary(definition) do
     definition
     |> String.to_charlist
-    |> :datetime_format_lexer.string
+    |> :datetime_format_lexer.string()
   end
 
-  def tokenize(%{_numbers: _numbers, _value: value}) do
+  def tokenize(%{number_system: _numbers, format: value}) do
     tokenize(value)
   end
 
@@ -32,11 +32,6 @@ defmodule Cldr.DateTime.Compiler do
 
   Using a yexx lexer, parse a datetime format definition into list of
   elements we can then interpret to format a date or datetime.
-
-  ## Example
-
-      iex> Cldr.Number.Format.Compiler.compile "yyyy/MM/dd"
-
   """
   def compile("") do
     {:error, "empty format string cannot be compiled"}
@@ -58,7 +53,7 @@ defmodule Cldr.DateTime.Compiler do
     {:ok, transforms}
   end
 
-  def compile(%{_numbers: _number_system, _value: value}) do
+  def compile(%{number_system: _number_system, format: value}) do
     compile(value)
   end
 

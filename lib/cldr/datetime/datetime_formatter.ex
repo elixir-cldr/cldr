@@ -33,6 +33,16 @@ defmodule Cldr.DateTime.Formatter do
     pad(year, n)
   end
 
+  # TODO This is not yet implemented
+  def year_cyclic(%{year: year}, _n, _locale, _options) do
+    year
+  end
+
+  # TODO This is not yet implemented
+  def year_related(%{year: year}, _n, _locale, _options) do
+    year
+  end
+
   def month(%{month: month}, 1, _locale, _options) do
     month
   end
@@ -71,6 +81,10 @@ defmodule Cldr.DateTime.Formatter do
 
   def month_standalone(%{month: month, calendar: calendar}, 5, locale, _options) do
     get_month(month, locale, calendar, :stand_alone, :narrow)
+  end
+
+  def year_week(date, n, locale, options) do
+
   end
 
   def day_of_month(%{day: day}, 1, _locale, _options) do
@@ -116,6 +130,10 @@ defmodule Cldr.DateTime.Formatter do
     weekday_name(date, n, locale, options)
   end
 
+  def standalone_day_of_week(date, n, locale, options) do
+
+  end
+
   def literal(_date, charlist, _locale, _options) do
     charlist
   end
@@ -153,6 +171,7 @@ defmodule Cldr.DateTime.Formatter do
     |> get_in([:calendars, cldr_calendar, :days, type, style, day_of_week])
   end
 
+  # erlang/elixir standard is that Monday -> 1
   defp day_key(1), do: :mon
   defp day_key(2), do: :tue
   defp day_key(3), do: :wed
@@ -186,6 +205,8 @@ defmodule Cldr.DateTime.Formatter do
     [?-, pad(abs(integer), n)]
   end
 
+  # This should be more performant than doing
+  # Enum.count(Integer.digits(n)) for all cases
   defp number_of_digits(n) when n < 0, do: number_of_digits(abs(n))
   defp number_of_digits(n) when n < 10, do: 1
   defp number_of_digits(n) when n < 100, do: 2

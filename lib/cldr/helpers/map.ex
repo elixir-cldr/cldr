@@ -150,6 +150,10 @@ defmodule Cldr.Map do
     right
   end
 
+  @doc """
+  Delete all members of a map that have a
+  key in the list of keys
+  """
   def delete_in(%{} = map, keys) when is_list(keys) do
     Enum.reject(map, fn {k, _v} -> k in keys end)
     |> Enum.map(fn {k, v} -> {k, delete_in(v, keys)} end)
@@ -170,6 +174,24 @@ defmodule Cldr.Map do
   end
 
   def delete_in(other, _keys) do
+    other
+  end
+
+  @doc """
+  Rename map keys
+  """
+  def rename_key(%{} = map, from, to) do
+    Enum.map(map, fn {k, v} ->
+      if k == from do
+        {to, rename_key(v, from, to)}
+      else
+        {k, rename_key(v, from, to)}
+      end
+    end)
+    |> Enum.into(%{})
+  end
+
+  def rename_key(other, _from, _to) do
     other
   end
 end

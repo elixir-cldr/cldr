@@ -406,13 +406,13 @@ defmodule Cldr.Number.System do
       {:ok, "0123456789"}
 
       iex> Cldr.Number.System.number_system_digits(:nope)
-      {:error, {Cldr.UnknownNumberSystemError, "The number system nil is not known"}}
+      {:error, {Cldr.UnknownNumberSystemError, "The number system :nope is not known or does not have digits"}}
   """
-  def number_system_digits(system) do
-    if system = systems_with_digits()[system] do
+  def number_system_digits(system_name) do
+    if system = systems_with_digits()[system_name] do
       {:ok, Map.get(system, :digits)}
     else
-      {:error, number_system_error(system)}
+      {:error, number_system_digits_error(system_name)}
     end
   end
 
@@ -426,14 +426,13 @@ defmodule Cldr.Number.System do
       "0123456789"
 
       Cldr.Number.System.number_system_digits! :nope
-      ** (Cldr.UnknownNumberSystemError) The number system :nope is not known
+      ** (Cldr.UnknownNumberSystemError) The number system :nope is not known or does not have digits
   """
   def number_system_digits!(system) do
     case number_system_digits(system) do
       {:ok, digits} ->
         digits
-      _ ->
-        {exception, message} = number_system_error(system)
+      {:error, {exception, message}} ->
         raise exception, message
     end
   end
@@ -462,4 +461,10 @@ defmodule Cldr.Number.System do
     {Cldr.UnknownNumberSystemError,
       "The number system #{inspect system_name} is not known"}
   end
+
+  def number_system_digits_error(system_name) do
+    {Cldr.UnknownNumberSystemError,
+      "The number system #{inspect system_name} is not known or does not have digits"}
+  end
 end
+
