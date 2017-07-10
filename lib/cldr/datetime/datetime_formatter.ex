@@ -1,4 +1,4 @@
-defmodule Cldr.DateTime do
+defmodule Cldr.DateTime.Formatter do
   @default_calendar :gregorian
 
   # Era should be calculated after checking the era
