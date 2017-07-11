@@ -63,7 +63,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/number_systems.json",
         "priv/cldr/plural_rules.json",
         "priv/cldr/version.json",
-        "priv/cldr/currencies.json"
+        "priv/cldr/currencies.json",
+        "priv/cldr/week_data.json"
       ]
     ]
   end

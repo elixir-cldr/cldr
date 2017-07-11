@@ -427,6 +427,21 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the data that defines start and end of
+  calendar weeks, weekends and years
+  """
+  def week_data do
+    client_data_dir()
+    |> Path.join("week_data.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.integerize_values
+    |> Map.take([:weekend_start, :weekend_end, :min_days, :first_day])
+  end
+
+  @doc """
   Get the configured number formats that should be precompiled at application
   compilation time.
 

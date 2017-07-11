@@ -37,6 +37,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_plurals()
       save_number_systems()
       save_currencies()
+      save_week_data()
       save_locales()
 
       all_locales()
@@ -203,15 +204,19 @@ if Code.ensure_loaded?(Experimental.Flow) do
     end
 
     defp save_plurals do
-      cardinal = Path.join(download_data_dir(), ["cldr-core", "/supplemental", "/plurals.json"])
-      |> File.read!
-      |> Poison.decode!
-      |> get_in(["supplemental", "plurals-type-cardinal"])
+      cardinal =
+        download_data_dir()
+        |> Path.join(["cldr-core", "/supplemental", "/plurals.json"])
+        |> File.read!
+        |> Poison.decode!
+        |> get_in(["supplemental", "plurals-type-cardinal"])
 
-      ordinal = Path.join(download_data_dir(), ["cldr-core", "/supplemental", "/ordinals.json"])
-      |> File.read!
-      |> Poison.decode!
-      |> get_in(["supplemental", "plurals-type-ordinal"])
+      ordinal =
+        download_data_dir()
+        |> Path.join(["cldr-core", "/supplemental", "/ordinals.json"])
+        |> File.read!
+        |> Poison.decode!
+        |> get_in(["supplemental", "plurals-type-ordinal"])
 
       content = %{cardinal: cardinal, ordinal: ordinal}
       path = Path.join(consolidated_output_dir(), "plural_rules.json")
@@ -222,7 +227,9 @@ if Code.ensure_loaded?(Experimental.Flow) do
 
     defp save_number_systems do
       path = Path.join(consolidated_output_dir(), "number_systems.json")
-      Path.join(download_data_dir(), ["cldr-core", "/supplemental", "/numberingSystems.json"])
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/numberingSystems.json"])
       |> File.read!
       |> Poison.decode!
       |> get_in(["supplemental", "numberingSystems"])
@@ -234,11 +241,26 @@ if Code.ensure_loaded?(Experimental.Flow) do
 
     def save_currencies do
       path = Path.join(consolidated_output_dir(), "currencies.json")
-      Path.join(download_data_dir(), ["cldr-numbers-full", "/main", "/en", "/currencies.json"])
+
+      download_data_dir()
+      |> Path.join(["cldr-numbers-full", "/main", "/en", "/currencies.json"])
       |> File.read!
       |> Poison.decode!
       |> get_in(["main", "en", "numbers", "currencies"])
       |> Map.keys
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_week_data do
+      path = Path.join(consolidated_output_dir(), "week_data.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/weekData.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "weekData"])
       |> save_file(path)
 
       assert_package_file_configured!(path)
