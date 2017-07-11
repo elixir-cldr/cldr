@@ -29,8 +29,14 @@ quotient_rule     ->  quotient_call rule quotient_call : {quotient, '$2'}.
 quotient_rule     ->  quotient_call quotient_call : {quotient, nil}.
 
 modulo_rule       ->  modulo_call rule modulo_call : {modulo, '$2'}.
-modulo_rule       ->  modulo_call modulo_call modulo_call : {modulo, triple}.
 modulo_rule       ->  modulo_call modulo_call : {modulo, nil}.
+
+% Note that here we are treating >>> as equivalent to >>
+% This is not strictly true since the spec says we should
+% ... but bypass the normal rule-selection process and just
+% use the rule that precedes this one in this rule list.
+modulo_rule       ->  modulo_call modulo_call modulo_call : {modulo, nil}.
+
 
 invoke_rule       ->  rule_call rule rule_call : {call, '$2'}.
 

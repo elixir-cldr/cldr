@@ -1,6 +1,6 @@
 -module(rbnf_parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("src/rbnf_parser.yrl", 52).
+-file("src/rbnf_parser.yrl", 58).
 
 % Consolidate characters into a binary
 append({char, _, _} = Char, {literal, Literal}) ->
@@ -665,7 +665,7 @@ yeccpars2_1_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_8_/1}).
--file("src/rbnf_parser.yrl", 42).
+-file("src/rbnf_parser.yrl", 48).
 yeccpars2_8_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -673,7 +673,7 @@ yeccpars2_8_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_19_/1}).
--file("src/rbnf_parser.yrl", 39).
+-file("src/rbnf_parser.yrl", 45).
 yeccpars2_19_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -681,7 +681,7 @@ yeccpars2_19_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_20_/1}).
--file("src/rbnf_parser.yrl", 38).
+-file("src/rbnf_parser.yrl", 44).
 yeccpars2_20_(__Stack0) ->
  [__1 | __Stack] = __Stack0,
  [begin
@@ -689,7 +689,7 @@ yeccpars2_20_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_21_/1}).
--file("src/rbnf_parser.yrl", 31).
+-file("src/rbnf_parser.yrl", 37).
 yeccpars2_21_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -721,7 +721,7 @@ yeccpars2_25_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_27_/1}).
--file("src/rbnf_parser.yrl", 29).
+-file("src/rbnf_parser.yrl", 28).
 yeccpars2_27_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -729,11 +729,11 @@ yeccpars2_27_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_28_/1}).
--file("src/rbnf_parser.yrl", 28).
+-file("src/rbnf_parser.yrl", 34).
 yeccpars2_28_(__Stack0) ->
  [__3,__2,__1 | __Stack] = __Stack0,
  [begin
-   { modulo , triple }
+   { modulo , nil }
   end | __Stack].
 
 -compile({inline,yeccpars2_29_/1}).
@@ -745,7 +745,7 @@ yeccpars2_29_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_36_/1}).
--file("src/rbnf_parser.yrl", 36).
+-file("src/rbnf_parser.yrl", 42).
 yeccpars2_36_(__Stack0) ->
  [__7,__6,__5,__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -753,7 +753,7 @@ yeccpars2_36_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_40_/1}).
--file("src/rbnf_parser.yrl", 34).
+-file("src/rbnf_parser.yrl", 40).
 yeccpars2_40_(__Stack0) ->
  [__7,__6,__5,__4,__3,__2,__1 | __Stack] = __Stack0,
  [begin
@@ -769,7 +769,7 @@ yeccpars2_42_(__Stack0) ->
   end | __Stack].
 
 -compile({inline,yeccpars2_43_/1}).
--file("src/rbnf_parser.yrl", 41).
+-file("src/rbnf_parser.yrl", 47).
 yeccpars2_43_(__Stack0) ->
  [__2,__1 | __Stack] = __Stack0,
  [begin
@@ -785,4 +785,4 @@ yeccpars2_44_(__Stack0) ->
   end | __Stack].
 
 
--file("src/rbnf_parser.yrl", 93).
+-file("src/rbnf_parser.yrl", 99).
