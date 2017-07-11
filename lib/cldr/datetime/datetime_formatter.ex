@@ -1,6 +1,10 @@
 defmodule Cldr.DateTime.Formatter do
   @default_calendar :gregorian
 
+  def default_calendar do
+    @default_calendar
+  end
+
   # Era should be calculated after checking the era
   # ranges - this implementation is assuming positive
   # and negative years represent the era boundary which
