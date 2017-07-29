@@ -6,7 +6,7 @@ defmodule Cldr.Mixfile do
   def project do
     [app: :ex_cldr,
      version: @version,
-     elixir: "~> 1.4",
+     elixir: "~> 1.5",
      name: "Cldr",
      source_url: "https://github.com/kipcole9/cldr",
      docs: docs(),
