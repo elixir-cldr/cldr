@@ -128,6 +128,17 @@ defmodule Cldr.Math do
   end
 
   @doc """
+  Returns the adjusted modulus of `x` and `y`
+  """
+  def amod(x, y) do
+    if (mod = mod(x,y)) == 0 do
+      y
+    else
+      mod
+    end
+  end
+
+  @doc """
   Convert a Decimal to a float
 
   * `decimal` must be a Decimal

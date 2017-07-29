@@ -14,6 +14,8 @@
 %% User code. This is placed here to allow extra attributes.
 -file("src/datetime_format_lexer.xrl", 99).
 
+-import('Elixir.List', [to_string/1]).
+
 count(Chars) -> string:len(Chars).
 
 unquote([_ | Tail]) ->
@@ -307,7 +309,7 @@ adjust_line(T, A, [_|Cs], L) ->
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("src/datetime_format_lexer.erl", 309).
+-file("src/datetime_format_lexer.erl", 311).
 yystate() -> 35.
 
 yystate(36, [10|Ics], Line, Tlen, _, _) ->
@@ -693,7 +695,7 @@ yyaction_1(TokenChars, TokenLine) ->
 -compile({inline,yyaction_2/2}).
 -file("src/datetime_format_lexer.xrl", 56).
 yyaction_2(TokenChars, TokenLine) ->
-     { token, { year_week, TokenLine, count (TokenChars) } } .
+     { token, { year_week_relative, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_3/2}).
 -file("src/datetime_format_lexer.xrl", 57).
@@ -838,16 +840,16 @@ yyaction_30(TokenChars, TokenLine) ->
 -compile({inline,yyaction_31/2}).
 -file("src/datetime_format_lexer.xrl", 93).
 yyaction_31(TokenChars, TokenLine) ->
-     { token, { literal, TokenLine, unquote (TokenChars) } } .
+     { token, { literal, TokenLine, 'Elixir.List' : to_string (unquote (TokenChars)) } } .
 
 -compile({inline,yyaction_32/1}).
 -file("src/datetime_format_lexer.xrl", 94).
 yyaction_32(TokenLine) ->
-     { token, { literal, TokenLine, "'" } } .
+     { token, { literal, TokenLine, << "'" >> } } .
 
 -compile({inline,yyaction_33/2}).
 -file("src/datetime_format_lexer.xrl", 95).
 yyaction_33(TokenChars, TokenLine) ->
-     { token, { literal, TokenLine, TokenChars } } .
+     { token, { literal, TokenLine, 'Elixir.List' : to_string (TokenChars) } } .
 
 -file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/leexinc.hrl", 309).

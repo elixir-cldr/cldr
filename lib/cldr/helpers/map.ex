@@ -26,6 +26,13 @@ defmodule Cldr.Map do
   end
 
   @doc """
+  Underscore one key of a map
+  """
+  def underscore_key(map, key) do
+    Map.put(map, Macro.underscore(key), Map.get(map, key))
+  end
+
+  @doc """
   Convert map string keys to :atom keys
   """
   def atomize_keys(nil), do: nil

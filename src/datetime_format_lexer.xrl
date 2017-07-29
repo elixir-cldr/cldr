@@ -55,7 +55,7 @@ Rules.
 {Era}+                   : {token,{era,TokenLine,count(TokenChars)}}.
 
 {YearNumeric}+           : {token,{year_numeric,TokenLine,count(TokenChars)}}.
-{YearWeek}+              : {token,{year_week,TokenLine,count(TokenChars)}}.
+{YearWeek}+              : {token,{year_week_relative,TokenLine,count(TokenChars)}}.
 {YearExtended}+          : {token,{year_extended,TokenLine,count(TokenChars)}}.
 {CyclicYear}+            : {token,{year_cyclic,TokenLine,count(TokenChars)}}.
 {RelatedYear}+           : {token,{year_related,TokenLine,count(TokenChars)}}.
@@ -92,11 +92,13 @@ Rules.
 {ISO_ZoneZ}+             : {token,{zone_iso_z,TokenLine,count(TokenChars)}}.
 {ISO_Zone}+              : {token,{zone_iso,TokenLine,count(TokenChars)}}.
 
-{Quoted}                 : {token,{literal,TokenLine,unquote(TokenChars)}}.
-{Quote}                  : {token,{literal,TokenLine,"'"}}.
-{Char}+                  : {token,{literal,TokenLine,TokenChars}}.
+{Quoted}                 : {token,{literal,TokenLine,'Elixir.List':to_string(unquote(TokenChars))}}.
+{Quote}                  : {token,{literal,TokenLine,<<"'">>}}.
+{Char}+                  : {token,{literal,TokenLine,'Elixir.List':to_string(TokenChars)}}.
 
 Erlang code.
+
+-import('Elixir.List', [to_string/1]).
 
 count(Chars) -> string:len(Chars).
 

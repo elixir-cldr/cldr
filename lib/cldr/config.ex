@@ -435,10 +435,59 @@ defmodule Cldr.Config do
     |> Path.join("week_data.json")
     |> File.read!
     |> Poison.decode!
-    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.underscore_key("WeekendStart")
+    |> Cldr.Map.underscore_key("WeekendEnd")
+    |> Cldr.Map.underscore_key("minDays")
+    |> Cldr.Map.underscore_key("firstDay")
     |> Cldr.Map.atomize_keys
     |> Cldr.Map.integerize_values
     |> Map.take([:weekend_start, :weekend_end, :min_days, :first_day])
+  end
+
+  @doc """
+  Returns the data that defines start and end of
+  calendar epochs
+  """
+  def calendar_data do
+    client_data_dir()
+    |> Path.join("calendar_data.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.integerize_keys
+    |> add_era_end_dates
+  end
+
+  def add_era_end_dates(calendars) do
+    Enum.map(calendars, fn {calendar, content} ->
+      new_content = Enum.map(content, fn
+        {:eras, eras} -> {:eras, add_end_dates(eras)}
+        {k, v} -> {k, v}
+      end)
+      |> Enum.into(%{})
+      {calendar, new_content}
+    end)
+    |> Enum.into(%{})
+  end
+
+  def add_end_dates(%{} = eras) do
+    eras
+    |> Enum.sort_by(fn {k, _v} -> k end, fn a, b -> a < b end)
+    |> add_end_dates
+  end
+
+  def add_end_dates([{_, %{start: _start_1}} = era_1, {_, %{start: start_2}} = era_2]) do
+    {era, dates} = era_1
+    [{era, Map.put(dates, :end, start_2 - 1)}, era_2]
+  end
+
+  def add_end_dates([{_, %{start: _start_1}} = era_1 | [{_, %{start: start_2}} | _] = tail]) do
+    {era, dates} = era_1
+    [{era, Map.put(dates, :end, start_2 - 1)}] ++ add_end_dates(tail)
+  end
+
+  def add_end_dates(other) do
+    other
   end
 
   @doc """

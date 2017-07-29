@@ -197,6 +197,14 @@ defmodule Cldr do
     {:error, Locale.locale_error(locale_name)}
   end
 
+  # TODO Should be replaced by a proper locale parser
+  def get_territory(locale \\ get_current_locale()) do
+    case String.split(locale, "-") do
+      [_lang, territory] -> territory
+      [_lang] -> :"001"
+    end
+  end
+
   @doc """
   Returns a boolean indicating if the specified locale
   is available in CLDR.

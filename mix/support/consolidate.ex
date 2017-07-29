@@ -38,6 +38,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_number_systems()
       save_currencies()
       save_week_data()
+      save_calendar_data()
       save_locales()
 
       all_locales()
@@ -261,6 +262,23 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> File.read!
       |> Poison.decode!
       |> get_in(["supplemental", "weekData"])
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_calendar_data do
+      path = Path.join(consolidated_output_dir(), "calendar_data.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/calendarData.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "calendarData"])
+      |> Map.delete("generic")
+      |> remove_leading_underscores
+      |> Cldr.Map.underscore_keys
+      |> Cldr.DateTime.Compiler.convert_eras_to_iso_days
       |> save_file(path)
 
       assert_package_file_configured!(path)
