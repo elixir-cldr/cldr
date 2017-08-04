@@ -4,21 +4,22 @@ defmodule Cldr.Mixfile do
   @version "0.4.3-dev"
 
   def project do
-    [app: :ex_cldr,
-     version: @version,
-     elixir: "~> 1.5",
-     name: "Cldr",
-     source_url: "https://github.com/kipcole9/cldr",
-     docs: docs(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     description: description(),
-     package: package(),
-     test_coverage: [tool: ExCoveralls],
-     aliases: aliases(),
-     elixirc_paths: elixirc_paths(Mix.env)
-   ]
+    [
+      app: :ex_cldr,
+      version: @version,
+      elixir: "~> 1.5",
+      name: "Cldr",
+      source_url: "https://github.com/kipcole9/cldr",
+      docs: docs(),
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps(),
+      description: description(),
+      package: package(),
+      test_coverage: [tool: ExCoveralls],
+      aliases: aliases(),
+      elixirc_paths: elixirc_paths(Mix.env)
+    ]
   end
 
   defp description do
