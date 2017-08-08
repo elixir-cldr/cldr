@@ -36,7 +36,7 @@ defmodule Cldr.Date do
   @format_types [:short, :medium, :long, :full]
 
   def to_string(date, options \\ [])
-  def to_string(%{calendar: calendar} = date, options) do
+  def to_string(%{year: _year, month: _month, day: _day, calendar: calendar} = date, options) do
     default_options = [format: :medium, locale: Cldr.get_current_locale()]
     options = Keyword.merge(default_options, options)
 
@@ -50,7 +50,8 @@ defmodule Cldr.Date do
     end
   end
 
-  def to_string!(date, options \\ []) do
+  def to_string!(date, options \\ [])
+  def to_string!(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, options) do
     case to_string(date, options) do
       {:ok, string} -> string
       {:error, {exception, message}} -> raise exception, message
@@ -59,7 +60,7 @@ defmodule Cldr.Date do
 
   # Insert generated functions for each locale and format here which
   # means that the lexing is done at compile time not runtime
-  # which will improve performance quite a bit.
+  # which improves performance quite a bit.
   for format <- Format.date_format_list() do
     case Compiler.compile(format) do
       {:ok, transforms} ->
