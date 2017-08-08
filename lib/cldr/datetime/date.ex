@@ -34,11 +34,11 @@ defmodule Cldr.Date do
       {:ok, "10 Julie 2017"}
   """
   @format_types [:short, :medium, :long, :full]
-  @default_options [format: :medium, locale: Cldr.get_current_locale()]
 
-  def to_string(date, options \\ @default_options)
+  def to_string(date, options \\ [])
   def to_string(%{calendar: calendar} = date, options) do
-    options = Keyword.merge(@default_options, options)
+    default_options [format: :medium, locale: Cldr.get_current_locale()]
+    options = Keyword.merge(default_options, options)
 
     with {:ok, locale} <- Cldr.valid_locale?(options[:locale]),
          {:ok, format_string} <- format_string_from_format(options[:format], locale, calendar),
@@ -50,7 +50,7 @@ defmodule Cldr.Date do
     end
   end
 
-  def to_string!(date, options \\ @default_options) do
+  def to_string!(date, options \\ []) do
     case to_string(date, options) do
       {:ok, string} -> string
       {:error, {exception, message}} -> raise exception, message
