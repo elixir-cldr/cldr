@@ -37,7 +37,7 @@ defmodule Cldr.Date do
 
   def to_string(date, options \\ [])
   def to_string(%{calendar: calendar} = date, options) do
-    default_options [format: :medium, locale: Cldr.get_current_locale()]
+    default_options = [format: :medium, locale: Cldr.get_current_locale()]
     options = Keyword.merge(default_options, options)
 
     with {:ok, locale} <- Cldr.valid_locale?(options[:locale]),
