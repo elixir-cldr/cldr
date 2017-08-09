@@ -89,3 +89,25 @@ defmodule Cldr.InvalidDateFormatType do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.InvalidTimeFormatType do
+  @moduledoc """
+  Exception raised when there is an invalid time format type.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidDateTimeFormatType do
+  @moduledoc """
+  Exception raised when there is an invalid datetime format type.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

@@ -1,4 +1,5 @@
 defmodule Cldr.DateTime.Formatter do
+  alias Cldr.DateTime.{Format, Compiler}
   alias Cldr.Calendar, as: Kalendar
   alias Cldr.Math
 
@@ -6,6 +7,55 @@ defmodule Cldr.DateTime.Formatter do
 
   def default_calendar do
     @default_calendar
+  end
+
+  # Insert generated functions for each locale and format here which
+  # means that the lexing is done at compile time not runtime
+  # which improves performance quite a bit.
+  for format <- Format.format_list() do
+    case Compiler.compile(format) do
+      {:ok, transforms} ->
+        def format(date, unquote(Macro.escape(format)) = f, locale, options) do
+          number_system = if is_map(f), do: f[:number_system], else: options[:number_system]
+          formatted =
+            unquote(transforms)
+            |> Enum.join
+            |> transliterate(locale, number_system)
+          {:ok, formatted}
+        end
+
+      {:error, message} ->
+        raise Cldr.FormatCompileError, "#{message} compiling date format: #{inspect format}"
+    end
+  end
+
+  def format(date, format, locale, options) do
+    case Compiler.tokenize(format) do
+      {:ok, tokens, _} ->
+        number_system = if is_map(format), do: format[:number_system], else: options[:number_system]
+        formatted =
+          tokens
+          |> apply_transforms(date, locale, options)
+          |> Enum.join
+          |> transliterate(locale, number_system)
+        {:ok, formatted}
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp apply_transforms(tokens, date, locale, options) do
+    Enum.map tokens, fn {token, _line, count} ->
+      apply(Formatter, token, [date, count, locale, options])
+    end
+  end
+
+  defp transliterate(formatted, _locale, nil) do
+    formatted
+  end
+
+  defp transliterate(formatted, locale, number_system) do
+    Cldr.Number.Transliterate.transliterate(formatted, locale, number_system)
   end
 
   #
