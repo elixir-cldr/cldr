@@ -438,8 +438,22 @@ defmodule Cldr.DateTime.Formatter do
   #
   # Time formatters
   #
-  def period_am_pm(%{hour: hour}, n, locale, _options) do
+  def period_am_pm(time, n, locale, _options) when n in 1..3 do
+    calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
 
+    get_period(time, calendar, :format, :abbreviated)
+  end
+
+  def period_am_pm(time, 4, locale, _options) do
+    calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
+
+    get_period(time, calendar, :format, :wide)
+  end
+
+  def period_am_pm(time, 5, locale, _options) do
+    calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
+
+    get_period(time, calendar, :format, :narrow)
   end
 
   def period_noon_mid(%{hour: 0, minute: 0}, n, locale, _options) do
@@ -522,6 +536,20 @@ defmodule Cldr.DateTime.Formatter do
     else
       index
     end
+  end
+
+  defp get_period(time, locale, calendar, type, style, options) do
+    cldr_calendar = type_from_calendar(calendar)
+    key = key_from_time(time)
+
+    locale
+    |> Cldr.get_locale
+    |> Map.get(:dates)
+    |> get_in([:calendars, cldr_calendar, :day_periods, type, style, key])
+  end
+
+  def key_from_time(%{hour: hour, minute: minute}) do
+
   end
 
   defp get_month(month, locale, calendar, type, style) do
