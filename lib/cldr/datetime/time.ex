@@ -23,7 +23,7 @@ defmodule Cldr.Time do
   def to_string(%{hour: _hour, minute: _minute, second: _second} = time, options) do
     default_options = [format: :medium, locale: Cldr.get_current_locale()]
     options = Keyword.merge(default_options, options)
-    calendar = time[:calendar] || Calendar.ISO
+    calendar = Map.get(time, :calendar) || Calendar.ISO
 
     with {:ok, locale} <- Cldr.valid_locale?(options[:locale]),
          {:ok, format_string} <- format_string_from_format(options[:format], locale, calendar),

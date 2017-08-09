@@ -28,10 +28,14 @@ WeekdayName         = E
 WeekdayNumber       = e
 StandAloneDayOfWeek = c
 
-Period              = [abB]
+Period_am_pm        = a
+Period_noon_mid     = b
+Period_flex         = B
 
-Hour12              = [hK]
-Hour24              = [Hk]
+Hour_0_11           = K
+Hour_1_12           = h
+Hour_0_23           = H
+Hour_1_24           = k
 
 Minute              = m
 
@@ -75,12 +79,17 @@ Rules.
 {WeekdayName}+           : {token,{weekday_name,TokenLine,count(TokenChars)}}.
 {WeekdayNumber}+         : {token,{weekday_number,TokenLine,count(TokenChars)}}.
 {StandAloneDayOfWeek}+   : {token,{standalone_day_of_week,TokenLine,count(TokenChars)}}.
-{Period}+                : {token,{period,TokenLine,count(TokenChars)}}.
 
-{Hour12}+                : {token,{hour_12,TokenLine,count(TokenChars)}}.
-{Hour24}+                : {token,{hour_24,TokenLine,count(TokenChars)}}.
+{Period_am_pm}+          : {token,{period_am_pm,TokenLine,count(TokenChars)}}.
+{Period_noon_mid}+       : {token,{period_noon_mid,TokenLine,count(TokenChars)}}.
+{Period_flex}+           : {token,{period_flex,TokenLine,count(TokenChars)}}.
+
+{Hour_1_12}+             : {token,{hour_1_12,TokenLine,count(TokenChars)}}.
+{Hour_0_11}+             : {token,{hour_0_11,TokenLine,count(TokenChars)}}.
+{Hour_1_24}+             : {token,{hour_1_24,TokenLine,count(TokenChars)}}.
+{Hour_0_23}+             : {token,{hour_0_23,TokenLine,count(TokenChars)}}.
+
 {Minute}+                : {token,{minute,TokenLine,count(TokenChars)}}.
-
 {Second}+                : {token,{second,TokenLine,count(TokenChars)}}.
 {FractionalSecond}+      : {token,{fractional_second,TokenLine,count(TokenChars)}}.
 

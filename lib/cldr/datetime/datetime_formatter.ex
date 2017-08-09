@@ -46,7 +46,7 @@ defmodule Cldr.DateTime.Formatter do
 
   defp apply_transforms(tokens, date, locale, options) do
     Enum.map tokens, fn {token, _line, count} ->
-      apply(Formatter, token, [date, count, locale, options])
+      apply(__MODULE__, token, [date, count, locale, options])
     end
   end
 
@@ -129,7 +129,7 @@ defmodule Cldr.DateTime.Formatter do
   """
   def year_week_relative(%{calendar: Calendar.ISO} = date, 2 = n, _locale, _options) do
     date
-    |> Kalendar.last_week_of_year(date)
+    |> Kalendar.last_week_of_year
     |> Map.get(:year)
     |> rem(100)
     |> pad(n)
@@ -137,7 +137,7 @@ defmodule Cldr.DateTime.Formatter do
 
   def year_week_relative(%{calendar: calendar} = date, 2 = n, _locale, _options) do
     date
-    |> calendar.last_week_of_year(date)
+    |> calendar.last_week_of_year
     |> Map.get(:year)
     |> rem(100)
     |> pad(n)
@@ -145,14 +145,14 @@ defmodule Cldr.DateTime.Formatter do
 
   def year_week_relative(%{calendar: Calendar.ISO} = date, n, _locale, _options) do
     date
-    |> Kalendar.last_week_of_year(date)
+    |> Kalendar.last_week_of_year
     |> Map.get(:year)
     |> pad(n)
   end
 
   def year_week_relative(%{calendar: calendar} = date, n, _locale, _options) do
     date
-    |> calendar.last_week_of_year(date)
+    |> calendar.last_week_of_year
     |> Map.get(:year)
     |> pad(n)
   end
@@ -438,8 +438,63 @@ defmodule Cldr.DateTime.Formatter do
   #
   # Time formatters
   #
+  def period_am_pm(%{hour: hour}, n, locale, _options) do
 
+  end
 
+  def period_noon_mid(%{hour: 0, minute: 0}, n, locale, _options) do
+
+  end
+
+  def period_noon_mid(%{hour: 12, minute: 0}, n, locale, _options) do
+
+  end
+
+  def period_noon_mid(time, n, locale, options) do
+    period_am_pm(time, n, locale, options)
+  end
+
+  def period_flex(%{hour: _hour, minute: _minute} = time, n, locale, options) do
+
+  end
+
+  def hour_1_12(%{hour: hour}, n, _locale, _options) do
+    hour
+    |> add(1)
+    |> rem(12)
+    |> pad(n)
+  end
+
+  def hour_0_11(%{hour: hour} = time, n, _locale, _options) do
+    hour
+    |> rem(12)
+    |> pad(n)
+  end
+
+  def hour_1_24(%{hour: hour} = time, n, _locale, _options) do
+    hour
+    |> add(1)
+    |> pad(n)
+  end
+
+  def hour_0_23(%{hour: hour} = time, n, _locale, _options) do
+    hour
+    |> pad(n)
+  end
+
+  def minute(%{minute: minute}, n, _locale, _options) do
+    minute
+    |> pad(n)
+  end
+
+  def second(%{second: second}, n, _locale, _options) do
+    second
+    |> pad(n)
+  end
+
+  def period(%{hour: hour}, n, _locale, _options) do
+
+  end
 
   @doc """
   Returns a literal.
@@ -545,4 +600,7 @@ defmodule Cldr.DateTime.Formatter do
   defp number_of_digits(n) when n < 10_000_000_000, do: 10
   defp number_of_digits(n), do: Enum.count(Integer.digits(n))
 
+  defp add(x, n) do
+    x + n
+  end
 end
