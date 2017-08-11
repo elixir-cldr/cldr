@@ -14,7 +14,7 @@ defmodule Cldr.DateTime.Compiler do
 
       iex> Cldr.DateTime.Compiler.tokenize "yyyy/MM/dd"
       {:ok,
-       [{:year_numeric, 1, 4}, {:literal, 1, "/"}, {:month, 1, 2}, {:literal, 1, "/"},
+       [{:year, 1, 4}, {:literal, 1, "/"}, {:month, 1, 2}, {:literal, 1, "/"},
         {:day_of_month, 1, 2}], 1}
   """
   def tokenize(definition) when is_binary(definition) do
