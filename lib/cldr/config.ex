@@ -445,6 +445,21 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the data that defines time periods of
+  a day for a language.
+
+  Time period rules are used to define the meaning
+  of "morning", "evening", "noon", "midnight" and
+  potentially other periods on a per-language basis.
+  """
+  def day_periods do
+    client_data_dir()
+    |> Path.join("day_periods.json")
+    |> File.read!
+    |> Poison.decode!
+  end
+
+  @doc """
   Returns the data that defines start and end of
   calendar epochs
   """

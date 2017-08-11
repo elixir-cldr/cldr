@@ -39,6 +39,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_currencies()
       save_week_data()
       save_calendar_data()
+      save_day_periods()
       save_locales()
 
       all_locales()
@@ -234,7 +235,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> File.read!
       |> Poison.decode!
       |> get_in(["supplemental", "numberingSystems"])
-      |> remove_leading_underscores
+      |> Cldr.Map.remove_leading_underscores
       |> save_file(path)
 
       assert_package_file_configured!(path)
@@ -276,9 +277,24 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Poison.decode!
       |> get_in(["supplemental", "calendarData"])
       |> Map.delete("generic")
-      |> remove_leading_underscores
+      |> Cldr.Map.remove_leading_underscores
       |> Cldr.Map.underscore_keys
       |> Cldr.DateTime.Compiler.convert_eras_to_iso_days
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_day_periods do
+      path = Path.join(consolidated_output_dir(), "day_periods.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/dayPeriods.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "dayPeriodRuleSet"])
+      |> Cldr.Map.remove_leading_underscores
+      |> Cldr.DateTime.Compiler.parse_time_periods
       |> save_file(path)
 
       assert_package_file_configured!(path)
@@ -293,16 +309,6 @@ if Code.ensure_loaded?(Experimental.Flow) do
       else
         raise "Path #{path} is not in the package definition"
       end
-    end
-
-    defp remove_leading_underscores(%{} = systems) do
-      Enum.map(systems, fn {k, v} ->
-        {String.replace_prefix(k, "_", ""), remove_leading_underscores(v)} end)
-      |> Enum.into(%{})
-    end
-
-    defp remove_leading_underscores(v) do
-      v
     end
 
     defp save_file(content, path) do

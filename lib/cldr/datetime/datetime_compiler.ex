@@ -90,6 +90,27 @@ defmodule Cldr.DateTime.Compiler do
     |> Enum.into(%{})
   end
 
+  def parse_time_periods(period_data) do
+    Enum.map(period_data, fn {language, periods} ->
+      {language, adjust_periods(periods)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp adjust_periods(periods) do
+    Enum.map(periods, fn {period, times} ->
+      {period, adjust_times(times)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp adjust_times(times) do
+    Enum.map(times, fn {key, time} ->
+      {key, Enum.map(String.split(time, ":"), &String.to_integer/1)}
+    end)
+    |> Enum.into(%{})
+  end
+
   def to_iso_days(%{year: year, month: month, day: day}) do
     gregorian_date_to_iso_days(year, month, day)
   end
@@ -106,7 +127,7 @@ defmodule Cldr.DateTime.Compiler do
   end
 
   @doc """
-  Converts a `year`, `month` and `day` into a rata die number of days
+  Converts a `year`, `month` and `day` into a number of days
   for the gregorian calendar
 
   This should be done in the Calendar.ISO module but today that

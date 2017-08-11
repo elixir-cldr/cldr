@@ -244,4 +244,13 @@ defmodule Cldr do
     end
   end
 
+  @doc """
+  Extract the language part from a locale.
+  """
+  def language_from_locale(locale) do
+    locale
+    |> String.split("-")
+    |> List.first
+  end
+
 end

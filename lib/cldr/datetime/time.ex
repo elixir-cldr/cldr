@@ -5,7 +5,7 @@ defmodule Cldr.Time do
   Formats a time according to a format string
   as defined in CLDR and described in [TR35](http://unicode.org/reports/tr35/tr35-dates.html)
 
-  * `date` is a `%DateTime{}` or `%NaiveDateTime{}` struct or any map that contains the keys
+  * `time` is a `%DateTime{}` or `%NaiveDateTime{}` struct or any map that contains the keys
   `hour`, `minute`, `second` and optionally `calendar` and `microsecond`
 
   * `options` is a keyword list of options for formatting.  The valid options are:
@@ -20,7 +20,7 @@ defmodule Cldr.Time do
   @format_types [:short, :medium, :long, :full]
 
   def to_string(time, options \\ [])
-  def to_string(%{hour: _hour, minute: _minute, second: _second} = time, options) do
+  def to_string(%{hour: _hour, minute: _minute} = time, options) do
     default_options = [format: :medium, locale: Cldr.get_current_locale()]
     options = Keyword.merge(default_options, options)
     calendar = Map.get(time, :calendar) || Calendar.ISO
@@ -36,7 +36,7 @@ defmodule Cldr.Time do
   end
 
   def to_string!(time, options \\ [])
-  def to_string!(%{hour: _hour, minute: _minute, second: _second} = time, options) do
+  def to_string!(%{hour: _hour, minute: _minute} = time, options) do
     case to_string(time, options) do
       {:ok, string} -> string
       {:error, {exception, message}} -> raise exception, message
@@ -67,4 +67,5 @@ defmodule Cldr.Time do
   defp format_string_from_format(format_string, _locale, _calendar) when is_binary(format_string) do
     {:ok, format_string}
   end
+
 end

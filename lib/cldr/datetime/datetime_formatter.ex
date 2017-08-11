@@ -58,6 +58,43 @@ defmodule Cldr.DateTime.Formatter do
     Cldr.Number.Transliterate.transliterate(formatted, locale, number_system)
   end
 
+  # Insert generated functions that will identify which time period key
+  # is appropriate for a given time value.  Note that we sort the time
+  # periods such that the "at" periods come before the "from"/"before"
+  # periods so that the functions are defined in the right order.
+  for {language, periods} <- Cldr.Config.day_periods() do
+    for {period, times} <- Enum.sort(periods, fn {_k, v}, _p2 -> !!Map.get(v, "at") end) do
+      case times do
+        %{"at" => [h, m]} ->
+          def time_period_for(%{hour: unquote(h), minute: unquote(m)}, unquote(language)) do
+            unquote(String.to_existing_atom(period))
+          end
+
+        # For when the time range wraps around midnight
+        %{"from" => [h1, 0], "before" => [h2, 0]} when h2 < h1 ->
+          def time_period_for(%{hour: hour}, unquote(language))
+          when rem(hour, 24) >= unquote(h1) or rem(hour, 24) < unquote(h2) do
+            unquote(String.to_existing_atom(period))
+          end
+
+        # For when the time range does not wrap around midnight
+        %{"from" => [h1, 0], "before" => [h2, 0]} ->
+          def time_period_for(%{hour: hour}, unquote(language))
+          when rem(hour, 24) >= unquote(h1) and rem(hour, 24) < unquote(h2) do
+            unquote(String.to_existing_atom(period))
+          end
+      end
+    end
+
+    # We also need a way to find out of a language supports the
+    # concept of "noon" and "midnight"
+    if Map.get(periods, "noon") && Map.get(periods, "midnight")do
+      def language_has_noon_and_midnight?(unquote(language)), do: true
+    end
+  end
+
+  def language_has_noon_and_midnight?(_), do: false
+
   #
   # Date Formatters
   #
@@ -438,38 +475,58 @@ defmodule Cldr.DateTime.Formatter do
   #
   # Time formatters
   #
-  def period_am_pm(time, n, locale, _options) when n in 1..3 do
+  def period_am_pm(time, n, locale, options)  do
     calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
+    type = period_type(n)
 
-    get_period(time, calendar, :format, :abbreviated)
+    key = am_or_pm(time, options[:variant])
+    get_period(time, locale, calendar, :format, type, key, options)
   end
 
-  def period_am_pm(time, 4, locale, _options) do
+  @doc """
+  Returns the formatting of the time period as either
+  "noon", "midnight" or "am"/"pm".
+
+  If the langauge doesn't support "noon" or "midnight" then
+  "am"/"pm" is used for all time periods.
+  """
+  def period_noon_mid(%{hour: hour, minute: minute} = time, n, locale, options)
+  when (rem(hour, 12) == 0 or rem(hour, 24) == 0) and minute == 0 do
     calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
+    language = Cldr.language_from_locale(locale)
+    type = period_type(n)
 
-    get_period(time, calendar, :format, :wide)
+    if language_has_noon_and_midnight?(language) do
+      time_period = time_period_for(time, language)
+      get_period(time, locale, calendar, :format, type, time_period, options)
+    else
+      period_am_pm(time, n, locale, options)
+    end
   end
 
-  def period_am_pm(time, 5, locale, _options) do
-    calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
-
-    get_period(time, calendar, :format, :narrow)
-  end
-
-  def period_noon_mid(%{hour: 0, minute: 0}, n, locale, _options) do
-
-  end
-
-  def period_noon_mid(%{hour: 12, minute: 0}, n, locale, _options) do
-
-  end
-
-  def period_noon_mid(time, n, locale, options) do
+  def period_noon_mid(%{hour: hour, minute: minute} = time, n, locale, options) do
     period_am_pm(time, n, locale, options)
   end
 
   def period_flex(%{hour: _hour, minute: _minute} = time, n, locale, options) do
+    calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
+    language = Cldr.language_from_locale(locale)
+    time_period = time_period_for(time, language)
+    type = period_type(n)
 
+    get_period(time, locale, calendar, :format, type, time_period, options)
+  end
+
+  defp period_type(n) when n in 1..3, do: :abbreviated
+  defp period_type(4), do: :wide
+  defp period_type(5), do: :narrow
+
+  defp am_or_pm(%{hour: hour, minute: minute}, _variants) when hour < 12 do
+    :am
+  end
+
+  defp am_or_pm(%{}, _variants) do
+    :pm
   end
 
   def hour_1_12(%{hour: hour}, n, _locale, _options) do
@@ -538,18 +595,13 @@ defmodule Cldr.DateTime.Formatter do
     end
   end
 
-  defp get_period(time, locale, calendar, type, style, options) do
+  defp get_period(time, locale, calendar, type, style, key, _options) do
     cldr_calendar = type_from_calendar(calendar)
-    key = key_from_time(time)
 
     locale
     |> Cldr.get_locale
     |> Map.get(:dates)
     |> get_in([:calendars, cldr_calendar, :day_periods, type, style, key])
-  end
-
-  def key_from_time(%{hour: hour, minute: minute}) do
-
   end
 
   defp get_month(month, locale, calendar, type, style) do

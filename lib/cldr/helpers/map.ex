@@ -230,4 +230,17 @@ defmodule Cldr.Map do
   def rename_key(other, _from, _to) do
     other
   end
+
+  @doc """
+  Remove any leading underscores from map keys
+  """
+  def remove_leading_underscores(%{} = map) do
+    Enum.map(map, fn {k, v} ->
+      {String.replace_prefix(k, "_", ""), remove_leading_underscores(v)} end)
+    |> Enum.into(%{})
+  end
+
+  def remove_leading_underscores(v) do
+    v
+  end
 end
