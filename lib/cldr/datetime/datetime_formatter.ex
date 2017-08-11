@@ -17,11 +17,17 @@ defmodule Cldr.DateTime.Formatter do
       {:ok, transforms} ->
         def format(date, unquote(Macro.escape(format)) = f, locale, options) do
           number_system = if is_map(f), do: f[:number_system], else: options[:number_system]
-          formatted =
-            unquote(transforms)
+          formatted = unquote(transforms)
+
+          if error_list = format_errors(formatted) do
+            {:error, Enum.join(error_list, "; ")}
+          else
+            formatted = formatted
             |> Enum.join
             |> transliterate(locale, number_system)
-          {:ok, formatted}
+
+            {:ok, formatted}
+          end
         end
 
       {:error, message} ->
@@ -33,12 +39,17 @@ defmodule Cldr.DateTime.Formatter do
     case Compiler.tokenize(format) do
       {:ok, tokens, _} ->
         number_system = if is_map(format), do: format[:number_system], else: options[:number_system]
-        formatted =
-          tokens
-          |> apply_transforms(date, locale, options)
+        formatted = apply_transforms(tokens, date, locale, options)
+
+        if error_list = format_errors(formatted) do
+          {:error, Enum.join(error_list, "; ")}
+        else
+          formatted = formatted
           |> Enum.join
           |> transliterate(locale, number_system)
-        {:ok, formatted}
+
+          {:ok, formatted}
+        end
       {:error, reason} ->
         {:error, reason}
     end
@@ -56,6 +67,15 @@ defmodule Cldr.DateTime.Formatter do
 
   defp transliterate(formatted, locale, number_system) do
     Cldr.Number.Transliterate.transliterate(formatted, locale, number_system)
+  end
+
+  def format_errors(list) do
+    errors =
+      list
+      |> Enum.filter(fn {:error, _reason} -> true; _ -> false end)
+      |> Enum.map(fn {:error, reason} -> reason end)
+
+    if Enum.empty?(errors), do: nil, else: errors
   end
 
   # Insert generated functions that will identify which time period key
@@ -106,16 +126,20 @@ defmodule Cldr.DateTime.Formatter do
   The specific return string is determined by
   how many `G`s are in the format.
   """
-  def era(date, n, locale, options) when n in 1..3 do
+  def era(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, n, locale, options) when n in 1..3 do
     get_era(date, :era_abbr, locale, options)
   end
 
-  def era(date, 4, locale, options) do
+  def era(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 4, locale, options) do
     get_era(date, :era_names, locale, options)
   end
 
-  def era(date, 5, locale, options) do
+  def era(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 5, locale, options) do
     get_era(date, :era_narrow, locale, options)
+  end
+
+  def era(date, _n, _locale, _options) do
+    error_return(date, "G", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -147,6 +171,10 @@ defmodule Cldr.DateTime.Formatter do
     pad(year, n)
   end
 
+  def year_numeric(date, _n, _locale, _options) do
+    error_return(date, "y", [:year])
+  end
+
   @doc """
   Returns the `year` (format symbol `Y`) in “Week of Year”
   based calendars in which the year transition occurs
@@ -164,7 +192,7 @@ defmodule Cldr.DateTime.Formatter do
   year digits, while any other field length specifies a
   minimum number of digits to display.
   """
-  def year_week_relative(%{calendar: Calendar.ISO} = date, 2 = n, _locale, _options) do
+  def year_week_relative(%{year: _year, month: _month, day: _day, calendar: Calendar.ISO} = date, 2 = n, _locale, _options) do
     date
     |> Kalendar.last_week_of_year
     |> Map.get(:year)
@@ -172,7 +200,7 @@ defmodule Cldr.DateTime.Formatter do
     |> pad(n)
   end
 
-  def year_week_relative(%{calendar: calendar} = date, 2 = n, _locale, _options) do
+  def year_week_relative(%{year: _year, month: _month, day: _day, calendar: calendar} = date, 2 = n, _locale, _options) do
     date
     |> calendar.last_week_of_year
     |> Map.get(:year)
@@ -180,18 +208,22 @@ defmodule Cldr.DateTime.Formatter do
     |> pad(n)
   end
 
-  def year_week_relative(%{calendar: Calendar.ISO} = date, n, _locale, _options) do
+  def year_week_relative(%{year: _year, month: _month, day: _day, calendar: Calendar.ISO} = date, n, _locale, _options) do
     date
     |> Kalendar.last_week_of_year
     |> Map.get(:year)
     |> pad(n)
   end
 
-  def year_week_relative(%{calendar: calendar} = date, n, _locale, _options) do
+  def year_week_relative(%{year: _year, month: _month, day: _day, calendar: calendar} = date, n, _locale, _options) do
     date
     |> calendar.last_week_of_year
     |> Map.get(:year)
     |> pad(n)
+  end
+
+  def year_week_relative(date, _n, _locale, _options) do
+    error_return(date, "Y", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -213,10 +245,14 @@ defmodule Cldr.DateTime.Formatter do
     pad(year, n)
   end
 
-  def year_extended(%{calendar: calendar} = date, n, _locale, _options) do
+  def year_extended(%{year: _year, calendar: calendar} = date, n, _locale, _options) do
     date
     |> calendar.extended_year_from_date
     |> pad(n)
+  end
+
+  def year_extended(date, _n, _locale, _options) do
+    error_return(date, "u", [:year, :calendar])
   end
 
   @doc """
@@ -236,6 +272,10 @@ defmodule Cldr.DateTime.Formatter do
   """
   def year_cyclic(%{year: year}, _n, _locale, _options) do
     year
+  end
+
+  def year_cyclic(date, _n, _locale, _options) do
+    error_return(date, "U", [:year])
   end
 
   @doc """
@@ -273,6 +313,10 @@ defmodule Cldr.DateTime.Formatter do
     |> Map.get(:year)
   end
 
+  def year_related(date, _n, _locale, _options) do
+    error_return(date, "r", [:year, :calendar])
+  end
+
   @doc """
   Returns the `month` (format symbol `M`) of a date
   for given locale. The `M` format returns the month
@@ -301,6 +345,10 @@ defmodule Cldr.DateTime.Formatter do
     get_month(month, locale, calendar, :format, :narrow)
   end
 
+  def month(date, _n, _locale, _options) do
+    error_return(date, "M", [:month])
+  end
+
   @doc """
   Returns the `month` (symbol `L`) in standalone format which is
   intended to formatted without an accompanying day (`d`).
@@ -326,6 +374,10 @@ defmodule Cldr.DateTime.Formatter do
 
   def month_standalone(%{month: month, calendar: calendar}, 5, locale, _options) do
     get_month(month, locale, calendar, :stand_alone, :narrow)
+  end
+
+  def month_standalone(date, _n, _locale, _options) do
+    error_return(date, "L", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -358,6 +410,10 @@ defmodule Cldr.DateTime.Formatter do
     |> pad(n)
   end
 
+  def week_of_year(date, _n, _locale, _options) do
+    error_return(date, "w", [:year, :month, :day, :calendar])
+  end
+
   @doc """
   Returns the week of the month (format symbol `W`) as an integer
   for a given `date`
@@ -369,6 +425,10 @@ defmodule Cldr.DateTime.Formatter do
     (days - first_of_month)
     |> div(7)
     |> pad(n)
+  end
+
+  def week_of_month(date, _n, _locale, _options) do
+    error_return(date, "W", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -385,6 +445,10 @@ defmodule Cldr.DateTime.Formatter do
     pad(day, 2)
   end
 
+  def day_of_month(date, _n, _locale, _options) do
+    error_return(date, "M", [:year, :month, :day, :calendar])
+  end
+
   @doc """
   Returns the day of the year (symbol `D`) as an integer.
 
@@ -395,6 +459,10 @@ defmodule Cldr.DateTime.Formatter do
     date
     |> Kalendar.day_of_year
     |> pad(n)
+  end
+
+  def day_of_year(date, _n, _locale, _options) do
+    error_return(date, "D", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -417,6 +485,10 @@ defmodule Cldr.DateTime.Formatter do
 
   def weekday_name(date, 6, locale, _options) do
     get_day(date, locale, :format, :short)
+  end
+
+  def weekday_name(date, _n, _locale, _options) do
+    error_return(date, "E", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -444,8 +516,12 @@ defmodule Cldr.DateTime.Formatter do
     |> pad(n)
   end
 
-  def weekday_number(date, n, locale, options) when n > 3 do
+  def weekday_number(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, n, locale, options) when n > 3 do
     weekday_name(date, n, locale, options)
+  end
+
+  def weekday_number(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, _n, _locale, _options) do
+    error_return(date, "e", [:year, :month, :day, :calendar])
   end
 
   @doc """
@@ -456,39 +532,61 @@ defmodule Cldr.DateTime.Formatter do
   it is intended for use without the associated `d`
   format symbol.
   """
-  def standalone_day_of_week(date, n, locale, _options) when n in 1..3 do
+  def standalone_day_of_week(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, n, locale, _options)
+  when n in 1..3 do
     get_day(date, locale, :stand_alone, :abbreviated)
   end
 
-  def standalone_day_of_week(date, 4, locale, _options) do
+  def standalone_day_of_week(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 4, locale, _options) do
     get_day(date, locale, :stand_alone, :wide)
   end
 
-  def standalone_day_of_week(date, 5, locale, _options) do
+  def standalone_day_of_week(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 5, locale, _options) do
     get_day(date, locale, :stand_alone, :narrow)
   end
 
-  def standalone_day_of_week(date, 6, locale, _options) do
+  def standalone_day_of_week(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 6, locale, _options) do
     get_day(date, locale, :stand_alone, :short)
+  end
+
+  def standalone_day_of_week(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, _n, _locale, _options) do
+    error_return(date, "c", [:year, :month, :day, :calendar])
   end
 
   #
   # Time formatters
   #
-  def period_am_pm(time, n, locale, options)  do
+
+  @doc """
+  Returns a localised version of "am" or "pm" (format symbol `a`).
+
+  May be upper or lowercase depending on the locale and other options.
+  The wide form may be the same as the short form if the “real”
+  long form (eg ante meridiem) is not customarily used.
+  """
+  def period_am_pm(%{hour: _hour} = time, n, locale, options)  do
     calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
     type = period_type(n)
 
     key = am_or_pm(time, options[:variant])
-    get_period(time, locale, calendar, :format, type, key, options)
+    get_period(locale, calendar, :format, type, key, options)
+  end
+
+  def period_am_pm(time, _n, _locale, _options) do
+    error_return(time, "a", [:hour])
   end
 
   @doc """
   Returns the formatting of the time period as either
-  "noon", "midnight" or "am"/"pm".
+  "noon", "midnight" or "am"/"pm" (format symbol 'b').
 
   If the langauge doesn't support "noon" or "midnight" then
   "am"/"pm" is used for all time periods.
+
+  May be upper or lowercase depending on the locale and other options.
+  If the locale doesn't the notion of a unique "noon" = 12:00,
+  then the PM form may be substituted. Similarly for "midnight" = 00:00
+  and the AM form.
   """
   def period_noon_mid(%{hour: hour, minute: minute} = time, n, locale, options)
   when (rem(hour, 12) == 0 or rem(hour, 24) == 0) and minute == 0 do
@@ -498,30 +596,45 @@ defmodule Cldr.DateTime.Formatter do
 
     if language_has_noon_and_midnight?(language) do
       time_period = time_period_for(time, language)
-      get_period(time, locale, calendar, :format, type, time_period, options)
+      get_period(locale, calendar, :format, type, time_period, options)
     else
       period_am_pm(time, n, locale, options)
     end
   end
 
-  def period_noon_mid(%{hour: hour, minute: minute} = time, n, locale, options) do
+  def period_noon_mid(%{hour: _hour, minute: _minute} = time, n, locale, options) do
     period_am_pm(time, n, locale, options)
   end
 
+  def period_noon_mid(time, _n, _locale, _options) do
+    error_return(time, "b", [:hour, :minute])
+  end
+
+  @doc """
+  Returns the formatting of the time period as a string, for
+  example "at night" (format symbol 'B').
+
+  May be upper or lowercase depending on the locale and other options.
+  Often there is only one width that is customarily used.
+  """
   def period_flex(%{hour: _hour, minute: _minute} = time, n, locale, options) do
     calendar = Map.get(time, :calendar, options[:calendar] || Calendar.ISO)
     language = Cldr.language_from_locale(locale)
     time_period = time_period_for(time, language)
     type = period_type(n)
 
-    get_period(time, locale, calendar, :format, type, time_period, options)
+    get_period(locale, calendar, :format, type, time_period, options)
+  end
+
+  def period_flex(time, _n, _locale, _options) do
+    error_return(time, "B", [:hour, :minute])
   end
 
   defp period_type(n) when n in 1..3, do: :abbreviated
   defp period_type(4), do: :wide
   defp period_type(5), do: :narrow
 
-  defp am_or_pm(%{hour: hour, minute: minute}, _variants) when hour < 12 do
+  defp am_or_pm(%{hour: hour, minute: _minute}, _variants) when hour < 12 do
     :am
   end
 
@@ -536,20 +649,22 @@ defmodule Cldr.DateTime.Formatter do
     |> pad(n)
   end
 
-  def hour_0_11(%{hour: hour} = time, n, _locale, _options) do
+  def hour_0_11(%{hour: hour}, n, _locale, _options) do
     hour
     |> rem(12)
     |> pad(n)
   end
 
-  def hour_1_24(%{hour: hour} = time, n, _locale, _options) do
+  def hour_1_24(%{hour: hour}, n, _locale, _options) do
     hour
     |> add(1)
+    |> rem(24)
     |> pad(n)
   end
 
-  def hour_0_23(%{hour: hour} = time, n, _locale, _options) do
+  def hour_0_23(%{hour: hour}, n, _locale, _options) do
     hour
+    |> rem(24)
     |> pad(n)
   end
 
@@ -561,10 +676,6 @@ defmodule Cldr.DateTime.Formatter do
   def second(%{second: second}, n, _locale, _options) do
     second
     |> pad(n)
-  end
-
-  def period(%{hour: hour}, n, _locale, _options) do
-
   end
 
   @doc """
@@ -595,7 +706,7 @@ defmodule Cldr.DateTime.Formatter do
     end
   end
 
-  defp get_period(time, locale, calendar, type, style, key, _options) do
+  defp get_period(locale, calendar, type, style, key, _options) do
     cldr_calendar = type_from_calendar(calendar)
 
     locale
@@ -682,5 +793,9 @@ defmodule Cldr.DateTime.Formatter do
 
   defp add(x, n) do
     x + n
+  end
+
+  def error_return(map, symbol, requirements) do
+    {:error, "The format symbol '#{symbol}' requires at least #{inspect requirements}.  Found: #{inspect map}"}
   end
 end
