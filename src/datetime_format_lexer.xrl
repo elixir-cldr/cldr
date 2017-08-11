@@ -58,26 +58,26 @@ Rules.
 
 {Era}+                   : {token,{era,TokenLine,count(TokenChars)}}.
 
-{YearNumeric}+           : {token,{year_numeric,TokenLine,count(TokenChars)}}.
-{YearWeek}+              : {token,{year_week_relative,TokenLine,count(TokenChars)}}.
-{YearExtended}+          : {token,{year_extended,TokenLine,count(TokenChars)}}.
-{CyclicYear}+            : {token,{year_cyclic,TokenLine,count(TokenChars)}}.
-{RelatedYear}+           : {token,{year_related,TokenLine,count(TokenChars)}}.
+{YearNumeric}+           : {token,{year,TokenLine,count(TokenChars)}}.
+{YearWeek}+              : {token,{week_aligned_year,TokenLine,count(TokenChars)}}.
+{YearExtended}+          : {token,{extended_year,TokenLine,count(TokenChars)}}.
+{CyclicYear}+            : {token,{cyclic_year,TokenLine,count(TokenChars)}}.
+{RelatedYear}+           : {token,{related_year,TokenLine,count(TokenChars)}}.
 
 {Quarter}+               : {token,{quarter,TokenLine,count(TokenChars)}}.
-{StandAloneQuarter}+     : {token,{quarter_standalone,TokenLine,count(TokenChars)}}.
+{StandAloneQuarter}+     : {token,{standalone_quarter,TokenLine,count(TokenChars)}}.
 
 {Month}+                 : {token,{month,TokenLine,count(TokenChars)}}.
-{StandAloneMonth}+       : {token,{month_standalone,TokenLine,count(TokenChars)}}.
+{StandAloneMonth}+       : {token,{standalone_month,TokenLine,count(TokenChars)}}.
 
 {WeekOfYear}+            : {token,{week_of_year,TokenLine,count(TokenChars)}}.
-{WeekOfMonth}+           : {token,{month_week,TokenLine,count(TokenChars)}}.
+{WeekOfMonth}+           : {token,{week_of_month,TokenLine,count(TokenChars)}}.
 {DayOfMonth}+            : {token,{day_of_month,TokenLine,count(TokenChars)}}.
 {DayOfYear}+             : {token,{day_of_year,TokenLine,count(TokenChars)}}.
 {DayOfWeekInMonth}+      : {token,{day_of_week_in_month,TokenLine,count(TokenChars)}}.
 
-{WeekdayName}+           : {token,{weekday_name,TokenLine,count(TokenChars)}}.
-{WeekdayNumber}+         : {token,{weekday_number,TokenLine,count(TokenChars)}}.
+{WeekdayName}+           : {token,{day_name,TokenLine,count(TokenChars)}}.
+{WeekdayNumber}+         : {token,{day_of_week,TokenLine,count(TokenChars)}}.
 {StandAloneDayOfWeek}+   : {token,{standalone_day_of_week,TokenLine,count(TokenChars)}}.
 
 {Period_am_pm}+          : {token,{period_am_pm,TokenLine,count(TokenChars)}}.

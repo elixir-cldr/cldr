@@ -45,7 +45,7 @@ defmodule Cldr.DateTime do
 
   # Standard format
   defp format_string_from_format(format, locale, calendar) when format in @format_types do
-    cldr_calendar = Cldr.DateTime.Formatter.type_from_calendar(calendar)
+    cldr_calendar = Formatter.type_from_calendar(calendar)
 
     format_string =
       locale
@@ -57,7 +57,7 @@ defmodule Cldr.DateTime do
 
   # Look up for the format in :available_formats
   defp format_string_from_format(format, locale, calendar) when is_atom(format) do
-    cldr_calendar = Cldr.DateTime.Formatter.type_from_calendar(calendar)
+    cldr_calendar = Formatter.type_from_calendar(calendar)
 
     format_string =
       locale

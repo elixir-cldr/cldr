@@ -710,27 +710,27 @@ yyaction_0(TokenChars, TokenLine) ->
 -compile({inline,yyaction_1/2}).
 -file("src/datetime_format_lexer.xrl", 59).
 yyaction_1(TokenChars, TokenLine) ->
-     { token, { year_numeric, TokenLine, count (TokenChars) } } .
+     { token, { year, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_2/2}).
 -file("src/datetime_format_lexer.xrl", 60).
 yyaction_2(TokenChars, TokenLine) ->
-     { token, { year_week_relative, TokenLine, count (TokenChars) } } .
+     { token, { week_aligned_year, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_3/2}).
 -file("src/datetime_format_lexer.xrl", 61).
 yyaction_3(TokenChars, TokenLine) ->
-     { token, { year_extended, TokenLine, count (TokenChars) } } .
+     { token, { extended_year, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_4/2}).
 -file("src/datetime_format_lexer.xrl", 62).
 yyaction_4(TokenChars, TokenLine) ->
-     { token, { year_cyclic, TokenLine, count (TokenChars) } } .
+     { token, { cyclic_year, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_5/2}).
 -file("src/datetime_format_lexer.xrl", 63).
 yyaction_5(TokenChars, TokenLine) ->
-     { token, { year_related, TokenLine, count (TokenChars) } } .
+     { token, { related_year, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_6/2}).
 -file("src/datetime_format_lexer.xrl", 65).
@@ -740,7 +740,7 @@ yyaction_6(TokenChars, TokenLine) ->
 -compile({inline,yyaction_7/2}).
 -file("src/datetime_format_lexer.xrl", 66).
 yyaction_7(TokenChars, TokenLine) ->
-     { token, { quarter_standalone, TokenLine, count (TokenChars) } } .
+     { token, { standalone_quarter, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_8/2}).
 -file("src/datetime_format_lexer.xrl", 68).
@@ -750,7 +750,7 @@ yyaction_8(TokenChars, TokenLine) ->
 -compile({inline,yyaction_9/2}).
 -file("src/datetime_format_lexer.xrl", 69).
 yyaction_9(TokenChars, TokenLine) ->
-     { token, { month_standalone, TokenLine, count (TokenChars) } } .
+     { token, { standalone_month, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_10/2}).
 -file("src/datetime_format_lexer.xrl", 71).
@@ -760,7 +760,7 @@ yyaction_10(TokenChars, TokenLine) ->
 -compile({inline,yyaction_11/2}).
 -file("src/datetime_format_lexer.xrl", 72).
 yyaction_11(TokenChars, TokenLine) ->
-     { token, { month_week, TokenLine, count (TokenChars) } } .
+     { token, { week_of_month, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_12/2}).
 -file("src/datetime_format_lexer.xrl", 73).
@@ -780,12 +780,12 @@ yyaction_14(TokenChars, TokenLine) ->
 -compile({inline,yyaction_15/2}).
 -file("src/datetime_format_lexer.xrl", 77).
 yyaction_15(TokenChars, TokenLine) ->
-     { token, { weekday_name, TokenLine, count (TokenChars) } } .
+     { token, { day_name, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_16/2}).
 -file("src/datetime_format_lexer.xrl", 78).
 yyaction_16(TokenChars, TokenLine) ->
-     { token, { weekday_number, TokenLine, count (TokenChars) } } .
+     { token, { day_of_week, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_17/2}).
 -file("src/datetime_format_lexer.xrl", 79).

@@ -1,4 +1,5 @@
 defmodule Cldr.DateTime.Format do
+  alias Cldr.DateTime.Formatter
   @standard_formats [:short, :medium, :long, :full]
 
   def format_list do
@@ -32,21 +33,38 @@ defmodule Cldr.DateTime.Format do
     end
   end
 
-  def date_formats(locale \\ Cldr.get_current_locale, calendar \\ Cldr.DateTime.Formatter.default_calendar) do
+  def common_datetime_format_names do
+    Cldr.known_locales
+    |> Enum.map(&datetime_available_formats/1)
+    |> Enum.map(&Map.keys/1)
+    |> Enum.map(&MapSet.new/1)
+    |> intersect_mapsets
+    |> MapSet.to_list
+  end
+
+  defp intersect_mapsets([a, b | []]) do
+    MapSet.intersection(a,b)
+  end
+
+  defp intersect_mapsets([a, b | tail]) do
+    intersect_mapsets([MapSet.intersection(a,b) | tail])
+  end
+
+  def date_formats(locale \\ Cldr.get_current_locale, calendar \\ Formatter.default_calendar) do
     locale
     |> Cldr.get_locale
     |> Map.get(:dates)
     |> get_in([:calendars, calendar, :date_formats])
   end
 
-  def time_formats(locale \\ Cldr.get_current_locale, calendar \\ Cldr.DateTime.Formatter.default_calendar) do
+  def time_formats(locale \\ Cldr.get_current_locale, calendar \\ Formatter.default_calendar) do
     locale
     |> Cldr.get_locale
     |> Map.get(:dates)
     |> get_in([:calendars, calendar, :time_formats])
   end
 
-  def datetime_formats(locale \\ Cldr.get_current_locale, calendar \\ Cldr.DateTime.Formatter.default_calendar) do
+  def datetime_formats(locale \\ Cldr.get_current_locale, calendar \\ Formatter.default_calendar) do
     locale
     |> Cldr.get_locale
     |> Map.get(:dates)
@@ -55,7 +73,7 @@ defmodule Cldr.DateTime.Format do
     |> Enum.into(%{})
   end
 
-  def datetime_available_formats(locale \\ Cldr.get_current_locale, calendar \\ Cldr.DateTime.Formatter.default_calendar) do
+  def datetime_available_formats(locale \\ Cldr.get_current_locale, calendar \\ Formatter.default_calendar) do
     locale
     |> Cldr.get_locale
     |> Map.get(:dates)
