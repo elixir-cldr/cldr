@@ -138,6 +138,44 @@ defmodule Cldr.DateTime.Formatter do
   def language_has_noon_and_midnight?(_), do: false
 
   #
+  # DateTime formatters
+  #
+
+  @doc """
+  Returns a formatted date.
+
+  DateTime formats are defined in CLDR using substitution rules whereby
+  the Date and/or Time are substituted into a format string.  Therefore
+  this function crafts a date format string which is then inserted into
+  the overall format being requested.
+  """
+  @spec date(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
+  def date(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
+  def date(%{year: _year, month: _month, day: _day, calendar: _calendar} = d, _n, _locale, options) do
+    case Cldr.Date.to_string(d, options) do
+      {:ok, date_string} -> date_string
+      {:error, _reason} = error -> error
+    end
+  end
+
+  @doc """
+  Returns a formatted time.
+
+  DateTime formats are defined in CLDR using substitution rules whereby
+  the Date and/or Time are substituted into a format string.  Therefore
+  this function crafts a time format string which is then inserted into
+  the overall format being requested.
+  """
+  @spec time(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
+  def time(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
+  def time(%{hour: _hour, minute: _minute} = t, _n, _locale, options) do
+    case Cldr.Time.to_string(t, options) do
+      {:ok, time_string} -> time_string
+      {:error, _reason} = error -> error
+    end
+  end
+
+  #
   # Date Formatters
   #
 

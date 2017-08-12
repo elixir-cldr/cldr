@@ -85,6 +85,10 @@ defmodule Cldr.Substitution do
     [Kernel.to_string(item_0), string, Kernel.to_string(item_1)]
   end
 
+  def substitute([item_0, item_1], [1, string, 0]) when is_binary(string) do
+    [Kernel.to_string(item_1), string, Kernel.to_string(item_0)]
+  end
+
   # Takes care of the common case where there are three parameters separated
   # by strings.
   def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2]) do

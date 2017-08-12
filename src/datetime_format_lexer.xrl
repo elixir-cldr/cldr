@@ -50,9 +50,12 @@ ZoneID              = V
 ISO_ZoneZ           = X
 ISO_Zone            = x
 
+Date                = ({1})
+Time                = ({0})
+
 Quote               = ''
 Quoted              = '[^']+'
-Char                = [^a-zA-Z']
+Char                = [^a-zA-Z{}']
 
 Rules.
 
@@ -66,6 +69,9 @@ Rules.
 
 {Quarter}+               : {token,{quarter,TokenLine,count(TokenChars)}}.
 {StandAloneQuarter}+     : {token,{standalone_quarter,TokenLine,count(TokenChars)}}.
+
+{Time}                   : {token,{time,TokenLine,0}}.
+{Date}                   : {token,{date,TokenLine,0}}.
 
 {Month}+                 : {token,{month,TokenLine,count(TokenChars)}}.
 {StandAloneMonth}+       : {token,{standalone_month,TokenLine,count(TokenChars)}}.

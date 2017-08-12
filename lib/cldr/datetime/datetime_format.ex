@@ -22,6 +22,7 @@ defmodule Cldr.DateTime.Format do
   end
 
   def all_datetime_formats(locale) do
+    all_formats_for(locale, &datetime_formats/2) ++
     all_formats_for(locale, &datetime_available_formats/2)
   end
 
