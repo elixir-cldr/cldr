@@ -43,7 +43,7 @@ Second              = s
 FractionalSecond    = S
 
 ShortZone           = z
-LongZone            = Z
+BasicZone           = Z
 GMT_Zone            = O
 GenericZone         = v
 ZoneID              = V
@@ -100,7 +100,7 @@ Rules.
 {FractionalSecond}+      : {token,{fractional_second,TokenLine,count(TokenChars)}}.
 
 {ShortZone}+             : {token,{zone_short,TokenLine,count(TokenChars)}}.
-{LongZone}+              : {token,{zone_long,TokenLine,count(TokenChars)}}.
+{BasicZone}+             : {token,{zone_basic,TokenLine,count(TokenChars)}}.
 {GMT_Zone}+              : {token,{zone_gmt,TokenLine,count(TokenChars)}}.
 {GenericZone}+           : {token,{zone_generic,TokenLine,count(TokenChars)}}.
 {ZoneID}+                : {token,{zone_id,TokenLine,count(TokenChars)}}.

@@ -139,6 +139,15 @@ defmodule Cldr.Math do
   end
 
   @doc """
+  Returns the remainder and dividend of two integers.
+  """
+  def div_mod(int1, int2) do
+    div = div(int1, int2)
+    mod = int1 - (div * int2)
+    {div, mod}
+  end
+
+  @doc """
   Convert a Decimal to a float
 
   * `decimal` must be a Decimal

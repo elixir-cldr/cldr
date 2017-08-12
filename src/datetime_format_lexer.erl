@@ -888,7 +888,7 @@ yyaction_30(TokenChars, TokenLine) ->
 -compile({inline,yyaction_31/2}).
 -file("src/datetime_format_lexer.xrl", 101).
 yyaction_31(TokenChars, TokenLine) ->
-     { token, { zone_long, TokenLine, count (TokenChars) } } .
+     { token, { zone_basic, TokenLine, count (TokenChars) } } .
 
 -compile({inline,yyaction_32/2}).
 -file("src/datetime_format_lexer.xrl", 102).

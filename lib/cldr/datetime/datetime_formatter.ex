@@ -848,6 +848,88 @@ defmodule Cldr.DateTime.Formatter do
   end
 
   @doc """
+  Returns the `:time_zone` (format symbol `v`) part of a `DateTime` or `Time`
+  """
+  @spec zone_generic(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
+  def zone_generic(time, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
+  def zone_generic(%{time_zone: time_zone}, _n, _locale, _options) do
+    time_zone
+  end
+
+  def zone_generic(time, _n, _locale, _options) do
+    error_return(time, "v", [:time_zone])
+  end
+
+  @doc """
+  Returns the `:time_zone` (format symbol `z`) part of a `DateTime` or `Time`
+  """
+  @spec zone_generic(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
+  def zone_short(time, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
+  def zone_short(%{zone_abbr: zone_abbr}, _n, _locale, _options) do
+    zone_abbr
+  end
+
+  def zone_short(time, _n, _locale, _options) do
+    error_return(time, "z", [:zone_abbr])
+  end
+
+  @doc """
+  Returns the basic zone offset (format symbol `Z`) part of a `DateTime` or `Time`,
+
+  The ISO8601 basic format with hours, minutes and optional seconds fields.
+  The format is equivalent to RFC 822 zone format (when optional seconds field
+  is absent). This is equivalent to the "xxxx" specifier.
+  """
+  @spec zone_basic(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
+  def zone_basic(time, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
+  def zone_basic(%{utc_offset: offset}, n, _locale, _options) when n in 1..3 do
+    {hours, minutes} = time_from_zone_offset(offset)
+    to_string(pad(hours, 2)) <> to_string(pad(minutes, 2))
+  end
+
+  def zone_basic(%{utc_offset: offset}, 4, _locale, _options) do
+    {hours, minutes} = time_from_zone_offset(offset)
+    "GMT" <> to_string(pad(hours, 2)) <> ":" <> to_string(pad(minutes, 2))
+  end
+
+  def zone_basic(%{utc_offset: offset}, 5, _locale, _options) do
+    {hours, minutes} = time_from_zone_offset(offset)
+    to_string(pad(hours, 2)) <> ":" <> to_string(pad(minutes, 2))
+  end
+
+  def zone_basic(time, _n, _locale, _options) do
+    error_return(time, "Z", [:utc_offset])
+  end
+
+  @doc """
+  Returns the short localised GMT offset (format symbol `O`) part of a
+  `DateTime` or `Time`,
+  """
+  def zone_gmt(%{utc_offset: offset}, 1, _locale, _options) do
+    {hours, minutes} = time_from_zone_offset(offset)
+    format = "GMT" <> to_string(pad(hours, 2))
+    if minutes == 0 do
+      format
+    else
+      format <> to_string(pad(minutes, 2))
+    end
+  end
+
+  def zone_gmt(%{utc_offset: _offset} = t, 4, locale, options) do
+    zone_basic(t, 4, locale, options)
+  end
+
+  def zone_gmt(time, _n, _locale, _options) do
+    error_return(time, "O", [:utc_offset])
+  end
+
+  defp time_from_zone_offset(offset) do
+    hours = trunc(offset)
+    minutes = abs(trunc((offset - hours) * 60))
+    {hours, minutes}
+  end
+
+  @doc """
   Returns a literal.
   """
   @spec literal(any, binary, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
