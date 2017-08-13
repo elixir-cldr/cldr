@@ -476,13 +476,13 @@ defmodule Cldr.DateTime.Formatter do
   """
   @spec week_of_year(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
   def week_of_year(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
-  def week_of_year(%{calendar: Calendar.ISO} = date, n, _locale, _options) do
+  def week_of_year(%{year: _year, month: _month, day: _day, calendar: Calendar.ISO} = date, n, _locale, _options) do
     date
     |> Kalendar.week_of_year
     |> pad(n)
   end
 
-  def week_of_year(%{calendar: calendar} = date, n, _locale, _options) do
+  def week_of_year(%{year: _year, month: _month, day: _day, calendar: calendar} = date, n, _locale, _options) do
     date
     |> calendar.week_of_year
     |> pad(n)
@@ -498,7 +498,7 @@ defmodule Cldr.DateTime.Formatter do
   """
   @spec week_of_month(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
   def week_of_month(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
-  def week_of_month(%{calendar: Calendar.ISO} = date, n, _locale, _options) do
+  def week_of_month(%{year: _year, month: _month, day: _day, calendar: Calendar.ISO} = date, n, _locale, _options) do
     {first_of_month, _fraction} = Kalendar.iso_days_from_date(Kalendar.first_day_of_month(date))
     {days, _fraction} = Kalendar.iso_days_from_date(date)
 
@@ -528,7 +528,7 @@ defmodule Cldr.DateTime.Formatter do
   end
 
   def day_of_month(date, _n, _locale, _options) do
-    error_return(date, "M", [:year, :month, :day, :calendar])
+    error_return(date, "M", [:day])
   end
 
   @doc """
@@ -539,7 +539,7 @@ defmodule Cldr.DateTime.Formatter do
   """
   @spec day_of_year(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
   def day_of_year(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
-  def day_of_year(%{} = date, n, _locale, _options) do
+  def day_of_year(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, n, _locale, _options) do
     date
     |> Kalendar.day_of_year
     |> pad(n)
@@ -557,19 +557,19 @@ defmodule Cldr.DateTime.Formatter do
   """
   @spec day_name(Map.t, integer, Cldr.Locale.t, Keyword.t) :: binary | {:error, binary}
   def day_name(date, n \\ 1, locale \\ Cldr.get_current_locale(), options \\ [])
-  def day_name(date, n, locale, _options) when n in 1..3 do
+  def day_name(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, n, locale, _options) when n in 1..3 do
     get_day(date, locale, :format, :abbreviated)
   end
 
-  def day_name(date, 4, locale, _options) do
+  def day_name(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 4, locale, _options) do
     get_day(date, locale, :format, :wide)
   end
 
-  def day_name(date, 5, locale, _options) do
+  def day_name(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 5, locale, _options) do
     get_day(date, locale, :format, :narrow)
   end
 
-  def day_name(date, 6, locale, _options) do
+  def day_name(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, 6, locale, _options) do
     get_day(date, locale, :format, :short)
   end
 

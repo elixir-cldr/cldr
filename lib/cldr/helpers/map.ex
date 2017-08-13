@@ -10,7 +10,7 @@ defmodule Cldr.Map do
 
   def underscore_keys(map = %{}) do
     map
-    |> Enum.map(fn {k, v} -> {Macro.underscore(k), underscore_keys(v)} end)
+    |> Enum.map(fn {k, v} -> {Cldr.String.underscore(k), underscore_keys(v)} end)
     |> Enum.map(fn {k, v} -> {String.replace(k, "-", "_"), v} end)
     |> Enum.into(%{})
   end
@@ -29,7 +29,7 @@ defmodule Cldr.Map do
   Underscore one key of a map
   """
   def underscore_key(map, key) do
-    Map.put(map, Macro.underscore(key), Map.get(map, key))
+    Map.put(map, Cldr.String.underscore(key), Map.get(map, key))
   end
 
   @doc """

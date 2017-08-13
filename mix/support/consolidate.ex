@@ -8,6 +8,8 @@ if Code.ensure_loaded?(Experimental.Flow) do
 
     alias Cldr.Normalize
 
+    @max_demand :erlang.system_info(:schedulers_online)
+
     defdelegate download_data_dir(), to: Cldr.Config
     defdelegate consolidated_output_dir(), to: Cldr.Config, as: :source_data_dir
 
@@ -25,7 +27,6 @@ if Code.ensure_loaded?(Experimental.Flow) do
     Also formats non-locale-specific CLDR data that is core to `Cldr`
     operation.
     """
-    @max_demand 50
     @spec consolidate_locales :: :ok
     def consolidate_locales do
       alias Experimental.Flow

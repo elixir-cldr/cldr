@@ -62,7 +62,7 @@ defmodule Cldr.Calendar do
   def iso_days_from_date(%{year: _, month: _, day: _, calendar: _} = date) do
     date
     |> naive_datetime_from_date
-    |> iso_days_from_naive_datetime
+    |> iso_days_from_datetime
   end
 
   def naive_datetime_from_date(%{year: year, month: month, day: day, calendar: calendar}) do
@@ -70,9 +70,15 @@ defmodule Cldr.Calendar do
     naive_datetime
   end
 
-  def iso_days_from_naive_datetime(%NaiveDateTime{year: year, month: month, day: day,
+  def iso_days_from_datetime(%NaiveDateTime{year: year, month: month, day: day,
                 hour: hour, minute: minute, second: second, microsecond: microsecond,
                 calendar: calendar}) do
+    calendar.naive_datetime_to_iso_days(year, month, day, hour, minute, second, microsecond)
+  end
+
+  def iso_days_from_datetime(%DateTime{year: year, month: month, day: day,
+                hour: hour, minute: minute, second: second, microsecond: microsecond,
+                calendar: calendar, zone_abbr: "UTC", time_zone: "Etc/UTC"}) do
     calendar.naive_datetime_to_iso_days(year, month, day, hour, minute, second, microsecond)
   end
 
@@ -241,6 +247,10 @@ defmodule Cldr.Calendar do
     date
     |> last_week_of_year
     |> Map.get(:year)
+  end
+
+  def iso_days_to_float({days, {numerator, denominator}}) do
+    days + (numerator / denominator)
   end
 end
 
