@@ -16,6 +16,8 @@ defmodule Cldr do
   alias Cldr.Config
   alias Cldr.Locale
 
+  @default_territory :"001"
+
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
       "Some locales are configured that are not known to CLDR. " <>
@@ -198,11 +200,20 @@ defmodule Cldr do
   end
 
   # TODO Should be replaced by a proper locale parser
-  def get_territory(locale \\ get_current_locale()) do
+  def territory_from_locale(locale \\ get_current_locale()) do
     case String.split(locale, "-") do
       [_lang, territory] -> territory
-      [_lang] -> :"001"
+      [_lang] -> @default_territory
     end
+  end
+
+  @doc """
+  Extract the language part from a locale.
+  """
+  def language_from_locale(locale \\ get_current_locale()) do
+    locale
+    |> String.split("-")
+    |> List.first
   end
 
   @doc """
@@ -243,14 +254,4 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}"}}
     end
   end
-
-  @doc """
-  Extract the language part from a locale.
-  """
-  def language_from_locale(locale) do
-    locale
-    |> String.split("-")
-    |> List.first
-  end
-
 end

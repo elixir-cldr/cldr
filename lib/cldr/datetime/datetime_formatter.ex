@@ -592,7 +592,7 @@ defmodule Cldr.DateTime.Formatter do
   def day_of_week(%{year: year, month: month, day: day, calendar: calendar}, n, locale, _options)
   when n in 1..2 do
     iso_day_of_week = calendar.day_of_week(year, month, day)
-    territory = Cldr.get_territory(locale)
+    territory = Cldr.territory_from_locale(locale)
 
     week_starts_on = get_in(Kalendar.week_data, [:first_day, territory])
     locale_day_of_week = day_ordinal(week_starts_on)
