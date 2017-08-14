@@ -113,55 +113,57 @@ defmodule Cldr.DateTime.Relative do
   def to_string(relative, options \\ []) do
     options = Keyword.merge(@default_options, options)
     unit = Keyword.get(options, :unit)
+    locale = Keyword.get(options, :locale)
     options = Keyword.delete(options, :unit)
-    to_string(relative, unit, options)
+    to_string(relative, unit, locale, options)
   end
 
-  defp to_string(relative, nil, options)
+  defp to_string(relative, nil, locale, options)
   when is_integer(relative) and relative in [-1, 0, +1] do
     unit = unit_from_seconds(relative)
-    binary = to_string(relative, unit, options)
+
+    binary = to_string(relative, unit, locale, options)
     if is_nil(binary) do
-      to_string(relative * 1.0, unit, options)
+      to_string(relative * 1.0, unit, locale, options)
     else
       binary
     end
   end
 
-  defp to_string(relative, unit, options)
+  defp to_string(relative, unit, locale, options)
   when is_integer(relative) and relative in [-1, 0, +1] do
-    options[:locale]
-    |> Cldr.get_locale
-    |> Map.get(:date_fields)
+    locale
+    |> get_locale()
     |> get_in([unit, options[:format], :relative_ordinal])
     |> Enum.at(relative + 1)
   end
 
-  defp to_string(relative, unit, options)
+  defp to_string(relative, unit, locale, options)
   when is_number(relative) and unit in @unit_keys do
     direction = if relative > 0, do: :relative_future, else: :relative_past
-    rules = options[:locale]
-    |> Cldr.get_locale
-    |> Map.get(:date_fields)
-    |> get_in([unit, options[:format], direction])
 
-    rule = Cldr.Number.Cardinal.pluralize(trunc(relative), options[:locale], rules)
+    rules =
+      locale
+      |> get_locale()
+      |> get_in([unit, options[:format], direction])
+
+    rule = Cldr.Number.Cardinal.pluralize(trunc(relative), locale, rules)
 
     relative
     |> abs
-    |> Cldr.Number.to_string(locale: options[:locale])
+    |> Cldr.Number.to_string(locale: locale)
     |> Cldr.Substitution.substitute(rule)
     |> Enum.join
   end
 
-  defp to_string(%DateTime{} = relative, unit, options) do
+  defp to_string(%DateTime{} = relative, unit, locale, options) do
     now = (options[:relative_to] || DateTime.utc_now) |> DateTime.to_unix
     then = DateTime.to_unix(relative)
     seconds = then - now
-    do_to_string(seconds, unit, options)
+    do_to_string(seconds, unit, locale, options)
   end
 
-  defp to_string(%Date{} = relative, unit, options) do
+  defp to_string(%Date{} = relative, unit, locale, options) do
     today = (options[:relative_to] || Date.utc_today)
     |> Date.to_erl
     |> :calendar.date_to_gregorian_days
@@ -173,24 +175,24 @@ defmodule Cldr.DateTime.Relative do
     |> Kernel.*(@day)
 
     seconds = then - today
-    do_to_string(seconds, unit, options)
+    do_to_string(seconds, unit, locale, options)
   end
 
-  defp to_string(span, unit, options) do
-    do_to_string(span, unit, options)
+  defp to_string(span, unit, locale, options) do
+    do_to_string(span, unit, locale, options)
   end
 
-  defp do_to_string(seconds, nil, options) do
-    do_to_string(seconds, unit_from_seconds(seconds), options)
+  defp do_to_string(seconds, nil, locale, options) do
+    do_to_string(seconds, unit_from_seconds(seconds), locale, options)
   end
 
-  defp do_to_string(seconds, unit, options) when unit in @unit_keys do
+  defp do_to_string(seconds, unit, locale, options) when unit in @unit_keys do
     seconds
     |> calculate_unit(unit)
-    |> to_string(unit, options)
+    |> to_string(unit, locale, options)
   end
 
-  defp do_to_string(_, unit, _) do
+  defp do_to_string(_, unit, _, _) do
     {:error, "Unknown time unit #{inspect unit}.  Valid time units are #{inspect @unit_keys}"}
   end
 
@@ -261,5 +263,15 @@ defmodule Cldr.DateTime.Relative do
   """
   def known_units do
     @unit_keys
+  end
+
+  for locale <- Cldr.Config.known_locales() do
+    locale_data =
+      locale
+      |> Cldr.Config.get_locale
+      |> Map.get(:date_fields)
+      |> Map.take(@unit_keys)
+
+    defp get_locale(unquote(locale)), do: unquote(Macro.escape(locale_data))
   end
 end
