@@ -116,29 +116,47 @@ defmodule Cldr.Unit do
   ## Example
 
       Cldr.Unit.available_units
-      [:volume_gallon, :pressure_pound_per_square_inch, :digital_terabyte,
-       :digital_bit, :digital_gigabit, :digital_kilobit, :volume_pint,
-       :speed_kilometer_per_hour, :concentr_part_per_million, :energy_calorie,
-       :volume_milliliter, :length_fathom, :length_foot, :volume_cubic_yard,
-       :mass_microgram, :length_nautical_mile, :volume_deciliter,
-       :consumption_mile_per_gallon, :volume_bushel, :volume_cubic_centimeter,
-       :length_light_year, :volume_gallon_imperial, :speed_meter_per_second,
-       :power_kilowatt, :power_watt, :length_millimeter, :digital_gigabyte,
-       :duration_nanosecond, :length_centimeter, :volume_cup_metric,
-       :length_kilometer, :angle_degree, :acceleration_g_force, :electric_ampere,
-       :volume_quart, :duration_century, :angle_revolution, :volume_hectoliter,
-       :area_square_meter, :digital_megabyte, :light_lux, :duration_year,
-       :energy_kilocalorie, :frequency_megahertz, :power_horsepower,
-       :volume_cubic_meter, :area_hectare, :frequency_hertz, :length_furlong,
-       :length_astronomical_unit, ...]
+      [:acceleration_g_force, :acceleration_meter_per_second_squared,
+       :angle_arc_minute, :angle_arc_second, :angle_degree, :angle_radian,
+       :angle_revolution, :area_acre, :area_hectare, :area_square_centimeter,
+       :area_square_foot, :area_square_inch, :area_square_kilometer,
+       :area_square_meter, :area_square_mile, :area_square_yard, :concentr_karat,
+       :concentr_milligram_per_deciliter, :concentr_millimole_per_liter,
+       :concentr_part_per_million, :consumption_liter_per_100kilometers,
+       :consumption_liter_per_kilometer, :consumption_mile_per_gallon,
+       :consumption_mile_per_gallon_imperial, :coordinate_unit, :digital_bit,
+       :digital_byte, :digital_gigabit, :digital_gigabyte, :digital_kilobit,
+       :digital_kilobyte, :digital_megabit, :digital_megabyte, :digital_terabit,
+       :digital_terabyte, :duration_century, :duration_day, :duration_hour,
+       :duration_microsecond, :duration_millisecond, :duration_minute,
+       :duration_month, :duration_nanosecond, :duration_second, :duration_week,
+       :duration_year, :electric_ampere, :electric_milliampere, :electric_ohm,
+       :electric_volt, ...]
   """
-  def available_units(locale \\ Cldr.get_current_locale(), style \\ @default_style) do
-    locale
-    |> Cldr.get_locale
-    |> Map.get(:units)
-    |> get_in([style])
-    |> Map.keys
+  def available_units(locale \\ Cldr.get_current_locale(), style \\ @default_style)
+
+  defp pattern_for(locale \\ Cldr.get_current_locale(), style \\ @default_style, unit)
+
+  # Generate the functions that encapsulate the unit data from CDLR
+  for locale <- Cldr.Config.known_locales() do
+    locale_data =
+      locale
+      |> Cldr.Config.get_locale
+      |> Map.get(:units)
+
+    for style <- @unit_styles do
+      units = Map.get(locale_data, style)
+
+      def available_units(unquote(locale), unquote(style)) do
+        unquote(Map.keys(units) |> Enum.sort)
+      end
+
+      defp pattern_for(unquote(locale), unquote(style), unit) do
+        get_in(unquote(Macro.escape(units)), unit)
+      end
+    end
   end
+
 
   @doc """
   Returns the available styles for a unit localiation.
@@ -161,12 +179,6 @@ defmodule Cldr.Unit do
     {Cldr.UnknownFormatError, "The unit style #{inspect style} is not known."}
   end
 
-  defp pattern_for(locale, style, unit) do
-    locale
-    |> Cldr.get_locale
-    |> Map.get(:units)
-    |> get_in([style, unit])
-  end
 
   defp normalize_options(options) do
     locale = options[:locale] || Cldr.get_current_locale()
