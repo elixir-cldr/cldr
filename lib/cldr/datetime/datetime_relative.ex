@@ -37,7 +37,7 @@ defmodule Cldr.DateTime.Relative do
 
   * `options` is a `Keyword` list of options which are:
 
-    * `:locale` is the locale in which the binary is formatted.  The default is `Cldr.get_locale/0`
+    * `:locale` is the locale in which the binary is formatted.  The default is `Cldr.get_current_locale/0`
     * `:format` is the format of the binary.  Format may be `:default`, `:narrow` or `:short`
     * `:unit` is the time unit for the formatting.  The allowable units are `:second`, `:minute`,
     `:hour`, `:day`, `:week`, `:month`, `:year`, `:mon`, `:tue`, `:wed`, `:thu`, `:fri`, `:sat`,

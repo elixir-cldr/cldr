@@ -200,6 +200,8 @@ defmodule Cldr do
   end
 
   # TODO Should be replaced by a proper locale parser
+  # Also default territory should be the default for the langauge
+  # rather than a global default
   def territory_from_locale(locale \\ get_current_locale()) do
     case String.split(locale, "-") do
       [_lang, territory] -> territory
@@ -251,7 +253,11 @@ defmodule Cldr do
     if locale_exists?(locale) do
       {:ok, locale}
     else
-      {:error, {Cldr.UnknownLocaleError, "Unknown locale #{inspect locale}"}}
+      {:error, Locale.locale_error(locale)}
     end
+  end
+
+  def valid_locale?(locale) do
+    {:error, {Cldr.InvalidLocaleError, "Invalid locale #{inspect locale}"}}
   end
 end

@@ -473,6 +473,16 @@ defmodule Cldr.Config do
     |> add_era_end_dates
   end
 
+  @doc """
+  Returns the calendars available for a given locale
+  """
+  def calendars_for_locale(locale_data) do
+    locale_data
+    |> Map.get(:dates)
+    |> Map.get(:calendars)
+    |> Map.keys
+  end
+
   def add_era_end_dates(calendars) do
     Enum.map(calendars, fn {calendar, content} ->
       new_content = Enum.map(content, fn

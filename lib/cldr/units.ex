@@ -11,7 +11,6 @@ defmodule Cldr.Unit do
   """
 
   alias Cldr.Substitution
-  alias Cldr.Locale
 
   @unit_styles [:long, :short, :narrow]
   @default_style :long
@@ -174,20 +173,12 @@ defmodule Cldr.Unit do
     style = options[:style] || @default_style
     options = Keyword.delete(options, :locale) |> Keyword.delete(:style)
 
-    with :ok <- verify_locale(locale),
+    with {:ok, _} <- Cldr.valid_locale?(locale),
          :ok <- verify_style(style)
     do
       {locale, style, options}
     else
       {:error, _} = error -> error
-    end
-  end
-
-  defp verify_locale(locale) do
-    if !Cldr.known_locale?(locale) do
-      {:error, Locale.locale_error(locale)}
-    else
-      :ok
     end
   end
 
