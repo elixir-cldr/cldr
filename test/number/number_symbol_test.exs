@@ -11,7 +11,7 @@ defmodule Number.Symbol.Test do
   end
 
   test "that we raise an error if we get minimum digits for an invalid locale" do
-    assert_raise Cldr.UnknownLocaleError, "The locale \"zzzzz\" is not known", fn ->
+    assert_raise Cldr.UnknownLocaleError, "The locale \"zzzzz\" is not known,", fn ->
       Cldr.Number.Format.minimum_grouping_digits_for!("zzzzz")
     end
   end

@@ -35,6 +35,10 @@ defmodule Cldr.Time do
     end
   end
 
+  def to_string(time, _options) do
+    error_return(time, [:hour, :minute, :second])
+  end
+
   def to_string!(time, options \\ [])
   def to_string!(%{hour: _hour, minute: _minute} = time, options) do
     case to_string(time, options) do
@@ -48,9 +52,9 @@ defmodule Cldr.Time do
 
     format_string =
       locale
-      |> Cldr.get_locale
-      |> Map.get(:dates)
-      |> get_in([:calendars, cldr_calendar, :time_formats, format])
+      |> time_formats_for(cldr_calendar)
+      |> Map.get(format)
+
     {:ok, format_string}
   end
 
@@ -66,6 +70,26 @@ defmodule Cldr.Time do
 
   defp format_string_from_format(format_string, _locale, _calendar) when is_binary(format_string) do
     {:ok, format_string}
+  end
+
+  def error_return(map, requirements) do
+    {:error, "Invalid time. Time is a map that requires at least #{inspect requirements} fields. " <>
+             "Found: #{inspect map}"}
+  end
+
+  for locale <- Cldr.Config.known_locales() do
+    locale_data = Cldr.Config.get_locale(locale)
+
+    for calendar <- Cldr.Config.calendars_for_locale(locale_data) do
+      time_formats =
+        locale_data
+        |> Map.get(:dates)
+        |> get_in([:calendars, calendar, :time_formats])
+
+      defp time_formats_for(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(time_formats))
+      end
+    end
   end
 
 end

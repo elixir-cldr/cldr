@@ -50,6 +50,10 @@ defmodule Cldr.Date do
     end
   end
 
+  def to_string(date, _options) do
+    error_return(date, [:year, :month, :day, :calendar])
+  end
+
   def to_string!(date, options \\ [])
   def to_string!(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, options) do
     case to_string(date, options) do
@@ -63,9 +67,9 @@ defmodule Cldr.Date do
 
     format_string =
       locale
-      |> Cldr.get_locale
-      |> Map.get(:dates)
-      |> get_in([:calendars, cldr_calendar, :date_formats, format])
+      |> date_formats_for(cldr_calendar)
+      |> Map.get(format)
+
     {:ok, format_string}
   end
 
@@ -81,5 +85,25 @@ defmodule Cldr.Date do
 
   defp format_string_from_format(format_string, _locale, _calendar) when is_binary(format_string) do
     {:ok, format_string}
+  end
+
+  def error_return(map, requirements) do
+    {:error, "Invalid date. Date is a map that requires at least #{inspect requirements} fields. " <>
+             "Found: #{inspect map}"}
+  end
+
+  for locale <- Cldr.Config.known_locales() do
+    locale_data = Cldr.Config.get_locale(locale)
+
+    for calendar <- Cldr.Config.calendars_for_locale(locale_data) do
+      time_formats =
+        locale_data
+        |> Map.get(:dates)
+        |> get_in([:calendars, calendar, :date_formats])
+
+      defp date_formats_for(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(time_formats))
+      end
+    end
   end
 end

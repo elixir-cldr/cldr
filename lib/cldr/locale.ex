@@ -12,6 +12,6 @@ defmodule Cldr.Locale do
   end
 
   def locale_error(locale_name) do
-    {Cldr.UnknownLocaleError, "The locale #{inspect locale_name} is not known"}
+    {Cldr.UnknownLocaleError, "The locale #{inspect locale_name} is not known."}
   end
 end

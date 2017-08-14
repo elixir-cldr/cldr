@@ -128,8 +128,8 @@ defmodule Cldr.List do
 
   @spec list_patterns_for(Cldr.locale) :: Map.t
   @spec list_pattern_styles_for(Cldr.locale) :: [atom]
-  Enum.each Cldr.known_locales, fn (locale) ->
-    patterns = Cldr.get_locale(locale).list_formats
+  for locale <- Cldr.known_locales do
+    patterns = Cldr.Config.get_locale(locale).list_formats
     pattern_names = Map.keys(patterns)
 
     @doc """
@@ -176,20 +176,12 @@ defmodule Cldr.List do
     locale = options[:locale] || Cldr.get_current_locale()
     format = options[:format] || @default_style
 
-    with :ok <- verify_locale(locale),
+    with {:ok, _} <- Cldr.valid_locale?(locale),
          :ok <- verify_format(locale, format)
     do
       {locale, format}
     else
       {:error, {_exception, _message}} = error -> error
-    end
-  end
-
-  defp verify_locale(locale) do
-    if !Cldr.known_locale?(locale) do
-      {:error, {Cldr.UnknownLocaleError, "The locale #{inspect locale} is not known."}}
-    else
-      :ok
     end
   end
 

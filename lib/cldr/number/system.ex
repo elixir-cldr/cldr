@@ -123,7 +123,7 @@ defmodule Cldr.Number.System do
       %{default: :latn, native: :thai}
 
       iex> Cldr.Number.System.number_systems_for "zz"
-      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known"}}
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known."}}
   """
   @spec number_systems_for(Locale.name | %Locale{}) :: Map.t
   def number_systems_for(locale) when is_binary(locale) do
@@ -224,7 +224,7 @@ defmodule Cldr.Number.System do
       [:latn, :hebr]
 
       iex> Cldr.Number.System.number_system_names_for "zz"
-      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known"}}
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zz\\" is not known."}}
   """
   @spec number_system_names_for(%Locale{} | Locale.name) :: [String.t]
   def number_system_names_for(locale) do
