@@ -152,7 +152,8 @@ defmodule Cldr.Unit do
       end
 
       defp pattern_for(unquote(locale), unquote(style), unit) do
-        Map.get(unquote(Macro.escape(units)), unit)
+        unquote(Macro.escape(units))
+        |> Map.get(unit)
       end
     end
   end
