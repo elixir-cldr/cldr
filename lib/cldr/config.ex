@@ -393,6 +393,7 @@ defmodule Cldr.Config do
 
   If a locale file is not found then it is installed.
   """
+  require Logger
   @table_name :cldr_locales
   def get_locale(locale) do
     {:ok, path} = case locale_path(locale) do
@@ -402,8 +403,25 @@ defmodule Cldr.Config do
         raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
     end
 
-    ensure_ets_table!()
+    # We use the :elixir_compiler_pid to know if we're compiing
+    # code.  If we are compiling we try to cache the locale
+    # content
+    do_get_locale(locale, path, :erlang.get(:elixir_compiler_pid))
+  end
 
+  defp do_get_locale(locale, path, :undefined) do
+    path
+    |> File.read!
+    |> Poison.decode!
+    |> assert_valid_keys!(locale)
+    |> Cldr.Map.atomize_keys
+    |> structure_rbnf
+    |> atomize_number_systems
+    |> structure_date_formats
+    |> Map.put(:name, locale)
+  end
+
+  defp do_get_locale(locale, path, pid) do
     # We are using :ets to cache locale entries at
     # compile time since the locale data is used a
     # lot and reading, decoding and formatting the
@@ -416,40 +434,36 @@ defmodule Cldr.Config do
     # so on.
     #
     # But ... compile performance is improved.
+    ensure_ets_table!(pid)
 
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
-        # IO.puts "Found locale #{locale}"
+        # Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"
         locale_data
 
       [] ->
-        # IO.puts "Inserting locale #{locale}."
-        locale_data =
-          path
-          |> File.read!
-          |> Poison.decode!
-          |> assert_valid_keys!(locale)
-          |> Cldr.Map.atomize_keys
-          |> structure_rbnf
-          |> atomize_number_systems
-          |> structure_date_formats
-          |> Map.put(:name, locale)
+        locale_data = do_get_locale(locale, path, :undefined)
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
-        rescue e in ArgumentError ->
-          "nothing #{inspect e}"
-          # IO.puts "Failed to insert #{locale}: Error #{inspect e}"
+          # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
+        rescue ArgumentError ->
+          nil
+          # This may actually happen because of timing conditions
+          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets"
         end
         locale_data
     end
   end
 
-  def ensure_ets_table! do
+  # We assign the compiler pid as the heir for our table so
+  # that the table doesn't die with each compilation thread
+  # This is undoubtedly hacky.
+  defp ensure_ets_table!(pid) do
     case :ets.info(@table_name) do
       :undefined ->
-        # IO.puts ">>>>>>>>>>>>>>>>>>>> CREATING"
-        :ets.new(@table_name, [:named_table, read_concurrency: true])
+        :ets.new(@table_name, [:named_table, {:read_concurrency, true}, {:heir, pid, []}])
+        # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end
