@@ -10,6 +10,7 @@ defmodule Cldr.Number.System do
   `Cldr.Number.Symbol.number_symbols_for/2`.
   """
 
+  require Cldr
   alias Cldr.Locale
   alias Cldr.Number.Symbol
 

@@ -4,6 +4,7 @@ defmodule Cldr.Number.Symbol do
   number system.
   """
 
+  require Cldr
   alias  Cldr.Number
   alias  Cldr.Locale
 

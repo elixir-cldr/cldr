@@ -10,6 +10,7 @@ defmodule Cldr.List do
       "Monday, Tuesday, and Wednesday"
   """
 
+  require Cldr
   alias Cldr.Substitution
 
   @type pattern_type :: :standard | :unit | :unit_narrow | :unit_short

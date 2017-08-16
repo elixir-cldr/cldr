@@ -1,6 +1,4 @@
 defmodule Cldr.DateTime do
-  alias Cldr.DateTime.Formatter
-
   @doc """
   Formats a datetime according to a format string
   as defined in CLDR and described in [TR35](http://unicode.org/reports/tr35/tr35-dates.html)
@@ -16,6 +14,10 @@ defmodule Cldr.DateTime do
   ## Examples
 
   """
+
+  require Cldr
+  alias Cldr.DateTime.Formatter
+
   @format_types [:short, :medium, :long, :full]
 
   def to_string(date, options \\ [])

@@ -1,5 +1,6 @@
 defmodule Cldr.Calendar do
   alias Cldr.DateTime.Compiler
+  require Cldr
 
   # Default territory is "World"
   @default_territory :"001"

@@ -16,6 +16,9 @@ defmodule Cldr.Rbnf do
   This list is the set of known locales for which
   there are rbnf rules defined.
   """
+
+  require Cldr
+
   @known_locales Enum.filter Cldr.Config.known_locales(), fn (locale) ->
     Cldr.Config.get_locale(locale).rbnf != %{}
   end

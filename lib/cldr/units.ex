@@ -10,6 +10,7 @@ defmodule Cldr.Unit do
   * `Cldr.Unit.available_units/0` identifies the available units for localization
   """
 
+  require Cldr
   alias Cldr.Substitution
 
   @unit_styles [:long, :short, :narrow]

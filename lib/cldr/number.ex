@@ -78,6 +78,7 @@ defmodule Cldr.Number do
   possible.
   """
 
+  require Cldr
   alias Cldr.Number.Formatter
   alias Cldr.Number.Format.Compiler
   import Cldr.Number.Format, only: [formats_for: 2]

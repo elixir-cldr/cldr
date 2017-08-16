@@ -44,6 +44,8 @@ defmodule Cldr.Number.Format do
                         :percent] ++ @short_format_styles
 
   defstruct @format_styles ++ [:currency_spacing]
+
+  require Cldr
   alias Cldr.Number.System
   alias Cldr.Locale
 

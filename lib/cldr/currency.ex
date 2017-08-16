@@ -3,6 +3,7 @@ defmodule Cldr.Currency do
   Defines a currency structure and a set of functions to manage the validity of a currency code
   and to return metadata for currencies.
   """
+  require Cldr
 
   @type format :: :standard |
     :accounting |
