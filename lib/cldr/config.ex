@@ -393,6 +393,7 @@ defmodule Cldr.Config do
 
   If a locale file is not found then it is installed.
   """
+  @table_name :cldr_locales
   def get_locale(locale) do
     {:ok, path} = case locale_path(locale) do
       {:error, :not_found} -> install_locale(locale)
@@ -401,18 +402,57 @@ defmodule Cldr.Config do
         raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
     end
 
-    path
-    |> File.read!
-    |> Poison.decode!
-    |> assert_valid_keys!(locale)
-    |> Cldr.Map.atomize_keys
-    |> structure_rbnf
-    |> atomize_number_systems
-    |> structure_currencies
-    |> structure_symbols
-    |> structure_number_formats
-    |> structure_date_formats
-    |> Map.put(:name, locale)
+    ensure_ets_table!()
+
+    # We are using :ets to cache locale entries at
+    # compile time since the locale data is used a
+    # lot and reading, decoding and formatting the
+    # data is quite expensive.
+    #
+    # This isn't perfect because you can see that
+    # there are multiple times we are creating
+    # the :ets table multiple times, some data
+    # doesn't seem to store (argument error) and
+    # so on.
+    #
+    # But ... compile performance is improved.
+
+    case :ets.lookup(@table_name, locale) do
+      [{^locale, locale_data}] ->
+        # IO.puts "Found locale #{locale}"
+        locale_data
+
+      [] ->
+        # IO.puts "Inserting locale #{locale}."
+        locale_data =
+          path
+          |> File.read!
+          |> Poison.decode!
+          |> assert_valid_keys!(locale)
+          |> Cldr.Map.atomize_keys
+          |> structure_rbnf
+          |> atomize_number_systems
+          |> structure_date_formats
+          |> Map.put(:name, locale)
+
+        try do
+          :ets.insert(@table_name, {locale, locale_data})
+        rescue e in ArgumentError ->
+          "nothing #{inspect e}"
+          # IO.puts "Failed to insert #{locale}: Error #{inspect e}"
+        end
+        locale_data
+    end
+  end
+
+  def ensure_ets_table! do
+    case :ets.info(@table_name) do
+      :undefined ->
+        # IO.puts ">>>>>>>>>>>>>>>>>>>> CREATING"
+        :ets.new(@table_name, [:named_table, read_concurrency: true])
+      _ ->
+        :ok
+    end
   end
 
   @doc """
@@ -602,51 +642,11 @@ defmodule Cldr.Config do
     Map.put(content, :number_systems, number_systems)
   end
 
-  # Put the currency data into a %Currency{} struct
-  defp structure_currencies(content) do
-    alias Cldr.Currency
-
-    # currencies = content.currencies
-    # |> Enum.map(fn {code, currency} -> {code, struct(Currency, currency)} end)
-    # |> Enum.into(%{})
-    #
-    # Map.put(content, :currencies, currencies)
-
-    content
-  end
-
-  # Put the number_formats into a %Format{} struct
-  defp structure_number_formats(content) do
-    content
-    # alias Cldr.Number.Format
-    #
-    # formats = content.number_formats
-    # |> Enum.map(fn {system, format} -> {system, struct(Format, format)} end)
-    # |> Enum.into(%{})
-    #
-    # Map.put(content, :number_formats, formats)
-  end
-
   defp structure_date_formats(content) do
     dates = content.dates
     |> Cldr.Map.integerize_keys
 
     Map.put(content, :dates, dates)
-  end
-
-  # Put the symbols into a %Symbol{} struct
-  defp structure_symbols(content) do
-    # alias Cldr.Number.Symbol
-    #
-    # symbols = content.number_symbols
-    # |> Enum.map(fn
-    #      {system, nil}    -> {system, nil}
-    #      {system, symbol} -> {system, struct(Symbol, symbol)}
-    #    end)
-    # |> Enum.into(%{})
-    #
-    # Map.put(content, :number_symbols, symbols)
-    content
   end
 
   # Put the rbnf rules into a %Rule{} struct
