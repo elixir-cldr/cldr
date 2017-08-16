@@ -158,7 +158,7 @@ defmodule Cldr.Number do
         `Cldr.Number.System.number_system_names_for/1`. The default is `:default`.
 
       * `:locale`: determines the locale in which the number is formatted. See
-        `Cldr.known_locales/0`. THe default is `Cldr.get_locale()` which is the
+        `Cldr.known_locales/0`. THe default is `Cldr.get_current_locale/0` which is the
         locale currently in affect for this `Process` and which is set by
         `Cldr.put_locale/1`.
 

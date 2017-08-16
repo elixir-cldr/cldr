@@ -25,7 +25,7 @@ defmodule Cldr.Unit do
   * `options` are:
 
     * `locale` is any configured locale. See `Cldr.known_locales()`. The default
-    is `locale: Cldr.get_locale()`
+    is `locale: Cldr.get_currenct_locale()`
 
     * `style` is one of those returned by `Cldr.Unit.available_styles`.
     THe current styles are `:long`, `:short` and `:narrow`.  The default is `style: :long`
@@ -108,7 +108,7 @@ defmodule Cldr.Unit do
   Returns the available units for a given locale and style.
 
   * `locale` is any configured locale. See `Cldr.known_locales()`. The default
-    is `locale: Cldr.get_locale()`
+    is `locale: Cldr.get_current_locale()`
 
   * `style` is one of those returned by `Cldr.Unit.available_styles`.
     The current styles are `:long`, `:short` and `:narrow`.  The default is `style: :long`

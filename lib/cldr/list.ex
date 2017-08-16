@@ -23,7 +23,7 @@ defmodule Cldr.List do
   * `options` are:
 
     * `locale` is any configured locale. See `Cldr.known_locales()`. The default
-    is `locale: Cldr.get_locale()`
+    is `locale: Cldr.get_current_locale/0`
 
     * `format` is one of those returned by
     `Cldr.List.list_pattern_types_for/1`. The default is `format: :standard`

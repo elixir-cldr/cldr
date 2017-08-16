@@ -2,7 +2,7 @@ defmodule Number.System.Test do
   use ExUnit.Case
 
   test "that number_system_for with a system name returns" do
-    system = Cldr.Number.System.number_system_for("en", :latn)
+    {:ok, system} = Cldr.Number.System.number_system_for("en", :latn)
     assert system == %{digits: "0123456789", type: :numeric}
   end
 

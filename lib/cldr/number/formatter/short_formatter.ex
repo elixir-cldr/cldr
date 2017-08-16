@@ -64,26 +64,18 @@ defmodule Cldr.Number.Formatter.Short do
 
   def to_string(number, style, options) do
     locale = (options[:locale] || Cldr.get_current_locale())
-    |> Cldr.get_locale
 
-    case locale do
-      %Locale{} ->
-        number_system = options[:number_system]
-        |> System.system_name_from(locale)
-
-        number
-        |> do_to_short_string(style, locale, number_system, options)
-      {:error, _} = error ->
-        error
+    with {:ok, _} <- Cldr.valid_locale?(locale),
+         {:ok, number_system} <- System.system_name_from(options[:number_system], locale)
+    do
+      do_to_short_string(number, style, locale, number_system, options)
+    else
+      {:error, _} = error -> error
     end
   end
 
-  @spec do_to_short_string(number, atom, %Locale{}, atom, Keyword.t) :: List.t
-  defp do_to_short_string(_number, _style, %Locale{} = _locale, {:error, _} = error, _options) do
-    error
-  end
-
-  defp do_to_short_string(number, style, %Locale{} = locale, number_system, options) do
+  @spec do_to_short_string(number, atom, Locale.name, atom, Keyword.t) :: List.t
+  defp do_to_short_string(number, style, locale, number_system, options) do
     case Format.formats_for(locale, number_system) do
       {:ok, formats} ->
         formats = Map.get(formats, style)

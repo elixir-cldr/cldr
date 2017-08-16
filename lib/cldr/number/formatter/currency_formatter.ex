@@ -36,9 +36,7 @@ defmodule Cldr.Number.Formatter.Currency do
 
   def to_string(number, :currency_long, options) do
     locale = options[:locale]
-
-    number_system = options[:number_system]
-    |> System.system_name_from(locale)
+    number_system = System.system_name_from!(options[:number_system], locale)
 
     if !(formats = Format.formats_for!(locale, number_system).currency_long) do
       raise ArgumentError, message: "No :currency_long format known for " <>

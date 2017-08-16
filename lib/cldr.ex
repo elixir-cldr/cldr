@@ -178,27 +178,6 @@ defmodule Cldr do
     !!Enum.find(known_locales(), &(&1 == locale))
   end
 
-  @doc """
-  Returns the map representation of a locale definition
-
-  A locale is defined by a map of definitions that are used to underpin the generation
-  of a set of functions that provide the public API.
-
-  * `locale` is any locale returned by `Cldr.known_locales/0`
-  """
-  @spec get_locale(Locale.name) :: Map.t
-  Enum.each @known_locales, fn locale_name ->
-    locale = struct(Locale, Config.get_locale(locale_name))
-
-    def get_locale(unquote(locale_name)) do
-      unquote(Macro.escape(locale))
-    end
-  end
-
-  def get_locale(locale_name) do
-    {:error, Locale.locale_error(locale_name)}
-  end
-
   # TODO Should be replaced by a proper locale parser
   # Also default territory should be the default for the langauge
   # rather than a global default

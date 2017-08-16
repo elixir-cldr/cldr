@@ -81,7 +81,8 @@ defmodule Cldr.Currency do
 
   def new(currency, options) when is_map(options) do
     with false <- known_currency?(currency),
-         {:ok, currency_code} <- make_currency_code(currency) do
+         {:ok, currency_code} <- make_currency_code(currency)
+    do
       options = @currency_defaults
       |> Map.merge(options)
       |> Map.merge(%{code: currency_code})
@@ -239,17 +240,32 @@ defmodule Cldr.Currency do
   @spec for_code(code, Cldr.locale) :: %{}
   def for_code(currency_code, locale \\ Cldr.get_current_locale()) do
     case validate_currency_code(currency_code) do
-      {:error, {_exception, _message}} = error -> error
-      {:ok, code} -> for_locale(locale)[code]
+      {:error, {_exception, _message}} = error ->
+        error
+      {:ok, code} ->
+        locale
+        |> for_locale
+        |> Map.get(code)
     end
   end
 
   @doc """
   Returns the currency metadata for a locale.
   """
-  @spec for_locale(Cldr.locale) :: %{}
-  def for_locale(locale \\ Cldr.get_current_locale()) do
-    Cldr.get_locale(locale).currencies
+  @spec for_locale(Cldr.locale) :: Map.t
+  def for_locale(locale \\ Cldr.get_current_locale())
+
+  for locale <- Cldr.Config.known_locales() do
+    currencies =
+      locale
+      |> Cldr.Config.get_locale
+      |> Map.get(:currencies)
+
+    def for_locale(unquote(locale)) do
+      unquote(Macro.escape(currencies))
+      |> Enum.map(fn {k, v} -> {k, struct(__MODULE__, v)} end)
+      |> Enum.into(%{})
+    end
   end
 
   @doc """
@@ -319,7 +335,8 @@ defmodule Cldr.Currency do
       ** (Cldr.UnknownCurrencyError) Currency "ABC" is not known
       (ex_cldr) lib/cldr/currency.ex:146: Cldr.Currency.normalize_currency_code!/1
   """
-  def normalize_currency_code!(currency_code) when is_binary(currency_code) or is_atom(currency_code) do
+  def normalize_currency_code!(currency_code)
+  when is_binary(currency_code) or is_atom(currency_code) do
     case code = normalize_currency_code(currency_code) do
       {:error, {exception, message}} ->
         raise exception, message

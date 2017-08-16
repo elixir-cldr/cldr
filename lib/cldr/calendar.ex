@@ -252,5 +252,36 @@ defmodule Cldr.Calendar do
   def iso_days_to_float({days, {numerator, denominator}}) do
     days + (numerator / denominator)
   end
+
+  #
+  # Data storage functions
+  #
+
+  for locale <- Cldr.known_locales() do
+    date_data =
+      locale
+      |> Cldr.Config.get_locale
+      |> Map.get(:dates)
+
+    calendars = Map.get(date_data, :calendars) |> Map.keys
+
+    for calendar <- calendars do
+      def era(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(get_in(date_data, [:calendars, calendar, :eras])))
+      end
+
+      def period(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(get_in(date_data, [:calendars, calendar, :day_periods])))
+      end
+
+      def month(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(get_in(date_data, [:calendars, calendar, :months])))
+      end
+
+      def day(unquote(locale), unquote(calendar)) do
+        unquote(Macro.escape(get_in(date_data, [:calendars, calendar, :days])))
+      end
+    end
+  end
 end
 

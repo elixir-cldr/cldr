@@ -16,10 +16,12 @@ defmodule Cldr.Rbnf do
   This list is the set of known locales for which
   there are rbnf rules defined.
   """
+  @known_locales Enum.filter Cldr.Config.known_locales(), fn (locale) ->
+    Cldr.Config.get_locale(locale).rbnf != %{}
+  end
+
   def known_locales do
-    Enum.filter Cldr.known_locales(), fn (locale) ->
-      Cldr.get_locale(locale).rbnf != %{}
-    end
+    @known_locales
   end
 
   @doc """
@@ -33,8 +35,17 @@ defmodule Cldr.Rbnf do
   supported by `Cldr`.
   """
   @spec for_locale(Locale.t) :: %{} | nil
-  def for_locale(locale) do
-    Cldr.get_locale(locale).rbnf
+  def for_locale(locale \\  Cldr.get_current_locale())
+
+  for locale <- Cldr.Config.known_locales() do
+    rbnf_data =
+      locale
+      |> Cldr.Config.get_locale
+      |> Map.get(:rbnf)
+
+    def for_locale(unquote(locale)) do
+      unquote(Macro.escape(rbnf_data))
+    end
   end
 
   @doc """

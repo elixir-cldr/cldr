@@ -50,7 +50,7 @@ defmodule Cldr.Number.Transliterate do
 
   * `sequence` is the string to be transliterated.
 
-  * `locale` is any known locale, defaulting to `Cldr.get_locale()`.
+  * `locale` is any known locale, defaulting to `Cldr.get_current_locale/0`.
 
   * `number_system` is any known number system. If expressed as a `string` it
     is the actual name of a known number system. If epressed as an `atom` it is
@@ -112,7 +112,7 @@ defmodule Cldr.Number.Transliterate do
   # For when the number system is provided as a string. We generate functions using
   # atom format so we need to convert but only to existing atoms
   def transliterate(sequence, locale, number_system) when is_binary(number_system) do
-    system = System.system_name_from(number_system, locale)
+    {:ok, system} = System.system_name_from(number_system, locale)
     transliterate(sequence, locale, system)
   end
 
@@ -128,38 +128,33 @@ defmodule Cldr.Number.Transliterate do
   end
 
   # Functions to transliterate the symbols
-  for locale <- Cldr.known_locales,
+  for locale <- Cldr.known_locales(),
       name <- System.number_system_names_for!(locale)
   do
-    if Symbol.number_symbols_for(locale, name) do
-      # Mapping for the grouping separator
-      @group Symbol.number_symbols_for(locale, name).group
+    # Mapping for the grouping separator
+    with {:ok, symbols} <- Symbol.number_symbols_for(locale, name) do
       defp transliterate_char(unquote(Compiler.placeholder(:group)), unquote(locale), unquote(name)) do
-        @group
+        unquote(symbols.group)
       end
 
       # Mapping for the decimal separator
-      @decimal Symbol.number_symbols_for(locale, name).decimal
       defp transliterate_char(unquote(Compiler.placeholder(:decimal)), unquote(locale), unquote(name)) do
-        @decimal
+        unquote(symbols.decimal)
       end
 
       # Mapping for the exponent
-      @exponent Symbol.number_symbols_for(locale, name).exponential
       defp transliterate_char(unquote(Compiler.placeholder(:exponent)), unquote(locale), unquote(name)) do
-        @exponent
+        unquote(symbols.exponential)
       end
 
       # Mapping for the plus sign
-      @plus Symbol.number_symbols_for(locale, name).plus_sign
       defp transliterate_char(unquote(Compiler.placeholder(:plus)), unquote(locale), unquote(name)) do
-        @plus
+        unquote(symbols.plus_sign)
       end
 
       # Mapping for the minus sign
-      @minus Symbol.number_symbols_for(locale, name).minus_sign
       defp transliterate_char(unquote(Compiler.placeholder(:minus)), unquote(locale), unquote(name)) do
-        @minus
+        unquote(symbols.minus_sign)
       end
     end
   end
@@ -203,8 +198,8 @@ defmodule Cldr.Number.Transliterate do
   """
   @spec transliterate_digits(binary, atom, atom) :: binary
   for {from_system, to_system} <- Application.get_env(:ex_cldr, :precompile_transliterations, []) do
-    with from = System.number_system_digits!(from_system),
-         to = System.number_system_digits!(to_system),
+    with {:ok, from} = System.number_system_digits(from_system),
+         {:ok, to} = System.number_system_digits(to_system),
          map = System.generate_transliteration_map(from, to)
     do
       def transliterate_digits(digits, unquote(from_system), unquote(to_system)) do

@@ -109,21 +109,21 @@ defmodule Cldr.DateTime.Formatter do
       case times do
         %{"at" => [h, m]} ->
           def time_period_for(%{hour: unquote(h), minute: unquote(m)}, unquote(language)) do
-            unquote(String.to_existing_atom(period))
+            unquote(String.to_atom(period))
           end
 
         # For when the time range wraps around midnight
         %{"from" => [h1, 0], "before" => [h2, 0]} when h2 < h1 ->
           def time_period_for(%{hour: hour}, unquote(language))
           when rem(hour, 24) >= unquote(h1) or rem(hour, 24) < unquote(h2) do
-            unquote(String.to_existing_atom(period))
+            unquote(String.to_atom(period))
           end
 
         # For when the time range does not wrap around midnight
         %{"from" => [h1, 0], "before" => [h2, 0]} ->
           def time_period_for(%{hour: hour}, unquote(language))
           when rem(hour, 24) >= unquote(h1) and rem(hour, 24) < unquote(h2) do
-            unquote(String.to_existing_atom(period))
+            unquote(String.to_atom(period))
           end
       end
     end
@@ -938,9 +938,8 @@ defmodule Cldr.DateTime.Formatter do
     variant? = options[:variant]
 
     locale
-    |> Cldr.get_locale
-    |> Map.get(:dates)
-    |> get_in([:calendars, cldr_calendar, :eras, type, era_key(date, cldr_calendar, variant?)])
+    |> Cldr.Calendar.era(cldr_calendar)
+    |> get_in([type, era_key(date, cldr_calendar, variant?)])
   end
 
   defp era_key(date, calendar, variant?) do
@@ -956,18 +955,16 @@ defmodule Cldr.DateTime.Formatter do
     cldr_calendar = type_from_calendar(calendar)
 
     locale
-    |> Cldr.get_locale
-    |> Map.get(:dates)
-    |> get_in([:calendars, cldr_calendar, :day_periods, type, style, key])
+    |> Cldr.Calendar.period(cldr_calendar)
+    |> get_in([type, style, key])
   end
 
   defp get_month(month, locale, calendar, type, style) do
     cldr_calendar = type_from_calendar(calendar)
 
     locale
-    |> Cldr.get_locale
-    |> Map.get(:dates)
-    |> get_in([:calendars, cldr_calendar, :months, type, style, month])
+    |> Cldr.Calendar.month(cldr_calendar)
+    |> get_in([type, style, month])
   end
 
   defp get_day(%{year: year, month: month, day: day, calendar: calendar}, locale, type, style) do
@@ -975,9 +972,8 @@ defmodule Cldr.DateTime.Formatter do
     day_of_week = day_key(calendar.day_of_week(year, month, day))
 
     locale
-    |> Cldr.get_locale
-    |> Map.get(:dates)
-    |> get_in([:calendars, cldr_calendar, :days, type, style, day_of_week])
+    |> Cldr.Calendar.day(cldr_calendar)
+    |> get_in([type, style, day_of_week])
   end
 
   # erlang/elixir standard is that Monday -> 1

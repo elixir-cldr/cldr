@@ -29,26 +29,23 @@ defmodule Cldr.Rbnf.TestSupport do
           json_data = json_string
           |> Poison.decode!
 
-          if Map.get(Cldr.get_locale(locale), :rbnf) != %{} do
-            if (rbnf_data = Map.get(Cldr.get_locale(locale), :rbnf)) != %{} do
-              Enum.each Map.keys(json_data), fn rule_group ->
-                if rbnf_data[String.to_existing_atom(rule_group)] do
-                  module = "Elixir.Cldr.Rbnf.#{rule_group}"
-                  |> String.replace("Rules", "")
+          if (rbnf_data = Cldr.Rbnf.for_locale(locale)) != %{} do
+            Enum.each Map.keys(json_data), fn rule_group ->
+              if rbnf_data[String.to_existing_atom(rule_group)] do
+                module = "Elixir.Cldr.Rbnf.#{rule_group}"
+                |> String.replace("Rules", "")
+                |> String.to_atom
+
+                Enum.each json_data[rule_group], fn {rule_set, tests} ->
+                  function = rule_set
+                  |> String.replace("-","_")
                   |> String.to_atom
 
-                  Enum.each json_data[rule_group], fn {rule_set, tests} ->
-                    function = rule_set
-                    |> String.replace("-","_")
-                    |> String.to_atom
+                  name = "#{module}.#{function} for locale #{inspect locale}"
+                  |> String.replace("−", "-")
+                  |> Cldr.Number.String.clean
 
-                    name = "#{module}.#{function} for locale #{inspect locale}"
-                    |> String.replace("−", "-")
-                    |> Cldr.Number.String.clean
-
-                    fun.(name, tests, module, function, locale)
-
-                  end
+                  fun.(name, tests, module, function, locale)
                 end
               end
             end

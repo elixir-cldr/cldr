@@ -22,7 +22,7 @@ defmodule Number.Format.Test do
   end
 
   test "that there are decimal formats for a locale" do
-    assert Map.keys(Cldr.get_locale("en").number_formats) == [:latn]
+    assert Map.keys(Cldr.Number.Format.all_formats_for("en")) == [:latn]
   end
 
   test "that there is an exception if we get formats for an unknown locale" do

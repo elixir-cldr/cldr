@@ -72,15 +72,18 @@ defmodule Cldr.Number.Format do
       "000 Mrd ¤", "000 Mr ¤", "000 M ¤", "000 NT ¤", "000 N ¤", "000 Tn ¤",
       "000 Tr ¤", ...]
   """
-  @spec decimal_format_list :: [format]
-  def decimal_format_list do
+  format_list =
     Cldr.known_locales()
-    |> Enum.map(&decimal_format_list_for/1)
+    |> Enum.map(&Cldr.Config.decimal_formats_for/1)
     |> Kernel.++(Cldr.Config.get_precompile_number_formats)
     |> List.flatten
     |> Enum.uniq
     |> Enum.reject(&is_nil/1)
     |> Enum.sort
+
+  @spec decimal_format_list :: [format]
+  def decimal_format_list do
+    unquote(Macro.escape(format_list))
   end
 
   @doc """
@@ -101,20 +104,15 @@ defmodule Cldr.Number.Format do
        "¤#,##0.00", "¤#,##0.00;(¤#,##0.00)", "¤000B", "¤000K", "¤000M",
        "¤000T", "¤00B", "¤00K", "¤00M", "¤00T", "¤0B", "¤0K", "¤0M", "¤0T"]
   """
-  def decimal_format_list_for(locale) do
-    Cldr.get_locale(locale)
-    |> Map.get(:number_formats)
-    |> Map.values
-    |> Enum.map(&Map.from_struct/1)
-    |> Enum.map(&(Map.delete(&1, :currency_spacing)))
-    |> Enum.map(&(Map.delete(&1, :currency_long)))
-    |> Enum.map(&Map.values/1)
-    |> List.flatten
-    |> Enum.reject(&is_integer/1)
-    |> Enum.map(&extract_formats/1)
-    |> List.flatten
-    |> Enum.uniq
-    |> Enum.sort
+  @spec decimal_format_list_for(Locale.t) :: [String.t, ...]
+  def decimal_format_list_for(locale \\ Cldr.get_current_locale())
+
+  for locale <- Cldr.Config.known_locales() do
+    decimal_formats = Cldr.Config.decimal_formats_for(locale)
+
+    def decimal_format_list_for(unquote(locale)) do
+      unquote(Macro.escape(decimal_formats))
+    end
   end
 
   @doc """
@@ -125,7 +123,7 @@ defmodule Cldr.Number.Format do
 
   ## Examples
 
-      Cldr.Number.Format.decimal_formats_for("en")
+      Cldr.Number.Format.all_formats_for("en")
       #=> %{latn: %Cldr.Number.Format{
         accounting: "¤#,##0.00;(¤#,##0.00)",
         currency: "¤#,##0.00",
@@ -148,18 +146,71 @@ defmodule Cldr.Number.Format do
         }
   """
   @spec all_formats_for(%Locale{} | Locale.name) :: Map.t
-  def all_formats_for(locale) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> all_formats_for
+  def all_formats_for(locale \\ Cldr.get_current_locale())
+
+  @doc """
+  Returns the minium grouping digits for a locale.
+
+  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
+
+  ## Examples
+
+      iex> Cldr.Number.Format.minimum_grouping_digits_for("en")
+      1
+  """
+  @spec minimum_grouping_digits_for(Locale.name) :: non_neg_integer
+  def minimum_grouping_digits_for(locale)
+
+  for locale <- Cldr.Config.known_locales() do
+    locale_data =
+      locale
+      |> Cldr.Config.get_locale
+
+    number_formats =
+      locale_data
+      |> Map.get(:number_formats)
+
+    minimum_grouping_digits =
+      locale_data
+      |> Map.get(:minimum_grouping_digits)
+
+    def all_formats_for(unquote(locale)) do
+      unquote(Macro.escape(number_formats))
+    end
+
+    def minimum_grouping_digits_for(unquote(locale)) do
+      unquote(minimum_grouping_digits)
+    end
   end
 
-  def all_formats_for(%Locale{} = locale) do
-    Map.get(locale, :number_formats)
+  def all_formats_for(locale) do
+    {:error, Locale.locale_error(locale)}
   end
 
-  def all_formats_for({:error, _} = error) do
-    error
+  def minimum_grouping_digits_for(locale) do
+    {:error, Locale.locale_error(locale)}
+  end
+
+  @doc """
+  Returns the minium grouping digits for a locale or raises if there is an error.
+
+  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
+
+  ## Examples
+
+      iex> Cldr.Number.Format.minimum_grouping_digits_for!("en")
+      1
+
+      Cldr.Number.Format.minimum_grouping_digits_for!("end")
+      ** (Cldr.UnknownLocaleError) The locale "end" is not known
+  """
+  def minimum_grouping_digits_for!(locale) do
+    case minimum_grouping_digits_for(locale) do
+      {:error, {exception, message}} ->
+        raise exception, message
+      digits ->
+        digits
+    end
   end
 
   @doc """
@@ -207,23 +258,19 @@ defmodule Cldr.Number.Format do
   @spec formats_for(%Locale{} | Locale.name, atom | String.t) :: Map.t
   def formats_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
 
-  def formats_for(locale, number_system) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> formats_for(number_system)
-  end
+  def formats_for(locale, number_system) do
+    with {:ok, _} <- Cldr.valid_locale?(locale),
+         {:ok, system_name} <- System.system_name_from(number_system, locale)
+    do
+      formats =
+        locale
+        |> all_formats_for
+        |> Map.get(system_name)
 
-  def formats_for(%Locale{} = locale, number_system) do
-    case system_name = System.system_name_from(number_system, locale) do
-      {:error, _} = error ->
-        error
-      _ ->
-        {:ok, all_formats_for(locale)[system_name]}
+      {:ok, struct(__MODULE__, formats)}
+    else
+      {:error, reason} -> {:error, reason}
     end
-  end
-
-  def formats_for({:error, _} = error, _number_system) do
-    error
   end
 
   @doc """
@@ -278,13 +325,7 @@ defmodule Cldr.Number.Format do
   """
   @spec format_styles_for(%Locale{} | Locale.name, atom | String.t) :: [atom]
   def format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
-  def format_styles_for(locale, number_system) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> format_styles_for(number_system)
-  end
-
-  def format_styles_for(%Locale{} = locale, number_system) do
+  def format_styles_for(locale, number_system) do
     with {:ok, formats} <- formats_for(locale, number_system) do
       formats
       |> Map.to_list
@@ -294,10 +335,6 @@ defmodule Cldr.Number.Format do
     else
       {:error, _} = error -> error
     end
-  end
-
-  def format_styles_for({:error, _} = error, _number_system) do
-    error
   end
 
   @doc """
@@ -324,28 +361,19 @@ defmodule Cldr.Number.Format do
   """
   @isnt_really_a_short_format [:currency_long]
   @short_formats MapSet.new(@short_format_styles -- @isnt_really_a_short_format)
+
   @spec short_format_styles_for(%Locale{} | Locale.name, binary | atom) :: [atom]
   def short_format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
-  def short_format_styles_for(locale, number_system) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> short_format_styles_for(number_system)
-  end
-
-  def short_format_styles_for(%Locale{} = locale, number_system) do
+  def short_format_styles_for(locale, number_system) do
     case formats = format_styles_for(locale, number_system) do
-    {:error, _} = error ->
-      error
-    _ ->
-      formats
-      |> MapSet.new
-      |> MapSet.intersection(@short_formats)
-      |> MapSet.to_list
+      {:error, _} = error ->
+        error
+      _ ->
+        formats
+        |> MapSet.new
+        |> MapSet.intersection(@short_formats)
+        |> MapSet.to_list
     end
-  end
-
-  def short_format_styles_for({:error, _} = error, _number_system) do
-    error
   end
 
   @doc """
@@ -372,27 +400,17 @@ defmodule Cldr.Number.Format do
       [:accounting, :currency, :currency_long, :percent,
        :scientific, :standard]
   """
-  @spec decimal_format_styles_for(%Locale{} | Locale.name, binary | atom) :: [atom]
+  @spec decimal_format_styles_for(Locale.name, binary | atom) :: [atom]
   def decimal_format_styles_for(locale \\ Cldr.get_current_locale(), number_system \\ :default)
-  def decimal_format_styles_for(locale, number_system) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> decimal_format_styles_for(number_system)
-  end
-
-  def decimal_format_styles_for(%Locale{} = locale, number_system) do
+  def decimal_format_styles_for(locale, number_system) do
     case format_styles_for(locale, number_system) do
-    [_ | _] = styles ->
-      styles
-      -- short_format_styles_for(locale, number_system)
-      -- [:currency_long, :currency_spacing]
-    {:error, _} = error ->
-      error
+      [_ | _] = styles ->
+        styles
+        -- short_format_styles_for(locale, number_system)
+        -- [:currency_long, :currency_spacing]
+      {:error, _} = error ->
+        error
     end
-  end
-
-  def decimal_format_styles_for({:error, _} = error, _number_systems) do
-    error
   end
 
   @doc """
@@ -411,30 +429,23 @@ defmodule Cldr.Number.Format do
   ## Examples
 
       iex> Cldr.Number.Format.format_system_types_for "pl"
-      [:default, :native]
+      {:ok, [:default, :native]}
 
       iex> Cldr.Number.Format.format_system_types_for "ru"
-      [:default, :native]
+      {:ok, [:default, :native]}
 
       iex> Cldr.Number.Format.format_system_types_for "th"
-      [:default, :native]
+      {:ok, [:default, :native]}
   """
-  @spec format_system_types_for(Locale.name | %Locale{}) :: [atom]
+  @spec format_system_types_for(Locale.name) :: [atom]
   def format_system_types_for(locale \\ Cldr.get_current_locale())
-  def format_system_types_for(locale) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> format_system_types_for
-  end
-
-  def format_system_types_for(%Locale{} = locale) do
-    locale
-    |> System.number_systems_for
-    |> Map.keys
-  end
-
-  def format_system_types_for({:error, _} = error) do
-    error
+  def format_system_types_for(locale) do
+    with {:ok, _} <- Cldr.valid_locale?(locale) do
+      {:ok, systems} = System.number_systems_for(locale)
+      {:ok, Map.keys(systems)}
+    else
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   @doc """
@@ -445,74 +456,14 @@ defmodule Cldr.Number.Format do
   ## Examples
 
       iex> Cldr.Number.Format.format_system_names_for("th")
-      [:latn, :thai]
+      {:ok, [:latn, :thai]}
 
       iex> Cldr.Number.Format.format_system_names_for("pl")
-      [:latn]
+      {:ok, [:latn]}
   """
   @spec format_system_names_for(Cldr.locale) :: [String.t]
   def format_system_names_for(locale \\ Cldr.get_current_locale()) do
     Cldr.Number.System.number_system_names_for(locale)
   end
 
-  @doc """
-  Returns the minium grouping digits for a locale.
-
-  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
-
-  ## Examples
-
-      iex> Cldr.Number.Format.minimum_grouping_digits_for("en")
-      1
-  """
-  @spec minimum_grouping_digits_for(%Locale{} | Locale.name) :: non_neg_integer
-  def minimum_grouping_digits_for(locale) when is_binary(locale) do
-    locale
-    |> Cldr.get_locale
-    |> minimum_grouping_digits_for
-  end
-
-  def minimum_grouping_digits_for(%Locale{} = locale) do
-    Map.get(locale, :minimum_grouping_digits)
-  end
-
-  def minimum_grouping_digits_for({:error, _} = error) do
-    error
-  end
-
-  @doc """
-  Returns the minium grouping digits for a locale or raises if there is an error.
-
-  * `locale` is any locale configured in the system.  See `Cldr.known_locales/0`
-
-  ## Examples
-
-      iex> Cldr.Number.Format.minimum_grouping_digits_for!("en")
-      1
-
-      Cldr.Number.Format.minimum_grouping_digits_for!("end")
-      ** (Cldr.UnknownLocaleError) The locale "end" is not known
-  """
-  def minimum_grouping_digits_for!(locale) do
-    case minimum_grouping_digits_for(locale) do
-      {:error, {exception, message}} ->
-        raise exception, message
-      digits ->
-        digits
-    end
-  end
-
-
-  # Extract number formats from short and long lists
-  @doc false
-  def extract_formats(formats) when is_map(formats) do
-    formats
-    |> Map.values
-    |> Enum.map(&hd/1)
-  end
-
-  @doc false
-  def extract_formats(format) do
-    format
-  end
 end

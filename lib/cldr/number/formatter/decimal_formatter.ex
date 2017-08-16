@@ -89,14 +89,11 @@ defmodule Cldr.Number.Formatter.Decimal do
   when is_number(number) and number < 0 do
     system   = options[:number_system]
     locale   = options[:locale]
-    symbols  = number_symbols_for(locale, system)
+    {:ok, symbols}  = number_symbols_for(locale, system)
 
     if (number_string = do_to_string(abs(number), meta, options)) == "0" do
       number_string
     else
-      system   = options[:number_system]
-      locale   = options[:locale]
-      symbols  = number_symbols_for(locale, system)
       symbols.minus_sign <> do_to_string(abs(number), meta, options)
     end
   end
@@ -559,7 +556,7 @@ defmodule Cldr.Number.Formatter.Decimal do
     system   = options[:number_system]
     locale   = options[:locale]
     currency = options[:currency]
-    symbols  = number_symbols_for(locale, system)
+    {:ok, symbols}  = number_symbols_for(locale, system)
 
     Enum.map format, fn (token) ->
       case token do

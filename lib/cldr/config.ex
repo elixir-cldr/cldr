@@ -528,6 +528,35 @@ defmodule Cldr.Config do
     Application.get_env(:ex_cldr, :precompile_number_formats, [])
   end
 
+  # Extract number formats from short and long lists
+  @doc false
+  def extract_formats(formats) when is_map(formats) do
+    formats
+    |> Map.values
+    |> Enum.map(&hd/1)
+  end
+
+  @doc false
+  def extract_formats(format) do
+    format
+  end
+
+  def decimal_formats_for(locale) do
+    locale
+    |> get_locale
+    |> Map.get(:number_formats)
+    |> Map.values
+    |> Enum.map(&(Map.delete(&1, :currency_spacing)))
+    |> Enum.map(&(Map.delete(&1, :currency_long)))
+    |> Enum.map(&Map.values/1)
+    |> List.flatten
+    |> Enum.reject(&is_integer/1)
+    |> Enum.map(&extract_formats/1)
+    |> List.flatten
+    |> Enum.uniq
+    |> Enum.sort
+  end
+
   # ------ Helpers ------
 
   # Simple check that the locale content contains what we expect
@@ -574,26 +603,28 @@ defmodule Cldr.Config do
   end
 
   # Put the currency data into a %Currency{} struct
-  # and ensure the currency symbol is upcased
   defp structure_currencies(content) do
     alias Cldr.Currency
 
-    currencies = content.currencies
-    |> Enum.map(fn {code, currency} -> {code, struct(Currency, currency)} end)
-    |> Enum.into(%{})
+    # currencies = content.currencies
+    # |> Enum.map(fn {code, currency} -> {code, struct(Currency, currency)} end)
+    # |> Enum.into(%{})
+    #
+    # Map.put(content, :currencies, currencies)
 
-    Map.put(content, :currencies, currencies)
+    content
   end
 
   # Put the number_formats into a %Format{} struct
   defp structure_number_formats(content) do
-    alias Cldr.Number.Format
-
-    formats = content.number_formats
-    |> Enum.map(fn {system, format} -> {system, struct(Format, format)} end)
-    |> Enum.into(%{})
-
-    Map.put(content, :number_formats, formats)
+    content
+    # alias Cldr.Number.Format
+    #
+    # formats = content.number_formats
+    # |> Enum.map(fn {system, format} -> {system, struct(Format, format)} end)
+    # |> Enum.into(%{})
+    #
+    # Map.put(content, :number_formats, formats)
   end
 
   defp structure_date_formats(content) do
@@ -605,16 +636,17 @@ defmodule Cldr.Config do
 
   # Put the symbols into a %Symbol{} struct
   defp structure_symbols(content) do
-    alias Cldr.Number.Symbol
-
-    symbols = content.number_symbols
-    |> Enum.map(fn
-         {system, nil}    -> {system, nil}
-         {system, symbol} -> {system, struct(Symbol, symbol)}
-       end)
-    |> Enum.into(%{})
-
-    Map.put(content, :number_symbols, symbols)
+    # alias Cldr.Number.Symbol
+    #
+    # symbols = content.number_symbols
+    # |> Enum.map(fn
+    #      {system, nil}    -> {system, nil}
+    #      {system, symbol} -> {system, struct(Symbol, symbol)}
+    #    end)
+    # |> Enum.into(%{})
+    #
+    # Map.put(content, :number_symbols, symbols)
+    content
   end
 
   # Put the rbnf rules into a %Rule{} struct
