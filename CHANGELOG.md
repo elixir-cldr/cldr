@@ -1,10 +1,18 @@
-## Changelog for Cldr v0.4.3 July __, 2017
+## Changelog for Cldr v0.5 August __, 2017
+
+### Breaking Changes
+
+* Cldr is now broken into separate packages. The package [ex_cldr](https://hex.pm/packages/ex_cldr) is a dependency for all other Cldr packages.  It includes the core functionality required by all modules, including number formatting.
+
+* `Cldr.List` and `Cldr.Unit` which were previously included in the the [ex_cldr](https://hex.pm/packages/ex_cldr) package are now in their own packages which must be added separately as dependencies.  These packages are [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) and [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
+
+* A new package, [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times) adds `date`, `time` and `datetime` formatting with the primary API being `Cldr.Date.to_string/2`, `Cldr.Time.to_string/2` and `Cldr.DateTime.to_string/2`
 
 ### Enhancements
 
-* Adds `date` and `datetime` formatting with the primary API being `Cldr.Date.to_string/2` and `Cldr.DateTime.to_string/2`
-
 * Adds `Cldr.valid_locale?/1` that returns an `{:ok, locale}` or `{:error, {exception, message}}` that is friendlier to use in a `with` function
+
+* Formalise that the `to_string/2` functions return either a `{:ok, result}` or {:error, reason} tuple.  The various "!" versions `to_string!/2` return a result string or raise an exception.
 
 ## Changelog for Cldr v0.4.2 July 9, 2017
 

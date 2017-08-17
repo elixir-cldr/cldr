@@ -280,7 +280,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Map.delete("generic")
       |> Cldr.Map.remove_leading_underscores
       |> Cldr.Map.underscore_keys
-      |> Cldr.DateTime.Compiler.convert_eras_to_iso_days
+      |> Cldr.Calendar.Conversion.convert_eras_to_iso_days
       |> save_file(path)
 
       assert_package_file_configured!(path)
@@ -295,7 +295,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Poison.decode!
       |> get_in(["supplemental", "dayPeriodRuleSet"])
       |> Cldr.Map.remove_leading_underscores
-      |> Cldr.DateTime.Compiler.parse_time_periods
+      |> Cldr.Calendar.Conversion.parse_time_periods
       |> save_file(path)
 
       assert_package_file_configured!(path)

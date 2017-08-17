@@ -2,7 +2,6 @@ defmodule Doc.Test do
   use ExUnit.Case
   doctest Cldr
   doctest Cldr.Config
-  doctest Cldr.List
   doctest Cldr.Math
   doctest Cldr.Currency
   doctest Cldr.Number
@@ -17,10 +16,4 @@ defmodule Doc.Test do
   doctest Cldr.Rbnf.Ordinal
   doctest Cldr.Rbnf.Spellout
   doctest Cldr.Rbnf.NumberSystem
-  doctest Cldr.Unit
-  doctest Cldr.DateTime.Relative
-  doctest Cldr.DateTime.Compiler
-  doctest Cldr.DateTime.Formatter
-  doctest Cldr.DateTime
-  doctest Cldr.Date
 end
