@@ -934,7 +934,7 @@ defmodule Cldr.DateTime.Formatter do
   # Helpers
 
   defp get_era(%{calendar: calendar} = date, type, locale, options) do
-    cldr_calendar = type_from_calendar(calendar)
+    {:ok, cldr_calendar} = type_from_calendar(calendar)
     variant? = options[:variant]
 
     locale
@@ -952,7 +952,7 @@ defmodule Cldr.DateTime.Formatter do
   end
 
   defp get_period(locale, calendar, type, style, key, _options) do
-    cldr_calendar = type_from_calendar(calendar)
+    {:ok, cldr_calendar} = type_from_calendar(calendar)
 
     locale
     |> Cldr.Calendar.period(cldr_calendar)
@@ -960,7 +960,7 @@ defmodule Cldr.DateTime.Formatter do
   end
 
   defp get_month(month, locale, calendar, type, style) do
-    cldr_calendar = type_from_calendar(calendar)
+    {:ok, cldr_calendar} = type_from_calendar(calendar)
 
     locale
     |> Cldr.Calendar.month(cldr_calendar)
@@ -968,7 +968,7 @@ defmodule Cldr.DateTime.Formatter do
   end
 
   defp get_day(%{year: year, month: month, day: day, calendar: calendar}, locale, type, style) do
-    cldr_calendar = type_from_calendar(calendar)
+    {:ok, cldr_calendar} = type_from_calendar(calendar)
     day_of_week = day_key(calendar.day_of_week(year, month, day))
 
     locale
@@ -995,9 +995,9 @@ defmodule Cldr.DateTime.Formatter do
 
   def type_from_calendar(calendar) do
     if :cldr_calendar in functions_exported(calendar) do
-      calendar.cldr_calendar
+      {:ok, calendar.cldr_calendar}
     else
-      @default_calendar
+      {:ok, @default_calendar}
     end
   end
 

@@ -1,5 +1,5 @@
 defmodule Cldr.Time do
-  alias Cldr.DateTime.Formatter
+  alias Cldr.DateTime.{Format, Formatter}
 
   @doc """
   Formats a time according to a format string
@@ -26,7 +26,8 @@ defmodule Cldr.Time do
     calendar = Map.get(time, :calendar) || Calendar.ISO
 
     with {:ok, locale} <- Cldr.valid_locale?(options[:locale]),
-         {:ok, format_string} <- format_string_from_format(options[:format], locale, calendar),
+         {:ok, cldr_calendar} <- Formatter.type_from_calendar(calendar),
+         {:ok, format_string} <- format_string_from_format(options[:format], locale, cldr_calendar),
          {:ok, formatted} <- Formatter.format(time, format_string, locale, options)
     do
       {:ok, formatted}
@@ -40,7 +41,7 @@ defmodule Cldr.Time do
   end
 
   def to_string!(time, options \\ [])
-  def to_string!(%{hour: _hour, minute: _minute} = time, options) do
+  def to_string!(time, options) do
     case to_string(time, options) do
       {:ok, string} -> string
       {:error, {exception, message}} -> raise exception, message
@@ -48,11 +49,9 @@ defmodule Cldr.Time do
   end
 
   defp format_string_from_format(format, locale, calendar) when format in @format_types do
-    cldr_calendar = Cldr.DateTime.Formatter.type_from_calendar(calendar)
-
     format_string =
       locale
-      |> time_formats_for(cldr_calendar)
+      |> Format.time_formats(calendar)
       |> Map.get(format)
 
     {:ok, format_string}
@@ -76,20 +75,4 @@ defmodule Cldr.Time do
     {:error, "Invalid time. Time is a map that requires at least #{inspect requirements} fields. " <>
              "Found: #{inspect map}"}
   end
-
-  for locale <- Cldr.Config.known_locales() do
-    locale_data = Cldr.Config.get_locale(locale)
-
-    for calendar <- Cldr.Config.calendars_for_locale(locale_data) do
-      time_formats =
-        locale_data
-        |> Map.get(:dates)
-        |> get_in([:calendars, calendar, :time_formats])
-
-      defp time_formats_for(unquote(locale), unquote(calendar)) do
-        unquote(Macro.escape(time_formats))
-      end
-    end
-  end
-
 end

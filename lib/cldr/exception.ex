@@ -46,6 +46,18 @@ defmodule Cldr.UnknownUnitError do
   end
 end
 
+defmodule Cldr.UnknownCalendarError do
+  @moduledoc """
+  Exception raised when an attempt is made to use a calendar that is not known.
+  in `Cldr`.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
 defmodule Cldr.FormatError do
   @moduledoc """
   Exception raised when there is an error in the formatting of a number/list/...

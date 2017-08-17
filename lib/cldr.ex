@@ -229,7 +229,7 @@ defmodule Cldr do
   when building a `with` cascade.
   """
   def valid_locale?(locale) when is_binary(locale) do
-    if locale_exists?(locale) do
+    if known_locale?(locale) do
       {:ok, locale}
     else
       {:error, Locale.locale_error(locale)}

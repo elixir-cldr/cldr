@@ -1,5 +1,5 @@
 defmodule Cldr.Date do
-  alias Cldr.DateTime.Formatter
+  alias Cldr.DateTime.{Formatter, Format}
 
   @doc """
   Formats a date according to a format string
@@ -41,7 +41,8 @@ defmodule Cldr.Date do
     options = Keyword.merge(default_options, options)
 
     with {:ok, locale} <- Cldr.valid_locale?(options[:locale]),
-         {:ok, format_string} <- format_string_from_format(options[:format], locale, calendar),
+         {:ok, cldr_calendar} <- Formatter.type_from_calendar(calendar),
+         {:ok, format_string} <- format_string_from_format(options[:format], locale, cldr_calendar),
          {:ok, formatted} <- Formatter.format(date, format_string, locale, options)
     do
       {:ok, formatted}
@@ -55,7 +56,7 @@ defmodule Cldr.Date do
   end
 
   def to_string!(date, options \\ [])
-  def to_string!(%{year: _year, month: _month, day: _day, calendar: _calendar} = date, options) do
+  def to_string!(date, options) do
     case to_string(date, options) do
       {:ok, string} -> string
       {:error, {exception, message}} -> raise exception, message
@@ -63,11 +64,9 @@ defmodule Cldr.Date do
   end
 
   defp format_string_from_format(format, locale, calendar) when format in @format_types do
-    cldr_calendar = Cldr.DateTime.Formatter.type_from_calendar(calendar)
-
     format_string =
       locale
-      |> date_formats_for(cldr_calendar)
+      |> Format.date_formats(calendar)
       |> Map.get(format)
 
     {:ok, format_string}
@@ -90,20 +89,5 @@ defmodule Cldr.Date do
   def error_return(map, requirements) do
     {:error, "Invalid date. Date is a map that requires at least #{inspect requirements} fields. " <>
              "Found: #{inspect map}"}
-  end
-
-  for locale <- Cldr.Config.known_locales() do
-    locale_data = Cldr.Config.get_locale(locale)
-
-    for calendar <- Cldr.Config.calendars_for_locale(locale_data) do
-      time_formats =
-        locale_data
-        |> Map.get(:dates)
-        |> get_in([:calendars, calendar, :date_formats])
-
-      defp date_formats_for(unquote(locale), unquote(calendar)) do
-        unquote(Macro.escape(time_formats))
-      end
-    end
   end
 end

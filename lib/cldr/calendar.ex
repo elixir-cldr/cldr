@@ -254,6 +254,9 @@ defmodule Cldr.Calendar do
     days + (numerator / denominator)
   end
 
+  def calendar_error(calendar_name) do
+    {Cldr.UnknownCalendarError, "The calendar #{inspect calendar_name} is not known."}
+  end
   #
   # Data storage functions
   #
