@@ -61,7 +61,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
-## Localizing & Formatting Numbers
+## Localizing and Formatting Numbers
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
