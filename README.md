@@ -39,7 +39,7 @@ Although `Cldr` is purely a library application, it should be added to your appl
 
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_units)
-* Date/Time/DateTime formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_dates_times)
+* Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
 
 Each of these packages includes `ex_cldr` as a dependency so configuring any of these additional packages will automatically install `ex_cldr`.
 
