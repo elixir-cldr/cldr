@@ -11,11 +11,21 @@ defmodule Cldr.Rbnf.Processor do
       import Cldr.Rbnf.Processor
 
       defp do_rule(number, locale, function, rule, parsed) do
-        parsed
-        |> Enum.map(fn {operation, argument} ->
-            do_operation(operation, number, locale, function, rule, argument)
-          end)
-        |> :erlang.iolist_to_binary
+        results = Enum.map(parsed, fn {operation, argument} ->
+          do_operation(operation, number, locale, function, rule, argument)
+        end)
+
+        if Enum.any?(results, fn {:error, _} -> true; _ -> false end) do
+          {:error, collect_errors(results)}
+        else
+          :erlang.iolist_to_binary(results)
+        end
+      end
+
+      defp collect_errors(results) do
+        results
+        |> Enum.map(fn {_, v} -> v; other -> other end)
+        |> Enum.join(", ")
       end
 
       defp do_operation(:literal, _number, _locale, _function, _rule, string) do
@@ -29,7 +39,7 @@ defmodule Cldr.Rbnf.Processor do
 
       defp do_operation(:modulo, number, locale, function, rule, {:format, format})
       when is_number(number) and number < 0 do
-        Cldr.Number.to_string(abs(number), locale: locale, format: format)
+        Cldr.Number.to_string!(abs(number), locale: locale, format: format)
       end
 
       defp do_operation(:modulo, number, locale, function, rule, nil)
@@ -51,7 +61,7 @@ defmodule Cldr.Rbnf.Processor do
 
       defp do_operation(:modulo, number, locale, function, rule, {:format, format}) do
         mod = number - (div(number, rule.divisor) * rule.divisor)
-        Cldr.Number.to_string(mod, locale: locale, format: format)
+        Cldr.Number.to_string!(mod, locale: locale, format: format)
       end
 
       # For Fractional rules we format the fraction as individual digits.
@@ -71,7 +81,7 @@ defmodule Cldr.Rbnf.Processor do
       end
 
       defp do_operation(:call, number, locale, _function, _rule, {:format, format}) do
-        Cldr.Number.to_string(number, locale: locale, format: format)
+        Cldr.Number.to_string!(number, locale: locale, format: format)
       end
 
       defp do_operation(:call, number, locale, _function, _rule, {:rule, rule_name}) do

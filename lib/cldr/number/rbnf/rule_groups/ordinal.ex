@@ -22,7 +22,7 @@ defmodule Cldr.Rbnf.Ordinal do
   This call is equivalent to the call through the public API of:
 
       iex> Cldr.Number.to_string 123, format: :ordinal
-      "123rd"
+      {:ok, "123rd"}
   """
 
   import Kernel, except: [and: 2]

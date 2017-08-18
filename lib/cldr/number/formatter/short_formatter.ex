@@ -6,19 +6,19 @@ defmodule Cldr.Number.Formatter.Short do
   examples:
 
       iex> Cldr.Number.to_string 123, format: :short
-      "123"
+      {:ok, "123"}
 
       iex> Cldr.Number.to_string 1234, format: :short
-      "1K"
+      {:ok, "1K"}
 
       iex> Cldr.Number.to_string 523456789, format: :short
-      "523M"
+      {:ok, "523M"}
 
       iex> Cldr.Number.to_string 7234567890, format: :short
-      "7B"
+      {:ok, "7B"}
 
       iex> Cldr.Number.to_string 7234567890, format: :long
-      "7 billion"
+      {:ok, "7 billion"}
 
   These formats are compact representations however they do lose
   precision in the presentation in favour of human readibility.
@@ -28,13 +28,13 @@ defmodule Cldr.Number.Formatter.Short do
   in the following examples:
 
       iex> Cldr.Number.to_string 1234, format: :short, currency: "EUR"
-      "€1K"
+      {:ok, "€1K"}
 
       iex> Cldr.Number.to_string 1234, format: :short, currency: "EUR", fractional_digits: 2
-      "€1.23K"
+      {:ok, "€1.23K"}
 
       iex> Cldr.Number.to_string 1234, format: :short, currency: "JPY"
-      "¥1K"
+      {:ok, "¥1K"}
   """
 
   import Cldr.Macros, only: [docp: 1]

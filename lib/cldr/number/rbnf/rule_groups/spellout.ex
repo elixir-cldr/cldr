@@ -24,7 +24,7 @@ defmodule Cldr.Rbnf.Spellout do
   This call is equivalent to the call through the public API of:
 
       iex> Cldr.Number.to_string 123, format: :spellout
-      "one hundred twenty-three"
+      {:ok, "one hundred twenty-three"}
   """
 
   import Kernel, except: [and: 2]

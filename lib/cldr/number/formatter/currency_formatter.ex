@@ -8,10 +8,10 @@ defmodule Cldr.Number.Formatter.Currency do
   To explain the difference, look at the following examples:
 
       iex> Cldr.Number.to_string 123, format: :currency, currency: "USD"
-      "$123.00"
+      {:ok, "$123.00"}
 
       iex> Cldr.Number.to_string 123, format: :long, currency: "USD"
-      "123 US dollars"
+      {:ok, "123 US dollars"}
 
   In the first example the format is defined by a decimal mask. In this example
   the format mask comes from:
@@ -50,7 +50,7 @@ defmodule Cldr.Number.Formatter.Currency do
     |> Keyword.put(:format, :standard)
     |> set_fractional_digits(options[:fractional_digits])
 
-    number_string = Number.to_string(number, options)
+    number_string = Number.to_string!(number, options)
 
     format = Number.Cardinal.pluralize(number, locale, formats)
     Substitution.substitute([number_string, currency_string], format)

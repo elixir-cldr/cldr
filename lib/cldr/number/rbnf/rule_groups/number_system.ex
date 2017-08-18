@@ -24,7 +24,7 @@ defmodule Cldr.Rbnf.NumberSystem do
   This call is equivalent to the call through the public API of:
 
       iex> Cldr.Number.to_string 123, format: :roman
-      "CXXIII"
+      {:ok, "CXXIII"}
   """
 
   import Kernel, except: [and: 2]

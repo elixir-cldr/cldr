@@ -1,16 +1,15 @@
 defmodule Number.Format.Test do
   use ExUnit.Case
-  import Cldr.Number.String, only: [clean: 1]
   alias Cldr.Number.Format
 
   Enum.each Cldr.Test.Number.Format.test_data(), fn {value, result, args} ->
-    test "formatted #{inspect value} == #{inspect clean(result)} with args: #{inspect args}" do
-      assert Cldr.Number.to_string(unquote(value), unquote(args)) == unquote(result)
+    test "formatted #{inspect value} == #{inspect result} with args: #{inspect args}" do
+      assert {:ok, unquote(result)} = Cldr.Number.to_string(unquote(value), unquote(args))
     end
   end
 
   test "literal-only format returns the literal" do
-    assert Cldr.Number.to_string(1234, format: "xxx") == "xxx"
+    assert {:ok, "xxx"} = Cldr.Number.to_string(1234, format: "xxx")
   end
 
   test "a currency format with no currency returns an error" do

@@ -172,55 +172,55 @@ defmodule Cldr.Number do
   ## Examples
 
       iex> Cldr.Number.to_string 12345
-      "12,345"
+      {:ok, "12,345"}
 
       iex> Cldr.Number.to_string 12345, locale: "fr"
-      "12 345"
+      {:ok, "12 345"}
 
       iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
-      "12 345,00 $US"
+      {:ok, "12 345,00 $US"}
 
-      iex(4)> Cldr.Number.to_string 12345, format: "#E0"
-      "1.2345E4"
+      iex> Cldr.Number.to_string 12345, format: "#E0"
+      {:ok, "1.2345E4"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
-      "THB12,345.00"
+      {:ok, "THB12,345.00"}
 
       iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
-      "(THB12,345.00)"
+      {:ok, "(THB12,345.00)"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
-      "THB12,345.00"
+      {:ok, "THB12,345.00"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
-      "THB๑๒,๓๔๕.๐๐"
+      {:ok, "THB๑๒,๓๔๕.๐๐"}
 
       iex> Cldr.Number.to_string 1244.30, format: :long
-      "1 thousand"
+      {:ok, "1 thousand"}
 
       iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
-      "1,244 US dollars"
+      {:ok, "1,244 US dollars"}
 
       iex> Cldr.Number.to_string 1244.30, format: :short
-      "1K"
+      {:ok, "1K"}
 
       iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
-      "€1K"
+      {:ok, "€1K"}
 
       iex> Cldr.Number.to_string 1234, format: :spellout
-      "one thousand two hundred thirty-four"
+      {:ok, "one thousand two hundred thirty-four"}
 
       iex> Cldr.Number.to_string 1234, format: :spellout_verbose
-      "one thousand two hundred and thirty-four"
+      {:ok, "one thousand two hundred and thirty-four"}
 
       iex> Cldr.Number.to_string 1989, format: :spellout_year
-      "nineteen eighty-nine"
+      {:ok, "nineteen eighty-nine"}
 
       iex> Cldr.Number.to_string 123, format: :ordinal
-      "123rd"
+      {:ok, "123rd"}
 
       iex(4)> Cldr.Number.to_string 123, format: :roman
-      "CXXIII"
+      {:ok, "CXXIII"}
 
   ## Errors
 
@@ -263,7 +263,10 @@ defmodule Cldr.Number do
     |> detect_negative_number(number)
 
     with :ok <- currency_format_has_code(format, currency_format?(format), options[:currency]) do
-      to_string(number, format, options)
+      case to_string(number, format, options) do
+        {:error, reason} -> {:error, reason}
+        string -> {:ok, string}
+      end
     else
       {:error, _} = error -> error
     end
@@ -275,10 +278,10 @@ defmodule Cldr.Number do
   """
   @spec to_string!(number, [Keyword.t]) :: Exception.t
   def to_string!(number, options \\ @default_options) do
-    case string = to_string(number, options) do
+    case to_string(number, options) do
       {:error, {exception, message}} ->
         raise exception, message
-      true ->
+      {:ok, string} ->
         string
     end
   end

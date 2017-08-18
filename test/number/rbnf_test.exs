@@ -2,18 +2,19 @@ defmodule Rbnf.Test do
   use ExUnit.Case
 
   test "rbnf spellout" do
-    assert Cldr.Number.to_string(25_340, format: :spellout) ==
-     "twenty-five thousand three hundred forty"
+    assert {:ok, "twenty-five thousand three hundred forty"} =
+      Cldr.Number.to_string(25_340, format: :spellout)
+
   end
 
   test "rbnf spellout ordinal verbose" do
-    assert Cldr.Number.to_string(123456, format: :spellout_ordinal_verbose) ==
-      "one hundred and twenty-three thousand, four hundred and fifty-sixth"
+    assert {:ok, "one hundred and twenty-three thousand, four hundred and fifty-sixth"} =
+    Cldr.Number.to_string(123456, format: :spellout_ordinal_verbose)
   end
 
   test "rbnf ordinal" do
-    assert Cldr.Number.to_string(123456, format: :ordinal) == "123,456th"
-    assert Cldr.Number.to_string(123456, format: :ordinal, locale: "fr") == "123 456e"
+    assert {:ok, "123,456th"} = Cldr.Number.to_string(123456, format: :ordinal)
+    assert {:ok, "123 456e"} = Cldr.Number.to_string(123456, format: :ordinal, locale: "fr")
   end
 
   test "rbnf improper fraction" do
@@ -29,23 +30,23 @@ defmodule Rbnf.Test do
   end
 
   test "roman numerals" do
-    assert Cldr.Number.to_string(1, format: :roman) == "I"
-    assert Cldr.Number.to_string(2, format: :roman) == "II"
-    assert Cldr.Number.to_string(3, format: :roman) == "III"
-    assert Cldr.Number.to_string(4, format: :roman) == "IV"
-    assert Cldr.Number.to_string(5, format: :roman) == "V"
-    assert Cldr.Number.to_string(6, format: :roman) == "VI"
-    assert Cldr.Number.to_string(7, format: :roman) == "VII"
-    assert Cldr.Number.to_string(8, format: :roman) == "VIII"
-    assert Cldr.Number.to_string(9, format: :roman) == "IX"
-    assert Cldr.Number.to_string(10, format: :roman) == "X"
-    assert Cldr.Number.to_string(11, format: :roman) == "XI"
-    assert Cldr.Number.to_string(20, format: :roman) == "XX"
-    assert Cldr.Number.to_string(50, format: :roman) == "L"
-    assert Cldr.Number.to_string(90, format: :roman) == "XC"
-    assert Cldr.Number.to_string(100, format: :roman) == "C"
-    assert Cldr.Number.to_string(1000, format: :roman) == "M"
-    assert Cldr.Number.to_string(123, format: :roman) == "CXXIII"
+    assert Cldr.Number.to_string(1, format: :roman) == {:ok, "I"}
+    assert Cldr.Number.to_string(2, format: :roman) == {:ok, "II"}
+    assert Cldr.Number.to_string(3, format: :roman) == {:ok, "III"}
+    assert Cldr.Number.to_string(4, format: :roman) == {:ok, "IV"}
+    assert Cldr.Number.to_string(5, format: :roman) == {:ok, "V"}
+    assert Cldr.Number.to_string(6, format: :roman) == {:ok, "VI"}
+    assert Cldr.Number.to_string(7, format: :roman) == {:ok, "VII"}
+    assert Cldr.Number.to_string(8, format: :roman) == {:ok, "VIII"}
+    assert Cldr.Number.to_string(9, format: :roman) == {:ok, "IX"}
+    assert Cldr.Number.to_string(10, format: :roman) == {:ok, "X"}
+    assert Cldr.Number.to_string(11, format: :roman) == {:ok, "XI"}
+    assert Cldr.Number.to_string(20, format: :roman) == {:ok, "XX"}
+    assert Cldr.Number.to_string(50, format: :roman) == {:ok, "L"}
+    assert Cldr.Number.to_string(90, format: :roman) == {:ok, "XC"}
+    assert Cldr.Number.to_string(100, format: :roman) == {:ok, "C"}
+    assert Cldr.Number.to_string(1000, format: :roman) == {:ok, "M"}
+    assert Cldr.Number.to_string(123, format: :roman) == {:ok, "CXXIII"}
   end
 
   Cldr.Rbnf.TestSupport.rbnf_tests fn (name, tests, module, function, locale) ->
