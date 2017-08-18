@@ -220,7 +220,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns an `{:ok, locale}` or {:error, {exception, message}}` tuple
+  Returns an `{:ok, locale}` or `{:error, {exception, message}}` tuple
   depending on whether the locale is valid and exists in the current
   configuration.
 
