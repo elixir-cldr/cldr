@@ -2,6 +2,8 @@
 
 ### Breaking Changes
 
+* ex_cldr now required Elixir 1.5 or greater since it required support for `Calendar` conversion funcitons and for utf-8 atoms.
+
 * Cldr is now broken into separate packages. This package [ex_cldr](https://hex.pm/packages/ex_cldr) is a dependency for all other Cldr packages.  It includes the core functionality required by all modules, including number formatting.
 
 * `Cldr.List` and `Cldr.Unit` which were previously included in the the [ex_cldr](https://hex.pm/packages/ex_cldr) package are now in their own packages which must be added separately as dependencies.  These packages are [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) and [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)

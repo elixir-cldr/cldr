@@ -8,6 +8,10 @@
 
 `Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, it to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 2017 and Version 0.1.0, `Cldr` is based upon [CLDR version 31.0.1](http://cldr.unicode.org).
 
+## Elixir Version Requirements
+
+* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.5 or later.
+
 ## Installation
 
 Add `ex_cldr` as a dependency to your `mix` project:

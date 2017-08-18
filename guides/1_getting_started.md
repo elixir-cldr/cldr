@@ -23,15 +23,15 @@ Although `Cldr` is purely a library application, it should be added to your appl
       [applications: [:ex_cldr]]
     end
 
-## Additional Cldr Packages: Units, Lists, Dates & Times
+## Additional Cldr Packages: Units, Lists, Dates and Times
 
 `ex_cldr` includes functions for the localisation and formatting of numbers and currencies.  Additional functionality is available by adding additional packages:
 
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
-* Unit formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_units)
+* Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_dates_times)
 
-Each of these packages includes `ex_cldr` as a dependency so configuring any of these additional packages will automatically install `ex_cldr`.
+Each of these packages includes [ex_cldr](https://hex.pm/packages/ex_cldr) as a dependency so configuring any of these additional packages will automatically install [ex_cldr](https://hex.pm/packages/ex_cldr).
 
 ## Quick Configuration
 
