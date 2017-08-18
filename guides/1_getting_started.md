@@ -138,7 +138,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Localizing Dates, DateTimes
+## Localizing Dates, Times and DateTimes
 
 As of version 0.2.0, formatting of relative dates and date times is supported with the `Cldr.Date.Relative` module.  The public API is `Cldr.Date.Relative.to_string/2`.  Some examples:
 

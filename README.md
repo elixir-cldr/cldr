@@ -71,7 +71,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
-## Localizing & Formatting Numbers
+## Localizing and Formatting Numbers
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
@@ -148,9 +148,9 @@ The `Cldr.Unit` module provides unit localization.  The public API for unit loca
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Localizing Dates, DateTimes
+## Localizing Dates, Times and DateTimes
 
-As of version 0.2.0, formatting of relative dates and date times is support in the `Cldr.DateTime.Relative` module.  The public API is `Cldr.DateTime.Relative.to_string/2`.  Some examples:
+As of version 0.2.0, formatting of relative dates and date times is supported in the `Cldr.DateTime.Relative` module.  The public API is `Cldr.DateTime.Relative.to_string/2`.  Some examples:
 
       iex> Cldr.DateTime.Relative.to_string(-1)
       "1 second ago"
