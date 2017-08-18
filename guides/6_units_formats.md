@@ -1,4 +1,4 @@
-# Localizing Units
+# Units Localizing and Formatting
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.
 
@@ -15,17 +15,18 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 ## Examples
 
+```elixir
       iex> Cldr.Unit.to_string 123, :volume_gallon
-      "123 gallons"
+      {:ok, "123 gallons"}
 
       iex> Cldr.Unit.to_string 1234, :volume_gallon, format: :long
-      "1 thousand gallons"
+      {:ok, "1 thousand gallons"}
 
       iex> Cldr.Unit.to_string 1234, :volume_gallon, format: :short
-      "1K gallons"
+      {:ok, "1K gallons"}
 
       iex> Cldr.Unit.to_string 1234, :frequency_megahertz
-      "1,234 megahertz"
+      {:ok, "1,234 megahertz"}
 
       iex> Cldr.Unit.available_units
       [:volume_gallon, :pressure_pound_per_square_inch, :digital_terabyte,
@@ -43,6 +44,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
        :energy_kilocalorie, :frequency_megahertz, :power_horsepower,
        :volume_cubic_meter, :area_hectare, :frequency_hertz, :length_furlong,
        :length_astronomical_unit, ...]
+```
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 

@@ -1,4 +1,4 @@
-# Number and Currency localization & formatting
+# Number and Currency Localization and Formatting
 
 CLDR defines many different ways to format a number for different uses and defines a set of formats categorised by common pupose to make it easier to express the same intent across many different locales that represent many different territories, cultures, number systems and scripts.
 
@@ -8,53 +8,55 @@ See `Cldr.Number` and `Cldr.Number.to_string/2`
 
 The primary api for number formatting is `Cldr.Number.to_string/2`.  It provides the ability to format numbers in a standard way for configured locales.  It also provides the means for format numbers as a currency, as a short form (like 1k instead of 1,000).  Additionally it provides formats to spell a number in works, format it as roman numerals and output an ordinal number.  Some examples illustrate:
 
+```elixir
       iex> Cldr.Number.to_string 12345
-      "12,345"
+      {:ok, "12,345"}
 
       iex> Cldr.Number.to_string 12345, locale: "fr"
-      "12 345"
+      {:ok, "12 345"}
 
       iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
-      "12 345,00 $US"
+      {:ok, "12 345,00 $US"}
 
       iex(4)> Cldr.Number.to_string 12345, format: "#E0"
-      "1.2345E4"
+      {:ok, "1.2345E4"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
-      "THB12,345.00"
+      {:ok, "THB12,345.00"}
 
       iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
-      "(THB12,345.00)"
+      {:ok, "(THB12,345.00)"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
-      "THB12,345.00"
+      {:ok, "THB12,345.00"}
 
       iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
-      "THB๑๒,๓๔๕.๐๐"
+      {:ok, "THB๑๒,๓๔๕.๐๐"}
 
       iex> Cldr.Number.to_string 1244.30, format: :long
-      "1 thousand"
+      {:ok, "1 thousand"}
 
       iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
-      "1,244.30 US dollars"
+      {:ok, "1,244.30 US dollars"}
 
       iex> Cldr.Number.to_string 1244.30, format: :short
-      "1K"
+      {:ok, "1K"}
 
       iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
-      "€1.24K"
+      {:ok, "€1.24K"}
 
       iex> Cldr.Number.to_string 1234, format: :spellout
-      "one thousand two hundred thirty-four"
+      {:ok, "one thousand two hundred thirty-four"}
 
       iex> Cldr.Number.to_string 1234, format: :spellout_verbose
-      "one thousand two hundred and thirty-four"
+      {:ok, "one thousand two hundred and thirty-four"}
 
       iex> Cldr.Number.to_string 123, format: :ordinal
-      "123rd"
+      {:ok, "123rd"}
 
       iex(4)> Cldr.Number.to_string 123, format: :roman
-      "CXXIII"
+      {:ok, "CXXIII"}
+```
 
 ## Formatting Styles
 

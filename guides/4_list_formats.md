@@ -1,4 +1,4 @@
-# List Localization
+# List Localization and Formatting
 
 `Cldr` interprets the CLDR rules for list formatting is a locale-specific way.  The list is recursed over and the list elements are passed to `Kernel.to_string/1` therefore the list elements can be anything that can be understood by `Kernel.to_string/1`.
 
@@ -9,22 +9,22 @@
 The primary api for list formatting is `Cldr.List.to_string/2`.  It provides the ability to format lists in a standard way for configured locales. For example:
 
     iex> Cldr.List.to_string(["a", "b", "c"], locale: "en")
-    "a, b, and c"
+    {:ok, "a, b, and c"}
 
     iex> Cldr.List.to_string(["a", "b", "c"], locale: "en", format: :unit_narrow)
-    "a b c"
+    {:ok, "a b c"}
 
     iex> Cldr.List.to_string(["a", "b", "c"], locale: "fr")
-    "a, b et c"
+    {:ok, "a, b et c"}
 
     iex> Cldr.List.to_string([1,2,3,4,5,6])
-    "1, 2, 3, 4, 5, and 6"
+    {:ok, "1, 2, 3, 4, 5, and 6"}
 
     iex> Cldr.List.to_string(["a"])
-    "a"
+    {:ok, "a"}
 
     iex> Cldr.List.to_string([1,2])
-    "1 and 2"
+    {:ok, "1 and 2"}
 
 `Cldr.List.to_string/2` takes a Keyword list of options where the valid options are:
 
@@ -36,6 +36,7 @@ The primary api for list formatting is `Cldr.List.to_string/2`.  It provides the
 
 List formats are referred to by a pattern style the standardises the way to refernce different formats in a locale.  See `Cldr.List.list_pattern_styles_for/1`.  For example:
 
+```elixir
     iex> Cldr.List.list__pattern_styles_for "en"
     [:standard, :standard_short, :unit, :unit_narrow, :unit_short]
 
@@ -44,6 +45,7 @@ List formats are referred to by a pattern style the standardises the way to refe
 
     iex> Cldr.List.list_pattern_styles_for "th"
     [:standard, :standard_short, :unit, :unit_narrow, :unit_short]
+```
 
 ## Formatting styles
 

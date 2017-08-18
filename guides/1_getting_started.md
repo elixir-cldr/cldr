@@ -223,6 +223,6 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 ## Testing
 
-Tests cover the full 514 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.4.x.  Elixir below 1.4 is not supported.
+Tests are run on Elixir 1.5.x.  Elixir below 1.5 is not supported.

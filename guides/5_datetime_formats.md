@@ -1,4 +1,4 @@
-# Date and DateTime Localization
+# Date, Time and DateTime Localization
 
 As of version 0.2.0, formatting of relative dates and date times is supported with the `Cldr.Date.Relative` module.  The public API is `Cldr.Date.Relative.to_string/2`.
 
@@ -8,6 +8,7 @@ Note that date and datetime formatting is not currently support - only relative 
 
 The primary API for formatting relative dates and datetimes is `Cldr.Date.Relative.to_string/2`.  Some examples:
 
+```elixir
       iex> Cldr.Date.Relative.to_string(-1)
       "1 second ago"
 
@@ -62,5 +63,5 @@ The primary API for formatting relative dates and datetimes is `Cldr.Date.Relati
       iex> Cldr.Date.Relative.to_string(~D[2017-04-29], unit: :ziggeraut)
       {:error,
        "Unknown time unit :ziggeraut.  Valid time units are [:day, :hour, :minute, :month, :second, :week, :year, :mon, :tue, :wed, :thu, :fri, :sat, :sun, :quarter]"}
-
+```
 
