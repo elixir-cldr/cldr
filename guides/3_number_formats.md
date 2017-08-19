@@ -9,53 +9,53 @@ See `Cldr.Number` and `Cldr.Number.to_string/2`
 The primary api for number formatting is `Cldr.Number.to_string/2`.  It provides the ability to format numbers in a standard way for configured locales.  It also provides the means for format numbers as a currency, as a short form (like 1k instead of 1,000).  Additionally it provides formats to spell a number in works, format it as roman numerals and output an ordinal number.  Some examples illustrate:
 
 ```elixir
-      iex> Cldr.Number.to_string 12345
-      {:ok, "12,345"}
+iex> Cldr.Number.to_string 12345
+{:ok, "12,345"}
 
-      iex> Cldr.Number.to_string 12345, locale: "fr"
-      {:ok, "12 345"}
+iex> Cldr.Number.to_string 12345, locale: "fr"
+{:ok, "12 345"}
 
-      iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
-      {:ok, "12 345,00 $US"}
+iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
+{:ok, "12 345,00 $US"}
 
-      iex(4)> Cldr.Number.to_string 12345, format: "#E0"
-      {:ok, "1.2345E4"}
+iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+{:ok, "1.2345E4"}
 
-      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
-      {:ok, "THB12,345.00"}
+iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
+{:ok, "THB12,345.00"}
 
-      iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
-      {:ok, "(THB12,345.00)"}
+iex> Cldr.Number.to_string -12345, format: :accounting, currency: "THB"
+{:ok, "(THB12,345.00)"}
 
-      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
-      {:ok, "THB12,345.00"}
+iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th"
+{:ok, "THB12,345.00"}
 
-      iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
-      {:ok, "THB๑๒,๓๔๕.๐๐"}
+iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB", locale: "th", number_system: :native
+{:ok, "THB๑๒,๓๔๕.๐๐"}
 
-      iex> Cldr.Number.to_string 1244.30, format: :long
-      {:ok, "1 thousand"}
+iex> Cldr.Number.to_string 1244.30, format: :long
+{:ok, "1 thousand"}
 
-      iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
-      {:ok, "1,244.30 US dollars"}
+iex> Cldr.Number.to_string 1244.30, format: :long, currency: "USD"
+{:ok, "1,244.30 US dollars"}
 
-      iex> Cldr.Number.to_string 1244.30, format: :short
-      {:ok, "1K"}
+iex> Cldr.Number.to_string 1244.30, format: :short
+{:ok, "1K"}
 
-      iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
-      {:ok, "€1.24K"}
+iex> Cldr.Number.to_string 1244.30, format: :short, currency: "EUR"
+{:ok, "€1.24K"}
 
-      iex> Cldr.Number.to_string 1234, format: :spellout
-      {:ok, "one thousand two hundred thirty-four"}
+iex> Cldr.Number.to_string 1234, format: :spellout
+{:ok, "one thousand two hundred thirty-four"}
 
-      iex> Cldr.Number.to_string 1234, format: :spellout_verbose
-      {:ok, "one thousand two hundred and thirty-four"}
+iex> Cldr.Number.to_string 1234, format: :spellout_verbose
+{:ok, "one thousand two hundred and thirty-four"}
 
-      iex> Cldr.Number.to_string 123, format: :ordinal
-      {:ok, "123rd"}
+iex> Cldr.Number.to_string 123, format: :ordinal
+{:ok, "123rd"}
 
-      iex(4)> Cldr.Number.to_string 123, format: :roman
-      {:ok, "CXXIII"}
+iex(4)> Cldr.Number.to_string 123, format: :roman
+{:ok, "CXXIII"}
 ```
 
 ## Formatting Styles
@@ -123,7 +123,7 @@ CLDR provides an additional mechanism for the formatting of numbers.  The two pr
 
 There are also many additional methods more specialised to a specific locale that cater for languages with more complex gender and grammar requirements.  Since these rules are specialised to a locale it is not possible to standarise the public API more than described in this section.
 
-The full set of RBNF formats is accessable through the modules `Cldr.Rbnf.Ordinal`, `Cldr.Rbnf.Spellout` and `Cldr.Rbnf.NumberSystems`.
+The full set of RBNF formats is accessable through the modules `Cldr.Rbnf.Ordinal`, `Cldr.Rbnf.Spellout` and `Cldr.Rbnf.NumberSystem`.
 
 Each of these modules has a set of functions that are generated at compile time that implement the relevant RBNF rules.  The available rules for a given locale can be retrieved by calling `Cldr.Rbnf.Spellout.rule_set(locale)` or the same function on the other modules.  For example:
 
@@ -138,14 +138,16 @@ Each of these modules has a set of functions that are generated at compile time 
 
 These rule-based formats are invoked directly on the required module passing the number and locale.  For example:
 
-    iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "fr"
-    "dix-neuf-cent quatre-vingt-neuf"
+```elixir
+iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "fr"
+"dix-neuf-cent quatre-vingt-neuf"
 
-    iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "en"
-    "nineteen eighty-nine"
+iex> Cldr.Rbnf.Spellout.spellout_numbering_year 1989, "en"
+"nineteen eighty-nine"
 
-    iex> Cldr.Rbnf.Ordinal.digits_ordinal 1989, "en"
-    "1,989th"
+iex> Cldr.Rbnf.Ordinal.digits_ordinal 1989, "en"
+"1,989th"
+```
 
 ### RBNF Rules with Float numbers
 
