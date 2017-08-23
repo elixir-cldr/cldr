@@ -15,6 +15,7 @@ defmodule Cldr do
 
   alias Cldr.Config
   alias Cldr.Locale
+  alias Cldr.Install
 
   @default_territory :"001"
 
@@ -41,6 +42,11 @@ defmodule Cldr do
     IO.puts "Please be patient, generating functions for many locales " <>
     "can take some time"
   end
+
+  # Ensure locales are all installed.  We do this once during
+  # compilation of `Cldr` because this is the module we define
+  # as the root of the dependency tree.
+  Install.install_known_locales
 
   @doc """
   Returns the directory path name where the CLDR json data

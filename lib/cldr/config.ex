@@ -90,7 +90,6 @@ defmodule Cldr.Config do
   """
 
   alias Cldr.Locale
-  import Cldr.Install, only: [install_locale: 1]
 
   @type t :: binary
 
@@ -397,8 +396,10 @@ defmodule Cldr.Config do
   @table_name :cldr_locales
   def get_locale(locale) do
     {:ok, path} = case locale_path(locale) do
-      {:error, :not_found} -> install_locale(locale)
-      {:ok, path}          -> {:ok, path}
+      {:ok, path}          ->
+        {:ok, path}
+      {:error, :not_found} ->
+        raise RuntimeError, message: "Locale definition was not found for #{locale}"
       error                ->
         raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
     end

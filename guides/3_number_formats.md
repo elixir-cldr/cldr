@@ -99,13 +99,13 @@ The formats described therein are supported by `Cldr` with some minor omissions 
 
   | Pattern       | Currency        | Text        |
   | ------------- | :-------------: | ----------: |
-  | #,##0.##      | n/a	           | 1 234,57    |
-  | #,##0.###     | n/a	           | 1 234,567   |
-  | ###0.#####    | n/a	           | 1234,567    |
-  | ###0.0000#    | n/a	           | 1234,5670   |
-  | 00000.0000    | n/a	           | 01234,5670  |
+  | #,##0.##      | n/a	            | 1 234,57    |
+  | #,##0.###     | n/a	            | 1 234,567   |
+  | ###0.#####    | n/a	            | 1234,567    |
+  | ###0.0000#    | n/a	            | 1234,5670   |
+  | 00000.0000    | n/a	            | 01234,5670  |
   | 00            | n/a             | 12          |
-  | #,##0.00 ¤    | EUR	           | 1 234,57 €  |
+  | #,##0.00 ¤    | EUR	            | 1 234,57 €  |
 
  See `Cldr.Number` and `Cldr.Number.Formatter.Decimal`.
 
@@ -151,6 +151,6 @@ iex> Cldr.Rbnf.Ordinal.digits_ordinal 1989, "en"
 
 ### RBNF Rules with Float numbers
 
-RBNF is primarily oriented towards positive integral numbers.  Whilst the standard caters for negative numbers and fractional numbers the implementation of the rules is incomplete.  Use with care.
+RBNF is primarily oriented towards positive integer numbers.  Whilst the standard caters for negative numbers and fractional numbers the implementation of the rules is incomplete.  Use with care.
 
 
