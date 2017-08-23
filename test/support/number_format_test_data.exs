@@ -115,8 +115,4 @@ defmodule Cldr.Test.Number.Format do
       {2134, "2,134 Australian dollars", [format: :currency_long, currency: :AUD]}
     ]
   end
-
-  def sanitize(string) do
-    Cldr.Number.String.clean(string)
-  end
 end

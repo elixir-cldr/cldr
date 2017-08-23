@@ -6,11 +6,15 @@
 
 * `Cldr.version/0` was returning the version as a 3-tuple of strings.  The correct format should have been a 3-tuple of integers.  This is now corrected.
 
+## Enhancements
+
+
+
 ## Changelog for Cldr v0.5.0 August 19, 2017
 
 ### Breaking Changes
 
-* ex_cldr now required Elixir 1.5 or greater since it required support for `Calendar` conversion funcitons and for utf-8 atoms.
+* ex_cldr now requires Elixir 1.5 or greater since it required support for `Calendar` conversion funcitons and for utf-8 atoms.
 
 * Cldr is now broken into separate packages. This package [ex_cldr](https://hex.pm/packages/ex_cldr) is a dependency for all other Cldr packages.  It includes the core functionality required by all modules, including number formatting.
 

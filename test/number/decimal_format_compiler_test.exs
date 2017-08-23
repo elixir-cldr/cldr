@@ -4,7 +4,7 @@ defmodule DecimalFormatCompiler.Test do
   alias Cldr.Number
 
   Enum.each Format.decimal_format_list, fn (format) ->
-    test "Compile decimal format #{inspect Number.String.clean(format)}" do
+    test "Compile decimal format #{inspect format}" do
       assert {:ok, _result} = Format.Compiler.parse(unquote(format))
     end
   end
