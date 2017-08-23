@@ -149,11 +149,13 @@ defmodule Cldr.Config do
   @doc """
   Returns the version string of the CLDR data repository
   """
-  @version_file Path.join(@client_data_dir, "version.json")
+  @version  @client_data_dir
+  |> Path.join("version.json")
+  |> File.read!
+  |> Poison.decode!
+
   def version do
-    @version_file
-    |> File.read!
-    |> Poison.decode!
+    @version
   end
 
   @doc """

@@ -63,9 +63,13 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {"31", "0", "1"}
+      {31, 0, 1}
   """
-  @version Config.version() |> String.split(".") |> List.to_tuple
+  @version Config.version()
+  |> String.split(".")
+  |> Enum.map(&String.to_integer/1)
+  |> List.to_tuple
+
   def version do
     @version
   end
