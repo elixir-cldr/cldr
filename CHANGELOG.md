@@ -1,4 +1,4 @@
-## Changelog for Cldr v0.5.2 August __, 2017
+## Changelog for Cldr v0.5.2 August 24, 2017
 
 * Revert the commit that produced the message "[ex_cldr] Installing locale ..." since it's too noisy
 
