@@ -1,3 +1,11 @@
+## Changelog for Cldr v0.5.1 August 24, 2017
+
+## Bug Fixes
+
+* Refactors locale downloading to ensure that the downloading process is single-threaded.  The mechanism in v0.5.0 downloaded locales during compilation but because of multiple compilations happening in parallel this created a window whereby locales were being downloaded multiple times and a race condition could also create an exception at compile time.
+
+* `Cldr.version/0` was returning the version as a 3-tuple of strings.  The correct format should have been a 3-tuple of integers.  This is now corrected.
+
 ## Changelog for Cldr v0.5.0 August 19, 2017
 
 ### Breaking Changes
