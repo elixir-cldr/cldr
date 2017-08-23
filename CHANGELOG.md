@@ -1,8 +1,12 @@
+## Changelog for Cldr v0.5.2 August __, 2017
+
+* Revert the commit that produced the message "[ex_cldr] Installing locale ..." since it's too noisy
+
 ## Changelog for Cldr v0.5.1 August 23, 2017
 
 ## Bug Fixes
 
-* Refactors locale downloading to ensure that the downloading process is single-threaded.  The mechanism in v0.5.0 downloaded locales during compilation but because of multiple compilations happening in parallel this created a window whereby locales were being downloaded multiple times and a race condition could also create an exception at compile time.
+* Refactor locale downloading to ensure that the downloading process is single-threaded.  The mechanism in v0.5.0 downloaded locales during compilation but because of multiple compilations happening in parallel this created a window whereby locales were being downloaded multiple times and a race condition could also create an exception at compile time.
 
 * `Cldr.version/0` was returning the version as a 3-tuple of strings.  The correct format should have been a 3-tuple of integers.  This is now corrected.
 

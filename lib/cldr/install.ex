@@ -38,7 +38,7 @@ defmodule Cldr.Install do
   Download the requested locale from github into the
   client application's cldr data directory.
 
-  * `locale` is any locale returned by `Cldr.known_locales{}`
+  * `locale` is any locale returned by `Cldr.known_locales/0`
 
   * `options` is a keyword list.  Currently the only supported
   option is `:force` which defaults to `false`.  If `truthy` the
@@ -75,7 +75,6 @@ defmodule Cldr.Install do
 
   defp do_install_locale(locale, true) do
     require Logger
-    IO.puts "[ex_cldr] Installing locale #{inspect locale}"
 
     output_file_name = [client_locales_dir(), "/", locale_filename(locale)]
     |> :erlang.iolist_to_binary
@@ -155,7 +154,7 @@ defmodule Cldr.Install do
   @doc """
   Returns the full pathname of the locale's json file.
 
-  * `locale` is any locale returned by `Cldr.known_locales{}`
+  * `locale` is any locale returned by `Cldr.known_locales/0`
 
   No checking of locale validity is performed.
   """
