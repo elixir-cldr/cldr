@@ -75,6 +75,7 @@ defmodule Cldr.Install do
 
   defp do_install_locale(locale, true) do
     require Logger
+    IO.puts "[ex_cldr] Installing locale #{inspect locale}"
 
     output_file_name = [client_locales_dir(), "/", locale_filename(locale)]
     |> :erlang.iolist_to_binary
