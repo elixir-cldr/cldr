@@ -394,11 +394,12 @@ defmodule Cldr.Config do
 
   If a locale file is not found then it is installed.
   """
-  require Logger
-  @table_name :cldr_locales
+
+  {:ok, _pid} = Cldr.Locale.Cache.start(name: :cldr_locale_cache)
+
   def get_locale(locale) do
     {:ok, path} = case locale_path(locale) do
-      {:ok, path}          ->
+      {:ok, path} ->
         {:ok, path}
       {:error, :not_found} ->
         raise RuntimeError, message: "Locale definition was not found for #{locale}"
@@ -406,13 +407,11 @@ defmodule Cldr.Config do
         raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
     end
 
-    # We use the :elixir_compiler_pid to know if we're compiing
-    # code.  If we are compiling we try to cache the locale
-    # content
-    do_get_locale(locale, path, compiling?())
+    do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
-  defp do_get_locale(locale, path, :undefined) do
+  @doc false
+  def do_get_locale(locale, path, :undefined) do
     path
     |> File.read!
     |> Poison.decode!
@@ -424,55 +423,9 @@ defmodule Cldr.Config do
     |> Map.put(:name, locale)
   end
 
-  # TODO Wrap this all in a GenServer that owns the ets table
-  # which will allow us to serialise the calls to update the
-  # table.  But we should still do table access directly since
-  # that will copy less data around.
-
-  defp do_get_locale(locale, path, compiler_pid) do
-    # We are using :ets to cache locale entries at
-    # compile time since the locale data is used a
-    # lot and reading, decoding and formatting the
-    # data is quite expensive.
-    ensure_ets_table!(compiler_pid)
-
-    case :ets.lookup(@table_name, locale) do
-      [{^locale, locale_data}] ->
-        # Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"
-        locale_data
-
-      [] ->
-        locale_data = do_get_locale(locale, path, :undefined)
-
-        try do
-          :ets.insert(@table_name, {locale, locale_data})
-          # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
-        rescue ArgumentError ->
-          nil
-          # This may actually happen because of timing conditions: someone else may
-          # have inserted behind our back.  But since we've now already generated
-          # the locale again just use it.
-          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
-        end
-        locale_data
-    end
-  end
-
-  defp compiling? do
-    :erlang.get(:elixir_compiler_pid)
-  end
-
-  # We assign the compiler pid as the heir for our table so
-  # that the table doesn't die with each compilation thread
-  # This is undoubtedly hacky.
-  defp ensure_ets_table!(pid) do
-    case :ets.info(@table_name) do
-      :undefined ->
-        :ets.new(@table_name, [:named_table, {:read_concurrency, true}, {:heir, pid, []}])
-        # Logger.debug "#{inspect self()}:  Created :ets table"
-      _ ->
-        :ok
-    end
+  @doc false
+  def do_get_locale(locale, path, compiler_pid) do
+    Cldr.Locale.Cache.get_locale(locale, path, compiler_pid)
   end
 
   @doc """
