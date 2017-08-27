@@ -43,15 +43,10 @@ defmodule Cldr.Locale.Cache do
     :erlang.get(:elixir_compiler_pid)
   end
 
-  # TODO Wrap this all in a GenServer that owns the ets table
-  # which will allow us to serialise the calls to update the
-  # table.  But we should still do table access directly since
-  # that will copy less data around.
-
   defp do_get_locale(locale, path, _compiler_pid) do
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
-        Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"
+        # Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"
         locale_data
 
       [] ->
@@ -59,13 +54,13 @@ defmodule Cldr.Locale.Cache do
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
-          Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
+          # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
         rescue ArgumentError ->
           nil
           # This may actually happen because of timing conditions: someone else may
           # have inserted behind our back.  But since we've now already generated
           # the locale again just use it.
-          Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
+          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
         end
         locale_data
     end
@@ -78,7 +73,7 @@ defmodule Cldr.Locale.Cache do
     case :ets.info(@table_name) do
       :undefined ->
         :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
-        Logger.debug "#{inspect self()}:  Created :ets table"
+        # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end
