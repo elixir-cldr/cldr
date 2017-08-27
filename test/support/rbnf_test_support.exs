@@ -29,7 +29,7 @@ defmodule Cldr.Rbnf.TestSupport do
           json_data = json_string
           |> Poison.decode!
 
-          if (rbnf_data = Cldr.Rbnf.for_locale(locale)) != %{} do
+          if (rbnf_data = Cldr.Rbnf.for_locale!(locale)) != %{} do
             Enum.each Map.keys(json_data), fn rule_group ->
               if rbnf_data[String.to_existing_atom(rule_group)] do
                 module = "Elixir.Cldr.Rbnf.#{rule_group}"
@@ -43,7 +43,6 @@ defmodule Cldr.Rbnf.TestSupport do
 
                   name = "#{module}.#{function} for locale #{inspect locale}"
                   |> String.replace("−", "-")
-                  |> Cldr.Number.String.clean
 
                   fun.(name, tests, module, function, locale)
                 end

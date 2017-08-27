@@ -89,21 +89,30 @@ defmodule Cldr.Rbnf.Config do
 
   ## Example
 
-      iex> Cldr.Rbnf.Config.for_locale("en") |> Map.keys
+      iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale("en")
+      iex> Map.keys(rules)
       [:OrdinalRules, :SpelloutRules]
   """
-  @spec for_locale(Locale.t) :: %{} | {:error, :rbnf_file_not_found}
+  @spec for_locale(Locale.t) :: Map.t |  {:error, {Cldr.NoRbnf, String.t}}
   def for_locale(locale) do
-    if File.exists?(locale_path(locale)) do
-      locale
-      |> locale_path
-      |> File.read!
-      |> Poison.decode!
-      |> Map.get("rbnf")
-      |> Map.get("rbnf")
-      |> rules_from_rule_sets
+    with {:ok, locale} <- Cldr.valid_locale?(locale),
+         true <- File.exists?(locale_path(locale))
+    do
+      rules =
+        locale
+        |> locale_path
+        |> File.read!
+        |> Poison.decode!
+        |> Map.get("rbnf")
+        |> Map.get("rbnf")
+        |> rules_from_rule_sets
+
+      {:ok, rules}
     else
-      {:error, :rbnf_file_not_found}
+      {:error, {exception, reason}} ->
+        {:error, {exception, reason}}
+      false ->
+        {:error, {Cldr.NoRbnf, "The locale #{inspect locale} does not have an RBNF configuration file available"}}
     end
   end
 
@@ -218,13 +227,13 @@ defmodule Cldr.Rbnf.Config do
     end
 
     divisor = if exponent > 0 do
-      :math.pow(radix, exponent) |> trunc
+      trunc(:math.pow(radix, exponent))
     else
       1
     end
 
     if divisor > base_value do
-      :math.pow(radix, exponent - 1) |> trunc
+      trunc(:math.pow(radix, exponent - 1))
     else
       divisor
     end

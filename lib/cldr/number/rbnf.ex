@@ -18,6 +18,7 @@ defmodule Cldr.Rbnf do
   """
 
   require Cldr
+  alias Cldr.Locale
 
   @known_locales Enum.filter Cldr.Config.known_locales(), fn (locale) ->
     Cldr.Config.get_locale(locale).rbnf != %{}
@@ -28,26 +29,36 @@ defmodule Cldr.Rbnf do
   end
 
   @doc """
-  Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
+  Returns {:ok, rbnf_rules} for a `locale` or `{:error, {Cldr.NoRbnf, info}}`
 
-  * `locale` is any locale returned by `Rbnf.known_locales/0`.
+  * `locale` is any locale returned by `Cldr.Rbnf.known_locales/0`.
 
-  Note that `for_locale/1` does not raise if the locale does not exist
-  like the majority of `Cldr`.  This is by design since the set of locales
-  that have rbnf rules is substantially less than the set of locales
-  supported by `Cldr`.
   """
   @spec for_locale(Locale.t) :: %{} | nil
-  def for_locale(locale \\  Cldr.get_current_locale())
+  def for_locale(locale \\  Cldr.get_current_locale()) do
+    with {:ok, locale} <- Cldr.valid_locale?(locale) do
+      rbnf_data =
+        locale
+        |> Cldr.Config.get_locale
+        |> Map.get(:rbnf)
 
-  for locale <- Cldr.Config.known_locales() do
-    rbnf_data =
-      locale
-      |> Cldr.Config.get_locale
-      |> Map.get(:rbnf)
+      {:ok, rbnf_data}
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
 
-    def for_locale(unquote(locale)) do
-      unquote(Macro.escape(rbnf_data))
+  @doc """
+  Returns rbnf_rules for a `locale` or raises an exception if
+  there are no rules.
+
+  * `locale` is any locale returned by `Cldr.Rbnf.known_locales/0`.
+
+  """
+  def for_locale!(locale) do
+    case for_locale(locale) do
+      {:ok, rules} -> rules
+      {:error, {exception, reason}} -> raise exception, reason
     end
   end
 
@@ -61,7 +72,7 @@ defmodule Cldr.Rbnf do
   @spec for_all_locales :: %{}
   def for_all_locales do
     Enum.map(known_locales(), fn locale ->
-      Enum.map(for_locale(locale), fn {group, sets} ->
+      Enum.map(for_locale!(locale), fn {group, sets} ->
         locale = String.replace(locale, "_", "-")
         {group, %{locale => sets}}
       end)
@@ -70,22 +81,24 @@ defmodule Cldr.Rbnf do
     |> Cldr.Map.merge_map_list
   end
 
-  # Returns all the rules in rbnf without any tagging for rulegroup or set.
-  # This is helpful for testing only.
-  @doc false
-  def all_rules do
-    known_locales()
-    |> Enum.map(&for_locale/1)
-    |> Enum.flat_map(&Map.values/1) # Get sets from groups
-    |> Enum.flat_map(&Map.values/1) # Get rules from set
-    |> Enum.flat_map(&(&1.rules))   # Get the list of rules
-  end
+  if Mix.env == :test do
+    # Returns all the rules in rbnf without any tagging for rulegroup or set.
+    # This is helpful for testing only.
+    @doc false
+    def all_rules do
+      known_locales()
+      |> Enum.map(&for_locale!/1)
+      |> Enum.flat_map(&Map.values/1) # Get sets from groups
+      |> Enum.flat_map(&Map.values/1) # Get rules from set
+      |> Enum.flat_map(&(&1.rules))   # Get the list of rules
+    end
 
-  # Returns a list of unique rule definitions.  Used for testing.
-  @doc false
-  def all_rule_definitions do
-    all_rules()
-    |> Enum.map(&(&1.definition))
-    |> Enum.uniq
+    # Returns a list of unique rule definitions.  Used for testing.
+    @doc false
+    def all_rule_definitions do
+      all_rules()
+      |> Enum.map(&(&1.definition))
+      |> Enum.uniq
+    end
   end
 end

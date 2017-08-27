@@ -124,3 +124,14 @@ defmodule Cldr.InvalidDateTimeFormatType do
   end
 end
 
+defmodule Cldr.NoRbnf do
+  @moduledoc """
+  Exception raised when there is no RBNF for a locale.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
