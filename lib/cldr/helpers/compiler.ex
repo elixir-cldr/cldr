@@ -8,7 +8,7 @@ defmodule Cldr.Locale.Cache do
   @gen_server_name :cldr_locale_cache
   # Client
 
-  def start(args) do
+  def start(args \\ []) do
     GenServer.start(__MODULE__, args, name: @gen_server_name)
   end
 
@@ -50,7 +50,7 @@ defmodule Cldr.Locale.Cache do
         locale_data
 
       [] ->
-        locale_data = Cldr.Config.do_get_locale(locale, path, :undefined)
+        locale_data = Cldr.Config.do_get_locale(locale, path)
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
