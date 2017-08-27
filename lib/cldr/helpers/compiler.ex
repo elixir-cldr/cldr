@@ -23,7 +23,7 @@ defmodule Cldr.Locale.Cache do
     # as the state.  State therefore is only the
     # reference to the ets table we use for caching
     ensure_ets_table!()
-    {:ok, :ets_table}
+    {:ok, @table_name}
   end
 
   def handle_call({:get_locale, locale, path, compiler_pid}, _from, state) do
