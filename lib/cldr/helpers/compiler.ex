@@ -12,8 +12,12 @@ defmodule Cldr.Locale.Cache do
     GenServer.start(__MODULE__, args, name: @gen_server_name)
   end
 
-  def get_locale(locale, path, compiler_pid) do
-    GenServer.call(@gen_server_name, {:get_locale, locale, path, compiler_pid})
+  def get_locale(locale, path) do
+    if compiling?() and not gen_server_started?() do
+      {:ok, _pid} = Cldr.Locale.Cache.start
+    end
+
+    GenServer.call(@gen_server_name, {:get_locale, locale, path})
   end
 
   # Server (callbacks)
@@ -26,8 +30,8 @@ defmodule Cldr.Locale.Cache do
     {:ok, @table_name}
   end
 
-  def handle_call({:get_locale, locale, path, compiler_pid}, _from, state) do
-    {:reply, do_get_locale(locale, path, compiler_pid), state}
+  def handle_call({:get_locale, locale, path}, _from, state) do
+    {:reply, do_get_locale(locale, path), state}
   end
 
   def handle_call(request, from, state) do
@@ -40,10 +44,20 @@ defmodule Cldr.Locale.Cache do
   end
 
   def compiling? do
-    :erlang.get(:elixir_compiler_pid)
+    case Process.get(:elixir_compiler_pid) do
+      nil -> false
+      pid when is_pid(pid) -> true
+    end
   end
 
-  defp do_get_locale(locale, path, _compiler_pid) do
+  def gen_server_started? do
+    case Process.whereis(@gen_server_name)  do
+      nil -> false
+      pid when is_pid(pid) -> true
+    end
+  end
+
+  defp do_get_locale(locale, path) do
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
         # Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"

@@ -101,11 +101,6 @@ defmodule Cldr.Config do
     "rbnf", "units", "date_fields", "dates"
   ]
 
-  # Start the gen_server that provides a locale cache during
-  # compile time:  this supports other modules that use the
-  # locale data to generate function.
-  {:ok, _pid} = Cldr.Locale.Cache.start
-
   @doc """
   Return the root path of the cldr application
   """
@@ -411,8 +406,8 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def do_get_locale(locale, path, compiler_pid \\ :undefined)
-  def do_get_locale(locale, path, :undefined) do
+  def do_get_locale(locale, path, compiling? \\ false)
+  def do_get_locale(locale, path, false) do
     path
     |> File.read!
     |> Poison.decode!
@@ -425,8 +420,8 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def do_get_locale(locale, path, compiler_pid) when is_pid(compiler_pid) do
-    Cldr.Locale.Cache.get_locale(locale, path, compiler_pid)
+  def do_get_locale(locale, path, true) do
+    Cldr.Locale.Cache.get_locale(locale, path)
   end
 
   @doc """

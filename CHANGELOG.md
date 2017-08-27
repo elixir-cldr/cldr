@@ -16,6 +16,14 @@
   | 0.5.2        | 108s                         |  21%          |
   | 0.6.0        | 82s                          |  24%          |
 
+* Also as a benefit of `Cldr.Locale.Cache` we get a memory footprint reduction.  For a development environment with 11 locales configured (as measured by :observer):
+
+  | Cldr version | Memory for 11 configured locals | % Improvement |
+  | ------------ | ------------------------------: | ------------: |
+  | 0.4.2        | 137s                            |  -            |
+  | 0.5.2        | 108s                            |  21%          |
+  | 0.6.0        | 32Mb                            |  24%          |
+
 ## Changelog for Cldr v0.5.2 August 24, 2017
 
 ### Enhancements
