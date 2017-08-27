@@ -8,6 +8,8 @@
 
 * `Cldr.Rbnf.Config.get_locale/1` used to generate functions to hold RBNF data.  This data is nearly 1Mb per locale and since it is only used at compile time to generate ruleset functions it was an unnecessary memory overhead.  On a development environment with 11 locales, memory usage dropped from 46Mb to 37Mb with this change.  Current behaviour now reads the RBNF data from the source data files when requested.  Since this content is cached in ETS at compile time via `Cldr.Config.get_locale/1` in a change introduced in version 0.5.0 the additional compilation overhead seems acceptable.
 
+* The approach to caching locale data during compilation is now encapsulated in a GenServer module `Cldr.Locale.Cache`. This architecture improves the cache hit rate and reduces compilation time.
+
 ## Changelog for Cldr v0.5.2 August 24, 2017
 
 ### Enhancements
