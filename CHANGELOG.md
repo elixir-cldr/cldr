@@ -1,4 +1,16 @@
+## Changelog for Cldr v0.6.0 August 27, 2017
+
+### Breaking Changes
+
+* `Cldr.Rbnf.Config.get_locale/1` now returns `{ok, rbnf}` or `{:error, reason}`.  The original behaviour is now implemented in `Cldr.Rbnf.Config.get_locale!/1` which will return `rbnf` or raise an exception.  This function is typically used only at compile time to generate ruleset functions so is unlikely to affect user code.  However it is a breaking change hence the version adjustment.
+
+### Enhancements
+
+* `Cldr.Rbnf.Config.get_locale/1` used to generate functions to hold RBNF data.  This data is nearly 1Mb per locale and since it is only used at compile time to generate ruleset functions it was an unnecessary memory overhead.  On a development environment with 11 locales, memory usage dropped from 46Mb to 37Mb with this change.  Current behaviour now reads the RBNF data from the source data files when requested.  Since this content is cached in ETS at compile time via `Cldr.Config.get_locale/1` in a change introduced in version 0.5.0 the additional compilation overhead seems acceptable.
+
 ## Changelog for Cldr v0.5.2 August 24, 2017
+
+### Enhancements
 
 * Revert the commit that produced the message "[ex_cldr] Installing locale ..." since it's too noisy
 
@@ -20,13 +32,13 @@
 
 * `Cldr.List` and `Cldr.Unit` which were previously included in the the [ex_cldr](https://hex.pm/packages/ex_cldr) package are now in their own packages which must be added separately as dependencies.  These packages are [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) and [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 
-* `Cldr.DateTime.Relative` is not included in this package.  It will be reintroduced into `ex_cldr` version 0.5.1 along with full date, time and datetime localisation.
+* `Cldr.DateTime.Relative` is not included in this package.  It will be reintroduced into `ex_cldr` version 0.7.0 along with full date, time and datetime localisation.
 
 ### Enhancements
 
 * Adds `Cldr.valid_locale?/1` that returns an `{:ok, locale}` or `{:error, {exception, message}}` that is friendlier to use in a `with` function
 
-* Standardise `to_string/2` functions return either a `{:ok, result}` or {:error, reason} tuple.  The various "!" versions `to_string!/2` return a result string or raise an exception.
+* Standardise `to_string/2` functions return either a `{:ok, result}` or `{:error, reason}` tuple.  The various "!" versions such as `to_string!/2` return a result string or raise an exception.
 
 ## Changelog for Cldr v0.4.2 July 9, 2017
 

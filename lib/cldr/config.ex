@@ -409,7 +409,7 @@ defmodule Cldr.Config do
     # We use the :elixir_compiler_pid to know if we're compiing
     # code.  If we are compiling we try to cache the locale
     # content
-    do_get_locale(locale, path, :erlang.get(:elixir_compiler_pid))
+    do_get_locale(locale, path, compiling?())
   end
 
   defp do_get_locale(locale, path, :undefined) do
@@ -424,20 +424,17 @@ defmodule Cldr.Config do
     |> Map.put(:name, locale)
   end
 
-  defp do_get_locale(locale, path, pid) do
+  # TODO Wrap this all in a GenServer that owns the ets table
+  # which will allow us to serialise the calls to update the
+  # table.  But we should still do table access directly since
+  # that will copy less data around.
+
+  defp do_get_locale(locale, path, compiler_pid) do
     # We are using :ets to cache locale entries at
     # compile time since the locale data is used a
     # lot and reading, decoding and formatting the
     # data is quite expensive.
-    #
-    # This isn't perfect because you can see that
-    # there are multiple times we are creating
-    # the :ets table multiple times, some data
-    # doesn't seem to store (argument error) and
-    # so on.
-    #
-    # But ... compile performance is improved.
-    ensure_ets_table!(pid)
+    ensure_ets_table!(compiler_pid)
 
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
@@ -452,11 +449,17 @@ defmodule Cldr.Config do
           # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
         rescue ArgumentError ->
           nil
-          # This may actually happen because of timing conditions
-          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets"
+          # This may actually happen because of timing conditions: someone else may
+          # have inserted behind our back.  But since we've now already generated
+          # the locale again just use it.
+          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
         end
         locale_data
     end
+  end
+
+  defp compiling? do
+    :erlang.get(:elixir_compiler_pid)
   end
 
   # We assign the compiler pid as the heir for our table so
