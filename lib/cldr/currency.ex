@@ -96,9 +96,10 @@ defmodule Cldr.Currency do
   end
 
   @doc """
-  Returns the localised pluralization of a currency's name.
+  Returns the appropriate currency display name for the `currency`, based
+  on the plural rules in effect for the `locale`.
 
-  * `number` is an integer, float or Decimal
+  * `number` is an integer, float or `Decimal`
 
   * `currency` is any currency returned by `Cldr.Currency.known_currencies/0`
 
