@@ -96,6 +96,51 @@ defmodule Cldr.Currency do
   end
 
   @doc """
+  Returns the localised pluralization of a currency's name.
+
+  * `number` is an integer, float or Decimal
+
+  * `currency` is any currency returned by `Cldr.Currency.known_currencies/0`
+
+  * `options` is a keyword list of options
+    * `:locale` is any locale returned by `Cldr.known_locales/0`.  The
+    default is `Cldr.get_current_locale/0`
+
+  ## Examples
+
+      iex> Cldr.Currency.pluralize 1, :USD
+      "US dollar"
+
+      iex> Cldr.Currency.pluralize 3, :USD
+      "US dollars"
+
+      iex> Cldr.Currency.pluralize 12, :USD, locale: "zh"
+      "美元"
+
+      iex> Cldr.Currency.pluralize 12, :USD, locale: "fr"
+      "dollars des États-Unis"
+
+      iex> Cldr.Currency.pluralize 1, :USD, locale: "fr"
+      "dollar des États-Unis"
+
+  """
+  def pluralize(number, currency, options \\ []) do
+    default_options = [locale: Cldr.get_current_locale()]
+    options = Keyword.merge(default_options, options)
+    locale = options[:locale]
+
+    with {:ok, currency_code} <- validate_currency_code(currency),
+         {:ok, locale} <- Cldr.valid_locale?(locale)
+    do
+      currency_data = for_code(currency_code, locale)
+      counts = Map.get(currency_data, :count)
+      Cldr.Number.Cardinal.pluralize(number, locale, counts)
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  @doc """
   Returns a list of all known currency codes.
 
   ## Example
