@@ -94,10 +94,11 @@ defmodule Cldr.Number.Formatter.Decimal do
     if (number_string = do_to_string(abs(number), meta, options)) == "0" do
       number_string
     else
-      symbols.minus_sign <> do_to_string(abs(number), meta, options)
+      symbols.minus_sign <> number_string
     end
   end
 
+  # For integrs in the standard form
   defp do_to_string(number, @standard_format = meta, options) when is_integer(number) do
     number
     |> output_to_tuple(meta)
