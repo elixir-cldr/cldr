@@ -566,6 +566,43 @@ defmodule Cldr.Config do
     |> Enum.sort
   end
 
+  def number_systems do
+    cldr_data_dir()
+    |> Path.join("number_systems.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Cldr.Map.atomize_keys
+    |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
+    |> Enum.into(%{})
+  end
+
+  def rbnf_rule_function(rule_name) do
+    case String.split(rule_name, "/") do
+      [locale, ruleset, rule] ->
+        ruleset_module =
+          ruleset
+          |> String.trim_trailing("Rules")
+
+        function =
+          rule
+          |> String.replace("-","_")
+          |> String.to_atom
+
+        locale =
+          locale
+          |> String.replace("_","-")
+
+        module = Module.concat(Cldr.Rbnf, ruleset_module)
+        {module, function, locale}
+      [rule] ->
+        function =
+          rule
+          |> String.replace("-","_")
+          |> String.to_atom
+        {Cldr.Rbnf.NumberSystem, function, "root"}
+    end
+  end
+
   # ------ Helpers ------
 
   # Simple check that the locale content contains what we expect

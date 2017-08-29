@@ -62,13 +62,8 @@ defmodule Cldr.Number.System do
       iex> Cldr.Number.System.number_systems |> Enum.count
       77
   """
-  @spec number_systems :: %{}
-  @number_systems Path.join(Cldr.Config.cldr_data_dir(), "number_systems.json")
-  |> File.read!
-  |> Poison.decode!
-  |> Cldr.Map.atomize_keys
-  |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
-  |> Enum.into(%{})
+  @spec number_systems :: Map.t
+  @number_systems Cldr.Config.number_systems
 
   def number_systems do
     @number_systems
@@ -406,6 +401,127 @@ defmodule Cldr.Number.System do
     else
       {:error, number_system_digits_error(system_name)}
     end
+  end
+
+  @number_system_names Enum.sort(Map.keys(@number_systems))
+  @doc """
+  Returns the names of the known number systems.
+
+  This is the full list of number systems for which
+  a definition is provided in CLDR.
+
+  Note that number formatting is not available for
+  all the number systems in this list.  Number formatting
+  is defined for a specific list of number systems in
+  each locale. To determine which number systems are
+  supported for number formatting in a given locale see
+  `number_system_names_for/1`.
+
+  ## Example
+
+      iex> Cldr.Number.System.known_number_systems
+      [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
+       :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :grek, :greklow, :gujr,
+       :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr, :hmng,
+       :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham, :laoo, :latn,
+       :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans, :mlym,
+       :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :newa, :nkoo, :olck,
+       :orya, :osma, :roman, :romanlow, :saur, :shrd, :sind, :sinh, :sora, :sund,
+       :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :vaii, :wara]
+
+  """
+  @spec known_number_systems :: [atom, ...]
+  def known_number_systems do
+    @number_system_names
+  end
+
+  @doc """
+  Returns `{:ok, system}` if the number system
+  is known, or `{:error, reason}`
+
+  ## Examples
+
+      iex> Cldr.Number.System.valid_number_system? :hant
+      {:ok, :hant}
+
+      iex> Cldr.Number.System.valid_number_system? :nope
+      {:error,
+       {Cldr.UnknownNumberSystemError, "The number system :nope is not known"}}
+
+  """
+  def valid_number_system?(system) do
+    if system in known_number_systems() do
+      {:ok, system}
+    else
+      {:error, number_system_error(system)}
+    end
+  end
+
+  @doc """
+  Converts a number into the representation of
+  a non-latin number system.
+
+  This function converts numbers to a known
+  number system only, it does not provide number
+  formatting.
+
+  There are two types of number systems in CLDR:
+
+  * `:numeric` in which the number system defines
+  a direct mapping between the latin digits `0..9`
+  into a the number system equivalent.  In this case,
+  `to_system/2` invokes `Cldr.Number.Transliterate.transliterate_digits/3`
+  for the given number.
+
+  * `:algorithmic` in which the number system
+  does not have the same structure as the `:latn`
+  number system and therefore the conversion is
+  done algorithmically.  For CLDR the algorithm
+  is implemented through `Cldr.Rbnf` rulesets.
+  These rulesets are considered by CLDR to be
+  less rigorous than the `:numeric` number systems
+  and caution and testing for a specific use case
+  is recommended.
+
+  ## Examples
+
+      iex> Cldr.Number.System.to_system 123456, :hebr
+      "ק׳׳ת׳"
+
+      iex> Cldr.Number.System.to_system 123, :hans
+      "一百二十三"
+
+      iex> Cldr.Number.System.to_system 123, :hant
+      "一百二十三"
+
+      iex> Cldr.Number.System.to_system 123, :hansfin
+      "壹佰贰拾叁"
+
+  """
+  @spec to_system(number, atom) :: String.t
+  def to_system(number, number_system)
+
+  for {system, definition} <- @number_systems do
+    if definition.type == :numeric do
+      def to_system(number, unquote(system)) do
+        number
+        |> to_string
+        |> Cldr.Number.Transliterate.transliterate_digits(:latn, unquote(system))
+      end
+    else
+      {module, function, locale} = Cldr.Config.rbnf_rule_function(definition.rules)
+      def to_system(number, unquote(system)) do
+        with {:ok, _locale} <- Cldr.valid_locale?(unquote(locale)) do
+          unquote(module).unquote(function)(number, unquote(locale))
+        else
+          {:error, reason} -> {:error, reason}
+        end
+      end
+    end
+  end
+
+  def to_system(_number, system) do
+    {:error, number_system_error(system)}
   end
 
   @doc """

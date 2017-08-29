@@ -1,4 +1,4 @@
-## Changelog for Cldr v0.6.0 August 27, 2017
+## Changelog for Cldr v0.6.0 September 1st, 2017
 
 ### Breaking Changes
 
@@ -7,6 +7,12 @@
 ### Enhancements
 
 * Add `Cldr.Currency.pluralize/3` to pluralize a currency's name
+
+* Add `Cldr.Number.to_number_system/2` to convert a number to a specific number system.  This is number system conversion only - there is no number formatting applied.
+
+* Add `Cldr.Number.System.to_system/2` that provides the conversion that underpins `Cldr.Number.to_number_system/2`
+
+* Add `Cldr.Number.known_number_systems/0` that returns all the number systems defined in CLDR.
 
 * `Cldr.Rbnf.Config.get_locale/1` used to generate functions to hold RBNF data.  This data is nearly 1Mb per locale and since it is only used at compile time to generate ruleset functions it was an unnecessary memory overhead.  On a development environment with 11 locales, memory usage dropped from 46Mb to 37Mb with this change.  Current behaviour now reads the RBNF data from the source data files when requested.  Since this content is cached in ETS at compile time via `Cldr.Config.get_locale/1` in a change introduced in version 0.5.0 the additional compilation overhead seems acceptable.
 

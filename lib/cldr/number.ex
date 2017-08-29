@@ -111,7 +111,7 @@ defmodule Cldr.Number do
   ]
 
   @doc """
-  Returns a number formatted according to a pattern and options.
+  Returns a number formatted into a string according to a format pattern and options.
 
   * `number` is an integer, float or Decimal to be formatted
 
@@ -224,7 +224,7 @@ defmodule Cldr.Number do
 
   ## Errors
 
-  An error tuple `{:error, message}` will be returned if an error is detected.
+  An error tuple `{:error, reason}` will be returned if an error is detected.
   The two most likely causes of an error return are:
 
     * A format cannot be compiled. In this case the error tuple will look like:
@@ -247,7 +247,7 @@ defmodule Cldr.Number do
 
     * The format style requested is not defined for the `locale` and
       `number_system`. This happens typically when the number system is
-      :algorithmic rather than the more common :numeric. In this case the error
+      `:algorithmic` rather than the more common `:numeric`. In this case the error
       return looks like:
 
   ```
@@ -256,7 +256,7 @@ defmodule Cldr.Number do
       "The locale \\"he\\" with number system \\"hebr\\" does not define a format :standard."}}
   ```
   """
-  @spec to_string(number, [Keyword.t]) :: String.t | {:error, {atom, String.t}}
+  @spec to_string(number, Keyword.t) :: String.t | {:error, {atom, String.t}}
   def to_string(number, options \\ @default_options) do
     {format, options} = options
     |> normalize_options(@default_options)
@@ -276,7 +276,7 @@ defmodule Cldr.Number do
   Same as the execution of `to_string/2` but raises an exception if an error would be
   returned.
   """
-  @spec to_string!(number, [Keyword.t]) :: Exception.t
+  @spec to_string!(number, Keyword.t) :: Exception.t
   def to_string!(number, options \\ @default_options) do
     case to_string(number, options) do
       {:error, {exception, message}} ->
@@ -284,6 +284,11 @@ defmodule Cldr.Number do
       {:ok, string} ->
         string
     end
+  end
+
+  @spec to_number_system(number, String.t) :: String.t | {:error, {Exception.t, String.t}}
+  def to_number_system(number, system) do
+    Cldr.Number.System.to_system(number, system)
   end
 
   # For ordinal numbers
