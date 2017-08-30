@@ -47,7 +47,7 @@ defmodule Cldr.Number.Formatter.Currency do
     currency_string = Number.Cardinal.pluralize(number, locale, currency.count)
 
     options = options
-    |> Keyword.put(:format, :standard)
+    |> Map.put(:format, :standard)
     |> set_fractional_digits(options[:fractional_digits])
 
     number_string = Number.to_string!(number, options)
@@ -59,7 +59,7 @@ defmodule Cldr.Number.Formatter.Currency do
 
   defp set_fractional_digits(options, nil) do
     options
-    |> Keyword.put(:fractional_digits, 0)
+    |> Map.put(:fractional_digits, 0)
   end
 
   defp set_fractional_digits(options, _digits) do

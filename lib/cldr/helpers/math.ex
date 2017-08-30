@@ -283,7 +283,7 @@ defmodule Cldr.Math do
 
   @ln10 Decimal.new(2.30258509299)
   def log(%Decimal{} = number) do
-    {mantissa, exp} = mantissa_exponent(number)
+    {mantissa, exp} = coef_exponent(number)
     exp = Decimal.new(exp)
     ln1 = Decimal.mult(exp, @ln10)
 
@@ -489,26 +489,26 @@ defmodule Cldr.Math do
 
   ## Examples
 
-      Cldr.Math.mantissa_exponent(Decimal.new(1.23004))
+      Cldr.Math.coef_exponent(Decimal.new(1.23004))
       {#Decimal<1.23004>, 0}
 
-      Cldr.Math.mantissa_exponent(Decimal.new(465))
+      Cldr.Math.coef_exponent(Decimal.new(465))
       {#Decimal<4.65>, 2}
 
-      Cldr.Math.mantissa_exponent(Decimal.new(-46.543))
+      Cldr.Math.coef_exponent(Decimal.new(-46.543))
       {#Decimal<-4.6543>, 1}
   """
 
   # An integer should be returned as a float mantissa
-  @spec mantissa_exponent(number_or_decimal) :: Digits.t
-  def mantissa_exponent(number) when is_integer(number) do
-    {mantissa_digits, exponent} = mantissa_exponent_digits(number)
+  @spec coef_exponent(number_or_decimal) :: Digits.t
+  def coef_exponent(number) when is_integer(number) do
+    {mantissa_digits, exponent} = coef_exponent_digits(number)
     {Digits.to_float(mantissa_digits), exponent}
   end
 
   # All other numbers are returned as the same type as the parameter
-  def mantissa_exponent(number) do
-    {mantissa_digits, exponent} = mantissa_exponent_digits(number)
+  def coef_exponent(number) do
+    {mantissa_digits, exponent} = coef_exponent_digits(number)
     {Digits.to_number(mantissa_digits, number), exponent}
   end
 
@@ -522,17 +522,17 @@ defmodule Cldr.Math do
 
   ## Examples
 
-      Cldr.Math.mantissa_exponent_digits(Decimal.new(1.23004))
+      Cldr.Math.coef_exponent_digits(Decimal.new(1.23004))
       {{[1, 2, 3, 0], 1, 1}, 0}
 
-      Cldr.Math.mantissa_exponent_digits(Decimal.new(465))
+      Cldr.Math.coef_exponent_digits(Decimal.new(465))
       {{[4, 6, 5], 1, 1}, -1}
 
-      Cldr.Math.mantissa_exponent_digits(Decimal.new(-46.543))
+      Cldr.Math.coef_exponent_digits(Decimal.new(-46.543))
       {{[4, 6, 5, 4], 1, -1}, 1}
   """
-  @spec mantissa_exponent_digits(number_or_decimal) :: Digits.t
-  def mantissa_exponent_digits(number) do
+  @spec coef_exponent_digits(number_or_decimal) :: Digits.t
+  def coef_exponent_digits(number) do
     {digits, place, sign} = Digits.to_digits(number)
     {{digits, 1, sign}, place - 1}
   end

@@ -74,7 +74,7 @@ defmodule Cldr.Number.Formatter.Short do
     end
   end
 
-  @spec do_to_short_string(number, atom, Locale.name, atom, Keyword.t) :: List.t
+  @spec do_to_short_string(number, atom, Locale.name, atom, Map.t) :: List.t
   defp do_to_short_string(number, style, locale, number_system, options) do
     case Format.formats_for(locale, number_system) do
       {:ok, formats} ->
@@ -94,7 +94,7 @@ defmodule Cldr.Number.Formatter.Short do
   # For short formats the fractional digits should be 0 unless otherwise specified,
   # even for currencies
   defp digits(options, nil) do
-    Keyword.put(options, :fractional_digits, 0)
+    Map.put(options, :fractional_digits, 0)
   end
 
   defp digits(options, _digits) do

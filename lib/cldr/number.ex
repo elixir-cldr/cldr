@@ -256,7 +256,7 @@ defmodule Cldr.Number do
       "The locale \\"he\\" with number system \\"hebr\\" does not define a format :standard."}}
   ```
   """
-  @spec to_string(number, Keyword.t) :: String.t | {:error, {atom, String.t}}
+  @spec to_string(number, Keyword.t | Map.t) :: {:ok, String.t} | {:error, {atom, String.t}}
   def to_string(number, options \\ @default_options) do
     {format, options} = options
     |> normalize_options(@default_options)
@@ -275,8 +275,16 @@ defmodule Cldr.Number do
   @doc """
   Same as the execution of `to_string/2` but raises an exception if an error would be
   returned.
+
+  ## Examples
+
+      iex> Cldr.Number.to_string! 12345
+      "12,345"
+
+      iex> Cldr.Number.to_string! 12345, locale: "fr"
+      "12 345"
   """
-  @spec to_string!(number, Keyword.t) :: Exception.t
+  @spec to_string!(number, Keyword.t | String.t) :: String.t | Exception.t
   def to_string!(number, options \\ @default_options) do
     case to_string(number, options) do
       {:error, {exception, message}} ->
@@ -284,11 +292,6 @@ defmodule Cldr.Number do
       {:ok, string} ->
         string
     end
-  end
-
-  @spec to_number_system(number, String.t) :: String.t | {:error, {Exception.t, String.t}}
-  def to_number_system(number, system) do
-    Cldr.Number.System.to_system(number, system)
   end
 
   # For ordinal numbers
@@ -364,24 +367,61 @@ defmodule Cldr.Number do
       "#{inspect format}."}}
   end
 
+  @doc """
+  Converts a number from the latin digits `0..9` into
+  another number system.
+
+  * `number` is an integer, float.  Decimal is supported only for
+  `:numeric` number systems, not `:algorithmic`.  See `Cldr.Number.System.to_system/2`
+  for further information.
+
+  * `system` is any number system returned by `Cldr.Number.System.known_number_systems/0`
+
+  ## Examples
+
+      iex> Cldr.Number.to_number_system 123, :hant
+      "一百二十三"
+
+      iex> Cldr.Number.to_number_system 123, :hebr
+      "ק׳"
+
+  """
+  @spec to_number_system(number, atom) :: String.t | {:error, {Exception.t, String.t}}
+  def to_number_system(number, system) do
+    Cldr.Number.System.to_system(number, system)
+  end
+
   # Merge options and default options with supplied options always
   # the winner.  If :currency is specified then the default :format
   # will be format: currency
   defp normalize_options(options, defaults) do
-    options = defaults
-    |> Keyword.merge(options, fn _k, _v1, v2 -> v2 end)
-    |> adjust_for_currency(options[:currency], options[:format])
-    |> resolve_standard_format
-    |> adjust_short_forms
+    options =
+      defaults
+      |> merge(options, fn _k, _v1, v2 -> v2 end)
+      |> adjust_for_currency(options[:currency], options[:format])
+      |> resolve_standard_format
+      |> adjust_short_forms
 
     {options[:format], options}
+  end
+
+  defp merge(defaults, options, fun) when is_list(options) do
+    defaults
+    |> Keyword.merge(options, fun)
+    |> Cldr.Map.from_keyword
+  end
+
+  defp merge(defaults, options, fun) when is_map(options) do
+    defaults
+    |> Cldr.Map.from_keyword
+    |> Map.merge(options, fun)
   end
 
   defp resolve_standard_format(options) do
     if options[:format] in @short_format_styles do
       options
     else
-      Keyword.put(options, :format, lookup_standard_format(options[:format], options))
+      Map.put(options, :format, lookup_standard_format(options[:format], options))
     end
   end
 
@@ -394,7 +434,7 @@ defmodule Cldr.Number do
   end
 
   defp adjust_for_currency(options, currency, nil) when not is_nil(currency) do
-    Keyword.put(options, :format, :currency)
+    Map.put(options, :format, :currency)
   end
 
   defp adjust_for_currency(options, _currency, _format) do
@@ -415,7 +455,7 @@ defmodule Cldr.Number do
   # based upon whether there is a :currency set in options or not.
   defp check_options(options, format, check, finally) do
     if options[:format] == format && check do
-      Keyword.put(options, :format, finally)
+      Map.put(options, :format, finally)
     else
       options
     end
@@ -423,16 +463,16 @@ defmodule Cldr.Number do
 
   defp detect_negative_number({format, options}, number)
   when (is_float(number) or is_integer(number)) and number < 0 do
-    {format, Keyword.put(options, :pattern, :negative)}
+    {format, Map.put(options, :pattern, :negative)}
   end
 
   defp detect_negative_number({format, options}, %Decimal{sign: sign})
   when sign < 0 do
-    {format, Keyword.put(options, :pattern, :negative)}
+    {format, Map.put(options, :pattern, :negative)}
   end
 
   defp detect_negative_number({format, options}, _number) do
-    {format, Keyword.put(options, :pattern, :positive)}
+    {format, Map.put(options, :pattern, :positive)}
   end
 
   defp currency_format_has_code(format, true, nil) do

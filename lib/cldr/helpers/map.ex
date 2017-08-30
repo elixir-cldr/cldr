@@ -243,4 +243,8 @@ defmodule Cldr.Map do
   def remove_leading_underscores(v) do
     v
   end
+
+  def from_keyword(keyword) do
+    Enum.into(keyword, %{})
+  end
 end

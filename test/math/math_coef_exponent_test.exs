@@ -7,16 +7,16 @@ defmodule Math.Mantissa.Exponent.Test do
   @ten Decimal.new(10)
 
   Enum.each @test, fn value ->
-    test "Validate mantissa * 10**exponent == original number of #{inspect value}" do
+    test "Validate coef * 10**exponent == original number of #{inspect value}" do
       test_value = Decimal.new(unquote(Macro.escape(value)))
 
       # Calculate the mantissa and exponent
-      {mantissa, exponent} = Cldr.Math.mantissa_exponent(test_value)
+      {coef, exponent} = Cldr.Math.coef_exponent(test_value)
 
       # And then recalculate the decimal value
       calculated_value = @ten
       |> Cldr.Math.power(exponent)
-      |> Decimal.mult(mantissa)
+      |> Decimal.mult(coef)
 
       # And confirm we made the round trip
       assert Decimal.cmp(calculated_value, test_value) == :eq

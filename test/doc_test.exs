@@ -10,6 +10,7 @@ defmodule Doc.Test do
   doctest Cldr.Number.System
   doctest Cldr.Number.Transliterate
   doctest Cldr.Number.Format.Compiler
+  doctest Cldr.Number.Formatter.Decimal
   doctest Cldr.Number.Formatter.Short
   doctest Cldr.Number.Formatter.Currency
   doctest Cldr.Rbnf.Config
