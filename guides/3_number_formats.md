@@ -2,7 +2,7 @@
 
 CLDR defines many different ways to format a number for different uses and defines a set of formats categorised by common pupose to make it easier to express the same intent across many different locales that represent many different territories, cultures, number systems and scripts.
 
-See `Cldr.Number` and `Cldr.Number.to_string/2`
+See `Cldr.Number`, `Cldr.Number.to_string/2` and `Cldr.Number.to_number_system/2`.
 
 ## Public API
 
@@ -81,12 +81,12 @@ iex> Cldr.Number.to_string 1234.31, format: :currency, currency: :CHF, cash: tru
 *  `:accounting` which formats a positive number like `standard` but which usually wraps a negative number in `()`. The `:accounting` format also requires that the `:currency` option be specified.
 
 ```elixir
-ex> Cldr.Number.to_string 1234, format: :accounting, currency: :THB
+iex> Cldr.Number.to_string 1234, format: :accounting, currency: :THB
 {:ok, "THB1,234.00"}
 
 iex> Cldr.Number.to_string -1234, format: :accounting, currency: :THB
 {:ok, "(THB1,234.00)"}
-````
+```
 
 *  `:percent` which multiplies a number by 100 and includes a locale-specific percent symbol.  Usually `%`.
 
@@ -110,7 +110,7 @@ iex> Cldr.Number.to_string 0.56, format: :permille
 *  `:scientific` which formats a number as a mantissa and base-10 exponent.
 
 ```elixir
-iex(19)> Cldr.Number.to_string 124.56, format: :scientific
+iex> Cldr.Number.to_string 124.56, format: :scientific
 {:ok, "1.2456E2"}
 ```
 
@@ -270,7 +270,7 @@ iex(56)> Cldr.Number.to_number_system 123, :hebr
 ```elixir
 iex> Cldr.Number.to_number_system 123, :thai
 {:ok, "๑๒๓"}
-elixir
+```
 
 The known number systems in `Cldr` can be returned by the function `Cldr.Number.System.known_number_systems/0`:
 
