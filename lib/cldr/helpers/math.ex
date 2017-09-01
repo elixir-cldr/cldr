@@ -219,6 +219,10 @@ defmodule Cldr.Math do
   Many thanks to [Stackoverflow](http://stackoverflow.com/questions/202302/rounding-to-an-arbitrary-number-of-significant-digits)
   """
   @spec round_significant(number_or_decimal, integer) :: number_or_decimal
+  def round_significant(number, n) when is_number(number) and n <= 0 do
+    number
+  end
+
   def round_significant(number, n) when is_number(number) do
     sign = if number < 0, do: -1, else: 1
     number = abs(number)

@@ -205,14 +205,82 @@ defmodule Cldr.Number.Format.Compiler do
   After parsing, reduce the format to a set of metrics
   that can then be used to format a number.
   """
-  def decode(definition) do
+  def compile(definition) do
     case parse(definition) do
     {:ok, format} ->
-      {:ok, analyze(format)}
+      meta_data = analyze(format)
+      {:ok, meta_data, formatting_pipeline(meta_data)}
     {:error, {_line, _parser, [message, context]}} ->
       {:error, "Decimal format compiler: #{message}#{Enum.join(context)}"}
     {:error, message} ->
       {:error, message}
+    end
+  end
+
+  @doc """
+  Returns an Elixir AST of a formatting pipeline that
+  when executed produces the formatted output for a given
+  format string.
+
+  Not all formats require all parts of the full formatting
+  pipeline so by compiling only those parts of the pipeline
+  that are required we produce an optimal code path.
+  """
+  def formatting_pipeline(meta) do
+    first_stage(:absolute_value)
+    |> stage_if_not(:multiply_by_factor, match?(%{multiplier: 1}, meta))
+    |> stage_if_not(:round_to_significant_digits, match?(%{significant_digits: %{min: 0, max: 0}}, meta))
+    |> stage_if_not(:round_to_nearest, match?(%{rounding: 0}, meta))
+    |> stage(:set_exponent)
+    # |> stage_if_not(:round_fractional_digits, match?(%{fractional_digits: %{max: 0, min: 0}}, meta))
+    |> stage(:round_fractional_digits)
+    |> stage(:output_to_tuple)
+    |> stage(:adjust_leading_zeros)
+    |> stage(:adjust_trailing_zeros)
+    |> stage_if_not(:set_max_integer_digits, match?(%{integer_digits: %{max: 0}}, meta))
+    |> stage_if_not(:apply_grouping, match?(%{grouping: %{fraction: %{first: 0, rest: 0}, integer: %{first: 0, rest: 0}}}, meta))
+    |> stage(:reassemble_number_string)
+    |> stage(:transliterate)
+    |> stage(:assemble_format)
+  end
+
+  defp first_stage(fun) do
+    quote context: Cldr.Number.Formatter.Decimal, do: unquote(fun)(var!(number), var!(meta), var!(options))
+  end
+
+  defp stage(fun) do
+    quote context: Cldr.Number.Formatter.Decimal, do: unquote(fun)(var!(meta), var!(options))
+  end
+
+  defp stage(pipeline, fun) do
+    Macro.pipe(pipeline, stage(fun), 0)
+  end
+
+  defp stage_if_not(pipeline, fun, false) do
+    stage(pipeline, fun)
+  end
+
+  defp stage_if_not(pipeline, _fun, true) do
+    pipeline
+  end
+
+  @doc false
+  # Outputs the formatting pipeline for a given format
+  # Intended primarily to help develop optimization
+  # strategies.
+  def pipeline(format) do
+    case compile(format) do
+      {:ok, _meta, stages} ->
+        {_, pipe} = Macro.prewalk(stages, [], fn ({name, _, _} = t, acc) ->
+          if name not in [:var!, :meta, :options, :number] do
+            {t, [name | acc]}
+          else
+            {t, acc}
+          end
+        end)
+        pipe
+      error ->
+        error
     end
   end
 
@@ -226,9 +294,9 @@ defmodule Cldr.Number.Format.Compiler do
     do_analyse(format, format[:positive][:format])
   end
 
-  defp do_analyse(format, nil) do
-    %{format: format}
-  end
+  # defp do_analyse(format, nil) do
+  #   %{format: format}
+  # end
 
   defp do_analyse(format, positive_format) do
     format_parts = split_format(positive_format)
@@ -265,7 +333,7 @@ defmodule Cldr.Number.Format.Compiler do
   end
 
   docp """
-  Extact how many integer digits are to be displayed.
+  Extract how many integer digits are to be displayed.
   """
   @digits_match Regex.compile!("(?<digits>" <> @digits <> "+)")
   defp required_integer_digits(%{"compact_integer" => integer_format}) do
@@ -275,6 +343,7 @@ defmodule Cldr.Number.Format.Compiler do
       @min_integer_digits
     end
   end
+  defp required_integer_digits(_), do: @min_integer_digits
 
   docp """
   If the pattern starts with a non-digit then its no limit on integer
@@ -290,6 +359,7 @@ defmodule Cldr.Number.Format.Compiler do
       @max_integer_digits
     end
   end
+  defp max_integer_digits(_), do: @max_integer_digits
 
   docp """
   Extract how many fraction digits must be displayed.
@@ -302,6 +372,7 @@ defmodule Cldr.Number.Format.Compiler do
       @min_fraction_digits
     end
   end
+  defp required_fraction_digits(_), do: @min_fraction_digits
 
   docp """
   Extract how many additional fraction digits may be displayed.
@@ -315,6 +386,7 @@ defmodule Cldr.Number.Format.Compiler do
       0
     end
   end
+  defp optional_fraction_digits(_), do: 0
 
   docp """
   Extract the exponent from the format
@@ -323,12 +395,14 @@ defmodule Cldr.Number.Format.Compiler do
   defp exponent_digits(%{"exponent_digits" => exp}) do
     String.length(exp)
   end
+  defp exponent_digits(_), do: 0
 
   docp """
   Extract whether a + sign was given the format exponent
   """
   def exponent_sign(%{"exponent_sign" => ""}), do: false
   def exponent_sign(%{"exponent_sign" => _exponent_sign}), do: true
+  def exponent_sign(_), do: false
 
   docp """
   Extract the number of significant digits to round the mantissa
@@ -336,9 +410,9 @@ defmodule Cldr.Number.Format.Compiler do
   using the "@@###" form then we'll use that instead.
   """
   @scientific_match Regex.compile!("(?<scientific_rounding>0[0#]*)?")
-  def scientific_rounding(%{"exponent_digits" => ""}), do: 0
+  defp scientific_rounding(%{"exponent_digits" => ""}), do: 0
 
-  def scientific_rounding((%{"compact_integer"  => integer_format,
+  defp scientific_rounding((%{"compact_integer"  => integer_format,
                              "compact_fraction" => fraction_format})) do
     format = integer_format <> fraction_format
     if captures = Regex.named_captures(@scientific_match, format) do
@@ -347,6 +421,7 @@ defmodule Cldr.Number.Format.Compiler do
       0
     end
   end
+  defp scientific_rounding(_), do: 0
 
   docp """
   Extract the padding length of the format.
@@ -432,6 +507,10 @@ defmodule Cldr.Number.Format.Compiler do
   defp grouping(%{"integer" => integer_format, "fraction" => fraction_format}) do
     %{integer: integer_grouping(integer_format),
       fraction: fraction_grouping(fraction_format)}
+  end
+  defp grouping(_) do
+    %{integer: %{first: @max_integer_digits, rest: @max_integer_digits},
+      fraction: %{first: @max_integer_digits, rest: @max_integer_digits}}
   end
 
   docp """
@@ -548,6 +627,7 @@ defmodule Cldr.Number.Format.Compiler do
       %{min: 0, max: 0}
     end
   end
+  defp significant_digits(_), do: %{min: 0, max: 0}
 
   docp """
   Extract the rounding value from a format.
@@ -596,6 +676,7 @@ defmodule Cldr.Number.Format.Compiler do
       {rounding, ""} -> rounding
     end
   end
+  defp rounding(_), do: @default_rounding
 
   @doc """
   A regular expression that can be used to split either a number format

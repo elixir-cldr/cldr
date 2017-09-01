@@ -41,12 +41,14 @@ defmodule Cldr.Number.Formatter.Decimal do
   @spec to_string(Math.number, String.t, Map.t) :: {:ok, String.t} | {:error, {atom, String.t}}
   def to_string(number, format, options)
 
-  # Precompile the known formats
+  # Precompile the known formats and build the formatting pipeline
+  # specific to this format thereby optimizing the performance.
   for format <- Cldr.Number.Format.decimal_format_list() do
-    case Compiler.decode(format) do
-      {:ok, meta} ->
+    case Compiler.compile(format) do
+      {:ok, meta, formatting_pipeline} ->
         def to_string(number, unquote(format), options) when is_map(options) do
-          do_to_string(number, unquote(Macro.escape(meta)), options)
+          meta = update_meta(unquote(Macro.escape(meta)), number, options)
+          unquote(formatting_pipeline)
         end
       {:error, message} ->
         raise Cldr.FormatCompileError, "#{message} compiling #{inspect format}"
@@ -54,70 +56,30 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   # For formats not precompiled we need to compile first
-  # and then process.
+  # and then process. This will be slower than a compiled
+  # format since we have to (a) compile the format and (b)
+  # execute the full formatting pipeline.
   def to_string(number, format, options) when is_map(options) do
-    case Compiler.decode(format) do
-      {:ok, meta} ->
+    case Compiler.compile(format) do
+      {:ok, meta, _pipeline} ->
+        meta = update_meta(meta, number, options)
         do_to_string(number, meta, options)
       {:error, message} ->
         {:error, {Cldr.FormatCompileError, message}}
     end
   end
 
-  # Now we have the number to be formatted, the meta data that
-  # defines the formatting and the options to be applied
-  # (which is related to localisation of the final format)
-
-  # This first version is an optimization for integers using the
-  # standard format since its the most common.
-  @standard_format %{format:
-    [positive: [format: "#,##0.###"], negative: [minus: '-', format: :same_as_positive]]}
-
-  # For negative numbers in the standard format
-  defp do_to_string(number, @standard_format = meta, options)
-  when is_number(number) and number < 0 do
-    system   = options[:number_system]
-    locale   = options[:locale]
-    {:ok, symbols}  = number_symbols_for(locale, system)
-
-    if (number_string = do_to_string(abs(number), meta, options)) == "0" do
-      number_string
-    else
-      symbols.minus_sign <> number_string
-    end
-  end
-
-  # For integrs in the standard form
-  defp do_to_string(number, @standard_format = meta, options) when is_integer(number) do
-    number
-    |> output_to_tuple(meta, options)
-    |> apply_grouping(meta, options)
-    |> reassemble_number_string(meta, options)
-    |> transliterate(meta, options)
-  end
-
-  # Optimization for a float in the standard format
-  defp do_to_string(number, @standard_format = meta, options) when is_float(number) do
-    meta = meta
-    |> adjust_for_fractional_digits(options[:fractional_digits])
-
-    {number, 0}
-    |> round_fractional_digits(meta, options)
-    |> output_to_tuple(meta, options)
-    |> adjust_trailing_zeros(meta, options)
-    |> apply_grouping(meta, options)
-    |> reassemble_number_string(meta, options)
-    |> transliterate(meta, options)
-  end
-
-  defp do_to_string(number, %{integer_digits: _integer_digits} = meta, options) do
-    meta = meta
+  def update_meta(meta, number, options) do
+    meta
     |> adjust_fraction_for_currency(options[:currency], options[:cash])
     |> adjust_fraction_for_significant_digits(number)
     |> adjust_for_fractional_digits(options[:fractional_digits])
+    |> Map.put(:number, number)
+  end
 
+  defp do_to_string(number, %{integer_digits: _integer_digits} = meta, options) do
     number
-    |> absolute_value
+    |> absolute_value(meta, options)
     |> multiply_by_factor(meta, options)
     |> round_to_significant_digits(meta, options)
     |> round_to_nearest(meta, options)
@@ -126,33 +88,33 @@ defmodule Cldr.Number.Formatter.Decimal do
     |> output_to_tuple(meta, options)
     |> adjust_leading_zeros(meta, options)
     |> adjust_trailing_zeros(meta, options)
-    |> set_max_integer_digits(meta)
+    |> set_max_integer_digits(meta, options)
     |> apply_grouping(meta, options)
     |> reassemble_number_string(meta, options)
     |> transliterate(meta, options)
-    |> assemble_format(number, meta, options)
+    |> assemble_format(meta, options)
   end
 
   # For when the format itself actually has only literal components
   # and no number format.
   defp do_to_string(number, meta, options) do
-    assemble_format("", number, meta, options)
+    assemble_format(number, meta, options)
   end
 
   # We work with the absolute value because the formatting of the sign
   # is done by selecting the "negative format" rather than the "positive format"
-  def absolute_value(%Decimal{} = number) do
+  defp absolute_value(%Decimal{} = number, _meta, _options) do
     Decimal.abs(number)
   end
 
-  def absolute_value(number) do
+  defp absolute_value(number, _meta, _options) do
     abs(number)
   end
 
   # If the format includes a % (percent) or permille then we
   # adjust the number by a factor.  All other formats the factor
   # is 1 and hence we avoid the multiplication.
-  defp multiply_by_factor(number, 1 = _factor, _options) do
+  defp multiply_by_factor(number, %{multiplier: 1}, _options) do
     number
   end
 
@@ -221,26 +183,19 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   # For a scientific format we need to adjust to a
   # coefficient * 10^exponent format.
-  defp set_exponent(number, %{exponent_digits: exponent_digits}, _options)
-  when exponent_digits == 0 do
+  defp set_exponent(number, %{exponent_digits: 0}, _options) do
     {number, 0}
   end
 
   defp set_exponent(number, meta, _options) do
     {coef, exponent} = Math.coef_exponent(number)
-
-    coef = if meta.scientific_rounding > 0 do
-      Math.round_significant(coef, meta.scientific_rounding)
-    else
-      coef
-    end
-
+    coef = Math.round_significant(coef, meta.scientific_rounding)
     {coef, exponent}
   end
 
   # Round to get the right number of fractional digits.  This is
   # applied after setting the exponent since we may have either
-  # the original number or its mantissa form.
+  # the original number or its coef/exponentform.
   defp round_fractional_digits({number, exponent}, _meta, _options)
   when is_integer(number) do
     {number, exponent}
@@ -288,20 +243,12 @@ defmodule Cldr.Number.Formatter.Decimal do
     end
     {sign, integer, fraction, exponent_sign, exponent}
   end
-  #
-  # defp adjust_leading_zeros(number, _integer, %{integer_digits: _integer_digits}) do
-  #   number
-  # end
 
   defp adjust_trailing_zeros({sign, integer, fraction, exponent_sign, exponent},
       %{fractional_digits: fraction_digits}, _options) do
     fraction = do_trailing_zeros(fraction,fraction_digits[:min] - length(fraction))
     {sign, integer, fraction, exponent_sign, exponent}
   end
-  #
-  # defp adjust_trailing_zeros(number, _fraction, %{fractional_digits: _fraction_digits}) do
-  #   number
-  # end
 
   defp do_trailing_zeros(fraction, count) when count <= 0 do
     fraction
@@ -313,12 +260,12 @@ defmodule Cldr.Number.Formatter.Decimal do
 
   # Take the rightmost maximum digits only - this is a truncation from the
   # right.
-  defp set_max_integer_digits(number, %{integer_digits: %{max: max}}) when max == 0 do
+  defp set_max_integer_digits(number, %{integer_digits: %{max: 0}}, _options) do
     number
   end
 
   defp set_max_integer_digits({sign, integer, fraction, exponent_sign, exponent},
-      %{integer_digits: %{max: max}}) do
+      %{integer_digits: %{max: max}}, _options) do
     integer = do_max_integer_digits(integer, length(integer) - max)
     {sign, integer, fraction, exponent_sign, exponent}
   end
@@ -413,11 +360,7 @@ defmodule Cldr.Number.Formatter.Decimal do
   defp add_separator(group, every, separator) do
     {_, [_ | rest]} = Enum.reduce group, {1, []}, fn elem, {counter, list} ->
       list = [elem | list]
-      list = if rem(counter, every) == 0 do
-        [separator | list]
-      else
-        list
-      end
+      list = if rem(counter, every) == 0, do: [separator | list], else: list
       {counter + 1, list}
     end
 
@@ -467,11 +410,9 @@ defmodule Cldr.Number.Formatter.Decimal do
   # whether the number is positive or negative (as indicated
   # by options[:sign]) we assemble the parts and transliterate
   # the currency sign, percent and permille characters.
-  defp assemble_format(number_string, number, meta, options) do
-    format = meta.format[options[:pattern]]
-
+  defp assemble_format(number_string, meta, options) do
     number_string
-    |> do_assemble_format(number, meta, format, options)
+    |> do_assemble_format(meta.number, meta, meta.format[options[:pattern]], options)
     |> :erlang.iolist_to_binary
   end
 
@@ -594,22 +535,19 @@ defmodule Cldr.Number.Formatter.Decimal do
   end
 
   # No fractional digits for an integer
-  defp adjust_fraction_for_significant_digits(
-      %{significant_digits: %{max: _max, min: _min}} = meta, number)
+  defp adjust_fraction_for_significant_digits(%{significant_digits: _} = meta, number)
   when is_integer(number) do
     meta
   end
 
   # Decimal version of an integer => exponent > 0
-  defp adjust_fraction_for_significant_digits(
-      %{significant_digits: %{max: _max, min: _min}} = meta,
-  %Decimal{exp: exp}) when exp >= 0 do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: _} = meta,
+      %Decimal{exp: exp}) when exp >= 0 do
     meta
   end
 
   # For all float or Decimal fraction
-  defp adjust_fraction_for_significant_digits(
-      %{significant_digits: %{max: _max, min: _min}} = meta, _number) do
+  defp adjust_fraction_for_significant_digits(%{significant_digits: _} = meta, _number) do
     %{meta | fractional_digits: %{max: 10, min: 1}}
   end
 
