@@ -61,6 +61,9 @@ defmodule Cldr.Test.Number.Format do
       # Percentage
       {0.1234, "12.34%",         [format: "#0.0#%"]},
 
+      # Permille
+      {0.1234, "123.4‰",         [format: "#0.0#‰"]},
+
       # Negative number format
       {-1234, "(1234.00)",       [format: "#.00;(#.00)"]},
 

@@ -403,6 +403,27 @@ defmodule Cldr.Number.System do
     end
   end
 
+  @doc """
+  Returns `digits` for a number system, or raises an exception if the
+  number system is not know.
+
+  ## Examples
+
+      iex> Cldr.Number.System.number_system_digits! :latn
+      "0123456789"
+
+      Cldr.Number.System.number_system_digits! :nope
+      ** (Cldr.UnknownNumberSystemError) The number system :nope is not known or does not have digits
+  """
+  def number_system_digits!(system) do
+    case number_system_digits(system) do
+      {:ok, digits} ->
+        digits
+      {:error, {exception, message}} ->
+        raise exception, message
+    end
+  end
+
   @number_system_names Enum.sort(Map.keys(@number_systems))
   @doc """
   Returns the names of the known number systems.
@@ -486,16 +507,16 @@ defmodule Cldr.Number.System do
   ## Examples
 
       iex> Cldr.Number.System.to_system 123456, :hebr
-      "ק׳׳ת׳"
+      {:ok, "ק׳׳ת׳"}
 
       iex> Cldr.Number.System.to_system 123, :hans
-      "一百二十三"
+      {:ok, "一百二十三"}
 
       iex> Cldr.Number.System.to_system 123, :hant
-      "一百二十三"
+      {:ok, "一百二十三"}
 
       iex> Cldr.Number.System.to_system 123, :hansfin
-      "壹佰贰拾叁"
+      {:ok, "壹佰贰拾叁"}
 
   """
   @spec to_system(number, atom) :: String.t
@@ -504,15 +525,17 @@ defmodule Cldr.Number.System do
   for {system, definition} <- @number_systems do
     if definition.type == :numeric do
       def to_system(number, unquote(system)) do
-        number
-        |> to_string
-        |> Cldr.Number.Transliterate.transliterate_digits(:latn, unquote(system))
+        string =
+          number
+          |> to_string
+          |> Cldr.Number.Transliterate.transliterate_digits(:latn, unquote(system))
+        {:ok, string}
       end
     else
       {module, function, locale} = Cldr.Config.rbnf_rule_function(definition.rules)
       def to_system(number, unquote(system)) do
         with {:ok, _locale} <- Cldr.valid_locale?(unquote(locale)) do
-          unquote(module).unquote(function)(number, unquote(locale))
+          {:ok, unquote(module).unquote(function)(number, unquote(locale))}
         else
           {:error, reason} -> {:error, reason}
         end
@@ -525,23 +548,29 @@ defmodule Cldr.Number.System do
   end
 
   @doc """
-  Returns `digits` for a number system, or raises an exception if the
-  number system is not know.
+  Converts a number into the representation of
+  a non-latin number system. Returns a converted
+  string or raises on error.
+
+  See `Cldr.Number.System.to_string/2` for further
+  information.
 
   ## Examples
 
-      iex> Cldr.Number.System.number_system_digits! :latn
-      "0123456789"
+      iex> Cldr.Number.System.to_system! 123, :hans
+      "一百二十三"
 
-      Cldr.Number.System.number_system_digits! :nope
-      ** (Cldr.UnknownNumberSystemError) The number system :nope is not known or does not have digits
+      iex> Cldr.Number.System.to_system! 123, :hant
+      "一百二十三"
+
+      iex> Cldr.Number.System.to_system! 123, :hansfin
+      "壹佰贰拾叁"
+
   """
-  def number_system_digits!(system) do
-    case number_system_digits(system) do
-      {:ok, digits} ->
-        digits
-      {:error, {exception, message}} ->
-        raise exception, message
+  def to_system!(number, system) do
+    case to_system(number, system) do
+      {:ok, string} -> string
+      {:error, {exception, reason}} -> raise exception, reason
     end
   end
 

@@ -369,7 +369,8 @@ defmodule Cldr.Number do
 
   @doc """
   Converts a number from the latin digits `0..9` into
-  another number system.
+  another number system.  Returns `{:ok, sttring}` or
+  `{:error, reason}`.
 
   * `number` is an integer, float.  Decimal is supported only for
   `:numeric` number systems, not `:algorithmic`.  See `Cldr.Number.System.to_system/2`
@@ -380,15 +381,36 @@ defmodule Cldr.Number do
   ## Examples
 
       iex> Cldr.Number.to_number_system 123, :hant
-      "一百二十三"
+      {:ok, "一百二十三"}
 
       iex> Cldr.Number.to_number_system 123, :hebr
-      "ק׳"
+      {:ok, "ק׳"}
 
   """
   @spec to_number_system(number, atom) :: String.t | {:error, {Exception.t, String.t}}
   def to_number_system(number, system) do
     Cldr.Number.System.to_system(number, system)
+  end
+
+  @doc """
+  Converts a number from the latin digits `0..9` into
+  another number system. Returns the converted number
+  or raises an exception on error.
+
+  * `number` is an integer, float.  Decimal is supported only for
+  `:numeric` number systems, not `:algorithmic`.  See `Cldr.Number.System.to_system/2`
+  for further information.
+
+  * `system` is any number system returned by `Cldr.Number.System.known_number_systems/0`
+
+  ## Example
+
+      iex> Cldr.Number.to_number_system! 123, :hant
+      "一百二十三"
+
+  """
+  def to_number_system!(number, system) do
+    Cldr.Number.System.to_system!(number, system)
   end
 
   # Merge options and default options with supplied options always

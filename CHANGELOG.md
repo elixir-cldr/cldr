@@ -26,6 +26,10 @@
   | 0.5.2        | 108s                         |  21%          |
   | 0.6.0        | 82s                          |  24%          |
 
+### Bug Fixes
+
+* Fixed `:permille` formatting (formats like `"#‰"`)
+
 ## Changelog for Cldr v0.5.2 August 24, 2017
 
 ### Enhancements

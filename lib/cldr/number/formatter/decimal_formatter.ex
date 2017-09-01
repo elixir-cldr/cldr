@@ -430,7 +430,7 @@ defmodule Cldr.Number.Formatter.Decimal do
         {:minus, _}          -> if number_string == "0", do: "", else: symbols.minus_sign
         {:currency, type}    -> currency_symbol(currency, number, type, locale)
         {:percent, _}        -> symbols.percent_sign
-        {:permille, _}       -> symbols.permille
+        {:permille, _}       -> symbols.per_mille
         {:literal, literal}  -> literal
         {:quote, _char}      -> "'"
         {:quoted_char, char} -> char
