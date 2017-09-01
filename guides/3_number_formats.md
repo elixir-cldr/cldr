@@ -82,7 +82,7 @@ See `Cldr.Number.Formatter.Decimal`
 
 * `decimal_short` which presents number is a narrow space.  For example, `1,000` would be formatted as `1k`.
 
-* `decimal_long` which presents numbers in a sentence form adjusted for plurality and locale.  For example, `1,0000` would be formatted as `1 thousand`.  This is not the same as spelling out the number which is part of the Unicode CLDR Rules-Based Number Formatting.  This capability is not yet available in `Cldr`
+* `decimal_long` which presents numbers in a sentence form adjusted for plurality and locale.  For example, `1,0000` would be formatted as `1 thousand`.  This is not the same as spelling out the number which is part of the Unicode CLDR Rules-Based Number Formatting.  See `Cldr.Rbnf` for that functionality.
 
 *  `currency_short` which formats a number in a manner similar to `decimal_short` but includes the symbol currency.
 
@@ -108,6 +108,42 @@ The formats described therein are supported by `Cldr` with some minor omissions 
   | #,##0.00 ¤    | EUR	            | 1 234,57 €  |
 
  See `Cldr.Number` and `Cldr.Number.Formatter.Decimal`.
+
+## Number Pattern Character Definitions
+
+  | Symbol | Location   | Localized Replacement | Meaning                                          |
+  | ------ | ---------- | --------------------- |------------------------------------------------- |
+  | 0      | Number     | digit                 | Digit                                            |
+  | 1 .. 9 | Number     | digit                 | '1' through '9' indicate rounding                |
+  | @      | Number     | digit                 | Significant digit                                |
+  | #      | Number     | digit, *nothing*      | Digit, omit leading/trailing zeros               |
+  | .      | Number     | decimal symbol        | Decimal or monetary decimal separator            |
+  | -      | Number     | minus sign            | Minus sign<sup>[1]</sup>                           |
+  | ,      | Number     | grouping separator    | Decimal/monetary grouping separator<sup>[2]</sup>  |
+  | E      | Number     | exponent              | Separates mantissa and exponent for scientific formatting |
+  | +      | Exponent   | plus sign             | Prefix positive exponent with plus sign          |
+  | %      | Pre/Suffix | percent sign          | Multiply by 100 and show as a percentage         |
+  | ‰      | Pre/Suffix | per mille             | Multiply by 1000 and show as per mille (aka “basis points”) |
+  | ;      | Subpattern | syntax only           | Separates positive and negative subpatterns      |
+  | ¤      | Pre/Suffix | currency symbol       | Currency symbol<sup>[3]</sup>                    |
+  | *      | Pre/Suffix | padding character     | Pad escape, precedes padding character           |
+  | '      | Pre/Suffix | syntax only           | To quote special chars.  eg '#'                  |
+
+### Notes
+
+  <sup>[1]</sup> The pattern '-'0.0 is not the same as the pattern -0.0. In the former case, the minus sign is a literal. In the latter case, it is a special symbol, which is replaced by the localised minus symbol, and can also be replaced by the plus symbol for a format like +12%.
+
+  <sup>[2]</sup> May occur in both the integer part and the fractional part. The position determines the grouping.
+
+  <sup>[3]</sup> Any sequence is replaced by the localized currency symbol for the currency being formatted, as in the table below. If present in a pattern, the monetary decimal separator and grouping separators (if available) are used instead of the numeric ones. If data is unavailable for a given sequence in a given locale, the display may fall back to `¤` or `¤¤`.
+
+  | No.  | Replacement Example                                                   |
+  | ---- | --------------------------------------------------------------------- |
+  | ¤    | Standard currency symbol as in `C$12.00`                              |
+  | ¤¤   | ISO currency symbol as in `CAD 12.00`                                 |
+  | ¤¤¤  | Appropriate currency display name based upon locale and plural rules  |
+  | ¤¤¤¤ | Narrow currency symbol as in `$12.00`                                 |
+
 
 ## Rule Based Number Formats
 
