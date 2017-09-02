@@ -12,18 +12,27 @@ defmodule Cldr.Number.Ordinal do
     :: :one | :two | :few | :many | :other
 
   # Function body is the AST of the function which needs to be injected
-  # into the function definition.  Using Code.eval_quoted/3 is hacky but
-  # I haven't found another way to inject the AST into the function definition.
-  Enum.each @configured_locales, fn (locale) ->
+  # into the function definition.
+  for locale <- @configured_locales do
     function_body =
       @rules
       |> Map.get(locale)
       |> rules_to_condition_statement(__MODULE__)
 
+    # This is the appropriate way to generate the function we're
+    # generating.  However this will generate a lot of warnings
+    # about unused parameters since not all generated functions
+    # use all parameters.
+
+    # defp do_plural_rule(unquote(locale), n, i, v, w, f, t) do
+    #   unquote(Macro.escape(function_body))
+    # end
+
+    # So we use this version which is a bit hacky.  But we're only calling
+    # Code.eval_quoted during compile time so we'll live with it.
     function = quote do
       defp do_plural_rule(unquote(locale), n, i, v, w, f, t), do: unquote(function_body)
     end
-
     Code.eval_quoted(function, [], __ENV__)
   end
 end

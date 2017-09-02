@@ -6,7 +6,7 @@ See `Cldr.Number`, `Cldr.Number.to_string/2` and `Cldr.Number.to_number_system/2
 
 ## Public API
 
-The primary api for number formatting is `Cldr.Number.to_string/2`.  It provides the ability to format numbers in a standard way for configured locales.  It also provides the means for format numbers as a currency, as a short form (like 1k instead of 1,000).  Additionally it provides formats to spell a number in works, format it as roman numerals and output an ordinal number.  Some examples illustrate:
+The primary api for number formatting is `Cldr.Number.to_string/2`.  It provides the ability to format numbers in a standard way for configured locales.  It also provides the means for format numbers as a currency, as a short form (like 1k instead of 1,000).  Additionally it provides formats to spell a number in words, format it as roman numerals and output an ordinal number.  Some examples illustrate:
 
 ```elixir
 iex> Cldr.Number.to_string 12345
@@ -18,7 +18,7 @@ iex> Cldr.Number.to_string 12345, locale: "fr"
 iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
 {:ok, "12 345,00 $US"}
 
-iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+iex> Cldr.Number.to_string 12345, format: "#E0"
 {:ok, "1.2345E4"}
 
 iex> Cldr.Number.to_string 12345, format: :accounting, currency: "THB"
@@ -250,16 +250,16 @@ iex> Cldr.Number.to_string 123, format: :ordinal, locale: "zh"
 iex> Cldr.Number.to_string 123, format: :roman
 {:ok, "CXXIII"}
 
-iex(49)> Cldr.Number.to_string 123, format: :roman_lower
+iex> Cldr.Number.to_string 123, format: :roman_lower
 {:ok, "cxxiii"}
 
-ex(4)> Cldr.Number.to_string 12345, format: :roman_lower
+iex> Cldr.Number.to_string 12345, format: :roman_lower
 {:ok, "12,345"}
 ```
 
-### Representing numbers in non-latin number systems
+### Converting numbers to non-latin number systems
 
-Some number systems, such as Hebrew and Chinese, do not use the digits 0 through 9 in the their native number system.  RBNF defines rules for these and other number systems that can provide number system conversion.  `Cldr.Number.to_string/2` does not support number systems without digits defined therefore another mechanism is requires to output numbers in these algorithmic number systems.  To support number system conversion, the function `Cldr.Number.to_number_system/2` is provided.  Note that no formatting is supported, this is a number system conversion only.
+Some number systems, such as Hebrew and Chinese, do not use the digits 0 through 9 in the their native number system.  RBNF defines rules for these and other number systems that can provide number system conversion.  `Cldr.Number.to_string/2` does not support number systems without digits defined therefore another mechanism is required to output numbers in these algorithmic number systems.  To support number system conversion, the function `Cldr.Number.to_number_system/2` is provided.  Note that no formatting is supported, this is a number system conversion only.
 
 For example, to output a number in the `:hans` numbering system (Chinese) and the Hebrew number system:
 
@@ -267,7 +267,7 @@ For example, to output a number in the `:hans` numbering system (Chinese) and th
 iex> Cldr.Number.to_number_system 123, :hans
 {:ok, "一百二十三"}
 
-iex(56)> Cldr.Number.to_number_system 123, :hebr
+iex> Cldr.Number.to_number_system 123, :hebr
 {:ok, "ק׳"}
 ```
 

@@ -74,7 +74,7 @@ The `Cldr.Number` module provides number formatting.  The public API for number 
     iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
     "12 345,00 $US"
 
-    iex(4)> Cldr.Number.to_string 12345, format: "#E0"
+    iex> Cldr.Number.to_string 12345, format: "#E0"
     "1.2345E4"
 
     iex(> Cldr.Number.to_string 1234, format: :roman

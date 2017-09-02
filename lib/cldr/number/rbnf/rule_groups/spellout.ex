@@ -11,7 +11,7 @@ defmodule Cldr.Rbnf.Spellout do
   The functions on this module are defined at compile time based upon the RBNF rules
   defined in the Unicode CLDR data repository.  Available rules are identified by:
 
-      iex(5)> Cldr.Rbnf.Spellout.rule_sets "en"
+      iex> Cldr.Rbnf.Spellout.rule_sets "en"
       [:spellout_ordinal_verbose, :spellout_ordinal, :spellout_numbering_year,
         :spellout_numbering_verbose, :spellout_numbering, :spellout_cardinal_verbose,
         :spellout_cardinal]
