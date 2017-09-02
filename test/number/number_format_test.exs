@@ -36,6 +36,11 @@ defmodule Number.Format.Test do
     end
   end
 
+  test "that an rbnf format request fails if the locale doesn't define the ruleset" do
+    assert Cldr.Number.to_string(123, format: :spellout_ordinal_verbose, locale: "zh") ==
+      {:error, {Cldr.NoRbnf, "Locale \"zh\" does not define an rbnf ruleset :spellout_ordinal_verbose"}}
+  end
+
   test "that we get default formats_for" do
     assert Format.formats_for!.__struct__ == Cldr.Number.Format
   end

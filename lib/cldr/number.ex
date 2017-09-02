@@ -295,38 +295,66 @@ defmodule Cldr.Number do
   end
 
   # For ordinal numbers
-  defp to_string(number, :ordinal, options) do
-    Cldr.Rbnf.Ordinal.digits_ordinal(number, options[:locale])
+  defp to_string(number, :ordinal = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Ordinal.digits_ordinal(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout numbers
-  defp to_string(number, :spellout, options) do
-    Cldr.Rbnf.Spellout.spellout_cardinal(number, options[:locale])
+  defp to_string(number, :spellout = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_cardinal(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout numbers
-  defp to_string(number, :spellout_numbering, options) do
-    Cldr.Rbnf.Spellout.spellout_numbering(number, options[:locale])
+  defp to_string(number, :spellout_numbering = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_numbering(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout numbers
-  defp to_string(number, :spellout_verbose, options) do
-    Cldr.Rbnf.Spellout.spellout_cardinal_verbose(number, options[:locale])
+  defp to_string(number, :spellout_verbose = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_cardinal_verbose(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout years
-  defp to_string(number, :spellout_year, options) do
-    Cldr.Rbnf.Spellout.spellout_numbering_year(number, options[:locale])
+  defp to_string(number, :spellout_year = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_numbering_year(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout ordinal
-  defp to_string(number, :spellout_ordinal, options) do
-    Cldr.Rbnf.Spellout.spellout_ordinal(number, options[:locale])
+  defp to_string(number, :spellout_ordinal = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_ordinal(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For spellout ordinal verbose
-  defp to_string(number, :spellout_ordinal_verbose, options) do
-    Cldr.Rbnf.Spellout.spellout_ordinal_verbose(number, options[:locale])
+  defp to_string(number, :spellout_ordinal_verbose = format, options) do
+    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+      Cldr.Rbnf.Spellout.spellout_ordinal_verbose(number, options[:locale])
+    else
+      {:error, rbnf_error(options[:locale], format)}
+    end
   end
 
   # For Roman numerals
@@ -343,7 +371,7 @@ defmodule Cldr.Number do
     Formatter.Currency.to_string(number, format, options)
   end
 
-  # For all opther short formats
+  # For all other short formats
   defp to_string(number, format, options)
   when is_atom(format) and format in @short_format_styles do
     Formatter.Short.to_string(number, format, options)
@@ -523,5 +551,9 @@ defmodule Cldr.Number do
 
   defp currency_format?(_format) do
     false
+  end
+
+  defp rbnf_error(locale, format) do
+    {Cldr.NoRbnf, "Locale #{inspect locale} does not define an rbnf ruleset #{inspect format}"}
   end
 end

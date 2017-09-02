@@ -118,7 +118,7 @@ See `Cldr.Number.Formatter.Decimal`.
 
 ## Short and Long Formats
 
-`Cldr` also supports formats that minimise publishing space or which attempt to make large number more human-readable.
+`Cldr` also supports formats that minimise publishing space or which attempt to make large numbers more human-readable.
 
 * `:short` which presents a number or currency in a narrow space.
 
@@ -135,6 +135,9 @@ iex> Cldr.Number.to_string 12456.56, format: :short, currency: :USD
 ```elixir
 iex> Cldr.Number.to_string 12456.56, format: :long
 {:ok, "12 thousand"}
+
+iex> Cldr.Number.to_string 1, format: :long, currency: :USD
+{:ok, "1 US dollar"}
 
 iex> Cldr.Number.to_string 12456.56, format: :long, currency: :USD
 {:ok, "12,457 US dollars"}
@@ -166,7 +169,7 @@ The formats described therein are supported by `Cldr` with some minor omissions 
 The folllowing table describes the symbols used in a number format string and is extracted from [TR35](http://unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns)
 
   | Symbol | Location   | Localized Replacement | Meaning                                          |
-  | ------ | ---------- | --------------------- |------------------------------------------------- |
+  | :----: | ---------- | --------------------- |------------------------------------------------- |
   | 0      | Number     | digit                 | Digit                                            |
   | 1 .. 9 | Number     | digit                 | '1' through '9' indicate rounding                |
   | @      | Number     | digit                 | Significant digit                                |
@@ -185,7 +188,7 @@ The folllowing table describes the symbols used in a number format string and is
 
 ### Notes
 
-  <sup>[1]</sup> The pattern '-'0.0 is not the same as the pattern -0.0. In the former case, the minus sign is a literal. In the latter case, it is a special symbol, which is replaced by the localised minus symbol, and can also be replaced by the plus symbol for a format like +12%.
+  <sup>[1]</sup> The pattern `'-'0.0` is not the same as the pattern `-0.0`. In the former case, the minus sign is a literal. In the latter case, it is a special symbol, which is replaced by the localised minus symbol, and can also be replaced by the plus symbol for a format like +12%.
 
   <sup>[2]</sup> May occur in both the integer part and the fractional part. The position determines the grouping.
 
@@ -249,6 +252,9 @@ iex> Cldr.Number.to_string 123, format: :roman
 
 iex(49)> Cldr.Number.to_string 123, format: :roman_lower
 {:ok, "cxxiii"}
+
+ex(4)> Cldr.Number.to_string 12345, format: :roman_lower
+{:ok, "12,345"}
 ```
 
 ### Representing numbers in non-latin number systems
