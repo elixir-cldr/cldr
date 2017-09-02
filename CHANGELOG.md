@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 
-* `Cldr.Number.to_string/2` now ensures that an RBNF ruleset exists for a given locale and returns `{:error, reason}` if not
+* `Cldr.Number.to_string/2` now ensures that an RBNF ruleset exists for a given locale and returns `{:error, reason}` if not.
 
 ## Changelog for Cldr v0.6.0 September 1st, 2017
 

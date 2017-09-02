@@ -295,20 +295,22 @@ defmodule Cldr.Number do
   end
 
   # For ordinal numbers
-  defp to_string(number, :ordinal = format, options) do
-    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+  @format :digits_ordinal
+  defp to_string(number, :ordinal, options) do
+    if @format in Cldr.Rbnf.Ordinal.rule_sets(options[:locale]) do
       Cldr.Rbnf.Ordinal.digits_ordinal(number, options[:locale])
     else
-      {:error, rbnf_error(options[:locale], format)}
+      {:error, rbnf_error(options[:locale], @format)}
     end
   end
 
   # For spellout numbers
-  defp to_string(number, :spellout = format, options) do
-    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+  @format :spellout_cardinal
+  defp to_string(number, :spellout, options) do
+    if @format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
       Cldr.Rbnf.Spellout.spellout_cardinal(number, options[:locale])
     else
-      {:error, rbnf_error(options[:locale], format)}
+      {:error, rbnf_error(options[:locale], @format)}
     end
   end
 
@@ -322,20 +324,22 @@ defmodule Cldr.Number do
   end
 
   # For spellout numbers
-  defp to_string(number, :spellout_verbose = format, options) do
-    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+  @format :spellout_cardinal_verbose
+  defp to_string(number, :spellout_verbose, options) do
+    if @format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
       Cldr.Rbnf.Spellout.spellout_cardinal_verbose(number, options[:locale])
     else
-      {:error, rbnf_error(options[:locale], format)}
+      {:error, rbnf_error(options[:locale], @format)}
     end
   end
 
   # For spellout years
-  defp to_string(number, :spellout_year = format, options) do
-    if format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
+  @format :spellout_numbering_year
+  defp to_string(number, :spellout_year, options) do
+    if @format in Cldr.Rbnf.Spellout.rule_sets(options[:locale]) do
       Cldr.Rbnf.Spellout.spellout_numbering_year(number, options[:locale])
     else
-      {:error, rbnf_error(options[:locale], format)}
+      {:error, rbnf_error(options[:locale], @format)}
     end
   end
 
