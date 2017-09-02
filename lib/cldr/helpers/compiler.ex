@@ -26,7 +26,7 @@ defmodule Cldr.Locale.Cache do
     # Create the ets table and return its reference
     # as the state.  State therefore is only the
     # reference to the ets table we use for caching
-    ensure_ets_table!()
+    create_ets_table!()
     {:ok, @table_name}
   end
 
@@ -83,7 +83,7 @@ defmodule Cldr.Locale.Cache do
   # We assign the compiler pid as the heir for our table so
   # that the table doesn't die with each compilation thread
   # This is undoubtedly hacky.
-  defp ensure_ets_table! do
+  defp create_ets_table! do
     case :ets.info(@table_name) do
       :undefined ->
         :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
