@@ -1,6 +1,6 @@
 # Date, Time and DateTime Localization and Formatting
 
-## Introduction & Getting Started
+## Introduction and Getting Started
 
 `ex_cldr_dates_times` is an addon library application for [ex_cldr](https://hex.pm/packages/ex_cldr) that provides localisation and formatting for dates, times and date_times.
 
