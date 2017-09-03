@@ -120,5 +120,4 @@ defmodule Cldr.Normalize.DateFields do
 
     [base, variant]
   end
-
 end
