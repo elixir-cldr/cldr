@@ -14,7 +14,7 @@ defmodule Cldr.Locale.Cache do
 
   def get_locale(locale, path) do
     if compiling?() and not gen_server_started?() do
-      {:ok, _pid} = Cldr.Locale.Cache.start
+      Cldr.Locale.Cache.start
     end
 
     GenServer.call(@gen_server_name, {:get_locale, locale, path})
