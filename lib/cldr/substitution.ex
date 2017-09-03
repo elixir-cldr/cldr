@@ -75,6 +75,10 @@ defmodule Cldr.Substitution do
     [Kernel.to_string(item), string]
   end
 
+  def substitute(item, [string, 0]) when is_binary(string) do
+    [string, Kernel.to_string(item)]
+  end
+
   def substitute(item, [string1, 0, string2]) when is_binary(string1) and is_binary(string2) do
     [string1, Kernel.to_string(item), string2]
   end

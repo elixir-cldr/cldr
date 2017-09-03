@@ -1,8 +1,10 @@
-## Changelog for Cldr v0.6.1
+## Changelog for Cldr v0.6.1 September 3rd, 2017
 
 ### Bug Fixes
 
 * `Cldr.Number.to_string/2` now ensures that an RBNF ruleset exists for a given locale and returns `{:error, reason}` if not.
+
+* Reconsolidate locales to include compiling the substitutions for various timezone fields.  This is required to support the release of [ex_cldr_dates_times](http://hex.pm/packages/ex_cldr_dates_times) that provides localisation and formatting for `Date`, `Time` and `DateTime` structs.
 
 ## Changelog for Cldr v0.6.0 September 1st, 2017
 
