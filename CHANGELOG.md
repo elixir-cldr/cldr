@@ -1,3 +1,9 @@
+## Changelog for Cldr v0.6.2 September 4th, 2017
+
+### Bug Fixes
+
+* Fixed a race condition whereby the `Cldr.Locale.Cache` genserver could be started twice but would raise an exception the second time.
+
 ## Changelog for Cldr v0.6.1 September 3rd, 2017
 
 ### Bug Fixes
