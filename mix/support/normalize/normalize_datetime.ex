@@ -21,23 +21,10 @@ defmodule Cldr.Normalize.DateTime do
     Map.put(content, "dates", dates)
   end
 
-  # @compile_keys ["gmt_format", "gmt_zero_format", "fallback_format",
-  #                "region_format_type_standard", "region_format_type_daylight",
-  #                "region_format"]
-  # def compile_substitutions(content) do
-  #   for key <- @compile_keys do
-  #     IO.inspect Map.keys(content)
-  #     IO.inspect get_in(content, ["time_zone_names"])
-  #     format =
-  #       content
-  #       |> get_in(["time_zone_names", key])
-  #       |> Cldr.Substitution.parse
-  #     put_in(content, ["time_zone_names", key], format)
-  #   end
-  # end
-
   defp compile_substitution_formats(dates) do
     Enum.map(dates, fn
+      {"date_time_formats" = k, v} ->
+        {k, v}
       {k, v} when is_binary(v) ->
         binary = if Regex.match?(~r/\{0\}/, v) do
           Cldr.Substitution.parse(v)

@@ -11,6 +11,8 @@ defmodule Cldr do
   * `Cldr.Currency.to_string/2` for formatting currencies
 
   * `Cldr.List.to_string/2` for formatting lists
+
+  * `Cldr.Unit.to_string/2` for formatting SI units
   """
 
   alias Cldr.Config
