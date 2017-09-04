@@ -4,6 +4,8 @@
 
 * Fixed a race condition whereby the `Cldr.Locale.Cache` genserver could be started twice but would raise an exception the second time.
 
+* Fixes an issue whereby function references to functions that are not available were being generated in `Cldr.Number.System`
+
 ## Changelog for Cldr v0.6.1 September 3rd, 2017
 
 ### Bug Fixes

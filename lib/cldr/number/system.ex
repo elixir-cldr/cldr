@@ -190,7 +190,8 @@ defmodule Cldr.Number.System do
       {:ok, %{digits: "0123456789", type: :numeric}}
 
       iex> Cldr.Number.System.number_system_for "en", :finance
-      {:error, {Cldr.UnknownNumberSystemError, "The number system :finance is not known"}}
+      {:error, {Cldr.UnknownNumberSystemError,
+        "The number system :finance is not known or the locale it is defined in is not known"}}
 
       iex> Cldr.Number.System.number_system_for "en", :native
       {:ok, %{digits: "0123456789", type: :numeric}}
@@ -294,7 +295,8 @@ defmodule Cldr.Number.System do
       {:ok, :latn}
 
       iex> Cldr.Number.System.system_name_from(:nope, "en")
-      {:error, {Cldr.UnknownNumberSystemError, "The number system :nope is not known"}}
+      {:error, {Cldr.UnknownNumberSystemError,
+        "The number system :nope is not known or the locale it is defined in is not known"}}
 
   Note that return value is not guaranteed to be a valid
   number system for the given locale as demonstrated in the third example.
@@ -466,8 +468,8 @@ defmodule Cldr.Number.System do
       {:ok, :hant}
 
       iex> Cldr.Number.System.valid_number_system? :nope
-      {:error,
-       {Cldr.UnknownNumberSystemError, "The number system :nope is not known"}}
+      {:error, {Cldr.UnknownNumberSystemError,
+        "The number system :nope is not known or the locale it is defined in is not known"}}
 
   """
   def valid_number_system?(system) do
@@ -533,11 +535,13 @@ defmodule Cldr.Number.System do
       end
     else
       {module, function, locale} = Cldr.Config.rbnf_rule_function(definition.rules)
-      def to_system(number, unquote(system)) do
-        with {:ok, _locale} <- Cldr.valid_locale?(unquote(locale)) do
-          {:ok, unquote(module).unquote(function)(number, unquote(locale))}
-        else
-          {:error, reason} -> {:error, reason}
+      if Keyword.get(module.__info__(:exports), function) do
+        def to_system(number, unquote(system)) do
+          with {:ok, _locale} <- Cldr.valid_locale?(unquote(locale)) do
+            {:ok, unquote(module).unquote(function)(number, unquote(locale))}
+          else
+            {:error, reason} -> {:error, reason}
+          end
         end
       end
     end
@@ -596,7 +600,8 @@ defmodule Cldr.Number.System do
   @doc false
   def number_system_error(system_name) do
     {Cldr.UnknownNumberSystemError,
-      "The number system #{inspect system_name} is not known"}
+      "The number system #{inspect system_name} is not known or the locale " <>
+      "it is defined in is not known"}
   end
 
   def number_system_digits_error(system_name) do

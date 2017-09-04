@@ -8,7 +8,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.6.1"}
+        {:ex_cldr, "~> 0.6.2"}
       ]
     end
 
@@ -16,12 +16,6 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
 
     mix deps.get
     mix deps.compile
-
-Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release.  This applies for Elixir versions up to 1.3.x; version 1.4 will automatically do this for you.
-
-    def application do
-      [applications: [:ex_cldr]]
-    end
 
 ## Additional Cldr Packages: Units, Lists, Dates and Times
 
