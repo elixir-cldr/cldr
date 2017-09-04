@@ -17,7 +17,7 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
     mix deps.get
     mix deps.compile
 
-## Additional Cldr Packages: Units, Lists, Dates and Times
+## Addon Cldr Packages
 
 `ex_cldr` includes functions for the localisation and formatting of numbers and currencies.  Additional functionality is available by adding additional packages:
 
@@ -55,7 +55,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
-## Localizing and Formatting Numbers
+## Numbers Localization
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
@@ -82,7 +82,7 @@ The `Cldr.Number` module provides number formatting.  The public API for number 
 
 See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
 
-## Localizing Lists
+## List Localization
 
 The `Cldr.List` module provides list formatting.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
 
@@ -97,7 +97,7 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
-## Localizing Units
+## Unit Localization
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.  Some examples:
 
@@ -132,7 +132,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Localizing Dates, Times and DateTimes
+## Dates and Times Localization
 
 As of version 0.2.0, formatting of relative dates and date times is supported with the `Cldr.Date.Relative` module.  The public API is `Cldr.Date.Relative.to_string/2`.  Some examples:
 

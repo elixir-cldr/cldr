@@ -1,4 +1,4 @@
-# Date, Time and DateTime Localization and Formatting
+# Date and Time Localization
 
 ## Introduction and Getting Started
 

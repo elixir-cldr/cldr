@@ -1,4 +1,4 @@
-# Units Localizing and Formatting
+# Unit Localization
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.
 
