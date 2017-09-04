@@ -1,4 +1,6 @@
-## Changelog for Cldr v0.6.2 September 4th, 2017
+# Changelog
+
+## Cldr v0.6.2 September 4th, 2017
 
 ### Bug Fixes
 
@@ -6,7 +8,7 @@
 
 * Fixes an issue whereby function references to functions that are not available were being generated in `Cldr.Number.System`
 
-## Changelog for Cldr v0.6.1 September 3rd, 2017
+## Cldr v0.6.1 September 3rd, 2017
 
 ### Bug Fixes
 
@@ -14,7 +16,7 @@
 
 * Reconsolidate locales to include compiling the substitutions for various timezone fields.  This is required to support the release of [ex_cldr_dates_times](http://hex.pm/packages/ex_cldr_dates_times) that provides localisation and formatting for `Date`, `Time` and `DateTime` structs.
 
-## Changelog for Cldr v0.6.0 September 1st, 2017
+## Cldr v0.6.0 September 1st, 2017
 
 ### Breaking Changes
 
@@ -46,13 +48,13 @@
 
 * Fixed `:permille` formatting (formats like `"#‰"`)
 
-## Changelog for Cldr v0.5.2 August 24, 2017
+## Cldr v0.5.2 August 24, 2017
 
 ### Enhancements
 
 * Revert the commit that produced the message "[ex_cldr] Installing locale ..." since it's too noisy
 
-## Changelog for Cldr v0.5.1 August 23, 2017
+## Cldr v0.5.1 August 23, 2017
 
 ## Bug Fixes
 
@@ -60,7 +62,7 @@
 
 * `Cldr.version/0` was returning the version as a 3-tuple of strings.  The correct format should have been a 3-tuple of integers.  This is now corrected.
 
-## Changelog for Cldr v0.5.0 August 19, 2017
+## Cldr v0.5.0 August 19, 2017
 
 ### Breaking Changes
 
@@ -78,19 +80,19 @@
 
 * Standardise `to_string/2` functions return either a `{:ok, result}` or `{:error, reason}` tuple.  The various "!" versions such as `to_string!/2` return a result string or raise an exception.
 
-## Changelog for Cldr v0.4.2 July 9, 2017
+## Cldr v0.4.2 July 9, 2017
 
 ### Bug Fixes
 
 * Installation of a new default locale was failing due a compilation order dependency issue.  Fixes #17.
 
-## Changelog for Cldr v0.4.1 May 29, 2017
+## Cldr v0.4.1 May 29, 2017
 
 ### Enhancements
 
 * Replace the two deprecated calls to `Integer.to_char_list/1` with `Integer.to_charlist/1` for Elixir 1.5 compatibility
 
-## Changelog for Cldr v0.4.0 May 29, 2017
+## Cldr v0.4.0 May 29, 2017
 
 This release introduces some breaking changes as described below.  However the changes do not affect the primary public api of `to_string/2` used in `Cldr.Number`, `Cldr.List`, `Cldr.Unit`except insofaras an error return is now standardised as an `{:error, {exception, nessage}}` tuple.  Therefore chances are that library users won't notice.
 
@@ -106,7 +108,7 @@ This release introduces some breaking changes as described below.  However the c
 
 * Functions that used to `raise` on error now do not.  Instead a standard error tuple is returned of the form `{:error, {exception_module, message}}`.  For many of these functions a `bang` version also now exists which will raise on error.  This change reflects the community view that library packages shouldn't raise exceptions.
 
-## Changelog for Cldr v0.3.0 May 22, 2017
+## Cldr v0.3.0 May 22, 2017
 
 ### Breaking Change
 
@@ -120,13 +122,13 @@ This release introduces some breaking changes as described below.  However the c
 
 * Fixed a bug whereby `Cldr.Number.Transliterate/3` with a `binary` number system would fail
 
-## Changelog for Cldr v0.2.1 May 22, 2017
+## Cldr v0.2.1 May 22, 2017
 
 ### Enhancements
 
 * Added `Cldr.Number.Transliterate/3` to transliterate a binary of digits from one number system to another.
 
-## Changelog for Cldr v0.2.0 April 27, 2017
+## Cldr v0.2.0 April 27, 2017
 
 ### Enhancements
 
@@ -138,7 +140,7 @@ This release introduces some breaking changes as described below.  However the c
 
 * Update all dependencies to latest versions
 
-## Changelog for Cldr v0.1.3 April 17, 2017
+## Cldr v0.1.3 April 17, 2017
 
 ### Enhancements
 
@@ -150,19 +152,19 @@ This release introduces some breaking changes as described below.  However the c
 
 * Update to CLDR 30.0.1.  Version can always be determined from `Cldr.version/0`
 
-## Changelog for Cldr v0.1.2 April 11, 2017
+## Cldr v0.1.2 April 11, 2017
 
 ### Enhancements
 
 * Improves the sourcing of avaialable currency codes with a small performance improvement in detecting known currency codes
 
-## Changelog for Cldr v0.1.1 April 8, 2017
+## Cldr v0.1.1 April 8, 2017
 
 ### Enhancements
 
 * Improves the validation of currency codes as well as the related tests
 
-## Changelog for Cldr v0.1.0 March, 23, 2017
+## Cldr v0.1.0 March, 23, 2017
 
 ### Enhancements
 
@@ -172,13 +174,13 @@ This release introduces some breaking changes as described below.  However the c
 
 * Ads an assertion to the data consolidation process to ensure that required files are configured in `mix.exs` package files
 
-## Changelog for Cldr v0.0.20 February 27th, 2017
+## Cldr v0.0.20 February 27th, 2017
 
 ### Bug Fixes
 
 * Adds `version.json` to the package definition, the lack of which was preventing compilation for the hex package (was not an issue with a github installation)
 
-## Changelog for Cldr v0.0.19 February 26th, 2017
+## Cldr v0.0.19 February 26th, 2017
 
 ### Enhancements
 
@@ -188,19 +190,19 @@ This release introduces some breaking changes as described below.  However the c
 
 * Corrects pluralization for locales that have a territory element (like "en-AU").  Plural rules are only defined on base locales (like "en") so when pluralizing we always use the base local to look up the plural rules
 
-## Changelog for Cldr v0.0.18 February 21st, 2017
+## Cldr v0.0.18 February 21st, 2017
 
 ### Enhancements
 
 * `Cldr.version/0` returns the version of the CLDR repository in use.  This is now automatically derived from the library data.
 
-## Changelog for Cldr v0.0.17 February 20th, 2017
+## Cldr v0.0.17 February 20th, 2017
 
 ### Bug fixes
 
 * Fixes `Cldr.Number.PluralRule.pluralize/3` by adding support for `%Decimal{}`.  Thanks to @jayjun
 
-## Changelog for Cldr v0.0.17 February 19th, 2017
+## Cldr v0.0.17 February 19th, 2017
 
 ### Bug fixes
 
@@ -219,7 +221,7 @@ This release introduces some breaking changes as described below.  However the c
     precompile_number_formats: ["¤¤#,##0.##"]
 ```
 
-## Changelog for Cldr v0.0.16
+## Cldr v0.0.16
 
 This release is primarily about optmising parts of the number formatting pipeline through a combination of code optimization and additional compile-time calculations.
 
@@ -270,7 +272,7 @@ All tests run on a first generation Macbook which is no speed demon.  The absolu
 
 * Fixed short and long formatting of currencies which would previously display the default currency number of fractional digits.  These now correctly default to zero.
 
-## Changelog for Cldr v0.0.15 December 12, 2016
+## Cldr v0.0.15 December 12, 2016
 
 ### Bug fixes
 
@@ -278,7 +280,7 @@ All tests run on a first generation Macbook which is no speed demon.  The absolu
 
 * Added poison and decimal to the application section of mix.exs
 
-## Changelog for Cldr v0.0.14 December 11, 2016
+## Cldr v0.0.14 December 11, 2016
 
 ### Enhancements
 
@@ -288,13 +290,13 @@ All tests run on a first generation Macbook which is no speed demon.  The absolu
 
 * Fixed an issue whereby compiled formats weren't being inserted into the AST.  Compiled formats now execute approximately twice as fast as non-compiled formats.  All formats defined in CLDR are compiled so most applications should benefit from the speedup.
 
-## Changelog for Cldr v0.0.13 December 11, 2016
+## Cldr v0.0.13 December 11, 2016
 
 ### Bug fixes
 
 * `Cldr.Plug` is not complete and won't compile if `Plug` is loaded as it will be for Phoenix applications.  For now, `Cldr.Plug` will not be compiled.
 
-## Changelog for Cldr v0.0.12 December 6, 2016
+## Cldr v0.0.12 December 6, 2016
 
 The last set of bugs have come from areas of the code which depends on different compilation environments:
 
@@ -316,32 +318,31 @@ Neither of these test case is easy to test with the standard `ExUnit` assertions
 
 * `Cldr.Number.to_string 1234, currency: :AUD` should default to format `:currency` but it was defaulting to format `:standard`.
 
-## Changelog for Cldr v0.0.11 December 5, 2016
+## Cldr v0.0.11 December 5, 2016
 
 ### Bug fixes
 
 * Fixed a small issue that would prevent locales from downloading if ex_cldr was being run from the github repo
 
-## Changelog for Cldr v0.0.10 December 5, 2016
+## Cldr v0.0.10 December 5, 2016
 
 ### Bug fixes
 
 * Detecting the version of Cldr at compile time fixed by checking both the mixfile version number if there's no existing ex_cldr app and checking the application spec if there is
 
-## Changelog for Cldr v0.0.9 December 5, 2016
+## Cldr v0.0.9 December 5, 2016
 
 ### Bug Fixes
 
 * Cldr is intended to download configured locales during compilation is the specified locale is not already installed.  Due to a developer misunderstanding of how the build process works and the treatment of the `priv` dir the download process was failing for packages installed from hex.  The process was not triggered for packages installed from github since all locales are configured in that case. The changes in this release do a much better job of managing the download process and of reflecting any errors that occur during the download.
 
-
-## Changelog for Cldr v0.0.8 December 4, 2016
+## Cldr v0.0.8 December 4, 2016
 
 ### Bug Fixes
 
 * Ensure "root" locale is always configured since it is required for some RBNF functions
 
-## Changelog for Cldr v0.0.7 December 3, 2016
+## Cldr v0.0.7 December 3, 2016
 
 ### Enhancements
 
@@ -362,19 +363,19 @@ Neither of these test case is easy to test with the standard `ExUnit` assertions
 
 * Fixed issue #6 whereby RBNF rulesets which have access "private" were being defined by :def and are now :defp
 
-## Changelog for Cldr v0.0.6 November 25, 2016
+## Cldr v0.0.6 November 25, 2016
 
 ### Enhancements
 
 * Updated the CLDR repository to 30.0.2 released on 2016-10-17.  See [the CLDR web site](http://cldr.unicode.org/index/downloads/cldr-30) for release details
 
-## Changelog for Cldr v0.0.5 October 9, 2016
+## Cldr v0.0.5 October 9, 2016
 
 ### Enhancements
 
 * Add new function `Cldr.Number.Math.root/2` which calculates the nth root of a number.
 
-## Changelog for Cldr v0.0.4 October 6, 2016
+## Cldr v0.0.4 October 6, 2016
 
 ### Bug Fixes
 
@@ -386,13 +387,13 @@ Neither of these test case is easy to test with the standard `ExUnit` assertions
 
 * Generated json for a locale now includes RBNF rule definitions.  These rules are not yet used but serve as the platform for the including RBNF generation in a near future release
 
-## Changelog for Cldr v0.0.3 September 12, 2016
+## Cldr v0.0.3 September 12, 2016
 
 ### Bug fixes
 
 * Ensures that the client application data directory is created before installing additional locales
 
-## Changelog for Cldr v0.0.2 September 12, 2016
+## Cldr v0.0.2 September 12, 2016
 
 ### Enhancements
 
@@ -402,6 +403,6 @@ Neither of these test case is easy to test with the standard `ExUnit` assertions
 
 * Fixes scientific formatting error whereby a forced "+" sign on the exponent was not displayed.  Closes #3.
 
-## Changelog for Cldr v.0.0.1 September 6, 2016
+## Cldr v.0.0.1 September 6, 2016
 
 * Initial release.
