@@ -17,7 +17,7 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
     mix deps.get
     mix deps.compile
 
-## Additional Cldr Packages: Units, Lists, Dates and Times
+## Addon Cldr Packages
 
 `ex_cldr` includes functions for the localisation and formatting of numbers and currencies.  Additional functionality is available by adding additional packages:
 
@@ -55,7 +55,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
-## Localizing and Formatting Numbers
+## Numbers Localization
 
 The `Cldr.Number` module provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
 
@@ -82,9 +82,9 @@ The `Cldr.Number` module provides number formatting.  The public API for number 
 
 See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
 
-## Localizing Lists
+## List Localization
 
-The `Cldr.List` module provides list formatting.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
+The [`Cldr.List`](https://hexdocs.pm/ex_cldr_lists/) module provides list formatting.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
 
     iex> Cldr.List.to_string(["a", "b", "c"], locale: "en")
     "a, b, and c"
@@ -97,7 +97,7 @@ The `Cldr.List` module provides list formatting.  The public API for list format
 
 Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
 
-## Localizing Units
+## Unit Localization
 
 The `Cldr.Unit` module provides unit formatting.  The public API for unit formating is `Cldr.Unit.to_string/3`.  Some examples:
 
@@ -132,7 +132,7 @@ The `Cldr.Unit` module provides unit formatting.  The public API for unit format
 
 See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
 
-## Localizing Dates, Times and DateTimes
+## Dates and Times Localization
 
 As of version 0.2.0, formatting of relative dates and date times is supported with the `Cldr.Date.Relative` module.  The public API is `Cldr.Date.Relative.to_string/2`.  Some examples:
 
@@ -187,9 +187,9 @@ As of version 0.2.0, formatting of relative dates and date times is supported wi
       iex> Cldr.Date.Relative.to_string -1, unit: :mon, locale: "fr"
       "lundi dernier"
 
-      iex> Cldr.Date.Relative.to_string(~D[2017-04-29], unit: :ziggeraut)
-      {:error,
-       "Unknown time unit :ziggeraut.  Valid time units are [:day, :hour, :minute, :month, :second, :week, :year, :mon, :tue, :wed, :thu, :fri, :sat, :sun, :quarter]"}
+      iex> Cldr.DateTime.Relative.to_string(~D[2017-04-29], unit: :ziggeraut)
+      {:error, {Cldr.UnknownTimeUnit,
+       "Unknown time unit :ziggeraut.  Valid time units are [:day, :hour, :minute, :month, :second, :week, :year, :mon, :tue, :wed, :thu, :fri, :sat, :sun, :quarter]"}}
 
 ## Gettext Integration
 
@@ -201,10 +201,6 @@ There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`
 
 `Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
 
-## Phoenix Integration
-
-There is an imcomplete (ie development not finished) implemenation of a `Plug` intended to parse the HTTP `accept-language` header into `Cldr` compatible locale and number system.  Since it's not development complete it definitely won't work yet.  Comments and ideas (and pull requests) are, however, welcome.
-
 ## About Locale strings
 
 Note that `Cldr` defines locale string according to the Unicode standard:
@@ -213,7 +209,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 * Potentially one or more modifiers separated by "-" (dash), not a "\_". (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "\_" into "-" for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example "pt-BR" is the locale referring to Brazilian Portugese.
 * In `Cldr` a locale is always a `binary` and never an `atom`.  Locale strings are often passed around in HTTP headers and converting to atoms creates an attack vector we can do without.
-* The locales known to `Cldr` can be retrieved by `Cldr.known_locales` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales` to get the locales available in the CLDR data repository.
+* The locales known to `Cldr` can be retrieved by `Cldr.known_locales/0` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales/0` to get the locales available in the CLDR data repository.
 
 ## Testing
 

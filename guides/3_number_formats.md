@@ -1,4 +1,4 @@
-# Number and Currency Localization and Formatting
+# Number and Currency Localization
 
 CLDR defines many different ways to format a number for different uses and defines a set of formats categorised by common pupose to make it easier to express the same intent across many different locales that represent many different territories, cultures, number systems and scripts.
 
