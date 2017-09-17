@@ -7,8 +7,6 @@ defmodule Cldr.Rbnf.Config do
   are used to do the parsing and normalising of RBNF data.
   """
 
-  alias Cldr.Rbnf.Rule
-
   @default_radix 10
   @data_dir Path.join(Cldr.Config.cldr_home, "data") <> "/cldr-rbnf"
   @rbnf_dir Path.join(@data_dir, "rbnf")
@@ -137,7 +135,7 @@ defmodule Cldr.Rbnf.Config do
   defp rules_from(rules) do
     Enum.map(rules, fn {name, rule} ->
       {base_value, radix} = radix_from_name(name)
-      %Rule{base_value: base_value, radix: radix, definition: remove_trailing_semicolon(rule)}
+      %{base_value: base_value, radix: radix, definition: remove_trailing_semicolon(rule)}
     end)
     |> sort_rules
     |> set_range
@@ -194,11 +192,11 @@ defmodule Cldr.Rbnf.Config do
   #
   # Means that rule "0" is applied for values up to but not including "10"
   defp set_range([rule | [next_rule | rest]]) do
-    [%Rule{rule | range: range_from_next_rule(rule.base_value, next_rule.base_value)}] ++ set_range([next_rule] ++ rest)
+    [Map.put(rule, :range, range_from_next_rule(rule.base_value, next_rule.base_value))] ++ set_range([next_rule] ++ rest)
   end
 
   defp set_range([rule | []]) do
-    [%Rule{rule | :range => :undefined}]
+    [Map.put(rule, :range, :undefined)]
   end
 
   defp range_from_next_rule(rule, next_rule) when is_number(rule) and is_number(next_rule) do
@@ -210,11 +208,11 @@ defmodule Cldr.Rbnf.Config do
   end
 
   defp set_divisor([rule]) do
-    [%Rule{rule | divisor: divisor(rule.base_value, rule.radix)}]
+    [Map.put(rule, :divisor, divisor(rule.base_value, rule.radix))]
   end
 
   defp set_divisor([rule | rest]) do
-    [%Rule{rule | divisor: divisor(rule.base_value, rule.radix)} | set_divisor(rest)]
+    [Map.put(rule, :divisor, divisor(rule.base_value, rule.radix)) | set_divisor(rest)]
   end
 
   # Thanks to twitter-cldr:

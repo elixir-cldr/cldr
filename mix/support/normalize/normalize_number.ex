@@ -4,7 +4,6 @@ defmodule Cldr.Normalize.Number do
   Takes the number part of the locale map and transforms the formats into a more easily
   processable structure that is then stored in map managed by `Cldr.Locale`
   """
-  alias Cldr.Number
 
   @doc """
   Normalize decimal formats for a locale.
@@ -32,7 +31,7 @@ defmodule Cldr.Normalize.Number do
       decimal_short_format  = get_in(decimal_formats,  ["short", "decimal_format"])
       currency_short_format = get_in(currency_formats, ["short", "standard"])
 
-      locale_formats = %Number.Format{
+      locale_formats = %{
         standard:         decimal_formats["standard"],
         decimal_long:     normalize_short_format(decimal_long_format),
         decimal_short:    normalize_short_format(decimal_short_format),

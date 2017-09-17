@@ -15,7 +15,7 @@ defmodule Cldr.Normalize.Currency do
     currencies = get_in(content, ["numbers", "currencies"])
     currencies = Enum.map(currencies, fn {code, currency} ->
       code = String.upcase(to_string(code))
-      currency_map = %Cldr.Currency{
+      currency_map = %{
         code:          code,
         name:          currency["display_name"],
         symbol:        currency["symbol"],

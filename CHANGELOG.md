@@ -1,10 +1,16 @@
 # Changelog
 
-## Cldr v0.6.3 ______, 2017
+## Cldr v0.7.0 ______, 2017
+
+### Breaking Changes
+
+* Number localization and formatting is broken out into its own package, `ex_cldr_numbers`.  Add it to your dependencies in `mix.exs` if required.
 
 ### Enhancements
 
 * Update Decimal dependency to 1.4
+
+* Add `likely_subtags` and `aliases` from the CLDR repository to support locale parsing and matching
 
 ## Cldr v0.6.2 September 4th, 2017
 
