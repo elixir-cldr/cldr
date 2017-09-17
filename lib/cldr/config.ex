@@ -667,11 +667,9 @@ defmodule Cldr.Config do
   end
 
   defp structure_sets(sets) do
-    alias Cldr.Rbnf.Rule
     Enum.map(sets, fn {name, set} ->
       name = underscore(name)
-      rules = Enum.map(set[:rules], fn (rule) -> struct(Rule, rule) end)
-      {underscore(name), %{set | rules: rules}}
+      {underscore(name), Map.put(set, :rules, set[:rules])}
     end)
     |> Enum.into(%{})
   end
