@@ -8,6 +8,8 @@
 
 `Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, it to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 2017 and Version 0.1.0, `Cldr` is based upon [CLDR version 31.0.1](http://cldr.unicode.org).
 
+**It is highly likely that you will also want to install one or more of the dependent packages that provide localization and formatting for a particular data domain.  See [Additional Cldr Packages](#additional_cldr_packages) below**.
+
 ## Elixir Version Requirements
 
 * [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.5 or later.
@@ -35,8 +37,9 @@ Although `Cldr` is purely a library application, it should be added to your appl
 
 ## Additional Cldr Packages
 
-`ex_cldr` includes functions for the localisation and formatting of numbers and currencies.  Additional functionality is available by adding additional packages:
+`ex_cldr` includes only basic functions to maintain the CLDR data repository in an accessible manner.  Additional functionality is available by adding additional packages:
 
+* Number formatting: [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
@@ -59,6 +62,10 @@ Configures a default locale of "en" (which is itself the `Cldr` default).  Addit
 Note that Elixir can't determine dependencies based upon configuration so when you make changes to your `Cldr` configuration a forced recompilation is required in order for the changes to take affect.  To recompile:
 
     iex> mix deps.compile ex_cldr --force
+    iex> mix deps.compile ex_cldr_numbers --force
+    iex> mix deps.compile ex_cldr_lists --force
+    iex> mix deps.compile ex_cldr_units --force
+    iex> mix deps.compile ex_cldr_dates_times --force
 
 `Cldr` pre-computes a lot of the CLDR specification and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
 
