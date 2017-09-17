@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.6.3 ______, 2017
+
+### Enhancements
+
+* Update Decimal dependency to 1.4
+
 ## Cldr v0.6.2 September 4th, 2017
 
 ### Bug Fixes
