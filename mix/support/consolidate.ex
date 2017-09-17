@@ -41,6 +41,8 @@ if Code.ensure_loaded?(Experimental.Flow) do
       save_week_data()
       save_calendar_data()
       save_day_periods()
+      save_aliases()
+      save_likely_subtags()
       save_locales()
 
       all_locales()
@@ -301,6 +303,41 @@ if Code.ensure_loaded?(Experimental.Flow) do
       assert_package_file_configured!(path)
     end
 
+    def save_aliases do
+      path = Path.join(consolidated_output_dir(), "aliases.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/aliases.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "metadata", "alias"])
+      |> Cldr.Map.remove_leading_underscores
+      |> Cldr.Map.underscore_key("variantAlias")
+      |> Cldr.Map.underscore_key("scriptAlias")
+      |> Cldr.Map.underscore_key("zoneAlias")
+      |> Cldr.Map.underscore_key("territoryAlias")
+      |> Cldr.Map.underscore_key("languageAlias")
+      |> Cldr.Map.deep_map(&split_alternates/1)
+      |> Enum.map(&simplify_replacements/1)
+      |> Enum.into(%{})
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_likely_subtags do
+      path = Path.join(consolidated_output_dir(), "likely_subtags.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/likelySubtags.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "likelySubtags"])
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
     def assert_package_file_configured!(path) do
       [_, path] = String.split(path, "/priv/")
       path = "priv/" <> path
@@ -314,6 +351,28 @@ if Code.ensure_loaded?(Experimental.Flow) do
 
     defp save_file(content, path) do
       File.write!(path, Poison.encode!(content))
+    end
+
+    defp split_alternates({k, v}) do
+      if String.contains?(v, " ") do
+        {k, String.split(v, " ")}
+      else
+        {k, v}
+      end
+    end
+
+    @replacement "replacement"
+    defp simplify_replacements({k, %{} = v}) do
+      if Map.get(v, @replacement) do
+        {k, Map.get(v, @replacement)}
+      else
+        replacements = Enum.map(v, &simplify_replacements/1) |> Enum.into(%{})
+        {k, replacements}
+      end
+    end
+
+    defp simplify_replacements({k, v}) do
+      {k, Enum.map(v, &simplify_replacements/1)}
     end
   end
 end

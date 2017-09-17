@@ -67,7 +67,9 @@ defmodule Cldr.Mixfile do
         "priv/cldr/currencies.json",
         "priv/cldr/week_data.json",
         "priv/cldr/calendar_data.json",
-        "priv/cldr/day_periods.json"
+        "priv/cldr/day_periods.json",
+        "priv/cldr/likely_subtags.json",
+        "priv/cldr/aliases.json"
       ]
     ]
   end

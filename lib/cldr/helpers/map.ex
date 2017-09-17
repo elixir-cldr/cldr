@@ -30,6 +30,7 @@ defmodule Cldr.Map do
   """
   def underscore_key(map, key) do
     Map.put(map, Cldr.String.underscore(key), Map.get(map, key))
+    |> Map.delete(key)
   end
 
   @doc """
@@ -246,5 +247,20 @@ defmodule Cldr.Map do
 
   def from_keyword(keyword) do
     Enum.into(keyword, %{})
+  end
+
+  @doc """
+  Execute a function over each element of a nested map
+  """
+  def deep_map(nil), do: nil
+
+  def deep_map(map = %{}, fun) do
+    Enum.map(map, fn
+      {k, v} when is_map(v) ->
+        {k, deep_map(v, fun)}
+      {_k, _v} = entry ->
+        fun.(entry)
+    end)
+    |> Enum.into(%{})
   end
 end
