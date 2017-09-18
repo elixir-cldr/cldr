@@ -2,7 +2,7 @@
 require Logger
 
 def normalize(input) when is_list(input) do
-  String.downcase to_string(input)
+  to_string(input)
 end
 
 def normalize(input) do
@@ -26,6 +26,19 @@ end
 def return_value(key, state, string_values, _values, _rule) do
   [v] = string_values
   {:ok, Map.put(state, key, normalize(v)), v}
+end
+
+def accumulate_value(key, state, string_values, _values, _rule) do
+  [v] = string_values
+  value = normalize(v)
+  case Map.get(state, key) do
+    nil ->
+      {:ok, Map.put(state, key, value), value}
+    [_h | _t] = state_value ->
+      {:ok, Map.put(state, key, state_value ++ [value]), value}
+    state_value ->
+      {:ok, Map.put(state, key, [state_value, value]), value}
+  end
 end
 
 def tuples(values) do
@@ -68,7 +81,7 @@ region        = 2ALPHA              ; ISO 3166-1 code
 
 variant       = 5*8alphanum         ; registered variants
                 / (DIGIT 3alphanum) !!! 
-                  return_value(:variant, state, string_values, values, rule)
+                  accumulate_value(:variant, state, string_values, values, rule)
                 !!!
 
 extensions     = locale / extension !!! 

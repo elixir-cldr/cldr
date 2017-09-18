@@ -435,6 +435,15 @@ defmodule Cldr.Config do
     |> Enum.map(&String.to_atom/1)
   end
 
+  def aliases do
+    client_data_dir()
+    |> Path.join("aliases.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+    |> Enum.into(%{})
+  end
+
   @doc """
   Returns the data that defines start and end of
   calendar weeks, weekends and years

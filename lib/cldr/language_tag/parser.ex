@@ -28,7 +28,6 @@ defmodule Cldr.LanguageTag.Parser do
 
   def parse(locale) when is_binary(locale) do
     locale
-    |> String.downcase
     |> Cldr.Locale.normalize_locale_name
     |> String.to_charlist
     |> parse

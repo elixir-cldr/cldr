@@ -12,7 +12,7 @@ defmodule Cldr.LanguageTag do
     Parser.parse!(locale_string)
   end
 
-  def locale(%{language: language, script: script, region: region} = language_tag) do
+  def parse_locale(%{language: language, script: script, region: region} = language_tag) do
     locale =
       [language, script, region]
       |> Enum.reject(&is_nil/1)
@@ -21,21 +21,16 @@ defmodule Cldr.LanguageTag do
     {:ok, locale, language_tag}
   end
 
-  def locale(locale_string) when is_binary(locale_string) do
-    case Parser.parse(locale_string) do
-      {:ok, language_tag} -> locale(language_tag)
+  def parse_locale(locale_string) when is_binary(locale_string) do
+    case parse(locale_string) do
+      {:ok, language_tag} -> parse_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def locale!(%{language: _language, script: _script, region: _region} = language_tag) do
-    {:ok, locale, _language_tag} = locale(language_tag)
-    locale
-  end
-
-  def locale!(locale_string) when is_binary(locale_string) do
-    case Parser.parse(locale_string) do
-      {:ok, language_tag} -> locale!(language_tag)
+  def parse_locale!(locale_string) when is_binary(locale_string) do
+    case parse_locale(locale_string) do
+      {:ok, locale, _language_tag} -> locale
       {:error, {exception, reason}} -> raise exception, reason
     end
   end
