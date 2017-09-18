@@ -49,27 +49,27 @@ langtag       = language
 language      = 2*3ALPHA            ; shortest ISO 639 code
                 ;["-" extlang]      ; sometimes followed by
                                     ; extended language subtags
-              / 4ALPHA              ; or reserved for future use
-              / 5*8ALPHA  !!!       # or registered language subtag
-                return_value(:language, state, string_values, values, rule)
-              !!!
+                / 4ALPHA            ; or reserved for future use
+                / 5*8ALPHA  !!!     # or registered language subtag
+                  return_value(:language, state, string_values, values, rule)
+                !!!
 
 extlang       = 3ALPHA              ; selected ISO 639 codes
                 *2("-" 3ALPHA)      ; permanently reserved
 
 script        = 4ALPHA  !!!         # ISO 15924 code
-                return_value(:script, state, string_values, values, rule)
-              !!!
+                  return_value(:script, state, string_values, values, rule)
+                !!!
 
 region        = 2ALPHA              ; ISO 3166-1 code
-              / 3DIGIT !!!          # UN M.49 code
-                return_value(:region, state, string_values, values, rule)
-              !!!
+                / 3DIGIT !!!        # UN M.49 code
+                  return_value(:region, state, string_values, values, rule)
+                !!!
 
 variant       = 5*8alphanum         ; registered variants
-              / (DIGIT 3alphanum) !!! 
-                return_value(:variant, state, string_values, values, rule)
-              !!!
+                / (DIGIT 3alphanum) !!! 
+                  return_value(:variant, state, string_values, values, rule)
+                !!!
 
 extensions     = locale / extension !!! 
                  _ = rule
