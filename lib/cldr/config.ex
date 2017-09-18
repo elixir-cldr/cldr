@@ -685,4 +685,31 @@ defmodule Cldr.Config do
   defp atomize(nil), do: nil
   defp atomize(v) when is_binary(v), do: String.to_atom(v)
   defp atomize(v), do: v
+
+  @doc false
+  def true_false() do
+    ["true", "false"]
+  end
+
+  @doc false
+  def days_of_week() do
+    ["sun", "mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+  end
+
+  @doc false
+  def collations() do
+    [
+      "big5han",
+      "dict",
+      "direct",
+      "gb2312",
+      "phonebk",
+      "pinyin",
+      "reformed",
+      "standard",
+      "stroke",
+      "trad",
+      "unihan"
+    ]
+  end
 end

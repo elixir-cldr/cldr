@@ -19,7 +19,7 @@ defmodule Cldr do
   alias Cldr.Locale
   alias Cldr.Install
 
-  @default_territory :"001"
+  @default_territory "001"
 
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
@@ -184,29 +184,51 @@ defmodule Cldr do
 
       iex> Cldr.known_locale?("!!")
       false
+
   """
   @spec known_locale?(Locale.t) :: boolean
   def known_locale?(locale) when is_binary(locale) do
     !!Enum.find(known_locales(), &(&1 == locale))
   end
 
-  # TODO Should be replaced by a proper locale parser
-  # Also default territory should be the default for the langauge
-  # rather than a global default
-  def territory_from_locale(locale \\ get_current_locale()) do
-    case String.split(locale, "-") do
-      [_lang, territory] -> territory
-      [_lang] -> @default_territory
-    end
+  @doc """
+  Get the region part of a locale or the default region
+  if it doesn't exist.
+
+  ## Examples
+
+      iex> Cldr.region_from_locale "zh-Hant-TW"
+      "TW"
+
+      iex> Cldr.region_from_locale "pt-BR"
+      "BR"
+
+      iex> Cldr.region_from_locale "en"
+      "001"
+
+  """
+  def region_from_locale(locale \\ get_current_locale()) do
+    Cldr.LanguageTag.parse!(locale).region || @default_territory
   end
+
 
   @doc """
   Extract the language part from a locale.
+
+  ## Examples
+
+    iex> Cldr.language_from_locale "en"
+    "en"
+
+    iex> Cldr.language_from_locale "en-US"
+    "en"
+
+    iex> Cldr.language_from_locale "zh-Hant-TW"
+    "zh"
+
   """
   def language_from_locale(locale \\ get_current_locale()) do
-    locale
-    |> String.split("-")
-    |> List.first
+    Cldr.LanguageTag.parse!(locale).language
   end
 
   @doc """

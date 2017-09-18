@@ -41,6 +41,7 @@ defmodule Cldr.Mixfile do
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.4"},
       {:ex_doc, "~> 0.15", only: :dev},
+      {:ex_abnf, "~> 0.3.0"},
       {:excoveralls, "~> 0.7.2", only: :test},
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]}
@@ -66,7 +67,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/calendar_data.json",
         "priv/cldr/day_periods.json",
         "priv/cldr/likely_subtags.json",
-        "priv/cldr/aliases.json"
+        "priv/cldr/aliases.json",
+        "priv/cldr/rfc4656.abnf"
       ]
     ]
   end
@@ -74,6 +76,7 @@ defmodule Cldr.Mixfile do
   def links do
     %{
       "GitHub"    => "https://github.com/kipcole9/cldr",
+      "Readme"    => "https://github.com/kipcole9/cldr/blob/v#{@version}/README.md",
       "Changelog" => "https://github.com/kipcole9/cldr/blob/v#{@version}/CHANGELOG.md"
     }
   end

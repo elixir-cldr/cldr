@@ -1,6 +1,14 @@
 # Changelog
 
-## Cldr v0.7.0 ______, 2017
+## Cldr v0.7.1 September 20, 2017
+
+### Enhancements
+
+* Add module `Cldr.LanguageTag` which provides parsing, normalization and matching for language tags in accordance with [RFC56469](https://tools.ietf.org/html/rfc5646) as adapter in [CLDR](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers).
+
+* Added `Cldr.known_currencies/0`,  `Cldr.known_number_systems/0` and `Cldr.known_calendars`
+
+## Cldr v0.7.0 September 18, 2017
 
 ### Breaking Changes
 
