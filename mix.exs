@@ -44,7 +44,8 @@ defmodule Cldr.Mixfile do
       {:ex_abnf, "~> 0.3.0"},
       {:excoveralls, "~> 0.7.2", only: :test},
       {:gettext, "~> 0.13.0", optional: true},
-      {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]}
+      {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
+      {:flow, "~> 0.11", optional: true, only: [:dev, :test]}
     ]
   end
 

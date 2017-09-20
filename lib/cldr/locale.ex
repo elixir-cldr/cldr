@@ -115,8 +115,10 @@ defmodule Cldr.Locale do
   end
 
   @alias_keys Map.keys(@aliases)
-  defp aliases(locale, type) when type in @alias_keys do
-    get_in(aliases(), [type, locale])
+  def aliases(key, type) when type in @alias_keys do
+    aliases()
+    |> Map.get(type)
+    |> Map.get(key)
   end
 
 end

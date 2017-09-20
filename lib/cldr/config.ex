@@ -442,6 +442,17 @@ defmodule Cldr.Config do
     |> Poison.decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> Enum.into(%{})
+    |> structify_languages
+  end
+
+  defp structify_languages(map) do
+    languages = Enum.map(map.language, fn {k, v} ->
+      values = Cldr.Map.atomize_keys(v)
+      {k, struct(Cldr.LanguageTag, values)}
+    end)
+    |> Enum.into(%{})
+
+    Map.put(map, :language, languages)
   end
 
   @doc """

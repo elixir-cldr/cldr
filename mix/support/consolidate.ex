@@ -1,5 +1,4 @@
-# credo:disable-for-this-file
-if Code.ensure_loaded?(Experimental.Flow) do
+if Code.ensure_loaded?(Flow) do
   defmodule Cldr.Consolidate do
     @moduledoc """
     Consolidates all locale-specific information from the CLDR repository into
@@ -7,6 +6,7 @@ if Code.ensure_loaded?(Experimental.Flow) do
     """
 
     alias Cldr.Normalize
+    alias Cldr.LanguageTag
 
     @max_demand :erlang.system_info(:schedulers_online)
 
@@ -29,8 +29,6 @@ if Code.ensure_loaded?(Experimental.Flow) do
     """
     @spec consolidate_locales :: :ok
     def consolidate_locales do
-      alias Experimental.Flow
-
       ensure_output_dir_exists!(consolidated_output_dir())
       ensure_output_dir_exists!(consolidated_locales_dir())
 
@@ -57,8 +55,6 @@ if Code.ensure_loaded?(Experimental.Flow) do
     """
     @spec consolidate_known_locales :: :ok
     def consolidate_known_locales do
-      alias Experimental.Flow
-
       Cldr.known_locales()
       |> Flow.from_enumerable(max_demand: @max_demand)
       |> Flow.map(&consolidate_locale/1)
@@ -312,14 +308,15 @@ if Code.ensure_loaded?(Experimental.Flow) do
       |> Poison.decode!
       |> get_in(["supplemental", "metadata", "alias"])
       |> Cldr.Map.remove_leading_underscores
-      |> Cldr.Map.underscore_key("variantAlias")
-      |> Cldr.Map.underscore_key("scriptAlias")
-      |> Cldr.Map.underscore_key("zoneAlias")
-      |> Cldr.Map.underscore_key("territoryAlias")
-      |> Cldr.Map.underscore_key("languageAlias")
+      |> Cldr.Map.rename_key("variantAlias", "variant")
+      |> Cldr.Map.rename_key("scriptAlias", "script")
+      |> Cldr.Map.rename_key("zoneAlias", "zone")
+      |> Cldr.Map.rename_key("territoryAlias", "region")
+      |> Cldr.Map.rename_key("languageAlias", "language")
       |> Cldr.Map.deep_map(&split_alternates/1)
       |> Enum.map(&simplify_replacements/1)
       |> Enum.into(%{})
+      |> parse_language_aliases
       |> save_file(path)
 
       assert_package_file_configured!(path)
@@ -353,6 +350,16 @@ if Code.ensure_loaded?(Experimental.Flow) do
       File.write!(path, Poison.encode!(content))
     end
 
+    defp parse_language_aliases(map) do
+      language_aliases = Enum.map(Map.get(map, "language"), fn {k, v} ->
+        [language | _rest] = String.split(v, " ")
+        {k, LanguageTag.parse!(language)}
+      end)
+      |> Enum.into(%{})
+
+      Map.put(map, "language", language_aliases)
+    end
+
     defp split_alternates({k, v}) do
       if String.contains?(v, " ") do
         {k, String.split(v, " ")}
@@ -374,5 +381,6 @@ if Code.ensure_loaded?(Experimental.Flow) do
     defp simplify_replacements({k, v}) do
       {k, Enum.map(v, &simplify_replacements/1)}
     end
+
   end
 end
