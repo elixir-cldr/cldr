@@ -3,6 +3,7 @@ defmodule Cldr.Locale do
   Parse and process locale json as defined by [Unicode](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
   """
   alias Cldr.LanguageTag
+  import Cldr.Helpers
 
   @typedoc "The name of a locale in a string format"
   @type name :: String.t
@@ -29,12 +30,29 @@ defmodule Cldr.Locale do
   region are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
   `sr_Latn_AQ`.
 
-  * If the tag is grandfathered in the supplemental data, then return it.
-
   * Remove the script code 'Zzzz' and the region code 'ZZ' if they occur.
 
   * Get the components of the cleaned-up source tag (languages, scripts, and
   regions), plus any variants and extensions.
+
+  ## Examples
+
+      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("en-US")
+      %Cldr.LanguageTag{extensions: %{}, language: "en", locale: %{}, private_use: [],
+       region: "US", script: nil, transforms: %{}, variant: nil}
+
+      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
+      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
+       region: "AQ", script: "Arab", transforms: %{}, variant: nil}
+
+      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
+      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
+       region: "AQ", script: "Latn", transforms: %{}, variant: nil}
+
+      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
+      %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: [], private_use: [],
+       region: "MD", script: nil, transforms: %{}, variant: nil}
+
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
     language_tag
@@ -42,15 +60,40 @@ defmodule Cldr.Locale do
     |> substitute(:script)
     |> substitute(:region)
     |> merge(language_tag)
+    |> remove_unknown(:script)
+    |> remove_unknown(:region)
   end
 
-  defp substitute(language_tag, _key) do
-    language_tag
+  defp substitute(%LanguageTag{language: language}, :language) do
+    aliases(language, :language) || %LanguageTag{}
   end
 
-  defp merge(_language_tag1, _language_tag2) do
-
+  defp substitute(%LanguageTag{script: script} = language_tag, :script) do
+    %{language_tag | script: aliases(script, :script) || script}
   end
+
+  defp substitute(%LanguageTag{region: region} = language_tag, :region) do
+    %{language_tag | region: aliases(region, :region) || region}
+  end
+
+  defp merge(alias_tag, original_language_tag) do
+    Map.merge(alias_tag, original_language_tag, fn
+      :language, v_alias, v_original ->
+        if empty?(v_alias), do: v_original, else: v_alias
+      _k, v_alias, v_original ->
+        if empty?(v_original), do: v_alias, else: v_original
+    end)
+  end
+
+  defp remove_unknown(%LanguageTag{script: "Zzzz"} = language_tag, :script) do
+    %{language_tag | script: nil}
+  end
+  defp remove_unknown(%LanguageTag{} = language_tag, :script), do: language_tag
+
+  defp remove_unknown(%LanguageTag{region: "ZZ"} = language_tag, :region) do
+    %{language_tag | region: nil}
+  end
+  defp remove_unknown(%LanguageTag{} = language_tag, :region), do: language_tag
 
   @doc """
   Given a source locale X, to return a locale Y where the empty subtags
@@ -120,6 +163,11 @@ defmodule Cldr.Locale do
     aliases()
     |> Map.get(type)
     |> Map.get(key)
+  end
+
+  @likely_subtags Cldr.Config.likely_subtags
+  def likely_subtags do
+    @likely_subtags
   end
 
 end

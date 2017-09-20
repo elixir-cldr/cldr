@@ -456,6 +456,20 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the likely subtags map which maps a
+  locale string to %LaguageTag{} representing
+  the likely subtags for that locale string.
+  """
+  def likely_subtags do
+    client_data_dir()
+    |> Path.join("likely_subtags.json")
+    |> File.read!
+    |> Poison.decode!
+    |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, v)} end)
+    |> Enum.into(%{})
+  end
+
+  @doc """
   Returns the data that defines start and end of
   calendar weeks, weekends and years
   """

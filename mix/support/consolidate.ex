@@ -330,6 +330,8 @@ if Code.ensure_loaded?(Flow) do
       |> File.read!
       |> Poison.decode!
       |> get_in(["supplemental", "likelySubtags"])
+      |> Enum.map(fn {k, v} -> {k, LanguageTag.parse!(v)} end)
+      |> Enum.into(%{})
       |> save_file(path)
 
       assert_package_file_configured!(path)
