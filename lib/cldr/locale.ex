@@ -69,11 +69,11 @@ defmodule Cldr.Locale do
 
   Lookup each of the following in order, and stop on the first match:
 
-  * `languages_scripts_regions`
-  * `languages_regions`
-  * `languages_scripts`
-  * `languages`
-  * `und_scripts`
+  * `language<sub>s</sub>_script<sub>s</sub>_region<sub>s</sub>`
+  * `language<sub>s</sub>_region<sub>s</sub>`
+  * `language<sub>s</sub>_script<sub>s</sub>`
+  * `language<sub>s</sub>`
+  * `und_script<sub>s</sub>`
 
   ### Return
 
@@ -83,8 +83,9 @@ defmodule Cldr.Locale do
 
   * Otherwise there is a match = language<sub>m</sub>_script<sub>m</sub>_region<sub>m</sub>
 
-  * Let x</sub>r</sub> = x,sub>s</sub> if x<sub>s</sub> is not empty, and x<sub>m</sub> otherwise.
-  * Return the language tag composed of languager _ scriptr _ regionr + variants + extensions .
+  * Let x<sub>r</sub> = x<sub>s</sub> if x<sub>s</sub> is not empty, and x<sub>m</sub> otherwise.
+
+  * Return the language tag composed of language<sub>r</sub>_script<sub>r</sub>_region<sub>r</sub>_ + variants + extensions .
 
   ## Example
 
