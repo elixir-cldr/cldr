@@ -425,7 +425,8 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns a list of the vaid currency codes in upcased atom format
+  Returns a list of the vaid currency codes in
+  upcased atom format
   """
   def currency_codes do
     client_data_dir()
@@ -435,6 +436,10 @@ defmodule Cldr.Config do
     |> Enum.map(&String.to_atom/1)
   end
 
+  @doc """
+  Returns the map of aliases for languages,
+  scripts and regions
+  """
   def aliases do
     client_data_dir()
     |> Path.join("aliases.json")
@@ -458,7 +463,7 @@ defmodule Cldr.Config do
   @doc """
   Returns the likely subtags map which maps a
   locale string to %LaguageTag{} representing
-  the likely subtags for that locale string.
+  the likely subtags for that locale string
   """
   def likely_subtags do
     client_data_dir()
