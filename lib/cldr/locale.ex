@@ -4,54 +4,101 @@ defmodule Cldr.Locale do
   """
   alias Cldr.LanguageTag
 
-  @type name :: binary
+  @typedoc "The name of a locale in a string format"
+  @type name :: String.t
 
-  def normalize_locale_name(locale_name) do
-    String.replace(locale_name, "_", "-")
+  @spec normalize_locale_name(name) :: name
+  def normalize_locale_name(name) do
+    String.replace(name, "_", "-")
   end
 
-  def locale_from(%LanguageTag{language: language, script: script, region: region}) do
+  def locale_from_language_tag(%LanguageTag{language: language, script: script, region: region}) do
     [language, script, region]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
 
   @doc """
-  Attempt to match the provided locale to a configured locale.
+  Given a source locale X, to return a locale Y where the aliases
+  have been substituted with their non-deprecated alternatives.
+
+  * Replace any deprecated subtags with their canonical values using the alias
+  data. Use the first value in the replacement list, if
+  it exists. Language tag replacements may have multiple parts, such as "
+  sh" ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
+  region are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
+  `sr_Latn_AQ`.
+
+  * If the tag is grandfathered in the supplemental data, then return it.
+
+  * Remove the script code 'Zzzz' and the region code 'ZZ' if they occur.
+
+  * Get the components of the cleaned-up source tag (languages, scripts, and
+  regions), plus any variants and extensions.
   """
-  def match(locale) when is_binary(locale) do
-    if Cldr.known_locale?(locale) do
-      {:ok, locale}
-    else
-      locale
-      |> LanguageTag.parse_locale
-      |> match
-    end
+  def substitute_aliases(%LanguageTag{} = language_tag) do
+    language_tag
+    |> substitute(:language)
+    |> substitute(:script)
+    |> substitute(:region)
+    |> merge(language_tag)
   end
 
-  @known_locales Cldr.known_locales
-  def match({:error, reason}), do: {:error, reason}
-
-  def match({:ok, locale, %LanguageTag{} = language_tag}) when locale in @known_locales do
-    {:ok, locale, language_tag}
+  defp substitute(language_tag, _key) do
+    language_tag
   end
 
-  def match({:ok, locale, %LanguageTag{} = language_tag}) do
-    match_alias(locale, language_tag)
+  defp merge(_language_tag1, _language_tag2) do
+
   end
 
-  def match_alias(locale, language_tag) do
-    case find_alias(locale, language_tag) do
-      {:ok, locale_alias} -> match({:ok, locale_alias, language_tag})
-      {:error, reason} -> {:error, reason}
-    end
-  end
+  @doc """
+  Given a source locale X, to return a locale Y where the empty subtags
+  have been filled in by the most likely subtags.
 
-  def find_alias(locale, language_tag) do
-    cond do
-      locale_alias = aliases(locale, :language_alias)  -> {:ok, locale_alias}
-      true -> {:error, alias_error(locale_from(language_tag), locale)}
-    end
+  This is written as X ⇒ Y ("X maximizes to Y").
+
+  A subtag is called empty if it is a missing script or region subtag, or it is
+  a base language subtag with the value `und`. In the description below,
+  a subscript on a subtag x indicates which tag it is from: x<sub>s</sub> is in the
+  source, `x<sub>m</sub>` is in a match, and `x<sub>r</sub>` is in the final result.
+
+  This operation is performed in the following way:
+
+  ### Lookup
+
+  Lookup each of the following in order, and stop on the first match:
+
+  * `languages_scripts_regions`
+  * `languages_regions`
+  * `languages_scripts`
+  * `languages`
+  * `und_scripts`
+
+  ### Return
+
+  * If there is no match,either return
+    * an error value, or
+    * the match for `und`
+
+  * Otherwise there is a match = language<sub>m</sub>_script<sub>m</sub>_region<sub>m</sub>
+
+  * Let x</sub>r</sub> = x,sub>s</sub> if x<sub>s</sub> is not empty, and x<sub>m</sub> otherwise.
+  * Return the language tag composed of languager _ scriptr _ regionr + variants + extensions .
+
+  ## Example
+
+  * Input is `ZH-ZZZZ-SG`.
+
+  * Normalize to `zh_SG`.
+
+  * Lookup in table. No match.
+
+  * Lookup `zh`, and get the match `zh-Hans-CN`. Substitute `SG`, and return `zh-Hans-SG`.
+
+  """
+  def add_likely_subtags do
+
   end
 
   def locale_error(locale_name) do
