@@ -24,8 +24,8 @@ defmodule Cldr.Locale do
 
   * Replace any deprecated subtags with their canonical values using the alias
   data. Use the first value in the replacement list, if
-  it exists. Language tag replacements may have multiple parts, such as "
-  sh" ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
+  it exists. Language tag replacements may have multiple parts, such as
+  `sh` ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
   region are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
   `sr_Latn_AQ`.
 
@@ -61,7 +61,7 @@ defmodule Cldr.Locale do
   A subtag is called empty if it is a missing script or region subtag, or it is
   a base language subtag with the value `und`. In the description below,
   a subscript on a subtag x indicates which tag it is from: x<sub>s</sub> is in the
-  source, `x<sub>m</sub>` is in a match, and `x<sub>r</sub>` is in the final result.
+  source, x<sub>m</sub> is in a match, and x<sub>r</sub> is in the final result.
 
   This operation is performed in the following way:
 
@@ -69,11 +69,11 @@ defmodule Cldr.Locale do
 
   Lookup each of the following in order, and stop on the first match:
 
-  * `language<sub>s</sub>_script<sub>s</sub>_region<sub>s</sub>`
-  * `language<sub>s</sub>_region<sub>s</sub>`
-  * `language<sub>s</sub>_script<sub>s</sub>`
-  * `language<sub>s</sub>`
-  * `und_script<sub>s</sub>`
+  * language<sub>s</sub>-script<sub>s</sub>-region<sub>s</sub>
+  * language<sub>s</sub>-region<sub>s</sub>
+  * language<sub>s</sub>-script<sub>s</sub>
+  * language<sub>s</sub>
+  * und-script<sub>s</sub>
 
   ### Return
 
@@ -81,17 +81,17 @@ defmodule Cldr.Locale do
     * an error value, or
     * the match for `und`
 
-  * Otherwise there is a match = language<sub>m</sub>_script<sub>m</sub>_region<sub>m</sub>
+  * Otherwise there is a match = language<sub>m</sub>-script<sub>m</sub>-region<sub>m</sub>
 
   * Let x<sub>r</sub> = x<sub>s</sub> if x<sub>s</sub> is not empty, and x<sub>m</sub> otherwise.
 
-  * Return the language tag composed of language<sub>r</sub>_script<sub>r</sub>_region<sub>r</sub>_ + variants + extensions .
+  * Return the language tag composed of language<sub>r</sub>-script<sub>r</sub>-region<sub>r</sub> + variants + extensions .
 
   ## Example
 
   * Input is `ZH-ZZZZ-SG`.
 
-  * Normalize to `zh_SG`.
+  * Normalize to `zh-SG`.
 
   * Lookup in table. No match.
 
