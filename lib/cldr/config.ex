@@ -470,7 +470,7 @@ defmodule Cldr.Config do
     |> Path.join("likely_subtags.json")
     |> File.read!
     |> Poison.decode!
-    |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, v)} end)
+    |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, Cldr.Map.atomize_keys(v))} end)
     |> Enum.into(%{})
   end
 

@@ -8,12 +8,28 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type name :: String.t
 
+  def canonical_language_tag(locale_name) when is_binary(locale_name) do
+    case LanguageTag.parse(locale_name) do
+      {:ok, language_tag} ->
+          {:ok, language_tag
+                |> substitute_aliases
+                |> add_likely_subtags}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   @spec normalize_locale_name(name) :: name
   def normalize_locale_name(name) do
     String.replace(name, "_", "-")
   end
 
-  def locale_from_language_tag(%LanguageTag{language: language, script: script, region: region}) do
+  def locale_from(%LanguageTag{language: language, script: script, region: region}) do
+    locale_from(language, script, region)
+  end
+
+  def locale_from(language, script, region) do
     [language, script, region]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
@@ -141,8 +157,14 @@ defmodule Cldr.Locale do
   * Lookup `zh`, and get the match `zh-Hans-CN`. Substitute `SG`, and return `zh-Hans-SG`.
 
   """
-  def add_likely_subtags do
+  def add_likely_subtags(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+    subtags = likely_subtags(locale_from(language, script, region)) ||
+              likely_subtags(locale_from(language, nil, region)) ||
+              likely_subtags(locale_from(language, script, nil)) ||
+              likely_subtags(locale_from(language, nil, nil)) ||
+              %LanguageTag{}
 
+    Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
 
   def locale_error(locale_name) do
@@ -170,4 +192,7 @@ defmodule Cldr.Locale do
     @likely_subtags
   end
 
+  def likely_subtags(locale_string) do
+    Map.get(likely_subtags(), locale_string)
+  end
 end
