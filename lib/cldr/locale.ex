@@ -11,13 +11,15 @@ defmodule Cldr.Locale do
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
       {:ok, language_tag} ->
-          {:ok, language_tag
-                |> substitute_aliases
-                |> add_likely_subtags}
-
+          {:ok, language_tag |> substitute_aliases |> add_likely_subtags}
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  def canonical_locale_name(locale_name) do
+    {:ok, language_tag} = canonical_language_tag(locale_name)
+    locale_from(language_tag)
   end
 
   @spec normalize_locale_name(name) :: name
@@ -26,10 +28,10 @@ defmodule Cldr.Locale do
   end
 
   def locale_from(%LanguageTag{language: language, script: script, region: region}) do
-    locale_from(language, script, region)
+    locale_name_from(language, script, region)
   end
 
-  def locale_from(language, script, region) do
+  def locale_name_from(language, script, region) do
     [language, script, region]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
@@ -148,21 +150,18 @@ defmodule Cldr.Locale do
 
   ## Example
 
-  * Input is `ZH-ZZZZ-SG`.
-
-  * Normalize to `zh-SG`.
-
-  * Lookup in table. No match.
-
-  * Lookup `zh`, and get the match `zh-Hans-CN`. Substitute `SG`, and return `zh-Hans-SG`.
+      iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
+      %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: [], private_use: [],
+       region: "SG", script: "Hans", transforms: %{}, variant: nil}
 
   """
   def add_likely_subtags(%LanguageTag{language: language, script: script, region: region} = language_tag) do
-    subtags = likely_subtags(locale_from(language, script, region)) ||
-              likely_subtags(locale_from(language, nil, region)) ||
-              likely_subtags(locale_from(language, script, nil)) ||
-              likely_subtags(locale_from(language, nil, nil)) ||
-              %LanguageTag{}
+    subtags = likely_subtags(locale_name_from(language, script, region)) ||
+              likely_subtags(locale_name_from(language, nil, region)) ||
+              likely_subtags(locale_name_from(language, script, nil)) ||
+              likely_subtags(locale_name_from(language, nil, nil)) ||
+              likely_subtags(locale_name_from("und", script, nil)) ||
+              likely_subtags(locale_name_from("und", nil, nil))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
