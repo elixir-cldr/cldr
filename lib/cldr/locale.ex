@@ -24,7 +24,7 @@ defmodule Cldr.Locale do
   def canonical_locale_name(locale) do
     case canonical_language_tag(locale) do
       {:ok, language_tag} -> locale_name_from(language_tag)
-      {:error, error} -> {:error, locale}
+      {:error, reason} -> {:error, reason}
     end
   end
 
