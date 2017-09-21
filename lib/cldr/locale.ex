@@ -11,15 +11,21 @@ defmodule Cldr.Locale do
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
       {:ok, language_tag} ->
-          {:ok, language_tag |> substitute_aliases |> add_likely_subtags}
+        canonical_language_tag(language_tag)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  def canonical_locale_name(locale_name) do
-    {:ok, language_tag} = canonical_language_tag(locale_name)
-    locale_from(language_tag)
+  def canonical_language_tag(%LanguageTag{} = language_tag) do
+    {:ok, language_tag |> substitute_aliases |> add_likely_subtags}
+  end
+
+  def canonical_locale_name(locale) do
+    case canonical_language_tag(locale) do
+      {:ok, language_tag} -> locale_name_from(language_tag)
+      {:error, error} -> {:error, locale}
+    end
   end
 
   @spec normalize_locale_name(name) :: name
@@ -27,7 +33,7 @@ defmodule Cldr.Locale do
     String.replace(name, "_", "-")
   end
 
-  def locale_from(%LanguageTag{language: language, script: script, region: region}) do
+  def locale_name_from(%LanguageTag{language: language, script: script, region: region}) do
     locale_name_from(language, script, region)
   end
 
