@@ -14,7 +14,7 @@ defmodule Cldr.LanguageTag.Parser do
   @grammar ABNF.load_file(Cldr.data_dir <> "/rfc5646.abnf")
 
   def parse(locale) when is_list(locale) do
-    case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{})) do
+    case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
       {:ok, language_tag} ->
         normalized_tag =
           language_tag
@@ -93,8 +93,11 @@ defmodule Cldr.LanguageTag.Parser do
     |> String.upcase
   end
 
-  defp return_parse_result(%{rest: [], state: state}), do: {:ok, state}
-  defp return_parse_result(%{rest: rest}) do
+  defp return_parse_result(%{rest: [], state: state}, _locale), do: {:ok, state}
+  defp return_parse_result(nil, locale) do
+    {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect locale}"}}
+  end
+  defp return_parse_result(%{rest: rest}, _locale) do
     {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect rest}"}}
   end
 

@@ -135,3 +135,15 @@ defmodule Cldr.NoRbnf do
   end
 end
 
+defmodule Cldr.AcceptLanguageError do
+  @moduledoc """
+  Exception raised when there no valid language tag
+  in an `Accept-Language` header.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
