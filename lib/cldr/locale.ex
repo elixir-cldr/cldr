@@ -21,6 +21,13 @@ defmodule Cldr.Locale do
     {:ok, language_tag |> substitute_aliases |> add_likely_subtags}
   end
 
+  def canonical_language_tag!(language_tag) do
+    case canonical_language_tag(language_tag) do
+      {:ok, tag} -> tag
+      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
   def canonical_locale_name(locale) do
     case canonical_language_tag(locale) do
       {:ok, language_tag} -> locale_name_from(language_tag)

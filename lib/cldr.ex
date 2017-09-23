@@ -19,7 +19,7 @@ defmodule Cldr do
   alias Cldr.Locale
   alias Cldr.Install
 
-  @default_territory "001"
+  @default_region "001"
 
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
@@ -106,11 +106,26 @@ defmodule Cldr do
 
       iex> Cldr.default_locale()
       "en"
+
   """
   @default_locale Config.default_locale()
   @spec default_locale :: [Locale.t]
   def default_locale do
     @default_locale
+  end
+
+  @doc """
+  Returns the default region when a locale
+  does not specify one and none can be inferred.
+
+  ## Example
+
+      iex> Cldr.default_region()
+      "001"
+
+  """
+  def default_region do
+    @default_region
   end
 
   @doc """
@@ -208,7 +223,7 @@ defmodule Cldr do
 
   """
   def region_from_locale(locale \\ get_current_locale()) do
-    Cldr.LanguageTag.parse!(locale).region || @default_territory
+    Cldr.Locale.canonical_language_tag!(locale).region || default_region()
   end
 
 
@@ -228,7 +243,7 @@ defmodule Cldr do
 
   """
   def language_from_locale(locale \\ get_current_locale()) do
-    Cldr.LanguageTag.parse!(locale).language
+    Cldr.Locale.canonical_language_tag!(locale).language
   end
 
   @doc """
@@ -247,6 +262,7 @@ defmodule Cldr do
 
       iex> Cldr.locale_exists? "en-SA"
       false
+
   """
   @spec locale_exists?(Locale.t) :: boolean
   def locale_exists?(locale) when is_binary(locale) do

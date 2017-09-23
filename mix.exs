@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.7.0"
+  @version "0.7.1-dev"
 
   def project do
     [
@@ -32,7 +32,7 @@ defmodule Cldr.Mixfile do
 
   def application do
     [
-      applications: [:poison, :decimal, :logger, :stream_data]
+      extra_applications: [:logger]
     ]
   end
 
@@ -46,7 +46,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
       {:flow, "~> 0.11", optional: true, only: [:dev, :test]},
-      {:stream_data, "~> 0.3.0", optional: true, only: [:dev, :test]}
+      {:stream_data, "~> 0.3.0", optional: true, only: :test}
     ]
   end
 
