@@ -48,7 +48,7 @@ defmodule Cldr.Locale do
     end
   end
 
-  defp set_cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+  defp set_cldr_locale_name(%LanguageTag{} = language_tag) do
     cldr_locale_name =
       cldr_locale_name(language_tag) ||
       locale_name_from(Cldr.default_locale)
@@ -56,7 +56,7 @@ defmodule Cldr.Locale do
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  def cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+  def cldr_locale_name(%LanguageTag{language: language, script: script, region: region}) do
     Cldr.known_locale(locale_name_from(language, script, region)) ||
     Cldr.known_locale(locale_name_from(language, nil, region)) ||
     Cldr.known_locale(locale_name_from(language, script, nil)) ||
