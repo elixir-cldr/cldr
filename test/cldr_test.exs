@@ -1,28 +1,22 @@
 defmodule Cldr.Test do
   use ExUnit.Case
 
-  # If you're testing on your own machine, replace @dev_dir
-  # with the repo root directory of your own system
-  def strip(string) do
-    String.replace(string, Cldr.Config.cldr_home(),"")
-  end
-
   test "that the cldr source data directory is correct" do
-    assert strip(Cldr.Config.source_data_dir()) == "/priv/cldr"
+    assert String.ends_with?(Cldr.Config.source_data_dir(), "/priv/cldr") == true
   end
 
   test "that the client data directory is correct" do
-    assert strip(Cldr.Config.client_data_dir()) ==
-      "/_build/test/lib/ex_cldr/priv/cldr"
+    assert String.ends_with?(Cldr.Config.client_data_dir(),
+      "/_build/test/lib/ex_cldr/priv/cldr") == true
   end
 
   test "that the cldr data directory is correct" do
-    assert strip(Cldr.Config.cldr_data_dir()) ==
-      "/_build/test/lib/ex_cldr/priv/cldr"
+    assert String.ends_with?(Cldr.Config.cldr_data_dir(),
+      "/_build/test/lib/ex_cldr/priv/cldr") == true
   end
 
   test "that the download data directory is correct" do
-    assert strip(Cldr.Config.download_data_dir()) == "/data"
+    assert String.ends_with?(Cldr.Config.download_data_dir(), "/data") == true
   end
 
   test "that we have the correct modules (keys) for the json consolidation" do
