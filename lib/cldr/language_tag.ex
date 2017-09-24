@@ -3,7 +3,7 @@ defmodule Cldr.LanguageTag do
 
   defstruct language: nil, script: nil, region: nil, variant: nil, locale: %{},
             transforms: %{}, extensions: %{}, private_use: [],
-            requested_locale_name: nil, canonical_locale_name: nil
+            requested_locale_name: nil, canonical_locale_name: nil, cldr_locale_name: nil
 
   def parse(locale_string) do
     Parser.parse(locale_string)

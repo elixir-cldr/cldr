@@ -28,9 +28,10 @@ defmodule Cldr.Test do
   test "default locale" do
     assert Cldr.default_locale() ==
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        extensions: %{}, language: "en", locale: [], private_use: [],
-        region: "001", requested_locale_name: "en-001", script: "Latn",
-        transforms: %{}, variant: nil}
+        cldr_locale_name: "en-001", extensions: %{}, language: "en",
+        locale: [], private_use: [], region: "001",
+        requested_locale_name: "en-001", script: "Latn", transforms: %{},
+        variant: nil}
   end
 
   test "locale does not exist" do

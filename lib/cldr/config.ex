@@ -90,6 +90,7 @@ defmodule Cldr.Config do
   """
 
   alias Cldr.Locale
+  alias Cldr.LanguageTag
 
   @type t :: binary
 
@@ -275,6 +276,36 @@ defmodule Cldr.Config do
     |> Enum.sort
   end
 
+  @doc false
+  # This is basically a duplication of `Cldr.Locale.canonical_language_tag` but
+  # written to be available at compile time in `Cldr` which is definitely hacky,
+  def canonical_language_tag!(locale_name) do
+    language_tag = LanguageTag.Parser.parse!(locale_name)
+    requested_locale_name = Locale.locale_name_from(language_tag)
+
+    canonical_tag =
+      language_tag
+      |> Locale.substitute_aliases
+      |> Locale.add_likely_subtags
+
+    canonical_tag
+      |> Map.put(:requested_locale_name, requested_locale_name)
+      |> Map.put(:canonical_locale_name, Locale.locale_name_from(canonical_tag))
+      |> set_cldr_locale_name
+  end
+
+  @doc false
+  def set_cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+    cldr_locale_name =
+      known_locale(Locale.locale_name_from(language, script, region)) ||
+      known_locale(Locale.locale_name_from(language, nil, region)) ||
+      known_locale(Locale.locale_name_from(language, script, nil)) ||
+      known_locale(Locale.locale_name_from(language, nil, nil)) ||
+      Locale.locale_name_from(LanguageTag.parse!(default_locale()))
+
+    %{language_tag | cldr_locale_name: cldr_locale_name}
+  end
+
   @doc """
   Returns a list of all locales that are configured and available
   in the CLDR repository.
@@ -286,6 +317,14 @@ defmodule Cldr.Config do
     |> MapSet.intersection(MapSet.new(all_locales()))
     |> MapSet.to_list
     |> Enum.sort
+  end
+
+  def known_locale(locale_name) do
+    if locale_name in known_locales() do
+      locale_name
+    else
+      false
+    end
   end
 
   @doc """

@@ -29,6 +29,7 @@ defmodule Cldr.Locale do
       canonical_tag
       |> Map.put(:requested_locale_name, requested_locale_name)
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
+      |> set_cldr_locale_name
 
     {:ok, canonical_tag}
   end
@@ -45,6 +46,17 @@ defmodule Cldr.Locale do
       {:ok, language_tag} -> locale_name_from(language_tag)
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  def set_cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+    cldr_locale_name =
+      Cldr.known_locale(locale_name_from(language, script, region)) ||
+      Cldr.known_locale(locale_name_from(language, nil, region)) ||
+      Cldr.known_locale(locale_name_from(language, script, nil)) ||
+      Cldr.known_locale(locale_name_from(language, nil, nil)) ||
+      locale_name_from(Cldr.default_locale)
+
+    %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
   @spec normalize_locale_name(name) :: name

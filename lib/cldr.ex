@@ -91,7 +91,7 @@ defmodule Cldr do
   """
   @spec set_current_locale(String.t) :: Map.t
   def set_current_locale(locale) when is_binary(locale) do
-    case Cldr.LanguageTag.parse(locale) do
+    case Cldr.Locale.canonical_language_tag(locale) do
       {:ok, language_tag} -> set_current_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
@@ -108,12 +108,13 @@ defmodule Cldr do
 
       iex> Cldr.default_locale()
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        extensions: %{}, language: "en", locale: [], private_use: [],
-        region: "001", requested_locale_name: "en-001", script: "Latn",
-        transforms: %{}, variant: nil}
+        cldr_locale_name: "en-001", extensions: %{}, language: "en",
+        locale: [], private_use: [], region: "001",
+        requested_locale_name: "en-001", script: "Latn", transforms: %{},
+        variant: nil}
 
   """
-  @default_locale Config.default_locale() |> Cldr.Locale.canonical_language_tag!
+  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
   @spec default_locale :: Cldr.LanguageTag.t
   def default_locale do
     @default_locale
@@ -273,7 +274,29 @@ defmodule Cldr do
   """
   @spec locale_exists?(Locale.t) :: boolean
   def locale_exists?(locale) when is_binary(locale) do
-    !!Enum.find(Config.all_locales(), &(&1 == locale))
+    locale in Config.all_locales()
+  end
+
+  @doc """
+  Returns either the locale name or nil based upon
+  whether the locale name is configured in `Cldr`.
+
+  ## Examples
+
+      iex> Cldr.known_locale "en-AU"
+      "en-AU"
+
+      iex> Cldr.known_locale "en-SA"
+      false
+
+  """
+
+  def known_locale(locale) when is_binary(locale) do
+    if locale in Config.known_locales do
+      locale
+    else
+      false
+    end
   end
 
   @doc """
