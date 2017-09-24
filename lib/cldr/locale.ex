@@ -18,7 +18,19 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag) do
-    {:ok, language_tag |> substitute_aliases |> add_likely_subtags}
+    requested_locale_name = locale_name_from(language_tag)
+
+    canonical_tag =
+      language_tag
+      |> substitute_aliases
+      |> add_likely_subtags
+
+    canonical_tag =
+      canonical_tag
+      |> Map.put(:requested_locale_name, requested_locale_name)
+      |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
+
+    {:ok, canonical_tag}
   end
 
   def canonical_language_tag!(language_tag) do

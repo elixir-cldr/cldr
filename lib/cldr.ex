@@ -89,14 +89,16 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
   """
-  @spec set_current_locale(Locale.t) :: Locale.t
+  @spec set_current_locale(String.t) :: Map.t
   def set_current_locale(locale) when is_binary(locale) do
-    if known_locale?(locale) do
-      Process.put(:cldr, locale)
-      locale
-    else
-      {:error, Cldr.Locale.locale_error(locale)}
+    case Cldr.LanguageTag.parse(locale) do
+      {:ok, language_tag} -> set_current_locale(language_tag)
+      {:error, reason} -> {:error, reason}
     end
+  end
+
+  def set_current_locale(%{} = language_tag) do
+    Process.put(:cldr, language_tag)
   end
 
   @doc """
@@ -105,11 +107,14 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.default_locale()
-      "en"
+      %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
+        extensions: %{}, language: "en", locale: [], private_use: [],
+        region: "001", requested_locale_name: "en-001", script: "Latn",
+        transforms: %{}, variant: nil}
 
   """
-  @default_locale Config.default_locale()
-  @spec default_locale :: [Locale.t]
+  @default_locale Config.default_locale() |> Cldr.Locale.canonical_language_tag!
+  @spec default_locale :: Cldr.LanguageTag.t
   def default_locale do
     @default_locale
   end
@@ -219,13 +224,15 @@ defmodule Cldr do
       "BR"
 
       iex> Cldr.region_from_locale "en"
+      "US"
+
+      iex> Cldr.region_from_locale "en-001"
       "001"
 
   """
   def region_from_locale(locale \\ get_current_locale()) do
     Cldr.Locale.canonical_language_tag!(locale).region || default_region()
   end
-
 
   @doc """
   Extract the language part from a locale.
@@ -301,7 +308,7 @@ defmodule Cldr do
        "islamic_tbla", "islamic_umalqura", "japanese", "persian", "roc"]
 
   """
-  @known_calendars Cldr.Config.calendar_data |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  @known_calendars Cldr.Config.known_calendars
   def known_calendars do
     @known_calendars
   end
@@ -342,7 +349,7 @@ defmodule Cldr do
        "ZWR"]
 
   """
-  @known_currencies Cldr.Config.currency_codes |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  @known_currencies Cldr.Config.known_currencies
   def known_currencies do
     @known_currencies
   end
@@ -364,7 +371,7 @@ defmodule Cldr do
        "talu", "taml", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara"]
 
   """
-  @known_number_systems Cldr.Config.number_systems |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  @known_number_systems Cldr.Config.known_number_systems
   def known_number_systems do
     @known_number_systems
   end

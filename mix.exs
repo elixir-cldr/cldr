@@ -36,6 +36,14 @@ defmodule Cldr.Mixfile do
     ]
   end
 
+  # defp stream_data do
+  #   if Mix.env == :test do
+  #     [:stream_data]
+  #   else
+  #     []
+  #   end
+  # end
+
   defp deps do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
@@ -46,7 +54,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
       {:flow, "~> 0.11", optional: true, only: [:dev, :test]},
-      {:stream_data, "~> 0.3.0", optional: true, only: :test}
+      {:stream_data, "~> 0.3.0", only: :test}
     ]
   end
 

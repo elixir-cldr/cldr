@@ -2,7 +2,8 @@ defmodule Cldr.LanguageTag do
   alias Cldr.LanguageTag.Parser
 
   defstruct language: nil, script: nil, region: nil, variant: nil, locale: %{},
-            transforms: %{}, extensions: %{}, private_use: []
+            transforms: %{}, extensions: %{}, private_use: [],
+            requested_locale_name: nil, canonical_locale_name: nil
 
   def parse(locale_string) do
     Parser.parse(locale_string)

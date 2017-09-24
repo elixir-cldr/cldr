@@ -11,7 +11,7 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.LanguageTag
   alias Cldr.Config
 
-  @grammar ABNF.load_file(Cldr.data_dir <> "/rfc5646.abnf")
+  @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
 
   def parse(locale) when is_list(locale) do
     case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
@@ -121,7 +121,7 @@ defmodule Cldr.LanguageTag.Parser do
 
   # from => [to, valid_list, default]
   @locale_map %{
-    "ca" => [:calendar,                 Cldr.known_calendars, "gregory"],
+    "ca" => [:calendar,                 Config.known_calendars, "gregory"],
     "co" => [:collation,                Config.collations(), "standard"],
     "ka" => [:alternative_collation,    ["noignore", "shifted"], "shifted"],
     "kb" => [:backward_level2,          Config.true_false(), "false"],
@@ -131,9 +131,9 @@ defmodule Cldr.LanguageTag.Parser do
     "kk" => [:normalization,            Config.true_false(), "true"],
     "kf" => [:case_first,               ["upper", "lower", "false"], "false"],
     "ks" => [:strength,                 ["level1", "level2", "level3", "level4", "identic"], "level3"],
-    "cu" => [:currency,                 Enum.map(Cldr.known_currencies, &String.downcase/1), nil],
+    "cu" => [:currency,                 Enum.map(Config.known_currencies, &String.downcase/1), nil],
     "cf" => [:currency_format,          ["standard", "account"], "standard"],
-    "nu" => [:number_system,            Cldr.known_number_systems, nil],
+    "nu" => [:number_system,            Config.known_number_systems, nil],
     "em" => [:emoji_style,              ["emoji", "text", "default"], "default"],
     "fw" => [:first_day_of_week,        Config.days_of_week(), "mon"],
     "hc" => [:hour_cycle,               ["h12", "h23", "h11", "h24"], "h23"],

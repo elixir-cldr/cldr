@@ -93,7 +93,7 @@ defmodule Cldr.Config do
 
   @type t :: binary
 
-  @default_locale "en"
+  @default_locale "en-001"
 
   @cldr_modules [
     "number_formats", "list_formats", "currencies",
@@ -313,6 +313,82 @@ defmodule Cldr.Config do
     (configured_locales() ++ gettext_locales() ++ [default_locale()])
     |> Enum.uniq
     |> Enum.sort
+  end
+
+  @doc """
+  Returns a list of strings representing the calendars known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Config.known_calendars
+      ["buddhist", "chinese", "coptic", "dangi", "ethiopic", "ethiopic_amete_alem",
+       "gregorian", "hebrew", "indian", "islamic", "islamic_civil", "islamic_rgsa",
+       "islamic_tbla", "islamic_umalqura", "japanese", "persian", "roc"]
+
+  """
+  def known_calendars do
+    calendar_data() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  end
+
+  @doc """
+  Returns a list of strings representing the currencies known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Config.known_currencies
+      ["ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON",
+       "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN",
+       "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN",
+       "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC",
+       "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN",
+       "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX",
+       "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK",
+       "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN",
+       "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK",
+       "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE",
+       "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP",
+       "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY",
+       "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT",
+       "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL",
+       "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN",
+       "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK",
+       "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO",
+       "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP",
+       "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB",
+       "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP",
+       "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP",
+       "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY",
+       "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI",
+       "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG",
+       "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF",
+       "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD",
+       "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL",
+       "ZWR"]
+
+  """
+  def known_currencies do
+    currency_codes() |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  end
+
+  @doc """
+  Returns a list of strings representing the number systems known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Config.known_number_systems
+      ["adlm", "ahom", "arab", "arabext", "armn", "armnlow", "bali", "beng", "bhks",
+       "brah", "cakm", "cham", "cyrl", "deva", "ethi", "fullwide", "geor", "grek",
+       "greklow", "gujr", "guru", "hanidays", "hanidec", "hans", "hansfin", "hant",
+       "hantfin", "hebr", "hmng", "java", "jpan", "jpanfin", "kali", "khmr", "knda",
+       "lana", "lanatham", "laoo", "latn", "lepc", "limb", "mathbold", "mathdbl",
+       "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo", "mtei",
+       "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma",
+       "roman", "romanlow", "saur", "shrd", "sind", "sinh", "sora", "sund", "takr",
+       "talu", "taml", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara"]
+
+  """
+  def known_number_systems do
+    number_systems() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
   end
 
   @doc """
