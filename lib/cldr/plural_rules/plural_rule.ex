@@ -11,7 +11,7 @@ defmodule Cldr.Number.PluralRule do
         "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
     end
 
-    quote do
+    quote location: :keep do
       alias  Cldr.Math
       import Cldr.Digits, only: [number_of_integer_digits: 1, remove_trailing_zeros: 1]
       import Cldr.Number.PluralRule.Compiler
@@ -65,7 +65,7 @@ defmodule Cldr.Number.PluralRule do
 
       * `number` is an integer, float or Decimal
 
-      * `locale` is any locale returned by `Cldr.known_locales()`
+      * `locale` is a `%LanguageTag.t`
 
       * `substitutions` is a map that maps plural keys to a string.  Per the
       CLDR defintion of plural rules, the valid substitution keys are `:zero`,
@@ -75,25 +75,25 @@ defmodule Cldr.Number.PluralRule do
 
       ## Examples
 
-          iex> Cldr.Number.Ordinal.pluralize 1, "en", %{one: "one"}
+          iex> Cldr.Number.Ordinal.pluralize 1, Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.Ordinal.pluralize 2, "en", %{one: "one"}
+          iex> Cldr.Number.Ordinal.pluralize 2, Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.Ordinal.pluralize 2, "en", %{one: "one", two: "two"}
+          iex> Cldr.Number.Ordinal.pluralize 2, Locale.new("en"), %{one: "one", two: "two"}
           "two"
 
-          iex> Cldr.Number.Ordinal.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+          iex> Cldr.Number.Ordinal.pluralize 22, Locale.new("en"), %{one: "one", two: "two", other: "other"}
           "other"
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(1), "en", %{one: "one"}
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(1), Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), "en", %{one: "one"}
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), Locale.new("en"), %{one: "one", two: "two"}
           "two"
       """
       @default_substitution :other
@@ -106,15 +106,9 @@ defmodule Cldr.Number.PluralRule do
         do_pluralize(number, locale, substitutions)
       end
 
-      defp do_pluralize(number, locale, %{} = substitutions) do
-        plural = plural_rule(number, base_locale(locale))
+      defp do_pluralize(number, %Cldr.LanguageTag{} = locale, %{} = substitutions) do
+        plural = plural_rule(number, locale)
         substitutions[plural] || substitutions[@default_substitution]
-      end
-
-      # Plural rules are only defined on the base locale
-      defp base_locale(locale) do
-        [base | rest] = String.split(locale, "-")
-        base
       end
 
       @doc """
@@ -163,7 +157,6 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a float
-      @lint {Credo.Check.Refactor.PipeChainStart, false}
       def plural_rule(number, locale, rounding)
       when is_float(number) and is_integer(rounding) and rounding > 0 do
         plural_rule(Decimal.new(number), locale, rounding)

@@ -292,6 +292,7 @@ defmodule Cldr.Config do
       |> Map.put(:requested_locale_name, requested_locale_name)
       |> Map.put(:canonical_locale_name, Locale.locale_name_from(canonical_tag))
       |> set_cldr_locale_name
+      |> set_rbnf_locale_name
   end
 
   @doc false
@@ -301,9 +302,20 @@ defmodule Cldr.Config do
       known_locale(Locale.locale_name_from(language, nil, region)) ||
       known_locale(Locale.locale_name_from(language, script, nil)) ||
       known_locale(Locale.locale_name_from(language, nil, nil)) ||
-      Locale.locale_name_from(LanguageTag.parse!(default_locale()))
+      known_locale(language_tag.requested_locale_name) ||
+      nil
 
     %{language_tag | cldr_locale_name: cldr_locale_name}
+  end
+
+  def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
+    rbnf_locale_name =
+      known_rbnf_locale(Locale.locale_name_from(language, script, nil)) ||
+      known_rbnf_locale(Locale.locale_name_from(language, nil, nil)) ||
+      known_rbnf_locale(language_tag.requested_locale_name) ||
+      nil
+
+    %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
   @doc """
@@ -319,8 +331,21 @@ defmodule Cldr.Config do
     |> Enum.sort
   end
 
+  def known_rbnf_locales do
+    known_locales()
+    |> Enum.filter(fn locale -> Map.get(get_locale(locale), :rbnf) != %{} end)
+  end
+
   def known_locale(locale_name) do
     if locale_name in known_locales() do
+      locale_name
+    else
+      false
+    end
+  end
+
+  def known_rbnf_locale(locale_name) do
+    if locale_name in known_rbnf_locales() do
       locale_name
     else
       false

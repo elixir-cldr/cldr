@@ -1,4 +1,4 @@
-if Code.ensure_loaded?(Experimental.Flow) do
+if Code.ensure_loaded?(Flow) do
   defmodule Mix.Tasks.Cldr.Consolidate do
     @moduledoc """
     Mix task to consolidate the cldr data into a set of files, one file per

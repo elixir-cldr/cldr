@@ -1,25 +1,35 @@
 defmodule Cldr do
   @moduledoc """
-  Cldr provides functions to localise numbers, currencies, lists and
-  dates/times to an appropriate locale as defined by the CLDR data
-  maintained by the ICU.
+  Cldr provides the core functions to retrieve and manage
+  the CLDR data that supports formatting and localisation.
 
-  The most commonly used functions are:
+  `Cldr` functionality is packaged into a number of separate
+  packages that each depend on this one.  These additional
+  modules provide:
 
-  * `Cldr.Number.to_string/2` for formatting numbers
+  * `Cldr.Number.to_string/2` for formatting numbers and
+    `Cldr.Currency.to_string/2` for formatting currencies.
+    These functions are contained in the hex package
+    [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
 
-  * `Cldr.Currency.to_string/2` for formatting currencies
+  * `Cldr.List.to_string/2` for formatting lists.
+    These function is contained in the hex package
+    [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists).
 
-  * `Cldr.List.to_string/2` for formatting lists
+  * `Cldr.Unit.to_string/2` for formatting SI units.
+    These function is contained in the hex package
+    [ex_cldr_units](https://hex.pm/packages/ex_cldr_units).
 
-  * `Cldr.Unit.to_string/2` for formatting SI units
+  * `Cldr.DateTime.to_string/2` for formatting of dates,
+    times and datetimes. This function is contained in the
+    hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
+
   """
 
   alias Cldr.Config
   alias Cldr.Locale
   alias Cldr.Install
-
-  @default_region "001"
+  alias Cldr.LanguageTag
 
   if Enum.any?(Config.unknown_locales()) do
     raise Cldr.UnknownLocaleError,
@@ -55,6 +65,7 @@ defmodule Cldr do
   is kept.
   """
   @data_dir Config.client_data_dir()
+  @spec data_dir :: String.t
   def data_dir do
     @data_dir
   end
@@ -72,6 +83,7 @@ defmodule Cldr do
   |> Enum.map(&String.to_integer/1)
   |> List.to_tuple
 
+  @spec version :: {non_neg_integer, non_neg_integer, non_neg_integer}
   def version do
     @version
   end
@@ -80,7 +92,7 @@ defmodule Cldr do
   Return the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
   """
-  @spec get_current_locale :: Locale.t
+  @spec get_current_locale :: LanguageTag.t
   def get_current_locale do
     Process.get(:cldr, default_locale())
   end
@@ -89,7 +101,7 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
   """
-  @spec set_current_locale(String.t) :: Map.t
+  @spec set_current_locale(String.t | LanguageTag.t) :: LanguageTag.t
   def set_current_locale(locale) when is_binary(locale) do
     case Cldr.Locale.canonical_language_tag(locale) do
       {:ok, language_tag} -> set_current_locale(language_tag)
@@ -109,13 +121,13 @@ defmodule Cldr do
       iex> Cldr.default_locale()
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: [], private_use: [], region: "001",
+        locale: [], private_use: [], rbnf_locale_name: "en", region: "001",
         requested_locale_name: "en-001", script: "Latn", transforms: %{},
         variant: nil}
 
   """
   @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
-  @spec default_locale :: Cldr.LanguageTag.t
+  @spec default_locale :: LanguageTag.t
   def default_locale do
     @default_locale
   end
@@ -131,7 +143,8 @@ defmodule Cldr do
 
   """
   def default_region do
-    @default_region
+    default_locale()
+    |> Map.get(:region)
   end
 
   @doc """
@@ -146,7 +159,7 @@ defmodule Cldr do
   See also: `requested_locales/0` and `known_locales/0`
   """
   @all_locales Config.all_locales()
-  @spec all_locales :: [Locale.t]
+  @spec all_locales :: [Locale.name, ...]
   def all_locales do
     @all_locales
   end
@@ -160,7 +173,7 @@ defmodule Cldr do
   See also `known_locales/0` and `all_locales/0`
   """
   @requested_locales Config.requested_locales()
-  @spec requested_locales :: [Locale.t] | []
+  @spec requested_locales :: [Locale.name, ...] | []
   def requested_locales do
     @requested_locales
   end
@@ -175,7 +188,7 @@ defmodule Cldr do
   in `Gettext`.
   """
   @known_locales Config.known_locales()
-  @spec known_locales :: [Locale.t] | []
+  @spec known_locales :: [Locale.name, ...] | []
   def known_locales do
     @known_locales
   end
@@ -189,9 +202,18 @@ defmodule Cldr do
   return an empty list.
   """
   @unknown_locales Config.unknown_locales()
-  @spec unknown_locales :: [Locale.t] | []
+  @spec unknown_locales :: [Locale.name, ...] | []
   def unknown_locales do
     @unknown_locales
+  end
+
+  @doc """
+  Returns a list of locales which have rules based number
+  formats (RBNF).
+  """
+  @known_rbnf_locales Cldr.Config.known_rbnf_locales
+  def known_rbnf_locales do
+    @known_rbnf_locales
   end
 
   @doc """
@@ -207,9 +229,28 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale?(Locale.t) :: boolean
-  def known_locale?(locale) when is_binary(locale) do
-    !!Enum.find(known_locales(), &(&1 == locale))
+  @spec known_locale?(Locale.name) :: boolean
+  def known_locale?(locale_name) when is_binary(locale_name) do
+    locale_name in known_locales()
+  end
+
+  @doc """
+  Returns a boolean indicating if the specified locale
+  is configured and available in Cldr and supports
+  rules based number formats (RBNF).
+
+  ## Examples
+
+      iex> Cldr.known_rbnf_locale?("en")
+      true
+
+      iex> Cldr.known_rbnf_locale?("!!")
+      false
+
+  """
+  @spec known_rbnf_locale?(Locale.name) :: boolean
+  def known_rbnf_locale?(locale_name) when is_binary(locale_name) do
+    locale_name in known_rbnf_locales()
   end
 
   @doc """
@@ -232,7 +273,10 @@ defmodule Cldr do
 
   """
   def region_from_locale(locale \\ get_current_locale()) do
-    Cldr.Locale.canonical_language_tag!(locale).region || default_region()
+    case Cldr.Locale.canonical_language_tag(locale) do
+      {:ok, tag} -> tag.region
+      {:error, _reason} -> nil
+    end
   end
 
   @doc """
@@ -251,7 +295,10 @@ defmodule Cldr do
 
   """
   def language_from_locale(locale \\ get_current_locale()) do
-    Cldr.Locale.canonical_language_tag!(locale).language
+    case Cldr.Locale.canonical_language_tag(locale) do
+      {:ok, tag} -> tag.language
+      {:error, _reason} -> nil
+    end
   end
 
   @doc """
@@ -272,9 +319,13 @@ defmodule Cldr do
       false
 
   """
-  @spec locale_exists?(Locale.t) :: boolean
+  @spec locale_exists?(Locale.name | LanguageTag.t) :: boolean
   def locale_exists?(locale) when is_binary(locale) do
     locale in Config.all_locales()
+  end
+
+  def locale_exists?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    locale_exists?(cldr_locale_name)
   end
 
   @doc """
@@ -290,10 +341,32 @@ defmodule Cldr do
       false
 
   """
+  @spec known_locale(Locale.name) :: String.t | false
+  def known_locale(locale_name) when is_binary(locale_name) do
+    if known_locale?(locale_name) do
+      locale_name
+    else
+      false
+    end
+  end
 
-  def known_locale(locale) when is_binary(locale) do
-    if locale in Config.known_locales do
-      locale
+  @doc """
+  Returns either the locale name or nil based upon
+  whether the locale name is configured in `Cldr`.
+
+  ## Examples
+
+      iex> Cldr.known_locale "en-AU"
+      "en-AU"
+
+      iex> Cldr.known_locale "en-SA"
+      false
+
+  """
+  @spec known_rbnf_locale(Locale.name) :: String.t | false
+  def known_rbnf_locale(locale_name) when is_binary(locale_name) do
+    if known_rbnf_locale?(locale_name) do
+      locale_name
     else
       false
     end
@@ -307,7 +380,22 @@ defmodule Cldr do
   `valid_locale/1` is like `locale_exists?/1` except that this
   function returns an `:ok` or `:error` tuple which is useful
   when building a `with` cascade.
+
+  ## Examples
+
+      iex> Cldr.valid_locale? "en"
+      {:ok, "en"}
+
+      iex> Cldr.valid_locale? Cldr.default_locale
+      {:ok, "en-001"}
+
+      iex> Cldr.valid_locale? "zzz"
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+
   """
+  @spec valid_locale?(Locale.name | LanguageTag.t) ::
+    {:ok, String.t} | {:error, {Exception.t, String.t}}
+
   def valid_locale?(locale) when is_binary(locale) do
     if known_locale?(locale) do
       {:ok, locale}
@@ -316,8 +404,16 @@ defmodule Cldr do
     end
   end
 
+  def valid_locale?(%LanguageTag{cldr_locale_name: nil} = locale) do
+    {:error, Locale.locale_error(locale)}
+  end
+
+  def valid_locale?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    valid_locale?(cldr_locale_name)
+  end
+
   def valid_locale?(locale) do
-    {:error, {Cldr.InvalidLocaleError, "Invalid locale #{inspect locale}"}}
+    {:error, Locale.locale_error(locale)}
   end
 
   @doc """

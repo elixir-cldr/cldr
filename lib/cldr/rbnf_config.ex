@@ -18,6 +18,7 @@ defmodule Cldr.Rbnf.Config do
 
       iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
       true
+
   """
   @spec rbnf_dir :: String.t
   def rbnf_dir do
@@ -46,6 +47,7 @@ defmodule Cldr.Rbnf.Config do
        "my", "nb", "nl", "nn", "pl", "pt-PT", "pt", "ro", "root", "ru", "se", "sk",
        "sl", "sq", "sr-Latn", "sr", "sv", "ta", "th", "tr", "uk", "vi", "yue",
        "zh-Hant", "zh"]
+
   """
   @spec rbnf_locales :: [String.t] | []
   def rbnf_locales do
@@ -69,6 +71,7 @@ defmodule Cldr.Rbnf.Config do
        "hi", "ky", "ko", "zh-Hant", "kl", "km", "sk", "ru", "zh", "de", "fi", "it",
        "be", "pl", "az", "tr", "is", "fr-CH", "es-419", "th", "fr-BE", "fr", "sl",
        "bs", "uk", "ar"]
+
   """
   def known_locales do
     MapSet.intersection(MapSet.new(Cldr.known_locales), MapSet.new(rbnf_locales()))
@@ -78,7 +81,7 @@ defmodule Cldr.Rbnf.Config do
   @doc """
   Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
 
-  * `locale` is any locale returned by `Rbnf.known_locales/0`.
+  * `locale_name` is any locale returned by `Rbnf.known_locales/0`.
 
   Note that `for_locale/1` does not raise if the locale does not exist
   like the majority of `Cldr`.  This is by design since the set of locales
@@ -90,14 +93,15 @@ defmodule Cldr.Rbnf.Config do
       iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale("en")
       iex> Map.keys(rules)
       [:OrdinalRules, :SpelloutRules]
+
   """
-  @spec for_locale(Locale.t) :: Map.t |  {:error, {Cldr.NoRbnf, String.t}}
-  def for_locale(locale) do
-    with {:ok, locale} <- Cldr.valid_locale?(locale),
-         true <- File.exists?(locale_path(locale))
+  @spec for_locale(Locale.name) :: Map.t |  {:error, {Cldr.NoRbnf, String.t}}
+  def for_locale(locale_name) do
+    with \
+      true <- File.exists?(locale_path(locale_name))
     do
       rules =
-        locale
+        locale_name
         |> locale_path
         |> File.read!
         |> Poison.decode!
@@ -110,7 +114,7 @@ defmodule Cldr.Rbnf.Config do
       {:error, {exception, reason}} ->
         {:error, {exception, reason}}
       false ->
-        {:error, {Cldr.NoRbnf, "The locale #{inspect locale} does not have an RBNF configuration file available"}}
+        {:error, {Cldr.NoRbnf, "The locale #{inspect locale_name} does not have an RBNF configuration file available"}}
     end
   end
 

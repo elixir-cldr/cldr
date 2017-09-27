@@ -8,6 +8,10 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type name :: String.t
 
+  def new(locale_name) when is_binary(locale_name) do
+    canonical_language_tag!(locale_name)
+  end
+
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
       {:ok, language_tag} ->
@@ -30,6 +34,7 @@ defmodule Cldr.Locale do
       |> Map.put(:requested_locale_name, requested_locale_name)
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
       |> set_cldr_locale_name
+      |> set_rbnf_locale_name
 
     {:ok, canonical_tag}
   end
@@ -49,18 +54,30 @@ defmodule Cldr.Locale do
   end
 
   defp set_cldr_locale_name(%LanguageTag{} = language_tag) do
-    cldr_locale_name =
-      cldr_locale_name(language_tag) ||
-      locale_name_from(Cldr.default_locale)
-
+    cldr_locale_name = cldr_locale_name(language_tag)
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  def cldr_locale_name(%LanguageTag{language: language, script: script, region: region}) do
+  defp set_rbnf_locale_name(%LanguageTag{} = language_tag) do
+    rbnf_locale_name = rbnf_locale_name(language_tag)
+    %{language_tag | rbnf_locale_name: rbnf_locale_name}
+  end
+
+  def cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
     Cldr.known_locale(locale_name_from(language, script, region)) ||
     Cldr.known_locale(locale_name_from(language, nil, region)) ||
     Cldr.known_locale(locale_name_from(language, script, nil)) ||
     Cldr.known_locale(locale_name_from(language, nil, nil)) ||
+    Cldr.known_locale(language_tag.requested_locale_name) ||
+    nil
+  end
+
+  def rbnf_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+    Cldr.known_rbnf_locale(locale_name_from(language, script, region)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, nil, region)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, script, nil)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, nil, nil)) ||
+    Cldr.known_rbnf_locale(language_tag.requested_locale_name) ||
     nil
   end
 
@@ -208,12 +225,17 @@ defmodule Cldr.Locale do
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
 
-  def locale_error(locale_name) do
+  def locale_error(locale_name) when is_binary(locale_name) do
     {Cldr.UnknownLocaleError, "The locale #{inspect locale_name} is not known."}
   end
 
+  def locale_error(%LanguageTag{requested_locale_name: requested_locale_name}) do
+    locale_error(requested_locale_name)
+  end
+
   def alias_error(locale_name, alias_name) do
-    {Cldr.UnknownLocaleError, "The locale #{inspect locale_name} and its alias #{inspect alias_name} are not known."}
+    {Cldr.UnknownLocaleError, "The locale #{inspect locale_name} and its " <>
+      "alias #{inspect alias_name} are not known."}
   end
 
   @aliases Cldr.Config.aliases

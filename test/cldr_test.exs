@@ -28,14 +28,25 @@ defmodule Cldr.Test do
   test "default locale" do
     assert Cldr.default_locale() ==
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: [], private_use: [], region: "001",
-        requested_locale_name: "en-001", script: "Latn", transforms: %{},
-        variant: nil}
+        cldr_locale_name: "en-001", extensions: %{},
+        language: "en", locale: [], private_use: [],
+        region: "001", requested_locale_name: "en-001",
+        script: "Latn", transforms: %{}, variant: nil,
+        rbnf_locale_name: "en"}
   end
 
   test "locale does not exist" do
     refute Cldr.locale_exists?("jabberwocky")
   end
 
+  test "that we have the right number of rbnf locales" do
+    assert Cldr.known_rbnf_locales == 
+      ["af", "am", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy", "da", "de",
+       "de-CH", "ee", "el", "en", "eo", "es", "es-419", "et", "fa", "fa-AF", "fi",
+       "fil", "fo", "fr", "fr-BE", "fr-CH", "ga", "he", "hi", "hr", "hu", "hy", "id",
+       "is", "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lt", "lv", "mk", "ms",
+       "mt", "my", "nb", "nl", "nn", "pl", "pt", "pt-PT", "ro", "root", "ru", "se",
+       "sk", "sl", "sq", "sr", "sr-Latn", "sv", "ta", "th", "tr", "uk", "vi", "yue",
+       "zh", "zh-Hant"]
+  end
 end
