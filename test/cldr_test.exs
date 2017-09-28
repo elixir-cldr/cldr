@@ -40,7 +40,7 @@ defmodule Cldr.Test do
   end
 
   test "that we have the right number of rbnf locales" do
-    assert Cldr.known_rbnf_locales == 
+    assert Cldr.known_rbnf_locales ==
       ["af", "am", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy", "da", "de",
        "de-CH", "ee", "el", "en", "eo", "es", "es-419", "et", "fa", "fa-AF", "fi",
        "fil", "fo", "fr", "fr-BE", "fr-CH", "ga", "he", "hi", "hr", "hu", "hy", "id",
@@ -48,5 +48,12 @@ defmodule Cldr.Test do
        "mt", "my", "nb", "nl", "nn", "pl", "pt", "pt-PT", "ro", "root", "ru", "se",
        "sk", "sl", "sq", "sr", "sr-Latn", "sv", "ta", "th", "tr", "uk", "vi", "yue",
        "zh", "zh-Hant"]
+  end
+
+  test "that requesting rbnf for a locale that doesn't define it returns and error" do
+    assert Cldr.Rbnf.Config.for_locale("zzz") ==
+      {:error,
+        {Cldr.Rbnf.NotAvailable,
+          "The locale \"zzz\" does not have an RBNF configuration file available"}}
   end
 end

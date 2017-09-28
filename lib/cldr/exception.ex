@@ -124,7 +124,7 @@ defmodule Cldr.InvalidDateTimeFormatType do
   end
 end
 
-defmodule Cldr.NoRbnf do
+defmodule Cldr.Rbnf.NotAvailable do
   @moduledoc """
   Exception raised when there is no RBNF for a locale.
   """

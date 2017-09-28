@@ -95,7 +95,7 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.name) :: Map.t |  {:error, {Cldr.NoRbnf, String.t}}
+  @spec for_locale(Locale.name) :: Map.t |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
   def for_locale(locale_name) do
     with \
       true <- File.exists?(locale_path(locale_name))
@@ -114,7 +114,7 @@ defmodule Cldr.Rbnf.Config do
       {:error, {exception, reason}} ->
         {:error, {exception, reason}}
       false ->
-        {:error, {Cldr.NoRbnf, "The locale #{inspect locale_name} does not have an RBNF configuration file available"}}
+        {:error, {Cldr.Rbnf.NotAvailable, "The locale #{inspect locale_name} does not have an RBNF configuration file available"}}
     end
   end
 
