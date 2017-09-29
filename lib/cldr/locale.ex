@@ -22,8 +22,6 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag) do
-    requested_locale_name = locale_name_from(language_tag)
-
     canonical_tag =
       language_tag
       |> substitute_aliases
@@ -31,7 +29,7 @@ defmodule Cldr.Locale do
 
     canonical_tag =
       canonical_tag
-      |> Map.put(:requested_locale_name, requested_locale_name)
+      |> Map.put(:requested_locale_name, locale_name_from(language_tag))
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
       |> set_cldr_locale_name
       |> set_rbnf_locale_name
@@ -43,13 +41,6 @@ defmodule Cldr.Locale do
     case canonical_language_tag(language_tag) do
       {:ok, tag} -> tag
       {:error, {exception, reason}} -> raise exception, reason
-    end
-  end
-
-  def canonical_locale_name(locale) do
-    case canonical_language_tag(locale) do
-      {:ok, language_tag} -> locale_name_from(language_tag)
-      {:error, reason} -> {:error, reason}
     end
   end
 
