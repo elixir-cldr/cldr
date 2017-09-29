@@ -6,4 +6,5 @@ defmodule Doc.Test do
   doctest Cldr.Locale
   doctest Cldr.LanguageTag
   doctest Cldr.LanguageTag.Parser
+  doctest Cldr.AcceptLanguage
 end
