@@ -3,7 +3,7 @@ defmodule Cldr do
   Cldr provides the core functions to retrieve and manage
   the CLDR data that supports formatting and localisation.
 
-  `Cldr` functionality is packaged into a number of separate
+  `Cldr` functionality is packaged into a several
   packages that each depend on this one.  These additional
   modules provide:
 
@@ -23,7 +23,6 @@ defmodule Cldr do
   * `Cldr.DateTime.to_string/2` for formatting of dates,
     times and datetimes. This function is contained in the
     hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
-
   """
 
   alias Cldr.Config
@@ -77,6 +76,7 @@ defmodule Cldr do
 
       iex> Cldr.version
       {31, 0, 1}
+
   """
   @version Config.version()
   |> String.split(".")
@@ -103,7 +103,7 @@ defmodule Cldr do
   """
   @spec set_current_locale(String.t | LanguageTag.t) :: LanguageTag.t
   def set_current_locale(locale) when is_binary(locale) do
-    case Cldr.Locale.canonical_language_tag(locale) do
+    case Cldr.Locale.new(locale) do
       {:ok, language_tag} -> set_current_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
@@ -114,7 +114,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default `locale` name.
+  Returns the default `locale`.
 
   ## Example
 
@@ -148,8 +148,8 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of all the locales defined in the CLDR
-  repository.
+  Returns a list of all the locale names defined in
+  the CLDR repository.
 
   Note that not necessarily all of these locales are
   available since functions are only generated for configured
@@ -165,7 +165,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of all requested locales.
+  Returns a list of all requested locale names.
 
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
@@ -179,7 +179,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of the known locales.
+  Returns a list of the known locale names.
 
   Known locales are those locales which
   are the subset of all CLDR locales that
@@ -194,11 +194,11 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of the locales that are configured, but
-  not known in CLDR.
+  Returns a list of the locales names that are configured,
+  but not known in CLDR.
 
-  Since we check at compile time for any unknown locales
-  and raise and exception this function should always
+  Since there is a compile-time exception raise if there are
+  any unknown locales this function should always
   return an empty list.
   """
   @unknown_locales Config.unknown_locales()
@@ -208,7 +208,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of locales which have rules based number
+  Returns a list of locale names which have rules based number
   formats (RBNF).
   """
   @known_rbnf_locales Cldr.Config.known_rbnf_locales
@@ -218,7 +218,7 @@ defmodule Cldr do
 
   @doc """
   Returns a boolean indicating if the specified locale
-  is configured and available in Cldr.
+  name is configured and available in Cldr.
 
   ## Examples
 
@@ -236,7 +236,7 @@ defmodule Cldr do
 
   @doc """
   Returns a boolean indicating if the specified locale
-  is configured and available in Cldr and supports
+  name is configured and available in Cldr and supports
   rules based number formats (RBNF).
 
   ## Examples
