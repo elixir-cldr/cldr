@@ -13,8 +13,12 @@ def normalize_list([list]) do
   normalize(list)
 end
 
-def normalize_list(list) do
+def normalize_list(list) when is_list(list) do
   Enum.map(list, &normalize/1)
+end
+
+def normalize_list(list) do
+  list
 end
 
 def normalize_tuples(list) do
@@ -84,7 +88,7 @@ variant       = 5*8alphanum         ; registered variants
                   accumulate_value(:variant, state, string_values, values, rule)
                 !!!
 
-extensions     = locale / extension !!! 
+extensions     = locale / transform / extension !!! 
                  _ = rule
                  _ = string_values
                  state = if values == [[[[]]]] do
@@ -114,13 +118,20 @@ locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword)) !!!
                 {:ok, %{state | locale: keywords}, []}
               !!!
 
+transform      = "t" (1*("-" keyword)) !!!
+                _ = rule
+                _ = string_values
+                keywords = tuples(values) |> normalize_tuples |> Enum.into(%{})
+                {:ok, %{state | transform: keywords}, []}
+              !!!
+              
 keyword       = key ["-" type] !!!
                 _ = rule
                 _ = string_values
                 [key | values] = :string.split(:lists.flatten(values), '-', :all)
                 {:ok, state, {normalize(key), values}}
               !!!
-key           = alphanum ALPHA !!! 
+key           = 2alphanum !!! 
                 _ = rule
                 _ = string_values
                 {:ok, state, normalize(:lists.flatten(values))}

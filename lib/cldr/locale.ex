@@ -54,20 +54,22 @@ defmodule Cldr.Locale do
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
-  def cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
-    Cldr.known_locale(locale_name_from(language, script, region)) ||
-    Cldr.known_locale(locale_name_from(language, nil, region)) ||
-    Cldr.known_locale(locale_name_from(language, script, nil)) ||
-    Cldr.known_locale(locale_name_from(language, nil, nil)) ||
+  def cldr_locale_name(%LanguageTag{language: language, script: script,
+      region: region, variant: variant} = language_tag) do
+    Cldr.known_locale(locale_name_from(language, script, region, variant)) ||
+    Cldr.known_locale(locale_name_from(language, nil, region, variant)) ||
+    Cldr.known_locale(locale_name_from(language, script, nil, variant)) ||
+    Cldr.known_locale(locale_name_from(language, nil, nil, variant)) ||
     Cldr.known_locale(language_tag.requested_locale_name) ||
     nil
   end
 
-  def rbnf_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
-    Cldr.known_rbnf_locale(locale_name_from(language, script, region)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, nil, region)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, script, nil)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, nil, nil)) ||
+  def rbnf_locale_name(%LanguageTag{language: language, script: script,
+      region: region} = language_tag) do
+    Cldr.known_rbnf_locale(locale_name_from(language, script, region, nil)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, nil, region, nil)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, script, nil, nil)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, nil, nil, nil)) ||
     Cldr.known_rbnf_locale(language_tag.requested_locale_name) ||
     nil
   end
@@ -77,12 +79,13 @@ defmodule Cldr.Locale do
     String.replace(name, "_", "-")
   end
 
-  def locale_name_from(%LanguageTag{language: language, script: script, region: region}) do
-    locale_name_from(language, script, region)
+  def locale_name_from(%LanguageTag{language: language, script: script,
+        region: region, variant: variant}) do
+    locale_name_from(language, script, region, variant)
   end
 
-  def locale_name_from(language, script, region) do
-    [language, script, region]
+  def locale_name_from(language, script, region, variant) do
+    [language, script, region, variant]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
@@ -107,19 +110,19 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("en-US")
       %Cldr.LanguageTag{extensions: %{}, language: "en", locale: %{}, private_use: [],
-       region: "US", script: nil, transforms: %{}, variant: nil}
+       region: "US", script: nil, transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
       %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
-       region: "AQ", script: "Arab", transforms: %{}, variant: nil}
+       region: "AQ", script: "Arab", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
       %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
-       region: "AQ", script: "Latn", transforms: %{}, variant: nil}
+       region: "AQ", script: "Latn", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: [], private_use: [],
-       region: "MD", script: nil, transforms: %{}, variant: nil}
+       region: "MD", script: nil, transform: %{}, variant: nil}
 
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
@@ -202,16 +205,16 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
       %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: [], private_use: [],
-       region: "SG", script: "Hans", transforms: %{}, variant: nil}
+       region: "SG", script: "Hans", transform: %{}, variant: nil}
 
   """
   def add_likely_subtags(%LanguageTag{language: language, script: script, region: region} = language_tag) do
-    subtags = likely_subtags(locale_name_from(language, script, region)) ||
-              likely_subtags(locale_name_from(language, nil, region)) ||
-              likely_subtags(locale_name_from(language, script, nil)) ||
-              likely_subtags(locale_name_from(language, nil, nil)) ||
-              likely_subtags(locale_name_from("und", script, nil)) ||
-              likely_subtags(locale_name_from("und", nil, nil))
+    subtags = likely_subtags(locale_name_from(language, script, region, nil)) ||
+              likely_subtags(locale_name_from(language, nil, region, nil)) ||
+              likely_subtags(locale_name_from(language, script, nil, nil)) ||
+              likely_subtags(locale_name_from(language, nil, nil, nil)) ||
+              likely_subtags(locale_name_from("und", script, nil, nil)) ||
+              likely_subtags(locale_name_from("und", nil, nil, nil))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end

@@ -31,7 +31,7 @@ defmodule Cldr.Test do
         cldr_locale_name: "en-001", extensions: %{},
         language: "en", locale: [], private_use: [],
         region: "001", requested_locale_name: "en-001",
-        script: "Latn", transforms: %{}, variant: nil,
+        script: "Latn", transform: %{}, variant: nil,
         rbnf_locale_name: "en"}
   end
 

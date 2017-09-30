@@ -122,7 +122,7 @@ defmodule Cldr do
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{}, language: "en",
         locale: [], private_use: [], rbnf_locale_name: "en", region: "001",
-        requested_locale_name: "en-001", script: "Latn", transforms: %{},
+        requested_locale_name: "en-001", script: "Latn", transform: %{},
         variant: nil}
 
   """

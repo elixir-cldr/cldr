@@ -296,12 +296,13 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def set_cldr_locale_name(%LanguageTag{language: language, script: script, region: region} = language_tag) do
+  def set_cldr_locale_name(%LanguageTag{language: language, script: script,
+      region: region, variant: variant} = language_tag) do
     cldr_locale_name =
-      known_locale(Locale.locale_name_from(language, script, region)) ||
-      known_locale(Locale.locale_name_from(language, nil, region)) ||
-      known_locale(Locale.locale_name_from(language, script, nil)) ||
-      known_locale(Locale.locale_name_from(language, nil, nil)) ||
+      known_locale(Locale.locale_name_from(language, script, region, variant)) ||
+      known_locale(Locale.locale_name_from(language, nil, region, variant)) ||
+      known_locale(Locale.locale_name_from(language, script, nil, variant)) ||
+      known_locale(Locale.locale_name_from(language, nil, nil, variant)) ||
       known_locale(language_tag.requested_locale_name) ||
       nil
 
@@ -310,8 +311,8 @@ defmodule Cldr.Config do
 
   def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
     rbnf_locale_name =
-      known_rbnf_locale(Locale.locale_name_from(language, script, nil)) ||
-      known_rbnf_locale(Locale.locale_name_from(language, nil, nil)) ||
+      known_rbnf_locale(Locale.locale_name_from(language, script, nil, nil)) ||
+      known_rbnf_locale(Locale.locale_name_from(language, nil, nil, nil)) ||
       known_rbnf_locale(language_tag.requested_locale_name) ||
       nil
 

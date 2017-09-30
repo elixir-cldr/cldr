@@ -20,6 +20,8 @@ defmodule Cldr.AcceptLanguage do
          Accept-Language: da, en-gb;q=0.8, en;q=0.7
 
   would mean: "I prefer Danish, but will accept British English and other types of English."
+
+
   """
   alias Cldr.Locale
 
@@ -80,13 +82,13 @@ defmodule Cldr.AcceptLanguage do
            cldr_locale_name: "da", extensions: %{}, language: "da",
            locale: [], private_use: [], rbnf_locale_name: "da",
            region: "DK", requested_locale_name: "da", script: "Latn",
-           transforms: %{}, variant: nil}},
+           transform: %{}, variant: nil}},
          {0.3,
           %Cldr.LanguageTag{canonical_locale_name: "zh-Hant-TW",
            cldr_locale_name: "zh-Hant", extensions: %{}, language: "zh",
            locale: [], private_use: [], rbnf_locale_name: "zh-Hant",
            region: "TW", requested_locale_name: "zh-TW", script: "Hant",
-           transforms: %{}, variant: nil}}]}
+           transform: %{}, variant: nil}}]}
 
 
       iex> Cldr.AcceptLanguage.parse "X"
@@ -101,13 +103,13 @@ defmodule Cldr.AcceptLanguage do
            cldr_locale_name: "da", extensions: %{}, language: "da",
            locale: [], private_use: [], rbnf_locale_name: "da",
            region: "DK", requested_locale_name: "da", script: "Latn",
-           transforms: %{}, variant: nil}},
+           transform: %{}, variant: nil}},
          {0.3,
           %Cldr.LanguageTag{canonical_locale_name: "zh-Hant-TW",
            cldr_locale_name: "zh-Hant", extensions: %{}, language: "zh",
            locale: [], private_use: [], rbnf_locale_name: "zh-Hant",
            region: "TW", requested_locale_name: "zh-TW", script: "Hant",
-           transforms: %{}, variant: nil}},
+           transform: %{}, variant: nil}},
          {:error,
           {Cldr.InvalidLanguageTag,
            "Could not parse language tag.  Error was detected at 'x'"},
@@ -153,14 +155,14 @@ defmodule Cldr.AcceptLanguage do
          %Cldr.LanguageTag{canonical_locale_name: "da-Latn-DK",
           cldr_locale_name: "da", extensions: %{}, language: "da",
           locale: [], private_use: [], rbnf_locale_name: "da", region: "DK",
-          requested_locale_name: "da", script: "Latn", transforms: %{},
+          requested_locale_name: "da", script: "Latn", transform: %{},
           variant: nil}},
         {0.3,
          %Cldr.LanguageTag{canonical_locale_name: "zh-Hant-TW",
           cldr_locale_name: "zh-Hant", extensions: %{}, language: "zh",
           locale: [], private_use: [], rbnf_locale_name: "zh-Hant",
           region: "TW", requested_locale_name: "zh-TW", script: "Hant",
-          transforms: %{}, variant: nil}}]
+          transform: %{}, variant: nil}}]
 
 
       Cldr.AcceptLanguage.parse! "X"
@@ -172,14 +174,14 @@ defmodule Cldr.AcceptLanguage do
          %Cldr.LanguageTag{canonical_locale_name: "da-Latn-DK",
           cldr_locale_name: "da", extensions: %{}, language: "da",
           locale: [], private_use: [], rbnf_locale_name: "da", region: "DK",
-          requested_locale_name: "da", script: "Latn", transforms: %{},
+          requested_locale_name: "da", script: "Latn", transform: %{},
           variant: nil}},
         {0.3,
          %Cldr.LanguageTag{canonical_locale_name: "zh-Hant-TW",
           cldr_locale_name: "zh-Hant", extensions: %{}, language: "zh",
           locale: [], private_use: [], rbnf_locale_name: "zh-Hant",
           region: "TW", requested_locale_name: "zh-TW", script: "Hant",
-          transforms: %{}, variant: nil}},
+          transform: %{}, variant: nil}},
         {:error,
          {Cldr.InvalidLanguageTag,
           "Could not parse language tag.  Error was detected at 'x'"}, "x"}]

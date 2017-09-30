@@ -19,7 +19,8 @@ defmodule Cldr.LanguageTag.Parser do
         normalized_tag =
           language_tag
           |> canonicalize_locale_keys
-          |> normalize_lang_script_region
+          |> canonicalize_transform_keys
+          |> normalize_lang_script_region_variant
         {:ok, normalized_tag}
       {:error, reason} ->
         {:error, reason}
@@ -54,25 +55,46 @@ defmodule Cldr.LanguageTag.Parser do
   defp canonicalize_locale_keys(%Cldr.LanguageTag{locale: locale} = language_tag) do
     canon_locale = Enum.map(locale, fn {k, v} ->
       if Map.has_key?(locale_key_map(), k) do
-        canonicalize_locale_key(locale_key_map()[k], v)
+        canonicalize_key(locale_key_map()[k], v)
       else
         {k, v}
       end
     end)
     |> upcase(:currency)
+    |> Enum.into(%{})
 
     Map.put(language_tag, :locale, canon_locale)
   end
 
-  defp normalize_lang_script_region(%{language: language, script: script, region: region} = language_tag) do
+  defp canonicalize_transform_keys(%Cldr.LanguageTag{transform: nil} = language_tag) do
+    language_tag
+  end
+
+  defp canonicalize_transform_keys(%Cldr.LanguageTag{transform: locale} = language_tag) do
+    canon_transform = Enum.map(locale, fn {k, v} ->
+      if Map.has_key?(transform_key_map(), k) do
+        canonicalize_key(transform_key_map()[k], v)
+      else
+        {k, v}
+      end
+    end)
+    |> Enum.into(%{})
+
+    Map.put(language_tag, :transform, canon_transform)
+  end
+
+  defp normalize_lang_script_region_variant(%{language: language, script: script,
+      region: region, variant: variant} = language_tag) do
     language = normalize_language(language)
     script = normalize_script(script)
     region = normalize_region(region)
+    variant = normalize_variant(variant)
 
     language_tag
     |> Map.put(:language, language)
     |> Map.put(:script, script)
     |> Map.put(:region, region)
+    |> Map.put(:variant, variant)
   end
 
   defp normalize_language(nil), do: nil
@@ -93,6 +115,12 @@ defmodule Cldr.LanguageTag.Parser do
     |> String.upcase
   end
 
+  defp normalize_variant(nil), do: nil
+  defp normalize_variant(variant) do
+    variant
+    |> String.upcase
+  end
+
   defp return_parse_result(%{rest: [], state: state}, _locale), do: {:ok, state}
   defp return_parse_result(nil, locale) do
     {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect locale}"}}
@@ -110,12 +138,12 @@ defmodule Cldr.LanguageTag.Parser do
     {:error, reason}
   end
 
-  defp canonicalize_locale_key([key, valid, default], param) do
+  defp canonicalize_key([key, valid, default], param) do
     value = if param in valid, do: param, else: default
     {key, value}
   end
 
-  defp canonicalize_locale_key(key, value) when is_atom(key) do
+  defp canonicalize_key(key, value) when is_atom(key) do
     {key, value}
   end
 
@@ -150,6 +178,21 @@ defmodule Cldr.LanguageTag.Parser do
 
   defp locale_key_map do
     @locale_map
+  end
+
+  @transform_map %{
+    "m0" => :mechanism,
+    "s0" => :source,
+    "d0" => :destination,
+    "i0" => :input_method,
+    "k0" => :keyboard,
+    "t0" => :machine,
+    "h0" => :hybrid,
+    "x0" => :private
+  }
+
+  defp transform_key_map do
+    @transform_map
   end
 
   defp upcase(locale, :currency = key) do
