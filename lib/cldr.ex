@@ -254,82 +254,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Get the region part of a locale or the default region
-  if it doesn't exist.
-
-  ## Examples
-
-      iex> Cldr.region_from_locale "zh-Hant-TW"
-      "TW"
-
-      iex> Cldr.region_from_locale "pt-BR"
-      "BR"
-
-      iex> Cldr.region_from_locale "en"
-      "US"
-
-      iex> Cldr.region_from_locale "en-001"
-      "001"
-
-  """
-  def region_from_locale(locale \\ get_current_locale()) do
-    case Cldr.Locale.canonical_language_tag(locale) do
-      {:ok, tag} -> tag.region
-      {:error, _reason} -> nil
-    end
-  end
-
-  @doc """
-  Extract the language part from a locale.
-
-  ## Examples
-
-    iex> Cldr.language_from_locale "en"
-    "en"
-
-    iex> Cldr.language_from_locale "en-US"
-    "en"
-
-    iex> Cldr.language_from_locale "zh-Hant-TW"
-    "zh"
-
-  """
-  def language_from_locale(locale \\ get_current_locale()) do
-    case Cldr.Locale.canonical_language_tag(locale) do
-      {:ok, tag} -> tag.language
-      {:error, _reason} -> nil
-    end
-  end
-
-  @doc """
-  Returns a boolean indicating if the specified locale
-  is available in CLDR.
-
-  The return value depends on whether the locale is
-  defined in the CLDR repository.  It does not necessarily
-  mean the locale is configured for Cldr.  See also
-  `Cldr.known_locale?/1`.
-
-  ## Examples
-
-      iex> Cldr.locale_exists? "en-AU"
-      true
-
-      iex> Cldr.locale_exists? "en-SA"
-      false
-
-  """
-  @spec locale_exists?(Locale.name | LanguageTag.t) :: boolean
-  def locale_exists?(locale) when is_binary(locale) do
-    locale in Config.all_locales()
-  end
-
-  def locale_exists?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
-    locale_exists?(cldr_locale_name)
-  end
-
-  @doc """
-  Returns either the locale name or nil based upon
+  Returns either the `locale_name` or `false` based upon
   whether the locale name is configured in `Cldr`.
 
   ## Examples
@@ -374,29 +299,25 @@ defmodule Cldr do
 
   @doc """
   Returns an `{:ok, locale}` or `{:error, {exception, message}}` tuple
-  depending on whether the locale is valid and exists in the current
+  depending on whether the locale is valid and known in the current
   configuration.
-
-  `valid_locale/1` is like `locale_exists?/1` except that this
-  function returns an `:ok` or `:error` tuple which is useful
-  when building a `with` cascade.
 
   ## Examples
 
-      iex> Cldr.valid_locale? "en"
+      iex> Cldr.validate_locale "en"
       {:ok, "en"}
 
-      iex> Cldr.valid_locale? Cldr.default_locale
+      iex> Cldr.validate_locale Cldr.default_locale
       {:ok, "en-001"}
 
-      iex> Cldr.valid_locale? "zzz"
+      iex> Cldr.validate_locale "zzz"
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec valid_locale?(Locale.name | LanguageTag.t) ::
+  @spec validate_locale(Locale.name | LanguageTag.t) ::
     {:ok, String.t} | {:error, {Exception.t, String.t}}
 
-  def valid_locale?(locale) when is_binary(locale) do
+  def validate_locale(locale) when is_binary(locale) do
     if known_locale?(locale) do
       {:ok, locale}
     else
@@ -404,16 +325,43 @@ defmodule Cldr do
     end
   end
 
-  def valid_locale?(%LanguageTag{cldr_locale_name: nil} = locale) do
+  def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
     {:error, Locale.locale_error(locale)}
   end
 
-  def valid_locale?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
-    valid_locale?(cldr_locale_name)
+  def validate_locale(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    validate_locale(cldr_locale_name)
   end
 
-  def valid_locale?(locale) do
+  def validate_locale(locale) do
     {:error, Locale.locale_error(locale)}
+  end
+
+  @doc """
+  Returns a boolean indicating if the specified locale
+  is available in CLDR.
+
+  The return value depends on whether the locale is
+  defined in the CLDR repository.  It does not necessarily
+  mean the locale is configured for Cldr.  See also
+  `Cldr.known_locale?/1`.
+
+  ## Examples
+
+      iex> Cldr.available_locale? "en-AU"
+      true
+
+      iex> Cldr.available_locale? "en-SA"
+      false
+
+  """
+  @spec available_locale?(Locale.name | LanguageTag.t) :: boolean
+  def available_locale?(locale) when is_binary(locale) do
+    locale in Config.all_locales()
+  end
+
+  def available_locale?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    available_locale?(cldr_locale_name)
   end
 
   @doc """
@@ -493,5 +441,54 @@ defmodule Cldr do
   @known_number_systems Cldr.Config.known_number_systems
   def known_number_systems do
     @known_number_systems
+  end
+
+
+  @doc """
+  Get the region part of a locale or the default region
+  if it doesn't exist.
+
+  ## Examples
+
+      iex> Cldr.region_from_locale "zh-Hant-TW"
+      "TW"
+
+      iex> Cldr.region_from_locale "pt-BR"
+      "BR"
+
+      iex> Cldr.region_from_locale "en"
+      "US"
+
+      iex> Cldr.region_from_locale "en-001"
+      "001"
+
+  """
+  def region_from_locale(locale \\ get_current_locale()) do
+    case Cldr.Locale.canonical_language_tag(locale) do
+      {:ok, tag} -> tag.region
+      {:error, _reason} -> nil
+    end
+  end
+
+  @doc """
+  Extract the language part from a locale.
+
+  ## Examples
+
+    iex> Cldr.language_from_locale "en"
+    "en"
+
+    iex> Cldr.language_from_locale "en-US"
+    "en"
+
+    iex> Cldr.language_from_locale "zh-Hant-TW"
+    "zh"
+
+  """
+  def language_from_locale(locale \\ get_current_locale()) do
+    case Cldr.Locale.canonical_language_tag(locale) do
+      {:ok, tag} -> tag.language
+      {:error, _reason} -> nil
+    end
   end
 end

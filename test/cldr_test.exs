@@ -36,7 +36,7 @@ defmodule Cldr.Test do
   end
 
   test "locale does not exist" do
-    refute Cldr.locale_exists?("jabberwocky")
+    refute Cldr.available_locale?("jabberwocky")
   end
 
   test "that we have the right number of rbnf locales" do
