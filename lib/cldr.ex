@@ -305,10 +305,19 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.validate_locale "en"
-      {:ok, "en"}
+      {:ok,
+       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
+        extensions: %{}, language: "en", locale: [], private_use: [],
+        rbnf_locale_name: "en", region: "US", requested_locale_name: "en",
+        script: "Latn", transform: %{}, variant: nil}}
 
       iex> Cldr.validate_locale Cldr.default_locale
-      {:ok, "en-001"}
+      {:ok,
+       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001", extensions: %{}, language: "en", locale: [],
+        private_use: [], rbnf_locale_name: "en", region: "001",
+        requested_locale_name: "en-001", script: "Latn", transform: %{},
+        variant: nil}}
 
       iex> Cldr.validate_locale "zzz"
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
@@ -317,20 +326,18 @@ defmodule Cldr do
   @spec validate_locale(Locale.name | LanguageTag.t) ::
     {:ok, String.t} | {:error, {Exception.t, String.t}}
 
-  def validate_locale(locale) when is_binary(locale) do
-    if known_locale?(locale) do
-      {:ok, locale}
-    else
-      {:error, Locale.locale_error(locale)}
-    end
+  def validate_locale(locale_name) when is_binary(locale_name) do
+    locale_name
+    |> Cldr.Locale.new
+    |> validate_locale
   end
 
   def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
     {:error, Locale.locale_error(locale)}
   end
 
-  def validate_locale(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
-    validate_locale(cldr_locale_name)
+  def validate_locale(%LanguageTag{} = language_tag) do
+    {:ok, language_tag}
   end
 
   def validate_locale(locale) do
