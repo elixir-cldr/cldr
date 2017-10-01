@@ -142,6 +142,7 @@ defmodule Cldr do
       "001"
 
   """
+  @spec default_region :: String.t
   def default_region do
     default_locale()
     |> Map.get(:region)
@@ -212,6 +213,7 @@ defmodule Cldr do
   formats (RBNF).
   """
   @known_rbnf_locales Cldr.Config.known_rbnf_locales
+  @spec known_rbnf_locales :: [Locale.name, ...] | []
   def known_rbnf_locales do
     @known_rbnf_locales
   end
@@ -383,6 +385,7 @@ defmodule Cldr do
 
   """
   @known_calendars Cldr.Config.known_calendars
+  @spec known_calendars :: [String.t, ...] | []
   def known_calendars do
     @known_calendars
   end
@@ -424,6 +427,7 @@ defmodule Cldr do
 
   """
   @known_currencies Cldr.Config.known_currencies
+  @spec known_currencies :: [String.t, ...] | []
   def known_currencies do
     @known_currencies
   end
@@ -446,56 +450,9 @@ defmodule Cldr do
 
   """
   @known_number_systems Cldr.Config.known_number_systems
+  @spec known_number_systems :: [String.t, ...] | []
   def known_number_systems do
     @known_number_systems
   end
 
-
-  # @doc """
-  # Get the region part of a locale or the default region
-  # if it doesn't exist.
-  #
-  # ## Examples
-  #
-  #     iex> Cldr.region_from_locale "zh-Hant-TW"
-  #     "TW"
-  #
-  #     iex> Cldr.region_from_locale "pt-BR"
-  #     "BR"
-  #
-  #     iex> Cldr.region_from_locale "en"
-  #     "US"
-  #
-  #     iex> Cldr.region_from_locale "en-001"
-  #     "001"
-  #
-  # """
-  # def region_from_locale(locale \\ get_current_locale()) do
-  #   case Cldr.Locale.canonical_language_tag(locale) do
-  #     {:ok, tag} -> tag.region
-  #     {:error, _reason} -> nil
-  #   end
-  # end
-  #
-  # @doc """
-  # Extract the language part from a locale.
-  #
-  # ## Examples
-  #
-  #   iex> Cldr.language_from_locale "en"
-  #   "en"
-  #
-  #   iex> Cldr.language_from_locale "en-US"
-  #   "en"
-  #
-  #   iex> Cldr.language_from_locale "zh-Hant-TW"
-  #   "zh"
-  #
-  # """
-  # def language_from_locale(locale \\ get_current_locale()) do
-  #   case Cldr.Locale.canonical_language_tag(locale) do
-  #     {:ok, tag} -> tag.language
-  #     {:error, _reason} -> nil
-  #   end
-  # end
 end

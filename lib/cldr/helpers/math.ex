@@ -703,7 +703,7 @@ defmodule Cldr.Math do
   # by Digits.to_digits.
 
   # scientific/decimal rounding are the same, we are just varying which
-  # digit we start counting from to find our rounding poin
+  # digit we start counting from to find our rounding point
   def round_digits(digits_t, options)
 
   # Passing true for decimal places avoids rounding and uses whatever is necessary

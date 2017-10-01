@@ -1,4 +1,9 @@
 defmodule Cldr.String do
+  @moduledoc """
+  Functions that operate on a `String.t` that are not provided
+  in the standard lib.
+  """
+
   @doc """
   This is the code of Macro.underscore with the following modifications
   which will be submitted as a PR when its clear it working appropriately
@@ -15,7 +20,6 @@ defmodule Cldr.String do
 
     that_that
 
-  This code will be removed if/when Elixir master accepts the submitted PR
   """
   def underscore(atom) when is_atom(atom) do
     "Elixir." <> rest = Atom.to_string(atom)
