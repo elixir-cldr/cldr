@@ -48,7 +48,7 @@ defmodule Cldr.Mixfile do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.4"},
-      {:ex_doc, github: "elixir-lang/ex_doc", branch: "master", only: :dev},
+      {:ex_doc, "~> 0.17", only: :dev},
       {:ex_abnf, "~> 0.3.0"},
       {:excoveralls, "~> 0.7.2", only: :test},
       {:gettext, "~> 0.13.0", optional: true},
@@ -115,10 +115,24 @@ defmodule Cldr.Mixfile do
 
   defp groups_for_modules do
     [
-      "Number": ~r/^Cldr.Number.?/,
-      "Normalize": ~r/^Cldr.Normalize.?/,
+      "Config": [
+        Cldr.Config,
+        Cldr.Rbnf.Config
+      ],
+      "Language Tag": ~r/^Cldr.LanguageTag.?/,
+      "Plural Rules": ~r/^Cldr.Number.?/,
+      "Normalization": ~r/^Cldr.Normalize.?/,
       "Gettext": ~r/^Cldr.Gettext.?/,
-      "Helpers": [Cldr.Helpers, Cldr.Map, Cldr.Math]
+      "Helpers": [
+        Cldr.Calendar.Conversion,
+        Cldr.Digits,
+        Cldr.Helpers, 
+        Cldr.Locale.Cache,
+        Cldr.Macros,
+        Cldr.Map, 
+        Cldr.Math, 
+        Cldr.String
+      ]
     ]
   end
 
