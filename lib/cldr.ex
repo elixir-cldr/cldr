@@ -451,51 +451,51 @@ defmodule Cldr do
   end
 
 
-  @doc """
-  Get the region part of a locale or the default region
-  if it doesn't exist.
-
-  ## Examples
-
-      iex> Cldr.region_from_locale "zh-Hant-TW"
-      "TW"
-
-      iex> Cldr.region_from_locale "pt-BR"
-      "BR"
-
-      iex> Cldr.region_from_locale "en"
-      "US"
-
-      iex> Cldr.region_from_locale "en-001"
-      "001"
-
-  """
-  def region_from_locale(locale \\ get_current_locale()) do
-    case Cldr.Locale.canonical_language_tag(locale) do
-      {:ok, tag} -> tag.region
-      {:error, _reason} -> nil
-    end
-  end
-
-  @doc """
-  Extract the language part from a locale.
-
-  ## Examples
-
-    iex> Cldr.language_from_locale "en"
-    "en"
-
-    iex> Cldr.language_from_locale "en-US"
-    "en"
-
-    iex> Cldr.language_from_locale "zh-Hant-TW"
-    "zh"
-
-  """
-  def language_from_locale(locale \\ get_current_locale()) do
-    case Cldr.Locale.canonical_language_tag(locale) do
-      {:ok, tag} -> tag.language
-      {:error, _reason} -> nil
-    end
-  end
+  # @doc """
+  # Get the region part of a locale or the default region
+  # if it doesn't exist.
+  #
+  # ## Examples
+  #
+  #     iex> Cldr.region_from_locale "zh-Hant-TW"
+  #     "TW"
+  #
+  #     iex> Cldr.region_from_locale "pt-BR"
+  #     "BR"
+  #
+  #     iex> Cldr.region_from_locale "en"
+  #     "US"
+  #
+  #     iex> Cldr.region_from_locale "en-001"
+  #     "001"
+  #
+  # """
+  # def region_from_locale(locale \\ get_current_locale()) do
+  #   case Cldr.Locale.canonical_language_tag(locale) do
+  #     {:ok, tag} -> tag.region
+  #     {:error, _reason} -> nil
+  #   end
+  # end
+  #
+  # @doc """
+  # Extract the language part from a locale.
+  #
+  # ## Examples
+  #
+  #   iex> Cldr.language_from_locale "en"
+  #   "en"
+  #
+  #   iex> Cldr.language_from_locale "en-US"
+  #   "en"
+  #
+  #   iex> Cldr.language_from_locale "zh-Hant-TW"
+  #   "zh"
+  #
+  # """
+  # def language_from_locale(locale \\ get_current_locale()) do
+  #   case Cldr.Locale.canonical_language_tag(locale) do
+  #     {:ok, tag} -> tag.language
+  #     {:error, _reason} -> nil
+  #   end
+  # end
 end
