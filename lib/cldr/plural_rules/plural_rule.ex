@@ -2,8 +2,8 @@ defmodule Cldr.Number.PluralRule do
   @moduledoc """
   Macro to define plural rule methods on a module.
 
-  Used to generate functions for `Cldr.Number.Ordinal` and `
-  Cldr.Number.Cardinal`
+  Used to generate functions for `Cldr.Number.Ordinal` and
+  `Cldr.Number.Cardinal`
   """
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
@@ -13,6 +13,8 @@ defmodule Cldr.Number.PluralRule do
 
     quote location: :keep do
       alias  Cldr.Math
+      alias  Cldr.LanguageTag
+
       import Cldr.Digits, only: [number_of_integer_digits: 1, remove_trailing_zeros: 1]
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
@@ -95,18 +97,19 @@ defmodule Cldr.Number.PluralRule do
 
           iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), Locale.new("en"), %{one: "one", two: "two"}
           "two"
+
       """
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal, Locale.name, %{}) :: String.t | nil
-      def pluralize(number, locale, %{} = substitutions) when is_number(number) do
+      @spec pluralize(Math.number_or_decimal, LanguageTag.t, Map.t) :: String.t | nil
+      def pluralize(number, %LanguageTag{} = locale, %{} = substitutions) when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
 
-      def pluralize(%Decimal{} = number, locale, %{} = substitutions) do
+      def pluralize(%Decimal{} = number, %LanguageTag{} = locale, %{} = substitutions) do
         do_pluralize(number, locale, substitutions)
       end
 
-      defp do_pluralize(number, %Cldr.LanguageTag{} = locale, %{} = substitutions) do
+      defp do_pluralize(number, %LanguageTag{} = locale, %{} = substitutions) do
         plural = plural_rule(number, locale)
         substitutions[plural] || substitutions[@default_substitution]
       end
@@ -114,11 +117,12 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       Return the plural rules for a locale.
 
-      The rules are returned in AST form after parsing.
+      The rules are returned in AST form after parsing. This function
+      is primarilty to support `Cldr.Gettext`.
       """
-      @spec plural_rules_for(Cldr.locale) :: %{}
-      def plural_rules_for(locale) do
-        Enum.map plural_rules()[locale], fn({"pluralRule-count-" <> category, rule}) ->
+      @spec plural_rules_for(Locale.name) :: Map.t
+      def plural_rules_for(locale_name) do
+        Enum.map plural_rules()[locale_name], fn({"pluralRule-count-" <> category, rule}) ->
           {:ok, definition} = parse(rule)
           {String.to_atom(category), definition}
         end
@@ -197,7 +201,6 @@ defmodule Cldr.Number.PluralRule do
         i = Decimal.to_integer(i)
         n = Math.to_float(n)
 
-        # IO.puts "n: #{inspect n}; i: #{inspect i}; v: #{inspect v}; w: #{inspect w}; f: #{inspect f}; t: #{inspect t}"
         do_plural_rule(locale, n, i, v, w, f, t)
       end
     end
