@@ -48,7 +48,7 @@ defmodule Cldr.Mixfile do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.4"},
-      {:ex_doc, "~> 0.15", only: :dev},
+      {:ex_doc, "~> 0.17", only: :dev},
       {:ex_abnf, "~> 0.3.0"},
       {:excoveralls, "~> 0.7.2", only: :test},
       {:gettext, "~> 0.13.0", optional: true},
@@ -96,7 +96,8 @@ defmodule Cldr.Mixfile do
       source_ref: "v#{@version}",
       main: "1_getting_started",
       extra_section: "GUIDES",
-      extras: extra_docs()
+      extras: extra_docs(),
+      groups_for_modules: groups_for_modules()
     ]
   end
 
@@ -110,6 +111,29 @@ defmodule Cldr.Mixfile do
     |> File.ls!
     |> Enum.map(&Path.join(@doc_dir, &1))
     |> Enum.sort
+  end
+
+  defp groups_for_modules do
+    [
+      "Config": [
+        Cldr.Config,
+        Cldr.Rbnf.Config
+      ],
+      "Language Tag": ~r/^Cldr.LanguageTag.?/,
+      "Plural Rules": ~r/^Cldr.Number.?/,
+      "Normalization": ~r/^Cldr.Normalize.?/,
+      "Gettext": ~r/^Cldr.Gettext.?/,
+      "Helpers": [
+        Cldr.Calendar.Conversion,
+        Cldr.Digits,
+        Cldr.Helpers, 
+        Cldr.Locale.Cache,
+        Cldr.Macros,
+        Cldr.Map, 
+        Cldr.Math, 
+        Cldr.String
+      ]
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "mix", "test"]
