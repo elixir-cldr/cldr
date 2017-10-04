@@ -165,32 +165,6 @@ defmodule Cldr.Install do
   # Create the client app locales directory and any directories
   # that don't exist above it.
   defp ensure_client_dirs_exist!(dir) do
-    paths = String.split(dir, "/")
-    |> Enum.reject(&(&1 == ""))
-    |> Enum.map(&(String.replace_prefix(&1, "", "/")))
-    do_ensure_client_dirs(paths)
-  end
-
-  defp do_ensure_client_dirs([h | []]) do
-    create_dir(h)
-  end
-
-  defp do_ensure_client_dirs([h | t]) do
-    create_dir(h)
-    do_ensure_client_dirs([h <> hd(t) | tl(t)])
-  end
-
-  defp create_dir(dir) do
-    case File.mkdir(dir) do
-      :ok ->
-        :ok
-      {:error, :eexist} ->
-        :ok
-      {:error, :eisdir} ->
-        :ok
-      {:error, code} ->
-        raise RuntimeError,
-          message: "Couldn't create #{dir}: #{inspect code}"
-    end
+    File.mkdir_p(dir)
   end
 end
