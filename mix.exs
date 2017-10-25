@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.7.1-dev"
+  @version "0.8.0"
 
   def project do
     [
@@ -36,21 +36,13 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  # defp stream_data do
-  #   if Mix.env == :test do
-  #     [:stream_data]
-  #   else
-  #     []
-  #   end
-  # end
-
   defp deps do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
-      {:decimal, "~> 1.4"},
-      {:ex_doc, "~> 0.17", only: :dev},
+      {:decimal, "~> 1.4.1"},
+      {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
       {:ex_abnf, "~> 0.3.0"},
-      {:excoveralls, "~> 0.7.2", only: :test},
+      {:excoveralls, "~> 0.7.4", only: :test},
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
       {:flow, "~> 0.11", optional: true, only: [:dev, :test]},
@@ -78,7 +70,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/day_periods.json",
         "priv/cldr/likely_subtags.json",
         "priv/cldr/aliases.json",
-        "priv/cldr/rfc4656.abnf"
+        "priv/cldr/rfc5646.abnf"
       ]
     ]
   end
@@ -126,11 +118,11 @@ defmodule Cldr.Mixfile do
       "Helpers": [
         Cldr.Calendar.Conversion,
         Cldr.Digits,
-        Cldr.Helpers, 
+        Cldr.Helpers,
         Cldr.Locale.Cache,
         Cldr.Macros,
-        Cldr.Map, 
-        Cldr.Math, 
+        Cldr.Map,
+        Cldr.Math,
         Cldr.String
       ]
     ]

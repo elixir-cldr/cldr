@@ -91,6 +91,26 @@ defmodule Cldr do
   @doc """
   Return the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
+
+  ## Example
+
+      iex> Cldr.set_current_locale("pl")
+      iex> Cldr.get_current_locale
+      %Cldr.LanguageTag{
+         canonical_locale_name: "pl-Latn-PL",
+         cldr_locale_name: "pl",
+         extensions: %{},
+         language: "pl",
+         locale: [],
+         private_use: [],
+         rbnf_locale_name: "pl",
+         region: "PL",
+         requested_locale_name: "pl",
+         script: "Latn",
+         transform: %{},
+         variant: nil
+       }
+
   """
   @spec get_current_locale :: LanguageTag.t
   def get_current_locale do
@@ -100,17 +120,52 @@ defmodule Cldr do
   @doc """
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
+
+  See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
+  of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
+  specification as implemented that includes the CLDR extensions for
+  "u" (locales) and "t" (transforms).
+
+  ## Examples
+
+      iex> Cldr.set_current_locale("en")
+      {
+        :ok,
+        %Cldr.LanguageTag{
+          canonical_locale_name: "en-Latn-US",
+          cldr_locale_name: "en",
+          extensions: %{},
+          language: "en",
+          locale: [],
+          private_use: [],
+          rbnf_locale_name: "en",
+          region: "US",
+          requested_locale_name: "en",
+          script: "Latn",
+          transform: %{},
+          variant: nil
+        }
+      }
+
+      iex> Cldr.set_current_locale("zzz")
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+
   """
   @spec set_current_locale(String.t | LanguageTag.t) :: LanguageTag.t
   def set_current_locale(locale) when is_binary(locale) do
-    case Cldr.Locale.new(locale) do
+    case Cldr.Locale.canonical_language_tag(locale) do
       {:ok, language_tag} -> set_current_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def set_current_locale(%{} = language_tag) do
+  def set_current_locale(%LanguageTag{cldr_locale_name: nil} = language_tag) do
+    {:error, Cldr.Locale.locale_error(language_tag)}
+  end
+
+  def set_current_locale(%LanguageTag{} = language_tag) do
     Process.put(:cldr, language_tag)
+    {:ok, language_tag}
   end
 
   @doc """

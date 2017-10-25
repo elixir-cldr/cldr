@@ -63,6 +63,7 @@ defmodule Cldr.Substitution do
       [0, " This is something ", 1]
       iex> Cldr.Substitution.substitute ["a", "b"], template
       ["a", " This is something ", "b"]
+
   """
   @spec substitute([term, ...], [String.t | integer, ...]) :: [String.t, ...]
 

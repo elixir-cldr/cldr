@@ -1,6 +1,6 @@
 # Configuring Cldr
 
-`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 511 locales known to Cldr wouldn't be an effective use of your time or your computers.  So `Cldr` requires that you configure the locales you want to use. You can do this in your `mix.exs` by specifying the locales you want to configure or by telling `Cldr` about a `Gettext` module you may already have configured - in which case `Cldr` will configure whatever locales you have configured in `Gettext`.
+`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 516 locales known to Cldr wouldn't be an effective use of your time or your computers.  So `Cldr` requires that you configure the locales you want to use. You can do this in your `mix.exs` by specifying the locales you want to configure or by telling `Cldr` about a `Gettext` module you may already have configured - in which case `Cldr` will configure whatever locales you have configured in `Gettext`.
 
 Here's an example configuration that uses all of the available configuration keys.
 

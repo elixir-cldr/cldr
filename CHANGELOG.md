@@ -1,6 +1,24 @@
 # Changelog
 
-## Cldr v0.7.1 September 20, 2017
+## Cldr v0.8.0 October 25th, 2017
+
+### Notes
+
+* This is the minimum version reqiured for Elixir 1.6.  It is also supported on Elixir 1.5.
+
+### Breaking changes
+
+* A  locale is now parsed according to [rfc5646](https://tools.ietf.org/html/rfc5646) and stored in a `Cldr.LanguageTag{}` struct.  This is resolved in accordance with the rfc and hence will automatically derive defaults for script and region.  It will also detect obsolete langauges and substitute the current CLDR language and overall provide a more robust interfact.
+
+* This change leads towards the 1.0 release planned before end of 2017.  In that release, full support of the HTTP header `Accept-Language` will be provided for the automatic setting of language, region, script and variants as defined in the rfc.
+
+* `Cldr.set_current_locale/1` now takes either a locale name (`String.t`) or a `%Cldr.LanguageTag{}` and correctly validates is before setting and returning `{:ok, language_tag}` or `{:error, reason}`
+
+### Implementation note
+
+* This release uses the [ex_abnf](https://hex.pm/packages/ex_abnf) package to parse the locale string.  This package is an parser/interpreter.  The next release will move to a modified version of the package [abnf](https://hex.pm/packages/abnf) which is a parser generator which will improve parsing performance.
+
+## Cldr v0.7.1 September 20th, 2017
 
 ### Enhancements
 
