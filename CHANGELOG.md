@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.8.1 October 25th, 2017
+
+### Bug Fixes
+
+* Correct the path creation for locale storage (thanks to @lostkobrakai).  Closes #19.
+
 ## Cldr v0.8.0 October 25th, 2017
 
 ### Notes
