@@ -11,6 +11,21 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.LanguageTag
   alias Cldr.Config
 
+  # @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
+
+  @doc """
+  Parse a locale name into a `Cldr.LanguageTag.t`
+
+  * `locale_name` is a string representation of a language tag
+    as defined by RFC5646
+
+  Returns
+
+  * `{:ok, language_tag}` or
+
+  * `{:error, reasons}`
+
+  """
   def parse(locale) when is_list(locale) do
     case return_parse_result(Cldr.Rfc5646.parse(:"language-tag", locale), locale) do
       {:ok, language_tag} ->
