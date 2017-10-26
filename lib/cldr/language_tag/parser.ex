@@ -11,8 +11,6 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.LanguageTag
   alias Cldr.Config
 
-  # @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
-
   @doc """
   Parse a locale name into a `Cldr.LanguageTag.t`
 
