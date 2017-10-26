@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.12.2"
+  @version "0.9.0-dev"
 
   def project do
     [
@@ -41,11 +41,17 @@ defmodule Cldr.Mixfile do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.4.1"},
+<<<<<<< 42092e9aab68ee0612c0b835cbb2f45175f34680
       {:gen_stage, "~> 0.12.2"},
       {:flow, "~> 0.11"},
       {:ex_abnf, "~> 0.3.0"},
       {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
       {:excoveralls, "~> 0.7.4", only: :test, runtime: false},
+=======
+      {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
+      {:excoveralls, "~> 0.7.4", only: :test},
+      {:abnf, path: "../abnf"},
+>>>>>>> Progress on the new language tag parser generator
       {:gettext, "~> 0.13.0", optional: true},
       {:stream_data, "~> 0.3.0", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}

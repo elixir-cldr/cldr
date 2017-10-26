@@ -1,57 +1,3 @@
-!!!
-require Logger
-
-def normalize(input) when is_list(input) do
-  to_string(input)
-end
-
-def normalize(input) do
-  input
-end
-
-def normalize_list([list]) do
-  normalize(list)
-end
-
-def normalize_list(list) when is_list(list) do
-  Enum.map(list, &normalize/1)
-end
-
-def normalize_list(list) do
-  list
-end
-
-def normalize_tuples(list) do
-  Enum.map(list, fn {k, v} ->
-    {normalize(k), normalize_list(v)}
-  end)
-end
-
-def return_value(key, state, string_values, _values, _rule) do
-  [v] = string_values
-  {:ok, Map.put(state, key, normalize(v)), v}
-end
-
-def accumulate_value(key, state, string_values, _values, _rule) do
-  [v] = string_values
-  value = normalize(v)
-  case Map.get(state, key) do
-    nil ->
-      {:ok, Map.put(state, key, value), value}
-    [_h | _t] = state_value ->
-      {:ok, Map.put(state, key, state_value ++ [value]), value}
-    state_value ->
-      {:ok, Map.put(state, key, [state_value, value]), value}
-  end
-end
-
-def tuples(values) do
-  values
-  |> List.flatten
-  |> Enum.reject(&is_integer/1)
-end
-!!!
-
 language-tag  = langtag             ; normal language tags
               / privateuse          ; private use tag
               / grandfathered       ; grandfathered tags
@@ -67,86 +13,37 @@ language      = 2*3ALPHA            ; shortest ISO 639 code
                 ;["-" extlang]      ; sometimes followed by
                                     ; extended language subtags
                 / 4ALPHA            ; or reserved for future use
-                / 5*8ALPHA  !!!     # or registered language subtag
-                  return_value(:language, state, string_values, values, rule)
-                !!!
+                / 5*8ALPHA
 
 extlang       = 3ALPHA              ; selected ISO 639 codes
                 *2("-" 3ALPHA)      ; permanently reserved
 
-script        = 4ALPHA  !!!         # ISO 15924 code
-                  return_value(:script, state, string_values, values, rule)
-                !!!
+script        = 4ALPHA
 
 region        = 2ALPHA              ; ISO 3166-1 code
-                / 3DIGIT !!!        # UN M.49 code
-                  return_value(:territory, state, string_values, values, rule)
-                !!!
+                / 3DIGIT
 
 variant       = 5*8alphanum         ; registered variants
-                / (DIGIT 3alphanum) !!! 
-                  accumulate_value(:variant, state, string_values, values, rule)
-                !!!
+                / (DIGIT 3alphanum)
 
-extensions     = locale / transform / extension !!! 
-                 _ = rule
-                 _ = string_values
-                 state = if values == [[[[]]]] do
-                   state
-                 else
-                   [[[{extension, values}]]] =  values
-                   extensions = Map.put(state.extensions, extension, normalize_list(values))
-                   Map.put(state, :extensions, extensions)
-                 end
-                 {:ok, state, []}
-              !!!
+extensions     = locale / transform / extension
 
-extension     = singleton 1*("-" (2*8alphanum)) !!! 
-                 _ = rule
-                 _ = string_values
-                [extension | values] = :string.split(:lists.flatten(values), '-', :all)
-                {:ok, state, {normalize(extension), values}}
-              !!!
+extension     = singleton 1*("-" (2*8alphanum))
 
                                     ;  The following is the syntax for the extensions managed
                                     ;  by CLDR.  These are extensions "u" for locale and "t"
                                     ;  for transforms
-locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword)) !!!
-                _ = rule
-                _ = string_values
-                keywords = tuples(values) |> normalize_tuples |> Enum.into(%{})
-                {:ok, %{state | locale: keywords}, []}
-              !!!
+locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword))
 
-transform      = "t" (1*("-" keyword)) !!!
-                _ = rule
-                _ = string_values
-                keywords = tuples(values) |> normalize_tuples |> Enum.into(%{})
-                {:ok, %{state | transform: keywords}, []}
-              !!!
-              
-keyword       = key ["-" type] !!!
-                _ = rule
-                _ = string_values
-                [key | values] = :string.split(:lists.flatten(values), '-', :all)
-                {:ok, state, {normalize(key), values}}
-              !!!
-key           = 2alphanum !!! 
-                _ = rule
-                _ = string_values
-                {:ok, state, normalize(:lists.flatten(values))}
-              !!!
-type          = 3*8alphanum *("-" 3*8alphanum) !!!
-                _ = rule
-                _ = string_values
-                {:ok, state, normalize(:lists.flatten(values))}
-              !!!
-attribute     = 3*8alphanum !!! 
-                _ = rule
-                _ = string_values
-                {:ok, state, {:attributes, normalize_list(:string.split(:lists.flatten(values), '-', :all))}}
-              !!!
+transform      = "t" (1*("-" keyword))
 
+keyword       = key ["-" type]
+
+key           = 2alphanum
+
+type          = 3*8alphanum *("-" 3*8alphanum)
+
+attribute     = 3*8alphanum
                                     ; Single alphanumerics
                                     ; "x" reserved for private use
                                     ; "u" reserved for CLDR use as locale
@@ -159,12 +56,7 @@ singleton     = DIGIT               ; 0 - 9
               / %x76-77             ; v - w
               / %x79-7A             ; y - z
 
-privateuse    = "x" 1*("-" (1*8alphanum)) !!!
-                 _ = rule
-                 _ = string_values
-                [_x | values] = :string.split(:lists.flatten(values), '-', :all)
-                {:ok, %{state | private_use: normalize_list(values)}, []}
-              !!!
+privateuse    = "x" 1*("-" (1*8alphanum))
 
 grandfathered = irregular           ; non-redundant tags registered
               / regular             ; during the RFC 3066 era
@@ -198,6 +90,3 @@ regular       = "art-lojban"        ; these tags match the 'langtag'
               / "zh-xiang"
 
 alphanum      = (ALPHA / DIGIT)     ; letters and numbers
-
-DIGIT          = %x30-39
-ALPHA          = %x41-5A / %x61-7A
