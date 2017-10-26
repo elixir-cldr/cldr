@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.8.1"
+  @version "0.9.0-dev"
 
   def project do
     [
@@ -41,8 +41,8 @@ defmodule Cldr.Mixfile do
       {:poison, "~> 2.1 or ~> 3.0"},
       {:decimal, "~> 1.4.1"},
       {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
-      {:ex_abnf, "~> 0.3.0"},
       {:excoveralls, "~> 0.7.4", only: :test},
+      {:abnf, path: "../abnf"},
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
       {:flow, "~> 0.11", optional: true, only: [:dev, :test]},
