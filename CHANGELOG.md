@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.8.2 October 30th, 2017
+
+### Enhancements
+
+* `Cldr.Number.PluralRule.plural_rule/3` implementation for `Float` no longer casts to a `Decimal` nor delegates to the `Decimal` path.
+
 ## Cldr v0.8.1 October 25th, 2017
 
 ### Bug Fixes

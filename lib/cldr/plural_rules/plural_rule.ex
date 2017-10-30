@@ -163,14 +163,17 @@ defmodule Cldr.Number.PluralRule do
       # Plural rule for a float
       def plural_rule(number, locale, rounding)
       when is_float(number) and is_integer(rounding) and rounding > 0 do
-        plural_rule(Decimal.new(number), locale, rounding)
-        # n = Float.round(abs(number), rounding)
-        # i = trunc(n)
-        # v = rounding
-        # t = fraction_as_integer(n - i)
-        # w = number_of_integer_digits(t)
-        # f = trunc(t * :math.pow(10, v - w))
-        # do_plural_rule(locale, n, i, v, w, f, t)
+        # Testing shows that this is working but just in case we
+        # can go back to casting the number to a decimal and
+        # using that path
+        # plural_rule(Decimal.new(number), locale, rounding)
+        n = Float.round(abs(number), rounding)
+        i = trunc(n)
+        v = rounding
+        t = fraction_as_integer(n - i, rounding)
+        w = number_of_integer_digits(t)
+        f = trunc(t * :math.pow(10, v - w))
+        do_plural_rule(locale, n, i, v, w, f, t)
       end
 
       # Plural rule for a %Decimal{}
@@ -202,6 +205,20 @@ defmodule Cldr.Number.PluralRule do
         n = Math.to_float(n)
 
         do_plural_rule(locale, n, i, v, w, f, t)
+      end
+
+      defp fraction_as_integer(x, rounding) do
+        number = Float.round(x, rounding)
+        do_fraction_as_integer(number)
+      end
+
+      defp do_fraction_as_integer(number) do
+        trunc_number = trunc(number)
+        if number - trunc_number == 0 do
+          trunc_number
+        else
+          do_fraction_as_integer(number * 10)
+        end
       end
     end
   end
