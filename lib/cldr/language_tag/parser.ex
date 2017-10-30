@@ -25,17 +25,18 @@ defmodule Cldr.LanguageTag.Parser do
 
   """
   def parse(locale) when is_list(locale) do
-    # case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
-    #   {:ok, language_tag} ->
-    #     normalized_tag =
-    #       language_tag
-    #       |> canonicalize_locale_keys
-    #       |> canonicalize_transform_keys
-    #       |> normalize_lang_script_region_variant
-    #     {:ok, normalized_tag}
-    #   {:error, reason} ->
-    #     {:error, reason}
-    # end
+    case return_parse_result(Cldr.Rfc5646.parse(:"language-tag", locale), locale) do
+      {:ok, language_tag} ->
+        language_tag
+        # normalized_tag =
+        #   language_tag
+        #   |> canonicalize_locale_keys
+        #   |> canonicalize_transform_keys
+        #   |> normalize_lang_script_region_variant
+        # {:ok, normalized_tag}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   def parse(locale_name) when is_binary(locale_name) do
@@ -138,12 +139,13 @@ defmodule Cldr.LanguageTag.Parser do
     |> String.upcase
   end
 
-  defp return_parse_result(%{rest: [], state: state}, _locale), do: {:ok, state}
-  defp return_parse_result(nil, locale) do
-    {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect locale}"}}
-  end
-  defp return_parse_result(%{rest: rest}, _locale) do
-    {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect rest}"}}
+  defp return_parse_result([{rule, name, children}], locale) do
+    remaining = Abnf.Operators.advance(children, locale)
+    if remaining == '' do
+      {:ok, children}
+    else
+      {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect remaining}"}}
+    end
   end
 
   defp canonicalize_key([key, valid, default], param) do
