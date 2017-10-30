@@ -217,7 +217,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 * Language codes are two lowercase letters (ie "en", not "EN")
 * Potentially one or more modifiers separated by "-" (dash), not a "\_". (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s "\_" into "-" for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example "pt-BR" is the locale referring to Brazilian Portugese.
-* In `Cldr` a locale is always a `binary` and never an `atom`.  Locale strings are often passed around in HTTP headers and converting to atoms creates an attack vector we can do without.
+* In `Cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `Cldr.LanguageTag` struct.
 * The locales known to `Cldr` can be retrieved by `Cldr.known_locales/0` to get the locales known to this configuration of `Cldr` and `Cldr.all_locales/0` to get the locales available in the CLDR data repository.
 
 ## Testing
