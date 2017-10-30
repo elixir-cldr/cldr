@@ -134,26 +134,7 @@ defmodule Cldr.LanguageTag.Parser do
 
   defp normalize_variant(nil), do: nil
   defp normalize_variant(variant) do
-<<<<<<< f0fa7433930f415b14af751cb2f115f57df8e105
     String.upcase(variant)
-=======
-    variant
-    |> String.upcase
-  end
-
-  defp return_parse_result([{rule, name, children}], locale) do
-    remaining = Abnf.Operators.advance(children, locale)
-    if remaining == '' do
-      {:ok, children}
-    else
-      {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect remaining}"}}
-    end
-  end
-
-  defp return_minimum_viable_tag(%{language: language, script: script, territory: territory} = language_tag, _reason)
-  when language != nil and script != nil and territory != nil do
-    {:ok, language_tag}
->>>>>>> Start integrating new abnf parser
   end
 
   defp return_parse_result([{rule, name, children}], locale) do
