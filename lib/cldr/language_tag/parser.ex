@@ -11,20 +11,20 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.LanguageTag
   alias Cldr.Config
 
-  @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
+  # @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
 
   def parse(locale) when is_list(locale) do
-    case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
-      {:ok, language_tag} ->
-        normalized_tag =
-          language_tag
-          |> canonicalize_locale_keys
-          |> canonicalize_transform_keys
-          |> normalize_lang_script_region_variant
-        {:ok, normalized_tag}
-      {:error, reason} ->
-        {:error, reason}
-    end
+    # case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
+    #   {:ok, language_tag} ->
+    #     normalized_tag =
+    #       language_tag
+    #       |> canonicalize_locale_keys
+    #       |> canonicalize_transform_keys
+    #       |> normalize_lang_script_region_variant
+    #     {:ok, normalized_tag}
+    #   {:error, reason} ->
+    #     {:error, reason}
+    # end
   end
 
   def parse(locale) when is_binary(locale) do

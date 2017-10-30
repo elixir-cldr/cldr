@@ -181,7 +181,12 @@ defmodule Cldr do
         variant: nil}
 
   """
-  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
+  # @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
+  @default_locale %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001", extensions: %{}, language: "en",
+        locale: [], private_use: [], rbnf_locale_name: "en", region: "001",
+        requested_locale_name: "en-001", script: "Latn", transform: %{},
+        variant: nil}
   @spec default_locale :: LanguageTag.t
   def default_locale do
     @default_locale
