@@ -20,7 +20,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.8.0"}
+        {:ex_cldr, "~> 0.8.2"}
       ]
     end
 
@@ -224,7 +224,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.4.x.  `Cldr` will not run on Elixir version before 1.4.
+Tests are run on Elixir 1.5.x.  `Cldr` will not run on Elixir version before 1.5.
 
 ### Updating the CDLR data repository if installing from Github
 
