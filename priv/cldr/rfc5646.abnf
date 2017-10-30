@@ -90,4 +90,3 @@ regular       = "art-lojban"        ; these tags match the 'langtag'
               / "zh-xiang"
 
 alphanum      = (ALPHA / DIGIT)     ; letters and numbers
->>>>>>> Progress on the new language tag parser generator
