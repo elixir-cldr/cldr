@@ -42,6 +42,7 @@ if Code.ensure_loaded?(Flow) do
       save_aliases()
       save_likely_subtags()
       save_locales()
+      save_territory_containment()
 
       all_locales()
       |> Flow.from_enumerable(max_demand: @max_demand)
@@ -249,6 +250,34 @@ if Code.ensure_loaded?(Flow) do
       |> Poison.decode!
       |> get_in(["main", "en", "numbers", "currencies"])
       |> Map.keys
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_territory_containment do
+      path = Path.join(consolidated_output_dir(), "territory_containment.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/territoryContainment.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "territoryContainment"])
+      |> Normalize.TerritoryContainment.normalize
+      |> save_file(path)
+
+      assert_package_file_configured!(path)
+    end
+
+    def save_territory_info do
+      path = Path.join(consolidated_output_dir(), "territory_info.json")
+
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/territoryInfo.json"])
+      |> File.read!
+      |> Poison.decode!
+      |> get_in(["supplemental", "territoryInfo"])
+      |> Normalize.TerritoryInfo.normalize
       |> save_file(path)
 
       assert_package_file_configured!(path)

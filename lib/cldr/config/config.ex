@@ -579,6 +579,26 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns a map of territory containments
+  """
+  def territory_containment do
+    client_data_dir()
+    |> Path.join("territory_containment.json")
+    |> File.read!
+    |> Poison.decode!
+  end
+
+  @doc """
+  Returns a map of territory info
+  """
+  def territory_info do
+    client_data_dir()
+    |> Path.join("territory_info.json")
+    |> File.read!
+    |> Poison.decode!
+  end
+
+  @doc """
   Returns the map of aliases for languages,
   scripts and regions
   """

@@ -153,6 +153,35 @@ defmodule Cldr.Map do
   end
 
   @doc """
+  Convert map binary values to integers where possible.
+  """
+  def floatize_values(nil), do: nil
+
+  def floatize_values(map = %{}) do
+    Enum.map(map, fn
+      {k, v} when is_binary(v) ->
+        if Regex.match?(~r/^[0-9]+\.[0-9]+$/, v) do
+          {k, String.to_float(v)}
+        else
+          {k, floatize_values(v)}
+        end
+      {k, v} ->
+        {k, floatize_values(v)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  # Walk the list and integerize the keys of
+  # of any map members
+  def floatize_values([head | rest]) do
+    [integerize_values(head) | integerize_values(rest)]
+  end
+
+  def floatize_values(not_a_map) do
+    not_a_map
+  end
+
+  @doc """
   Returns the result of deep merging a list of maps
   """
   def merge_map_list([h | []]) do

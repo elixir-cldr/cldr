@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.8.3"
+  @version "0.8.4-dev"
 
   def project do
     [
@@ -70,6 +70,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/day_periods.json",
         "priv/cldr/likely_subtags.json",
         "priv/cldr/aliases.json",
+        "priv/cldr/territory_containment.json",
+        "priv/cldr/territory_info.json",
         "priv/cldr/rfc5646.abnf"
       ]
     ]
