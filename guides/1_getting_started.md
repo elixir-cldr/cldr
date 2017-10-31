@@ -8,7 +8,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.8.2"}
+        {:ex_cldr, "~> 0.8.3"}
       ]
     end
 
@@ -21,6 +21,7 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
 
 `ex_cldr` includes functions for the localisation and formatting of numbers and currencies.  Additional functionality is available by adding additional packages:
 
+* Number formatting: [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
@@ -43,6 +44,8 @@ Configures a default locale of "en" (which is itself the `Cldr` default).  Addit
 Note that Elixir can't determine dependencies based upon configuration so when you make changes to your `Cldr` configuration a forced recompilation is required in order for the changes to take affect.  To recompile:
 
     iex> mix deps.compile ex_cldr --force
+
+**Any addon packages will also require compilation if the configuration changes.**
 
 `Cldr` pre-computes a lot of the CLDR specification and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
 

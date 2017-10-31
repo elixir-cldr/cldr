@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.8.3 October 31st, 2017
+
+### Enhancements
+
+* Restructure the CLDR unit data into unit types (:acceleration, :mass, ...) to support upcoming unit conversion capabilities in [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
+
 ## Cldr v0.8.2 October 30th, 2017
 
 ### Enhancements

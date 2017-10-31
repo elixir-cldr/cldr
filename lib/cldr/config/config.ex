@@ -553,6 +553,7 @@ defmodule Cldr.Config do
     |> File.read!
     |> Poison.decode!
     |> assert_valid_keys!(locale)
+    |> structure_units
     |> Cldr.Map.atomize_keys
     |> structure_rbnf
     |> atomize_number_systems
@@ -844,6 +845,35 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
 
     Map.put(content, :rbnf, rbnf)
+  end
+
+  def structure_units(content) do
+    units =
+      content["units"]
+      |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
+      |> Enum.into(%{})
+
+    Map.put(content, "units", units)
+  end
+
+  defp group_units(units) do
+    units
+    |> Enum.map(fn {k, v} ->
+         [group | key] = String.split(k, "_", parts: 2)
+         if key == [] do
+           nil
+         else
+           [key] = key
+           {group, key, v}
+         end
+       end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.group_by(
+         fn {group, _key, _value} -> group end,
+         fn {_group, key, value} -> {key, value} end
+       )
+    |> Enum.map(fn {k, v} -> {k, Enum.into(v, %{})} end)
+    |> Enum.into(%{})
   end
 
   defp structure_sets(sets) do
