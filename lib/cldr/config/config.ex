@@ -105,7 +105,7 @@ defmodule Cldr.Config do
   @doc """
   Return the root path of the cldr application
   """
-  @cldr_home_dir Path.join(__DIR__, "/../..") |> Path.expand
+  @cldr_home_dir Path.join(__DIR__, "/../../..") |> Path.expand
   def cldr_home do
     @cldr_home_dir
   end

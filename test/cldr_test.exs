@@ -1,6 +1,10 @@
 defmodule Cldr.Test do
   use ExUnit.Case
 
+  test "that the cldr home directory is correct" do
+    assert String.ends_with?(Cldr.Config.cldr_home(), "/cldr") == true
+  end
+
   test "that the cldr source data directory is correct" do
     assert String.ends_with?(Cldr.Config.source_data_dir(), "/priv/cldr") == true
   end
