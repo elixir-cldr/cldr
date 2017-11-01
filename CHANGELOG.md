@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.9.1 November ---, 2017
+
+### Bug Fixes
+
+* `Cldr.Locale.normalize_locale_name/1` handles `language-script-region` and `language-region-variant` correctly
+
 ## Cldr v0.9.0 November 1st, 2017
 
 ### Breaking Changes

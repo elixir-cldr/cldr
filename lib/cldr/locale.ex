@@ -99,6 +99,9 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.normalize_locale_name "EN"
       "en"
 
+      iex> Cldr.Locale.normalize_locale_name "ca_es_valencia"
+      "ca-ES-VALENCIA"
+
   """
   @spec normalize_locale_name(name) :: name
   def normalize_locale_name(name) do
@@ -110,7 +113,11 @@ defmodule Cldr.Locale do
           String.downcase(lang) <> "-" <> String.upcase(other)
         end
       [lang, script, region] ->
-        String.downcase(lang) <> "-" <> String.capitalize(script) <> "-" <> String.upcase(region)
+        if String.length(script) == 4 do # Its a lang-script-region
+          String.downcase(lang) <> "-" <> String.capitalize(script) <> "-" <> String.upcase(region)
+        else # Its lang-region-variant
+          String.downcase(lang) <> "-" <> String.upcase(script) <> "-" <> String.upcase(region)
+        end
       [lang] ->
         String.downcase(lang)
       _ ->
@@ -217,7 +224,7 @@ defmodule Cldr.Locale do
   defp remove_unknown(%LanguageTag{} = language_tag, :region), do: language_tag
 
   @doc """
-  Given a source locale X, to return a locale Y where the empty subtags
+  Given a source locale X, return a locale Y where the empty subtags
   have been filled in by the most likely subtags.
 
   This is written as X ⇒ Y ("X maximizes to Y").
@@ -299,7 +306,7 @@ defmodule Cldr.Locale do
     @likely_subtags
   end
 
-  def likely_subtags(locale_string) do
-    Map.get(likely_subtags(), locale_string)
+  def likely_subtags(locale_name) do
+    Map.get(likely_subtags(), locale_name)
   end
 end
