@@ -21,6 +21,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.into(%{})
     |> add_currency_for_territories
     |> add_country_phone_codes
+    |> add_measurement_system
   end
 
   @key "language_population"
@@ -43,6 +44,24 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.map(fn {territory, map} ->
          {territory, Map.put(map, "currency", Map.get(currencies, territory))}
        end)
+    |> Enum.into(%{})
+  end
+
+  def add_measurement_system(territories) do
+    systems = get_measurement_data()
+
+    territories
+    |> Enum.map(fn {territory, map} ->
+      map =
+        map
+        |> Map.put(:measurement_system, get_in(systems, [:measurement_system, territory]) ||
+                    get_in(systems, [:measurement_system, :"001"]))
+        |> Map.put(:paper_size, get_in(systems, [:paper_size, territory]) ||
+                    get_in(systems, [:paper_size, :"001"]))
+        |> Map.put(:temperature_measurement,
+                    get_in(systems, [:measurement_system_category_temperature, territory]) || "metric")
+      {territory, map}
+    end)
     |> Enum.into(%{})
   end
 
@@ -77,4 +96,15 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.into(%{})
   end
 
+  @measurement_path Path.join(Cldr.Config.download_data_dir(),
+    ["cldr-core", "/supplemental", "/measurementData.json"])
+
+  def get_measurement_data do
+    @measurement_path
+    |> File.read!
+    |> Poison.decode!
+    |> get_in(["supplemental", "measurementData"])
+    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.atomize_keys
+  end
 end

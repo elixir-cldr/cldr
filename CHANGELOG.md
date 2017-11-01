@@ -2,6 +2,10 @@
 
 ## Cldr v0.9.1 November ---, 2017
 
+### Enhancements
+
+* Added measurement systems information to `Cldr.Config.territory_info/1`
+
 ### Bug Fixes
 
 * `Cldr.Locale.normalize_locale_name/1` handles `language-script-region` and `language-region-variant` correctly
