@@ -4,13 +4,14 @@ defmodule Cldr.Normalize.Currency do
   Takes the currency part of the locale map and transforms the formats into a more easily
   processable structure that is then stored in map managed by `Cldr.Locale`
   """
+
   def normalize(content, locale) do
     content
     |> normalize_currencies(locale)
   end
 
   def normalize_currencies(content, _locale) do
-    currency_data = get_currency_data()
+    currency_data = get_currency_data()["fractions"]
     default = currency_data["DEFAULT"]
     currencies = get_in(content, ["numbers", "currencies"])
     currencies = Enum.map(currencies, fn {code, currency} ->
@@ -54,12 +55,34 @@ defmodule Cldr.Normalize.Currency do
     |> File.read!
     |> Poison.decode!
     |> Cldr.Map.underscore_keys
-    |> get_in(["supplemental", "currency_data", "fractions"])
+    |> get_in(["supplemental", "currency_data"])
     |> upcase_currency_codes
+    |> upcase_territory_codes
   end
 
   defp upcase_currency_codes(currencies) do
-    Enum.map(currencies, fn {k, v} -> {String.upcase(k), v} end)
-    |> Enum.into(%{})
+    fractions =
+      currencies["fractions"]
+      |> Enum.map(fn {k, v} -> {String.upcase(k), v} end)
+      |> Enum.into(%{})
+
+    Map.put(currencies, "fractions", fractions)
+  end
+
+  defp upcase_territory_codes(currencies) do
+    regions =
+      currencies["region"]
+      |> Enum.map(fn {k, v} -> {String.upcase(k), v} end)
+      |> Enum.map(fn {k, v} ->
+          {k, Enum.map(v, &Cldr.Map.remove_leading_underscores/1)}
+         end)
+      |> Enum.map(fn {k, v} ->
+           {k, Enum.map(v, fn list ->
+                 Enum.map(list, fn {k, v} -> {String.upcase(k), v} end) |> Enum.into(%{})
+               end)}
+         end)
+      |> Enum.into(%{})
+
+    Map.put(currencies, "region", regions)
   end
 end

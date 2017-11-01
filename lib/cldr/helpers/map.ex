@@ -69,6 +69,35 @@ defmodule Cldr.Map do
   end
 
   @doc """
+  Convert map binary values to atoms where possible.
+  """
+  def atomize_values(nil), do: nil
+
+  def atomize_values(map = %{}) do
+    Enum.map(map, fn
+      {k, v} when is_binary(v) ->
+        {k, String.to_atom(v)}
+      {k, v} ->
+        {k, atomize_values(v)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  # Walk the list and atomize the values of
+  # of any list members
+  def atomize_values([head | rest]) do
+    [atomize_values(head) | atomize_values(rest)]
+  end
+
+  def atomize_values(item) when is_binary(item) do
+    String.to_atom(item)
+  end
+
+  def atomize_values(not_a_map) do
+    not_a_map
+  end
+
+  @doc """
   Convert map atom keys to strings
   """
   def stringify_keys(nil), do: nil

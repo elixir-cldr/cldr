@@ -74,9 +74,59 @@ defmodule Cldr.Locale do
     nil
   end
 
+  @doc """
+  Normalize the casing of a locale name.
+
+  Locale names are case insensitive but certain common
+  case is followed:
+
+  * lower case for a language
+  * capitalized for a script
+  * upper case for a region
+
+  Note this function is intended to support only the CLDR
+  names which have limited structure.  For proper parsing
+  of local names and language tags, see `Cldr.Locale.canonical_language_tag/1`
+
+  ## Examples
+
+      iex> Cldr.Locale.normalize_locale_name "zh_hant"
+      "zh-Hant"
+
+      iex> Cldr.Locale.normalize_locale_name "en_us"
+      "en-US"
+
+      iex> Cldr.Locale.normalize_locale_name "EN"
+      "en"
+
+  """
   @spec normalize_locale_name(name) :: name
   def normalize_locale_name(name) do
-    String.replace(name, "_", "-")
+    case String.split(name, ~r/[-_]/) do
+      [lang, other] ->
+        if String.length(other) == 4 do
+          String.downcase(lang) <> "-" <> String.capitalize(other)
+        else
+          String.downcase(lang) <> "-" <> String.upcase(other)
+        end
+      [lang, script, region] ->
+        String.downcase(lang) <> "-" <> String.capitalize(script) <> "-" <> String.upcase(region)
+      [lang] ->
+        String.downcase(lang)
+      _ ->
+        String.replace(name, "_", "-")
+    end
+  end
+
+  @doc """
+  Normalize the format of a territory code.
+  """
+  def normalize_territory_code({code, rest}) do
+    {normalize_territory_code(code), rest}
+  end
+
+  def normalize_territory_code(code) do
+    String.upcase(code)
   end
 
   def locale_name_from(%LanguageTag{language: language, script: script,

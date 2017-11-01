@@ -392,7 +392,7 @@ defmodule Cldr.Config do
 
   """
   def known_calendars do
-    calendar_data() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+    calendar_info() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
   end
 
   @doc """
@@ -569,6 +569,34 @@ defmodule Cldr.Config do
   @doc """
   Returns a list of the vaid currency codes in
   upcased atom format
+
+  ## Example
+
+      iex> Cldr.Config.currency_codes
+      [:XBB, :XEU, :SKK, :AUD, :CZK, :ISJ, :BRC, :IDR, :UYP, :VEF, :UAH, :KMF, :NGN,
+       :NAD, :LUC, :AWG, :BRZ, :AOK, :SHP, :DEM, :UGS, :ECS, :BRR, :HUF, :INR, :TPE,
+       :GYD, :MCF, :USS, :ALK, :TJR, :BGO, :BUK, :DKK, :LSL, :AZM, :ZRN, :MKN, :GHC,
+       :JMD, :NOK, :GWP, :CVE, :RUR, :BDT, :NIC, :LAK, :XFO, :KHR, :SRD, :ESB, :PGK,
+       :YUD, :BRN, :MAD, :PYG, :QAR, :MOP, :BOB, :CHW, :PHP, :SDG, :SEK, :KZT, :SDP,
+       :ZWD, :XTS, :SRG, :ANG, :CLF, :BOV, :XBA, :TMT, :TJS, :CUC, :SUR, :MAF, :BRL,
+       :PLZ, :PAB, :AOA, :ZWR, :UGX, :PTE, :NPR, :BOL, :MRO, :MXN, :ATS, :ARP, :KWD,
+       :CLE, :NLG, :TMM, :SAR, :PEN, :PKR, :RUB, :AMD, :MDL, :XRE, :AOR, :MZN, :ESA,
+       :XOF, :CNX, :ILR, :KRW, :CDF, :VND, :DJF, :FKP, :BIF, :FJD, :MYR, :BBD, :GEK,
+       :PES, :CNY, :GMD, :SGD, :MTP, :ZMW, :MWK, :BGN, :GEL, :TTD, :LVL, :XCD, :ARL,
+       :EUR, :UYU, :ZAL, :CSD, :ECV, :GIP, :CLP, :KRH, :CYP, :TWD, :SBD, :SZL, :IRR,
+       :LRD, :CRC, :XDR, :SYP, :YUM, :SIT, :DOP, :MVP, :BWP, :KPW, :GNS, :ZMK, :BZD,
+       :TRY, :MLF, :KES, :MZE, :ALL, :JOD, :HTG, :TND, :ZAR, :LTT, :BGL, :XPD, :CSK,
+       :SLL, :BMD, :BEF, :FIM, :ARA, :ZRZ, :CHF, :SOS, :KGS, :GWE, :LTL, :ITL, :DDM,
+       :ERN, :BAM, :BRB, :ARS, :RHD, :STD, :RWF, :GQE, :HRD, :ILP, :YUR, :AON, :BYR,
+       :RSD, :ZWL, :XBD, :XFU, :GBP, :VEB, :BTN, :UZS, :BGM, :BAD, :MMK, :XBC, :LUF,
+       :BSD, :XUA, :GRD, :CHE, :JPY, :EGP, :XAG, :LYD, :XAU, :USD, :BND, :XPT, :BRE,
+       :ROL, :PLN, :MZM, :FRF, :MGF, :LUL, :SSP, :DZD, :IEP, :SDD, :ADP, :AFN, :IQD,
+       :GHS, :TOP, :LVR, :YUN, :MKD, :GNF, :MXP, :THB, :TZS, :XPF, :AED, :SVC, :RON,
+       :BEC, :CUP, :USN, :LBP, :BOP, :BHD, :BAN, :MDC, :VUV, :MGA, :ISK, :COP, :BYN,
+       :UAK, :TRL, :SCR, :KRO, :ILS, :ETB, :CAD, :AZN, :VNN, :NIO, :COU, :EEK, :KYD,
+       :MNT, :HNL, :WST, :PEI, :YER, :MTL, :AFA, :ARM, :HKD, :NZD, :UYI, :MXV, :GTQ,
+       :BYB, :XXX, :XSU, :HRK, :OMR, :BEL, :MUR, :ESP, :YDD, :MVR, :LKR, :XAF]
+
   """
   def currency_codes do
     client_data_dir()
@@ -586,16 +614,117 @@ defmodule Cldr.Config do
     |> Path.join("territory_containment.json")
     |> File.read!
     |> Poison.decode!
+    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_values
   end
 
   @doc """
-  Returns a map of territory info
+  Returns a map of territory info for all territories
+  known to CLDR.
+
+  The territory information is independent of the
+  `ex_cldr` configuration.
+
+  ## Example
+
+      iex> Cldr.Config.territory_info[:GB]
+      %{currency: %{GBP: %{from: ~D[1694-07-27]}},
+        gdp: 2788000000000,
+        language_population:
+          %{
+            "bn" => %{population_percent: 0.67},
+            "cy" => %{official_status: "official_regional", population_percent: 0.77},
+            "de" => %{population_percent: 6}, "el" => %{population_percent: 0.34},
+            "en" => %{official_status: "official", population_percent: 99},
+            "fr" => %{population_percent: 19},
+            "ga" => %{official_status: "official_regional", population_percent: 0.026},
+            "gd" => %{official_status: "official_regional", population_percent: 0.099, writing_percent: 5},
+            "it" => %{population_percent: 0.34},
+            "ks" => %{population_percent: 0.19},
+            "kw" => %{population_percent: 0.0031},
+            "ml" => %{population_percent: 0.035},
+            "pa" => %{population_percent: 0.79},
+            "sco" => %{population_percent: 2.7, writing_percent: 5},
+            "syl" => %{population_percent: 0.51},
+            "yi" => %{population_percent: 0.049},
+            "zh-Hant" => %{population_percent: 0.54}
+          },
+        literacy_percent: 99,
+        population: 64430400,
+        telephone_country_code: 44}
+
   """
   def territory_info do
     client_data_dir()
     |> Path.join("territory_info.json")
     |> File.read!
     |> Poison.decode!
+    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+    |> atomize_territory_keys
+    |> adjust_currency_codes
+    |> atomize_language_population
+    |> Enum.into(%{})
+  end
+
+  defp atomize_territory_keys(territories) do
+    territories
+    |> Enum.map(fn {k, v} ->
+      {k, Enum.map(v, fn {k1, v1} -> {String.to_atom(k1), v1} end) |> Enum.into(%{})}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp adjust_currency_codes(territories) do
+    territories
+    |> Enum.map(fn {territory, data} ->
+      currencies =
+        data
+        |> Map.get(:currency)
+        |> Cldr.Map.atomize_keys
+        |> Cldr.Map.merge_map_list
+        |> Enum.map(fn {currency, data} ->
+          data = if data[:tender] == "false" do
+            Map.put(data, :tender, false)
+          else
+            data
+          end
+
+          data = if data[:from] do
+            Map.put(data, :from, Date.from_iso8601!(data[:from]))
+          else
+            data
+          end
+
+          data = if data[:to] do
+            Map.put(data, :to, Date.from_iso8601!(data[:to]))
+          else
+            data
+          end
+
+          {currency, data}
+        end)
+        |> Enum.into(%{})
+      {territory, Map.put(data, :currency, currencies)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp atomize_language_population(territories) do
+    territories
+    |> Enum.map(fn {territory, data} ->
+      languages =
+        data
+        |> Map.get(:language_population)
+        |> atomize_language_keys
+        |> Enum.into(%{})
+      {territory, Map.put(data, :language_population, languages)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp atomize_language_keys(nil), do: []
+  defp atomize_language_keys(lang) do
+    Enum.map(lang, fn {language, values} -> {language, Cldr.Map.atomize_keys(values)} end)
   end
 
   @doc """
@@ -640,18 +769,26 @@ defmodule Cldr.Config do
   Returns the data that defines start and end of
   calendar weeks, weekends and years
   """
-  def week_data do
+  def week_info do
     client_data_dir()
     |> Path.join("week_data.json")
     |> File.read!
     |> Poison.decode!
-    |> Cldr.Map.underscore_key("WeekendStart")
-    |> Cldr.Map.underscore_key("WeekendEnd")
-    |> Cldr.Map.underscore_key("minDays")
-    |> Cldr.Map.underscore_key("firstDay")
+    |> Cldr.Map.underscore_keys
+    |> Enum.map(&upcase_territory_codes/1)
+    |> Enum.into(%{})
     |> Cldr.Map.atomize_keys
     |> Cldr.Map.integerize_values
     |> Map.take([:weekend_start, :weekend_end, :min_days, :first_day])
+  end
+
+  defp upcase_territory_codes({k, content}) do
+    content =
+      content
+      |> Enum.map(fn {territory, rest} -> {String.upcase(territory), rest} end)
+      |> Enum.into(%{})
+
+    {k, content}
   end
 
   @doc """
@@ -661,8 +798,19 @@ defmodule Cldr.Config do
   Time period rules are used to define the meaning
   of "morning", "evening", "noon", "midnight" and
   potentially other periods on a per-language basis.
+
+  ## Example
+
+      iex> Cldr.Config.day_period_info |> Map.get("fr")
+      %{"afternoon1" => %{"before" => [18, 0], "from" => [12, 0]},
+        "evening1" => %{"before" => [24, 0], "from" => [18, 0]},
+        "midnight" => %{"at" => [0, 0]},
+        "morning1" => %{"before" => [12, 0], "from" => [4, 0]},
+        "night1" => %{"before" => [4, 0], "from" => [0, 0]},
+        "noon" => %{"at" => [12, 0]}}
+
   """
-  def day_periods do
+  def day_period_info do
     client_data_dir()
     |> Path.join("day_periods.json")
     |> File.read!
@@ -671,9 +819,15 @@ defmodule Cldr.Config do
 
   @doc """
   Returns the data that defines start and end of
-  calendar epochs
+  calendar epochs.
+
+  ## Example
+
+      iex> Cldr.Config.calendar_info |> Map.get(:gregorian)
+      %{calendar_system: "solar", eras: %{0 => %{end: 0}, 1 => %{start: 1}}}
+
   """
-  def calendar_data do
+  def calendar_info do
     client_data_dir()
     |> Path.join("calendar_data.json")
     |> File.read!
@@ -684,16 +838,32 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the calendars available for a given locale
+  Returns the calendars available for a given locale name
+
+  ## Example
+
+      iex> Cldr.Config.calendars_for_locale "en"
+      [:buddhist, :chinese, :coptic, :dangi, :ethiopic, :ethiopic_amete_alem,
+       :generic, :gregorian, :hebrew, :indian, :islamic, :islamic_civil,
+       :islamic_rgsa, :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
+
   """
-  def calendars_for_locale(locale_data) do
+  def calendars_for_locale(locale_name) when is_binary(locale_name) do
+    locale_name
+    |> get_locale()
+    |> Map.get(:dates)
+    |> Map.get(:calendars)
+    |> Map.keys
+  end
+
+  def calendars_for_locale(%{} = locale_data) do
     locale_data
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys
   end
 
-  def add_era_end_dates(calendars) do
+  defp add_era_end_dates(calendars) do
     Enum.map(calendars, fn {calendar, content} ->
       new_content = Enum.map(content, fn
         {:eras, eras} -> {:eras, add_end_dates(eras)}
@@ -705,23 +875,24 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
   end
 
-  def add_end_dates(%{} = eras) do
+  defp add_end_dates(%{} = eras) do
     eras
     |> Enum.sort_by(fn {k, _v} -> k end, fn a, b -> a < b end)
     |> add_end_dates
+    |> Enum.into(%{})
   end
 
-  def add_end_dates([{_, %{start: _start_1}} = era_1, {_, %{start: start_2}} = era_2]) do
+  defp add_end_dates([{_, %{start: _start_1}} = era_1, {_, %{start: start_2}} = era_2]) do
     {era, dates} = era_1
     [{era, Map.put(dates, :end, start_2 - 1)}, era_2]
   end
 
-  def add_end_dates([{_, %{start: _start_1}} = era_1 | [{_, %{start: start_2}} | _] = tail]) do
+  defp add_end_dates([{_, %{start: _start_1}} = era_1 | [{_, %{start: start_2}} | _] = tail]) do
     {era, dates} = era_1
     [{era, Map.put(dates, :end, start_2 - 1)}] ++ add_end_dates(tail)
   end
 
-  def add_end_dates(other) do
+  defp add_end_dates(other) do
     other
   end
 
@@ -733,6 +904,7 @@ defmodule Cldr.Config do
 
       iex> Cldr.Config.get_precompile_number_formats
       []
+
   """
   def get_precompile_number_formats do
     Application.get_env(:ex_cldr, :precompile_number_formats, [])

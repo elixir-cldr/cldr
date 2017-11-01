@@ -1,5 +1,31 @@
 # Changelog
 
+## Cldr v0.9.0 November 1st, 2017
+
+### Breaking Changes
+
+* Renamed `Cldr.Config.week_data/0` to `Cldr.Config.week_info/0`
+
+* Renamed `Cldr.Config.day_periods/0` to `Cldr.Config.day_period_info/0`
+
+* Renamed `Cldr.Config.calendar_data/0` to `Cldr.Config.calendar_info/0`
+
+### Enhancements
+
+* Restructured the underlying data maps to conform to the principle that currency codes and territory codes are always uppercased.  Scripts and number systems are capital cased.  Languages are lower cased.
+
+* In the data mapping process the intent is that languages are kept as strings.  Currency codes and territory codes are kept as atoms.  There may be more work to do on this before the 1.0 release.
+
+* Added `Cldr.Config.territory_info/0`.  This function returns the currencies, population, literacy, gdp and languages for a given territory.  In later release measurement data and other data may be added.
+
+* Added `Cldr.Config.territory_containment/0`.  This function identifies the enclosures of territories (like members of the EU, or countries in Asia)
+
+* Updated `Cldr.Config.calendars_for_locale/1` to also allow a locale name as a parameter
+
+### Bug fixes
+
+* Fixed the content of the `week_data.json` file which was previously omitting the first and last day of the week content
+
 ## Cldr v0.8.3 October 31st, 2017
 
 ### Enhancements
