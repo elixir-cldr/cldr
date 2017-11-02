@@ -32,9 +32,28 @@ defmodule Cldr.Number.Cardinal do
     # So we use this version which is a bit hacky.  But we're only calling
     # Code.eval_quoted during compile time so we'll live with the hack.
     function = quote do
-      defp do_plural_rule(%LanguageTag{language: unquote(locale_name)}, n, i, v, w, f, t),
+      defp do_plural_rule(%LanguageTag{cldr_locale_name: unquote(locale_name)}, n, i, v, w, f, t),
         do: unquote(function_body)
     end
     Code.eval_quoted(function, [], __ENV__)
+  end
+
+  # If we get here then it means that the locale doesn't have a plural rule,
+  # but the language might
+  defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t) do
+    if language_tag.language == language_tag.cldr_locale_name do
+      raise Cldr.UnknownPluralRules, "No #{rule_type()} plural rules available for #{inspect language_tag}"
+    else
+      language_tag = Map.put(language_tag, :cldr_locale_name, language_tag.language)
+      do_plural_rule(language_tag, n, i, v, w, f, t)
+    end
+  end
+
+  defp rule_type do
+    __MODULE__
+    |> Atom.to_string
+    |> String.split(".")
+    |> Enum.reverse
+    |> hd
   end
 end

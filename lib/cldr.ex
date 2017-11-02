@@ -75,7 +75,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {31, 0, 1}
+      {32, 0, 0}
 
   """
   @version Config.version()
@@ -101,7 +101,7 @@ defmodule Cldr do
          cldr_locale_name: "pl",
          extensions: %{},
          language: "pl",
-         locale: [],
+         locale: %{},
          private_use: [],
          rbnf_locale_name: "pl",
          region: "PL",
@@ -136,7 +136,7 @@ defmodule Cldr do
           cldr_locale_name: "en",
           extensions: %{},
           language: "en",
-          locale: [],
+          locale: %{},
           private_use: [],
           rbnf_locale_name: "en",
           region: "US",
@@ -176,7 +176,7 @@ defmodule Cldr do
       iex> Cldr.default_locale()
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: [], private_use: [], rbnf_locale_name: "en", region: "001",
+        locale: %{}, private_use: [], rbnf_locale_name: "en", region: "001",
         requested_locale_name: "en-001", script: "Latn", transform: %{},
         variant: nil}
 
@@ -364,14 +364,14 @@ defmodule Cldr do
       iex> Cldr.validate_locale "en"
       {:ok,
        %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
-        extensions: %{}, language: "en", locale: [], private_use: [],
+        extensions: %{}, language: "en", locale: %{}, private_use: [],
         rbnf_locale_name: "en", region: "US", requested_locale_name: "en",
         script: "Latn", transform: %{}, variant: nil}}
 
       iex> Cldr.validate_locale Cldr.default_locale
       {:ok,
        %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{}, language: "en", locale: [],
+        cldr_locale_name: "en-001", extensions: %{}, language: "en", locale: %{},
         private_use: [], rbnf_locale_name: "en", region: "001",
         requested_locale_name: "en-001", script: "Latn", transform: %{},
         variant: nil}}
@@ -456,29 +456,29 @@ defmodule Cldr do
        "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN",
        "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC",
        "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN",
-       "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX",
-       "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK",
-       "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN",
-       "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK",
-       "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE",
-       "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP",
-       "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY",
-       "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT",
-       "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL",
-       "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN",
-       "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK",
-       "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO",
-       "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP",
-       "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB",
-       "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP",
-       "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP",
-       "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY",
-       "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI",
-       "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG",
-       "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF",
-       "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD",
-       "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL",
-       "ZWR"]
+       "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNH",
+       "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP",
+       "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP",
+       "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP",
+       "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ",
+       "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP",
+       "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD",
+       "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD",
+       "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL",
+       "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD",
+       "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR",
+       "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC",
+       "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK",
+       "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD",
+       "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD",
+       "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "STN", "SUR",
+       "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE",
+       "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN",
+       "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST",
+       "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO",
+       "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD",
+       "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ",
+       "ZWD", "ZWL", "ZWR"]
 
   """
   @known_currencies Cldr.Config.known_currencies
@@ -494,12 +494,12 @@ defmodule Cldr do
 
       iex> Cldr.known_number_systems
       ["adlm", "ahom", "arab", "arabext", "armn", "armnlow", "bali", "beng", "bhks",
-       "brah", "cakm", "cham", "cyrl", "deva", "ethi", "fullwide", "geor", "grek",
-       "greklow", "gujr", "guru", "hanidays", "hanidec", "hans", "hansfin", "hant",
-       "hantfin", "hebr", "hmng", "java", "jpan", "jpanfin", "kali", "khmr", "knda",
-       "lana", "lanatham", "laoo", "latn", "lepc", "limb", "mathbold", "mathdbl",
-       "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo", "mtei",
-       "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma",
+       "brah", "cakm", "cham", "cyrl", "deva", "ethi", "fullwide", "geor", "gonm",
+       "grek", "greklow", "gujr", "guru", "hanidays", "hanidec", "hans", "hansfin",
+       "hant", "hantfin", "hebr", "hmng", "java", "jpan", "jpanfin", "kali", "khmr",
+       "knda", "lana", "lanatham", "laoo", "latn", "lepc", "limb", "mathbold",
+       "mathdbl", "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo",
+       "mtei", "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma",
        "roman", "romanlow", "saur", "shrd", "sind", "sinh", "sora", "sund", "takr",
        "talu", "taml", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara"]
 

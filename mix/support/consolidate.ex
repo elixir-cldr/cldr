@@ -170,9 +170,9 @@ if Code.ensure_loaded?(Flow) do
       end
     end
 
-    # As of CLDR 31 there is an available locale es-BZ that has no content and
+    # As of CLDR 32 there is an available locale "yue" that has no content and
     # therefore should not be included
-    @invalid_locales []
+    @invalid_locales ["yue"]
 
     def all_locales() do
       download_data_dir()

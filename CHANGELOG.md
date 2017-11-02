@@ -1,8 +1,16 @@
 # Changelog
 
-## Cldr v0.9.1 November ---, 2017
+## Cldr v0.10.0 November 2nd, 2017
+
+The primary purpose of this update is to move to CLDR data release 32.  The [release notes for CLDR 32](http://cldr.unicode.org/index/downloads/cldr-32) describe the changes.  From a functional point of view there is a limited impact to existing users of `ex_cldr`.
 
 ### Enhancements
+
+* Update to CLDR version 32 which adds the additional locales of `ccp-IN`, `ccp`, `sd`, `tg`, `tt`, `wo`, `yue-Hans`, `yue-Hant` and removes the locale `yue`.
+
+* Plural rules are added for `pt-PT` which are different to the plural rules for `pt`
+
+* Returns a more meaningful exception if plural rules are not available for a given locale
 
 * Added measurement systems information to `Cldr.Config.territory_info/1`
 

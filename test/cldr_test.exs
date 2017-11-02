@@ -33,7 +33,7 @@ defmodule Cldr.Test do
     assert Cldr.default_locale() ==
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{},
-        language: "en", locale: [], private_use: [],
+        language: "en", locale: %{}, private_use: [],
         region: "001", requested_locale_name: "en-001",
         script: "Latn", transform: %{}, variant: nil,
         rbnf_locale_name: "en"}
@@ -45,13 +45,13 @@ defmodule Cldr.Test do
 
   test "that we have the right number of rbnf locales" do
     assert Cldr.known_rbnf_locales ==
-      ["af", "am", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy", "da", "de",
-       "de-CH", "ee", "el", "en", "eo", "es", "es-419", "et", "fa", "fa-AF", "fi",
-       "fil", "fo", "fr", "fr-BE", "fr-CH", "ga", "he", "hi", "hr", "hu", "hy", "id",
-       "is", "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lt", "lv", "mk", "ms",
-       "mt", "my", "nb", "nl", "nn", "pl", "pt", "pt-PT", "ro", "root", "ru", "se",
-       "sk", "sl", "sq", "sr", "sr-Latn", "sv", "ta", "th", "tr", "uk", "vi", "yue",
-       "zh", "zh-Hant"]
+    ["af", "ak", "am", "ar", "az", "be", "bg", "bs", "ca", "chr", "cs", "cy", "da",
+     "de", "de-CH", "ee", "el", "en", "en-IN", "eo", "es", "es-419", "et", "fa",
+     "fa-AF", "fi", "fil", "fo", "fr", "fr-BE", "fr-CH", "ga", "he", "hi", "hr",
+     "hu", "hy", "id", "is", "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lrc",
+     "lt", "lv", "mk", "ms", "mt", "my", "nb", "nl", "nn", "pl", "pt", "pt-PT",
+     "ro", "root", "ru", "se", "sk", "sl", "sq", "sr", "sr-Latn", "sv", "ta", "th",
+     "tr", "uk", "vi", "yue-Hans", "zh", "zh-Hant"]
   end
 
   test "that requesting rbnf for a locale that doesn't define it returns and error" do

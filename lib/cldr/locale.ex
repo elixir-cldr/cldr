@@ -170,15 +170,15 @@ defmodule Cldr.Locale do
        region: "US", script: nil, transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
-      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
+      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
        region: "AQ", script: "Arab", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
-      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: [], private_use: [],
+      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
        region: "AQ", script: "Latn", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
-      %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: [], private_use: [],
+      %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: %{}, private_use: [],
        region: "MD", script: nil, transform: %{}, variant: nil}
 
   """
@@ -261,7 +261,7 @@ defmodule Cldr.Locale do
   ## Example
 
       iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
-      %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: [], private_use: [],
+      %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: %{}, private_use: [],
        region: "SG", script: "Hans", transform: %{}, variant: nil}
 
   """
