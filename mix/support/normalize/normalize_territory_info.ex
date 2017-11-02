@@ -49,9 +49,9 @@ defmodule Cldr.Normalize.TerritoryInfo do
 
   def add_measurement_system(territories) do
     systems = get_measurement_data()
-
     territories
     |> Enum.map(fn {territory, map} ->
+      territory = String.to_atom(territory)
       map =
         map
         |> Map.put(:measurement_system, get_in(systems, [:measurement_system, territory]) ||
@@ -104,7 +104,8 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> File.read!
     |> Poison.decode!
     |> get_in(["supplemental", "measurementData"])
-    |> Cldr.Map.underscore_keys
+    |> Enum.map(fn {k, v} -> {String.replace(Cldr.String.underscore(k), "-", "_"), v} end)
+    |> Enum.into(%{})
     |> Cldr.Map.atomize_keys
   end
 end
