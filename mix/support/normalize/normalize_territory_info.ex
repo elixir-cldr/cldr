@@ -54,12 +54,12 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.map(fn {territory, map} ->
       map =
         map
-        |> Map.put(:measurement_system, get_in(systems, [:measurement_system, territory]) ||
-                    get_in(systems, [:measurement_system, :"001"]))
-        |> Map.put(:paper_size, get_in(systems, [:paper_size, territory]) ||
-                    get_in(systems, [:paper_size, :"001"]))
-        |> Map.put(:temperature_measurement,
-                    get_in(systems, [:measurement_system_category_temperature, territory]) || "metric")
+        |> Map.put("measurement_system", get_in(systems, ["measurement_system", territory]) ||
+                    get_in(systems, ["measurement_system", "001"]))
+        |> Map.put("paper_size", get_in(systems, ["paper_size", territory]) ||
+                    get_in(systems, ["paper_size", "001"]))
+        |> Map.put("temperature_measurement",
+                    get_in(systems, ["measurement_system_category_temperature", territory]) || "metric")
       {territory, map}
     end)
     |> Enum.into(%{})
@@ -105,6 +105,5 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Poison.decode!
     |> get_in(["supplemental", "measurementData"])
     |> Cldr.Map.underscore_keys
-    |> Cldr.Map.atomize_keys
   end
 end

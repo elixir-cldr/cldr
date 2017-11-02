@@ -662,7 +662,7 @@ defmodule Cldr.Config do
           "zh-Hant" => %{population_percent: 0.54}
         },
         literacy_percent: 99,
-        measurement_system: "metric",
+        measurement_system: "UK",
         paper_size: "A4",
         population: 64430400,
         telephone_country_code: 44,
