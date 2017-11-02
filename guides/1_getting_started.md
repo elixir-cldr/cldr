@@ -1,6 +1,6 @@
 # Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, it to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 2017 and Version 0.1.0, `Cldr` is based upon [CLDR version 31.0.1](http://cldr.unicode.org).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of November 2nd 2017 and Version 0.10.0, `Cldr` is based upon [CLDR version 32.0.0](http://cldr.unicode.org/index/downloads/cldr-32).
 
 ## Installation
 
@@ -8,7 +8,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 0.8.4"}
+        {:ex_cldr, "~> 0.10.0"}
       ]
     end
 
@@ -33,17 +33,21 @@ Each of these packages includes [ex_cldr](https://hex.pm/packages/ex_cldr) as a 
 Without any specific configuration Cldr will support the "en" locale only.  To support additional locales update your `config.exs` file (or the relevant environment version).
 
     config :ex_cldr,
-      default_locale: "en",
+      default_locale: "en-001",
       locales: ["fr-*", "pt-BR", "en", "pl", "ru", "th", "he"],
       gettext: MyApp.Gettext
 
-Configures a default locale of "en" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portugues, English, Polish, Russian, Thai and Hebrew.
+Configures a default locale of "en-001" (which is itself the `Cldr` default).  Additional locales are configured with the `:locales` key.  In this example, all locales starting with "fr-" will be configured along with Brazilian Portuguese, English, Polish, Russian, Thai and Hebrew.
 
 ### Recompiling after a configuration change
 
 Note that Elixir can't determine dependencies based upon configuration so when you make changes to your `Cldr` configuration a forced recompilation is required in order for the changes to take affect.  To recompile:
 
     iex> mix deps.compile ex_cldr --force
+    iex> mix deps.compile ex_cldr_numbers --force
+    iex> mix deps.compile ex_cldr_lists --force
+    iex> mix deps.compile ex_cldr_units --force
+    iex> mix deps.compile ex_cldr_dates_times --force
 
 **Any addon packages will also require compilation if the configuration changes.**
 
@@ -54,7 +58,7 @@ Note that Elixir can't determine dependencies based upon configuration so when y
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 516 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 523 locales are installed when the repo is cloned into your application deps.
 
 * If installed from hex then only the locales "en" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
