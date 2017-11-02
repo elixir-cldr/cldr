@@ -91,6 +91,17 @@ defmodule Cldr.UnknownCurrencyError do
   end
 end
 
+defmodule Cldr.UnknownTerritoryError do
+  @moduledoc """
+  Exception raised when there is an invalid territory code.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
 defmodule Cldr.UnknownPluralRules do
   @moduledoc """
   Exception raised when there are no plural rules for a locale or language.

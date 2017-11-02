@@ -12,7 +12,13 @@ The primary purpose of this update is to move to CLDR data release 32.  The [rel
 
 * Returns a more meaningful exception if plural rules are not available for a given locale
 
-* Added measurement systems information to `Cldr.Config.territory_info/1`
+* Added measurement systems information to `Cldr.Config.territory_info/0`
+
+* Added `Cldr.Config.territory_info/1` to return territory info for one territory
+
+* Added `Cldr.known_territories/0` to return a list of valid territories in `Cldr`
+
+* Added `Cldr.validate_territory/1` to normalize and validate a territory code
 
 ### Bug Fixes
 

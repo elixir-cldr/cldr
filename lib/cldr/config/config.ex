@@ -682,6 +682,51 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
   end
 
+  @doc """
+  Get territory info for a specific territory.
+
+  * `territory` is a string, atom or language_tag representation
+    of a territory code in the list returned by `Cldr.known_territories`
+
+  Returns:
+
+  * A map of the territory information or
+  * `{:error, reason}
+
+  ## Example
+
+      iex> Cldr.Config.territory_info "au"
+      %{
+        currency: %{AUD: %{from: ~D[1966-02-14]}},
+        gdp: 1189000000000,
+        language_population: %{
+          "en" => %{official_status: "de_facto_official", population_percent: 96},
+          "it" => %{population_percent: 1.9},
+          "wbp" => %{population_percent: 0.011},
+          "zh-Hant" => %{population_percent: 2.1}
+        },
+        literacy_percent: 99,
+        measurement_system: "metric",
+        paper_size: "A4",
+        population: 23232400,
+        telephone_country_code: 61,
+        temperature_measurement: "metric"
+      }
+
+      iex> Cldr.Config.territory_info "abc"
+      {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
+
+  """
+  @spec territory_info(String.t | Atom.t | LanguageTag.t) :: Map.t | {:error, {Exception.t, String.t}}
+  def territory_info(territory) do
+    with {:ok, territory_code} <- Cldr.validate_territory(territory) do
+      territory_info()
+      |> Map.get(territory_code)
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
   defp atomize_territory_keys(territories) do
     territories
     |> Enum.map(fn {k, v} ->

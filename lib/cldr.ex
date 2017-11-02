@@ -446,6 +446,108 @@ defmodule Cldr do
   end
 
   @doc """
+  Returns a list of the territories known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.known_territories
+      [:"001", :"002", :"003", :"005", :"009", :"011", :"013", :"014", :"015", :"017",
+       :"018", :"019", :"021", :"029", :"030", :"034", :"035", :"039", :"053", :"054",
+       :"057", :"061", :"142", :"143", :"145", :"150", :"151", :"154", :"155", :"202",
+       :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
+       :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
+       :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
+       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
+       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
+       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
+       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
+       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
+       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
+       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
+       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
+       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
+       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
+       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
+       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
+       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
+       :XK, :YE, :YT, :ZA, :ZM, :ZW]
+
+  """
+  @known_territories Cldr.Config.territory_containment
+  |> Enum.map(fn {k, v} -> [k, v] end)
+  |> List.flatten
+  |> Enum.uniq
+  |> Enum.sort
+
+  @spec known_territories :: [Atom.t, ...]
+  def known_territories do
+    @known_territories
+  end
+
+  @doc """
+  Normalise and validate a territory code.
+
+  * `territory` is either a string, atom or %LanguageTag{} representing
+    a territory code
+
+  Returns:
+
+  * `{:ok, normalized_territory_code}` or
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+      iex> Cldr.validate_territory "en"
+      {:error, {Cldr.UnknownTerritoryError, "The territory \\"en\\" is unknown"}}
+
+      iex> Cldr.validate_territory "gb"
+      {:ok, :GB}
+
+      iex> Cldr.validate_territory "001"
+      {:ok, :"001"}
+
+      iex> Cldr.validate_territory Cldr.Locale.new("en")
+      {:ok, :US}
+
+      iex> Cldr.validate_territory %{}
+      {:error, {Cldr.UnknownTerritoryError, "The territory %{} is invalid"}}
+
+  """
+  @spec validate_territory(Atom.t | String.t) ::
+    {:ok, Atom.t} | {:error, {Exception.t, String.t}}
+
+  def validate_territory(territory) when is_atom(territory) and territory in @known_territories do
+    {:ok, territory}
+  end
+
+  def validate_territory(territory) when is_atom(territory) do
+    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}}
+  end
+
+  def validate_territory(territory) when is_binary(territory) do
+    try do
+      territory
+      |> String.upcase
+      |> String.to_existing_atom
+      |> validate_territory
+    rescue ArgumentError ->
+      {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}}
+    end
+  end
+
+  def validate_territory(%LanguageTag{region: nil} = locale) do
+    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect locale} is unknown"}}
+  end
+
+  def validate_territory(%LanguageTag{region: region}) do
+    validate_territory(region)
+  end
+
+  def validate_territory(territory) do
+    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is invalid"}}
+  end
+
+  @doc """
   Returns a list of strings representing the currencies known to `Cldr`.
 
   ## Example
