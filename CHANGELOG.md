@@ -1,5 +1,17 @@
 # Changelog
 
+## Cldr v0.11.0 November 3rd, 2017
+
+### Breaking Changes
+
+* CLDR uses the term `territory`, the [Language Tag RFC](https://tools.ietf.org/html/rfc5646) uses the term `region`.  `ex_cldr` is now standardized on using `territory`.  The struct `Cldr.LanguageTag` and the related functions have been renamed appropriately.
+
+* `Cldr.default_territory/0` now returns an atom to be consistent with the representation of territory codes throughout `ex_cldr`.
+
+### Enhancements
+
+* Work with Dialyzer has led to improved `@spec`s and an edge case bug fix in `Cldr.Math.mod`.  There is additional work to be done in this area before the 1,0 release,
+
 ## Cldr v0.10.0 November 2nd, 2017
 
 The primary purpose of this update is to move to CLDR data release 32.  The [release notes for CLDR 32](http://cldr.unicode.org/index/downloads/cldr-32) describe the changes.  From a functional point of view there is a limited impact to existing users of `ex_cldr`.
