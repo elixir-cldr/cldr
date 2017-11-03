@@ -3,6 +3,11 @@ defmodule Cldr do
   Cldr provides the core functions to retrieve and manage
   the CLDR data that supports formatting and localisation.
 
+  This module provides the core functions to access formatted
+  CLDR data, set and retrieve a current locale and validate
+  certain core data types such as locales, currencies and
+  territories.
+
   `Cldr` functionality is packaged into a several
   packages that each depend on this one.  These additional
   modules provide:
@@ -23,6 +28,7 @@ defmodule Cldr do
   * `Cldr.DateTime.to_string/2` for formatting of dates,
     times and datetimes. This function is contained in the
     hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
+
   """
 
   alias Cldr.Config
@@ -104,7 +110,7 @@ defmodule Cldr do
          locale: %{},
          private_use: [],
          rbnf_locale_name: "pl",
-         region: "PL",
+         territory: "PL",
          requested_locale_name: "pl",
          script: "Latn",
          transform: %{},
@@ -139,7 +145,7 @@ defmodule Cldr do
           locale: %{},
           private_use: [],
           rbnf_locale_name: "en",
-          region: "US",
+          territory: "US",
           requested_locale_name: "en",
           script: "Latn",
           transform: %{},
@@ -177,7 +183,7 @@ defmodule Cldr do
       iex> Cldr.default_locale()
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: %{}, private_use: [], rbnf_locale_name: "en", region: "001",
+        locale: %{}, private_use: [], rbnf_locale_name: "en", territory: "001",
         requested_locale_name: "en-001", script: "Latn", transform: %{},
         variant: nil}
 
@@ -189,19 +195,20 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default region when a locale
+  Returns the default territory when a locale
   does not specify one and none can be inferred.
 
   ## Example
 
-      iex> Cldr.default_region()
-      "001"
+      iex> Cldr.default_territory()
+      :"001"
 
   """
-  @spec default_region :: String.t
-  def default_region do
+  @spec default_territory :: atom()
+  def default_territory do
     default_locale()
-    |> Map.get(:region)
+    |> Map.get(:territory)
+    |> String.to_existing_atom
   end
 
   @doc """
@@ -366,14 +373,14 @@ defmodule Cldr do
       {:ok,
        %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
         extensions: %{}, language: "en", locale: %{}, private_use: [],
-        rbnf_locale_name: "en", region: "US", requested_locale_name: "en",
+        rbnf_locale_name: "en", territory: "US", requested_locale_name: "en",
         script: "Latn", transform: %{}, variant: nil}}
 
       iex> Cldr.validate_locale Cldr.default_locale
       {:ok,
        %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{}, language: "en", locale: %{},
-        private_use: [], rbnf_locale_name: "en", region: "001",
+        private_use: [], rbnf_locale_name: "en", territory: "001",
         requested_locale_name: "en-001", script: "Latn", transform: %{},
         variant: nil}}
 
@@ -474,12 +481,7 @@ defmodule Cldr do
        :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
-  @known_territories Cldr.Config.territory_containment
-  |> Enum.map(fn {k, v} -> [k, v] end)
-  |> List.flatten
-  |> Enum.uniq
-  |> Enum.sort
-
+  @known_territories Cldr.Config.known_territories
   @spec known_territories :: [atom(), ...]
   def known_territories do
     @known_territories
@@ -536,12 +538,12 @@ defmodule Cldr do
     end
   end
 
-  def validate_territory(%LanguageTag{region: nil} = locale) do
+  def validate_territory(%LanguageTag{territory: nil} = locale) do
     {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect locale} is unknown"}}
   end
 
-  def validate_territory(%LanguageTag{region: region}) do
-    validate_territory(region)
+  def validate_territory(%LanguageTag{territory: territory}) do
+    validate_territory(territory)
   end
 
   def validate_territory(territory) do

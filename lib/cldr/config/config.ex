@@ -297,10 +297,10 @@ defmodule Cldr.Config do
 
   @doc false
   def set_cldr_locale_name(%LanguageTag{language: language, script: script,
-      region: region, variant: variant} = language_tag) do
+      territory: territory, variant: variant} = language_tag) do
     cldr_locale_name =
-      known_locale(Locale.locale_name_from(language, script, region, variant)) ||
-      known_locale(Locale.locale_name_from(language, nil, region, variant)) ||
+      known_locale(Locale.locale_name_from(language, script, territory, variant)) ||
+      known_locale(Locale.locale_name_from(language, nil, territory, variant)) ||
       known_locale(Locale.locale_name_from(language, script, nil, variant)) ||
       known_locale(Locale.locale_name_from(language, nil, nil, variant)) ||
       known_locale(language_tag.requested_locale_name) ||
@@ -454,6 +454,42 @@ defmodule Cldr.Config do
   """
   def known_number_systems do
     number_systems() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+  end
+
+  @doc """
+  Returns a list of atoms representing the territories known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Config.known_territories
+      [:"001", :"002", :"003", :"005", :"009", :"011", :"013", :"014", :"015", :"017",
+       :"018", :"019", :"021", :"029", :"030", :"034", :"035", :"039", :"053", :"054",
+       :"057", :"061", :"142", :"143", :"145", :"150", :"151", :"154", :"155", :"202",
+       :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
+       :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
+       :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
+       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
+       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
+       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
+       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
+       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
+       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
+       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
+       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
+       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
+       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
+       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
+       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
+       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
+       :XK, :YE, :YT, :ZA, :ZM, :ZW]
+
+  """
+  def known_territories do
+    territory_containment()
+    |> Enum.map(fn {k, v} -> [k, v] end)
+    |> List.flatten
+    |> Enum.uniq
+    |> Enum.sort
   end
 
   @doc """

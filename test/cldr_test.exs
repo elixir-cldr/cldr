@@ -34,7 +34,7 @@ defmodule Cldr.Test do
       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001", extensions: %{},
         language: "en", locale: %{}, private_use: [],
-        region: "001", requested_locale_name: "en-001",
+        territory: "001", requested_locale_name: "en-001",
         script: "Latn", transform: %{}, variant: nil,
         rbnf_locale_name: "en"}
   end

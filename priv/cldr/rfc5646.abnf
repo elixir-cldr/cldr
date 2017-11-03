@@ -80,7 +80,7 @@ script        = 4ALPHA  !!!         # ISO 15924 code
 
 region        = 2ALPHA              ; ISO 3166-1 code
                 / 3DIGIT !!!        # UN M.49 code
-                  return_value(:region, state, string_values, values, rule)
+                  return_value(:territory, state, string_values, values, rule)
                 !!!
 
 variant       = 5*8alphanum         ; registered variants

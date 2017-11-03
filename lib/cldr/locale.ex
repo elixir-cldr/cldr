@@ -61,9 +61,9 @@ defmodule Cldr.Locale do
 
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
   def cldr_locale_name(%LanguageTag{language: language, script: script,
-      region: region, variant: variant} = language_tag) do
-    Cldr.known_locale(locale_name_from(language, script, region, variant)) ||
-    Cldr.known_locale(locale_name_from(language, nil, region, variant)) ||
+      territory: territory, variant: variant} = language_tag) do
+    Cldr.known_locale(locale_name_from(language, script, territory, variant)) ||
+    Cldr.known_locale(locale_name_from(language, nil, territory, variant)) ||
     Cldr.known_locale(locale_name_from(language, script, nil, variant)) ||
     Cldr.known_locale(locale_name_from(language, nil, nil, variant)) ||
     Cldr.known_locale(language_tag.requested_locale_name) ||
@@ -72,9 +72,9 @@ defmodule Cldr.Locale do
 
   @spec rbnf_locale_name(LanguageTag.t) :: locale_name | nil
   def rbnf_locale_name(%LanguageTag{language: language, script: script,
-      region: region} = language_tag) do
-    Cldr.known_rbnf_locale(locale_name_from(language, script, region, nil)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, nil, region, nil)) ||
+      territory: territory} = language_tag) do
+    Cldr.known_rbnf_locale(locale_name_from(language, script, territory, nil)) ||
+    Cldr.known_rbnf_locale(locale_name_from(language, nil, territory, nil)) ||
     Cldr.known_rbnf_locale(locale_name_from(language, script, nil, nil)) ||
     Cldr.known_rbnf_locale(locale_name_from(language, nil, nil, nil)) ||
     Cldr.known_rbnf_locale(language_tag.requested_locale_name) ||
@@ -89,7 +89,7 @@ defmodule Cldr.Locale do
 
   * lower case for a language
   * capitalized for a script
-  * upper case for a region
+  * upper case for a region/territory
 
   Note this function is intended to support only the CLDR
   names which have limited structure.  For proper parsing
@@ -133,12 +133,12 @@ defmodule Cldr.Locale do
   end
 
   def locale_name_from(%LanguageTag{language: language, script: script,
-        region: region, variant: variant}) do
-    locale_name_from(language, script, region, variant)
+        territory: territory, variant: variant}) do
+    locale_name_from(language, script, territory, variant)
   end
 
-  def locale_name_from(language, script, region, variant) do
-    [language, script, region, variant]
+  def locale_name_from(language, script, territory, variant) do
+    [language, script, territory, variant]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
@@ -151,41 +151,41 @@ defmodule Cldr.Locale do
   data. Use the first value in the replacement list, if
   it exists. Language tag replacements may have multiple parts, such as
   `sh` ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
-  region are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
+  region/territory are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
   `sr_Latn_AQ`.
 
-  * Remove the script code 'Zzzz' and the region code 'ZZ' if they occur.
+  * Remove the script code 'Zzzz' and the territory code 'ZZ' if they occur.
 
   * Get the components of the cleaned-up source tag (languages, scripts, and
-  regions), plus any variants and extensions.
+  regions/territories), plus any variants and extensions.
 
   ## Examples
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("en-US")
       %Cldr.LanguageTag{extensions: %{}, language: "en", locale: %{}, private_use: [],
-       region: "US", script: nil, transform: %{}, variant: nil}
+       territory: "US", script: nil, transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
       %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
-       region: "AQ", script: "Arab", transform: %{}, variant: nil}
+       territory: "AQ", script: "Arab", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
       %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
-       region: "AQ", script: "Latn", transform: %{}, variant: nil}
+       territory: "AQ", script: "Latn", transform: %{}, variant: nil}
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: %{}, private_use: [],
-       region: "MD", script: nil, transform: %{}, variant: nil}
+       territory: "MD", script: nil, transform: %{}, variant: nil}
 
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
     language_tag
     |> substitute(:language)
     |> substitute(:script)
-    |> substitute(:region)
+    |> substitute(:territory)
     |> merge(language_tag)
     |> remove_unknown(:script)
-    |> remove_unknown(:region)
+    |> remove_unknown(:territory)
   end
 
   defp substitute(%LanguageTag{language: language}, :language) do
@@ -196,8 +196,8 @@ defmodule Cldr.Locale do
     %{language_tag | script: aliases(script, :script) || script}
   end
 
-  defp substitute(%LanguageTag{region: region} = language_tag, :region) do
-    %{language_tag | region: aliases(region, :region) || region}
+  defp substitute(%LanguageTag{territory: territory} = language_tag, :territory) do
+    %{language_tag | territory: aliases(territory, :region) || territory}
   end
 
   defp merge(alias_tag, original_language_tag) do
@@ -214,10 +214,10 @@ defmodule Cldr.Locale do
   end
   defp remove_unknown(%LanguageTag{} = language_tag, :script), do: language_tag
 
-  defp remove_unknown(%LanguageTag{region: "ZZ"} = language_tag, :region) do
-    %{language_tag | region: nil}
+  defp remove_unknown(%LanguageTag{territory: "ZZ"} = language_tag, :territory) do
+    %{language_tag | territory: nil}
   end
-  defp remove_unknown(%LanguageTag{} = language_tag, :region), do: language_tag
+  defp remove_unknown(%LanguageTag{} = language_tag, :territory), do: language_tag
 
   @doc """
   Given a source locale X, return a locale Y where the empty subtags
@@ -258,12 +258,12 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
       %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: %{}, private_use: [],
-       region: "SG", script: "Hans", transform: %{}, variant: nil}
+       territory: "SG", script: "Hans", transform: %{}, variant: nil}
 
   """
-  def add_likely_subtags(%LanguageTag{language: language, script: script, region: region} = language_tag) do
-    subtags = likely_subtags(locale_name_from(language, script, region, nil)) ||
-              likely_subtags(locale_name_from(language, nil, region, nil)) ||
+  def add_likely_subtags(%LanguageTag{language: language, script: script, territory: territory} = language_tag) do
+    subtags = likely_subtags(locale_name_from(language, script, territory, nil)) ||
+              likely_subtags(locale_name_from(language, nil, territory, nil)) ||
               likely_subtags(locale_name_from(language, script, nil, nil)) ||
               likely_subtags(locale_name_from(language, nil, nil, nil)) ||
               likely_subtags(locale_name_from("und", script, nil, nil)) ||

@@ -84,16 +84,16 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   defp normalize_lang_script_region_variant(%{language: language, script: script,
-      region: region, variant: variant} = language_tag) do
+      territory: territory, variant: variant} = language_tag) do
     language = normalize_language(language)
     script = normalize_script(script)
-    region = normalize_region(region)
+    territory = normalize_territory(territory)
     variant = normalize_variant(variant)
 
     language_tag
     |> Map.put(:language, language)
     |> Map.put(:script, script)
-    |> Map.put(:region, region)
+    |> Map.put(:territory, territory)
     |> Map.put(:variant, variant)
   end
 
@@ -109,9 +109,9 @@ defmodule Cldr.LanguageTag.Parser do
     |> String.capitalize
   end
 
-  defp normalize_region(nil), do: nil
-  defp normalize_region(region) do
-    region
+  defp normalize_territory(nil), do: nil
+  defp normalize_territory(territory) do
+    territory
     |> String.upcase
   end
 
@@ -129,8 +129,8 @@ defmodule Cldr.LanguageTag.Parser do
     {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect rest}"}}
   end
 
-  defp return_minimum_viable_tag(%{language: language, script: script, region: region} = language_tag, _reason)
-  when language != nil and script != nil and region != nil do
+  defp return_minimum_viable_tag(%{language: language, script: script, territory: territory} = language_tag, _reason)
+  when language != nil and script != nil and territory != nil do
     {:ok, language_tag}
   end
 
