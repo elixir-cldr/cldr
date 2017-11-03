@@ -95,7 +95,7 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.name) :: Map.t |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
+  @spec for_locale(Locale.locale_name) :: Map.t |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
   def for_locale(locale_name) do
     with \
       true <- File.exists?(locale_path(locale_name))

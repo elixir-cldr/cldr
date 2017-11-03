@@ -6,77 +6,72 @@
 
 % mod function will calculate the modulo in Java fashion
 % for floats and decimals so that mod(4.3, 3) == 1.3
-% The function itself is defined in Cldr.Numbers
+% The function itself is defined in Cldr.Math
 mod(Operand, Value) ->
   {'mod', kernel_context(), [operand(Operand), Value]}.
-  
+
 % Return a reference to an operand
 operand(Operand) ->
   {atomize(Operand), [], 'Elixir'}.
-  
+
 % 'and' function
 and_function(A, B) ->
   {'and', kernel_context(), [A, B]}.
-  
+
 % 'or' function
 or_function(A, B) ->
   {'or', kernel_context(), [A, B]}.
-  
+
 % 'not' function
 not_function(A) ->
   {'!', kernel_context(), [A]}.
-  
+
 % Range syntax
 range(Start, End) ->
   {'..', kernel_context(), [Start, End]}.
-  
+
 % Inclusion forms
 % -> for a range. call a helper function `within`
 % so we can handle integers and floats/decimals
 % separately
 conditional(equals, A, B = {'..', _C, [_From, _To]}) ->
   {'within', kernel_context(), [A, B]};
-% {'and', kernel_context(),
-%   [{'and', kernel_context(),
-%    [{'>=', kernel_context(), [A, From]},
-%     {'<=', kernel_context(), [A, To]}]},
-%   {'==', kernel_context(), [{'t', [], 'Elixir'}, 0]}]};
-  
+
 % -> for an expression
-% NOTE this will calculate the expression each time which is 
+% NOTE this will calculate the expression each time which is
 % inefficienct.  But parser isn't the right place to unwrap that.
 conditional({'mod', [_C], [{_L}]}, A, B) ->
   {'==', kernel_context(), [A, B]};
-    
+
 % -> for a value
 conditional(equals, A, B) ->
   {'==', kernel_context(), [A, B]}.
-  
+
 % Convert a range list into a postfix 'or' form
 % Just two items in the list
 or_range_list(Operand, [A, B]) ->
-  or_function(conditional(equals, Operand, A), 
+  or_function(conditional(equals, Operand, A),
               conditional(equals, Operand, B));
-              
+
 % Many items in a list
 or_range_list(Operand, [A | B]) ->
-  or_function(conditional(equals, Operand, A), 
+  or_function(conditional(equals, Operand, A),
               or_range_list(Operand, B));
 
 % When theres only one value
-or_range_list(Operand, Value) -> 
+or_range_list(Operand, Value) ->
   conditional(equals, Operand, Value).
-    
+
 % Append to build up a list of ranges or values
 append(A, B) when is_list(A) and is_list(B) ->
   A ++ B;
-  
+
 append(A, B) when is_list(A) and not is_list(B)->
   A ++ [B];
-  
+
 append(A, B) when not is_list(A) and is_list(B) ->
   [A] ++ B;
-  
+
 append(A, B) when not is_list(A) and not is_list(B) ->
   [A, B].
 
@@ -86,11 +81,11 @@ unwrap({_,_,V}) -> V.
 % Elixir Kernel Context
 kernel_context() ->
   [{context, 'Elixir'}, {import, 'Elixir.Kernel'}].
-  
+
 % Atomize a token value
 atomize(Token) ->
   list_to_atom(unwrap(Token)).
-  
+
 
 -file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/yeccpre.hrl", 0).
 %%
@@ -265,7 +260,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/plural_rules_parser.erl", 268).
+-file("src/plural_rules_parser.erl", 263).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -981,4 +976,4 @@ yeccpars2_53_(__Stack0) ->
   end | __Stack].
 
 
--file("src/plural_rules_parser.yrl", 180).
+-file("src/plural_rules_parser.yrl", 175).

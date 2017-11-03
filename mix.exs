@@ -42,11 +42,12 @@ defmodule Cldr.Mixfile do
       {:decimal, "~> 1.4.1"},
       {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
       {:ex_abnf, "~> 0.3.0"},
-      {:excoveralls, "~> 0.7.4", only: :test},
+      {:excoveralls, "~> 0.7.4", only: :test, runtime: false},
       {:gettext, "~> 0.13.0", optional: true},
       {:gen_stage, "~> 0.12.2", optional: true, only: [:dev, :test]},
       {:flow, "~> 0.11", optional: true, only: [:dev, :test]},
-      {:stream_data, "~> 0.3.0", only: :test}
+      {:stream_data, "~> 0.3.0", only: :test},
+      {:dialyxir, "~> 0.5", only: :dev, runtime: false}
     ]
   end
 

@@ -9,8 +9,8 @@ defmodule Cldr.Number.Cardinal do
   @type operand :: non_neg_integer
 
   # Generate the functions to process plural rules
-  @spec do_plural_rule(Cldr.locale, number, operand, operand, operand, operand, operand)
-    :: :one | :two | :few | :many | :other
+  @spec do_plural_rule(LanguageTag.t, number, operand, operand, operand, operand,
+    [integer(),...] | integer()) :: :one | :two | :few | :many | :other
 
   # Function body is the AST of the function which needs to be injected
   # into the function definition.

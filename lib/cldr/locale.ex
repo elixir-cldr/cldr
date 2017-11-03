@@ -6,11 +6,15 @@ defmodule Cldr.Locale do
   import Cldr.Helpers
 
   @typedoc "The name of a locale in a string format"
-  @type name :: String.t
+  @type locale_name() :: String.t
 
+  @spec new(locale_name) :: LanguageTag.t | none()
   def new(locale_name) when is_binary(locale_name) do
     canonical_language_tag!(locale_name)
   end
+
+  @spec canonical_language_tag(locale_name | LanguageTag.t) ::
+    {:ok, LanguageTag.t} | {:error, {Cldr.InvalidLanguageTag, String.t}}
 
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
@@ -37,9 +41,10 @@ defmodule Cldr.Locale do
     {:ok, canonical_tag}
   end
 
+  @spec canonical_language_tag!(locale_name | LanguageTag.t) :: LanguageTag.t | none()
   def canonical_language_tag!(language_tag) do
     case canonical_language_tag(language_tag) do
-      {:ok, tag} -> tag
+      {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
   end
@@ -54,6 +59,7 @@ defmodule Cldr.Locale do
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
+  @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
   def cldr_locale_name(%LanguageTag{language: language, script: script,
       region: region, variant: variant} = language_tag) do
     Cldr.known_locale(locale_name_from(language, script, region, variant)) ||
@@ -64,6 +70,7 @@ defmodule Cldr.Locale do
     nil
   end
 
+  @spec rbnf_locale_name(LanguageTag.t) :: locale_name | nil
   def rbnf_locale_name(%LanguageTag{language: language, script: script,
       region: region} = language_tag) do
     Cldr.known_rbnf_locale(locale_name_from(language, script, region, nil)) ||
@@ -103,7 +110,7 @@ defmodule Cldr.Locale do
       "ca-ES-VALENCIA"
 
   """
-  @spec normalize_locale_name(name) :: name
+  @spec normalize_locale_name(locale_name) :: locale_name
   def normalize_locale_name(name) do
     case String.split(name, ~r/[-_]/) do
       [lang, other] ->
@@ -123,17 +130,6 @@ defmodule Cldr.Locale do
       _ ->
         String.replace(name, "_", "-")
     end
-  end
-
-  @doc """
-  Normalize the format of a territory code.
-  """
-  def normalize_territory_code({code, rest}) do
-    {normalize_territory_code(code), rest}
-  end
-
-  def normalize_territory_code(code) do
-    String.upcase(code)
   end
 
   def locale_name_from(%LanguageTag{language: language, script: script,

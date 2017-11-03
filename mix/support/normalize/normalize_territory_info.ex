@@ -16,7 +16,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Cldr.Map.underscore_keys
     |> Cldr.Map.integerize_values
     |> Cldr.Map.floatize_values
-    |> Enum.map(&Locale.normalize_territory_code/1)
+    |> Enum.map(&normalize_territory_code/1)
     |> Enum.map(&normalize_language_codes/1)
     |> Enum.into(%{})
     |> add_currency_for_territories
@@ -107,5 +107,13 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.map(fn {k, v} -> {String.replace(Cldr.String.underscore(k), "-", "_"), v} end)
     |> Enum.into(%{})
     |> Cldr.Map.atomize_keys
+  end
+
+  defp normalize_territory_code({code, rest}) do
+    {normalize_territory_code(code), rest}
+  end
+
+  defp normalize_territory_code(code) do
+    String.upcase(code)
   end
 end

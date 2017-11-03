@@ -120,7 +120,7 @@ defmodule Cldr.Number.PluralRule do
       The rules are returned in AST form after parsing. This function
       is primarilty to support `Cldr.Gettext`.
       """
-      @spec plural_rules_for(Locale.name) :: Map.t
+      @spec plural_rules_for(Locale.locale_name) :: Map.t
       def plural_rules_for(locale_name) do
         Enum.map plural_rules()[locale_name], fn({"pluralRule-count-" <> category, rule}) ->
           {:ok, definition} = parse(rule)

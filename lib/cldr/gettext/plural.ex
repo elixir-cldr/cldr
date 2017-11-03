@@ -23,7 +23,7 @@ if Code.ensure_loaded?(Gettext) do
         2
 
     """
-    @spec nplurals(Locale.name | LanguageTag.t) :: non_neg_integer
+    @spec nplurals(Locale.locale_name | LanguageTag.t) :: non_neg_integer
     def nplurals(locale_name) do
       with \
         {:ok, _locale} <- Cldr.validate_locale(locale_name)
@@ -65,7 +65,7 @@ if Code.ensure_loaded?(Gettext) do
         1
 
     """
-    @spec plural(Locale.name | LanguageTag.t, number) :: non_neg_integer
+    @spec plural(Locale.locale_name | LanguageTag.t, number) :: non_neg_integer
     def plural(%LanguageTag{cldr_locale_name: cldr_locale_name}, n) do
       plural(cldr_locale_name, n)
     end

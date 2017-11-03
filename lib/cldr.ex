@@ -151,9 +151,10 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec set_current_locale(String.t | LanguageTag.t) :: LanguageTag.t
-  def set_current_locale(locale) when is_binary(locale) do
-    case Cldr.Locale.canonical_language_tag(locale) do
+  @spec set_current_locale(Locale.locale_name | LanguageTag.t) ::
+    {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+  def set_current_locale(locale_name) when is_binary(locale_name) do
+    case Cldr.Locale.canonical_language_tag(locale_name) do
       {:ok, language_tag} -> set_current_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
@@ -215,7 +216,7 @@ defmodule Cldr do
   See also: `requested_locales/0` and `known_locales/0`
   """
   @all_locales Config.all_locales()
-  @spec all_locales :: [Locale.name, ...]
+  @spec all_locales :: [Locale.locale_name, ...]
   def all_locales do
     @all_locales
   end
@@ -229,7 +230,7 @@ defmodule Cldr do
   See also `known_locales/0` and `all_locales/0`
   """
   @requested_locales Config.requested_locales()
-  @spec requested_locales :: [Locale.name, ...] | []
+  @spec requested_locales :: [Locale.locale_name, ...] | []
   def requested_locales do
     @requested_locales
   end
@@ -244,7 +245,7 @@ defmodule Cldr do
   in `Gettext`.
   """
   @known_locales Config.known_locales()
-  @spec known_locales :: [Locale.name, ...] | []
+  @spec known_locales :: [Locale.locale_name, ...] | []
   def known_locales do
     @known_locales
   end
@@ -258,7 +259,7 @@ defmodule Cldr do
   return an empty list.
   """
   @unknown_locales Config.unknown_locales()
-  @spec unknown_locales :: [Locale.name, ...] | []
+  @spec unknown_locales :: [Locale.locale_name, ...] | []
   def unknown_locales do
     @unknown_locales
   end
@@ -268,7 +269,7 @@ defmodule Cldr do
   formats (RBNF).
   """
   @known_rbnf_locales Cldr.Config.known_rbnf_locales
-  @spec known_rbnf_locales :: [Locale.name, ...] | []
+  @spec known_rbnf_locales :: [Locale.locale_name, ...] | []
   def known_rbnf_locales do
     @known_rbnf_locales
   end
@@ -286,7 +287,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale?(Locale.name) :: boolean
+  @spec known_locale?(Locale.locale_name) :: boolean
   def known_locale?(locale_name) when is_binary(locale_name) do
     locale_name in known_locales()
   end
@@ -305,7 +306,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale?(Locale.name) :: boolean
+  @spec known_rbnf_locale?(Locale.locale_name) :: boolean
   def known_rbnf_locale?(locale_name) when is_binary(locale_name) do
     locale_name in known_rbnf_locales()
   end
@@ -323,7 +324,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale(Locale.name) :: String.t | false
+  @spec known_locale(Locale.locale_name) :: String.t | false
   def known_locale(locale_name) when is_binary(locale_name) do
     if known_locale?(locale_name) do
       locale_name
@@ -345,7 +346,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale(Locale.name) :: String.t | false
+  @spec known_rbnf_locale(Locale.locale_name) :: String.t | false
   def known_rbnf_locale(locale_name) when is_binary(locale_name) do
     if known_rbnf_locale?(locale_name) do
       locale_name
@@ -380,7 +381,7 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec validate_locale(Locale.name | LanguageTag.t) ::
+  @spec validate_locale(Locale.locale_name | LanguageTag.t) ::
     {:ok, String.t} | {:error, {Exception.t, String.t}}
 
   def validate_locale(locale_name) when is_binary(locale_name) do
@@ -419,7 +420,7 @@ defmodule Cldr do
       false
 
   """
-  @spec available_locale?(Locale.name | LanguageTag.t) :: boolean
+  @spec available_locale?(Locale.locale_name | LanguageTag.t) :: boolean
   def available_locale?(locale) when is_binary(locale) do
     locale in Config.all_locales()
   end

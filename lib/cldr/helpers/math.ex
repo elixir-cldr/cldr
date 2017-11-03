@@ -62,7 +62,7 @@ defmodule Cldr.Math do
       iex> Cldr.Math.within(2.1, 1..3)
       false
   """
-  @spec within(number, integer) :: boolean
+  @spec within(number, integer | Range.t) :: boolean
   def within(number, range) when is_integer(number) do
     number in range
   end
@@ -98,14 +98,13 @@ defmodule Cldr.Math do
       iex> Cldr.Math.mod Decimal.new(123.456), 3.4
       #Decimal<1.056>
   """
-  @spec mod(number_or_decimal, number_or_decimal) ::
-    float | %Decimal{}
+  @spec mod(number_or_decimal, number_or_decimal) :: number_or_decimal
 
-  def mod(number, modulus) when is_float(number) do
+  def mod(number, modulus) when is_float(number) and is_number(modulus) do
     number - (Float.floor(number / modulus) * modulus)
   end
 
-  def mod(number, modulus) when is_integer(number) do
+  def mod(number, modulus) when is_integer(number) and is_number(modulus) do
     modulo = number
     |> Kernel./(modulus)
     |> Float.floor
@@ -130,17 +129,21 @@ defmodule Cldr.Math do
   @doc """
   Returns the adjusted modulus of `x` and `y`
   """
+  @spec amod(number_or_decimal, number_or_decimal) :: number_or_decimal
+  @decimal_zero Decimal.new(0)
   def amod(x, y) do
-    if (mod = mod(x,y)) == 0 do
-      y
-    else
-      mod
+    case mod = mod(x, y) do
+      %Decimal{} = decimal_mod ->
+        if Decimal.cmp(decimal_mod, @decimal_zero) == :eq, do: y, else: mod
+      _ ->
+        if mod == 0, do: y, else: mod
     end
   end
 
   @doc """
   Returns the remainder and dividend of two integers.
   """
+  @spec div_mod(integer, integer) :: {integer, integer}
   def div_mod(int1, int2) do
     div = div(int1, int2)
     mod = int1 - (div * int2)
@@ -501,10 +504,11 @@ defmodule Cldr.Math do
 
       Cldr.Math.coef_exponent(Decimal.new(-46.543))
       {#Decimal<-4.6543>, 1}
+
   """
 
   # An integer should be returned as a float mantissa
-  @spec coef_exponent(number_or_decimal) :: Digits.t
+  @spec coef_exponent(number_or_decimal) :: {number_or_decimal, integer}
   def coef_exponent(number) when is_integer(number) do
     {mantissa_digits, exponent} = coef_exponent_digits(number)
     {Digits.to_float(mantissa_digits), exponent}
@@ -535,7 +539,7 @@ defmodule Cldr.Math do
       Cldr.Math.coef_exponent_digits(Decimal.new(-46.543))
       {{[4, 6, 5, 4], 1, -1}, 1}
   """
-  @spec coef_exponent_digits(number_or_decimal) :: Digits.t
+  @spec coef_exponent_digits(number_or_decimal) :: {Digits.t, integer()}
   def coef_exponent_digits(number) do
     {digits, place, sign} = Digits.to_digits(number)
     {{digits, 1, sign}, place - 1}
@@ -754,8 +758,8 @@ defmodule Cldr.Math do
   defp cascade_incr([d | rest]), do: [d+1 | rest]
   defp cascade_incr([]), do: [1, :rollover]
 
-
-  @spec increment?(boolean, non_neg_integer | nil, non_neg_integer | nil, list, rounding) :: non_neg_integer
+  @spec increment?(boolean, non_neg_integer | nil, non_neg_integer | nil, list(), atom()) ::
+    boolean
   defp increment?(positive, least_sig, tie, rest, round)
 
   # Directed rounding towards 0 (truncate)

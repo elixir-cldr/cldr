@@ -1,4 +1,7 @@
 defmodule Cldr.Locale.Sigil do
+  alias Cldr.Locale
+  alias Cldr.LanguageTag
+
   @doc ~S"""
   Implements the sigil `~L` for a Locale
 
@@ -10,7 +13,7 @@ defmodule Cldr.Locale.Sigil do
       iex> ~L[en]
 
   """
-
+  @spec sigil_L(Locale.locale_name, any()) :: LanguageTag.t | none()
   def sigil_L(locale_name, _) do
     Cldr.Locale.new(locale_name)
   end
