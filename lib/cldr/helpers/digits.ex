@@ -216,7 +216,7 @@ defmodule Cldr.Digits do
   #   Code extracted from: https://github.com/ewildgoose/elixir-float_pp/blob/master/lib/float_pp/digits.ex
   #   Which is licenced under http://www.apache.org/licenses/LICENSE-2.0
 
-  @spec to_tuple(Decimal.t | number) :: {List.t, List.t, integer}
+  @spec to_tuple(Decimal.t | number) :: {list(), list(), integer}
   def to_tuple(number) do
     {mantissa, exp, sign} = to_digits(number)
     mantissa = cond do

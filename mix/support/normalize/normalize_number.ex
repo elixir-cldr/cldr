@@ -69,7 +69,7 @@ defmodule Cldr.Normalize.Number do
     |> Enum.uniq
   end
 
-  @spec normalize_short_format(Map.t) :: List.t
+  @spec normalize_short_format(%{}) :: list()
   def normalize_short_format(nil) do
     nil
   end

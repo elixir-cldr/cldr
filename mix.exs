@@ -18,7 +18,8 @@ defmodule Cldr.Mixfile do
       package: package(),
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
-      elixirc_paths: elixirc_paths(Mix.env)
+      elixirc_paths: elixirc_paths(Mix.env),
+      dialyzer: [ignore_warnings: ".dialyzer_ignore_warnings"]
     ]
   end
 

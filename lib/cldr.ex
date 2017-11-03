@@ -480,7 +480,7 @@ defmodule Cldr do
   |> Enum.uniq
   |> Enum.sort
 
-  @spec known_territories :: [Atom.t, ...]
+  @spec known_territories :: [atom(), ...]
   def known_territories do
     @known_territories
   end
@@ -514,8 +514,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownTerritoryError, "The territory %{} is invalid"}}
 
   """
-  @spec validate_territory(Atom.t | String.t) ::
-    {:ok, Atom.t} | {:error, {Exception.t, String.t}}
+  @spec validate_territory(atom() | String.t) ::
+    {:ok, atom()} | {:error, {Exception.t, String.t}}
 
   def validate_territory(territory) when is_atom(territory) and territory in @known_territories do
     {:ok, territory}

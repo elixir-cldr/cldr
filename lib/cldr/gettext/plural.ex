@@ -6,7 +6,9 @@ if Code.ensure_loaded?(Gettext) do
     @behaviour Gettext.Plural
 
     alias Cldr.Number.Cardinal
+    alias Cldr.Math
     alias Cldr.LanguageTag
+    alias Cldr.Locale
 
     @doc """
     Returns how many plural forms exist for a given locale.
@@ -23,8 +25,8 @@ if Code.ensure_loaded?(Gettext) do
         2
 
     """
-    @spec nplurals(Locale.locale_name | LanguageTag.t) :: non_neg_integer
-    def nplurals(locale_name) do
+    @spec nplurals(Locale.locale_name) :: non_neg_integer
+    def nplurals(locale_name) when is_binary(locale_name) do
       with \
         {:ok, _locale} <- Cldr.validate_locale(locale_name)
       do
@@ -65,12 +67,14 @@ if Code.ensure_loaded?(Gettext) do
         1
 
     """
-    @spec plural(Locale.locale_name | LanguageTag.t, number) :: non_neg_integer
+    @spec plural(Locale.locale_name | LanguageTag.t, Math.number_or_decimal)
+      :: non_neg_integer | {:error, String.t}
+
     def plural(%LanguageTag{cldr_locale_name: cldr_locale_name}, n) do
       plural(cldr_locale_name, n)
     end
 
-    def plural(locale_name, n) do
+    def plural(locale_name, n) when is_binary(locale_name) do
       with \
         {:ok, locale} <- Cldr.validate_locale(locale_name)
       do

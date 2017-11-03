@@ -6,6 +6,7 @@ defmodule Cldr.Rbnf.Config do
   a standard format that is easily digestible for Cldr, these functions
   are used to do the parsing and normalising of RBNF data.
   """
+  alias Cldr.Locale
 
   @default_radix 10
   @data_dir Path.join(Cldr.Config.cldr_home, "data") <> "/cldr-rbnf"
@@ -95,7 +96,7 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.locale_name) :: Map.t |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
+  @spec for_locale(Locale.locale_name) :: %{} |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
   def for_locale(locale_name) do
     with \
       true <- File.exists?(locale_path(locale_name))

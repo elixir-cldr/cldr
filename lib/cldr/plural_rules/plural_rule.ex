@@ -12,8 +12,9 @@ defmodule Cldr.Number.PluralRule do
     end
 
     quote location: :keep do
-      alias  Cldr.Math
-      alias  Cldr.LanguageTag
+      alias Cldr.Math
+      alias Cldr.LanguageTag
+      alias Cldr.Locale
 
       import Cldr.Digits, only: [number_of_integer_digits: 1, remove_trailing_zeros: 1]
       import Cldr.Number.PluralRule.Compiler
@@ -57,7 +58,7 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       The plural rules defined in CLDR.
       """
-      @spec plural_rules :: Map.t
+      @spec plural_rules :: %{}
       def plural_rules do
         @rules
       end
@@ -100,7 +101,7 @@ defmodule Cldr.Number.PluralRule do
 
       """
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal, LanguageTag.t, Map.t) :: String.t | nil
+      @spec pluralize(Math.number_or_decimal, LanguageTag.t, %{}) :: String.t | nil
       def pluralize(number, %LanguageTag{} = locale, %{} = substitutions) when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
@@ -120,7 +121,7 @@ defmodule Cldr.Number.PluralRule do
       The rules are returned in AST form after parsing. This function
       is primarilty to support `Cldr.Gettext`.
       """
-      @spec plural_rules_for(Locale.locale_name) :: Map.t
+      @spec plural_rules_for(Locale.locale_name) :: [{atom(), list()}, ...]
       def plural_rules_for(locale_name) do
         Enum.map plural_rules()[locale_name], fn({"pluralRule-count-" <> category, rule}) ->
           {:ok, definition} = parse(rule)

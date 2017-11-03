@@ -36,7 +36,7 @@ defmodule Cldr.Normalize.Currency do
   end
 
   @count_types [:zero, :one, :two, :few, :many, :other]
-  @spec currency_counts(Currency.t) :: Map.t
+  @spec currency_counts(%{}) :: %{}
   def currency_counts(currency) do
     Enum.reduce @count_types, %{}, fn (category, counts) ->
       if display_count = currency["display_name_count_#{category}"] do

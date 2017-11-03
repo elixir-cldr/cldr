@@ -191,7 +191,7 @@ defmodule Cldr.Config do
   * The `Gettext.get_locale/1` for the current configuratioh
   * "en"
   """
-  @spec default_locale :: Locale.t
+  @spec default_locale :: Locale.locale_name
   def default_locale do
     app_default = Application.get_env(:ex_cldr, :default_locale)
     cond do
@@ -212,7 +212,7 @@ defmodule Cldr.Config do
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
   """
-  @spec gettext_locales :: [Locale.t]
+  @spec gettext_locales :: [Locale.locale_name]
   def gettext_locales do
     if gettext_configured?() do
       Gettext
@@ -238,7 +238,7 @@ defmodule Cldr.Config do
   |> Poison.decode!
   |> Enum.sort
 
-  @spec all_locales :: [Locale.t]
+  @spec all_locales :: [Locale.locale_name]
   def all_locales do
     @all_locales
   end
@@ -263,7 +263,7 @@ defmodule Cldr.Config do
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
-  @spec configured_locales :: [Locale.t]
+  @spec configured_locales :: [Locale.locale_name]
   def configured_locales do
     locales = case app_locales = Application.get_env(:ex_cldr, :locales) do
       :all  -> @all_locales
@@ -323,7 +323,7 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured and available
   in the CLDR repository.
   """
-  @spec known_locales :: [Locale.t]
+  @spec known_locales :: [Locale.locale_name]
   def known_locales do
     requested_locales()
     |> MapSet.new()
@@ -357,7 +357,7 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured but not available
   in the CLDR repository.
   """
-  @spec unknown_locales :: [Locale.t]
+  @spec unknown_locales :: [Locale.locale_name]
   def unknown_locales do
     requested_locales()
     |> MapSet.new()
@@ -373,7 +373,7 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
-  @spec requested_locales :: [Locale.t]
+  @spec requested_locales :: [Locale.locale_name]
   def requested_locales do
     (configured_locales() ++ gettext_locales() ++ [default_locale()])
     |> Enum.uniq
@@ -492,7 +492,7 @@ defmodule Cldr.Config do
        "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locales([Locale.t]) :: [Locale.t]
+  @spec expand_locales([Locale.locale_name, ...]) :: [Locale.locale_name, ...]
   def expand_locales(locales) do
     locale_list = Enum.map(locales, fn locale ->
       if String.contains?(locale, @wildcard_matchers) do
@@ -717,7 +717,7 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory_info(String.t | Atom.t | LanguageTag.t) :: Map.t | {:error, {Exception.t, String.t}}
+  @spec territory_info(String.t | atom() | LanguageTag.t) :: %{} | {:error, {Exception.t, String.t}}
   def territory_info(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territory_info()
