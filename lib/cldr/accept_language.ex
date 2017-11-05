@@ -20,8 +20,6 @@ defmodule Cldr.AcceptLanguage do
          Accept-Language: da, en-gb;q=0.8, en;q=0.7
 
   would mean: "I prefer Danish, but will accept British English and other types of English."
-
-
   """
   alias Cldr.Locale
 
@@ -38,7 +36,7 @@ defmodule Cldr.AcceptLanguage do
       [{1.0, "da"}, {0.3, "zh-tw"}]
 
   """
-  @language_separator Regex.compile! ","
+  @language_separator ","
   def tokenize(accept_language) do
     accept_language
     |> String.downcase

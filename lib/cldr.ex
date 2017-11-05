@@ -322,6 +322,9 @@ defmodule Cldr do
   Returns either the `locale_name` or `false` based upon
   whether the locale name is configured in `Cldr`.
 
+  This is helpful when building a list of `or` expressions
+  to return the first known locale name from a list.
+
   ## Examples
 
       iex> Cldr.known_locale_name "en-AU"
