@@ -14,7 +14,7 @@ defmodule Cldr.Number.Cardinal do
 
   # Function body is the AST of the function which needs to be injected
   # into the function definition.
-  for locale_name <- @configured_locales do
+  for locale_name <- @configured_locale_names do
     function_body =
       @rules
       |> Map.get(locale_name)

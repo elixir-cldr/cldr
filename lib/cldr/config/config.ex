@@ -150,13 +150,11 @@ defmodule Cldr.Config do
   @doc """
   Returns the version string of the CLDR data repository
   """
-  @version  @client_data_dir
-  |> Path.join("version.json")
-  |> File.read!
-  |> Poison.decode!
-
   def version do
-    @version
+    @client_data_dir
+    |> Path.join("version.json")
+    |> File.read!
+    |> Poison.decode!
   end
 
   @doc """
@@ -233,14 +231,12 @@ defmodule Cldr.Config do
   raise an exception at compile time.
   """
   @locales_path Path.join(@cldr_data_dir, "available_locales.json")
-  @all_locales @locales_path
-  |> File.read!
-  |> Poison.decode!
-  |> Enum.sort
-
-  @spec all_locales :: [Locale.locale_name]
-  def all_locales do
-    @all_locales
+  @spec all_locale_names :: [Locale.locale_name]
+  def all_locale_names do
+    @locales_path
+    |> File.read!
+    |> Poison.decode!
+    |> Enum.sort
   end
 
   @doc """
@@ -263,15 +259,15 @@ defmodule Cldr.Config do
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
-  @spec configured_locales :: [Locale.locale_name]
-  def configured_locales do
-    locales = case app_locales = Application.get_env(:ex_cldr, :locales) do
-      :all  -> @all_locales
+  @spec configured_locale_names :: [Locale.locale_name]
+  def configured_locale_names do
+    locale_names = case app_locale_names = Application.get_env(:ex_cldr, :locales) do
+      :all  -> all_locale_names()
       nil   -> [default_locale()]
-      _     -> expand_locales(app_locales)
+      _     -> expand_locale_names(app_locale_names)
     end
 
-    ["root" | locales]
+    ["root" | locale_names]
     |> Enum.uniq
     |> Enum.sort
   end
@@ -299,11 +295,11 @@ defmodule Cldr.Config do
   def set_cldr_locale_name(%LanguageTag{language: language, script: script,
       territory: territory, variant: variant} = language_tag) do
     cldr_locale_name =
-      known_locale(Locale.locale_name_from(language, script, territory, variant)) ||
-      known_locale(Locale.locale_name_from(language, nil, territory, variant)) ||
-      known_locale(Locale.locale_name_from(language, script, nil, variant)) ||
-      known_locale(Locale.locale_name_from(language, nil, nil, variant)) ||
-      known_locale(language_tag.requested_locale_name) ||
+      known_locale_name(Locale.locale_name_from(language, script, territory, variant)) ||
+      known_locale_name(Locale.locale_name_from(language, nil, territory, variant)) ||
+      known_locale_name(Locale.locale_name_from(language, script, nil, variant)) ||
+      known_locale_name(Locale.locale_name_from(language, nil, nil, variant)) ||
+      known_locale_name(language_tag.requested_locale_name) ||
       nil
 
     %{language_tag | cldr_locale_name: cldr_locale_name}
@@ -311,9 +307,9 @@ defmodule Cldr.Config do
 
   def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
     rbnf_locale_name =
-      known_rbnf_locale(Locale.locale_name_from(language, script, nil, nil)) ||
-      known_rbnf_locale(Locale.locale_name_from(language, nil, nil, nil)) ||
-      known_rbnf_locale(language_tag.requested_locale_name) ||
+      known_rbnf_locale_name(Locale.locale_name_from(language, script, nil, nil)) ||
+      known_rbnf_locale_name(Locale.locale_name_from(language, nil, nil, nil)) ||
+      known_rbnf_locale_name(language_tag.requested_locale_name) ||
       nil
 
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
@@ -323,30 +319,30 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured and available
   in the CLDR repository.
   """
-  @spec known_locales :: [Locale.locale_name]
-  def known_locales do
-    requested_locales()
+  @spec known_locale_names :: [Locale.locale_name]
+  def known_locale_names do
+    requested_locale_names()
     |> MapSet.new()
-    |> MapSet.intersection(MapSet.new(all_locales()))
+    |> MapSet.intersection(MapSet.new(all_locale_names()))
     |> MapSet.to_list
     |> Enum.sort
   end
 
-  def known_rbnf_locales do
-    known_locales()
+  def known_rbnf_locale_names do
+    known_locale_names()
     |> Enum.filter(fn locale -> Map.get(get_locale(locale), :rbnf) != %{} end)
   end
 
-  def known_locale(locale_name) do
-    if locale_name in known_locales() do
+  def known_locale_name(locale_name) do
+    if locale_name in known_locale_names() do
       locale_name
     else
       false
     end
   end
 
-  def known_rbnf_locale(locale_name) do
-    if locale_name in known_rbnf_locales() do
+  def known_rbnf_locale_name(locale_name) do
+    if locale_name in known_rbnf_locale_names() do
       locale_name
     else
       false
@@ -357,11 +353,11 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured but not available
   in the CLDR repository.
   """
-  @spec unknown_locales :: [Locale.locale_name]
-  def unknown_locales do
-    requested_locales()
+  @spec unknown_locale_names :: [Locale.locale_name]
+  def unknown_locale_names do
+    requested_locale_names()
     |> MapSet.new()
-    |> MapSet.difference(MapSet.new(all_locales()))
+    |> MapSet.difference(MapSet.new(all_locale_names()))
     |> MapSet.to_list
     |> Enum.sort
   end
@@ -373,9 +369,9 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
-  @spec requested_locales :: [Locale.locale_name]
-  def requested_locales do
-    (configured_locales() ++ gettext_locales() ++ [default_locale()])
+  @spec requested_locale_names :: [Locale.locale_name]
+  def requested_locale_names do
+    (configured_locale_names() ++ gettext_locales() ++ [default_locale()])
     |> Enum.uniq
     |> Enum.sort
   end
@@ -516,10 +512,10 @@ defmodule Cldr.Config do
 
   ## Examples
 
-      iex> Cldr.Config.expand_locales(["en-A+"])
+      iex> Cldr.Config.expand_locale_names(["en-A+"])
       ["en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
 
-      iex> Cldr.Config.expand_locales(["fr-*"])
+      iex> Cldr.Config.expand_locale_names(["fr-*"])
       ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",
        "fr-CG", "fr-CH", "fr-CI", "fr-CM", "fr-DJ", "fr-DZ", "fr-GA", "fr-GF",
        "fr-GN", "fr-GP", "fr-GQ", "fr-HT", "fr-KM", "fr-LU", "fr-MA", "fr-MC",
@@ -528,23 +524,23 @@ defmodule Cldr.Config do
        "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locales([Locale.locale_name, ...]) :: [Locale.locale_name, ...]
-  def expand_locales(locales) do
-    locale_list = Enum.map(locales, fn locale ->
-      if String.contains?(locale, @wildcard_matchers) do
-        Enum.filter(@all_locales, &Regex.match?(Regex.compile!(locale), &1))
+  @spec expand_locale_names([Locale.locale_name, ...]) :: [Locale.locale_name, ...]
+  def expand_locale_names(locale_names) do
+    locale_name_list = Enum.map(locale_names, fn locale_name ->
+      if String.contains?(locale_name, @wildcard_matchers) do
+        Enum.filter(all_locale_names(), &Regex.match?(Regex.compile!(locale_name), &1))
       else
-        locale
+        locale_name
       end
     end)
-    locale_list |> List.flatten |> Enum.uniq
+    locale_name_list |> List.flatten |> Enum.uniq
   end
 
   @doc """
   Returns the location of the json data for a locale or `nil`
   if the locale can't be found.
 
-  * `locale` is any locale returned from `Cldr.known_locales()`
+  * `locale` is any locale returned from `Cldr.known_locale_names()`
   """
   @spec locale_path(String.t) :: {:ok, String.t} | {:error, :not_found}
   def locale_path(locale) do

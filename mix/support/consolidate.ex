@@ -52,11 +52,11 @@ if Code.ensure_loaded?(Flow) do
     end
 
     @doc """
-    Consolidates known locales as defined by `Cldr.known_locales/0`.
+    Consolidates known locales as defined by `Cldr.known_locale_names/0`.
     """
     @spec consolidate_known_locales :: :ok
     def consolidate_known_locales do
-      Cldr.known_locales()
+      Cldr.known_locale_names()
       |> Flow.from_enumerable(max_demand: @max_demand)
       |> Flow.map(&consolidate_locale/1)
       |> Enum.to_list
@@ -66,7 +66,7 @@ if Code.ensure_loaded?(Flow) do
     @doc """
     Consolidates one locale.
 
-    * `locale` is any locale defined by `Cldr.all_locales/0`
+    * `locale` is any locale defined by `Cldr.all_locale_names/0`
     """
     def consolidate_locale(locale) do
       IO.puts "Consolidating locale #{locale}"

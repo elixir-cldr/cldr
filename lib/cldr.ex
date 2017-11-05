@@ -36,25 +36,25 @@ defmodule Cldr do
   alias Cldr.Install
   alias Cldr.LanguageTag
 
-  if Enum.any?(Config.unknown_locales()) do
+  if Enum.any?(Config.unknown_locale_names()) do
     raise Cldr.UnknownLocaleError,
-      "Some locales are configured that are not known to CLDR. " <>
+      "Some locale names are configured that are not known to CLDR. " <>
       "Compilation cannot continue until the configuration includes only " <>
-      "locales known in CLDR.\n\n" <>
-      "Configured locales: #{inspect Config.requested_locales()}\n" <>
-      "Gettext locales:    #{inspect Config.gettext_locales()}\n" <>
-      "Unknown locales:    " <>
-      "#{IO.ANSI.red()}#{inspect Config.unknown_locales()}" <>
+      "locales names known in CLDR.\n\n" <>
+      "Configured locales names: #{inspect Config.requested_locales()}\n" <>
+      "Gettext locales names:    #{inspect Config.gettext_locales()}\n" <>
+      "Unknown locales names:    " <>
+      "#{IO.ANSI.red()}#{inspect Config.unknown_locale_names()}" <>
       "#{IO.ANSI.default_color()}\n"
   end
 
   @warn_if_greater_than 100
-  @known_locale_count Enum.count(Config.known_locales())
-  @locale_string if @known_locale_count > 1, do: "locales ", else: "locale "
+  @known_locale_count Enum.count(Config.known_locale_names())
+  @locale_string if @known_locale_count > 1, do: "locales named ", else: "locale named "
   IO.puts "Generating Cldr for #{@known_locale_count} " <>
     @locale_string <>
-    "#{inspect Config.known_locales, limit: 5} with " <>
-    "default locale #{inspect Config.default_locale()}"
+    "#{inspect Config.known_locale_names, limit: 5} with " <>
+    "default locale name #{inspect Config.default_locale()}"
   if @known_locale_count > @warn_if_greater_than do
     IO.puts "Please be patient, generating functions for many locales " <>
     "can take some time"
@@ -63,7 +63,7 @@ defmodule Cldr do
   # Ensure locales are all installed.  We do this once during
   # compilation of `Cldr` because this is the module we define
   # as the root of the dependency tree.
-  Install.install_known_locales
+  Install.install_known_locale_names
 
   @doc """
   Returns the directory path name where the CLDR json data
@@ -222,10 +222,10 @@ defmodule Cldr do
 
   See also: `requested_locales/0` and `known_locales/0`
   """
-  @all_locales Config.all_locales()
-  @spec all_locales :: [Locale.locale_name, ...]
-  def all_locales do
-    @all_locales
+  @all_locale_names Config.all_locale_names()
+  @spec all_locale_names :: [Locale.locale_name, ...]
+  def all_locale_names do
+    @all_locale_names
   end
 
   @doc """
@@ -236,10 +236,10 @@ defmodule Cldr do
 
   See also `known_locales/0` and `all_locales/0`
   """
-  @requested_locales Config.requested_locales()
-  @spec requested_locales :: [Locale.locale_name, ...] | []
-  def requested_locales do
-    @requested_locales
+  @requested_locale_names Config.requested_locale_names()
+  @spec requested_locale_names :: [Locale.locale_name, ...] | []
+  def requested_locale_names do
+    @requested_locale_names
   end
 
   @doc """
@@ -251,10 +251,10 @@ defmodule Cldr do
   directly in the `config.exs` file or
   in `Gettext`.
   """
-  @known_locales Config.known_locales()
-  @spec known_locales :: [Locale.locale_name, ...] | []
-  def known_locales do
-    @known_locales
+  @known_locale_names Config.known_locale_names()
+  @spec known_locale_names :: [Locale.locale_name, ...] | []
+  def known_locale_names do
+    @known_locale_names
   end
 
   @doc """
@@ -265,20 +265,20 @@ defmodule Cldr do
   any unknown locales this function should always
   return an empty list.
   """
-  @unknown_locales Config.unknown_locales()
-  @spec unknown_locales :: [Locale.locale_name, ...] | []
-  def unknown_locales do
-    @unknown_locales
+  @unknown_locale_names Config.unknown_locale_names()
+  @spec unknown_locale_names :: [Locale.locale_name, ...] | []
+  def unknown_locale_names do
+    @unknown_locale_names
   end
 
   @doc """
   Returns a list of locale names which have rules based number
   formats (RBNF).
   """
-  @known_rbnf_locales Cldr.Config.known_rbnf_locales
-  @spec known_rbnf_locales :: [Locale.locale_name, ...] | []
-  def known_rbnf_locales do
-    @known_rbnf_locales
+  @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names
+  @spec known_rbnf_locale_names :: [Locale.locale_name, ...] | []
+  def known_rbnf_locale_names do
+    @known_rbnf_locale_names
   end
 
   @doc """
@@ -287,16 +287,16 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.known_locale?("en")
+      iex> Cldr.known_locale_name?("en")
       true
 
-      iex> Cldr.known_locale?("!!")
+      iex> Cldr.known_locale_name?("!!")
       false
 
   """
-  @spec known_locale?(Locale.locale_name) :: boolean
-  def known_locale?(locale_name) when is_binary(locale_name) do
-    locale_name in known_locales()
+  @spec known_locale_name?(Locale.locale_name) :: boolean
+  def known_locale_name?(locale_name) when is_binary(locale_name) do
+    locale_name in known_locale_names()
   end
 
   @doc """
@@ -306,16 +306,16 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.known_rbnf_locale?("en")
+      iex> Cldr.known_rbnf_locale_name?("en")
       true
 
-      iex> Cldr.known_rbnf_locale?("!!")
+      iex> Cldr.known_rbnf_locale_name?("!!")
       false
 
   """
-  @spec known_rbnf_locale?(Locale.locale_name) :: boolean
-  def known_rbnf_locale?(locale_name) when is_binary(locale_name) do
-    locale_name in known_rbnf_locales()
+  @spec known_rbnf_locale_name?(Locale.locale_name) :: boolean
+  def known_rbnf_locale_name?(locale_name) when is_binary(locale_name) do
+    locale_name in known_rbnf_locale_names()
   end
 
   @doc """
@@ -324,16 +324,16 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.known_locale "en-AU"
+      iex> Cldr.known_locale_name "en-AU"
       "en-AU"
 
-      iex> Cldr.known_locale "en-SA"
+      iex> Cldr.known_locale_name "en-SA"
       false
 
   """
-  @spec known_locale(Locale.locale_name) :: String.t | false
-  def known_locale(locale_name) when is_binary(locale_name) do
-    if known_locale?(locale_name) do
+  @spec known_locale_name(Locale.locale_name) :: String.t | false
+  def known_locale_name(locale_name) when is_binary(locale_name) do
+    if known_locale_name?(locale_name) do
       locale_name
     else
       false
@@ -341,21 +341,22 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns either the locale name or nil based upon
-  whether the locale name is configured in `Cldr`.
+  Returns either the RBNF `locale_name` or `false` based upon
+  whether the locale name is configured in `Cldr`
+  and has RBNF rules defined.
 
   ## Examples
 
-      iex> Cldr.known_locale "en-AU"
-      "en-AU"
+      iex> Cldr.known_rbnf_locale_name "en"
+      "en"
 
-      iex> Cldr.known_locale "en-SA"
+      iex> Cldr.known_rbnf_locale_name "en-SA"
       false
 
   """
-  @spec known_rbnf_locale(Locale.locale_name) :: String.t | false
-  def known_rbnf_locale(locale_name) when is_binary(locale_name) do
-    if known_rbnf_locale?(locale_name) do
+  @spec known_rbnf_locale_name(Locale.locale_name) :: String.t | false
+  def known_rbnf_locale_name(locale_name) when is_binary(locale_name) do
+    if known_rbnf_locale_name?(locale_name) do
       locale_name
     else
       false
@@ -393,7 +394,7 @@ defmodule Cldr do
 
   def validate_locale(locale_name) when is_binary(locale_name) do
     locale_name
-    |> Cldr.Locale.new
+    |> Cldr.Locale.new!
     |> validate_locale
   end
 
@@ -420,20 +421,20 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.available_locale? "en-AU"
+      iex> Cldr.available_locale_name? "en-AU"
       true
 
-      iex> Cldr.available_locale? "en-SA"
+      iex> Cldr.available_locale_name? "en-SA"
       false
 
   """
-  @spec available_locale?(Locale.locale_name | LanguageTag.t) :: boolean
-  def available_locale?(locale) when is_binary(locale) do
-    locale in Config.all_locales()
+  @spec available_locale_name?(Locale.locale_name | LanguageTag.t) :: boolean
+  def available_locale_name?(locale) when is_binary(locale) do
+    locale in Config.all_locale_names()
   end
 
-  def available_locale?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
-    available_locale?(cldr_locale_name)
+  def available_locale_name?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    available_locale_name?(cldr_locale_name)
   end
 
   @doc """
@@ -509,7 +510,7 @@ defmodule Cldr do
       iex> Cldr.validate_territory "001"
       {:ok, :"001"}
 
-      iex> Cldr.validate_territory Cldr.Locale.new("en")
+      iex> Cldr.validate_territory Cldr.Locale.new!("en")
       {:ok, :US}
 
       iex> Cldr.validate_territory %{}

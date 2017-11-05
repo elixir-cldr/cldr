@@ -33,26 +33,26 @@ defmodule Cldr.Number.PluralRule do
       |> Map.keys
       |> Enum.sort
 
-      def known_locales do
+      def known_locale_names do
         @rules_locales
       end
 
       @doc """
       The configured locales for which plural rules are defined
 
-      This is the intersection of the Cldr.known_locales and the locales for
+      This is the intersection of the `Cldr.known_locale_names/0` and the locales for
       which plural rules are defined.  There are many Cldr locales which
       don't have their own plural rules so this list is the intersection
       of Cldr's configured locales and those that have rules.
       """
-      @configured_locales @rules_locales
+      @configured_locale_names @rules_locales
       |> MapSet.new
-      |> MapSet.intersection(MapSet.new(Cldr.known_locales()))
+      |> MapSet.intersection(MapSet.new(Cldr.known_locale_names()))
       |> MapSet.to_list
       |> Enum.sort
 
-      def configured_locales do
-        @configured_locales
+      def configured_locale_names do
+        @configured_locale_names
       end
 
       @doc """

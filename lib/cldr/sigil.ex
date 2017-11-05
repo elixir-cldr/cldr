@@ -10,12 +10,27 @@ defmodule Cldr.Locale.Sigil do
 
   ## Example
 
+      iex> import Cldr.Locale.Sigil
       iex> ~L[en]
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }
 
   """
   @spec sigil_L(Locale.locale_name, any()) :: LanguageTag.t | none()
   def sigil_L(locale_name, _) do
-    Cldr.Locale.new(locale_name)
+    Cldr.Locale.new!(locale_name)
   end
 
 end

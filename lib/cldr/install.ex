@@ -21,16 +21,16 @@ defmodule Cldr.Install do
   @doc """
   Install all the configured locales.
   """
-  def install_known_locales do
-    Enum.each Cldr.Config.known_locales(), &install_locale/1
+  def install_known_locale_names do
+    Enum.each Cldr.Config.known_locale_names(), &install_locale_name/1
     :ok
   end
 
   @doc """
   Install all available locales.
   """
-  def install_all_locales do
-    Enum.each Cldr.Config.all_locales(), &install_locale/1
+  def install_all_locale_names do
+    Enum.each Cldr.Config.all_locale_names(), &install_locale_name/1
     :ok
   end
 
@@ -54,12 +54,12 @@ defmodule Cldr.Install do
   to download the correct version of the locale file which is then
   written to the configured data directory.
   """
-  def install_locale(locale, options \\ []) do
-    if !locale_installed?(locale) or options[:force] do
+  def install_locale_name(locale_name, options \\ []) do
+    if !locale_installed?(locale_name) or options[:force] do
       ensure_client_dirs_exist!(client_locales_dir())
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
-      do_install_locale(locale, locale in Cldr.Config.all_locales())
+      do_install_locale_name(locale_name, locale_name in Cldr.Config.all_locale_names())
     else
       :already_installed
     end
@@ -68,32 +68,32 @@ defmodule Cldr.Install do
   # Normally a library function shouldn't raise an exception (thats up
   # to the client app) but we install locales only at compilation time
   # and an exception then is the appropriate response.
-  defp do_install_locale(locale, false) do
+  defp do_install_locale_name(locale_name, false) do
     raise Cldr.UnknownLocaleError,
-      "Failed to install the locale #{inspect locale}. The locale is not known."
+      "Failed to install the locale named #{inspect locale_name}. The locale name is not known."
   end
 
-  defp do_install_locale(locale, true) do
+  defp do_install_locale_name(locale_name, true) do
     require Logger
 
-    output_file_name = [client_locales_dir(), "/", locale_filename(locale)]
+    output_file_name = [client_locales_dir(), "/", locale_filename(locale_name)]
     |> :erlang.iolist_to_binary
 
-    url = String.to_charlist("#{base_url()}#{locale_filename(locale)}")
+    url = String.to_charlist("#{base_url()}#{locale_filename(locale_name)}")
     case :httpc.request(url) do
       {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
         output_file_name
         |> File.write!(:erlang.list_to_binary(body))
 
-        Logger.info "Downloaded locale #{inspect locale}"
+        Logger.info "Downloaded locale #{inspect locale_name}"
         {:ok, output_file_name}
       {_, {{_version, code, message}, _headers, _body}} ->
-        Logger.error "Failed to download locale #{inspect locale} from #{url}. " <>
+        Logger.error "Failed to download locale #{inspect locale_name} from #{url}. " <>
           "HTTP Error: (#{code}) #{inspect message}"
         {:error, code}
       {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
         Logger.error "Failed to connect to #{inspect host} to download " <>
-          "locale #{inspect locale}. Reason: #{inspect sys_message}"
+          "locale #{inspect locale_name}. Reason: #{inspect sys_message}"
         {:error, sys_message}
     end
   end

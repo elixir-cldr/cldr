@@ -8,8 +8,8 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t
 
-  @spec new(locale_name) :: LanguageTag.t | none()
-  def new(locale_name) when is_binary(locale_name) do
+  @spec new!(locale_name) :: LanguageTag.t | none()
+  def new!(locale_name) when is_binary(locale_name) do
     canonical_language_tag!(locale_name)
   end
 
@@ -62,22 +62,22 @@ defmodule Cldr.Locale do
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
   def cldr_locale_name(%LanguageTag{language: language, script: script,
       territory: territory, variant: variant} = language_tag) do
-    Cldr.known_locale(locale_name_from(language, script, territory, variant)) ||
-    Cldr.known_locale(locale_name_from(language, nil, territory, variant)) ||
-    Cldr.known_locale(locale_name_from(language, script, nil, variant)) ||
-    Cldr.known_locale(locale_name_from(language, nil, nil, variant)) ||
-    Cldr.known_locale(language_tag.requested_locale_name) ||
+    Cldr.known_locale_name(locale_name_from(language, script, territory, variant)) ||
+    Cldr.known_locale_name(locale_name_from(language, nil, territory, variant)) ||
+    Cldr.known_locale_name(locale_name_from(language, script, nil, variant)) ||
+    Cldr.known_locale_name(locale_name_from(language, nil, nil, variant)) ||
+    Cldr.known_locale_name(language_tag.requested_locale_name) ||
     nil
   end
 
   @spec rbnf_locale_name(LanguageTag.t) :: locale_name | nil
   def rbnf_locale_name(%LanguageTag{language: language, script: script,
       territory: territory} = language_tag) do
-    Cldr.known_rbnf_locale(locale_name_from(language, script, territory, nil)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, nil, territory, nil)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, script, nil, nil)) ||
-    Cldr.known_rbnf_locale(locale_name_from(language, nil, nil, nil)) ||
-    Cldr.known_rbnf_locale(language_tag.requested_locale_name) ||
+    Cldr.known_rbnf_locale_name(locale_name_from(language, script, territory, nil)) ||
+    Cldr.known_rbnf_locale_name(locale_name_from(language, nil, territory, nil)) ||
+    Cldr.known_rbnf_locale_name(locale_name_from(language, script, nil, nil)) ||
+    Cldr.known_rbnf_locale_name(locale_name_from(language, nil, nil, nil)) ||
+    Cldr.known_rbnf_locale_name(language_tag.requested_locale_name) ||
     nil
   end
 

@@ -4,6 +4,7 @@ defmodule Doc.Test do
   doctest Cldr.Config
   doctest Cldr.Math
   doctest Cldr.Locale
+  doctest Cldr.Locale.Sigil
   doctest Cldr.LanguageTag
   doctest Cldr.LanguageTag.Parser
   doctest Cldr.AcceptLanguage

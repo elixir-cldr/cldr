@@ -27,9 +27,9 @@ defmodule Cldr.Rbnf.Config do
   end
 
   if File.exists?(@rbnf_dir) do
-    @rbnf_locales Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".json"))
+    @rbnf_locale_names Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".json"))
   else
-    @rbnf_locales []
+    @rbnf_locale_names []
   end
 
   @doc """
@@ -50,9 +50,9 @@ defmodule Cldr.Rbnf.Config do
        "zh-Hant", "zh"]
 
   """
-  @spec rbnf_locales :: [String.t] | []
-  def rbnf_locales do
-    @rbnf_locales
+  @spec rbnf_locale_names :: [String.t] | []
+  def rbnf_locale_names do
+    @rbnf_locale_names
   end
 
   @doc """
@@ -64,7 +64,7 @@ defmodule Cldr.Rbnf.Config do
 
   ## Example
 
-      iex> Cldr.Rbnf.Config.known_locales
+      iex> Cldr.Rbnf.Config.known_locale_names
       ["lo", "eo", "ja", "el", "fo", "hu", "yue", "fil", "sq", "cy", "da", "sv", "ee",
        "et", "ta", "nl", "vi", "nb", "lv", "id", "pt-PT", "fa-AF", "lt", "my",
        "sr-Latn", "cs", "ms", "fa", "bg", "es", "en", "af", "mt", "am", "ca", "mk",
@@ -74,8 +74,8 @@ defmodule Cldr.Rbnf.Config do
        "bs", "uk", "ar"]
 
   """
-  def known_locales do
-    MapSet.intersection(MapSet.new(Cldr.known_locales), MapSet.new(rbnf_locales()))
+  def known_locale_names do
+    MapSet.intersection(MapSet.new(Cldr.known_locale_names), MapSet.new(rbnf_locale_names()))
     |> MapSet.to_list
   end
 
@@ -97,7 +97,7 @@ defmodule Cldr.Rbnf.Config do
 
   """
   @spec for_locale(Locale.locale_name) :: %{} |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
-  def for_locale(locale_name) do
+  def for_locale(locale_name) when is_binary(locale_name) do
     with \
       true <- File.exists?(locale_path(locale_name))
     do
@@ -115,8 +115,12 @@ defmodule Cldr.Rbnf.Config do
       {:error, {exception, reason}} ->
         {:error, {exception, reason}}
       false ->
-        {:error, {Cldr.Rbnf.NotAvailable, "The locale #{inspect locale_name} does not have an RBNF configuration file available"}}
+        {:error, rbnf_nofile_error(locale_name)}
     end
+  end
+
+  defp rbnf_nofile_error(locale_name) do
+    {Cldr.Rbnf.NotAvailable, "The locale name #{inspect locale_name} does not have an RBNF configuration file available"}
   end
 
   defp rules_from_rule_sets(json) do

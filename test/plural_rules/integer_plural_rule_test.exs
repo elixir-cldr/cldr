@@ -6,12 +6,12 @@ defmodule Integer.PluralRule.Test do
   @modules      [Cldr.Number.Cardinal, Cldr.Number.Ordinal]
 
   for module           <- @modules,
-      locale_name      <- module.configured_locales,
+      locale_name      <- module.configured_locale_names,
       {category, rule} <- module.plural_rules_for(locale_name),
       sample_type      <- @sample_types,
       one_rule         <- (rule[sample_type] || [])
   do
-    locale = Cldr.Locale.new(locale_name)
+    locale = Cldr.Locale.new!(locale_name)
     case one_rule do
       :ellipsis ->
         true
