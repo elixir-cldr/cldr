@@ -814,6 +814,19 @@ defmodule Cldr do
       "The number system type #{inspect number_system_type} is invalid"}
   end
 
+  def validate_number_system_or_type(number_system) do
+    with {:ok, number_system} <- validate_number_system(number_system) do
+      {:ok, number_system}
+    else
+      {:error, _} ->
+        with {:ok, number_system} <- validate_number_system_type(number_system) do
+          {:ok, number_system}
+        else
+          {:error, _reason} -> {:error, unknown_number_system_error(number_system)}
+        end
+    end
+  end
+
   defp locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: locale_name
   defp locale_name(locale) when is_binary(locale), do: locale
 end
