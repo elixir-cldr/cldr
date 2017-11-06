@@ -731,8 +731,25 @@ defmodule Cldr do
     {:error, unknown_number_system_error(number_system)}
   end
 
-  def unknown_number_system_error(currency) do
-    {Cldr.UnknownNumberSystemError, "The number_system #{inspect currency} is invalid"}
+  def unknown_number_system_error(number_system) when is_atom(number_system) do
+    {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is unknown"}
+  end
+
+  def unknown_number_system_error(number_system) do
+    {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is invalid"}
+  end
+
+  def unknown_number_system_for_locale_error(number_system, locale, valid_number_systems)
+  when is_atom(number_system) do
+    {Cldr.UnknownNumberSystemError,
+      "The number system #{inspect number_system} is unknown " <>
+      "for the locale named #{locale_name(locale)}. " <>
+      "Valid number systems are #{inspect valid_number_systems}"
+    }
+  end
+
+  def unknown_number_system_for_locale_error(number_system, _locale) do
+    unknown_number_system_error(number_system)
   end
 
   @doc """
@@ -787,7 +804,16 @@ defmodule Cldr do
     {:error, unknown_number_system_type_error(number_system_type)}
   end
 
-  def unknown_number_system_type_error(number_system_type) do
-    {Cldr.UnknownNumberSystemTypeError, "The number system type #{inspect number_system_type} is invalid"}
+  def unknown_number_system_type_error(number_system_type) when is_atom(number_system_type) do
+    {Cldr.UnknownNumberSystemTypeError,
+      "The number system type #{inspect number_system_type} is unknown"}
   end
+
+  def unknown_number_system_type_error(number_system_type) when is_atom(number_system_type) do
+    {Cldr.UnknownNumberSystemTypeError,
+      "The number system type #{inspect number_system_type} is invalid"}
+  end
+
+  defp locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: locale_name
+  defp locale_name(locale) when is_binary(locale), do: locale
 end
