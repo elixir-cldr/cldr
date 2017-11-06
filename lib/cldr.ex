@@ -10,7 +10,7 @@ defmodule Cldr do
 
   `Cldr` functionality is packaged into a several
   packages that each depend on this one.  These additional
-  modules provide:
+  modules are:
 
   * `Cldr.Number.to_string/2` for formatting numbers and
     `Cldr.Currency.to_string/2` for formatting currencies.
