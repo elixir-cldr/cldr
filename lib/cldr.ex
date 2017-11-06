@@ -446,19 +446,64 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.known_calendars
-      ["buddhist", "chinese", "coptic", "dangi", "ethiopic", "ethiopic_amete_alem",
-       "gregorian", "hebrew", "indian", "islamic", "islamic_civil", "islamic_rgsa",
-       "islamic_tbla", "islamic_umalqura", "japanese", "persian", "roc"]
+      [:buddhist, :chinese, :coptic, :dangi, :ethiopic, :ethiopic_amete_alem,
+       :gregorian, :hebrew, :indian, :islamic, :islamic_civil, :islamic_rgsa,
+       :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
 
   """
   @known_calendars Cldr.Config.known_calendars
-  @spec known_calendars :: [String.t, ...] | []
+  @spec known_calendars :: [atom(), ...]
   def known_calendars do
     @known_calendars
   end
 
   @doc """
+  Normalise and validate a calendar_name.
+
+  * `calendar` is either a string or atom representing
+    a calendar code as returned by `Cldr.known_calendars/0`
+
+  Returns:
+
+  * `{:ok, normalized_calendar_name}` or
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+
+  """
+  @spec validate_calendar(atom() | String.t) ::
+    {:ok, atom()} | {:error, {Exception.t, String.t}}
+
+  def validate_calendar(calendar) when is_atom(calendar) and calendar in @known_calendars do
+    {:ok, calendar}
+  end
+
+  def validate_calendar(calendar) when is_atom(calendar) do
+    {:error, unknown_calendar_error(calendar)}
+  end
+
+  def validate_calendar(calendar) when is_binary(calendar) do
+    try do
+      calendar
+      |> String.downcase
+      |> String.to_existing_atom
+      |> validate_calendar
+    rescue ArgumentError ->
+      {:error, unknown_calendar_error(calendar)}
+    end
+  end
+
+  def unknown_calendar_error(calendar) do
+    {Cldr.UnknownCalendarError, "The calendar name #{inspect calendar} is invalid"}
+  end
+
+  @doc """
   Returns a list of the territories known to `Cldr`.
+
+  The territories codes are defined in [UN M.49](https://en.wikipedia.org/wiki/UN_M.49)
+  which defines both individual territories and enclosing territories.  The
+  territory `:"001" is defined as "the world".
 
   ## Example
 
@@ -495,7 +540,7 @@ defmodule Cldr do
   Normalise and validate a territory code.
 
   * `territory` is either a string, atom or %LanguageTag{} representing
-    a territory code
+    a territory code as returned by `Cldr.known_territories/0`
 
   Returns:
 
@@ -517,7 +562,7 @@ defmodule Cldr do
       {:ok, :US}
 
       iex> Cldr.validate_territory %{}
-      {:error, {Cldr.UnknownTerritoryError, "The territory %{} is invalid"}}
+      {:error, {Cldr.UnknownTerritoryError, "The territory %{} is unknown"}}
 
   """
   @spec validate_territory(atom() | String.t) ::
@@ -528,7 +573,7 @@ defmodule Cldr do
   end
 
   def validate_territory(territory) when is_atom(territory) do
-    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}}
+    {:error, unknown_territory_error(territory)}
   end
 
   def validate_territory(territory) when is_binary(territory) do
@@ -538,12 +583,12 @@ defmodule Cldr do
       |> String.to_existing_atom
       |> validate_territory
     rescue ArgumentError ->
-      {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}}
+      {:error, unknown_territory_error(territory)}
     end
   end
 
   def validate_territory(%LanguageTag{territory: nil} = locale) do
-    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect locale} is unknown"}}
+    {:error, unknown_territory_error(locale)}
   end
 
   def validate_territory(%LanguageTag{territory: territory}) do
@@ -551,7 +596,11 @@ defmodule Cldr do
   end
 
   def validate_territory(territory) do
-    {:error, {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is invalid"}}
+    {:error, unknown_territory_error(territory)}
+  end
+
+  def unknown_territory_error(territory) do
+    {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}
   end
 
   @doc """
@@ -560,40 +609,77 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.known_currencies
-      ["ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON",
-       "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN",
-       "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN",
-       "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC",
-       "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN",
-       "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNH",
-       "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP",
-       "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP",
-       "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP",
-       "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ",
-       "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP",
-       "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD",
-       "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD",
-       "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL",
-       "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD",
-       "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR",
-       "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC",
-       "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK",
-       "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD",
-       "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD",
-       "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "STN", "SUR",
-       "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE",
-       "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN",
-       "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST",
-       "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO",
-       "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD",
-       "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ",
-       "ZWD", "ZWL", "ZWR"]
+      [:XBB, :XEU, :SKK, :AUD, :CZK, :ISJ, :BRC, :IDR, :UYP, :VEF, :UAH, :KMF, :NGN,
+       :NAD, :LUC, :AWG, :BRZ, :AOK, :SHP, :DEM, :UGS, :ECS, :BRR, :HUF, :INR, :TPE,
+       :GYD, :MCF, :USS, :ALK, :TJR, :BGO, :BUK, :DKK, :LSL, :AZM, :ZRN, :MKN, :GHC,
+       :JMD, :NOK, :GWP, :CVE, :RUR, :BDT, :NIC, :LAK, :XFO, :KHR, :SRD, :ESB, :PGK,
+       :YUD, :BRN, :MAD, :PYG, :QAR, :MOP, :BOB, :CHW, :PHP, :SDG, :SEK, :KZT, :SDP,
+       :ZWD, :XTS, :SRG, :ANG, :CLF, :BOV, :XBA, :TMT, :TJS, :CUC, :SUR, :MAF, :BRL,
+       :PLZ, :PAB, :AOA, :ZWR, :UGX, :PTE, :NPR, :BOL, :MRO, :MXN, :ATS, :ARP, :KWD,
+       :CLE, :NLG, :TMM, :SAR, :PEN, :PKR, :RUB, :AMD, :MDL, :XRE, :AOR, :MZN, :ESA,
+       :XOF, :CNX, :ILR, :KRW, :CDF, :VND, :DJF, :FKP, :BIF, :FJD, :MYR, :BBD, :GEK,
+       :PES, :CNY, :GMD, :SGD, :MTP, :ZMW, :MWK, :BGN, :GEL, :TTD, :LVL, :XCD, :ARL,
+       :EUR, :UYU, :ZAL, :CSD, :ECV, :GIP, :CLP, :KRH, :CYP, :TWD, :SBD, :SZL, :IRR,
+       :LRD, :CRC, :XDR, :SYP, :YUM, :SIT, :DOP, :MVP, :BWP, :KPW, :GNS, :ZMK, :BZD,
+       :TRY, :MLF, :KES, :MZE, :ALL, :JOD, :HTG, :TND, :ZAR, :LTT, :BGL, :XPD, :CSK,
+       :SLL, :BMD, :BEF, :FIM, :ARA, :ZRZ, :CHF, :SOS, :KGS, :GWE, :LTL, :ITL, :DDM,
+       :ERN, :BAM, :BRB, :ARS, :RHD, :STD, :RWF, :GQE, :HRD, :ILP, :YUR, :AON, :BYR,
+       :RSD, :ZWL, :XBD, :XFU, :GBP, :VEB, :BTN, :UZS, :BGM, :BAD, :MMK, :XBC, :LUF,
+       :BSD, :XUA, :GRD, :CHE, :JPY, :EGP, :XAG, :LYD, :XAU, :USD, :BND, :XPT, :BRE,
+       :ROL, :PLN, :MZM, :FRF, :MGF, :LUL, :SSP, :DZD, :IEP, :SDD, :ADP, :AFN, :IQD,
+       :GHS, :TOP, :LVR, :YUN, :MKD, :GNF, :MXP, :THB, :CNH, :TZS, :XPF, :AED, :SVC,
+       :RON, :BEC, :CUP, :USN, :LBP, :BOP, :BHD, :BAN, :MDC, :VUV, :MGA, :ISK, :COP,
+       :BYN, :UAK, :TRL, :SCR, :KRO, :ILS, :ETB, :CAD, :AZN, :VNN, :NIO, :COU, :EEK,
+       :KYD, :MNT, :HNL, :WST, :PEI, :YER, :MTL, :STN, :AFA, :ARM, :HKD, :NZD, :UYI,
+       :MXV, :GTQ, :BYB, :XXX, :XSU, :HRK, :OMR, :BEL, :MUR, :ESP, :YDD, :MVR, :LKR,
+       :XAF]
 
   """
   @known_currencies Cldr.Config.known_currencies
   @spec known_currencies :: [String.t, ...] | []
   def known_currencies do
     @known_currencies
+  end
+
+  @doc """
+  Normalise and validate a currency code.
+
+  * `currency` is either a string or atom representing
+    an ISO 4217 currency code as returned by `Cldr.known_currencies/0`
+
+  Returns:
+
+  * `{:ok, normalized_currency_code}` or
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+
+  """
+  @spec validate_currency(atom() | String.t) ::
+    {:ok, atom()} | {:error, {Exception.t, String.t}}
+
+  def validate_currency(currency) when is_atom(currency) and currency in @known_currencies do
+    {:ok, currency}
+  end
+
+  def validate_currency(currency) when is_atom(currency) do
+    {:error, unknown_currency_error(currency)}
+  end
+
+  def validate_currency(currency) when is_binary(currency) do
+    try do
+      currency
+      |> String.upcase
+      |> String.to_existing_atom
+      |> validate_currency
+    rescue ArgumentError ->
+      {:error, unknown_currency_error(currency)}
+    end
+  end
+
+  def unknown_currency_error(currency) do
+    {Cldr.UnknownCurrencyError, "The currency #{inspect currency} is invalid"}
   end
 
   @doc """
@@ -619,4 +705,34 @@ defmodule Cldr do
     @known_number_systems
   end
 
+  @doc """
+  Normalise and validate a number system name.
+
+  * `number_system` is a string representing
+    a number system returned by `Cldr.known_number_systems/0`
+
+  Returns:
+
+  * `{:ok, normalized_number_system_name}` or
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+
+  """
+  @spec validate_number_system(String.t() | any()) ::
+    {:ok, String.t} | {:error, {Exception.t, String.t}}
+
+  def validate_number_system(number_system)
+  when is_binary(number_system) and number_system in @known_number_systems do
+    {:ok, number_system}
+  end
+
+  def validate_number_system(number_system) do
+    {:error, unknown_number_system_error(number_system)}
+  end
+
+  def unknown_number_system_error(currency) do
+    {Cldr.UnknownNumberSystemError, "The number_system #{inspect currency} is invalid"}
+  end
 end

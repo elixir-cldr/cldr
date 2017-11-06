@@ -159,7 +159,7 @@ defmodule Cldr.LanguageTag.Parser do
     "kk" => [:normalization,            Config.true_false(), "true"],
     "kf" => [:case_first,               ["upper", "lower", "false"], "false"],
     "ks" => [:strength,                 ["level1", "level2", "level3", "level4", "identic"], "level3"],
-    "cu" => [:currency,                 Enum.map(Config.known_currencies, &String.downcase/1), nil],
+    "cu" => [:currency,                 Config.known_currencies, nil],
     "cf" => [:currency_format,          ["standard", "account"], "standard"],
     "nu" => [:number_system,            Config.known_number_systems, nil],
     "em" => [:emoji_style,              ["emoji", "text", "default"], "default"],
