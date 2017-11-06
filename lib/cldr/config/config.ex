@@ -438,19 +438,27 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.known_number_systems
-      ["adlm", "ahom", "arab", "arabext", "armn", "armnlow", "bali", "beng", "bhks",
-       "brah", "cakm", "cham", "cyrl", "deva", "ethi", "fullwide", "geor", "gonm",
-       "grek", "greklow", "gujr", "guru", "hanidays", "hanidec", "hans", "hansfin",
-       "hant", "hantfin", "hebr", "hmng", "java", "jpan", "jpanfin", "kali", "khmr",
-       "knda", "lana", "lanatham", "laoo", "latn", "lepc", "limb", "mathbold",
-       "mathdbl", "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo",
-       "mtei", "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma",
-       "roman", "romanlow", "saur", "shrd", "sind", "sinh", "sora", "sund", "takr",
-       "talu", "taml", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara"]
+      [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
+       :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :gonm, :grek, :greklow,
+       :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr,
+       :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham, :laoo,
+       :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans,
+       :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :newa, :nkoo,
+       :olck, :orya, :osma, :roman, :romanlow, :saur, :shrd, :sind, :sinh, :sora,
+       :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :vaii, :wara]
 
   """
   def known_number_systems do
-    number_systems() |> Map.keys |> Enum.map(&Atom.to_string/1) |> Enum.sort
+    number_systems() |> Map.keys |> Enum.sort
+  end
+
+  def known_number_system_types do
+    known_locale_names()
+    |> Enum.map(&get_locale/1)
+    |> Enum.map(&Map.get(&1, :number_systems))
+    |> Enum.flat_map(&Map.keys/1)
+    |> Enum.uniq
+    |> Enum.sort
   end
 
   @doc """

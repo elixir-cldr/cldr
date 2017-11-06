@@ -22,6 +22,18 @@ defmodule Cldr.UnknownNumberSystemError do
   end
 end
 
+defmodule Cldr.UnknownNumberSystemTypeError do
+  @moduledoc """
+  Exception raised when an attempt is made to use a number system type that is not known
+  in `Cldr`.  `Cldr.Number.number_system_types/0` returns the number system types known to `Cldr`.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
 defmodule Cldr.UnknownFormatError do
   @moduledoc """
   Exception raised when an attempt is made to use a locale that is not configured

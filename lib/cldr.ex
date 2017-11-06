@@ -683,24 +683,23 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of strings representing the number systems known to `Cldr`.
+  Returns a list of atoms representing the number systems known to `Cldr`.
 
   ## Example
 
       iex> Cldr.known_number_systems
-      ["adlm", "ahom", "arab", "arabext", "armn", "armnlow", "bali", "beng", "bhks",
-       "brah", "cakm", "cham", "cyrl", "deva", "ethi", "fullwide", "geor", "gonm",
-       "grek", "greklow", "gujr", "guru", "hanidays", "hanidec", "hans", "hansfin",
-       "hant", "hantfin", "hebr", "hmng", "java", "jpan", "jpanfin", "kali", "khmr",
-       "knda", "lana", "lanatham", "laoo", "latn", "lepc", "limb", "mathbold",
-       "mathdbl", "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo",
-       "mtei", "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma",
-       "roman", "romanlow", "saur", "shrd", "sind", "sinh", "sora", "sund", "takr",
-       "talu", "taml", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara"]
+      [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
+       :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :gonm, :grek, :greklow,
+       :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr,
+       :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham, :laoo,
+       :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans,
+       :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :newa, :nkoo,
+       :olck, :orya, :osma, :roman, :romanlow, :saur, :shrd, :sind, :sinh, :sora,
+       :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :vaii, :wara]
 
   """
   @known_number_systems Cldr.Config.known_number_systems
-  @spec known_number_systems :: [String.t, ...] | []
+  @spec known_number_systems :: [atom(), ...] | []
   def known_number_systems do
     @known_number_systems
   end
@@ -734,5 +733,61 @@ defmodule Cldr do
 
   def unknown_number_system_error(currency) do
     {Cldr.UnknownNumberSystemError, "The number_system #{inspect currency} is invalid"}
+  end
+
+  @doc """
+  Returns a list of atoms representing the number systems types known to `Cldr`.
+
+  ## Example
+
+      iex> Cldr.Config.known_number_system_types
+      [:default, :finance, :native, :traditional]
+
+  """
+  @known_number_system_types Cldr.Config.known_number_system_types
+  def known_number_system_types do
+    @known_number_system_types
+  end
+
+  @doc """
+  Normalise and validate a number system type.
+
+  * `number_system` is a atom representing
+    a number system returned by `Cldr.known_number_system_types/0`
+
+  Returns:
+
+  * `{:ok, normalized_number_system_type}` or
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+
+  """
+  @spec validate_number_system_type(String.t() | any()) ::
+    {:ok, String.t} | {:error, {Exception.t, String.t}}
+
+  def validate_number_system_type(number_system_type)
+  when is_atom(number_system_type) and number_system_type in @known_number_system_types do
+    {:ok, number_system_type}
+  end
+
+  def validate_number_system_type(number_system_type) when is_binary(number_system_type) do
+    try do
+      number_system_type
+      |> String.downcase
+      |> String.to_existing_atom
+      |> validate_number_system_type
+    rescue ArgumentError ->
+      {:error, unknown_number_system_type_error(number_system_type)}
+    end
+  end
+
+  def validate_number_system_type(number_system_type) do
+    {:error, unknown_number_system_type_error(number_system_type)}
+  end
+
+  def unknown_number_system_type_error(number_system_type) do
+    {Cldr.UnknownNumberSystemTypeError, "The number system type #{inspect number_system_type} is invalid"}
   end
 end

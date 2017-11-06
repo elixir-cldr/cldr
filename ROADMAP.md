@@ -28,7 +28,7 @@ Certain data items used frequently in `Cldr` and their usage should be in a norm
 
 * `locale_name` locale name is the `String.t` representation of a locale. It is the data type of the locale as defined in CLDR such as "en-US", "fr", "zh-Hant" as examples.
 
-* `langauge` is the langauge part of a `locale_name` or `Locale`.  It is always a `String.t` and no attempt is ever made to convert it to an `atom`.
+* `language` is the language part of a `locale_name` or `Locale`.  It is always a `String.t` and no attempt is ever made to convert it to an `atom`.
 
 * A `locale` is the struct `Cldr.LanguageTag` that is returned by `Cldr.Locale.canonical_language_tag/1`.  This function takes a `locale_name` and returns a `Cldr.LanguageTag` struct.  This is the primary form of a `Cldr.Locale`
 
@@ -36,7 +36,7 @@ Certain data items used frequently in `Cldr` and their usage should be in a norm
 
 * A `territory` is represented by an upper-cased atom of a [UN M.49](https://en.wikipedia.org/wiki/UN_M.49) territory code
 
-* A `number system` is interpreted as either a `String.t` in which case it is a number system as returned by `Cldr.known_number_systems/0` or as an `atom()` in which case it is intereted as a number system type. A number system type is designed to standardise the usage of number systems that are defined within a `Locale`. For example, each `Locale` defines a number system type `:default`.  If the number system is an `atom()` then it is resolved to an actual number system within the context of a `Locale`.
+* A `number system` is interpreted as an `atom()`.  If the atom is one that in the list
 
 * A `calendar_name` is represented as a lower-cased `atom()`
 
