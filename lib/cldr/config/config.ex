@@ -452,11 +452,13 @@ defmodule Cldr.Config do
     number_systems() |> Map.keys |> Enum.sort
   end
 
+  @max_demand :erlang.system_info(:schedulers_online)
   def known_number_system_types do
     known_locale_names()
-    |> Enum.map(&get_locale/1)
-    |> Enum.map(&Map.get(&1, :number_systems))
-    |> Enum.flat_map(&Map.keys/1)
+    |> Flow.from_enumerable(max_demand: @max_demand)
+    |> Flow.map(&get_locale/1)
+    |> Flow.map(&Map.get(&1, :number_systems))
+    |> Flow.flat_map(&Map.keys/1)
     |> Enum.uniq
     |> Enum.sort
   end

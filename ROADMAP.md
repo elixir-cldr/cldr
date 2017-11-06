@@ -36,9 +36,9 @@ Certain data items used frequently in `Cldr` and their usage should be in a norm
 
 * A `territory` is represented by an upper-cased atom of a [UN M.49](https://en.wikipedia.org/wiki/UN_M.49) territory code
 
-* A `number system` is interpreted as an `atom()`.  If the atom is one that in the list
+* A `number system` is interpreted as an `atom()`.  See `Cldr.known_number_systems/0` and `Cldr.known_number_system_types/0`
 
-* A `calendar_name` is represented as a lower-cased `atom()`
+* A `calendar_name` is represented as a lower-cased `atom()`.  See `Cldr.known_calendars/0`
 
 
 
