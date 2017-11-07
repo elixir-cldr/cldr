@@ -42,18 +42,10 @@ defmodule Cldr.Number.Cardinal do
   # but the language might
   defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t) do
     if language_tag.language == language_tag.cldr_locale_name do
-      raise Cldr.UnknownPluralRules, "No #{rule_type()} plural rules available for #{inspect language_tag}"
+      raise Cldr.UnknownPluralRules, "No #{@module_name} plural rules available for #{inspect language_tag}"
     else
       language_tag = Map.put(language_tag, :cldr_locale_name, language_tag.language)
       do_plural_rule(language_tag, n, i, v, w, f, t)
     end
-  end
-
-  defp rule_type do
-    __MODULE__
-    |> Atom.to_string
-    |> String.split(".")
-    |> Enum.reverse
-    |> hd
   end
 end

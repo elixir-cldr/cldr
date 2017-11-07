@@ -1,12 +1,11 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
 defmodule Cldr.Number.PluralRule.Compiler do
   @moduledoc """
-  Generate functions from CLDR plural rules that can be used to determine
-  which pularization rule to be used for a given number.
+  Function to tokenize and parse a plural rule.
   """
 
   @doc """
-  Scan a rule definition
+  Tokenize a plural rule definition.
 
   Using a leex lexer, tokenize a rule definition
   """
@@ -17,7 +16,7 @@ defmodule Cldr.Number.PluralRule.Compiler do
   end
 
   @doc """
-  Parse a rule definition
+  Parse a plural rule definition.
 
   Using a yexx lexer, parse a rule definition into an Elixir
   AST that can then be `unquoted` into a function definition.
