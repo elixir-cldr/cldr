@@ -10,6 +10,7 @@ if Code.ensure_loaded?(Flow) do
     @shortdoc "Consolidate cldr json data into a single per-locale set of files"
 
     def run(_) do
+      System.put_env("DEV", "true")
       Cldr.Consolidate.consolidate_locales()
     end
   end

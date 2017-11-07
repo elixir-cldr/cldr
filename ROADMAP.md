@@ -6,7 +6,7 @@
 - [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 - [X] Review all `@doc` in the public API to ensure they and their examples are consistent in describing functions and arguments.
 - [X] Check consistency of the usage of key data items like `locale`, `currency`, `number system`, `territory`
-- [ ] Add localised territory names to locale definitions
+- [X] Add localised territory names to locale definitions
 - [X] Add AcceptLanguage matcher for configured locales
 - [ ] Add a `Plug` to process an AcceptLanguage header
 - [ ] Refactor the functions in `Cldr.Map`
