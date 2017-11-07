@@ -1,6 +1,41 @@
 defmodule Cldr.Locale do
   @moduledoc """
-  Parse and process locale json as defined by [Unicode](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
+  Functions to parse and normalize locale names into a structure
+  locale represented by`Cldr.LanguageTag`.
+
+  CLDR represents localisation data organized into locales, with
+  each locale being identified by a locale name that is formatted
+  according to [RFC5646](https://tools.ietf.org/html/rfc5646) with
+  the extensions `u` defined by CLDR to provide for extended locale
+  preferences and `t` defined by CLDR to provide for transform
+  definitions.
+
+  In practise, the CLDR data utilizes a simple subset of locale name
+  formats being:
+
+  * a Language code such as `en` or `fr`
+
+  * a Language code and Tertitory code such as `en-GB`
+
+  * a Language code and Script such as `zh-Hant`
+
+  * and in only two cases a Language code, Territory code and Variant
+    such as `ca-ES-VALENCIA` and `en-US-POSIX`.
+
+  The RFC defines a language tag as:
+
+  > A language tag is composed from a sequence of one or more "subtags",
+    each of which refines or narrows the range of language identified by
+    the overall tag.  Subtags, in turn, are a sequence of alphanumeric
+    characters (letters and digits), distinguished and separated from
+    other subtags in a tag by a hyphen ("-", [Unicode] U+002D)
+
+  Therefore `Cldr` uses the hyphen ("-", [Unicode] U+002D) as the subtag
+  separator.  On certain platforms, including POSIX platforms, the
+  subtag separator is a "_" (underscore) rather than a "-" (hyphen). Where
+  appropriate, `Cldr` will transliterate any underscore into a hyphen before
+  parsing or processing.
+
   """
   alias Cldr.LanguageTag
   import Cldr.Helpers
@@ -8,11 +43,56 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t
 
-  @spec new!(locale_name) :: LanguageTag.t | none()
-  def new!(locale_name) when is_binary(locale_name) do
-    canonical_language_tag!(locale_name)
-  end
+  defdelegate new(locale_name), to: __MODULE__, as: :canonical_language_tag
+  defdelegate new!(locale_name), to: __MODULE__, as: :canonical_language_tag!
 
+  @doc """
+  Parses a locale name and returns a `Cldr.LanguageTag` struct
+  that represents a locale.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct
+
+  Returns:
+
+  * `{:ok, language_tag}` or
+  * `{:eror, reason}`
+
+  Several steps are followed to produce a canonical language tag:
+
+  1. The language tag is parsed in accordance with [RFC5646](https://tools.ietf.org/html/rfc5646)
+
+  2. Any language, script or region aliases are replaced. This
+     will replace any obsolete elements with current versions
+
+  3. If a territory or script is not specified, a default is provided
+     using the CLDR information returned by `Cldr.Locale.likely_subtags/1`
+
+  4. A `Cldr` locale name is selected that is the nearest fit to the
+     requested locale.
+
+  ## Example
+
+      iex> Cldr.Locale.canonical_language_tag "en"
+      {
+        :ok,
+        %Cldr.LanguageTag{
+          canonical_locale_name: "en-Latn-US",
+          cldr_locale_name: "en",
+          extensions: %{},
+          language: "en",
+          locale: %{},
+          private_use: [],
+          rbnf_locale_name: "en",
+          requested_locale_name: "en",
+          script: "Latn",
+          territory: "US",
+          transform: %{},
+          variant: nil
+        }
+      }
+
+  """
   @spec canonical_language_tag(locale_name | LanguageTag.t) ::
     {:ok, LanguageTag.t} | {:error, {Cldr.InvalidLanguageTag, String.t}}
 
@@ -41,6 +121,16 @@ defmodule Cldr.Locale do
     {:ok, canonical_tag}
   end
 
+  @doc """
+  Parses a locale name and returns a `Cldr.LanguageTag` struct
+  that represents a locale or raises on error.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct
+
+  See `Cldr.Locale.canonical_language_tag/1` for more information.
+
+  """
   @spec canonical_language_tag!(locale_name | LanguageTag.t) :: LanguageTag.t | none()
   def canonical_language_tag!(language_tag) do
     case canonical_language_tag(language_tag) do
@@ -60,7 +150,7 @@ defmodule Cldr.Locale do
   end
 
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
-  def cldr_locale_name(%LanguageTag{language: language, script: script,
+  defp cldr_locale_name(%LanguageTag{language: language, script: script,
       territory: territory, variant: variant} = language_tag) do
     Cldr.known_locale_name(locale_name_from(language, script, territory, variant)) ||
     Cldr.known_locale_name(locale_name_from(language, nil, territory, variant)) ||
@@ -71,7 +161,7 @@ defmodule Cldr.Locale do
   end
 
   @spec rbnf_locale_name(LanguageTag.t) :: locale_name | nil
-  def rbnf_locale_name(%LanguageTag{language: language, script: script,
+  defp rbnf_locale_name(%LanguageTag{language: language, script: script,
       territory: territory} = language_tag) do
     Cldr.known_rbnf_locale_name(locale_name_from(language, script, territory, nil)) ||
     Cldr.known_rbnf_locale_name(locale_name_from(language, nil, territory, nil)) ||
@@ -85,15 +175,18 @@ defmodule Cldr.Locale do
   Normalize the casing of a locale name.
 
   Locale names are case insensitive but certain common
-  case is followed:
+  casing is followed in practise:
 
   * lower case for a language
-  * capitalized for a script
+  * capital case for a script
   * upper case for a region/territory
 
-  Note this function is intended to support only the CLDR
-  names which have limited structure.  For proper parsing
-  of local names and language tags, see `Cldr.Locale.canonical_language_tag/1`
+  **Note** this function is intended to support only the CLDR
+  locale names which have a format that is a subset of the full
+  langauge tag specification.
+
+  For proper parsing of local names and language tags, see
+  `Cldr.Locale.canonical_language_tag/1`
 
   ## Examples
 
@@ -133,7 +226,7 @@ defmodule Cldr.Locale do
   end
 
   def locale_name_from(%LanguageTag{language: language, script: script,
-        territory: territory, variant: variant}) do
+      territory: territory, variant: variant}) do
     locale_name_from(language, script, territory, variant)
   end
 
@@ -144,20 +237,20 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Given a source locale X, to return a locale Y where the aliases
+  Given a source locale X, return a locale Y where the aliases
   have been substituted with their non-deprecated alternatives.
 
   * Replace any deprecated subtags with their canonical values using the alias
-  data. Use the first value in the replacement list, if
-  it exists. Language tag replacements may have multiple parts, such as
-  `sh` ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
-  region/territory are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
-  `sr_Latn_AQ`.
+    data. Use the first value in the replacement list, if
+    it exists. Language tag replacements may have multiple parts, such as
+    `sh` ➞ `sr_Latn` or `mo` ➞ `ro_MD`. In such a case, the original script and/or
+    region/territory are retained if there is one. Thus `sh_Arab_AQ` ➞ `sr_Arab_AQ`, not
+    `sr_Latn_AQ`.
 
   * Remove the script code 'Zzzz' and the territory code 'ZZ' if they occur.
 
   * Get the components of the cleaned-up source tag (languages, scripts, and
-  regions/territories), plus any variants and extensions.
+    regions/territories), plus any variants and extensions.
 
   ## Examples
 
