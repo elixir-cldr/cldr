@@ -127,6 +127,9 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
 
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
   See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
   of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
   specification as implemented that includes the CLDR extensions for
@@ -159,6 +162,7 @@ defmodule Cldr do
   """
   @spec set_current_locale(Locale.locale_name | LanguageTag.t) ::
     {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+
   def set_current_locale(locale_name) when is_binary(locale_name) do
     case Cldr.Locale.canonical_language_tag(locale_name) do
       {:ok, language_tag} -> set_current_locale(language_tag)
@@ -204,11 +208,13 @@ defmodule Cldr do
       :"001"
 
   """
+  @default_territory @default_locale
+  |> Map.get(:territory)
+  |> String.to_atom
+
   @spec default_territory :: atom()
   def default_territory do
-    default_locale()
-    |> Map.get(:territory)
-    |> String.to_existing_atom
+    @default_territory
   end
 
   @doc """
@@ -285,6 +291,8 @@ defmodule Cldr do
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr.
 
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+
   ## Examples
 
       iex> Cldr.known_locale_name?("en")
@@ -303,6 +311,8 @@ defmodule Cldr do
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr and supports
   rules based number formats (RBNF).
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
   ## Examples
 
@@ -324,6 +334,8 @@ defmodule Cldr do
 
   This is helpful when building a list of `or` expressions
   to return the first known locale name from a list.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
   ## Examples
 
@@ -348,6 +360,8 @@ defmodule Cldr do
   whether the locale name is configured in `Cldr`
   and has RBNF rules defined.
 
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+
   ## Examples
 
       iex> Cldr.known_rbnf_locale_name "en"
@@ -370,6 +384,9 @@ defmodule Cldr do
   Returns an `{:ok, locale}` or `{:error, {exception, message}}` tuple
   depending on whether the locale is valid and known in the current
   configuration.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
   ## Examples
 
@@ -422,6 +439,9 @@ defmodule Cldr do
   mean the locale is configured for Cldr.  See also
   `Cldr.known_locale?/1`.
 
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
   ## Examples
 
       iex> Cldr.available_locale_name? "en-AU"
@@ -460,8 +480,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a calendar_name.
 
-  * `calendar` is either a string or atom representing
-    a calendar code as returned by `Cldr.known_calendars/0`
+  * `calendar` is any calendar name returned by `Cldr.known_calendars/0`
 
   Returns:
 
@@ -470,6 +489,11 @@ defmodule Cldr do
 
   ## Examples
 
+      iex> Cldr.validate_calendar :gregorian
+      {:ok, :gregorian}
+
+      iex> Cldr.validate_calendar :invalid
+      {:error, {Cldr.UnknownCalendarError, "The calendar name :invalid is invalid"}}
 
   """
   @spec validate_calendar(atom() | String.t) ::
@@ -539,8 +563,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a territory code.
 
-  * `territory` is either a string, atom or %LanguageTag{} representing
-    a territory code as returned by `Cldr.known_territories/0`
+  * `territory` is any territory code returned by `Cldr.known_territories/0`
 
   Returns:
 
@@ -599,6 +622,18 @@ defmodule Cldr do
     {:error, unknown_territory_error(territory)}
   end
 
+  @doc """
+  Returns an error tuple for an invalid territory.
+
+    * `territory` is any territory code **not** returned by `Cldr.known_territories/0`
+
+  ## Examples
+
+      iex> Cldr.unknown_territory_error "invalid"
+      {Cldr.UnknownTerritoryError, "The territory \\"invalid\\" is unknown"}
+
+  """
+  @spec unknown_territory_error(any()) :: {Cldr.UnknownTerritoryError, String.t}
   def unknown_territory_error(territory) do
     {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}
   end
@@ -644,8 +679,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a currency code.
 
-  * `currency` is either a string or atom representing
-    an ISO 4217 currency code as returned by `Cldr.known_currencies/0`
+  * `currency` is any ISO 4217 currency code as returned by `Cldr.known_currencies/0`
 
   Returns:
 
@@ -654,6 +688,17 @@ defmodule Cldr do
 
   ## Examples
 
+      iex> Cldr.validate_currency :USD
+      {:ok, :USD}
+
+      iex> Cldr.validate_currency "USD"
+      {:ok, :USD}
+
+      iex> Cldr.validate_currency "invalid"
+      {:error, {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}}
+
+      iex> Cldr.validate_currency :invalid
+      {:error, {Cldr.UnknownCurrencyError, "The currency :invalid is invalid"}}
 
   """
   @spec validate_currency(atom() | String.t) ::
@@ -678,6 +723,18 @@ defmodule Cldr do
     end
   end
 
+  @doc """
+  Returns an error tuple for an invalid currency.
+
+    * `currency` is any currency code not returned by `Cldr.known_currencies/0`
+
+  ## Examples
+
+      iex> Cldr.unknown_currency_error "invalid"
+      {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}
+
+  """
+  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t}
   def unknown_currency_error(currency) do
     {Cldr.UnknownCurrencyError, "The currency #{inspect currency} is invalid"}
   end
@@ -707,8 +764,8 @@ defmodule Cldr do
   @doc """
   Normalise and validate a number system name.
 
-  * `number_system` is a string representing
-    a number system returned by `Cldr.known_number_systems/0`
+  * `number_system` is any number system name returned by
+    `Cldr.known_number_systems/0`
 
   Returns:
 
@@ -717,20 +774,57 @@ defmodule Cldr do
 
   ## Examples
 
+      iex> Cldr.validate_number_system :latn
+      {:ok, :latn}
+
+      iex> Cldr.validate_number_system "latn"
+      {:ok, :latn}
+
+      iex> Cldr.validate_number_system "invalid"
+      {
+        :error,
+        {Cldr.UnknownNumberSystemError, "The number system :invalid is unknown"}
+      }
 
   """
   @spec validate_number_system(String.t() | any()) ::
     {:ok, String.t} | {:error, {Exception.t, String.t}}
 
   def validate_number_system(number_system)
-  when is_binary(number_system) and number_system in @known_number_systems do
+  when is_atom(number_system) and number_system in @known_number_systems do
     {:ok, number_system}
+  end
+
+  def validate_number_system(number_system) when is_binary(number_system) do
+    try do
+      number_system
+      |> String.downcase
+      |> String.to_existing_atom
+      |> validate_number_system
+    rescue ArgumentError ->
+      {:error, unknown_number_system_error(number_system)}
+    end
   end
 
   def validate_number_system(number_system) do
     {:error, unknown_number_system_error(number_system)}
   end
 
+  @doc """
+  Returns an error tuple for an unknown number system.
+
+    * `number_system` is any number system name not returned by `Cldr.known_number_systems/0`
+
+  ## Examples
+
+      iex> Cldr.unknown_number_system_error "invalid"
+      {Cldr.UnknownNumberSystemError, "The number system \\"invalid\\" is invalid"}
+
+      iex> Cldr.unknown_number_system_error :invalid
+      {Cldr.UnknownNumberSystemError, "The number system :invalid is unknown"}
+
+  """
+  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t}
   def unknown_number_system_error(number_system) when is_atom(number_system) do
     {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is unknown"}
   end
@@ -769,8 +863,8 @@ defmodule Cldr do
   @doc """
   Normalise and validate a number system type.
 
-  * `number_system` is a atom representing
-    a number system returned by `Cldr.known_number_system_types/0`
+  * `number_system_type` is any number system type returned by
+    `Cldr.known_number_system_types/0`
 
   Returns:
 
@@ -779,6 +873,17 @@ defmodule Cldr do
 
   ## Examples
 
+      iex> Cldr.validate_number_system_type :default
+      {:ok, :default}
+
+      iex> Cldr.validate_number_system_type :traditional
+      {:ok, :traditional}
+
+      iex> Cldr.validate_number_system_type :latn
+      {
+        :error,
+        {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}
+      }
 
   """
   @spec validate_number_system_type(String.t() | any()) ::
@@ -804,29 +909,33 @@ defmodule Cldr do
     {:error, unknown_number_system_type_error(number_system_type)}
   end
 
+  @doc """
+  Returns an error tuple for an unknown number system type.
+
+    * `number_system_type` is any number system type name not returned
+      by `Cldr.known_number_system_types/0`
+
+  ## Examples
+
+      iex> Cldr.unknown_number_system_type_error "invalid"
+      {Cldr.UnknownNumberSystemTypeError, "The number system type \\"invalid\\" is invalid"}
+
+      iex> Cldr.unknown_number_system_type_error :invalid
+      {Cldr.UnknownNumberSystemTypeError, "The number system type :invalid is unknown"}
+
+  """
+  @spec unknown_number_system_type_error(any()) :: {Cldr.UnknownNumberSystemTypeError, String.t}
+
   def unknown_number_system_type_error(number_system_type) when is_atom(number_system_type) do
     {Cldr.UnknownNumberSystemTypeError,
       "The number system type #{inspect number_system_type} is unknown"}
   end
 
-  def unknown_number_system_type_error(number_system_type) when is_atom(number_system_type) do
+  def unknown_number_system_type_error(number_system_type) do
     {Cldr.UnknownNumberSystemTypeError,
       "The number system type #{inspect number_system_type} is invalid"}
   end
 
-  def validate_number_system_or_type(number_system) do
-    with {:ok, number_system} <- validate_number_system(number_system) do
-      {:ok, number_system}
-    else
-      {:error, _} ->
-        with {:ok, number_system} <- validate_number_system_type(number_system) do
-          {:ok, number_system}
-        else
-          {:error, _reason} -> {:error, unknown_number_system_error(number_system)}
-        end
-    end
-  end
-
-  defp locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: locale_name
-  defp locale_name(locale) when is_binary(locale), do: locale
+  defp locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
+  defp locale_name(locale) when is_binary(locale), do: inspect(locale)
 end
