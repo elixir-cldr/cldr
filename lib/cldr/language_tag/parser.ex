@@ -152,15 +152,6 @@ defmodule Cldr.LanguageTag.Parser do
     {:error, {Cldr.InvalidLanguageTag, "Could not parse language tag.  Error was detected at #{inspect rest}"}}
   end
 
-  defp return_minimum_viable_tag(%{language: language, script: script, territory: territory} = language_tag, _reason)
-  when language != nil and script != nil and territory != nil do
-    {:ok, language_tag}
-  end
-
-  defp return_minimum_viable_tag(_language_tag, reason) do
-    {:error, reason}
-  end
-
   defp canonicalize_key([key, valid, default], param) do
     value = if param in valid, do: param, else: default
     {key, value}
