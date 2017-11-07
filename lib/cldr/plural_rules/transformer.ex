@@ -8,13 +8,6 @@ defmodule Cldr.Number.PluralRule.Transformer do
 
   alias Cldr.Number.PluralRule
 
-  # Obsolete but a good code pattern to know
-  # defmacrop define_do_cardinal(rules, locale) do
-  #   {:defp, context, [arguments]} = quote do: defp do_cardinal(unquote(locale), n, i, v, w, f, t)
-  #   function = {:defp, context, [arguments, [do: rules]]}
-  #   function
-  # end
-
   @doc """
   Converts a map representing a set of plural rules and converts it
   to an `cond` statement.

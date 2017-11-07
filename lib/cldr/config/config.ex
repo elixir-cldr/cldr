@@ -693,7 +693,7 @@ defmodule Cldr.Config do
   Returns:
 
   * A map of the territory information or
-  * `{:error, reason}
+  * `{:error, reason}`
 
   ## Example
 

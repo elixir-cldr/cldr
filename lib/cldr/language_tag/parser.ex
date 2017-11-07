@@ -3,7 +3,7 @@ defmodule Cldr.LanguageTag.Parser do
   Parses a CLDR language tag (also referred to as locale string).
 
   The applicable specification is from [CLDR](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
-  which is similar based upon [RFC56469](https://tools.ietf.org/html/rfc5646) with some variations.
+  which is similar based upon [RFC5646](https://tools.ietf.org/html/rfc5646) with some variations.
 
   This module provides functions to parse a language tag (locale string).  To be
   consistent with the rest of `Cldr`, the term locale string will be preferred.
@@ -13,8 +13,25 @@ defmodule Cldr.LanguageTag.Parser do
 
   @grammar ABNF.load_file(Cldr.Config.cldr_data_dir <> "/rfc5646.abnf")
 
-  def parse(locale) when is_list(locale) do
-    case return_parse_result(ABNF.apply(@grammar, "language-tag", locale, %LanguageTag{}), locale) do
+  @doc """
+  Parse a locale name into a `Cldr.LanguageTag.t`
+
+  * `locale_name` is a string representation of a language tag
+    as defined by RFC5646
+
+  Returns
+
+  * `{:ok, language_tag}` or
+
+  * `{:error, reasons}`
+
+  """
+  @spec parse(Locale.locale_name | charlist) ::
+    {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+
+  def parse(locale_name) when is_list(locale_name) do
+    case return_parse_result(ABNF.apply(@grammar, "language-tag", locale_name, %LanguageTag{}),
+        locale_name) do
       {:ok, language_tag} ->
         normalized_tag =
           language_tag
@@ -27,24 +44,30 @@ defmodule Cldr.LanguageTag.Parser do
     end
   end
 
-  def parse(locale) when is_binary(locale) do
-    locale
+  def parse(locale_name) when is_binary(locale_name) do
+    locale_name
     |> Cldr.Locale.normalize_locale_name
     |> String.to_charlist
     |> parse
   end
 
+  @doc """
+  Parse a locale name into a `Cldr.LanguageTag.t`
+
+  * `locale_name` is a string representation of a language tag
+    as defined by RFC5646
+
+  Returns
+
+  * `language_tag` or
+
+  * raises an exception
+
+  """
   def parse!(locale) do
     case parse(locale) do
       {:ok, language_tag} -> language_tag
       {:error, {exception, reason}} -> raise exception, reason
-    end
-  end
-
-  def lenient_parse(locale) do
-    case parse_output = parse(locale) do
-      {:ok, result} -> {:ok, result}
-      {:error, reason} -> return_minimum_viable_tag(parse_output.state, reason)
     end
   end
 

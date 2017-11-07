@@ -180,10 +180,36 @@ defmodule Cldr.LanguageTag do
     rbnf_locale_name:       String.t
   }
 
-  def parse(locale_string) when is_binary(locale_string) do
-    Parser.parse(locale_string)
+  @doc """
+  Parse a locale name into a `Cldr.LangaugeTag` struct.
+
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/0`
+
+  Returns:
+
+  * `{:ok, language_tag}` or
+
+  * `{:error, reason}`
+
+  """
+  @spec parse(Locale.local_name) :: {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+  def parse(locale_name) when is_binary(locale_name) do
+    Parser.parse(locale_name)
   end
 
+  @doc """
+  Parse a locale name into a `Cldr.LangaugeTag` struct and raises on error
+
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/0`
+
+  Returns:
+
+  * `language_tag` or
+
+  * raises and exception
+
+  """
+  @spec parse(Locale.local_name) :: LanguageTag.t | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
   end

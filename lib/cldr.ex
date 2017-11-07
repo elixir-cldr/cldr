@@ -380,13 +380,48 @@ defmodule Cldr do
     end
   end
 
+
   @doc """
-  Returns an `{:ok, locale}` or `{:error, {exception, message}}` tuple
-  depending on whether the locale is valid and known in the current
-  configuration.
+  Returns a boolean indicating if the specified locale
+  is available in CLDR.
+
+  The return value depends on whether the locale is
+  defined in the CLDR repository.  It does not necessarily
+  mean the locale is configured for Cldr.  See also
+  `Cldr.known_locale?/1`.
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  ## Examples
+
+      iex> Cldr.available_locale_name? "en-AU"
+      true
+
+      iex> Cldr.available_locale_name? "en-SA"
+      false
+
+  """
+  @spec available_locale_name?(Locale.locale_name | LanguageTag.t) :: boolean
+  def available_locale_name?(locale_name) when is_binary(locale_name) do
+    locale_name in Config.all_locale_names()
+  end
+
+  def available_locale_name?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
+    available_locale_name?(cldr_locale_name)
+  end
+
+  @doc """
+  Normalise and validate a locale name.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  Returns:
+
+  * `{:ok, language_tag}`
+
+  * `{:error, reason}`
 
   ## Examples
 
@@ -431,36 +466,6 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a boolean indicating if the specified locale
-  is available in CLDR.
-
-  The return value depends on whether the locale is
-  defined in the CLDR repository.  It does not necessarily
-  mean the locale is configured for Cldr.  See also
-  `Cldr.known_locale?/1`.
-
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
-
-  ## Examples
-
-      iex> Cldr.available_locale_name? "en-AU"
-      true
-
-      iex> Cldr.available_locale_name? "en-SA"
-      false
-
-  """
-  @spec available_locale_name?(Locale.locale_name | LanguageTag.t) :: boolean
-  def available_locale_name?(locale) when is_binary(locale) do
-    locale in Config.all_locale_names()
-  end
-
-  def available_locale_name?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
-    available_locale_name?(cldr_locale_name)
-  end
-
-  @doc """
   Returns a list of strings representing the calendars known to `Cldr`.
 
   ## Example
@@ -478,13 +483,14 @@ defmodule Cldr do
   end
 
   @doc """
-  Normalise and validate a calendar_name.
+  Normalise and validate a calendar name.
 
   * `calendar` is any calendar name returned by `Cldr.known_calendars/0`
 
   Returns:
 
   * `{:ok, normalized_calendar_name}` or
+
   * `{:error, {exception, message}}`
 
   ## Examples
@@ -518,6 +524,17 @@ defmodule Cldr do
     end
   end
 
+  @doc """
+  Returns an error tuple for an invalid calendar.
+
+    * `calendar` is any calendar name **not** returned by `Cldr.known_calendars/0`
+
+  ## Examples
+
+      iex> Cldr.unknown_calendar_error "invalid"
+      {Cldr.UnknownCalendarError, "The calendar name \\"invalid\\" is invalid"}
+
+  """
   def unknown_calendar_error(calendar) do
     {Cldr.UnknownCalendarError, "The calendar name #{inspect calendar} is invalid"}
   end
@@ -526,8 +543,11 @@ defmodule Cldr do
   Returns a list of the territories known to `Cldr`.
 
   The territories codes are defined in [UN M.49](https://en.wikipedia.org/wiki/UN_M.49)
-  which defines both individual territories and enclosing territories.  The
-  territory `:"001" is defined as "the world".
+  which defines both individual territories and enclosing territories. These enclosing
+  territories are defined for statistical purposes and do not relate to political
+  alignment.
+
+  For example, the territory `:"001"` is defined as "the world".
 
   ## Example
 
@@ -568,6 +588,7 @@ defmodule Cldr do
   Returns:
 
   * `{:ok, normalized_territory_code}` or
+
   * `{:error, {exception, message}}`
 
   ## Examples
@@ -623,7 +644,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns an error tuple for an invalid territory.
+  Returns an error tuple for an unknown territory.
 
     * `territory` is any territory code **not** returned by `Cldr.known_territories/0`
 
@@ -677,13 +698,14 @@ defmodule Cldr do
   end
 
   @doc """
-  Normalise and validate a currency code.
+  Normalize and validate a currency code.
 
   * `currency` is any ISO 4217 currency code as returned by `Cldr.known_currencies/0`
 
   Returns:
 
   * `{:ok, normalized_currency_code}` or
+
   * `{:error, {exception, message}}`
 
   ## Examples
@@ -726,7 +748,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an invalid currency.
 
-    * `currency` is any currency code not returned by `Cldr.known_currencies/0`
+    * `currency` is any currency code **not** returned by `Cldr.known_currencies/0`
 
   ## Examples
 
@@ -762,7 +784,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Normalise and validate a number system name.
+  Normalize and validate a number system name.
 
   * `number_system` is any number system name returned by
     `Cldr.known_number_systems/0`
@@ -770,6 +792,7 @@ defmodule Cldr do
   Returns:
 
   * `{:ok, normalized_number_system_name}` or
+
   * `{:error, {exception, message}}`
 
   ## Examples
@@ -813,7 +836,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown number system.
 
-    * `number_system` is any number system name not returned by `Cldr.known_number_systems/0`
+    * `number_system` is any number system name **not** returned by `Cldr.known_number_systems/0`
 
   ## Examples
 
@@ -831,19 +854,6 @@ defmodule Cldr do
 
   def unknown_number_system_error(number_system) do
     {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is invalid"}
-  end
-
-  def unknown_number_system_for_locale_error(number_system, locale, valid_number_systems)
-  when is_atom(number_system) do
-    {Cldr.UnknownNumberSystemError,
-      "The number system #{inspect number_system} is unknown " <>
-      "for the locale named #{locale_name(locale)}. " <>
-      "Valid number systems are #{inspect valid_number_systems}"
-    }
-  end
-
-  def unknown_number_system_for_locale_error(number_system, _locale) do
-    unknown_number_system_error(number_system)
   end
 
   @doc """
@@ -912,7 +922,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown number system type.
 
-    * `number_system_type` is any number system type name not returned
+    * `number_system_type` is any number system type name **not** returned
       by `Cldr.known_number_system_types/0`
 
   ## Examples
@@ -936,6 +946,6 @@ defmodule Cldr do
       "The number system type #{inspect number_system_type} is invalid"}
   end
 
-  defp locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
-  defp locale_name(locale) when is_binary(locale), do: inspect(locale)
+  def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
+  def locale_name(locale) when is_binary(locale), do: inspect(locale)
 end

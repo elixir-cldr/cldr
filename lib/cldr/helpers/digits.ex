@@ -92,6 +92,7 @@ defmodule Cldr.Digits do
 
       iex> Cldr.Digits.number_of_integer_digits '12345'
       5
+
   """
   @spec number_of_integer_digits(Math.number_or_decimal | list() |
     {[integer(),...], integer | [integer(), ...], -1 | 1}) :: integer
@@ -146,6 +147,7 @@ defmodule Cldr.Digits do
 
       iex> Cldr.Math.remove_trailing_zeros(1234000)
       1234
+
   """
   @spec remove_trailing_zeros(Math.number_or_decimal | [integer(), ...]) ::
     integer | [integer(), ...]
@@ -185,6 +187,7 @@ defmodule Cldr.Digits do
 
       iex> Cldr.Math.number_of_leading_zeros(Decimal.new(0.0001))
       3
+
   """
   @spec number_of_leading_zeros(Math.number_or_decimal | [integer(), ...]) :: integer
   def number_of_leading_zeros(%Decimal{} = number) do

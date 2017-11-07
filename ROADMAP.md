@@ -6,6 +6,7 @@
 - [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 - [ ] Review all `@doc` to ensure they and the examples are consistent in describing functions and arguments.
 - [ ] Check consistency of the usage of key data items like `locale`, `currency`, `number system`, `territory`
+- [ ] Add localised territory names to locale definitions
 
 ### Parser generator for language tags
 
@@ -13,7 +14,7 @@ Based upon the exiting work in [this repo](https://github.com/vanstee/abnf) the 
 parser/interpreter mechanism.  The code under development is at  [this repo](https://github.com/kipcole9/abnf).  For completion
 the code requires:
 
-* Better error handline
+* Better error handling
 * Ability to include state and a way to invoke functions to update it
 
 ### Update guides
@@ -26,7 +27,7 @@ the code requires:
 
 Certain data items used frequently in `Cldr` and their usage should be in a normalised for so that a client library can rely upon such formats. The following is the definitive definition of how key data elements are represented:
 
-* `locale_name` locale name is the `String.t` representation of a locale. It is the data type of the locale as defined in CLDR such as "en-US", "fr", "zh-Hant" as examples.
+* `locale_name` locale name is the `String.t` representation of a locale. It is the data type of the locale as defined in CLDR such as "en-US", "fr", "zh-Hant" for example.
 
 * `language` is the language part of a `locale_name` or `Locale`.  It is always a `String.t` and no attempt is ever made to convert it to an `atom`.
 
