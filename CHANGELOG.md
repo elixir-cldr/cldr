@@ -1,5 +1,19 @@
 # Changelog
 
+## Cldr v0.12.0 November 8th, 2017
+
+### Breaking Changes
+
+* `Cldr.known_locales/0` and `Cldr.known_rbnf_locales/0` are renamed to `Cldr.known_locale_names` and `Cldr.known_rbnf_locale_names`
+
+* Several functions have been refactored into different modules. These changes should be largely invisible to client code since the main public api of `to_string/2` has not changed
+
+### Enhancements
+
+* Add `Cldr.AcceptLanguage.match/1` which, given and `Accept-Language` header will return the configured `Cldr` locale that most nearly matches the request.
+
+* Updated many `@doc`s and examples to be consistent in parameter names and descriptions and to better reflect intent.  This is part of an ongoing effort to complete a 1.0 release by the end of 2017
+
 ## Cldr v0.11.0 November 3rd, 2017
 
 ### Breaking Changes

@@ -22,6 +22,17 @@ defmodule Cldr.UnknownNumberSystemError do
   end
 end
 
+defmodule Cldr.NoMatchingLocale do
+  @moduledoc """
+  Exception raised when no configured locale matches the provided "Accept-Language" header
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
 defmodule Cldr.UnknownNumberSystemTypeError do
   @moduledoc """
   Exception raised when an attempt is made to use a number system type that is not known

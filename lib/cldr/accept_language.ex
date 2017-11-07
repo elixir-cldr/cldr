@@ -22,6 +22,7 @@ defmodule Cldr.AcceptLanguage do
   would mean: "I prefer Danish, but will accept British English and other types of English."
   """
   alias Cldr.Locale
+  alias Cldr.LanguageTag
 
   @default_quality 1.0
   @low_quality 0.2
@@ -189,6 +190,92 @@ defmodule Cldr.AcceptLanguage do
     case parse(accept_language) do
       {:ok, parse_result} -> parse_result
       {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
+  @doc """
+  Parse an `Accept-Language` string and return the best match for
+  a configured `Cldr` locale.
+
+  * `accept_langauge` is a string representing an accept language header
+
+  Returns:
+
+  * `{:ok, language_tag}` or
+
+  * `{:error, reason}`
+
+  ## Examples
+
+      iex> Cldr.AcceptLanguage.match "da;q=0.1,zh-TW;q=0.3"
+      {
+        :ok,
+        %Cldr.LanguageTag{
+          canonical_locale_name: "zh-Hant-TW",
+          cldr_locale_name: "zh-Hant",
+          extensions: %{},
+          language: "zh",
+          locale: %{},
+          private_use: [],
+          rbnf_locale_name: "zh-Hant",
+          requested_locale_name: "zh-TW",
+          script: "Hant",
+          territory: "TW",
+          transform: %{},
+          variant: nil
+        }
+      }
+
+      iex> Cldr.AcceptLanguage.match "en,zh-TW;q=0.3"
+      {
+        :ok,
+        %Cldr.LanguageTag{
+          canonical_locale_name: "en-Latn-US",
+          cldr_locale_name: "en",
+          extensions: %{},
+          language: "en",
+          locale: %{},
+          private_use: [],
+          rbnf_locale_name: "en",
+          requested_locale_name: "en",
+          script: "Latn",
+          territory: "US",
+          transform: %{},
+          variant: nil
+        }
+      }
+
+      iex> Cldr.AcceptLanguage.match "xx,yy;q=0.3"
+      {
+        :error,
+        {Cldr.NoMatchingLocale,
+         "No configured locale could be matched to \\"xx,yy;q=0.3\\""}
+      }
+
+      iex> Cldr.AcceptLanguage.match "x"
+      {
+        :error,
+        {Cldr.AcceptLanguageError,
+         "Could not parse language tag.  Error was detected at 'x'"}
+      }
+
+  """
+  def match(accept_language) when is_binary(accept_language) do
+    with {:ok, languages} <- parse(accept_language) do
+      candidates =
+        Enum.filter(languages, fn
+          {priority, %LanguageTag{cldr_locale_name: locale_name}}
+              when is_float(priority) and not is_nil(locale_name) -> true
+          _ -> false
+        end)
+
+      case candidates do
+        [{_priority, language_tag} | _] -> {:ok, language_tag}
+        _ -> {:error, {Cldr.NoMatchingLocale,
+                "No configured locale could be matched to #{inspect accept_language}"}}
+      end
+    else
+      {:error, reason} -> {:error, reason}
     end
   end
 
