@@ -2,8 +2,8 @@ defmodule Cldr.Number.PluralRule do
   @moduledoc """
   Macro to define plural rule methods on a module.
 
-  Used to generate functions for `Cldr.Number.Ordinal` and
-  `Cldr.Number.Cardinal`
+  Used to generate plural rule functions for
+  `Cldr.Number.Ordinal` and `Cldr.Number.Cardinal`.
   """
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
@@ -20,45 +20,51 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
+      @module_name Atom.to_string(unquote(opts)) |> String.capitalize
+
       @rules Cldr.Config.cldr_data_dir()
       |> Path.join("/plural_rules.json")
       |> File.read!
       |> Poison.decode!
       |> Map.get(Atom.to_string(unquote(opts)))
 
-      @doc """
-      The locales for which cardinal rules are defined
-      """
+
       @rules_locales @rules
       |> Map.keys
       |> Enum.sort
 
-      def known_locale_names do
+      @doc """
+      The locales for which plural rules are defined
+      """
+      def available_locale_names do
         @rules_locales
       end
 
-      @doc """
-      The configured locales for which plural rules are defined
-
-      This is the intersection of the `Cldr.known_locale_names/0` and the locales for
-      which plural rules are defined.  There are many Cldr locales which
-      don't have their own plural rules so this list is the intersection
-      of Cldr's configured locales and those that have rules.
-      """
-      @configured_locale_names @rules_locales
+      @known_locale_names @rules_locales
       |> MapSet.new
       |> MapSet.intersection(MapSet.new(Cldr.known_locale_names()))
       |> MapSet.to_list
       |> Enum.sort
 
-      def configured_locale_names do
-        @configured_locale_names
+      @doc """
+      The configured locales for which plural rules are defined.
+
+      Returns the intersection of `Cldr.known_locale_names/0` and
+      the locales for which #{@module_name} plural rules are defined.
+
+      There are many `Cldr` locales which don't have their own plural
+      rules so this list is the intersection of `Cldr`'s configured
+      locales and those that have rules.
+      """
+      @spec known_locale_names :: [Locale.locale_name, ...]
+      def known_locale_names do
+        @known_locale_names
       end
 
       @doc """
-      The plural rules defined in CLDR.
+      Returns all the plural rules defined in CLDR.
       """
-      @spec plural_rules :: %{}
+      @spec plural_rules :: Map.t
       def plural_rules do
         @rules
       end
@@ -68,40 +74,47 @@ defmodule Cldr.Number.PluralRule do
 
       * `number` is an integer, float or Decimal
 
-      * `locale` is a `%LanguageTag.t`
+      * `locale` is any locale returned by `Cldr.Locale.new!/1`
 
-      * `substitutions` is a map that maps plural keys to a string.  Per the
-      CLDR defintion of plural rules, the valid substitution keys are `:zero`,
-      `:one`, `:two`, `:few`, `:many` and `:other`.
+      * `substitutions` is a map that maps plural keys to a string.
+        The valid substitution keys are `:zero`, `:one`, `:two`,
+        `:few`, `:many` and `:other`.
 
-      See also `Cldr.Ordinal.plural_rule/3` and `Cldr.Cardinal.plural_rule/3`.
+      See also `Cldr.#{@module_name}.plural_rule/3`.
 
       ## Examples
 
-          iex> Cldr.Number.Ordinal.pluralize 1, Locale.new("en"), %{one: "one"}
+          iex> Cldr.Number.#{@module_name}.pluralize 1,
+          ...> Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.Ordinal.pluralize 2, Locale.new("en"), %{one: "one"}
+          iex> Cldr.Number.#{@module_name}.pluralize 2,
+          ...> Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.Ordinal.pluralize 2, Locale.new("en"), %{one: "one", two: "two"}
+          iex> Cldr.Number.#{@module_name}.pluralize 2,
+          ...> Locale.new("en"), %{one: "one", two: "two"}
           "two"
 
-          iex> Cldr.Number.Ordinal.pluralize 22, Locale.new("en"), %{one: "one", two: "two", other: "other"}
+          iex> Cldr.Number.#{@module_name}.pluralize 22, Locale.new("en"),
+          ...> %{one: "one", two: "two", other: "other"}
           "other"
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(1), Locale.new("en"), %{one: "one"}
+          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(1),
+          ...> Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), Locale.new("en"), %{one: "one"}
+          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(2),
+          ...> Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.Ordinal.pluralize Decimal.new(2), Locale.new("en"), %{one: "one", two: "two"}
+          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(2),
+          ...> Locale.new("en"), %{one: "one", two: "two"}
           "two"
 
       """
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal, LanguageTag.t, %{}) :: String.t | nil
+      @spec pluralize(Math.number_or_decimal, LanguageTag.t, %{}) :: any()
       def pluralize(number, %LanguageTag{} = locale, %{} = substitutions) when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
@@ -141,16 +154,43 @@ defmodule Cldr.Number.PluralRule do
       # t       visible fractional digits in n, without trailing zeros.
 
       @doc """
-      Lookup the plural cardinal category for a given number in a given locale
+      Return the plural key for a given number in a given locale
 
-      Identify which category (zero, one, two, few, many or other) a given number
-      in a given locale fits into.  This category can then be used to format the
-      number or currency
+      Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
+      `:many` or `:other`) a given number fits into within the
+      context of a given locale.
+
+      Note that these key names should not be interpreted
+      literally.  For example, the key returned from
+      `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
+      `:other`, not `:zero`.
+
+      This key can then be used to format a number, date, time, unit,
+      list or other content in a plural-sensitive way.
+
+      ## Examples
+
+          iex> Cldr.Number.#{@module_name}.plural_rule 0, "fr"
+          :other
+
+          iex> Cldr.Number.#{@module_name}.plural_rule 1, "en"
+          :one
+
       """
+      @spec plural_rule(Math.number_or_decimal, Locale.locale_name | LanguageTag.t, atom()) ::
+        :zero | :one | :two | :few | :many | :other
+
       def plural_rule(number, locale \\ Cldr.get_current_locale(), rounding \\ Math.default_rounding())
 
-      def plural_rule(string, locale, rounding) when is_binary(string) do
-        plural_rule(Decimal.new(string), locale, rounding)
+      def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
+        case Cldr.Locale.new(locale_name) do
+          {:ok, locale} -> plural_rule(number, locale, rounding)
+          {:error, reason} -> {:error, reason}
+        end
+      end
+
+      def plural_rule(number, locale, rounding) when is_binary(number) do
+        plural_rule(Decimal.new(number), locale, rounding)
       end
 
       # Plural rule for an integer

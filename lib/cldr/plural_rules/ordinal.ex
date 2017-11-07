@@ -10,11 +10,11 @@ defmodule Cldr.Number.Ordinal do
 
   # Generate the functions to process plural rules
   @spec do_plural_rule(LanguageTag.t, number, operand, operand, operand, operand,
-    [integer(),...] | integer()) :: :one | :two | :few | :many | :other
+    [integer(),...] | integer()) :: :zero | :one | :two | :few | :many | :other
 
   # Function body is the AST of the function which needs to be injected
   # into the function definition.
-  for locale_name <- @configured_locale_names do
+  for locale_name <- @known_locale_names do
     function_body =
       @rules
       |> Map.get(locale_name)

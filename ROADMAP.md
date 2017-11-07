@@ -7,12 +7,12 @@
 - [ ] Review all `@doc` to ensure they and the examples are consistent in describing functions and arguments.
 - [ ] Check consistency of the usage of key data items like `locale`, `currency`, `number system`, `territory`
 - [ ] Add localised territory names to locale definitions
+- [X] Add AcceptLanguage matcher for configured locales
+- [ ] Add a `Plug` to process an AcceptLanguage header
 
 ### Parser generator for language tags
 
-Based upon the exiting work in [this repo](https://github.com/vanstee/abnf) the parser generator will be faster than the current
-parser/interpreter mechanism.  The code under development is at  [this repo](https://github.com/kipcole9/abnf).  For completion
-the code requires:
+Based upon the exiting work in [this repo](https://github.com/vanstee/abnf) the parser generator will be faster than the current parser/interpreter mechanism.  The code under development is at  [this repo](https://github.com/kipcole9/abnf).  For completion the code requires:
 
 * Better error handling
 * Ability to include state and a way to invoke functions to update it
