@@ -5,8 +5,7 @@ defmodule Cldr.String do
   """
 
   @doc """
-  This is the code of Macro.underscore with the following modifications
-  which will be submitted as a PR when its clear it working appropriately
+  This is the code of Macro.underscore with modifications:
 
   The change is to cater for strings in the format:
 

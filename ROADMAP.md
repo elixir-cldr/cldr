@@ -9,6 +9,7 @@
 - [ ] Add localised territory names to locale definitions
 - [X] Add AcceptLanguage matcher for configured locales
 - [ ] Add a `Plug` to process an AcceptLanguage header
+- [ ] Refactor the functions in `Cldr.Map`
 
 ### Parser generator for language tags
 
