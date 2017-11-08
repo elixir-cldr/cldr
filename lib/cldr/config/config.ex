@@ -99,7 +99,7 @@ defmodule Cldr.Config do
   @cldr_modules [
     "number_formats", "list_formats", "currencies",
     "number_systems", "number_symbols", "minimum_grouping_digits",
-    "rbnf", "units", "date_fields", "dates", "territories"
+    "rbnf", "units", "date_fields", "dates", "territories", "languages"
   ]
 
   @doc """
@@ -597,9 +597,10 @@ defmodule Cldr.Config do
     |> Poison.decode!
     |> assert_valid_keys!(locale)
     |> structure_units
-    |> Cldr.Map.atomize_keys
+    |> atomize_keys(required_modules() -- ["languages"])
     |> structure_rbnf
     |> atomize_number_systems
+    |> atomize_languages
     |> structure_date_formats
     |> Map.put(:name, locale)
   end
@@ -607,6 +608,17 @@ defmodule Cldr.Config do
   @doc false
   def do_get_locale(locale, path, true) do
     Cldr.Locale.Cache.get_locale(locale, path)
+  end
+
+  defp atomize_keys(content, modules) do
+    Enum.map(content, fn {module, values} ->
+      if module in modules do
+        {String.to_atom(module), Cldr.Map.atomize_keys(values)}
+      else
+        {String.to_atom(module), values}
+      end
+    end)
+    |> Enum.into(%{})
   end
 
   @doc """
@@ -735,6 +747,16 @@ defmodule Cldr.Config do
       {k, Enum.map(v, fn {k1, v1} -> {String.to_atom(k1), v1} end) |> Enum.into(%{})}
     end)
     |> Enum.into(%{})
+  end
+
+  defp atomize_languages(content) do
+    languages =
+      content
+      |> Map.get(:languages)
+      |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_keys(v)} end)
+      |> Enum.into(%{})
+
+    Map.put(content, :languages, languages)
   end
 
   defp adjust_currency_codes(territories) do

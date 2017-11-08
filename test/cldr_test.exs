@@ -27,7 +27,7 @@ defmodule Cldr.Test do
     assert Cldr.Config.required_modules() ==
       ["number_formats", "list_formats", "currencies", "number_systems",
        "number_symbols", "minimum_grouping_digits", "rbnf", "units", "date_fields",
-       "dates", "territories"]
+       "dates", "territories", "languages"]
   end
 
   test "default locale" do

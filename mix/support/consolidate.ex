@@ -97,6 +97,7 @@ if Code.ensure_loaded?(Flow) do
       |> Normalize.DateFields.normalize(locale)
       |> Normalize.DateTime.normalize(locale)
       |> Normalize.TerritoryNames.normalize(locale)
+      |> Normalize.LanguageNames.normalize(locale)
     end
 
     # Remove the top two levels of the map since they add nothing

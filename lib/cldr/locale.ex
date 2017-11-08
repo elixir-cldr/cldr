@@ -207,7 +207,7 @@ defmodule Cldr.Locale do
 
   """
   @spec normalize_locale_name(locale_name) :: locale_name
-  def normalize_locale_name(locale_name) do
+  def normalize_locale_name(locale_name) when is_binary(locale_name) do
     case String.split(locale_name, ~r/[-_]/) do
       [lang, other] ->
         if String.length(other) == 4 do
