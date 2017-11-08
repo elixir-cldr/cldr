@@ -41,7 +41,7 @@ defmodule Cldr do
       "Some locale names are configured that are not known to CLDR. " <>
       "Compilation cannot continue until the configuration includes only " <>
       "locales names known in CLDR.\n\n" <>
-      "Configured locales names: #{inspect Config.requested_locales()}\n" <>
+      "Configured locales names: #{inspect Config.requested_locale_names()}\n" <>
       "Gettext locales names:    #{inspect Config.gettext_locales()}\n" <>
       "Unknown locales names:    " <>
       "#{IO.ANSI.red()}#{inspect Config.unknown_locale_names()}" <>

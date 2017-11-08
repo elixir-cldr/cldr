@@ -207,7 +207,7 @@ defmodule Cldr.AcceptLanguage do
 
   ## Examples
 
-      iex> Cldr.AcceptLanguage.match "da;q=0.1,zh-TW;q=0.3"
+      iex> Cldr.AcceptLanguage.best_match "da;q=0.1,zh-TW;q=0.3"
       {
         :ok,
         %Cldr.LanguageTag{
@@ -226,7 +226,7 @@ defmodule Cldr.AcceptLanguage do
         }
       }
 
-      iex> Cldr.AcceptLanguage.match "en,zh-TW;q=0.3"
+      iex> Cldr.AcceptLanguage.best_match "en,zh-TW;q=0.3"
       {
         :ok,
         %Cldr.LanguageTag{
@@ -245,14 +245,14 @@ defmodule Cldr.AcceptLanguage do
         }
       }
 
-      iex> Cldr.AcceptLanguage.match "xx,yy;q=0.3"
+      iex> Cldr.AcceptLanguage.best_match "xx,yy;q=0.3"
       {
         :error,
         {Cldr.NoMatchingLocale,
          "No configured locale could be matched to \\"xx,yy;q=0.3\\""}
       }
 
-      iex> Cldr.AcceptLanguage.match "x"
+      iex> Cldr.AcceptLanguage.best_match "x"
       {
         :error,
         {Cldr.AcceptLanguageError,
@@ -260,7 +260,7 @@ defmodule Cldr.AcceptLanguage do
       }
 
   """
-  def match(accept_language) when is_binary(accept_language) do
+  def best_match(accept_language) when is_binary(accept_language) do
     with {:ok, languages} <- parse(accept_language) do
       candidates =
         Enum.filter(languages, fn

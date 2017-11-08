@@ -106,6 +106,7 @@ defmodule Cldr.Locale do
   def canonical_language_tag(%LanguageTag{} = language_tag) do
     canonical_tag =
       language_tag
+      |> validate_territory
       |> substitute_aliases
       |> add_likely_subtags
 
@@ -267,6 +268,18 @@ defmodule Cldr.Locale do
     [language, script, territory, variant]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
+  end
+
+  def validate_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
+  def validate_territory(%LanguageTag{territory: territory} = language_tag) do
+    territory = try do
+      code = String.to_existing_atom(territory)
+      if code in Cldr.known_territories, do: territory, else: nil
+    rescue ArgumentError ->
+      nil
+    end
+
+    %{language_tag | territory: territory}
   end
 
   @doc """

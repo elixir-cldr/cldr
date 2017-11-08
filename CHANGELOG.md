@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v0.12.12 November 9th, 2017
+
+### Enhancements
+
+* When parsing language tags with an invalid territory code, the territory code is set to nil before invoking substitutes and likely subtags so that a reasonable default territory is returned.
+
+* The function `Cldr.LanguageTag.match/1` is renamed to `Cldr.LanguageTag.best_match/1` to better reflect its intent (thanks to @lostkobrakai)
+
 ## Cldr v0.12.1 November 8th, 2017
 
 ### Enhancements
