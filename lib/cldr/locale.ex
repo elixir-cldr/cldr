@@ -1,7 +1,7 @@
 defmodule Cldr.Locale do
   @moduledoc """
   Functions to parse and normalize locale names into a structure
-  locale represented by`Cldr.LanguageTag`.
+  locale represented by a `Cldr.LanguageTag`.
 
   CLDR represents localisation data organized into locales, with
   each locale being identified by a locale name that is formatted
@@ -38,7 +38,7 @@ defmodule Cldr.Locale do
   When validating a locale name, `Cldr` will attempt to match the requested
   locale name to a configured locale. Therefore `Cldr.Locale.new/1` may
   return an `{:ok, language_tag}` tuple even when the locale returned does
-  not exactly match the provided locale name.  For example, the following
+  not exactly match the requested locale name.  For example, the following
   attempts to create a locale matching the non-existent "english as spoken
   in Spain" local name.  Here `Cldr` will match to the nearest configured
   locale, which in this case will be "en".
@@ -67,7 +67,7 @@ defmodule Cldr.Locale do
   * requested_locale_name
   * nil
 
-  Therefor matching is tolerant of a request for unknown scripts,
+  Therefore matching is tolerant of a request for unknown scripts,
   territories and variants.  Only the requested language is a
   requirement to be matched to a configured locale.
 
@@ -78,9 +78,13 @@ defmodule Cldr.Locale do
   following requests the locale name "mo" which is the deprecated
   code for "Moldovian".  The replacement code is "ro" (Romanian).
 
-    iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
-    %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: %{}, private_use: [],
-     territory: "MD", script: nil, transform: %{}, variant: nil}
+      iex> Cldr.Locale.new("mo")
+      {:ok,
+        %Cldr.LanguageTag{canonical_locale_name: "ro-Latn-MD",
+         cldr_locale_name: "ro-MD", extensions: %{}, language: "ro",
+         locale: %{}, private_use: [], rbnf_locale_name: "ro",
+         requested_locale_name: "mo", script: "Latn", territory: "MD",
+         transform: %{}, variant: nil}}
 
   ### Likely subtags
 
@@ -100,7 +104,12 @@ defmodule Cldr.Locale do
   Showing that a the likely subtag for the script is "Latn" and the likely
   territory is "US".
 
-  ## Invalid territory codes
+  Using the example for Substitutions above, we can see the
+  result of combining substitutions and likely subtags for locale name "mo"
+  returns the current language code of "ro" as well as the likely
+  territory code of "MD" (Moldova).
+
+  ### Invalid territory codes
 
   Whilst `Cldr` is tolerant of invalid territory codes, it is also important
   that such invalid codes not shadow the potential replacement of deprecated
@@ -189,7 +198,7 @@ defmodule Cldr.Locale do
   def canonical_language_tag(%LanguageTag{} = language_tag) do
     canonical_tag =
       language_tag
-      |> validate_territory
+      |> check_valid_territory
       |> substitute_aliases
       |> add_likely_subtags
 
@@ -363,18 +372,6 @@ defmodule Cldr.Locale do
     [language, script, territory, variant]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
-  end
-
-  def validate_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
-  def validate_territory(%LanguageTag{territory: territory} = language_tag) do
-    territory = try do
-      code = String.to_existing_atom(territory)
-      if code in Cldr.known_territories, do: territory, else: nil
-    rescue ArgumentError ->
-      nil
-    end
-
-    %{language_tag | territory: territory}
   end
 
   @doc """
@@ -650,9 +647,6 @@ defmodule Cldr.Locale do
 
     * `locale_name` is any locale name returned by `Cldr.known_locale_names/0`
 
-  ## Examples
-
-
   """
   @spec alias_error(Locale.locale_name | LanguageTag.t, String.t) ::
     {Cldr.UnknownLocaleError, String.t}
@@ -664,5 +658,17 @@ defmodule Cldr.Locale do
 
   def alias_error(%LanguageTag{requested_locale_name: requested_locale_name}, alias_name) do
     alias_error(requested_locale_name, alias_name)
+  end
+
+  defp check_valid_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
+  defp check_valid_territory(%LanguageTag{territory: territory} = language_tag) do
+    territory = try do
+      code = String.to_existing_atom(territory)
+      if code in Cldr.known_territories, do: territory, else: nil
+    rescue ArgumentError ->
+      nil
+    end
+
+    %{language_tag | territory: territory}
   end
 end
