@@ -33,6 +33,89 @@ defmodule Cldr.Locale do
   appropriate, `Cldr` will transliterate any underscore into a hyphen before
   parsing or processing.
 
+  ### Locale name validity
+
+  When validating a locale name, `Cldr` will attempt to match the requested
+  locale name to a configured locale. Therefore `Cldr.Locale.new/1` may
+  return an `{:ok, language_tag}` tuple even when the locale returned does
+  not exactly match the provided locale name.  For example, the following
+  attempts to create a locale matching the non-existent "english as spoken
+  in Spain" local name.  Here `Cldr` will match to the nearest configured
+  locale, which in this case will be "en".
+
+      iex> Cldr.Locale.new("en-ES")
+      {:ok,
+       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-ES", cldr_locale_name: "en",
+        extensions: %{}, language: "en", locale: %{}, private_use: [],
+        rbnf_locale_name: "en", requested_locale_name: "en-ES", script: "Latn",
+        territory: "ES", transform: %{}, variant: nil}}
+
+  ### Matching locales to requested locale names
+
+  When attempting to match the requested locale name to a configured
+  locale, `Cldr` attempt to match against a set of reductions in the
+  following order and will return the first match:
+
+  * language, script, territory, variant
+  * language, territory, variant
+  * language, script, variant
+  * language, variant
+  * language, script, territory
+  * language, territory
+  * language, script
+  * language
+  * requested_locale_name
+  * nil
+
+  Therefor matching is tolerant of a request for unknown scripts,
+  territories and variants.  Only the requested language is a
+  requirement to be matched to a configured locale.
+
+  ### Substitutions for Obsolete and Deprecated locale names
+
+  CLDR provides data to help manage the transition from obsolete
+  or deprecated locale names to current names.  For example, the
+  following requests the locale name "mo" which is the deprecated
+  code for "Moldovian".  The replacement code is "ro" (Romanian).
+
+    iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
+    %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: %{}, private_use: [],
+     territory: "MD", script: nil, transform: %{}, variant: nil}
+
+  ### Likely subtags
+
+  CLDR also provides data to indetify the most likely subtags for a
+  requested locale name.  This data is based on the default content data,
+  the population data, and the the suppress-script data in [BCP47]. It is
+  heuristically derived, and may change over time. For example, when
+  requesting the locale "en", the following is returned:
+
+      iex> Cldr.Locale.new("en")
+      {:ok,
+       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
+        extensions: %{}, language: "en", locale: %{}, private_use: [],
+        rbnf_locale_name: "en", requested_locale_name: "en", script: "Latn",
+        territory: "US", transform: %{}, variant: nil}}
+
+  Showing that a the likely subtag for the script is "Latn" and the likely
+  territory is "US".
+
+  ## Invalid territory codes
+
+  Whilst `Cldr` is tolerant of invalid territory codes, it is also important
+  that such invalid codes not shadow the potential replacement of deprecated
+  codes nor the insertion of likely subtags.  Therefore invalid territory
+  codes are ignored during this process.  For example requesting a locale
+  name "en-XX" which requests the invalid territory "XX", the following
+  will be returned:
+
+      iex> Cldr.Locale.new("en-XX")
+      {:ok,
+       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
+        extensions: %{}, language: "en", locale: %{}, private_use: [],
+        rbnf_locale_name: "en", requested_locale_name: "en-XX", script: "Latn",
+        territory: "US", transform: %{}, variant: nil}}
+
   """
   alias Cldr.LanguageTag
   import Cldr.Helpers
@@ -153,11 +236,23 @@ defmodule Cldr.Locale do
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
   defp cldr_locale_name(%LanguageTag{language: language, script: script,
       territory: territory, variant: variant} = language_tag) do
+
+    # Including variant
     Cldr.known_locale_name(locale_name_from(language, script, territory, variant)) ||
     Cldr.known_locale_name(locale_name_from(language, nil, territory, variant)) ||
     Cldr.known_locale_name(locale_name_from(language, script, nil, variant)) ||
     Cldr.known_locale_name(locale_name_from(language, nil, nil, variant)) ||
+
+    # Not including variant
+    Cldr.known_locale_name(locale_name_from(language, script, territory, nil)) ||
+    Cldr.known_locale_name(locale_name_from(language, nil, territory, nil)) ||
+    Cldr.known_locale_name(locale_name_from(language, script, nil, nil)) ||
+    Cldr.known_locale_name(locale_name_from(language, nil, nil, nil)) ||
+
+    # Finally the requested locale name
     Cldr.known_locale_name(language_tag.requested_locale_name) ||
+
+    # Boom -  can't match
     nil
   end
 
