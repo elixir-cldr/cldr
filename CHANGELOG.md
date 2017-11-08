@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.12.1 November 8th, 2017
+
+### Enhancements
+
+* Adds localised territory names and localised language names to the content available in `Cldr`.  To retrieve the content, call `Cldr.Config.get_locale(locale_name) |> Map.get(:territories)` and `Cldr.Config.get_locale(locale_name) |> Map.get(:languages)`.  Note that `Cldr.get_locale/1` reads and parses the json content on each invocation so the best approach is to read the appropriate locale content at compile time and embed the required content into some functions.
+
 ## Cldr v0.12.0 November 8th, 2017
 
 ### Breaking Changes
