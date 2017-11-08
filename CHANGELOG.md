@@ -1,6 +1,12 @@
 # Changelog
 
-## Cldr v0.12.12 November 9th, 2017
+## Cldr v0.12.3 November _th, 2017
+
+### Enhancements
+
+* Relax the matching of requested locale names to configured locales by also matching without Variant.  See `Cldr.Locale.cldr_locale_name/1`
+
+## Cldr v0.12.2 November 9th, 2017
 
 ### Enhancements
 
