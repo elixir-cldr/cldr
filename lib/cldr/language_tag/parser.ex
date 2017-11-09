@@ -134,14 +134,12 @@ defmodule Cldr.LanguageTag.Parser do
 
   defp normalize_territory(nil), do: nil
   defp normalize_territory(territory) do
-    territory
-    |> String.upcase
+    String.upcase(territory)
   end
 
   defp normalize_variant(nil), do: nil
   defp normalize_variant(variant) do
-    variant
-    |> String.upcase
+    String.upcase(variant)
   end
 
   defp return_parse_result(%{rest: [], state: state}, _locale), do: {:ok, state}

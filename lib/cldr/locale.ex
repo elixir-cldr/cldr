@@ -64,7 +64,7 @@ defmodule Cldr.Locale do
   * language, territory
   * language, script
   * language
-  * requested_locale_name
+  * requested locale name
   * nil
 
   Therefore matching is tolerant of a request for unknown scripts,
@@ -109,7 +109,7 @@ defmodule Cldr.Locale do
   returns the current language code of "ro" as well as the likely
   territory code of "MD" (Moldova).
 
-  ### Invalid territory codes
+  ### Inknown territory codes
 
   Whilst `Cldr` is tolerant of invalid territory codes, it is also important
   that such invalid codes not shadow the potential replacement of deprecated
