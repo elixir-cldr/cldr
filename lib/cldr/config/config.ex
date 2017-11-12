@@ -452,15 +452,21 @@ defmodule Cldr.Config do
     number_systems() |> Map.keys |> Enum.sort
   end
 
-  @max_demand :erlang.system_info(:schedulers_online)
+  @max_concurrency System.schedulers_online * 2
   def known_number_system_types do
     known_locale_names()
-    |> Flow.from_enumerable(max_demand: @max_demand)
-    |> Flow.map(&get_locale/1)
-    |> Flow.map(&Map.get(&1, :number_systems))
-    |> Flow.flat_map(&Map.keys/1)
+    |> Task.async_stream(__MODULE__, :number_systems_for, [], max_concurrency: @max_concurrency)
+    |> Enum.to_list
+    |> Enum.flat_map(&elem(&1, 1))
     |> Enum.uniq
     |> Enum.sort
+  end
+
+  def number_systems_for(locale_name) do
+    locale_name
+    |> get_locale
+    |> Map.get(:number_systems)
+    |> Enum.map(&elem(&1, 0))
   end
 
   @doc """

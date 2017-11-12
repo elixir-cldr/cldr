@@ -1,5 +1,11 @@
 # Changelog
 
+## Cldr v0.13.1 November 13th, 2017
+
+### Enhancements
+
+* Remove dependency on `Flow` and make `GenStage` an optional dependency and only for `:dev` and `:test`
+
 ## Cldr v0.13.0 November 12th, 2017
 
 ### Enhancements
