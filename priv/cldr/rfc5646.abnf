@@ -20,13 +20,13 @@ extlang       = 3ALPHA              ; selected ISO 639 codes
 
 script        = 4ALPHA
 
-region        = 2ALPHA              ; ISO 3166-1 code
+territory     = 2ALPHA              ; ISO 3166-1 code
                 / 3DIGIT
 
 variant       = 5*8alphanum         ; registered variants
                 / (DIGIT 3alphanum)
 
-extensions     = locale / transform / extension
+extensions    = locale / transform / extension
 
 extension     = singleton 1*("-" (2*8alphanum))
 
@@ -35,7 +35,7 @@ extension     = singleton 1*("-" (2*8alphanum))
                                     ;  for transforms
 locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword))
 
-transform      = "t" (1*("-" keyword))
+transform     = "t" (1*("-" keyword))
 
 keyword       = key ["-" type]
 

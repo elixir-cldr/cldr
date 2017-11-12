@@ -192,12 +192,7 @@ defmodule Cldr do
         variant: nil}
 
   """
-  # @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
-  @default_locale %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: [], private_use: [], rbnf_locale_name: "en", territory: "001",
-        requested_locale_name: "en-001", script: "Latn", transform: %{},
-        variant: nil}
+  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
   @spec default_locale :: LanguageTag.t
   def default_locale do
     @default_locale
@@ -513,6 +508,9 @@ defmodule Cldr do
   def validate_calendar(calendar) when is_atom(calendar) and calendar in @known_calendars do
     {:ok, calendar}
   end
+
+  # "gregory" is the name used for the locale "u" extension
+  def validate_calendar("gregory"), do: {:ok, :gregorian}
 
   def validate_calendar(calendar) when is_atom(calendar) do
     {:error, unknown_calendar_error(calendar)}
