@@ -30,6 +30,7 @@ defmodule Cldr.LanguageTag.Parser do
         normalized_tag =
           language_tag
           |> extract_keys
+          |> Map.put(:requested_locale_name, List.to_string(locale))
           |> canonicalize_locale_keys
           |> canonicalize_transform_keys
         {:ok, normalized_tag}

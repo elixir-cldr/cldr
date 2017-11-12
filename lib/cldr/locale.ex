@@ -119,11 +119,20 @@ defmodule Cldr.Locale do
   will be returned:
 
       iex> Cldr.Locale.new("en-XX")
-      {:ok,
-       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
-        extensions: %{}, language: "en", locale: %{}, private_use: [],
-        rbnf_locale_name: "en", requested_locale_name: "en-XX", script: "Latn",
-        territory: "US", transform: %{}, variant: nil}}
+      {:ok, %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }}
 
   """
   alias Cldr.LanguageTag
@@ -196,15 +205,17 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag) do
+    supress_requested_locale_substitution? = !language_tag.language
+
     canonical_tag =
       language_tag
       |> check_valid_territory
+      |> set_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases
       |> add_likely_subtags
 
     canonical_tag =
       canonical_tag
-      |> Map.put(:requested_locale_name, locale_name_from(language_tag))
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
       |> set_cldr_locale_name
       |> set_rbnf_locale_name
@@ -228,6 +239,15 @@ defmodule Cldr.Locale do
       {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
+  end
+
+  @spec set_requested_locale_name(LanguageTag.t, boolean()) :: LanguageTag.t
+  defp set_requested_locale_name(language_tag, true) do
+    language_tag
+  end
+
+  defp set_requested_locale_name(language_tag, false) do
+    Map.put(language_tag, :requested_locale_name, locale_name_from(language_tag))
   end
 
   @spec set_cldr_locale_name(LanguageTag.t) :: LanguageTag.t
@@ -393,20 +413,68 @@ defmodule Cldr.Locale do
   ## Examples
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("en-US")
-      %Cldr.LanguageTag{extensions: %{}, language: "en", locale: %{}, private_use: [],
-       territory: "US", script: nil, transform: %{}, variant: nil}
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: %{},
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "en-us",
+        script: nil,
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
-      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
-       territory: "AQ", script: "Arab", transform: %{}, variant: nil}
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: %{},
+        language: "sr",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "sh-arab-aq",
+        script: "Arab",
+        territory: "AQ",
+        transform: %{},
+        variant: nil
+      }
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
-      %Cldr.LanguageTag{extensions: %{}, language: "sr", locale: %{}, private_use: [],
-       territory: "AQ", script: "Latn", transform: %{}, variant: nil}
+      %Cldr.LanguageTag{
+         canonical_locale_name: nil,
+         cldr_locale_name: nil,
+         extensions: %{},
+         language: "sr",
+         locale: %{},
+         private_use: [],
+         rbnf_locale_name: nil,
+         requested_locale_name: "sh-aq",
+         script: "Latn",
+         territory: "AQ",
+         transform: %{},
+         variant: nil
+       }
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
-      %Cldr.LanguageTag{extensions: %{}, language: "ro", locale: %{}, private_use: [],
-       territory: "MD", script: nil, transform: %{}, variant: nil}
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: %{},
+        language: "ro",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "mo",
+        script: nil,
+        territory: "MD",
+        transform: %{},
+        variant: nil
+      }
 
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
@@ -486,8 +554,20 @@ defmodule Cldr.Locale do
   ## Example
 
       iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
-      %Cldr.LanguageTag{extensions: %{}, language: "zh", locale: %{}, private_use: [],
-       territory: "SG", script: "Hans", transform: %{}, variant: nil}
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: %{},
+        language: "zh",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "zh-sg",
+        script: "Hans",
+        territory: "SG",
+        transform: %{},
+        variant: nil
+      }
 
   """
   def add_likely_subtags(%LanguageTag{language: language, script: script, territory: territory} = language_tag) do
