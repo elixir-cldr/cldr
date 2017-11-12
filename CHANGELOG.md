@@ -1,8 +1,12 @@
 # Changelog
 
-## Cldr v0.12.3 November _th, 2017
+## Cldr v0.13.0 November 12th, 2017
 
 ### Enhancements
+
+* Updates the abnf parser to use the hex package [abnf2](https://hex.pm/packages/abnf2).  Strictly speaking this is not a regression of breaking change from a public API perspective however since this is a core part of the ex_cldr package, preventing accidental package upgrade seems the appropriate conservative strategy.
+
+* After upgrading it is recommended to `mix deps.clean --unused`
 
 * Relax the matching of requested locale names to configured locales by also matching without Variant.  See `Cldr.Locale.cldr_locale_name/1`
 
