@@ -76,9 +76,18 @@ defmodule Cldr.LanguageTag.Parser do
     |> Map.put(:requested_locale_name, value)
   end
 
+  defp extract_keys([{:grandfathered = key, value, subtags}]) do
+    extract_key(key, value, subtags, %LanguageTag{})
+    |> Map.put(:requested_locale_name, value)
+  end
+
   defp extract_key(:language = key, value, _children, language_tag) do
     language = normalize_language(value)
     Map.put(language_tag, key, language)
+  end
+
+  defp extract_key(:grandfathered, value, _subtags, language_tag) do
+    Map.put(language_tag, :requested_locale_name, value)
   end
 
   defp extract_key(:script = key, value, _children, language_tag) do
