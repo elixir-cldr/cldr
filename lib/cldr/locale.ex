@@ -109,7 +109,7 @@ defmodule Cldr.Locale do
   returns the current language code of "ro" as well as the likely
   territory code of "MD" (Moldova).
 
-  ### Inknown territory codes
+  ### Unknown territory codes
 
   Whilst `Cldr` is tolerant of invalid territory codes, it is also important
   that such invalid codes not shadow the potential replacement of deprecated

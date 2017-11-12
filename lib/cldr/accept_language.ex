@@ -31,12 +31,15 @@ defmodule Cldr.AcceptLanguage do
   Splits the language ranges for an `Accept-Language` header
   value into tuples `{quality, language}`.
 
+  * `accept-language` is any string in the format defined by [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
+
   ## Example
 
       iex> Cldr.AcceptLanguage.tokenize "da,zh-TW;q=0.3"
       [{1.0, "da"}, {0.3, "zh-tw"}]
 
   """
+  @spec tokenize(String.t) :: [{float(), String.t}, ...]
   @language_separator ","
   def tokenize(accept_language) do
     accept_language
@@ -65,8 +68,13 @@ defmodule Cldr.AcceptLanguage do
   or tokenized form to return a tuple of the form
   `{:ok, [{quality, %Cldr.LanguageTag{}}, ...]}` sorted by quality.
 
-  If not valid language tags are found, the tuple `{:error, reason}`
-  is returned.
+  * `accept-language` is any string in the format defined by [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
+
+  Returns:
+
+  * `{:ok, [{quality, language_tag}, ...]}` or
+
+  * `{:error, {Cldr.AcceptLanguageError, String.t}}`
 
   If at least one valid language tag is found but errors are also
   detected on one more more tags, an `{ok, list}` tuple is returned
@@ -115,6 +123,9 @@ defmodule Cldr.AcceptLanguage do
           "x"}]}
 
   """
+  @spec parse([{float(), String.t}, ...] | String.t) ::
+    {:ok, [{float(), LanguageTag.t} | {:error, {Cldr.InvalidLanguageTag, String.t}}, ...]}
+
   def parse(tokens) when is_list(tokens) do
     accept_language =
       tokens
@@ -141,7 +152,13 @@ defmodule Cldr.AcceptLanguage do
   `[{quality, %Cldr.LanguageTag{}}, ...]` sorted by quality
   in decending order.
 
-  If no valid language tags are found, an exception is raised.
+  * `accept-language` is any string in the format defined by [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
+
+  Returns:
+
+  * `{:ok, [{quality, language_tag}, ...]}` or
+
+  * `raises an `Cldr.AcceptLanguageError` exception
 
   If at least one valid language tag is found but errors are also
   detected on one more more tags, an `{ok, list}` tuple is returned
@@ -260,6 +277,9 @@ defmodule Cldr.AcceptLanguage do
       }
 
   """
+  @spec best_match(String.t) ::
+    {:ok, LanguageTag.t} | {:error, {Cldr.AcceptLanguageError, String.t}}
+
   def best_match(accept_language) when is_binary(accept_language) do
     with {:ok, languages} <- parse(accept_language) do
       candidates =
@@ -291,6 +311,7 @@ defmodule Cldr.AcceptLanguage do
          "Could not parse language tag.  Error was detected at 'x'"}, "x"}]
 
   """
+  @spec errors([tuple(), ...]) :: [{:error, {Cldr.InvalidLanguageTag, String.t}}, ...]
   def errors(parse_result) when is_list(parse_result) do
     Enum.filter(parse_result, fn
       {:error, _, _} -> true
