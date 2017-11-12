@@ -44,7 +44,7 @@ defmodule Cldr.Mixfile do
       {:gen_stage, "~> 0.12.2"},
       {:flow, "~> 0.11"},
       {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
-      {:abnf, path: "../abnf"},
+      {:abnf2, "~> 0.1"},
       {:gettext, "~> 0.13.0", optional: true},
       {:stream_data, "~> 0.3.0", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}
