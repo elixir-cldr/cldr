@@ -158,7 +158,7 @@ defmodule Cldr.AcceptLanguage do
 
   * `{:ok, [{quality, language_tag}, ...]}` or
 
-  * `raises an `Cldr.AcceptLanguageError` exception
+  * raises a `Cldr.AcceptLanguageError` exception
 
   If at least one valid language tag is found but errors are also
   detected on one more more tags, an `{ok, list}` tuple is returned

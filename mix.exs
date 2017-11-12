@@ -60,6 +60,7 @@ defmodule Cldr.Mixfile do
         "lib", "src", "guides", "config",
         "mix.exs", "README*", "CHANGELOG*", "LICENSE*",
         "priv/cldr/locales/en.json",
+        "priv/cldr/locales/en-001.json",
         "priv/cldr/locales/root.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
