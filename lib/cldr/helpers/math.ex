@@ -282,6 +282,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.log(Decimal.new(9000))
       #Decimal<9.103886231350952380952380952>
+
   """
   @spec log(number_or_decimal) :: number_or_decimal
   def log(number) when is_number(number) do
@@ -337,6 +338,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.log10(Decimal.new(9000))
       #Decimal<3.953767554157656512064441441>
+
   """
   @spec log10(number_or_decimal) :: number_or_decimal
   def log10(number) when is_number(number) do

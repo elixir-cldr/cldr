@@ -3,13 +3,15 @@
 `Cldr` aims to reach api stability by the end of 2017.  In order to reach that milestone the following are planned:
 
 - [X] Implement a new abnf parser generator for language tags.
-- [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 - [X] Review all `@doc` in the public API to ensure they and their examples are consistent in describing functions and arguments.
 - [X] Check consistency of the usage of key data items like `locale`, `currency`, `number system`, `territory`
 - [X] Add localised territory names and language names to locale definitions
 - [X] Add AcceptLanguage matcher for configured locales
-- [ ] Add a `Plug` to process an AcceptLanguage header
-- [ ] Refactor the functions in `Cldr.Map`
+- [X] Refactor the functions in `Cldr.Map`
+- [ ] Simplify `Cldr.Math` to include only those functions required and move the rest to another package
+- [ ] Add a `Plug` to process an AcceptLanguage header and set Cldr locale
+- [ ] Add AcceptLanguage matcher for Gettext locales if Gettext is configured
+- [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 
 ### Parser generator for language tags
 

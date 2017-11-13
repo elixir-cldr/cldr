@@ -1,217 +1,213 @@
 defmodule Cldr.Map do
   @moduledoc """
-  Helper functions for transforming maps, keys and values.
+  Functions for transforming maps, keys and values.
   """
 
   @doc """
-  Convert map string camelCase keys to underscore_keys
-  """
-  def underscore_keys(nil), do: nil
+  Recursively traverse a map and invoke a function for each key
+  and a function for each value that transform the map.
 
+  * `map` is any `Map.t`
+
+  * `key_function` is a function or function reference that
+    is called for each key of the provided map and any keys
+    of any submaps
+
+  * `value_function` is a function or function reference that
+    is called for each value of the provided map and any values
+    of any submaps
+
+  Returns:
+
+  * The `map` transformed by the recursive application of `key_function`
+    and `value_function`
+
+  ## Examples
+
+  """
+  @spec deep_map(Map.t, key_function :: function(), value_function :: function()) :: Map.t
+  def deep_map(map, key_function \\ &identity/1, value_function \\ &identity/1)
+  def deep_map(map, key_function, value_function) when is_map(map) do
+    Enum.map(map, fn
+      {k, v} when is_map(v) or is_list(v) ->
+        {key_function.(k), deep_map(v, key_function, value_function)}
+      {k, v} ->
+        {key_function.(k), value_function.(v)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  def deep_map([head | rest], key_fun, value_fun) do
+    [deep_map(head, key_fun, value_fun) | deep_map(rest, key_fun, value_fun)]
+  end
+
+  def deep_map(nil, _key_fun, _value_fun) do
+    nil
+  end
+
+  def deep_map(value, _key_fun, value_fun) do
+    value_fun.(value)
+  end
+
+  @doc """
+  Transforms a `map`'s `String.t` keys to `atom()` keys.
+
+  * `map` is any `Map.t`
+
+  * `options` is a keyword list of options.  The
+    available option is:
+
+    * `:only_existing` which is set to `true` will
+      only convert the binary key to an atom if the atom
+      already exists.  The default is `false`.
+
+  ## Examples
+
+  """
+  def atomize_keys(map, options \\ [only_existing: false]) do
+    deep_map(map, &atomize_element(&1, options[:only_existing]))
+  end
+
+  @doc """
+  Transforms a `map`'s `String.t` values to `atom()` values.
+
+  * `map` is any `Map.t`
+
+  * `options` is a keyword list of options.  The
+    available option is:
+
+    * `:only_existing` which is set to `true` will
+      only convert the binary value to an atom if the atom
+      already exists.  The default is `false`.
+
+  ## Examples
+
+  """
+  def atomize_values(map, options \\ [only_existing: false]) do
+    deep_map(map, &identity/1, &atomize_element(&1, options[:only_existing]))
+  end
+
+  @doc """
+  Transforms a `map`'s `atom()` keys to `String.t` keys.
+
+  * `map` is any `Map.t`
+
+  ## Examples
+
+  """
+  def stringify_keys(map) do
+    deep_map(map, fn
+      k when is_atom(k) -> Atom.to_string(k)
+      k -> k
+    end)
+  end
+
+  @doc """
+  Transforms a `map`'s keys to `Integer.t` keys.
+
+  * `map` is any `Map.t`
+
+  The map key is converted to an `integer` from
+  either an `atom` or `String.t` only when the
+  key is comprised of `integer` digits.
+
+  Keys which cannot be converted to an `integer`
+  are returned unchanged.
+
+  ## Examples
+
+  """
+  def integerize_keys(map) do
+    deep_map(map, &integerize_element/1)
+  end
+
+  @doc """
+  Transforms a `map`'s values to `Integer.t` values.
+
+  * `map` is any `Map.t`
+
+  The map value is converted to an `integer` from
+  either an `atom` or `String.t` only when the
+  value is comprised of `integer` digits.
+
+  Keys which cannot be converted to an integer
+  are returned unchanged.
+
+  ## Examples
+
+  """
+  def integerize_values(map) do
+    deep_map(map, &identity/1, &integerize_element/1)
+  end
+
+  @doc """
+  Transforms a `map`'s values to `Float.t` values.
+
+  * `map` is any `Map.t`
+
+  The map value is converted to a `float` from
+  either an `atom` or `String.t` only when the
+  value is comprised of a valid float forma.
+
+  Keys which cannot be converted to a `float`
+  are returned unchanged.
+
+  ## Examples
+
+  """
+  def floatize_values(map) do
+    deep_map(map, &identity/1, &floatize_element/1)
+  end
+
+  @doc """
+  Rename map keys from `from` to `to`
+
+  * `map` is any `Map.t`
+
+  * `from` is any value map key
+
+  * `to` is any valud map key
+
+  ## Examples
+
+  """
+  def rename_key(map, from, to) do
+    deep_map(map, fn
+      ^from -> to
+      other -> other
+    end)
+  end
+
+  @doc """
+  Convert map keys from `camelCase` to `snake_case`
+
+  * `map` is any `Map.t`
+
+  ## Examples
+
+  """
   def underscore_keys(map = %{}) do
-    map
-    |> Enum.map(fn {k, v} -> {Cldr.String.underscore(k), underscore_keys(v)} end)
-    |> Enum.map(fn {k, v} -> {String.replace(k, "-", "_"), v} end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and atomize the keys of
-  # of any map members
-  def underscore_keys([head | rest]) do
-    [underscore_keys(head) | underscore_keys(rest)]
-  end
-
-  def underscore_keys(not_a_map) do
-    not_a_map
+    deep_map(map, &underscore/1)
   end
 
   @doc """
-  Underscore one key of a map
+  Removes any leading underscores from `map`
+  keys.
+
+  * `map` is any `Map.t`
+
+  ## Examples
+
   """
-  def underscore_key(map, key) do
-    Map.put(map, Cldr.String.underscore(key), Map.get(map, key))
-    |> Map.delete(key)
-  end
-
-  @doc """
-  Convert map string keys to :atom keys
-  """
-  def atomize_keys(nil), do: nil
-
-  # Structs don't do enumerable and anyway the keys are already
-  # atoms
-  def atomize_keys(struct = %{__struct__: _}) do
-    struct
-  end
-
-  def atomize_keys(map = %{}) do
-    map
-    |> Enum.map(fn {k, v} -> {atomize_key(k), atomize_keys(v)} end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and atomize the keys of
-  # of any map members
-  def atomize_keys([head | rest]) do
-    [atomize_keys(head) | atomize_keys(rest)]
-  end
-
-  def atomize_keys(not_a_map) do
-    not_a_map
-  end
-
-  def atomize_key(key) when is_binary(key) do
-    String.to_atom(key)
-  end
-
-  def atomize_key(key) when is_atom(key) do
-    key
-  end
-
-  @doc """
-  Convert map binary values to atoms where possible.
-  """
-  def atomize_values(nil), do: nil
-
-  def atomize_values(map = %{}) do
-    Enum.map(map, fn
-      {k, v} when is_binary(v) ->
-        {k, String.to_atom(v)}
-      {k, v} ->
-        {k, atomize_values(v)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and atomize the values of
-  # of any list members
-  def atomize_values([head | rest]) do
-    [atomize_values(head) | atomize_values(rest)]
-  end
-
-  def atomize_values(item) when is_binary(item) do
-    String.to_atom(item)
-  end
-
-  def atomize_values(not_a_map) do
-    not_a_map
-  end
-
-  @doc """
-  Convert map atom keys to strings
-  """
-  def stringify_keys(nil), do: nil
-
-  def stringify_keys(map = %{}) do
-    map
-    |> Enum.map(fn {k, v} -> {Atom.to_string(k), stringify_keys(v)} end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and atomize the keys of
-  # of any map members
-  def stringify_keys([head | rest]) do
-    [stringify_keys(head) | stringify_keys(rest)]
-  end
-
-  def stringify_keys(not_a_map) do
-    not_a_map
-  end
-
-  @doc """
-  Convert map atom or binary keys to integers where possible.
-  """
-  def integerize_keys(nil), do: nil
-
-  def integerize_keys(map = %{}) do
-    Enum.map(map, fn
-      {k, v} when is_atom(k) ->
-        k2 = Atom.to_string(k)
-        if Regex.match?(~r/^[0-9]+$/, k2) do
-          {String.to_integer(k2), integerize_keys(v)}
-        else
-          {k, integerize_keys(v)}
-        end
-      {k, v} when is_binary(k) ->
-        if Regex.match?(~r/^[0-9]+$/, k) do
-          {String.to_integer(k), integerize_keys(v)}
-        else
-          {k, integerize_keys(v)}
-        end
-    end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and integerize the keys of
-  # of any map members
-  def integerize_keys([head | rest]) do
-    [integerize_keys(head) | integerize_keys(rest)]
-  end
-
-  def integerize_keys(not_a_map) do
-    not_a_map
-  end
-
-  @doc """
-  Convert map binary values to integers where possible.
-  """
-  def integerize_values(nil), do: nil
-
-  def integerize_values(map = %{}) do
-    Enum.map(map, fn
-      {k, v} when is_binary(v) ->
-        if Regex.match?(~r/^[0-9]+$/, v) do
-          {k, String.to_integer(v)}
-        else
-          {k, integerize_values(v)}
-        end
-      {k, v} ->
-        {k, integerize_values(v)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and integerize the keys of
-  # of any map members
-  def integerize_values([head | rest]) do
-    [integerize_values(head) | integerize_values(rest)]
-  end
-
-  def integerize_values(not_a_map) do
-    not_a_map
-  end
-
-  @doc """
-  Convert map binary values to integers where possible.
-  """
-  def floatize_values(nil), do: nil
-
-  def floatize_values(map = %{}) do
-    Enum.map(map, fn
-      {k, v} when is_binary(v) ->
-        if Regex.match?(~r/^[0-9]+\.[0-9]+$/, v) do
-          {k, String.to_float(v)}
-        else
-          {k, floatize_values(v)}
-        end
-      {k, v} ->
-        {k, floatize_values(v)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  # Walk the list and integerize the keys of
-  # of any map members
-  def floatize_values([head | rest]) do
-    [integerize_values(head) | integerize_values(rest)]
-  end
-
-  def floatize_values(not_a_map) do
-    not_a_map
+  def remove_leading_underscores(map) do
+    deep_map(map, &String.replace_prefix(&1, "_", ""))
   end
 
   @doc """
   Returns the result of deep merging a list of maps
+
+  ## Examples
+
   """
   def merge_map_list([h | []]) do
     h
@@ -227,6 +223,13 @@ defmodule Cldr.Map do
 
   @doc """
   Deep merge two maps
+
+  * `left` is any `Map.t`
+
+  * `right` is any `Map.t`
+
+  ## Examples
+
   """
   def deep_merge(left, right) do
     Map.merge(left, right, &deep_resolve/3)
@@ -248,6 +251,9 @@ defmodule Cldr.Map do
   @doc """
   Delete all members of a map that have a
   key in the list of keys
+
+  ## Examples
+
   """
   def delete_in(%{} = map, keys) when is_list(keys) do
     Enum.reject(map, fn {k, _v} -> k in keys end)
@@ -272,53 +278,136 @@ defmodule Cldr.Map do
     other
   end
 
-  @doc """
-  Rename map keys
-  """
-  def rename_key(%{} = map, from, to) do
-    Enum.map(map, fn {k, v} ->
-      if k == from do
-        {to, rename_key(v, from, to)}
-      else
-        {k, rename_key(v, from, to)}
-      end
-    end)
-    |> Enum.into(%{})
-  end
-
-  def rename_key(other, _from, _to) do
-    other
-  end
-
-  @doc """
-  Remove any leading underscores from map keys
-  """
-  def remove_leading_underscores(%{} = map) do
-    Enum.map(map, fn {k, v} ->
-      {String.replace_prefix(k, "_", ""), remove_leading_underscores(v)} end)
-    |> Enum.into(%{})
-  end
-
-  def remove_leading_underscores(v) do
-    v
-  end
-
   def from_keyword(keyword) do
     Enum.into(keyword, %{})
   end
 
-  @doc """
-  Execute a function over each element of a nested map
-  """
-  def deep_map(nil), do: nil
+  defp identity(x), do: x
 
-  def deep_map(map = %{}, fun) do
-    Enum.map(map, fn
-      {k, v} when is_map(v) ->
-        {k, deep_map(v, fun)}
-      {_k, _v} = entry ->
-        fun.(entry)
-    end)
-    |> Enum.into(%{})
+  defp atomize_element(x, true) when is_binary(x) do
+    try do
+      String.to_existing_atom(x)
+    rescue ArgumentError ->
+      x
+    end
   end
+
+  defp atomize_element(x, false) when is_binary(x) do
+    String.to_atom(x)
+  end
+
+  defp atomize_element(x, _) do
+    x
+  end
+
+  @integer_reg Regex.compile!("^[0-9]+$")
+  defp integerize_element(x) when is_atom(x) do
+    integer =
+      x
+      |> Atom.to_string
+      |> integerize_element
+
+    if is_integer(integer) do
+      integer
+    else
+      x
+    end
+  end
+
+  defp integerize_element(x) when is_binary(x) do
+    if Regex.match?(@integer_reg, x) do
+      String.to_integer(x)
+    else
+      x
+    end
+  end
+
+  defp integerize_element(x) do
+    x
+  end
+
+  @float_reg Regex.compile!("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
+  defp floatize_element(x) when is_atom(x) do
+    x
+    |> Atom.to_string
+    |> floatize_element
+  end
+
+  defp floatize_element(x) when is_binary(x) do
+    if Regex.match?(@float_reg, x) do
+      String.to_float(x)
+    else
+      x
+    end
+  end
+
+  defp floatize_element(x) do
+    x
+  end
+
+  @doc """
+  Convert a camelCase string or atome to a snake_case
+
+  * `string` is a `String.t` or `atom()` to be
+    transformed
+
+  This is the code of Macro.underscore with modifications.
+  The change is to cater for strings in the format:
+
+    This_That
+
+  which in Macro.underscore gets formatted as
+
+    this__that (note the double underscore)
+
+  when we actually want
+
+    that_that
+
+  ## Examples
+
+  """
+  @spec underscore(string :: String.t | atom()) :: String.t
+  def underscore(atom) when is_atom(atom) do
+    "Elixir." <> rest = Atom.to_string(atom)
+    underscore(rest)
+  end
+  def underscore(<<h, t::binary>>) do
+    <<to_lower_char(h)>> <> do_underscore(t, h)
+  end
+  def underscore("") do
+    ""
+  end
+
+  # h is upper case, next char is not uppercase, or a _ or .  => and prev != _
+  defp do_underscore(<<h, t, rest::binary>>, prev)
+      when (h >= ?A and h <= ?Z) and not (t >= ?A and t <= ?Z) and t != ?. and t != ?_ and prev != ?_ do
+    <<?_, to_lower_char(h), t>> <> do_underscore(rest, t)
+  end
+
+  # h is uppercase, previous was not uppercase or _
+  defp do_underscore(<<h, t::binary>>, prev)
+      when (h >= ?A and h <= ?Z) and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
+    <<?_, to_lower_char(h)>> <> do_underscore(t, h)
+  end
+
+  # h is .
+  defp do_underscore(<<?., t::binary>>, _) do
+    <<?/>> <> underscore(t)
+  end
+
+  # Any other char
+  defp do_underscore(<<h, t::binary>>, _) do
+    <<to_lower_char(h)>> <> do_underscore(t, h)
+  end
+  defp do_underscore(<<>>, _) do
+    <<>>
+  end
+
+  def to_upper_char(char) when char >= ?a and char <= ?z, do: char - 32
+  def to_upper_char(char), do: char
+
+  def to_lower_char(char) when char >= ?A and char <= ?Z, do: char + 32
+  def to_lower_char(char), do: char
 end
+
