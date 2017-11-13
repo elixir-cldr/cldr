@@ -8,9 +8,9 @@
 - [X] Add localised territory names and language names to locale definitions
 - [X] Add AcceptLanguage matcher for configured locales
 - [X] Refactor the functions in `Cldr.Map`
+- [X] Add Locale matcher for Gettext locales if Gettext is configured
 - [ ] Simplify `Cldr.Math` to include only those functions required and move the rest to another package
 - [ ] Add a `Plug` to process an AcceptLanguage header and set Cldr locale
-- [ ] Add AcceptLanguage matcher for Gettext locales if Gettext is configured
 - [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 
 ### Parser generator for language tags
