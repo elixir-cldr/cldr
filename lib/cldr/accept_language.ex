@@ -244,23 +244,21 @@ defmodule Cldr.AcceptLanguage do
       }
 
       iex> Cldr.AcceptLanguage.best_match "en,zh-TW;q=0.3"
-      {
-        :ok,
-        %Cldr.LanguageTag{
-          canonical_locale_name: "en-Latn-US",
-          cldr_locale_name: "en",
-          extensions: %{},
-          language: "en",
-          locale: %{},
-          private_use: [],
-          rbnf_locale_name: "en",
-          requested_locale_name: "en",
-          script: "Latn",
-          territory: "US",
-          transform: %{},
-          variant: nil
-        }
-      }
+      {:ok, %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }}
 
       iex> Cldr.AcceptLanguage.best_match "xx,yy;q=0.3"
       {

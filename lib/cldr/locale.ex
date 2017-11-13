@@ -44,11 +44,21 @@ defmodule Cldr.Locale do
   locale, which in this case will be "en".
 
       iex> Cldr.Locale.new("en-ES")
-      {:ok,
-       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-ES", cldr_locale_name: "en",
-        extensions: %{}, language: "en", locale: %{}, private_use: [],
-        rbnf_locale_name: "en", requested_locale_name: "en-ES", script: "Latn",
-        territory: "ES", transform: %{}, variant: nil}}
+      {:ok, %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-ES",
+        cldr_locale_name: "en",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-ES",
+        script: "Latn",
+        territory: "ES",
+        transform: %{},
+        variant: nil
+      }}
 
   ### Matching locales to requested locale names
 
@@ -95,11 +105,21 @@ defmodule Cldr.Locale do
   requesting the locale "en", the following is returned:
 
       iex> Cldr.Locale.new("en")
-      {:ok,
-       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
-        extensions: %{}, language: "en", locale: %{}, private_use: [],
-        rbnf_locale_name: "en", requested_locale_name: "en", script: "Latn",
-        territory: "US", transform: %{}, variant: nil}}
+      {:ok, %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }}
 
   Showing that a the likely subtag for the script is "Latn" and the likely
   territory is "US".
@@ -123,6 +143,7 @@ defmodule Cldr.Locale do
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
+        gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
@@ -179,6 +200,7 @@ defmodule Cldr.Locale do
           canonical_locale_name: "en-Latn-US",
           cldr_locale_name: "en",
           extensions: %{},
+          gettext_locale_name: "en",
           language: "en",
           locale: %{},
           private_use: [],
@@ -219,6 +241,7 @@ defmodule Cldr.Locale do
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
       |> set_cldr_locale_name
       |> set_rbnf_locale_name
+      |> set_gettext_locale_name
 
     {:ok, canonical_tag}
   end
@@ -262,6 +285,12 @@ defmodule Cldr.Locale do
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
+  @spec set_gettext_locale_name(LanguageTag.t) :: LanguageTag.t
+  defp set_gettext_locale_name(%LanguageTag{} = language_tag) do
+    gettext_locale_name = gettext_locale_name(language_tag)
+    %{language_tag | gettext_locale_name: gettext_locale_name}
+  end
+
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
   defp cldr_locale_name(%LanguageTag{language: language, script: script,
       territory: territory, variant: variant} = language_tag) do
@@ -294,6 +323,24 @@ defmodule Cldr.Locale do
     Cldr.known_rbnf_locale_name(locale_name_from(language, nil, nil, nil)) ||
     Cldr.known_rbnf_locale_name(language_tag.requested_locale_name) ||
     nil
+  end
+
+  @spec gettext_locale_name(LanguageTag.t) :: locale_name | nil
+  defp gettext_locale_name(%LanguageTag{language: language, script: script,
+      territory: territory} = language_tag) do
+    name =
+      Cldr.known_gettext_locale_name(locale_name_from(language, script, territory, nil)) ||
+      Cldr.known_gettext_locale_name(locale_name_from(language, nil, territory, nil)) ||
+      Cldr.known_gettext_locale_name(locale_name_from(language, script, nil, nil)) ||
+      Cldr.known_gettext_locale_name(locale_name_from(language, nil, nil, nil)) ||
+      Cldr.known_gettext_locale_name(language_tag.requested_locale_name) ||
+      nil
+
+    if name do
+      String.replace(name, "-", "_")
+    else
+      name
+    end
   end
 
   @doc """
@@ -417,6 +464,7 @@ defmodule Cldr.Locale do
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},
+        gettext_locale_name: nil,
         language: "en",
         locale: %{},
         private_use: [],
@@ -433,6 +481,7 @@ defmodule Cldr.Locale do
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},
+        gettext_locale_name: nil,
         language: "sr",
         locale: %{},
         private_use: [],
@@ -449,6 +498,7 @@ defmodule Cldr.Locale do
          canonical_locale_name: nil,
          cldr_locale_name: nil,
          extensions: %{},
+         gettext_locale_name: nil,
          language: "sr",
          locale: %{},
          private_use: [],
@@ -465,6 +515,7 @@ defmodule Cldr.Locale do
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},
+        gettext_locale_name: nil,
         language: "ro",
         locale: %{},
         private_use: [],
@@ -559,6 +610,7 @@ defmodule Cldr.Locale do
         cldr_locale_name: nil,
         extensions: %{},
         language: "zh",
+        gettext_locale_name: nil,
         locale: %{},
         private_use: [],
         rbnf_locale_name: nil,

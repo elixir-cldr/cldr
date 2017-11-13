@@ -36,6 +36,11 @@ defmodule Cldr do
   alias Cldr.Install
   alias Cldr.LanguageTag
 
+  # Ensure locales are all installed.  We do this once during
+  # compilation of `Cldr` because this is the module we define
+  # as the root of the dependency tree.
+  Install.install_known_locale_names
+
   if Enum.any?(Config.unknown_locale_names()) do
     raise Cldr.UnknownLocaleError,
       "Some locale names are configured that are not known to CLDR. " <>
@@ -59,11 +64,6 @@ defmodule Cldr do
     IO.puts "Please be patient, generating functions for many locales " <>
     "can take some time"
   end
-
-  # Ensure locales are all installed.  We do this once during
-  # compilation of `Cldr` because this is the module we define
-  # as the root of the dependency tree.
-  Install.install_known_locale_names
 
   @doc """
   Returns the directory path name where the CLDR json data
@@ -144,6 +144,7 @@ defmodule Cldr do
           canonical_locale_name: "en-Latn-US",
           cldr_locale_name: "en",
           extensions: %{},
+          gettext_locale_name: "en",
           language: "en",
           locale: %{},
           private_use: [],
@@ -288,6 +289,17 @@ defmodule Cldr do
   end
 
   @doc """
+  Returns a list of GetText locale names but in CLDR format with
+  underscore replaces by hyphen in order to facilitate comparisons
+  with Cldr locale names.
+  """
+  @known_gettext_locale_names Config.gettext_locales() |> Enum.map(&String.replace(&1, "_", "-"))
+  @spec known_gettext_locale_names :: [Locale.locale_name, ...] | []
+  def known_gettext_locale_names do
+    @known_gettext_locale_names
+  end
+
+  @doc """
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr.
 
@@ -326,6 +338,26 @@ defmodule Cldr do
   @spec known_rbnf_locale_name?(Locale.locale_name) :: boolean
   def known_rbnf_locale_name?(locale_name) when is_binary(locale_name) do
     locale_name in known_rbnf_locale_names()
+  end
+
+  @doc """
+  Returns a boolean indicating if the specified locale
+  name is configured and available in Gettext.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+
+  ## Examples
+
+      iex> Cldr.known_gettext_locale_name?("en")
+      true
+
+      iex> Cldr.known_gettext_locale_name?("!!")
+      false
+
+  """
+  @spec known_gettext_locale_name?(Locale.locale_name) :: boolean
+  def known_gettext_locale_name?(locale_name) when is_binary(locale_name) do
+    locale_name in known_gettext_locale_names()
   end
 
   @doc """
@@ -380,6 +412,31 @@ defmodule Cldr do
     end
   end
 
+  @doc """
+  Returns either the Gettext `locale_name` in Cldr format or
+  `false` based upon whether the locale name is configured in
+  `GetText`.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+
+  ## Examples
+
+      iex> Cldr.known_gettext_locale_name "en"
+      "en"
+
+      iex> Cldr.known_gettext_locale_name "en-SA"
+      false
+
+  """
+  @spec known_gettext_locale_name(Locale.locale_name) :: String.t | false
+  def known_gettext_locale_name(locale_name) when is_binary(locale_name) do
+    if known_gettext_locale_name?(locale_name) do
+      locale_name
+    else
+      false
+    end
+  end
+
 
   @doc """
   Returns a boolean indicating if the specified locale
@@ -426,11 +483,21 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.validate_locale "en"
-      {:ok,
-       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-US", cldr_locale_name: "en",
-        extensions: %{}, language: "en", locale: %{}, private_use: [],
-        rbnf_locale_name: "en", territory: "US", requested_locale_name: "en",
-        script: "Latn", transform: %{}, variant: nil}}
+      {:ok, %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }}
 
       iex> Cldr.validate_locale Cldr.default_locale
       {:ok,

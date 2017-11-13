@@ -163,7 +163,8 @@ defmodule Cldr.LanguageTag do
             requested_locale_name:  nil,
             canonical_locale_name:  nil,
             cldr_locale_name:       nil,
-            rbnf_locale_name:       nil
+            rbnf_locale_name:       nil,
+            gettext_locale_name:    nil
 
   @type t :: %__MODULE__ {
     language:               String.t,

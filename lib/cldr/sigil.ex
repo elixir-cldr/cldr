@@ -16,6 +16,7 @@ defmodule Cldr.Locale.Sigil do
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
+        gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],

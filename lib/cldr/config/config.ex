@@ -231,7 +231,7 @@ defmodule Cldr.Config do
   raise an exception at compile time.
   """
   @locales_path Path.join(@cldr_data_dir, "available_locales.json")
-  @spec all_locale_names :: [Locale.locale_name]
+  @spec all_locale_names :: [Locale.locale_name, ...]
   def all_locale_names do
     @locales_path
     |> File.read!
