@@ -61,6 +61,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.within(2.1, 1..3)
       false
+
   """
   @spec within(number, integer | Range.t) :: boolean
   def within(number, range) when is_integer(number) do
@@ -97,6 +98,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.mod Decimal.new(123.456), 3.4
       #Decimal<1.056>
+
   """
   @spec mod(number_or_decimal, number_or_decimal) :: number_or_decimal
 
@@ -374,6 +376,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.power(2, 10)
       1024
+
   """
 
   # Decimal number and decimal n
@@ -479,7 +482,7 @@ defmodule Cldr.Math do
   defp do_power(number, n, _mod) do
     number * power(number, n - 1)
   end
-
+  #
   # Precompute powers of 10 up to 10^326
   # FIXME: duplicating existing function in Float, which only goes up to 15.
   Enum.reduce 0..326, 1, fn x, acc ->
@@ -540,6 +543,7 @@ defmodule Cldr.Math do
 
       Cldr.Math.coef_exponent_digits(Decimal.new(-46.543))
       {{[4, 6, 5, 4], 1, -1}, 1}
+
   """
   @spec coef_exponent_digits(number_or_decimal) :: {Digits.t, integer()}
   def coef_exponent_digits(number) do
@@ -566,6 +570,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.sqrt(Decimal.new(9.869))
       #Decimal<3.141496458696078173887197038>
+
   """
   @precision 0.0001
   @decimal_precision Decimal.new(@precision)
@@ -628,6 +633,7 @@ defmodule Cldr.Math do
 
       iex> Cldr.Math.root Decimal.new(27), 3
       #Decimal<3.0>
+
   """
   def root(%Decimal{} = number, nth) when is_integer(nth) and nth > 0 do
     guess = :math.pow(to_float(number), 1 / nth)

@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v0.14.0 November 14th, 2017
+
+### Enhancements
+
+* `%LanguageTag{}` includes a new field `:gettext_locale_name` which will be matched if possible to a configured `Gettext` locale to aid cross-library collaboration.
+
+* Refactored the functions in `Cldr.Map`
+
 ## Cldr v0.13.1 November 13th, 2017
 
 ### Enhancements
