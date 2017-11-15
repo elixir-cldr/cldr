@@ -1,5 +1,5 @@
-if Code.ensure_loaded?(Plug) and false do
-  defmodule Cldr.Plug.Locale do
+if Code.ensure_loaded?(Plug) do
+  defmodule Cldr.Plug.AcceptLanguage do
     @moduledoc """
     A Phoenix plug that is used to parse the `HTTP Accept-Language header` and
     set the `Cldr` locale appropriately.
@@ -10,8 +10,7 @@ if Code.ensure_loaded?(Plug) and false do
     syntax to include a more complete form of a locale string as defined by the
     [Unicode Consortium](http://unicode.org).
 
-
-     ## Cldr.Plug.Locale support
+    ## Cldr.Plug.Locale support
 
     `Cldr.Plug.Locale` will support parsing a locale identifier using the
     following formats:
@@ -20,30 +19,41 @@ if Code.ensure_loaded?(Plug) and false do
     -------------------- | -----------------------
     en                   | Language "en"
     en-GB                | Language "en" with region subtag "GB".
-    en-latn-AU           | Language "en" with script "latn" and regional subtag "AU"
-    en-AU-u-cu-USD       | Language "en", region subtag "AU", currency unit "USD"
-    en-CA-u-cu-USD-hc-12 | Multiple extensions can be specified
+    en-Latn-AU           | Language "en" with script "latn" and regional subtag "AU"
+    en-AU-u-cu-usd       | Language "en", region subtag "AU", currency unit "USD"
+    en-CA-u-cu-use-hc-12 | Multiple extensions can be specified
     """
 
     import Plug.Conn
+    require Logger
 
     @language_header "accept-language"
 
-    def init(default \\ Cldr.default_locale()) do
+    def init(default) do
       default
     end
 
-    def call(conn, default) do
-      parse_locale(conn.assigns[:locale], conn)
+    def call(conn, _default) do
+      accept_language = get_req_header(conn, @language_header)
+      put_private(conn, :cldr_locale, best_match(accept_language))
     end
 
-    defp parse_locale(nil, conn) do
-      accept_languages = get_req_header(conn, "accept-language")
-      conn |> assign(:locale, locale)
+    def best_match(nil) do
+      nil
     end
 
-    defp parse_locale(_locale, conn) do
-      conn
+    def best_match(accept_language) do
+      case Cldr.AcceptLanguage.best_match(accept_language) do
+        {:ok, locale} ->
+          locale
+        {:error, {exception, reason}} ->
+          Logger.warn "#{exception}: #{reason}"
+          nil
+      end
+    end
+
+    def get_cldr_locale(conn) do
+      conn.private[:cldr_locale]
     end
   end
 end
