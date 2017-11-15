@@ -98,11 +98,6 @@ if Code.ensure_loaded?(Plug) do
       {:ok, Gettext.put_locale(options[:gettext], locale_name)}
     end
 
-    defp set_locale(other, locale, _options) do
-      Logger.warn "The locale #{locale.requested_locale_name} can not be set for app " <>
-                  "#{inspect other}.  The app is unknown or unsupported."
-    end
-
     def get_cldr_locale(conn) do
       conn.private[:cldr_locale]
     end
