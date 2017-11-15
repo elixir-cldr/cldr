@@ -9,18 +9,20 @@ if Code.ensure_loaded?(Plug) do
         plug Cldr.Plug.SetLocale,
          apps:    [:cldr, :gettext],
          from:    [:accept_language, :url, :query, :body],
-         param:   "param_name",
-         default: "default_locale_name",
-         gettext: GetTextModule
+         param:   "locale",
+         default: Cldr.default_locale,
+         gettext: GetTextModule,
+         session_key: "cldr_locale"
 
     """
 
     import Plug.Conn
     require Logger
 
-    @default_from [:accept_language]
-    @from_options [:accept_language, :url, :body, :query]
+    @default_from [:session, :accept_language]
+    @from_options [:accept_language, :url, :body, :query, :session]
     @app_options  [:cldr, :gettext]
+    @session_key  "cldr_locale"
     @language_header "accept-language"
     @default_param_name "locale"
 
@@ -31,6 +33,7 @@ if Code.ensure_loaded?(Plug) do
       |> validate_param(options[:param])
       |> validate_default(options[:default])
       |> validate_gettext(options[:gettext])
+      |> validate_session_key(options[:session_key])
     end
 
     def call(conn, options) do
@@ -46,30 +49,34 @@ if Code.ensure_loaded?(Plug) do
     def locale_from_params(conn, from, options) do
       Enum.reduce_while(from, nil, fn param, _acc ->
         conn
-        |> fetch_param(param, options[:param])
+        |> fetch_param(param, options[:param], options)
         |> return_if_valid_locale
       end)
     end
 
-    def fetch_param(conn, :accept_language, _param) do
+    def fetch_param(conn, :accept_language, _param, _options) do
       conn
       |> get_req_header(@language_header)
       |> Cldr.AcceptLanguage.best_match
     end
 
-    def fetch_param(conn, :query, param) do
+    def fetch_param(conn, :query, param, _options) do
       conn.query_params[param]
       |> Cldr.validate_locale
     end
 
-    def fetch_param(conn, :url, param) do
+    def fetch_param(conn, :url, param, _options) do
       conn.url_params[param]
       |> Cldr.validate_locale
     end
 
-    def fetch_param(conn, :body, param) do
+    def fetch_param(conn, :body, param, _options) do
       conn.body_params[param]
       |> Cldr.validate_locale
+    end
+
+    def fetch_param(conn, :session, _param, options) do
+      get_session(conn, options[:session_key])
     end
 
     defp return_if_valid_locale(nil) do
@@ -158,6 +165,14 @@ if Code.ensure_loaded?(Plug) do
       if !Code.ensure_loaded(gettext) do
         raise ArgumentError, "Gettext module #{inspect gettext} is not known"
       end
+    end
+
+    defp validate_session_key(options, nil), do: Keyword.put(options, :session_key, @session_key)
+    defp validate_session_key(options, session_key) when is_binary(session_key), do: options
+    defp validate_session_key(_options, session_key) do
+      raise(ArgumentError,
+          "Invalid :session_key #{inspect session_key} detected. " <>
+          ":session_key must be a string")
     end
   end
 end
