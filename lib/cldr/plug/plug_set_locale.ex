@@ -72,10 +72,6 @@ if Code.ensure_loaded?(Plug) do
       |> Cldr.validate_locale
     end
 
-    def fetch_param(_conn, type) do
-      {:error, "Locale parameter type #{inspect type} is not known"}
-    end
-
     defp return_if_valid_locale(nil) do
       {:cont, nil}
     end
@@ -125,7 +121,7 @@ if Code.ensure_loaded?(Plug) do
     end
     defp validate_apps(_options, apps) do
       raise(ArgumentError,
-          "Invalid app list: #{inspect apps}.  Valid apps are :cldr and :gettext")
+          "Invalid app list: #{inspect apps}.  Valid apps #{inspect @app_options}")
     end
 
     defp validate_from(options, nil), do: Keyword.put(options, :from, @default_from)
@@ -154,7 +150,7 @@ if Code.ensure_loaded?(Plug) do
           ":param must be a string")
     end
 
-    defp validate_default(options, nil), do: options
+    defp validate_default(options, nil), do: Keyword.put(options, :default, Cldr.default_locale)
     defp validate_default(options, default) do
       case Cldr.validate_locale(default) do
         {:ok, locale} -> Keyword.put(options, :default, locale)
