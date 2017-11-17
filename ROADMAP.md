@@ -11,6 +11,7 @@
 - [X] Add Locale matcher for Gettext locales if Gettext is configured
 - [X] Simplify `Cldr.Math` to include only those functions required
 - [X] Add a `Plug` to process an AcceptLanguage header and set Cldr locale
+- [ ] Case insensitive matching up locales for Gettext (needed for the plugs)
 - [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 
 ### Parser generator for language tags
