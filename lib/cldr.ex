@@ -127,6 +127,8 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
@@ -293,7 +295,9 @@ defmodule Cldr do
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
   """
-  @known_gettext_locale_names Config.gettext_locales() |> Enum.map(&String.replace(&1, "_", "-"))
+  @known_gettext_locale_names Config.gettext_locales()
+  |> Enum.map(&Locale.locale_name_from_posix/1)
+
   @spec known_gettext_locale_names :: [Locale.locale_name, ...] | []
   def known_gettext_locale_names do
     @known_gettext_locale_names
@@ -302,6 +306,8 @@ defmodule Cldr do
   @doc """
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr.
+
+  ## Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -324,6 +330,8 @@ defmodule Cldr do
   name is configured and available in Cldr and supports
   rules based number formats (RBNF).
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
   ## Examples
@@ -343,6 +351,8 @@ defmodule Cldr do
   @doc """
   Returns a boolean indicating if the specified locale
   name is configured and available in Gettext.
+
+  ## Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -366,6 +376,8 @@ defmodule Cldr do
 
   This is helpful when building a list of `or` expressions
   to return the first known locale name from a list.
+
+  ## Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -392,6 +404,8 @@ defmodule Cldr do
   whether the locale name is configured in `Cldr`
   and has RBNF rules defined.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
   ## Examples
@@ -416,6 +430,8 @@ defmodule Cldr do
   Returns either the Gettext `locale_name` in Cldr format or
   `false` based upon whether the locale name is configured in
   `GetText`.
+
+  ## Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -447,6 +463,8 @@ defmodule Cldr do
   mean the locale is configured for Cldr.  See also
   `Cldr.known_locale?/1`.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
@@ -471,10 +489,12 @@ defmodule Cldr do
   @doc """
   Normalise and validate a locale name.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
-  Returns:
+  ## Returns
 
   * `{:ok, language_tag}`
 
@@ -515,9 +535,10 @@ defmodule Cldr do
     {:ok, String.t} | {:error, {Exception.t, String.t}}
 
   def validate_locale(locale_name) when is_binary(locale_name) do
-    locale_name
-    |> Cldr.Locale.new!
-    |> validate_locale
+    case Cldr.Locale.new(locale_name) do
+      {:ok, locale} -> validate_locale(locale)
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
@@ -530,6 +551,43 @@ defmodule Cldr do
 
   def validate_locale(locale) do
     {:error, Locale.locale_error(locale)}
+  end
+
+  @doc """
+  Normalise and validate a gettext locale name.
+
+  ## Options
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  ## Returns
+
+  * `{:ok, language_tag}`
+
+  * `{:error, reason}`
+
+  ## Examples
+
+
+  """
+  def validate_gettext_locale(locale_name) when is_binary(locale_name) do
+    case Cldr.Locale.new(locale_name) do
+      {:ok, locale} -> validate_gettext_locale(locale)
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  def validate_gettext_locale(%LanguageTag{gettext_locale_name: nil} = locale) do
+    {:error, Locale.gettext_locale_error(locale)}
+  end
+
+  def validate_gettext_locale(%LanguageTag{} = language_tag) do
+    {:ok, language_tag}
+  end
+
+  def validate_gettext_locale(locale) do
+    {:error, Locale.gettext_locale_error(locale)}
   end
 
   @doc """
@@ -552,13 +610,15 @@ defmodule Cldr do
   @doc """
   Normalise and validate a calendar name.
 
+  ## Options
+
   * `calendar` is any calendar name returned by `Cldr.known_calendars/0`
 
-  Returns:
+  ## Returns
 
   * `{:ok, normalized_calendar_name}` or
 
-  * `{:error, {exception, message}}`
+  * `{:error, {Cldr.UnknownCalendarError, message}}`
 
   ## Examples
 
@@ -597,7 +657,13 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an invalid calendar.
 
+  ## Options
+
     * `calendar` is any calendar name **not** returned by `Cldr.known_calendars/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownCalendarError, message}}`
 
   ## Examples
 
@@ -653,13 +719,15 @@ defmodule Cldr do
   @doc """
   Normalise and validate a territory code.
 
+  ## Options
+
   * `territory` is any territory code returned by `Cldr.known_territories/0`
 
-  Returns:
+  ## Returns:
 
   * `{:ok, normalized_territory_code}` or
 
-  * `{:error, {exception, message}}`
+  * `{:error, {Cldr.UnknownTerritoryError, message}}`
 
   ## Examples
 
@@ -716,7 +784,13 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown territory.
 
-    * `territory` is any territory code **not** returned by `Cldr.known_territories/0`
+  ## Options
+
+  * `territory` is any territory code **not** returned by `Cldr.known_territories/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownTerritoryError, message}}`
 
   ## Examples
 
@@ -770,13 +844,15 @@ defmodule Cldr do
   @doc """
   Normalize and validate a currency code.
 
+  ## Options
+
   * `currency` is any ISO 4217 currency code as returned by `Cldr.known_currencies/0`
 
-  Returns:
+  ## Returns
 
   * `{:ok, normalized_currency_code}` or
 
-  * `{:error, {exception, message}}`
+  * `{:error, {Cldr.UnknownCurrencyError, message}}`
 
   ## Examples
 
@@ -818,7 +894,13 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an invalid currency.
 
-    * `currency` is any currency code **not** returned by `Cldr.known_currencies/0`
+  ## Options
+
+  * `currency` is any currency code **not** returned by `Cldr.known_currencies/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownCurrencyError, message}}
 
   ## Examples
 
@@ -856,10 +938,12 @@ defmodule Cldr do
   @doc """
   Normalize and validate a number system name.
 
+  ## Options
+
   * `number_system` is any number system name returned by
     `Cldr.known_number_systems/0`
 
-  Returns:
+  ## Returns
 
   * `{:ok, normalized_number_system_name}` or
 
@@ -906,7 +990,13 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown number system.
 
-    * `number_system` is any number system name **not** returned by `Cldr.known_number_systems/0`
+  ## Options
+
+  * `number_system` is any number system name **not** returned by `Cldr.known_number_systems/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownNumberSystemError, message}}`
 
   ## Examples
 
@@ -943,12 +1033,15 @@ defmodule Cldr do
   @doc """
   Normalise and validate a number system type.
 
+  ## Options
+
   * `number_system_type` is any number system type returned by
     `Cldr.known_number_system_types/0`
 
-  Returns:
+  ## Returns
 
   * `{:ok, normalized_number_system_type}` or
+
   * `{:error, {exception, message}}`
 
   ## Examples
@@ -992,8 +1085,14 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown number system type.
 
-    * `number_system_type` is any number system type name **not** returned
+  ## Options
+
+  * `number_system_type` is any number system type name **not** returned
       by `Cldr.known_number_system_types/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownNumberSystemTypeError, message}}`
 
   ## Examples
 
