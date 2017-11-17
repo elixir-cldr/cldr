@@ -1,7 +1,7 @@
 if Code.ensure_loaded?(Plug) do
   defmodule Cldr.Plug.SetLocale do
     @moduledoc """
-    Sets the Cldr and/or Gettext locales derived from the accept-langauge
+    Sets the Cldr and/or Gettext locales derived from the accept-language
     header, a query parameter, a url parameter, a body parameter or the
     session.
 

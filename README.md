@@ -210,9 +210,9 @@ There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`
 
 `Cldr` provides two plugs to aid integration into an HTTP workflow.  These two plugs are:
 
-* `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale.
+* `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
 
-* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` with that locale.  It will also call `Gettext.put_locale/2` if requested.  The plug will look for a locale in the following locations depending on the plug configuration:
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through. `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
 
   * `url_params`
   * `query_params`
@@ -232,7 +232,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 ## Testing
 
-Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.5.x.  `Cldr` will not run on Elixir version before 1.5.
 
