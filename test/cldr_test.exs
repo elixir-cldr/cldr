@@ -61,4 +61,57 @@ defmodule Cldr.Test do
         {Cldr.Rbnf.NotAvailable,
           "The locale name \"zzz\" does not have an RBNF configuration file available"}}
   end
+
+  test "that locale substitutions are applied" do
+    assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
+    %Cldr.LanguageTag{
+      canonical_locale_name: nil,
+      cldr_locale_name: nil,
+      extensions: %{},
+      gettext_locale_name: nil,
+      language: "en",
+      locale: %{},
+      private_use: [],
+      rbnf_locale_name: nil,
+      requested_locale_name: "en-us",
+      script: nil,
+      territory: "US",
+      transform: %{},
+      variant: nil
+    }
+
+    assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
+    %Cldr.LanguageTag{
+      canonical_locale_name: nil,
+      cldr_locale_name: nil,
+      extensions: %{},
+      gettext_locale_name: nil,
+      language: "sr",
+      locale: %{},
+      private_use: [],
+      rbnf_locale_name: nil,
+      requested_locale_name: "sh-arab-aq",
+      script: "Arab",
+      territory: "AQ",
+      transform: %{},
+      variant: nil
+    }
+
+    assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
+    %Cldr.LanguageTag{
+       canonical_locale_name: nil,
+       cldr_locale_name: nil,
+       extensions: %{},
+       gettext_locale_name: nil,
+       language: "sr",
+       locale: %{},
+       private_use: [],
+       rbnf_locale_name: nil,
+       requested_locale_name: "sh-aq",
+       script: "Latn",
+       territory: "AQ",
+       transform: %{},
+       variant: nil
+     }
+  end
 end

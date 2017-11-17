@@ -10,6 +10,7 @@ defmodule Cldr.LanguageTag.Parser do
   """
   alias Cldr.LanguageTag
   alias Cldr.Config
+  alias Cldr.Locale
 
   @doc """
   Parse a locale name into a `Cldr.LanguageTag.t`
@@ -175,7 +176,7 @@ defmodule Cldr.LanguageTag.Parser do
   defp normalize_locale_name(name) do
     name
     |> String.downcase
-    |> String.replace("_", "-")
+    |> Locale.locale_name_from_posix
   end
 
   defp normalize_language(nil), do: nil

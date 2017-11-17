@@ -121,7 +121,7 @@ defmodule Cldr.Locale do
         variant: nil
       }}
 
-  Showing that a the likely subtag for the script is "Latn" and the likely
+  Which shows that a the likely subtag for the script is "Latn" and the likely
   territory is "US".
 
   Using the example for Substitutions above, we can see the
@@ -169,16 +169,20 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale.
 
+  ## Options
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct
 
-  Returns:
+  ## Returns
 
   * `{:ok, language_tag}` or
 
   * `{:eror, reason}`
 
-  Several steps are followed to produce a canonical language tag:
+  ## Method
 
   1. The language tag is parsed in accordance with [RFC5646](https://tools.ietf.org/html/rfc5646)
 
@@ -250,6 +254,10 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale or raises on error.
 
+  ## Options
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct
 
@@ -292,62 +300,53 @@ defmodule Cldr.Locale do
   end
 
   @spec cldr_locale_name(LanguageTag.t) :: locale_name | nil
-  defp cldr_locale_name(%LanguageTag{language: language, script: script,
-      territory: territory, variant: variant} = language_tag) do
-
-    # Including variant
-    Cldr.known_locale_name(locale_name_from(language, script, territory, variant)) ||
-    Cldr.known_locale_name(locale_name_from(language, nil, territory, variant)) ||
-    Cldr.known_locale_name(locale_name_from(language, script, nil, variant)) ||
-    Cldr.known_locale_name(locale_name_from(language, nil, nil, variant)) ||
-
-    # Not including variant
-    Cldr.known_locale_name(locale_name_from(language, script, territory, nil)) ||
-    Cldr.known_locale_name(locale_name_from(language, nil, territory, nil)) ||
-    Cldr.known_locale_name(locale_name_from(language, script, nil, nil)) ||
-    Cldr.known_locale_name(locale_name_from(language, nil, nil, nil)) ||
-
-    # Finally the requested locale name
+  defp cldr_locale_name(%LanguageTag{} = language_tag) do
+    first_match(language_tag, &Cldr.known_locale_name/1) ||
     Cldr.known_locale_name(language_tag.requested_locale_name) ||
-
-    # Boom -  can't match
     nil
   end
 
   @spec rbnf_locale_name(LanguageTag.t) :: locale_name | nil
-  defp rbnf_locale_name(%LanguageTag{language: language, script: script,
-      territory: territory} = language_tag) do
-    Cldr.known_rbnf_locale_name(locale_name_from(language, script, territory, nil)) ||
-    Cldr.known_rbnf_locale_name(locale_name_from(language, nil, territory, nil)) ||
-    Cldr.known_rbnf_locale_name(locale_name_from(language, script, nil, nil)) ||
-    Cldr.known_rbnf_locale_name(locale_name_from(language, nil, nil, nil)) ||
-    Cldr.known_rbnf_locale_name(language_tag.requested_locale_name) ||
-    nil
+  defp rbnf_locale_name(%LanguageTag{} = language_tag) do
+    first_match(language_tag, &Cldr.known_rbnf_locale_name/1)
   end
 
   @spec gettext_locale_name(LanguageTag.t) :: locale_name | nil
-  defp gettext_locale_name(%LanguageTag{language: language, script: script,
-      territory: territory} = language_tag) do
-    name =
-      Cldr.known_gettext_locale_name(locale_name_from(language, script, territory, nil)) ||
-      Cldr.known_gettext_locale_name(locale_name_from(language, nil, territory, nil)) ||
-      Cldr.known_gettext_locale_name(locale_name_from(language, script, nil, nil)) ||
-      Cldr.known_gettext_locale_name(locale_name_from(language, nil, nil, nil)) ||
-      Cldr.known_gettext_locale_name(language_tag.requested_locale_name) ||
-      nil
+  defp gettext_locale_name(%LanguageTag{} = language_tag) do
+    language_tag
+    |> first_match(&Cldr.known_gettext_locale_name/1)
+    |> locale_name_to_posix
+  end
 
-    if name do
-      String.replace(name, "-", "_")
-    else
-      name
-    end
+  defp first_match(%LanguageTag{language: language, script: script,
+        territory: territory, variant: variant}, fun) when is_function(fun) do
+    # Including variant
+    fun.(locale_name_from(language, script, territory, variant)) ||
+    fun.(locale_name_from(language, nil, territory, variant)) ||
+    fun.(locale_name_from(language, script, nil, variant)) ||
+    fun.(locale_name_from(language, nil, nil, variant)) ||
+
+    # Not including variant
+    fun.(locale_name_from(language, script, territory, nil)) ||
+    fun.(locale_name_from(language, nil, territory, nil)) ||
+    fun.(locale_name_from(language, script, nil, nil)) ||
+    fun.(locale_name_from(language, nil, nil, nil)) ||
+    nil
   end
 
   @doc """
   Normalize the casing of a locale name.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct
+
+  ## Returns
+
+  * The normalized locale name as a `String.t`
+
+  ## Method
 
   Locale names are case insensitive but certain common
   casing is followed in practise:
@@ -396,12 +395,14 @@ defmodule Cldr.Locale do
       [lang] ->
         String.downcase(lang)
       _ ->
-        String.replace(locale_name, "_", "-")
+        locale_name_from_posix(locale_name)
     end
   end
 
   @doc """
   Return a locale name from a `Cldr.LanguageTag`
+
+  ## Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct
@@ -423,8 +424,15 @@ defmodule Cldr.Locale do
   Return a locale name by combining language, script, territory and variant
   parameters
 
+  ## Options
+
   * `language`, `script`, `territory` and `variant` are string
     representations, or `nil`, of the language subtags
+
+  ## Returns
+
+  * The locale name constructed from the non-nil arguments joined
+    by a "-"
 
   ## Example
 
@@ -445,6 +453,12 @@ defmodule Cldr.Locale do
   Substitute deprectated subtags with a `Cldr.LanguageTag` with their
   non-deprecated alternatives.
 
+  ## Options
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+
+  ## Method
+
   * Replace any deprecated subtags with their canonical values using the alias
     data. Use the first value in the replacement list, if
     it exists. Language tag replacements may have multiple parts, such as
@@ -457,58 +471,7 @@ defmodule Cldr.Locale do
   * Get the components of the cleaned-up source tag (languages, scripts, and
     regions/territories), plus any variants and extensions.
 
-  ## Examples
-
-      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("en-US")
-      %Cldr.LanguageTag{
-        canonical_locale_name: nil,
-        cldr_locale_name: nil,
-        extensions: %{},
-        gettext_locale_name: nil,
-        language: "en",
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: nil,
-        requested_locale_name: "en-us",
-        script: nil,
-        territory: "US",
-        transform: %{},
-        variant: nil
-      }
-
-      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")
-      %Cldr.LanguageTag{
-        canonical_locale_name: nil,
-        cldr_locale_name: nil,
-        extensions: %{},
-        gettext_locale_name: nil,
-        language: "sr",
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: nil,
-        requested_locale_name: "sh-arab-aq",
-        script: "Arab",
-        territory: "AQ",
-        transform: %{},
-        variant: nil
-      }
-
-      iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("sh_AQ")
-      %Cldr.LanguageTag{
-         canonical_locale_name: nil,
-         cldr_locale_name: nil,
-         extensions: %{},
-         gettext_locale_name: nil,
-         language: "sr",
-         locale: %{},
-         private_use: [],
-         rbnf_locale_name: nil,
-         requested_locale_name: "sh-aq",
-         script: "Latn",
-         territory: "AQ",
-         transform: %{},
-         variant: nil
-       }
+  ## Example
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{
@@ -570,19 +533,21 @@ defmodule Cldr.Locale do
   defp remove_unknown(%LanguageTag{} = language_tag, :territory), do: language_tag
 
   @doc """
-  Replace empty subtags within a `Cldr.LanguageTag` with the most likely
+  Replace empty subtags within a `Cldr.LanguageTag.t` with the most likely
   subtag.
 
-  A subtag is called empty if it is a missing script or region subtag, or it is
+  ## Options
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+
+  A subtag is called empty if it has a missing script or territory subtag, or it is
   a base language subtag with the value `und`. In the description below,
   a subscript on a subtag x indicates which tag it is from: x<sub>s</sub> is in the
   source, x<sub>m</sub> is in a match, and x<sub>r</sub> is in the final result.
 
-  This operation is performed in the following way:
+  ## Lookup
 
-  ### Lookup
-
-  Lookup each of the following in order, and stop on the first match:
+  Lookup each of the following in order, and stops on the first match:
 
   * language<sub>s</sub>-script<sub>s</sub>-region<sub>s</sub>
   * language<sub>s</sub>-region<sub>s</sub>
@@ -590,7 +555,7 @@ defmodule Cldr.Locale do
   * language<sub>s</sub>
   * und-script<sub>s</sub>
 
-  ### Return
+  ## Returns
 
   * If there is no match,either return
     * an error value, or
@@ -636,7 +601,13 @@ defmodule Cldr.Locale do
   @doc """
   Returns an error tuple for an invalid locale.
 
+  ## Options
+
     * `locale_name` is any locale name returned by `Cldr.known_locale_names/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownLocaleError, message}}`
 
   ## Examples
 
@@ -654,8 +625,36 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Returns the map of likely subtags for a subset of available
-  locale names.
+  Returns an error tuple for an invalid gettext locale.
+
+  ## Options
+
+    * `locale_name` is any locale name returned by `Cldr.known_gettext_locale_names/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownLocaleError, message}}`
+
+  ## Examples
+
+      iex> Cldr.Locale.gettext_locale_error :invalid
+      {Cldr.UnknownLocaleError, "The gettext locale :invalid is not known."}
+
+  """
+  @spec gettext_locale_error(Locale.locale_name | LanguageTag.t) :: {Cldr.UnknownLocaleError, String.t}
+  def gettext_locale_error(%LanguageTag{gettext_locale_name: gettext_locale_name}) do
+    gettext_locale_error(gettext_locale_name)
+  end
+
+  def gettext_locale_error(locale_name) do
+    {Cldr.UnknownLocaleError, "The gettext locale #{inspect locale_name} is not known."}
+  end
+
+  @doc """
+  Returns the map of likely subtags.
+
+  Note that not all locales are guaranteed
+  to have likely subtags.
 
   ## Example
 
@@ -702,6 +701,8 @@ defmodule Cldr.Locale do
   Returns the likely substags, as a `Cldr.LanguageTag`,
   for a given locale name.
 
+  ## Options
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct
 
@@ -719,22 +720,6 @@ defmodule Cldr.Locale do
         requested_locale_name: nil,
         script: "Latn",
         territory: "US",
-        transform: %{},
-        variant: nil
-      }
-
-      iex> Cldr.Locale.likely_subtags Cldr.Locale.new!("th")
-      %Cldr.LanguageTag{
-        canonical_locale_name: nil,
-        cldr_locale_name: nil,
-        extensions: %{},
-        language: "th",
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: nil,
-        requested_locale_name: nil,
-        script: "Thai",
-        territory: "TH",
         transform: %{},
         variant: nil
       }
@@ -761,6 +746,8 @@ defmodule Cldr.Locale do
   @doc """
   Return a map of the aliases for a given alias key and type
 
+  ## Options
+
   * `type` is one of `[:language, :region, :script, :variant, :zone]`
 
   * `key` is the substitution key (a language, region, script, variant or zone)
@@ -776,6 +763,8 @@ defmodule Cldr.Locale do
 
   @doc """
   Returns an error tuple for an invalid locale alias.
+
+  ## Options
 
     * `locale_name` is any locale name returned by `Cldr.known_locale_names/0`
 
@@ -803,4 +792,17 @@ defmodule Cldr.Locale do
 
     %{language_tag | territory: territory}
   end
+
+  @doc """
+  Transforms a locale name from the Posix format to the Cldr format
+  """
+  def locale_name_from_posix(nil), do: nil
+  def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
+
+  @doc """
+  Transforms a locale name from the CLDR format to the Posix format
+  """
+  def locale_name_to_posix(nil), do: nil
+  def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
+
 end
