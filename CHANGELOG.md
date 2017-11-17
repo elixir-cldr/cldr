@@ -1,8 +1,16 @@
 # Changelog
 
-## Cldr v0.14.0 November 14th, 2017
+## Cldr v0.14.0 November 17th, 2017
+
+Version 0.14.0 completes the functional definition for the planned 1.0 release.  Further work on documentation refactoring is required before the first release candidate for 1.0.
 
 ### Enhancements
+
+* Adds two `Plug`s:
+
+  * `Cldr.Plug.AcceptLanguage` will parse an `accept-language` header and resolve the best matched configured `Cldr` locale
+
+  * `Cldr.Plug.SetLocale` which will identify a requested locale in the request parameters or `accept-language` header and set both/either `Cldr` and `Gettext` locales
 
 * `%LanguageTag{}` includes a new field `:gettext_locale_name` which will be matched if possible to a configured `Gettext` locale to aid cross-library collaboration.
 

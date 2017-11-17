@@ -1,9 +1,7 @@
 # credo:disable-for-this-file
 defmodule Cldr.Normalize.Units do
-  @moduledoc """
-  Takes the units part of the locale map and transforms the formats into a more easily
-  processable structure that is then stored in map managed by `Cldr.Locale`
-  """
+  @moduledoc false
+
   alias Cldr.Substitution
 
   def normalize(content, locale) do

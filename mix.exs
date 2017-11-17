@@ -117,7 +117,7 @@ defmodule Cldr.Mixfile do
       ],
       "Language Tag": ~r/^Cldr.LanguageTag.?/,
       "Plural Rules": ~r/^Cldr.Number.?/,
-      "Normalization": ~r/^Cldr.Normalize.?/,
+      "Plugs": ~r/^Cldr.Plug.?/,
       "Gettext": ~r/^Cldr.Gettext.?/,
       "Helpers": [
         Cldr.Calendar.Conversion,

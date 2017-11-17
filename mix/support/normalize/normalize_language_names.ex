@@ -1,8 +1,5 @@
 defmodule Cldr.Normalize.LanguageNames do
-  @moduledoc """
-  Takes the territory name part of the locale map and transforms the formats into a more easily
-  processable structure that is then stored in map managed by `Cldr.Locale`
-  """
+  @moduledoc false
 
   def normalize(content, locale) do
     content

@@ -1,8 +1,6 @@
 defmodule Cldr.Normalize.TerritoryInfo do
-  @moduledoc """
-  Takes the territory info data and transforms the formats into a more easily
-  processable structure.
-  """
+  @moduledoc false
+
   alias Cldr.Locale
 
   def normalize(content) do

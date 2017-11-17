@@ -1,9 +1,6 @@
-# credo:disable-for-this-file
 defmodule Cldr.Normalize.Rbnf do
-  @moduledoc """
-  Takes the rbnf part of the locale map and transforms the formats into a more easily
-  processable structure that is then stored in map managed by `Cldr.Locale`
-  """
+  @moduledoc false
+
   def normalize(content, locale) do
     content
     |> normalize_rbnf(locale)

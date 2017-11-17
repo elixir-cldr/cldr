@@ -10,7 +10,7 @@
 - [X] Refactor the functions in `Cldr.Map`
 - [X] Add Locale matcher for Gettext locales if Gettext is configured
 - [X] Simplify `Cldr.Math` to include only those functions required
-- [ ] Add a `Plug` to process an AcceptLanguage header and set Cldr locale
+- [X] Add a `Plug` to process an AcceptLanguage header and set Cldr locale
 - [ ] Update guides and move the relevant sections to the dependent packages (numbers, date_times, lists, units, ...)
 
 ### Parser generator for language tags

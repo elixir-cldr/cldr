@@ -7,6 +7,9 @@ config :ex_cldr,
   gettext: Cldr.Gettext,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}]
 
+config :plug,
+  validate_header_keys_during_test: true
+
 config :ex_unit,
   module_load_timeout: 220_000,
   case_load_timeout: 220_000,

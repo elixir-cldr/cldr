@@ -1,9 +1,6 @@
 if Code.ensure_loaded?(Flow) do
   defmodule Cldr.Consolidate do
-    @moduledoc """
-    Consolidates all locale-specific information from the CLDR repository into
-    one locale-specific file.
-    """
+    @moduledoc false
 
     alias Cldr.Normalize
     alias Cldr.LanguageTag

@@ -198,6 +198,20 @@ As of version 0.2.0, formatting of relative dates and date times is supported wi
       {:error, {Cldr.UnknownTimeUnit,
        "Unknown time unit :ziggeraut.  Valid time units are [:day, :hour, :minute, :month, :second, :week, :year, :mon, :tue, :wed, :thu, :fri, :sat, :sun, :quarter]"}}
 
+## Plugs
+
+`Cldr` provides two plugs to aid integration into an HTTP workflow.  These two plugs are:
+
+* `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale.
+
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` with that locale.  It will also call `Gettext.put_locale/2` if requested.  The plug will look for a locale in the following locations depending on the plug configuration:
+
+  * `url_params`
+  * `query_params`
+  * `body_params`
+  * `accept-language` header
+  * the `session`
+
 ## Gettext Integration
 
 There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  **Its not yet fully tested**. It is configured in `Gettext` by:
@@ -220,6 +234,6 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 ## Testing
 
-Tests cover the full 516 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 523 locales defined in CLDR. Since `Cldr` attempts to maximumize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.5.x.  Elixir below 1.5 is not supported.
+Tests are run on Elixir 1.5 and later.  Elixir below 1.5 is not supported.

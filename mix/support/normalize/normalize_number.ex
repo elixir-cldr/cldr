@@ -1,16 +1,6 @@
-# credo:disable-for-this-file
 defmodule Cldr.Normalize.Number do
-  @moduledoc """
-  Takes the number part of the locale map and transforms the formats into a more easily
-  processable structure that is then stored in map managed by `Cldr.Locale`
-  """
+  @moduledoc false
 
-  @doc """
-  Normalize decimal formats for a locale.
-
-  * `locale` is the full locale map from CLDR. The map is transformed and
-    returned so that further processing may occur
-  """
   def normalize(content, locale) do
     content
     |> normalize_formats(locale)

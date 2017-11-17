@@ -206,9 +206,19 @@ There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`
 
 `Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
 
-## Phoenix Integration
+## Plugs
 
-There is an imcomplete (ie development not finished) implemenation of a `Plug` intended to parse the HTTP `accept-language` header into `Cldr` compatible locale and number system.  Since it's not development complete it definitely won't work yet.  Comments and ideas (and pull requests) are, however, welcome.
+`Cldr` provides two plugs to aid integration into an HTTP workflow.  These two plugs are:
+
+* `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale.
+
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` with that locale.  It will also call `Gettext.put_locale/2` if requested.  The plug will look for a locale in the following locations depending on the plug configuration:
+
+  * `url_params`
+  * `query_params`
+  * `body_params`
+  * `accept-language` header
+  * the `session`
 
 ## About Locale strings
 

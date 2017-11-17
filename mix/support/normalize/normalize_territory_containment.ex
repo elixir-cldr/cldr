@@ -1,8 +1,5 @@
 defmodule Cldr.Normalize.TerritoryContainment do
-  @moduledoc """
-  Takes the territory containment data and transforms the formats into a more easily
-  processable structure.
-  """
+  @moduledoc false
 
   def normalize(content) do
     content

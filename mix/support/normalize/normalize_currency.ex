@@ -1,9 +1,5 @@
-# credo:disable-for-this-file
 defmodule Cldr.Normalize.Currency do
-  @moduledoc """
-  Takes the currency part of the locale map and transforms the formats into a more easily
-  processable structure that is then stored in map managed by `Cldr.Locale`
-  """
+  @moduledoc false
 
   def normalize(content, locale) do
     content
