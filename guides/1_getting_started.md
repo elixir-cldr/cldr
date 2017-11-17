@@ -204,7 +204,7 @@ As of version 0.2.0, formatting of relative dates and date times is supported wi
 
 * `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
 
-* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through. `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is also returned from `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
 
   * `url_params`
   * `query_params`

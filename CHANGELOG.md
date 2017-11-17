@@ -10,7 +10,7 @@ Version 0.14.0 completes the functional definition for the planned 1.0 release. 
 
   * `Cldr.Plug.AcceptLanguage` will parse an `accept-language` header and resolve the best matched configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
 
-  * `Cldr.Plug.SetLocale` which will identify a requested locale in the request parameters or `accept-language` header and will set both/either `Cldr` and `Gettext` locales. The result is also stored in `conn.private[:cldr_locale]` is returned by `Cldr.Plug.SetLocale.get_cldr_locale/1`.
+  * `Cldr.Plug.SetLocale` which will identify a requested locale in the request parameters or `accept-language` header and will set both/either `Cldr` and `Gettext` locales. The result is also stored in `conn.private[:cldr_locale]` and is returned by `Cldr.Plug.SetLocale.get_cldr_locale/1`.
 
 * `%LanguageTag{}` includes a new field `:gettext_locale_name` which will be matched if possible to a configured `Gettext` locale to aid cross-library collaboration.
 
