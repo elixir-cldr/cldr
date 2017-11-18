@@ -900,7 +900,7 @@ defmodule Cldr do
 
   ## Returns
 
-  * `{:error, {Cldr.UnknownCurrencyError, message}}
+  * `{:error, {Cldr.UnknownCurrencyError, message}}`
 
   ## Examples
 

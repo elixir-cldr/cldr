@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "0.14.0-dev"
+  @version "1.0.0-rc.0"
 
   def project do
     [
@@ -89,23 +89,26 @@ defmodule Cldr.Mixfile do
   def docs do
     [
       source_ref: "v#{@version}",
-      main: "1_getting_started",
-      extra_section: "GUIDES",
-      extras: extra_docs(),
+      main: "README",
+      extras: [
+        "README.md",
+        "ROADMAP.md",
+        "LICENSE.md",
+        "CHANGELOG.md"
+      ],
+      deps: [
+        ex_cldr_numbers: "https://hexdocs.pm/ex_cldr_numbers",
+        ex_cldr_dates_times: "https://hexdocs.pm/ex_cldr_dates_times",
+        ex_cldr_units: "https://hexdocs.pm/ex_cldr_units",
+        ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists"
+      ],
+      filter_prefix: "Cldr",
       groups_for_modules: groups_for_modules()
     ]
   end
 
   def aliases do
     [ ]
-  end
-
-  @doc_dir "./guides"
-  defp extra_docs do
-    @doc_dir
-    |> File.ls!
-    |> Enum.map(&Path.join(@doc_dir, &1))
-    |> Enum.sort
   end
 
   defp groups_for_modules do
