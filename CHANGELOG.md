@@ -1,3 +1,13 @@
+# Changelog for Cldr v1.0.0-rc.1
+
+This is the changelog for Cldr v1.0.0-rc.1 released on November __th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+This version signals API stability and the first release candidate.
+
+### Enhancements
+
+* Removed obsolete guides since they are now merged into the readme files of each dependent package
+
 # Changelog for Cldr v1.0.0-rc.0
 
 This is the changelog for Cldr v1.0.0-rc.0 released on November 18th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
