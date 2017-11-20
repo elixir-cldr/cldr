@@ -285,11 +285,9 @@ defmodule Cldr.Map do
   defp identity(x), do: x
 
   defp atomize_element(x, true) when is_binary(x) do
-    try do
-      String.to_existing_atom(x)
-    rescue ArgumentError ->
-      x
-    end
+    String.to_existing_atom(x)
+  rescue ArgumentError ->
+    x
   end
 
   defp atomize_element(x, false) when is_binary(x) do

@@ -644,14 +644,12 @@ defmodule Cldr do
   end
 
   def validate_calendar(calendar) when is_binary(calendar) do
-    try do
-      calendar
-      |> String.downcase
-      |> String.to_existing_atom
-      |> validate_calendar
-    rescue ArgumentError ->
-      {:error, unknown_calendar_error(calendar)}
-    end
+    calendar
+    |> String.downcase
+    |> String.to_existing_atom
+    |> validate_calendar
+  rescue ArgumentError ->
+    {:error, unknown_calendar_error(calendar)}
   end
 
   @doc """
@@ -759,14 +757,12 @@ defmodule Cldr do
   end
 
   def validate_territory(territory) when is_binary(territory) do
-    try do
-      territory
-      |> String.upcase
-      |> String.to_existing_atom
-      |> validate_territory
-    rescue ArgumentError ->
-      {:error, unknown_territory_error(territory)}
-    end
+    territory
+    |> String.upcase
+    |> String.to_existing_atom
+    |> validate_territory
+  rescue ArgumentError ->
+    {:error, unknown_territory_error(territory)}
   end
 
   def validate_territory(%LanguageTag{territory: nil} = locale) do
@@ -881,14 +877,12 @@ defmodule Cldr do
   end
 
   def validate_currency(currency) when is_binary(currency) do
-    try do
-      currency
-      |> String.upcase
-      |> String.to_existing_atom
-      |> validate_currency
-    rescue ArgumentError ->
-      {:error, unknown_currency_error(currency)}
-    end
+    currency
+    |> String.upcase
+    |> String.to_existing_atom
+    |> validate_currency
+  rescue ArgumentError ->
+    {:error, unknown_currency_error(currency)}
   end
 
   @doc """
@@ -973,14 +967,12 @@ defmodule Cldr do
   end
 
   def validate_number_system(number_system) when is_binary(number_system) do
-    try do
-      number_system
-      |> String.downcase
-      |> String.to_existing_atom
-      |> validate_number_system
-    rescue ArgumentError ->
-      {:error, unknown_number_system_error(number_system)}
-    end
+    number_system
+    |> String.downcase
+    |> String.to_existing_atom
+    |> validate_number_system
+  rescue ArgumentError ->
+    {:error, unknown_number_system_error(number_system)}
   end
 
   def validate_number_system(number_system) do
