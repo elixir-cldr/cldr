@@ -650,44 +650,44 @@ defmodule Cldr.Config do
 
       iex> Cldr.Config.territory_info[:GB]
       %{
-         currency: %{GBP: %{from: ~D[1694-07-27]}},
-         gdp: 2788000000000,
-         language_population: %{
-           "bn" => %{population_percent: 0.67},
-           "cy" => %{
-             official_status: "official_regional",
-             population_percent: 0.77
-           },
-           "de" => %{population_percent: 6},
-           "el" => %{population_percent: 0.34},
-           "en" => %{official_status: "official", population_percent: 99},
-           "fr" => %{population_percent: 19},
-           "ga" => %{
-             official_status: "official_regional",
-             population_percent: 0.026
-           },
-           "gd" => %{
-             official_status: "official_regional",
-             population_percent: 0.099,
-             writing_percent: 5
-           },
-           "it" => %{population_percent: 0.34},
-           "ks" => %{population_percent: 0.19},
-           "kw" => %{population_percent: 0.0031},
-           "ml" => %{population_percent: 0.035},
-           "pa" => %{population_percent: 0.79},
-           "sco" => %{population_percent: 2.7, writing_percent: 5},
-           "syl" => %{population_percent: 0.51},
-           "yi" => %{population_percent: 0.049},
-           "zh-Hant" => %{population_percent: 0.54}
-         },
-         literacy_percent: 99,
-         measurement_system: "UK",
-         paper_size: "A4",
-         population: 64769500,
-         telephone_country_code: 44,
-         temperature_measurement: "metric"
-       }
+        currency: [GBP: %{from: ~D[1694-07-27]}],
+        gdp: 2788000000000,
+        language_population: %{
+          "bn" => %{population_percent: 0.67},
+          "cy" => %{
+            official_status: "official_regional",
+            population_percent: 0.77
+          },
+          "de" => %{population_percent: 6},
+          "el" => %{population_percent: 0.34},
+          "en" => %{official_status: "official", population_percent: 99},
+          "fr" => %{population_percent: 19},
+          "ga" => %{
+            official_status: "official_regional",
+            population_percent: 0.026
+          },
+          "gd" => %{
+            official_status: "official_regional",
+            population_percent: 0.099,
+            writing_percent: 5
+          },
+          "it" => %{population_percent: 0.34},
+          "ks" => %{population_percent: 0.19},
+          "kw" => %{population_percent: 0.0031},
+          "ml" => %{population_percent: 0.035},
+          "pa" => %{population_percent: 0.79},
+          "sco" => %{population_percent: 2.7, writing_percent: 5},
+          "syl" => %{population_percent: 0.51},
+          "yi" => %{population_percent: 0.049},
+          "zh-Hant" => %{population_percent: 0.54}
+        },
+        literacy_percent: 99,
+        measurement_system: "UK",
+        paper_size: "A4",
+        population: 64769500,
+        telephone_country_code: 44,
+        temperature_measurement: "metric"
+      }
 
   """
   def territory_info do
@@ -717,10 +717,13 @@ defmodule Cldr.Config do
 
       iex> Cldr.Config.territory_info "au"
       %{
-        currency: %{AUD: %{from: ~D[1966-02-14]}},
+        currency: [AUD: %{from: ~D[1966-02-14]}],
         gdp: 1189000000000,
         language_population: %{
-          "en" => %{official_status: "de_facto_official", population_percent: 96},
+          "en" => %{
+            official_status: "de_facto_official",
+            population_percent: 96
+          },
           "it" => %{population_percent: 1.9},
           "wbp" => %{population_percent: 0.011},
           "zh-Hant" => %{population_percent: 2.1}
@@ -772,7 +775,7 @@ defmodule Cldr.Config do
         data
         |> Map.get(:currency)
         |> Cldr.Map.atomize_keys
-        |> Cldr.Map.merge_map_list
+        |> into_keyword_list
         |> Enum.map(fn {currency, data} ->
           data = if data[:tender] == "false" do
             Map.put(data, :tender, false)
@@ -794,10 +797,16 @@ defmodule Cldr.Config do
 
           {currency, data}
         end)
-        |> Enum.into(%{})
       {territory, Map.put(data, :currency, currencies)}
     end)
     |> Enum.into(%{})
+  end
+
+  defp into_keyword_list(list) do
+    Enum.reduce list, Keyword.new, fn map, acc ->
+      currency = Map.to_list(map) |> hd
+      [currency | acc]
+    end
   end
 
   defp atomize_language_population(territories) do
