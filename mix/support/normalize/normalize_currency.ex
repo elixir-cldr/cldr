@@ -75,10 +75,15 @@ defmodule Cldr.Normalize.Currency do
       |> Enum.map(fn {k, v} ->
            {k, Enum.map(v, fn list ->
                  Enum.map(list, fn {k, v} -> {String.upcase(k), v} end) |> Enum.into(%{})
-               end)}
+               end) |> make_list}
          end)
       |> Enum.into(%{})
 
     Map.put(currencies, "region", regions)
   end
+
+  defp make_list(list) when is_list(list) do
+    List.flatten(list)
+  end
+
 end
