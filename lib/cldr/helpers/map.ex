@@ -418,7 +418,8 @@ defmodule Cldr.Map do
 
   # h is upper case, next char is not uppercase, or a _ or .  => and prev != _
   defp do_underscore(<<h, t, rest::binary>>, prev)
-      when (h >= ?A and h <= ?Z) and not (t >= ?A and t <= ?Z) and t != ?. and t != ?_ and prev != ?_ do
+      when (h >= ?A and h <= ?Z) and not (t >= ?A and t <= ?Z) and t != ?.
+      and t != ?_ and t != ?- and prev != ?_  do
     <<?_, to_lower_char(h), t>> <> do_underscore(rest, t)
   end
 
