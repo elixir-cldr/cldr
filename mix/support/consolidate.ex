@@ -41,6 +41,7 @@ defmodule Cldr.Consolidate do
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
+    |> Enum.to_list
     :ok
   end
 
@@ -51,6 +52,7 @@ defmodule Cldr.Consolidate do
   def consolidate_known_locales do
     Cldr.known_locale_names()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
+    |> Enum.to_list
     :ok
   end
 
@@ -58,6 +60,7 @@ defmodule Cldr.Consolidate do
   Consolidates one locale.
 
   * `locale` is any locale defined by `Cldr.all_locale_names/0`
+
   """
   def consolidate_locale(locale) do
     IO.puts "Consolidating locale #{locale}"

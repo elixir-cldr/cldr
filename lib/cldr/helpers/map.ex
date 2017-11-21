@@ -4,6 +4,45 @@ defmodule Cldr.Map do
   """
 
   @doc """
+  Recursively traverse a map and invoke a function for each key/
+  value pair that transforms the map.
+
+  * `map` is any `Map.t`
+
+  * `function` is a function or function reference that
+    is called for each key/value pair of the provided map
+
+  Returns:
+
+  * The `map` transformed by the recursive application of `function`
+
+  ## Examples
+
+  """
+  @spec deep_map(Map.t, function :: function()) :: Map.t
+  def deep_map(map, function) when is_map(map) do
+    Enum.map(map, fn
+      {k, v} when is_map(v) or is_list(v) ->
+        {k, deep_map(v, function)}
+      {k, v} ->
+        function.({k, v})
+    end)
+    |> Enum.into(%{})
+  end
+
+  def deep_map([head | rest], fun) do
+    [deep_map(head, fun) | deep_map(rest, fun)]
+  end
+
+  def deep_map(nil, _fun) do
+    nil
+  end
+
+  def deep_map(value, fun) do
+    fun.(value)
+  end
+
+  @doc """
   Recursively traverse a map and invoke a function for each key
   and a function for each value that transform the map.
 
@@ -26,7 +65,7 @@ defmodule Cldr.Map do
 
   """
   @spec deep_map(Map.t, key_function :: function(), value_function :: function()) :: Map.t
-  def deep_map(map, key_function \\ &identity/1, value_function \\ &identity/1)
+  def deep_map(map, key_function, value_function)
   def deep_map(map, key_function, value_function) when is_map(map) do
     Enum.map(map, fn
       {k, v} when is_map(v) or is_list(v) ->
@@ -65,7 +104,7 @@ defmodule Cldr.Map do
 
   """
   def atomize_keys(map, options \\ [only_existing: false]) do
-    deep_map(map, &atomize_element(&1, options[:only_existing]))
+    deep_map(map, &atomize_element(&1, options[:only_existing]), &identity/1)
   end
 
   @doc """
@@ -99,7 +138,7 @@ defmodule Cldr.Map do
     deep_map(map, fn
       k when is_atom(k) -> Atom.to_string(k)
       k -> k
-    end)
+    end, &identity/1)
   end
 
   @doc """
@@ -118,7 +157,7 @@ defmodule Cldr.Map do
 
   """
   def integerize_keys(map) do
-    deep_map(map, &integerize_element/1)
+    deep_map(map, &integerize_element/1, &identity/1)
   end
 
   @doc """
@@ -175,7 +214,7 @@ defmodule Cldr.Map do
     deep_map(map, fn
       ^from -> to
       other -> other
-    end)
+    end, &identity/1)
   end
 
   @doc """
@@ -187,7 +226,7 @@ defmodule Cldr.Map do
 
   """
   def underscore_keys(map = %{}) do
-    deep_map(map, &underscore/1)
+    deep_map(map, &underscore/1, &identity/1)
   end
 
   @doc """
@@ -200,7 +239,7 @@ defmodule Cldr.Map do
 
   """
   def remove_leading_underscores(map) do
-    deep_map(map, &String.replace_prefix(&1, "_", ""))
+    deep_map(map, &String.replace_prefix(&1, "_", ""), &identity/1)
   end
 
   @doc """
@@ -387,6 +426,11 @@ defmodule Cldr.Map do
   defp do_underscore(<<h, t::binary>>, prev)
       when (h >= ?A and h <= ?Z) and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
     <<?_, to_lower_char(h)>> <> do_underscore(t, h)
+  end
+
+  # h is dash "-" -> replace with underscore "_"
+  defp do_underscore(<<?-, t::binary>>, _) do
+    <<?_>> <> underscore(t)
   end
 
   # h is .

@@ -1060,14 +1060,12 @@ defmodule Cldr do
   end
 
   def validate_number_system_type(number_system_type) when is_binary(number_system_type) do
-    try do
-      number_system_type
-      |> String.downcase
-      |> String.to_existing_atom
-      |> validate_number_system_type
-    rescue ArgumentError ->
-      {:error, unknown_number_system_type_error(number_system_type)}
-    end
+    number_system_type
+    |> String.downcase
+    |> String.to_existing_atom
+    |> validate_number_system_type
+  rescue ArgumentError ->
+    {:error, unknown_number_system_type_error(number_system_type)}
   end
 
   def validate_number_system_type(number_system_type) do
