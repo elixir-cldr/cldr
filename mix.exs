@@ -56,7 +56,7 @@ defmodule Cldr.Mixfile do
       licenses: ["Apache 2.0"],
       links: links(),
       files: [
-        "lib", "src", "guides", "config",
+        "lib", "src", "config",
         "mix.exs", "README*", "CHANGELOG*", "LICENSE*",
         "priv/cldr/locales/en.json",
         "priv/cldr/locales/en-001.json",
