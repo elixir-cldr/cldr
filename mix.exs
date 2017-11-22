@@ -90,6 +90,7 @@ defmodule Cldr.Mixfile do
     [
       source_ref: "v#{@version}",
       main: "README",
+      logo: "logo.png",
       extras: [
         "README.md",
         "ROADMAP.md",
