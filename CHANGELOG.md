@@ -1,10 +1,12 @@
-# Changelog for Cldr v1.0.0-rc.1
+# Changelog for Cldr v1.0.0-rc.2
 
-This is the changelog for Cldr v1.0.0-rc.1 released on November 22nd, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.0.0-rc.2 released on November 22nd, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 This version signals API stability and the first release candidate.
 
-## Bug Fixes
+## Bug Fixes (including for 1.0.0-rc.1)
+
+* Fixed a bug in `Cldr.Map.underscore_keys/1` that wasn't correctly accounting for repeated "-"'s
 
 * Fixed currency definition in `Cldr.Config.territory_info/1` so that a list is returned instead of a map so that the record of the same currency being used at different times is preserved.  The canonical example if Palestine (territory code :PS) which has used the Jordanian Dinar twice during its history.
 
@@ -15,22 +17,3 @@ This version signals API stability and the first release candidate.
 ## Enhancements
 
 * Removed obsolete guides since they are now merged into the readme files of each dependent package
-
-# Changelog for Cldr v1.0.0-rc.0
-
-This is the changelog for Cldr v1.0.0-rc.0 released on November 18th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
-
-This version signals API stability and the first release candidate.
-
-## Enhancements
-
-* Adds two `Plug`s:
-
-  * `Cldr.Plug.AcceptLanguage` will parse an `accept-language` header and resolve the best matched configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
-
-  * `Cldr.Plug.SetLocale` which will identify a requested locale in the request parameters or `accept-language` header and will set both/either `Cldr` and `Gettext` locales. The result is also stored in `conn.private[:cldr_locale]` and is returned by `Cldr.Plug.SetLocale.get_cldr_locale/1`.
-
-* `%LanguageTag{}` includes a new field `:gettext_locale_name` which will be matched if possible to a configured `Gettext` locale to aid cross-library collaboration.
-
-* Refactored the functions in `Cldr.Map`
-
