@@ -3,6 +3,8 @@ defmodule Cldr.Number.Ordinal do
   Implements ordinal plural rules for numbers.
   """
 
+  @compile :nowarn_unused_vars
+
   use Cldr.Number.PluralRule, :ordinal
   alias Cldr.LanguageTag
 
@@ -20,22 +22,9 @@ defmodule Cldr.Number.Ordinal do
       |> Map.get(locale_name)
       |> rules_to_condition_statement(__MODULE__)
 
-    # This is the appropriate way to generate the function we're
-    # generating.  However this will generate a lot of warnings
-    # about unused parameters since not all generated functions
-    # use all parameters.
-
-    # defp do_plural_rule(unquote(locale), n, i, v, w, f, t) do
-    #   unquote(Macro.escape(function_body))
-    # end
-
-    # So we use this version which is a bit hacky.  But we're only calling
-    # Code.eval_quoted during compile time so we'll live with it.
-    function = quote do
-      defp do_plural_rule(%LanguageTag{language: unquote(locale_name)}, n, i, v, w, f, t),
-        do: unquote(function_body)
+    defp do_plural_rule(%LanguageTag{language: unquote(locale_name)}, n, i, v, w, f, t) do
+      unquote(function_body)
     end
-    Code.eval_quoted(function, [], __ENV__)
   end
 
   # If we get here then it means that the locale doesn't have a plural rule,

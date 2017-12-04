@@ -39,7 +39,8 @@ defmodule Cldr.Number.PluralRule.Transformer do
     Macro.prewalk ast, [], fn(expr, acc) ->
       new_expr = case expr do
         {var, [], Elixir} ->
-          {var, [], module}
+          {:var!, [context: Elixir, import: Kernel], [{var, [], module}]}
+          # {var, [], module}
         {:mod, _context, [operand, value]} ->
           {:mod, [context: Elixir, import: Elixir.Cldr.Math], [operand, value]}
         {:within, _context, [operand, range]} ->
