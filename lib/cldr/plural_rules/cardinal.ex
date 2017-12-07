@@ -2,6 +2,7 @@ defmodule Cldr.Number.Cardinal do
   @moduledoc """
   Implements cardinal plural rules for numbers.
   """
+
   @compile :nowarn_unused_vars
 
   use Cldr.Number.PluralRule, :cardinal

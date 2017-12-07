@@ -16,7 +16,8 @@ defmodule Cldr.Number.PluralRule do
       alias Cldr.LanguageTag
       alias Cldr.Locale
 
-      import Cldr.Digits, only: [number_of_integer_digits: 1, remove_trailing_zeros: 1]
+      import Cldr.Digits,
+        only: [number_of_integer_digits: 1, remove_trailing_zeros: 1, fraction_as_integer: 2]
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
@@ -180,12 +181,12 @@ defmodule Cldr.Number.PluralRule do
       @spec plural_rule(Math.number_or_decimal, Locale.locale_name | LanguageTag.t, atom()) ::
         :zero | :one | :two | :few | :many | :other
 
-      def plural_rule(number, locale \\ Cldr.get_current_locale(), rounding \\ Math.default_rounding())
+      def plural_rule(number, locale \\ Cldr.get_current_locale(),
+                              rounding \\ Math.default_rounding())
 
       def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
-        case Cldr.Locale.new(locale_name) do
-          {:ok, locale} -> plural_rule(number, locale, rounding)
-          {:error, reason} -> {:error, reason}
+        with {:ok, locale} <- Cldr.Locale.new(locale_name) do
+           plural_rule(number, locale, rounding)
         end
       end
 
@@ -246,20 +247,6 @@ defmodule Cldr.Number.PluralRule do
         n = Math.to_float(n)
 
         do_plural_rule(locale, n, i, v, w, f, t)
-      end
-
-      defp fraction_as_integer(x, rounding) do
-        number = Float.round(x, rounding)
-        do_fraction_as_integer(number)
-      end
-
-      defp do_fraction_as_integer(number) do
-        trunc_number = trunc(number)
-        if number - trunc_number == 0 do
-          trunc_number
-        else
-          do_fraction_as_integer(number * 10)
-        end
       end
     end
   end

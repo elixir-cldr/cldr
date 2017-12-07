@@ -72,6 +72,11 @@ defmodule Cldr.Digits do
     |> fraction_as_integer
   end
 
+  def fraction_as_integer(number, rounding) do
+    number = Float.round(number, rounding)
+    fraction_as_integer(number)
+  end
+
   @doc """
   Returns the number of decimal digits in the integer
   part of a number.
