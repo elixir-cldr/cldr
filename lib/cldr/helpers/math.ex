@@ -234,7 +234,7 @@ defmodule Cldr.Math do
     d = Float.ceil(:math.log10(number))
     power = n - d
 
-    magnitude = :math.pow(10, power)
+    magnitude = :math.pow(10,power)
     shifted = Float.round(number * magnitude)
     rounded = shifted / magnitude
 

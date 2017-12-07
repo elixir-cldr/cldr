@@ -1,7 +1,7 @@
 
-# Changelog for Cldr v1.0.0-rc.3
+# Changelog for Cldr v1.0.0
 
-This is the changelog for Cldr v1.0.0-rc.3 released on December 7th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.0.0 released on December __th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 This version signals API stability and the first release candidate.
 
@@ -18,6 +18,8 @@ This is anticipated to be the last release candidate before final release on Dec
 * Fixed a bug in `Cldr.Consolidate` that crept in during the replacement of `Flow` with `Task.async_stream`
 
 ## Enhancements
+
+* Remove duplicated fraction_as_integer/2 from plural rules
 
 * Optimised the code that supports plural rules in `Cldr.Number.Cardinal` and `Cldr.Number.Ordinal`
 

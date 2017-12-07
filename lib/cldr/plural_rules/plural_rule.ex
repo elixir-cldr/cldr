@@ -214,7 +214,7 @@ defmodule Cldr.Number.PluralRule do
         v = rounding
         t = fraction_as_integer(n - i, rounding)
         w = number_of_integer_digits(t)
-        f = trunc(t * :math.pow(10, v - w))
+        f = trunc(t * Math.power_of_10(v - w))
         do_plural_rule(locale, n, i, v, w, f, t)
       end
 
@@ -233,7 +233,7 @@ defmodule Cldr.Number.PluralRule do
         # f visible fractional digits in n, with trailing zeros.
         f = n
         |> Decimal.sub(i)
-        |> Decimal.mult(Decimal.new(:math.pow(10, v)))
+        |> Decimal.mult(Decimal.new(Math.power_of_10(v)))
         |> Decimal.round(0, :floor)
         |> Decimal.to_integer
 
