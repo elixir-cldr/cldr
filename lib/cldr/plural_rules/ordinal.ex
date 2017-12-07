@@ -22,7 +22,7 @@ defmodule Cldr.Number.Ordinal do
       |> Map.get(locale_name)
       |> rules_to_condition_statement(__MODULE__)
 
-    defp do_plural_rule(%LanguageTag{language: unquote(locale_name)}, n, i, v, w, f, t) do
+    defp do_plural_rule(%LanguageTag{cldr_locale_name: unquote(locale_name)}, n, i, v, w, f, t) do
       unquote(function_body)
     end
   end
