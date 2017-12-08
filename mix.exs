@@ -40,12 +40,12 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.1 or ~> 3.0"},
-      {:decimal, "~> 1.4.1"},
-      {:ex_doc, "~> 0.18.1", only: [:dev, :docs]},
+      {:decimal, "~> 1.4"},
+      {:ex_doc, "~> 0.18", only: [:dev, :docs]},
       {:abnf2, "~> 0.1"},
-      {:gettext, "~> 0.13.0", optional: true},
+      {:gettext, "~> 0.13", optional: true},
       {:plug, "~> 1.3", optional: true, only: [:dev, :test]},
-      {:stream_data, "~> 0.3.0", only: :test},
+      {:stream_data, "~> 0.4.0", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}
     ]
   end
