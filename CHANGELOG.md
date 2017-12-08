@@ -1,4 +1,3 @@
-
 # Changelog for Cldr v1.0.0
 
 This is the changelog for Cldr v1.0.0 released on December 8th, 2017.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
@@ -8,6 +7,8 @@ This version signals API stability and the first release candidate.
 This is anticipated to be the last release candidate before final release on December 15th.
 
 ## Bug Fixes (including for 1.0.0-rc.1 and rc.2)
+
+* Correct function names in Cldr.Normalize.LanguageNames.  Closes #26.
 
 * Fixed a bug in `Cldr.Map.underscore_keys/1` that wasn't correctly accounting for repeated "-"'s
 
