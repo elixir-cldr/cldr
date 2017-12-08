@@ -3,10 +3,10 @@ defmodule Cldr.Normalize.LanguageNames do
 
   def normalize(content, locale) do
     content
-    |> normalize_territory_names(locale)
+    |> normalize_language_names(locale)
   end
 
-  def normalize_territory_names(content, _locale) do
+  def normalize_language_names(content, _locale) do
     territories =
       content
       |> get_in(["locale_display_names", "languages"])
