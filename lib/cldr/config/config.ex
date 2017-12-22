@@ -527,10 +527,14 @@ defmodule Cldr.Config do
   its variants, a locale can be specified as a regex which will
   then do a match against all CLDR locales.
 
+  For locale names that have a Script or Vairant component the base
+  language is also configured since plural rules will fall back to the
+  language for these locale names.
+
   ## Examples
 
       iex> Cldr.Config.expand_locale_names(["en-A+"])
-      ["en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
+      ["en", "en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
 
       iex> Cldr.Config.expand_locale_names(["fr-*"])
       ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",
@@ -543,14 +547,26 @@ defmodule Cldr.Config do
   @wildcard_matchers ["*", "+", ".", "["]
   @spec expand_locale_names([Locale.locale_name, ...]) :: [Locale.locale_name, ...]
   def expand_locale_names(locale_names) do
-    locale_name_list = Enum.map(locale_names, fn locale_name ->
+    Enum.map(locale_names, fn locale_name ->
       if String.contains?(locale_name, @wildcard_matchers) do
-        Enum.filter(all_locale_names(), &Regex.match?(Regex.compile!(locale_name), &1))
+        case Regex.compile(locale_name) do
+          {:ok, regex} -> Enum.filter(all_locale_names(), &Regex.match?(regex, &1))
+          {:error, reason} -> raise ArgumentError,
+              "Invalid regex in locale name #{inspect locale_name}: #{inspect reason}"
+        end
       else
         locale_name
       end
     end)
-    locale_name_list |> List.flatten |> Enum.uniq
+    |> List.flatten
+    |> Enum.map(fn locale_name ->
+      case String.split(locale_name, "-") do
+        [language] -> language
+        [language | _rest] -> [language, locale_name]
+      end
+    end)
+    |> List.flatten
+    |> Enum.uniq
   end
 
   @doc """

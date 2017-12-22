@@ -701,6 +701,7 @@ defmodule Cldr.Math do
 
   * `:half_down` - Round to nearest value, but in a tiebreak, round towards 0
     (Non IEEE algorithm)
+
   """
 
   # The canonical function head that takes a number and returns a number.
