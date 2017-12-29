@@ -57,7 +57,7 @@ defmodule Cldr.Normalize.Units do
       locale
       |> locale_path
       |> File.read!
-      |> Poison.decode!
+      |> Jason.decode!
     else
       {:error, {:units_file_not_found, locale_path(locale)}}
     end
