@@ -49,7 +49,7 @@ defmodule Cldr.Normalize.Currency do
   def get_currency_data do
     @currency_path
     |> File.read!
-    |> Poison.decode!
+    |> Jason.decode!
     |> Cldr.Map.underscore_keys
     |> get_in(["supplemental", "currency_data"])
     |> upcase_currency_codes

@@ -79,7 +79,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
   def get_phone_data do
     @currency_path
     |> File.read!
-    |> Poison.decode!
+    |> Jason.decode!
     |> get_in(["supplemental", "telephoneCodeData"])
     |> Cldr.Map.underscore_keys
     |> Enum.map(fn {k, v} -> {String.upcase(k), v} end)
@@ -100,7 +100,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
   def get_measurement_data do
     @measurement_path
     |> File.read!
-    |> Poison.decode!
+    |> Jason.decode!
     |> get_in(["supplemental", "measurementData"])
     |> Enum.map(fn {k, v} -> {String.replace(Cldr.String.underscore(k), "-", "_"), v} end)
     |> Enum.into(%{})

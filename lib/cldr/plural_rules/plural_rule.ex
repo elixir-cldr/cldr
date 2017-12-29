@@ -26,7 +26,7 @@ defmodule Cldr.Number.PluralRule do
       @rules Cldr.Config.cldr_data_dir()
       |> Path.join("/plural_rules.json")
       |> File.read!
-      |> Poison.decode!
+      |> Jason.decode!
       |> Map.get(Atom.to_string(unquote(opts)))
 
 
