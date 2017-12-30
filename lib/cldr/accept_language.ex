@@ -39,11 +39,11 @@ defmodule Cldr.AcceptLanguage do
       [{1.0, "da"}, {0.3, "zh-tw"}]
 
   """
-  @spec tokenize(String.t) :: [{float(), String.t}, ...]
+  @spec tokenize(String.t()) :: [{float(), String.t()}, ...]
   @language_separator ","
   def tokenize(accept_language) do
     accept_language
-    |> String.downcase
+    |> String.downcase()
     |> remove_whitespace
     |> String.split(@language_separator)
     |> Enum.reject(&is_nil/1)
@@ -56,8 +56,10 @@ defmodule Cldr.AcceptLanguage do
     case String.split(language, @quality_separator) do
       [language, quality] ->
         {parse_quality(quality), language}
+
       [language] ->
         {@default_quality, language}
+
       [language | _rest] ->
         {@low_quality, language}
     end
@@ -123,8 +125,11 @@ defmodule Cldr.AcceptLanguage do
           "x"}]}
 
   """
-  @spec parse([{float(), String.t}, ...] | String.t) ::
-    {:ok, [{float(), LanguageTag.t} | {:error, {Cldr.InvalidLanguageTag, String.t}}, ...]}
+  @spec parse([{float(), String.t()}, ...] | String.t()) ::
+          {:ok, [
+            {float(), LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}},
+            ...
+          ]}
 
   def parse(tokens) when is_list(tokens) do
     accept_language =
@@ -135,6 +140,7 @@ defmodule Cldr.AcceptLanguage do
     case accept_language do
       [{:error, reason, language_tag}] ->
         {:error, accept_language_error(reason, language_tag)}
+
       _ ->
         {:ok, accept_language}
     end
@@ -275,22 +281,33 @@ defmodule Cldr.AcceptLanguage do
       }
 
   """
-  @spec best_match(String.t) ::
-    {:ok, LanguageTag.t} | {:error, {Cldr.AcceptLanguageError, String.t}}
+  @spec best_match(String.t()) ::
+          {:ok, LanguageTag.t()} | {:error, {Cldr.AcceptLanguageError, String.t()}}
 
   def best_match(accept_language) when is_binary(accept_language) do
     with {:ok, languages} <- parse(accept_language) do
       candidates =
         Enum.filter(languages, fn
           {priority, %LanguageTag{cldr_locale_name: locale_name}}
-              when is_float(priority) and not is_nil(locale_name) -> true
-          _ -> false
+          when is_float(priority) and not is_nil(locale_name) ->
+            true
+
+          _ ->
+            false
         end)
 
       case candidates do
-        [{_priority, language_tag} | _] -> {:ok, language_tag}
-        _ -> {:error, {Cldr.NoMatchingLocale,
-                "No configured locale could be matched to #{inspect accept_language}"}}
+        [{_priority, language_tag} | _] ->
+          {:ok, language_tag}
+
+        _ ->
+          {
+            :error,
+            {
+              Cldr.NoMatchingLocale,
+              "No configured locale could be matched to #{inspect(accept_language)}"
+            }
+          }
       end
     else
       {:error, reason} -> {:error, reason}
@@ -309,7 +326,7 @@ defmodule Cldr.AcceptLanguage do
          "Could not parse language tag.  Error was detected at 'x'"}, "x"}]
 
   """
-  @spec errors([tuple(), ...]) :: [{:error, {Cldr.InvalidLanguageTag, String.t}}, ...]
+  @spec errors([tuple(), ...]) :: [{:error, {Cldr.InvalidLanguageTag, String.t()}}, ...]
   def errors(parse_result) when is_list(parse_result) do
     Enum.filter(parse_result, fn
       {:error, _, _} -> true
@@ -329,6 +346,7 @@ defmodule Cldr.AcceptLanguage do
       case Locale.canonical_language_tag(language_tag) do
         {:ok, tag} ->
           {quality, tag}
+
         {:error, reason} ->
           {:error, reason, language_tag}
       end

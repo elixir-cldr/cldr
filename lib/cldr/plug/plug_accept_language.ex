@@ -14,8 +14,11 @@ if Code.ensure_loaded?(Plug) do
     @language_header "accept-language"
 
     def init(any) do
-      Logger.warn "#{__MODULE__} does not support configuration options. " <>
-                  "Please remove #{inspect any} from the plug invokation."
+      Logger.warn(
+        "#{__MODULE__} does not support configuration options. " <>
+          "Please remove #{inspect(any)} from the plug invokation."
+      )
+
       init()
     end
 
@@ -39,8 +42,9 @@ if Code.ensure_loaded?(Plug) do
       case Cldr.AcceptLanguage.best_match(accept_language) do
         {:ok, locale} ->
           locale
+
         {:error, {exception, reason}} ->
-          Logger.warn "#{exception}: #{reason}"
+          Logger.warn("#{exception}: #{reason}")
           nil
       end
     end

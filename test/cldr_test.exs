@@ -10,13 +10,13 @@ defmodule Cldr.Test do
   end
 
   test "that the client data directory is correct" do
-    assert String.ends_with?(Cldr.Config.client_data_dir(),
-      "/_build/test/lib/ex_cldr/priv/cldr") == true
+    assert String.ends_with?(Cldr.Config.client_data_dir(), "/_build/test/lib/ex_cldr/priv/cldr") ==
+             true
   end
 
   test "that the cldr data directory is correct" do
-    assert String.ends_with?(Cldr.Config.cldr_data_dir(),
-      "/_build/test/lib/ex_cldr/priv/cldr") == true
+    assert String.ends_with?(Cldr.Config.cldr_data_dir(), "/_build/test/lib/ex_cldr/priv/cldr") ==
+             true
   end
 
   test "that the download data directory is correct" do
@@ -25,19 +25,38 @@ defmodule Cldr.Test do
 
   test "that we have the correct modules (keys) for the json consolidation" do
     assert Cldr.Config.required_modules() ==
-      ["number_formats", "list_formats", "currencies", "number_systems",
-       "number_symbols", "minimum_grouping_digits", "rbnf", "units", "date_fields",
-       "dates", "territories", "languages"]
+             [
+               "number_formats",
+               "list_formats",
+               "currencies",
+               "number_systems",
+               "number_symbols",
+               "minimum_grouping_digits",
+               "rbnf",
+               "units",
+               "date_fields",
+               "dates",
+               "territories",
+               "languages"
+             ]
   end
 
   test "default locale" do
     assert Cldr.default_locale() ==
-      %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{},
-        language: "en", locale: %{}, private_use: [],
-        territory: "001", requested_locale_name: "en-001",
-        script: "Latn", transform: %{}, variant: nil,
-        rbnf_locale_name: "en"}
+             %Cldr.LanguageTag{
+               canonical_locale_name: "en-Latn-001",
+               cldr_locale_name: "en-001",
+               extensions: %{},
+               language: "en",
+               locale: %{},
+               private_use: [],
+               territory: "001",
+               requested_locale_name: "en-001",
+               script: "Latn",
+               transform: %{},
+               variant: nil,
+               rbnf_locale_name: "en"
+             }
   end
 
   test "locale name does not exist" do
@@ -45,83 +64,160 @@ defmodule Cldr.Test do
   end
 
   test "that we have the right number of rbnf locales" do
-    assert Cldr.known_rbnf_locale_names ==
-    ["af", "ak", "am", "ar", "az", "be", "bg", "bs", "ca", "chr", "cs", "cy", "da",
-     "de", "de-CH", "ee", "el", "en", "en-IN", "eo", "es", "es-419", "et", "fa",
-     "fa-AF", "fi", "fil", "fo", "fr", "fr-BE", "fr-CH", "ga", "he", "hi", "hr",
-     "hu", "hy", "id", "is", "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lrc",
-     "lt", "lv", "mk", "ms", "mt", "my", "nb", "nl", "nn", "pl", "pt", "pt-PT",
-     "ro", "root", "ru", "se", "sk", "sl", "sq", "sr", "sr-Latn", "sv", "ta", "th",
-     "tr", "uk", "vi", "yue-Hans", "zh", "zh-Hant"]
+    assert Cldr.known_rbnf_locale_names() ==
+             [
+               "af",
+               "ak",
+               "am",
+               "ar",
+               "az",
+               "be",
+               "bg",
+               "bs",
+               "ca",
+               "chr",
+               "cs",
+               "cy",
+               "da",
+               "de",
+               "de-CH",
+               "ee",
+               "el",
+               "en",
+               "en-IN",
+               "eo",
+               "es",
+               "es-419",
+               "et",
+               "fa",
+               "fa-AF",
+               "fi",
+               "fil",
+               "fo",
+               "fr",
+               "fr-BE",
+               "fr-CH",
+               "ga",
+               "he",
+               "hi",
+               "hr",
+               "hu",
+               "hy",
+               "id",
+               "is",
+               "it",
+               "ja",
+               "ka",
+               "kl",
+               "km",
+               "ko",
+               "ky",
+               "lo",
+               "lrc",
+               "lt",
+               "lv",
+               "mk",
+               "ms",
+               "mt",
+               "my",
+               "nb",
+               "nl",
+               "nn",
+               "pl",
+               "pt",
+               "pt-PT",
+               "ro",
+               "root",
+               "ru",
+               "se",
+               "sk",
+               "sl",
+               "sq",
+               "sr",
+               "sr-Latn",
+               "sv",
+               "ta",
+               "th",
+               "tr",
+               "uk",
+               "vi",
+               "yue-Hans",
+               "zh",
+               "zh-Hant"
+             ]
   end
 
   test "that requesting rbnf for a locale that doesn't define it returns and error" do
     assert Cldr.Rbnf.Config.for_locale("zzz") ==
-      {:error,
-        {Cldr.Rbnf.NotAvailable,
-          "The locale name \"zzz\" does not have an RBNF configuration file available"}}
+             {
+               :error,
+               {
+                 Cldr.Rbnf.NotAvailable,
+                 "The locale name \"zzz\" does not have an RBNF configuration file available"
+               }
+             }
   end
 
   test "that locale substitutions are applied" do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
-    %Cldr.LanguageTag{
-      canonical_locale_name: nil,
-      cldr_locale_name: nil,
-      extensions: %{},
-      gettext_locale_name: nil,
-      language: "en",
-      locale: %{},
-      private_use: [],
-      rbnf_locale_name: nil,
-      requested_locale_name: "en-us",
-      script: nil,
-      territory: "US",
-      transform: %{},
-      variant: nil
-    }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "en",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "en-us",
+               script: nil,
+               territory: "US",
+               transform: %{},
+               variant: nil
+             }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
-    %Cldr.LanguageTag{
-      canonical_locale_name: nil,
-      cldr_locale_name: nil,
-      extensions: %{},
-      gettext_locale_name: nil,
-      language: "sr",
-      locale: %{},
-      private_use: [],
-      rbnf_locale_name: nil,
-      requested_locale_name: "sh-arab-aq",
-      script: "Arab",
-      territory: "AQ",
-      transform: %{},
-      variant: nil
-    }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "sr",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "sh-arab-aq",
+               script: "Arab",
+               territory: "AQ",
+               transform: %{},
+               variant: nil
+             }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
-    %Cldr.LanguageTag{
-       canonical_locale_name: nil,
-       cldr_locale_name: nil,
-       extensions: %{},
-       gettext_locale_name: nil,
-       language: "sr",
-       locale: %{},
-       private_use: [],
-       rbnf_locale_name: nil,
-       requested_locale_name: "sh-aq",
-       script: "Latn",
-       territory: "AQ",
-       transform: %{},
-       variant: nil
-     }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "sr",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "sh-aq",
+               script: "Latn",
+               territory: "AQ",
+               transform: %{},
+               variant: nil
+             }
   end
 
   test "that we can have repeated currencies in a territory" do
     assert Cldr.Config.territory_info(:PS)[:currency] ==
-      [
-        JOD: %{from: ~D[1996-02-12]},
-        ILS: %{from: ~D[1985-09-04]},
-        ILP: %{from: ~D[1967-06-01], to: ~D[1980-02-22]},
-        JOD: %{from: ~D[1950-07-01], to: ~D[1967-06-01]}
-      ]
-    end
+             [
+               JOD: %{from: ~D[1996-02-12]},
+               ILS: %{from: ~D[1985-09-04]},
+               ILP: %{from: ~D[1967-06-01], to: ~D[1980-02-22]},
+               JOD: %{from: ~D[1950-07-01], to: ~D[1967-06-01]}
+             ]
+  end
 end

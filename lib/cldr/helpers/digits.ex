@@ -32,10 +32,10 @@ defmodule Cldr.Digits do
   `Cldr.Digits.to_integer/1`, `Cldr.Digits.to_float/1` and
   `Cldr.Digits.to_decimal/1`.
   """
-  @type  t :: {[0..9, ...], non_neg_integer, 1 | -1}
+  @type t :: {[0..9, ...], non_neg_integer, 1 | -1}
 
-  @two52 bsl 1, 52
-  @two53 bsl 1, 53
+  @two52 bsl(1, 52)
+  @two53 bsl(1, 53)
   @float_bias 1022
   @min_e -1074
 
@@ -56,9 +56,9 @@ defmodule Cldr.Digits do
       iex> Cldr.Math.fraction_as_integer(1999)
       0
   """
-  @spec fraction_as_integer(Math.number_or_decimal | {list, list, 1 | -1}) :: integer
+  @spec fraction_as_integer(Math.number_or_decimal() | {list, list, 1 | -1}) :: integer
   def fraction_as_integer({_integer, fraction, _sign})
-  when is_list(fraction) do
+      when is_list(fraction) do
     Integer.undigits(fraction)
   end
 
@@ -99,8 +99,11 @@ defmodule Cldr.Digits do
       5
 
   """
-  @spec number_of_integer_digits(Math.number_or_decimal | list() |
-    {[integer(),...], integer | [integer(), ...], -1 | 1}) :: integer
+  @spec number_of_integer_digits(
+          Math.number_or_decimal()
+          | list()
+          | {[integer(), ...], integer | [integer(), ...], -1 | 1}
+        ) :: integer
   def number_of_integer_digits(%Decimal{} = number) do
     number
     |> to_digits
@@ -123,12 +126,12 @@ defmodule Cldr.Digits do
 
   # For a tuple returned by `Digits.to_digits/1`
   def number_of_integer_digits({integer, place, _sign})
-  when is_list(integer) and is_integer(place) and place <= 0 do
+      when is_list(integer) and is_integer(place) and place <= 0 do
     0
   end
 
   def number_of_integer_digits({integer, place, _sign})
-  when is_list(integer) and is_integer(place) do
+      when is_list(integer) and is_integer(place) do
     place
   end
 
@@ -138,7 +141,7 @@ defmodule Cldr.Digits do
   end
 
   def number_of_integer_digits({integer, fraction, _sign})
-  when is_list(integer) and is_list(fraction) do
+      when is_list(integer) and is_list(fraction) do
     number_of_integer_digits(integer)
   end
 
@@ -154,8 +157,8 @@ defmodule Cldr.Digits do
       1234
 
   """
-  @spec remove_trailing_zeros(Math.number_or_decimal | [integer(), ...]) ::
-    integer | [integer(), ...]
+  @spec remove_trailing_zeros(Math.number_or_decimal() | [integer(), ...]) ::
+          integer | [integer(), ...]
   def remove_trailing_zeros(0) do
     0
   end
@@ -174,9 +177,9 @@ defmodule Cldr.Digits do
 
   # Filters either a charlist or a list of integers.
   def remove_trailing_zeros(number) when is_list(number) do
-    Enum.take_while number, fn c ->
+    Enum.take_while(number, fn c ->
       (c >= ?1 and c <= ?9) or c > 0
-    end
+    end)
   end
 
   @doc """
@@ -194,7 +197,7 @@ defmodule Cldr.Digits do
       3
 
   """
-  @spec number_of_leading_zeros(Math.number_or_decimal | [integer(), ...]) :: integer
+  @spec number_of_leading_zeros(Math.number_or_decimal() | [integer(), ...]) :: integer
   def number_of_leading_zeros(%Decimal{} = number) do
     {_integer_digits, fraction_digits, _sign} = to_tuple(number)
     number_of_leading_zeros(fraction_digits)
@@ -206,7 +209,7 @@ defmodule Cldr.Digits do
   end
 
   def number_of_leading_zeros(number) when is_list(number) do
-    Enum.take_while(number, fn c -> c == ?0  or c == 0 end)
+    Enum.take_while(number, fn c -> c == ?0 or c == 0 end)
     |> length
   end
 
@@ -224,27 +227,33 @@ defmodule Cldr.Digits do
   #   Code extracted from: https://github.com/ewildgoose/elixir-float_pp/blob/master/lib/float_pp/digits.ex
   #   Which is licenced under http://www.apache.org/licenses/LICENSE-2.0
 
-  @spec to_tuple(Decimal.t | number) :: {list(), list(), integer}
+  @spec to_tuple(Decimal.t() | number) :: {list(), list(), integer}
   def to_tuple(number) do
     {mantissa, exp, sign} = to_digits(number)
-    mantissa = cond do
-      # Need to right fill with zeros
-      exp > length(mantissa) ->
-        mantissa ++ :lists.duplicate(exp - length(mantissa), 0)
-      # Need to left fill with zeros
-      exp < 0 ->
-        :lists.duplicate(abs(exp), 0) ++ mantissa
-      true ->
-        mantissa
-    end
+
+    mantissa =
+      cond do
+        # Need to right fill with zeros
+        exp > length(mantissa) ->
+          mantissa ++ :lists.duplicate(exp - length(mantissa), 0)
+
+        # Need to left fill with zeros
+        exp < 0 ->
+          :lists.duplicate(abs(exp), 0) ++ mantissa
+
+        true ->
+          mantissa
+      end
 
     cond do
       # Its an integer
       exp == length(mantissa) ->
         {mantissa, [], sign}
+
       # It's a fraction with no integer part
       exp <= 0 ->
         {[], mantissa, sign}
+
       # It's a fraction
       exp > 0 and exp < length(mantissa) ->
         {integer, fraction} = :lists.split(exp, mantissa)
@@ -260,6 +269,7 @@ defmodule Cldr.Digits do
   """
   def to_digits(0.0), do: {[0], 1, 1}
   def to_digits(0), do: {[0], 1, 1}
+
   def to_digits(float) when is_float(float) do
     # Find mantissa and exponent from IEEE-754 packed notation
     {frac, exp} = frexp(float)
@@ -292,13 +302,13 @@ defmodule Cldr.Digits do
   Takes a list of digits and coverts them back to a number of the same
   type as `number`
   """
-  def to_number(digits, number) when is_integer(number),   do: to_integer(digits)
-  def to_number(digits, number) when is_float(number),     do: to_float(digits)
-  def to_number(digits, %Decimal{}),                       do: to_decimal(digits)
+  def to_number(digits, number) when is_integer(number), do: to_integer(digits)
+  def to_number(digits, number) when is_float(number), do: to_float(digits)
+  def to_number(digits, %Decimal{}), do: to_decimal(digits)
 
-  def to_number(digits, :integer),                         do: to_integer(digits)
-  def to_number(digits, :float),                           do: to_float(digits)
-  def to_number(digits, :decimal),                         do: to_decimal(digits)
+  def to_number(digits, :integer), do: to_integer(digits)
+  def to_number(digits, :float), do: to_float(digits)
+  def to_number(digits, :decimal), do: to_decimal(digits)
 
   def to_integer({digits, place, sign}) do
     {int_digits, _fraction_digits} = Enum.split(digits, place)
@@ -323,25 +333,28 @@ defmodule Cldr.Digits do
   # http://www.cs.tufts.edu/~nr/cs257/archive/florian-loitsch/printf.pdf
   # See the paper for further explanation
 
-  docp """
+  docp("""
   Set initial values {r, s, m+, m-}
   based on table 1 from FP-Printing paper
   Assumes frac is scaled to integer (and exponent scaled appropriately)
-  """
+  """)
+
   defp flonum(float, frac, exp) do
     round = Integer.is_even(frac)
+
     if exp >= 0 do
       b_exp = bsl(1, exp)
+
       if frac !== @two52 do
-        scale((frac * b_exp * 2), 2, b_exp, b_exp, round, round, float)
+        scale(frac * b_exp * 2, 2, b_exp, b_exp, round, round, float)
       else
-        scale((frac * b_exp * 4), 4, (b_exp * 2), b_exp, round, round, float)
+        scale(frac * b_exp * 4, 4, b_exp * 2, b_exp, round, round, float)
       end
     else
-      if (exp === @min_e) or (frac !== @two52) do
-        scale((frac * 2), bsl(1, (1 - exp)), 1, 1, round, round, float)
+      if exp === @min_e or frac !== @two52 do
+        scale(frac * 2, bsl(1, 1 - exp), 1, 1, round, round, float)
       else
-        scale((frac * 4), bsl(1, (2 - exp)), 2, 1, round, round, float)
+        scale(frac * 4, bsl(1, 2 - exp), 2, 1, round, round, float)
       end
     end
   end
@@ -349,11 +362,12 @@ defmodule Cldr.Digits do
   @log_0_approx -60
   def scale(r, s, m_plus, m_minus, low_ok, high_ok, float) do
     # TODO: Benchmark removing the log10 and using the approximation given in original paper?
-    est = if float == 0 do
-      @log_0_approx
-    else
-      trunc(Float.ceil(:math.log10(abs(float)) - 1.0e-10))
-    end
+    est =
+      if float == 0 do
+        @log_0_approx
+      else
+        trunc(Float.ceil(:math.log10(abs(float)) - 1.0e-10))
+      end
 
     if est >= 0 do
       fixup(r, s * power_of_10(est), m_plus, m_minus, est, low_ok, high_ok, float)
@@ -364,30 +378,30 @@ defmodule Cldr.Digits do
   end
 
   def fixup(r, s, m_plus, m_minus, k, low_ok, high_ok, float) do
-    too_low = if high_ok, do: (r + m_plus) >= s, else: (r + m_plus) > s
+    too_low = if high_ok, do: r + m_plus >= s, else: r + m_plus > s
 
     if too_low do
-      {generate(r, s, m_plus, m_minus, low_ok, high_ok), (k + 1), sign(float)}
+      {generate(r, s, m_plus, m_minus, low_ok, high_ok), k + 1, sign(float)}
     else
       {generate(r * 10, s, m_plus * 10, m_minus * 10, low_ok, high_ok), k, sign(float)}
     end
   end
 
   defp generate(r, s, m_plus, m_minus, low_ok, high_ok) do
-    d = div r, s
-    r = rem r, s
+    d = div(r, s)
+    r = rem(r, s)
 
-    tc1 = if low_ok,  do: r <= m_minus,       else: r < m_minus
-    tc2 = if high_ok, do: (r + m_plus) >= s,  else: (r + m_plus) > s
+    tc1 = if low_ok, do: r <= m_minus, else: r < m_minus
+    tc2 = if high_ok, do: r + m_plus >= s, else: r + m_plus > s
 
-    if not(tc1) do
-      if not(tc2) do
+    if not tc1 do
+      if not tc2 do
         [d | generate(r * 10, s, m_plus * 10, m_minus * 10, low_ok, high_ok)]
       else
         [d + 1]
       end
     else
-      if not(tc2) do
+      if not tc2 do
         [d]
       else
         if r * 2 < s do
@@ -399,23 +413,23 @@ defmodule Cldr.Digits do
     end
   end
 
-
   ############################################################################
   # Utility functions
 
   # FIXME: We don't handle +/-inf and NaN inputs. Not believed to be an issue in
   # Elixir, but beware future-self reading this...
 
-  docp """
+  docp("""
   The frexp() function is as per the clib function with the same name. It breaks
   the floating-point number value into a normalized fraction and an integral
   power of 2.
 
   Returns {frac, exp}, where the magnitude of frac is in the interval
   [1/2, 1) or 0, and value = frac*(2^exp).
-  """
+  """)
+
   defp frexp(value) do
-    << sign::1, exp::11, frac::52 >> = << value::float >>
+    <<sign::1, exp::11, frac::52>> = <<value::float>>
     frexp(sign, frac, exp)
   end
 
@@ -426,8 +440,8 @@ defmodule Cldr.Digits do
   # Handle denormalised values
   defp frexp(sign, frac, 0) do
     exp = bitwise_length(frac)
-    <<f::float>> = <<sign::1, @float_bias::11, (frac-1)::52>>
-    {f, -(@float_bias) - 52 + exp}
+    <<f::float>> = <<sign::1, @float_bias::11, frac - 1::52>>
+    {f, -@float_bias - 52 + exp}
   end
 
   # Handle normalised values
@@ -436,17 +450,17 @@ defmodule Cldr.Digits do
     {f, exp - @float_bias}
   end
 
-  docp """
+  docp("""
   Return the number of significant bits needed to store the given number
-  """
+  """)
+
   defp bitwise_length(value) do
     bitwise_length(value, 0)
   end
 
   defp bitwise_length(0, n), do: n
-  defp bitwise_length(value, n), do: bitwise_length(bsr(value, 1), n+1)
+  defp bitwise_length(value, n), do: bitwise_length(bsr(value, 1), n + 1)
 
   defp sign(float) when float < 0, do: -1
   defp sign(_float), do: 1
-
 end

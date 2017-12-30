@@ -8,12 +8,13 @@ defmodule Cldr.Normalize.DateTime do
   end
 
   def normalize_dates(content, _locale) do
-    dates = content
-    |> get_in(["dates"])
-    |> Map.delete("fields")
-    |> Cldr.Map.rename_key("_numbers", "number_system")
-    |> Cldr.Map.rename_key("_value", "format")
-    |> compile_substitution_formats
+    dates =
+      content
+      |> get_in(["dates"])
+      |> Map.delete("fields")
+      |> Cldr.Map.rename_key("_numbers", "number_system")
+      |> Cldr.Map.rename_key("_value", "format")
+      |> compile_substitution_formats
 
     Map.put(content, "dates", dates)
   end
@@ -22,12 +23,15 @@ defmodule Cldr.Normalize.DateTime do
     Enum.map(dates, fn
       {"date_time_formats" = k, v} ->
         {k, v}
+
       {k, v} when is_binary(v) ->
-        binary = if Regex.match?(~r/\{0\}/, v) do
-          Cldr.Substitution.parse(v)
-        else
-          v
-        end
+        binary =
+          if Regex.match?(~r/\{0\}/, v) do
+            Cldr.Substitution.parse(v)
+          else
+            v
+          end
+
         {k, binary}
 
       {k, v} when is_map(v) ->

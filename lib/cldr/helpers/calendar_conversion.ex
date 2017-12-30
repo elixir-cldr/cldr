@@ -54,12 +54,14 @@ defmodule Cldr.Calendar.Conversion do
   end
 
   def to_iso_days(date) when is_binary(date) do
-    {year, month, day} = case String.split(date, "-") do
-      [year, month, day] ->
-        {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
-      ["", year, month, day] ->
-        {String.to_integer("-#{year}"), String.to_integer(month), String.to_integer(day)}
-    end
+    {year, month, day} =
+      case String.split(date, "-") do
+        [year, month, day] ->
+          {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
+
+        ["", year, month, day] ->
+          {String.to_integer("-#{year}"), String.to_integer(month), String.to_integer(day)}
+      end
 
     gregorian_date_to_iso_days(year, month, day)
   end
@@ -76,16 +78,13 @@ defmodule Cldr.Calendar.Conversion do
       cond do
         month <= 2 -> 0
         leap_year?(year) -> -1
-        true ->  -2
+        true -> -2
       end
 
-    (gregorian_epoch_days() - 1) +
-    (365 * (year - 1)) +
-    Float.floor((year - 1) / 4) -
-    Float.floor((year - 1) / 100) +
-    Float.floor((year - 1) / 400) +
-    Float.floor((367 * month - 362) / 12) +
-    correction + day |> trunc
+    (gregorian_epoch_days() - 1 + 365 * (year - 1) + Float.floor((year - 1) / 4) -
+       Float.floor((year - 1) / 100) + Float.floor((year - 1) / 400) +
+       Float.floor((367 * month - 362) / 12) + correction + day)
+    |> trunc
   end
 
   @doc """
@@ -104,6 +103,6 @@ defmodule Cldr.Calendar.Conversion do
   end
 
   def mod(x, y) do
-    x - (y * Float.floor(x / y))
+    x - y * Float.floor(x / y)
   end
 end

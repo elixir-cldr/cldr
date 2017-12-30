@@ -29,9 +29,8 @@ defmodule Cldr.Locale.Sigil do
       }
 
   """
-  @spec sigil_L(Locale.locale_name, any()) :: LanguageTag.t | none()
+  @spec sigil_L(Locale.locale_name(), any()) :: LanguageTag.t() | none()
   def sigil_L(locale_name, _) do
     Cldr.Locale.new!(locale_name)
   end
-
 end

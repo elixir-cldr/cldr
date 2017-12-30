@@ -22,7 +22,7 @@ defmodule Cldr.Install do
   Install all the configured locales.
   """
   def install_known_locale_names do
-    Enum.each Cldr.Config.known_locale_names(), &install_locale_name/1
+    Enum.each(Cldr.Config.known_locale_names(), &install_locale_name/1)
     :ok
   end
 
@@ -30,7 +30,7 @@ defmodule Cldr.Install do
   Install all available locales.
   """
   def install_all_locale_names do
-    Enum.each Cldr.Config.all_locale_names(), &install_locale_name/1
+    Enum.each(Cldr.Config.all_locale_names(), &install_locale_name/1)
     :ok
   end
 
@@ -70,35 +70,45 @@ defmodule Cldr.Install do
   # and an exception then is the appropriate response.
   defp do_install_locale_name(locale_name, false) do
     raise Cldr.UnknownLocaleError,
-      "Failed to install the locale named #{inspect locale_name}. The locale name is not known."
+          "Failed to install the locale named #{inspect(locale_name)}. The locale name is not known."
   end
 
   defp do_install_locale_name(locale_name, true) do
     require Logger
 
-    output_file_name = [client_locales_dir(), "/", locale_filename(locale_name)]
-    |> :erlang.iolist_to_binary
+    output_file_name =
+      [client_locales_dir(), "/", locale_filename(locale_name)]
+      |> :erlang.iolist_to_binary()
 
     url = String.to_charlist("#{base_url()}#{locale_filename(locale_name)}")
+
     case :httpc.request(url) do
       {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
         output_file_name
         |> File.write!(:erlang.list_to_binary(body))
 
-        Logger.info "Downloaded locale #{inspect locale_name}"
+        Logger.info("Downloaded locale #{inspect(locale_name)}")
         {:ok, output_file_name}
+
       {_, {{_version, code, message}, _headers, _body}} ->
-        Logger.error "Failed to download locale #{inspect locale_name} from #{url}. " <>
-          "HTTP Error: (#{code}) #{inspect message}"
+        Logger.error(
+          "Failed to download locale #{inspect(locale_name)} from #{url}. " <>
+            "HTTP Error: (#{code}) #{inspect(message)}"
+        )
+
         {:error, code}
+
       {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
-        Logger.error "Failed to connect to #{inspect host} to download " <>
-          "locale #{inspect locale_name}. Reason: #{inspect sys_message}"
+        Logger.error(
+          "Failed to connect to #{inspect(host)} to download " <>
+            "locale #{inspect(locale_name)}. Reason: #{inspect(sys_message)}"
+        )
+
         {:error, sys_message}
     end
   end
 
-  docp """
+  docp("""
   Builds the base url to retrieve a locale file from github.
 
   The url is built using the version number of the `Cldr` application.
@@ -107,20 +117,23 @@ defmodule Cldr.Install do
 
   This requires that a branch is tagged with the version number before creating
   a release or publishing to hex.
-  """
+  """)
+
   @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
   defp base_url do
     [@base_url, branch_from_version(), "/priv/cldr/locales/"]
-    |> :erlang.iolist_to_binary
+    |> :erlang.iolist_to_binary()
   end
 
   # Returns the version of ex_cldr
   defp app_version do
     cond do
       spec = Application.spec(:ex_cldr) ->
-        Keyword.get(spec, :vsn) |> :erlang.list_to_binary
+        Keyword.get(spec, :vsn) |> :erlang.list_to_binary()
+
       Code.ensure_loaded?(Cldr.Mixfile) ->
         Keyword.get(Cldr.Mixfile.project(), :version)
+
       true ->
         :error
     end
@@ -147,7 +160,7 @@ defmodule Cldr.Install do
   def locale_installed?(locale) do
     case Cldr.Config.locale_path(locale) do
       {:ok, _path} -> true
-      _            -> false
+      _ -> false
     end
   end
 

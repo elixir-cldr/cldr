@@ -19,11 +19,12 @@ defmodule Cldr.Map do
   ## Examples
 
   """
-  @spec deep_map(Map.t, function :: function()) :: Map.t
+  @spec deep_map(Map.t(), function :: function()) :: Map.t()
   def deep_map(map, function) when is_map(map) do
     Enum.map(map, fn
       {k, v} when is_map(v) or is_list(v) ->
         {k, deep_map(v, function)}
+
       {k, v} ->
         function.({k, v})
     end)
@@ -64,12 +65,14 @@ defmodule Cldr.Map do
   ## Examples
 
   """
-  @spec deep_map(Map.t, key_function :: function(), value_function :: function()) :: Map.t
+  @spec deep_map(Map.t(), key_function :: function(), value_function :: function()) :: Map.t()
   def deep_map(map, key_function, value_function)
+
   def deep_map(map, key_function, value_function) when is_map(map) do
     Enum.map(map, fn
       {k, v} when is_map(v) or is_list(v) ->
         {key_function.(k), deep_map(v, key_function, value_function)}
+
       {k, v} ->
         {key_function.(k), value_function.(v)}
     end)
@@ -135,10 +138,14 @@ defmodule Cldr.Map do
 
   """
   def stringify_keys(map) do
-    deep_map(map, fn
-      k when is_atom(k) -> Atom.to_string(k)
-      k -> k
-    end, &identity/1)
+    deep_map(
+      map,
+      fn
+        k when is_atom(k) -> Atom.to_string(k)
+        k -> k
+      end,
+      &identity/1
+    )
   end
 
   @doc """
@@ -211,10 +218,14 @@ defmodule Cldr.Map do
 
   """
   def rename_key(map, from, to) do
-    deep_map(map, fn
-      ^from -> to
-      other -> other
-    end, &identity/1)
+    deep_map(
+      map,
+      fn
+        ^from -> to
+        other -> other
+      end,
+      &identity/1
+    )
   end
 
   @doc """
@@ -325,8 +336,9 @@ defmodule Cldr.Map do
 
   defp atomize_element(x, true) when is_binary(x) do
     String.to_existing_atom(x)
-  rescue ArgumentError ->
-    x
+  rescue
+    ArgumentError ->
+      x
   end
 
   defp atomize_element(x, false) when is_binary(x) do
@@ -341,7 +353,7 @@ defmodule Cldr.Map do
   defp integerize_element(x) when is_atom(x) do
     integer =
       x
-      |> Atom.to_string
+      |> Atom.to_string()
       |> integerize_element
 
     if is_integer(integer) do
@@ -366,7 +378,7 @@ defmodule Cldr.Map do
   @float_reg Regex.compile!("^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$")
   defp floatize_element(x) when is_atom(x) do
     x
-    |> Atom.to_string
+    |> Atom.to_string()
     |> floatize_element
   end
 
@@ -404,28 +416,30 @@ defmodule Cldr.Map do
   ## Examples
 
   """
-  @spec underscore(string :: String.t | atom()) :: String.t
+  @spec underscore(string :: String.t() | atom()) :: String.t()
   def underscore(atom) when is_atom(atom) do
     "Elixir." <> rest = Atom.to_string(atom)
     underscore(rest)
   end
+
   def underscore(<<h, t::binary>>) do
     <<to_lower_char(h)>> <> do_underscore(t, h)
   end
+
   def underscore("") do
     ""
   end
 
   # h is upper case, next char is not uppercase, or a _ or .  => and prev != _
   defp do_underscore(<<h, t, rest::binary>>, prev)
-      when (h >= ?A and h <= ?Z) and not (t >= ?A and t <= ?Z) and t != ?.
-      and t != ?_ and t != ?- and prev != ?_  do
+       when h >= ?A and h <= ?Z and not (t >= ?A and t <= ?Z) and t != ?. and t != ?_ and t != ?- and
+              prev != ?_ do
     <<?_, to_lower_char(h), t>> <> do_underscore(rest, t)
   end
 
   # h is uppercase, previous was not uppercase or _
   defp do_underscore(<<h, t::binary>>, prev)
-      when (h >= ?A and h <= ?Z) and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
+       when h >= ?A and h <= ?Z and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
     <<?_, to_lower_char(h)>> <> do_underscore(t, h)
   end
 
@@ -443,6 +457,7 @@ defmodule Cldr.Map do
   defp do_underscore(<<h, t::binary>>, _) do
     <<to_lower_char(h)>> <> do_underscore(t, h)
   end
+
   defp do_underscore(<<>>, _) do
     <<>>
   end
@@ -454,4 +469,3 @@ defmodule Cldr.Map do
   def to_lower_char(char) when char >= ?A and char <= ?Z, do: char + 32
   def to_lower_char(char), do: char
 end
-

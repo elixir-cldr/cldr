@@ -25,7 +25,7 @@ defmodule CldrLocaleParserTest do
   ]
 
   for code <- @language_codes do
-    test "That #{inspect code} parses without error" do
+    test "That #{inspect(code)} parses without error" do
       assert {:ok, _} = Parser.parse(unquote(code))
     end
   end

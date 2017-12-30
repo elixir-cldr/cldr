@@ -9,10 +9,11 @@ defmodule Cldr.Normalize.List do
   end
 
   def normalize_lists(content, _locale) do
-    lists = content
-    |> get_in(["list_patterns"])
-    |> Enum.map(fn {"list_pattern_type_" <> type, data} -> {type, compile_formats(data)} end)
-    |> Enum.into(%{})
+    lists =
+      content
+      |> get_in(["list_patterns"])
+      |> Enum.map(fn {"list_pattern_type_" <> type, data} -> {type, compile_formats(data)} end)
+      |> Enum.into(%{})
 
     Map.put(content, "list_formats", lists)
   end

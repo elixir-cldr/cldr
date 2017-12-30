@@ -9,7 +9,7 @@ defmodule Cldr.Rbnf.Config do
   alias Cldr.Locale
 
   @default_radix 10
-  @data_dir Path.join(Cldr.Config.cldr_home, "data") <> "/cldr-rbnf"
+  @data_dir Path.join(Cldr.Config.cldr_home(), "data") <> "/cldr-rbnf"
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
   @doc """
@@ -21,7 +21,7 @@ defmodule Cldr.Rbnf.Config do
       true
 
   """
-  @spec rbnf_dir :: String.t
+  @spec rbnf_dir :: String.t()
   def rbnf_dir do
     @rbnf_dir
   end
@@ -50,7 +50,7 @@ defmodule Cldr.Rbnf.Config do
        "zh-Hant", "zh"]
 
   """
-  @spec rbnf_locale_names :: [String.t] | []
+  @spec rbnf_locale_names :: [String.t()] | []
   def rbnf_locale_names do
     @rbnf_locale_names
   end
@@ -75,8 +75,8 @@ defmodule Cldr.Rbnf.Config do
 
   """
   def known_locale_names do
-    MapSet.intersection(MapSet.new(Cldr.known_locale_names), MapSet.new(rbnf_locale_names()))
-    |> MapSet.to_list
+    MapSet.intersection(MapSet.new(Cldr.known_locale_names()), MapSet.new(rbnf_locale_names()))
+    |> MapSet.to_list()
   end
 
   @doc """
@@ -96,16 +96,14 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.locale_name) :: %{} |  {:error, {Cldr.Rbnf.NotAvailable, String.t}}
+  @spec for_locale(Locale.locale_name()) :: %{} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
   def for_locale(locale_name) when is_binary(locale_name) do
-    with \
-      true <- File.exists?(locale_path(locale_name))
-    do
+    with true <- File.exists?(locale_path(locale_name)) do
       rules =
         locale_name
         |> locale_path
-        |> File.read!
-        |> Poison.decode!
+        |> File.read!()
+        |> Poison.decode!()
         |> Map.get("rbnf")
         |> Map.get("rbnf")
         |> rules_from_rule_sets
@@ -114,13 +112,17 @@ defmodule Cldr.Rbnf.Config do
     else
       {:error, {exception, reason}} ->
         {:error, {exception, reason}}
+
       false ->
         {:error, rbnf_nofile_error(locale_name)}
     end
   end
 
   defp rbnf_nofile_error(locale_name) do
-    {Cldr.Rbnf.NotAvailable, "The locale name #{inspect locale_name} does not have an RBNF configuration file available"}
+    {
+      Cldr.Rbnf.NotAvailable,
+      "The locale name #{inspect(locale_name)} does not have an RBNF configuration file available"
+    }
   end
 
   defp rules_from_rule_sets(json) do
@@ -152,12 +154,12 @@ defmodule Cldr.Rbnf.Config do
   end
 
   defp sort_rules(rules) do
-    Enum.sort(rules, fn (a, b) ->
+    Enum.sort(rules, fn a, b ->
       cond do
-        is_binary(a.base_value)     -> true
-        is_binary(b.base_value)     -> false
+        is_binary(a.base_value) -> true
+        is_binary(b.base_value) -> false
         a.base_value < b.base_value -> true
-        true                        -> false
+        true -> false
       end
     end)
   end
@@ -166,12 +168,13 @@ defmodule Cldr.Rbnf.Config do
     case String.split(name, "/") do
       [base_value, radix] ->
         {to_integer(base_value), to_integer(radix)}
+
       [base_value] ->
         {to_integer(base_value), @default_radix}
     end
   end
 
-  @spec locale_path(binary) :: String.t
+  @spec locale_path(binary) :: String.t()
   defp locale_path(locale) when is_binary(locale) do
     Path.join(rbnf_dir(), "/#{locale}.json")
   end
@@ -201,7 +204,8 @@ defmodule Cldr.Rbnf.Config do
   #
   # Means that rule "0" is applied for values up to but not including "10"
   defp set_range([rule | [next_rule | rest]]) do
-    [Map.put(rule, :range, range_from_next_rule(rule.base_value, next_rule.base_value))] ++ set_range([next_rule] ++ rest)
+    [Map.put(rule, :range, range_from_next_rule(rule.base_value, next_rule.base_value))] ++
+      set_range([next_rule] ++ rest)
   end
 
   defp set_range([rule | []]) do
@@ -227,17 +231,19 @@ defmodule Cldr.Rbnf.Config do
   # Thanks to twitter-cldr:
   # https://github.com/twitter/twitter-cldr-rb/blob/master/lib/twitter_cldr/formatters/numbers/rbnf/rule.rb
   defp divisor(base_value, radix) when is_integer(base_value) and is_integer(radix) do
-    exponent = if base_value > 0 do
-      Float.ceil(:math.log(base_value) / :math.log(radix)) |> trunc
-    else
-      1
-    end
+    exponent =
+      if base_value > 0 do
+        Float.ceil(:math.log(base_value) / :math.log(radix)) |> trunc
+      else
+        1
+      end
 
-    divisor = if exponent > 0 do
-      trunc(:math.pow(radix, exponent))
-    else
-      1
-    end
+    divisor =
+      if exponent > 0 do
+        trunc(:math.pow(radix, exponent))
+      else
+        1
+      end
 
     if divisor > base_value do
       trunc(:math.pow(radix, exponent - 1))
@@ -253,7 +259,7 @@ defmodule Cldr.Rbnf.Config do
   defp function_name_from(set) do
     set
     |> String.trim_leading("%")
-    |> String.replace("-","_")
-    |> String.to_atom
+    |> String.replace("-", "_")
+    |> String.to_atom()
   end
 end

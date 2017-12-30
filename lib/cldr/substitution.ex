@@ -28,7 +28,7 @@ defmodule Cldr.Substitution do
   This function is primarily intended to support compile-time generation
   of templates that simplify and speed up parameter substitution at runtime.
   """
-  @spec parse(String.t) :: [String.t | integer, ...]
+  @spec parse(String.t()) :: [String.t() | integer, ...]
   def parse("") do
     []
   end
@@ -36,7 +36,6 @@ defmodule Cldr.Substitution do
   def parse(template) when is_binary(template) do
     String.split(template, ~r/{[0-9]}/, include_captures: true, trim: true)
     |> Enum.map(&item_from_token/1)
-
   end
 
   def parse(_template) do
@@ -65,7 +64,7 @@ defmodule Cldr.Substitution do
       ["a", " This is something ", "b"]
 
   """
-  @spec substitute([term, ...], [String.t | integer, ...]) :: [String.t, ...]
+  @spec substitute([term, ...], [String.t() | integer, ...]) :: [String.t(), ...]
 
   # Takes care of a common case where there is one parameter
   def substitute([item], [0, string]) when is_binary(string) do
@@ -97,18 +96,21 @@ defmodule Cldr.Substitution do
   # Takes care of the common case where there are three parameters separated
   # by strings.
   def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2]) do
-    [Kernel.to_string(item_0), string_1,
-     Kernel.to_string(item_1), string_2,
-     Kernel.to_string(item_2)]
+    [
+      Kernel.to_string(item_0),
+      string_1,
+      Kernel.to_string(item_1),
+      string_2,
+      Kernel.to_string(item_2)
+    ]
   end
 
-  @digits [?0,?1,?2,?3,?4,?5,?6,?7,?8,?9]
-  defp item_from_token(<< ?{, digit, ?} >>) when digit in @digits do
+  @digits [?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9]
+  defp item_from_token(<<?{, digit, ?}>>) when digit in @digits do
     digit - ?0
   end
 
   defp item_from_token(string) do
     string
   end
-
 end

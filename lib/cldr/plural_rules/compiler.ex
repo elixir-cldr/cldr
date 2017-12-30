@@ -11,8 +11,8 @@ defmodule Cldr.Number.PluralRule.Compiler do
   """
   def tokenize(definition) when is_binary(definition) do
     definition
-    |> String.to_charlist
-    |> :plural_rules_lexer.string
+    |> String.to_charlist()
+    |> :plural_rules_lexer.string()
   end
 
   @doc """
@@ -22,11 +22,11 @@ defmodule Cldr.Number.PluralRule.Compiler do
   AST that can then be `unquoted` into a function definition.
   """
   def parse(tokens) when is_list(tokens) do
-    :plural_rules_parser.parse tokens
+    :plural_rules_parser.parse(tokens)
   end
 
   def parse(definition) when is_binary(definition) do
     {:ok, tokens, _end_line} = tokenize(definition)
-    tokens |> :plural_rules_parser.parse
+    tokens |> :plural_rules_parser.parse()
   end
 end

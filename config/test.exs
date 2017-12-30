@@ -6,10 +6,9 @@ config :ex_cldr,
   locales: :all,
   gettext: Cldr.Gettext,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}],
-  json_decoder: Poison
+  json_library: Poison
 
-config :plug,
-  validate_header_keys_during_test: true
+config :plug, validate_header_keys_during_test: true
 
 config :ex_unit,
   module_load_timeout: 220_000,

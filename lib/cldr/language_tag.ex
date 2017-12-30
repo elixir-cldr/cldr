@@ -152,34 +152,34 @@ defmodule Cldr.LanguageTag do
   """
   alias Cldr.LanguageTag.Parser
 
-  defstruct language:               nil,
-            script:                 nil,
-            territory:              nil,
-            variant:                nil,
-            locale:                 %{},
-            transform:              %{},
-            extensions:             %{},
-            private_use:            [],
-            requested_locale_name:  nil,
-            canonical_locale_name:  nil,
-            cldr_locale_name:       nil,
-            rbnf_locale_name:       nil,
-            gettext_locale_name:    nil
+  defstruct language: nil,
+            script: nil,
+            territory: nil,
+            variant: nil,
+            locale: %{},
+            transform: %{},
+            extensions: %{},
+            private_use: [],
+            requested_locale_name: nil,
+            canonical_locale_name: nil,
+            cldr_locale_name: nil,
+            rbnf_locale_name: nil,
+            gettext_locale_name: nil
 
-  @type t :: %__MODULE__ {
-    language:               String.t,
-    script:                 String.t | nil,
-    territory:              String.t | nil,
-    variant:                String.t | nil,
-    locale:                 %{},
-    transform:              %{},
-    extensions:             %{},
-    private_use:            [String.t, ...] | [],
-    requested_locale_name:  String.t,
-    canonical_locale_name:  String.t,
-    cldr_locale_name:       String.t,
-    rbnf_locale_name:       String.t
-  }
+  @type t :: %__MODULE__{
+          language: String.t(),
+          script: String.t() | nil,
+          territory: String.t() | nil,
+          variant: String.t() | nil,
+          locale: %{},
+          transform: %{},
+          extensions: %{},
+          private_use: [String.t(), ...] | [],
+          requested_locale_name: String.t(),
+          canonical_locale_name: String.t(),
+          cldr_locale_name: String.t(),
+          rbnf_locale_name: String.t()
+        }
 
   @doc """
   Parse a locale name into a `Cldr.LangaugeTag` struct.
@@ -193,7 +193,8 @@ defmodule Cldr.LanguageTag do
   * `{:error, reason}`
 
   """
-  @spec parse(Locale.local_name) :: {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+  @spec parse(Locale.local_name()) ::
+          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
   def parse(locale_name) when is_binary(locale_name) do
     Parser.parse(locale_name)
   end
@@ -210,9 +211,8 @@ defmodule Cldr.LanguageTag do
   * raises and exception
 
   """
-  @spec parse(Locale.local_name) :: LanguageTag.t | none()
+  @spec parse(Locale.local_name()) :: LanguageTag.t() | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
   end
-
 end

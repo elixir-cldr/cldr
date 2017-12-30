@@ -191,4 +191,3 @@ defmodule Cldr.AcceptLanguageError do
     %__MODULE__{message: message}
   end
 end
-

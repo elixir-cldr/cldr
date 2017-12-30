@@ -21,7 +21,7 @@ defmodule Cldr.Consolidate do
   Also formats non-locale-specific CLDR data that is core to `Cldr`
   operation.
   """
-  @max_concurrency System.schedulers_online * 2
+  @max_concurrency System.schedulers_online() * 2
   @spec consolidate_locales :: :ok
   def consolidate_locales do
     ensure_output_dir_exists!(consolidated_output_dir())
@@ -41,7 +41,8 @@ defmodule Cldr.Consolidate do
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
-    |> Enum.to_list
+    |> Enum.to_list()
+
     :ok
   end
 
@@ -52,7 +53,8 @@ defmodule Cldr.Consolidate do
   def consolidate_known_locales do
     Cldr.known_locale_names()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
-    |> Enum.to_list
+    |> Enum.to_list()
+
     :ok
   end
 
@@ -63,14 +65,15 @@ defmodule Cldr.Consolidate do
 
   """
   def consolidate_locale(locale) do
-    IO.puts "Consolidating locale #{locale}"
+    IO.puts("Consolidating locale #{locale}")
+
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
-    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.underscore_keys()
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
-    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_keys()
     |> save_locale(locale)
   end
 
@@ -102,7 +105,7 @@ defmodule Cldr.Consolidate do
 
   defp save_locale(content, locale) do
     output_path = Path.join(consolidated_locales_dir(), "#{locale}.json")
-    File.write!(output_path, Cldr.Config.json_lib.encode!(content))
+    File.write!(output_path, Cldr.Config.json_lib().encode!(content))
   end
 
   defp merge_maps([file_1]) do
@@ -141,7 +144,7 @@ defmodule Cldr.Consolidate do
 
   def cldr_directories do
     download_data_dir()
-    |> File.ls!
+    |> File.ls!()
     |> Enum.filter(&cldr_dir?/1)
     |> Enum.map(&Path.join(download_data_dir(), &1))
   end
@@ -158,11 +161,12 @@ defmodule Cldr.Consolidate do
     case File.mkdir(dir) do
       :ok ->
         :ok
+
       {:error, :eexist} ->
         :ok
+
       {:error, code} ->
-        raise RuntimeError,
-          message: "Couldn't create #{dir}: #{inspect code}"
+        raise RuntimeError, message: "Couldn't create #{dir}: #{inspect(code)}"
     end
   end
 
@@ -173,8 +177,8 @@ defmodule Cldr.Consolidate do
   def all_locales() do
     download_data_dir()
     |> Path.join(["cldr-core", "/availableLocales.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["availableLocales", "full"])
     |> Kernel.--(@invalid_locales)
   end
@@ -182,8 +186,8 @@ defmodule Cldr.Consolidate do
   defp cldr_version() do
     download_data_dir()
     |> Path.join(["cldr-core", "/package.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["version"])
   end
 
@@ -205,15 +209,15 @@ defmodule Cldr.Consolidate do
     cardinal =
       download_data_dir()
       |> Path.join(["cldr-core", "/supplemental", "/plurals.json"])
-      |> File.read!
-      |> Poison.decode!
+      |> File.read!()
+      |> Poison.decode!()
       |> get_in(["supplemental", "plurals-type-cardinal"])
 
     ordinal =
       download_data_dir()
       |> Path.join(["cldr-core", "/supplemental", "/ordinals.json"])
-      |> File.read!
-      |> Poison.decode!
+      |> File.read!()
+      |> Poison.decode!()
       |> get_in(["supplemental", "plurals-type-ordinal"])
 
     content = %{cardinal: cardinal, ordinal: ordinal}
@@ -228,10 +232,10 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/numberingSystems.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "numberingSystems"])
-    |> Cldr.Map.remove_leading_underscores
+    |> Cldr.Map.remove_leading_underscores()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -242,10 +246,10 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-numbers-full", "/main", "/en", "/currencies.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["main", "en", "numbers", "currencies"])
-    |> Map.keys
+    |> Map.keys()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -256,10 +260,10 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/territoryContainment.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "territoryContainment"])
-    |> Normalize.TerritoryContainment.normalize
+    |> Normalize.TerritoryContainment.normalize()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -270,10 +274,10 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/territoryInfo.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "territoryInfo"])
-    |> Normalize.TerritoryInfo.normalize
+    |> Normalize.TerritoryInfo.normalize()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -284,8 +288,8 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/weekData.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "weekData"])
     |> save_file(path)
 
@@ -297,13 +301,13 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/calendarData.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "calendarData"])
     |> Map.delete("generic")
-    |> Cldr.Map.remove_leading_underscores
-    |> Cldr.Map.underscore_keys
-    |> Cldr.Calendar.Conversion.convert_eras_to_iso_days
+    |> Cldr.Map.remove_leading_underscores()
+    |> Cldr.Map.underscore_keys()
+    |> Cldr.Calendar.Conversion.convert_eras_to_iso_days()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -314,11 +318,11 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/dayPeriods.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "dayPeriodRuleSet"])
-    |> Cldr.Map.remove_leading_underscores
-    |> Cldr.Calendar.Conversion.parse_time_periods
+    |> Cldr.Map.remove_leading_underscores()
+    |> Cldr.Calendar.Conversion.parse_time_periods()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -329,10 +333,10 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/aliases.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "metadata", "alias"])
-    |> Cldr.Map.remove_leading_underscores
+    |> Cldr.Map.remove_leading_underscores()
     |> Cldr.Map.rename_key("variantAlias", "variant")
     |> Cldr.Map.rename_key("scriptAlias", "script")
     |> Cldr.Map.rename_key("zoneAlias", "zone")
@@ -352,8 +356,8 @@ defmodule Cldr.Consolidate do
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/likelySubtags.json"])
-    |> File.read!
-    |> Poison.decode!
+    |> File.read!()
+    |> Poison.decode!()
     |> get_in(["supplemental", "likelySubtags"])
     |> Enum.map(fn {k, v} -> {k, LanguageTag.parse!(v)} end)
     |> Enum.into(%{})
@@ -366,7 +370,7 @@ defmodule Cldr.Consolidate do
     [_, path] = String.split(path, "/priv/")
     path = "priv/" <> path
 
-    if path in Mix.Project.config[:package][:files] do
+    if path in Mix.Project.config()[:package][:files] do
       :ok
     else
       raise "Path #{path} is not in the package definition"
@@ -374,15 +378,16 @@ defmodule Cldr.Consolidate do
   end
 
   defp save_file(content, path) do
-    File.write!(path, Cldr.Config.json_lib.encode!(content))
+    File.write!(path, Cldr.Config.json_lib().encode!(content))
   end
 
   defp parse_language_aliases(map) do
-    language_aliases = Enum.map(Map.get(map, "language"), fn {k, v} ->
-      [language | _rest] = String.split(v, " ")
-      {k, LanguageTag.parse!(language)}
-    end)
-    |> Enum.into(%{})
+    language_aliases =
+      Enum.map(Map.get(map, "language"), fn {k, v} ->
+        [language | _rest] = String.split(v, " ")
+        {k, LanguageTag.parse!(language)}
+      end)
+      |> Enum.into(%{})
 
     Map.put(map, "language", language_aliases)
   end
@@ -408,5 +413,4 @@ defmodule Cldr.Consolidate do
   defp simplify_replacements({k, v}) do
     {k, Enum.map(v, &simplify_replacements/1)}
   end
-
 end

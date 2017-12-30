@@ -14,17 +14,15 @@ defmodule Cldr.Normalize.TerritoryNames do
         k = String.replace(k, ~r/^(.)_(.)/, "\\1\\2")
         {String.upcase(k), v}
       end)
-      |> Enum.group_by(
-          fn {k, _v} -> hd(String.split(k, "_")) end,
-          fn {k, v} ->
-            parts = String.split(k, "_ALT_")
-            if length(parts) == 1 do
-              %{"standard" => v}
-            else
-              %{String.downcase(hd(Enum.reverse(parts))) => v}
-            end
-          end
-        )
+      |> Enum.group_by(fn {k, _v} -> hd(String.split(k, "_")) end, fn {k, v} ->
+        parts = String.split(k, "_ALT_")
+
+        if length(parts) == 1 do
+          %{"standard" => v}
+        else
+          %{String.downcase(hd(Enum.reverse(parts))) => v}
+        end
+      end)
       |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
       |> Enum.into(%{})
 

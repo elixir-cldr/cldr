@@ -24,22 +24,25 @@ defmodule Cldr.String do
     "Elixir." <> rest = Atom.to_string(atom)
     underscore(rest)
   end
+
   def underscore(<<h, t::binary>>) do
     <<to_lower_char(h)>> <> do_underscore(t, h)
   end
+
   def underscore("") do
     ""
   end
 
   # h is upper case, next char is not uppercase, or a _ or .  => and prev != _
   defp do_underscore(<<h, t, rest::binary>>, prev)
-      when (h >= ?A and h <= ?Z) and not (t >= ?A and t <= ?Z) and t != ?. and t != ?_ and prev != ?_ do
+       when h >= ?A and h <= ?Z and not (t >= ?A and t <= ?Z) and t != ?. and t != ?_ and
+              prev != ?_ do
     <<?_, to_lower_char(h), t>> <> do_underscore(rest, t)
   end
 
   # h is uppercase, previous was not uppercase or _
   defp do_underscore(<<h, t::binary>>, prev)
-      when (h >= ?A and h <= ?Z) and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
+       when h >= ?A and h <= ?Z and not (prev >= ?A and prev <= ?Z) and prev != ?_ do
     <<?_, to_lower_char(h)>> <> do_underscore(t, h)
   end
 
@@ -52,6 +55,7 @@ defmodule Cldr.String do
   defp do_underscore(<<h, t::binary>>, _) do
     <<to_lower_char(h)>> <> do_underscore(t, h)
   end
+
   defp do_underscore(<<>>, _) do
     <<>>
   end

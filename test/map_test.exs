@@ -2,13 +2,11 @@ defmodule Support.Map.Test do
   use ExUnit.Case
 
   test "that map keys are underscored" do
-    assert Cldr.Map.underscore_keys(%{"thisKey" => "value"}) ==
-           %{"this_key" => "value"}
+    assert Cldr.Map.underscore_keys(%{"thisKey" => "value"}) == %{"this_key" => "value"}
   end
 
   test "that map keys are atomised" do
-    assert Cldr.Map.atomize_keys(%{"thisKey" => "value"}) ==
-           %{thisKey: "value"}
+    assert Cldr.Map.atomize_keys(%{"thisKey" => "value"}) == %{thisKey: "value"}
   end
 
   test "that nested map keys are atomised" do

@@ -16,48 +16,55 @@ defmodule Cldr.Number.PluralRule.Transformer do
   converted to a `cond` statement.
   """
   def rules_to_condition_statement(rules, module) do
-    branches = Enum.map rules, fn({"pluralRule-count-" <> category, rule}) ->
-      {:ok, definition} = PluralRule.Compiler.parse(rule)
-      {new_ast, _} = set_operand_module(definition[:rule], module)
-      rule_to_cond_branch(new_ast, String.to_atom(category))
-    end
-    {:cond, [],[[do: move_true_branch_to_end(branches)]]}
+    branches =
+      Enum.map(rules, fn {"pluralRule-count-" <> category, rule} ->
+        {:ok, definition} = PluralRule.Compiler.parse(rule)
+        {new_ast, _} = set_operand_module(definition[:rule], module)
+        rule_to_cond_branch(new_ast, String.to_atom(category))
+      end)
+
+    {:cond, [], [[do: move_true_branch_to_end(branches)]]}
   end
 
   # We can't assume the order of branches and we need the
   # `true` branch at the end since it will always match
   # and hence potentially shadow other branches
   defp move_true_branch_to_end(branches) do
-    Enum.sort branches, fn ({:->, [], [[ast], _category]}, _other_branch) ->
-      not(ast == true)
-    end
+    Enum.sort(branches, fn {:->, [], [[ast], _category]}, _other_branch ->
+      not (ast == true)
+    end)
   end
 
   # Walk the AST and replace the variable context to that of the calling
   # module
   defp set_operand_module(ast, module) do
-    Macro.prewalk ast, [], fn(expr, acc) ->
-      new_expr = case expr do
-        {var, [], Elixir} ->
-          {:var!, [context: Elixir, import: Kernel], [{var, [], module}]}
+    Macro.prewalk(ast, [], fn expr, acc ->
+      new_expr =
+        case expr do
+          {var, [], Elixir} ->
+            {:var!, [context: Elixir, import: Kernel], [{var, [], module}]}
+
           # {var, [], module}
-        {:mod, _context, [operand, value]} ->
-          {:mod, [context: Elixir, import: Elixir.Cldr.Math], [operand, value]}
-        {:within, _context, [operand, range]} ->
-          {:within, [context: Elixir, import: Elixir.Cldr.Math], [operand, range]}
-        _ ->
-          expr
-      end
+          {:mod, _context, [operand, value]} ->
+            {:mod, [context: Elixir, import: Elixir.Cldr.Math], [operand, value]}
+
+          {:within, _context, [operand, range]} ->
+            {:within, [context: Elixir, import: Elixir.Cldr.Math], [operand, range]}
+
+          _ ->
+            expr
+        end
+
       {new_expr, acc}
-    end
+    end)
   end
 
   # Transform the rule AST into a branch of a `cond` statement
   defp rule_to_cond_branch(nil, category) do
-     {:->, [], [[true], category]}
+    {:->, [], [[true], category]}
   end
 
   defp rule_to_cond_branch(rule_ast, category) do
-     {:->, [], [[rule_ast], category]}
+    {:->, [], [[rule_ast], category]}
   end
 end

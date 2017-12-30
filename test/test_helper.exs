@@ -1,1 +1,1 @@
-ExUnit.start [trace: "--trace" in System.argv, timeout: 120_000]
+ExUnit.start(trace: "--trace" in System.argv(), timeout: 120_000)

@@ -8,7 +8,7 @@ defmodule Cldr.Number.PluralRule do
   defmacro __using__(opts) do
     unless opts in [:cardinal, :ordinal] do
       raise ArgumentError,
-        "Invalid option #{inspect opts}. :cardinal or :ordinal are the only valid options"
+            "Invalid option #{inspect(opts)}. :cardinal or :ordinal are the only valid options"
     end
 
     quote location: :keep do
@@ -18,21 +18,21 @@ defmodule Cldr.Number.PluralRule do
 
       import Cldr.Digits,
         only: [number_of_integer_digits: 1, remove_trailing_zeros: 1, fraction_as_integer: 2]
+
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
-      @module_name Atom.to_string(unquote(opts)) |> String.capitalize
+      @module_name Atom.to_string(unquote(opts)) |> String.capitalize()
 
       @rules Cldr.Config.cldr_data_dir()
-      |> Path.join("/plural_rules.json")
-      |> File.read!
-      |> Cldr.Config.json_lib.decode!
-      |> Map.get(Atom.to_string(unquote(opts)))
-
+             |> Path.join("/plural_rules.json")
+             |> File.read!()
+             |> Cldr.Config.json_lib().decode!
+             |> Map.get(Atom.to_string(unquote(opts)))
 
       @rules_locales @rules
-      |> Map.keys
-      |> Enum.sort
+                     |> Map.keys()
+                     |> Enum.sort()
 
       @doc """
       The locales for which plural rules are defined
@@ -42,10 +42,10 @@ defmodule Cldr.Number.PluralRule do
       end
 
       @known_locale_names @rules_locales
-      |> MapSet.new
-      |> MapSet.intersection(MapSet.new(Cldr.known_locale_names()))
-      |> MapSet.to_list
-      |> Enum.sort
+                          |> MapSet.new()
+                          |> MapSet.intersection(MapSet.new(Cldr.known_locale_names()))
+                          |> MapSet.to_list()
+                          |> Enum.sort()
 
       @doc """
       The configured locales for which plural rules are defined.
@@ -57,7 +57,7 @@ defmodule Cldr.Number.PluralRule do
       rules so this list is the intersection of `Cldr`'s configured
       locales and those that have rules.
       """
-      @spec known_locale_names :: [Locale.locale_name, ...]
+      @spec known_locale_names :: [Locale.locale_name(), ...]
       def known_locale_names do
         @known_locale_names
       end
@@ -65,7 +65,7 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       Returns all the plural rules defined in CLDR.
       """
-      @spec plural_rules :: Map.t
+      @spec plural_rules :: Map.t()
       def plural_rules do
         @rules
       end
@@ -115,7 +115,7 @@ defmodule Cldr.Number.PluralRule do
 
       """
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal, LanguageTag.t, %{}) :: any()
+      @spec pluralize(Math.number_or_decimal(), LanguageTag.t(), %{}) :: any()
       def pluralize(number, %LanguageTag{} = locale, %{} = substitutions) when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
@@ -135,12 +135,12 @@ defmodule Cldr.Number.PluralRule do
       The rules are returned in AST form after parsing. This function
       is primarilty to support `Cldr.Gettext`.
       """
-      @spec plural_rules_for(Locale.locale_name) :: [{atom(), list()}, ...]
+      @spec plural_rules_for(Locale.locale_name()) :: [{atom(), list()}, ...]
       def plural_rules_for(locale_name) do
-        Enum.map plural_rules()[locale_name], fn({"pluralRule-count-" <> category, rule}) ->
+        Enum.map(plural_rules()[locale_name], fn {"pluralRule-count-" <> category, rule} ->
           {:ok, definition} = parse(rule)
           {String.to_atom(category), definition}
-        end
+        end)
       end
 
       # Plural Operand Meanings as defined in CLDR plural rules and used
@@ -178,15 +178,18 @@ defmodule Cldr.Number.PluralRule do
           :one
 
       """
-      @spec plural_rule(Math.number_or_decimal, Locale.locale_name | LanguageTag.t, atom()) ::
-        :zero | :one | :two | :few | :many | :other
+      @spec plural_rule(Math.number_or_decimal(), Locale.locale_name() | LanguageTag.t(), atom()) ::
+              :zero | :one | :two | :few | :many | :other
 
-      def plural_rule(number, locale \\ Cldr.get_current_locale(),
-                              rounding \\ Math.default_rounding())
+      def plural_rule(
+            number,
+            locale \\ Cldr.get_current_locale(),
+            rounding \\ Math.default_rounding()
+          )
 
       def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
         with {:ok, locale} <- Cldr.Locale.new(locale_name) do
-           plural_rule(number, locale, rounding)
+          plural_rule(number, locale, rounding)
         end
       end
 
@@ -198,13 +201,16 @@ defmodule Cldr.Number.PluralRule do
       def plural_rule(number, locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
-        v = 0; w = 0; f = 0; t = 0
+        v = 0
+        w = 0
+        f = 0
+        t = 0
         do_plural_rule(locale, n, i, v, w, f, t)
       end
 
       # Plural rule for a float
       def plural_rule(number, locale, rounding)
-      when is_float(number) and is_integer(rounding) and rounding > 0 do
+          when is_float(number) and is_integer(rounding) and rounding > 0 do
         # Testing shows that this is working but just in case we
         # can go back to casting the number to a decimal and
         # using that path
@@ -220,7 +226,7 @@ defmodule Cldr.Number.PluralRule do
 
       # Plural rule for a %Decimal{}
       def plural_rule(%Decimal{} = number, locale, rounding)
-      when is_integer(rounding) and rounding > 0 do
+          when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
 
@@ -231,11 +237,12 @@ defmodule Cldr.Number.PluralRule do
         v = abs(n.exp)
 
         # f visible fractional digits in n, with trailing zeros.
-        f = n
-        |> Decimal.sub(i)
-        |> Decimal.mult(Decimal.new(Math.power_of_10(v)))
-        |> Decimal.round(0, :floor)
-        |> Decimal.to_integer
+        f =
+          n
+          |> Decimal.sub(i)
+          |> Decimal.mult(Decimal.new(Math.power_of_10(v)))
+          |> Decimal.round(0, :floor)
+          |> Decimal.to_integer()
 
         #   t visible fractional digits in n, without trailing zeros.
         t = remove_trailing_zeros(f)

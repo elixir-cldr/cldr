@@ -97,9 +97,18 @@ defmodule Cldr.Config do
   @default_locale "en-001"
 
   @cldr_modules [
-    "number_formats", "list_formats", "currencies",
-    "number_systems", "number_symbols", "minimum_grouping_digits",
-    "rbnf", "units", "date_fields", "dates", "territories", "languages"
+    "number_formats",
+    "list_formats",
+    "currencies",
+    "number_systems",
+    "number_symbols",
+    "minimum_grouping_digits",
+    "rbnf",
+    "units",
+    "date_fields",
+    "dates",
+    "territories",
+    "languages"
   ]
 
   @doc """
@@ -113,7 +122,7 @@ defmodule Cldr.Config do
   @doc """
   Return the root path of the cldr application
   """
-  @cldr_home_dir Path.join(__DIR__, "/../../..") |> Path.expand
+  @cldr_home_dir Path.join(__DIR__, "/../../..") |> Path.expand()
   def cldr_home do
     @cldr_home_dir
   end
@@ -132,7 +141,7 @@ defmodule Cldr.Config do
   @doc """
   Returns the path of the CLDR data directory for the ex_cldr app
   """
-  @cldr_data_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary
+  @cldr_data_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary()
   def cldr_data_dir do
     @cldr_data_dir
   end
@@ -141,7 +150,7 @@ defmodule Cldr.Config do
   Return the path name of the CLDR data directory for a client application.
   """
   @client_data_dir Application.get_env(:ex_cldr, :data_dir, @cldr_data_dir)
-  |> Path.expand
+                   |> Path.expand()
 
   def client_data_dir do
     @client_data_dir
@@ -161,7 +170,7 @@ defmodule Cldr.Config do
   def version do
     @client_data_dir
     |> Path.join("version.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
   end
 
@@ -177,7 +186,7 @@ defmodule Cldr.Config do
   are stored.
   """
   def download_data_dir do
-    Path.join(Cldr.Config.cldr_home, "data")
+    Path.join(Cldr.Config.cldr_home(), "data")
   end
 
   @doc """
@@ -197,16 +206,19 @@ defmodule Cldr.Config do
   * The `Gettext.get_locale/1` for the current configuratioh
   * "en"
   """
-  @spec default_locale :: Locale.locale_name
+  @spec default_locale :: Locale.locale_name()
   def default_locale do
     app_default = Application.get_env(:ex_cldr, :default_locale)
+
     cond do
       app_default ->
         app_default
+
       gettext_configured?() ->
         Gettext
         |> apply(:get_locale, [gettext()])
-        |> Enum.map(&String.replace(&1,"_","-"))
+        |> Enum.map(&String.replace(&1, "_", "-"))
+
       true ->
         @default_locale
     end
@@ -218,12 +230,12 @@ defmodule Cldr.Config do
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
   """
-  @spec gettext_locales :: [Locale.locale_name]
+  @spec gettext_locales :: [Locale.locale_name()]
   def gettext_locales do
     if gettext_configured?() do
       Gettext
       |> apply(:known_locales, [gettext()])
-      |> Enum.map(&String.replace(&1,"_","-"))
+      |> Enum.map(&String.replace(&1, "_", "-"))
     else
       []
     end
@@ -239,12 +251,12 @@ defmodule Cldr.Config do
   raise an exception at compile time.
   """
   @locales_path Path.join(@cldr_data_dir, "available_locales.json")
-  @spec all_locale_names :: [Locale.locale_name, ...]
+  @spec all_locale_names :: [Locale.locale_name(), ...]
   def all_locale_names do
     @locales_path
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
-    |> Enum.sort
+    |> Enum.sort()
   end
 
   @doc """
@@ -267,17 +279,18 @@ defmodule Cldr.Config do
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
-  @spec configured_locale_names :: [Locale.locale_name]
+  @spec configured_locale_names :: [Locale.locale_name()]
   def configured_locale_names do
-    locale_names = case app_locale_names = Application.get_env(:ex_cldr, :locales) do
-      :all  -> all_locale_names()
-      nil   -> [default_locale()]
-      _     -> expand_locale_names(app_locale_names)
-    end
+    locale_names =
+      case app_locale_names = Application.get_env(:ex_cldr, :locales) do
+        :all -> all_locale_names()
+        nil -> [default_locale()]
+        _ -> expand_locale_names(app_locale_names)
+      end
 
     ["root" | locale_names]
-    |> Enum.uniq
-    |> Enum.sort
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   @doc false
@@ -289,26 +302,27 @@ defmodule Cldr.Config do
 
     canonical_tag =
       language_tag
-      |> Locale.substitute_aliases
-      |> Locale.add_likely_subtags
+      |> Locale.substitute_aliases()
+      |> Locale.add_likely_subtags()
 
     canonical_tag
-      |> Map.put(:requested_locale_name, requested_locale_name)
-      |> Map.put(:canonical_locale_name, Locale.locale_name_from(canonical_tag))
-      |> set_cldr_locale_name
-      |> set_rbnf_locale_name
+    |> Map.put(:requested_locale_name, requested_locale_name)
+    |> Map.put(:canonical_locale_name, Locale.locale_name_from(canonical_tag))
+    |> set_cldr_locale_name
+    |> set_rbnf_locale_name
   end
 
   @doc false
-  def set_cldr_locale_name(%LanguageTag{language: language, script: script,
-      territory: territory, variant: variant} = language_tag) do
+  def set_cldr_locale_name(
+        %LanguageTag{language: language, script: script, territory: territory, variant: variant} =
+          language_tag
+      ) do
     cldr_locale_name =
       known_locale_name(Locale.locale_name_from(language, script, territory, variant)) ||
-      known_locale_name(Locale.locale_name_from(language, nil, territory, variant)) ||
-      known_locale_name(Locale.locale_name_from(language, script, nil, variant)) ||
-      known_locale_name(Locale.locale_name_from(language, nil, nil, variant)) ||
-      known_locale_name(language_tag.requested_locale_name) ||
-      nil
+        known_locale_name(Locale.locale_name_from(language, nil, territory, variant)) ||
+        known_locale_name(Locale.locale_name_from(language, script, nil, variant)) ||
+        known_locale_name(Locale.locale_name_from(language, nil, nil, variant)) ||
+        known_locale_name(language_tag.requested_locale_name) || nil
 
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
@@ -316,9 +330,8 @@ defmodule Cldr.Config do
   def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
     rbnf_locale_name =
       known_rbnf_locale_name(Locale.locale_name_from(language, script, nil, nil)) ||
-      known_rbnf_locale_name(Locale.locale_name_from(language, nil, nil, nil)) ||
-      known_rbnf_locale_name(language_tag.requested_locale_name) ||
-      nil
+        known_rbnf_locale_name(Locale.locale_name_from(language, nil, nil, nil)) ||
+        known_rbnf_locale_name(language_tag.requested_locale_name) || nil
 
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
@@ -327,13 +340,13 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured and available
   in the CLDR repository.
   """
-  @spec known_locale_names :: [Locale.locale_name]
+  @spec known_locale_names :: [Locale.locale_name()]
   def known_locale_names do
     requested_locale_names()
     |> MapSet.new()
     |> MapSet.intersection(MapSet.new(all_locale_names()))
-    |> MapSet.to_list
-    |> Enum.sort
+    |> MapSet.to_list()
+    |> Enum.sort()
   end
 
   def known_rbnf_locale_names do
@@ -361,13 +374,13 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured but not available
   in the CLDR repository.
   """
-  @spec unknown_locale_names :: [Locale.locale_name]
+  @spec unknown_locale_names :: [Locale.locale_name()]
   def unknown_locale_names do
     requested_locale_names()
     |> MapSet.new()
     |> MapSet.difference(MapSet.new(all_locale_names()))
-    |> MapSet.to_list
-    |> Enum.sort
+    |> MapSet.to_list()
+    |> Enum.sort()
   end
 
   @doc """
@@ -377,11 +390,11 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
-  @spec requested_locale_names :: [Locale.locale_name]
+  @spec requested_locale_names :: [Locale.locale_name()]
   def requested_locale_names do
     (configured_locale_names() ++ gettext_locales() ++ [default_locale()])
-    |> Enum.uniq
-    |> Enum.sort
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   @doc """
@@ -396,7 +409,7 @@ defmodule Cldr.Config do
 
   """
   def known_calendars do
-    calendar_info() |> Map.keys |> Enum.sort
+    calendar_info() |> Map.keys() |> Enum.sort()
   end
 
   @doc """
@@ -435,7 +448,7 @@ defmodule Cldr.Config do
   def known_currencies do
     client_data_dir()
     |> Path.join("currencies.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
     |> Enum.map(&String.to_atom/1)
   end
@@ -457,17 +470,17 @@ defmodule Cldr.Config do
 
   """
   def known_number_systems do
-    number_systems() |> Map.keys |> Enum.sort
+    number_systems() |> Map.keys() |> Enum.sort()
   end
 
-  @max_concurrency System.schedulers_online * 2
+  @max_concurrency System.schedulers_online() * 2
   def known_number_system_types do
     known_locale_names()
     |> Task.async_stream(__MODULE__, :number_systems_for, [], max_concurrency: @max_concurrency)
-    |> Enum.to_list
+    |> Enum.to_list()
     |> Enum.flat_map(&elem(&1, 1))
-    |> Enum.uniq
-    |> Enum.sort
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   def number_systems_for(locale_name) do
@@ -508,9 +521,9 @@ defmodule Cldr.Config do
   def known_territories do
     territory_containment()
     |> Enum.map(fn {k, v} -> [k, v] end)
-    |> List.flatten
-    |> Enum.uniq
-    |> Enum.sort
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   @doc """
@@ -553,28 +566,31 @@ defmodule Cldr.Config do
        "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locale_names([Locale.locale_name, ...]) :: [Locale.locale_name, ...]
+  @spec expand_locale_names([Locale.locale_name(), ...]) :: [Locale.locale_name(), ...]
   def expand_locale_names(locale_names) do
     Enum.map(locale_names, fn locale_name ->
       if String.contains?(locale_name, @wildcard_matchers) do
         case Regex.compile(locale_name) do
-          {:ok, regex} -> Enum.filter(all_locale_names(), &Regex.match?(regex, &1))
-          {:error, reason} -> raise ArgumentError,
-              "Invalid regex in locale name #{inspect locale_name}: #{inspect reason}"
+          {:ok, regex} ->
+            Enum.filter(all_locale_names(), &Regex.match?(regex, &1))
+
+          {:error, reason} ->
+            raise ArgumentError,
+                  "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
         end
       else
         locale_name
       end
     end)
-    |> List.flatten
+    |> List.flatten()
     |> Enum.map(fn locale_name ->
       case String.split(locale_name, "-") do
         [language] -> language
         [language | _rest] -> [language, locale_name]
       end
     end)
-    |> List.flatten
-    |> Enum.uniq
+    |> List.flatten()
+    |> Enum.uniq()
   end
 
   @doc """
@@ -583,15 +599,16 @@ defmodule Cldr.Config do
 
   * `locale` is any locale returned from `Cldr.known_locale_names()`
   """
-  @spec locale_path(String.t) :: {:ok, String.t} | {:error, :not_found}
+  @spec locale_path(String.t()) :: {:ok, String.t()} | {:error, :not_found}
   def locale_path(locale) do
     relative_locale_path = ["locales/", "#{locale}.json"]
     client_path = Path.join(client_data_dir(), relative_locale_path)
-    cldr_path   = Path.join(cldr_data_dir(), relative_locale_path)
+    cldr_path = Path.join(cldr_data_dir(), relative_locale_path)
+
     cond do
       File.exists?(client_path) -> {:ok, client_path}
-      File.exists?(cldr_path)   -> {:ok, cldr_path}
-      true                      -> {:error, :not_found}
+      File.exists?(cldr_path) -> {:ok, cldr_path}
+      true -> {:error, :not_found}
     end
   end
 
@@ -607,23 +624,28 @@ defmodule Cldr.Config do
   during production run there is no file access or decoding.
   """
   def get_locale(locale) do
-    {:ok, path} = case locale_path(locale) do
-      {:ok, path} ->
-        {:ok, path}
-      {:error, :not_found} ->
-        raise RuntimeError, message: "Locale definition was not found for #{locale}"
-      error                ->
-        raise RuntimeError, message: "Unexpected return from locale_path(#{inspect locale}) => #{inspect error}"
-    end
+    {:ok, path} =
+      case locale_path(locale) do
+        {:ok, path} ->
+          {:ok, path}
+
+        {:error, :not_found} ->
+          raise RuntimeError, message: "Locale definition was not found for #{locale}"
+
+        error ->
+          raise RuntimeError,
+            message: "Unexpected return from locale_path(#{inspect(locale)}) => #{inspect(error)}"
+      end
 
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
   @doc false
   def do_get_locale(locale, path, compiling? \\ false)
+
   def do_get_locale(locale, path, false) do
     path
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
     |> assert_valid_keys!(locale)
     |> structure_units
@@ -657,10 +679,10 @@ defmodule Cldr.Config do
   def territory_containment do
     client_data_dir()
     |> Path.join("territory_containment.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
-    |> Cldr.Map.atomize_keys
-    |> Cldr.Map.atomize_values
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values()
   end
 
   @doc """
@@ -717,7 +739,7 @@ defmodule Cldr.Config do
   def territory_info do
     client_data_dir()
     |> Path.join("territory_info.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> atomize_territory_keys
@@ -764,7 +786,8 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory_info(String.t | atom() | LanguageTag.t) :: %{} | {:error, {Exception.t, String.t}}
+  @spec territory_info(String.t() | atom() | LanguageTag.t()) ::
+          %{} | {:error, {Exception.t(), String.t()}}
   def territory_info(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territory_info()
@@ -798,39 +821,43 @@ defmodule Cldr.Config do
       currencies =
         data
         |> Map.get(:currency)
-        |> Cldr.Map.atomize_keys
+        |> Cldr.Map.atomize_keys()
         |> into_keyword_list
         |> Enum.map(fn {currency, data} ->
-          data = if data[:tender] == "false" do
-            Map.put(data, :tender, false)
-          else
-            data
-          end
+          data =
+            if data[:tender] == "false" do
+              Map.put(data, :tender, false)
+            else
+              data
+            end
 
-          data = if data[:from] do
-            Map.put(data, :from, Date.from_iso8601!(data[:from]))
-          else
-            data
-          end
+          data =
+            if data[:from] do
+              Map.put(data, :from, Date.from_iso8601!(data[:from]))
+            else
+              data
+            end
 
-          data = if data[:to] do
-            Map.put(data, :to, Date.from_iso8601!(data[:to]))
-          else
-            data
-          end
+          data =
+            if data[:to] do
+              Map.put(data, :to, Date.from_iso8601!(data[:to]))
+            else
+              data
+            end
 
           {currency, data}
         end)
+
       {territory, Map.put(data, :currency, currencies)}
     end)
     |> Enum.into(%{})
   end
 
   defp into_keyword_list(list) do
-    Enum.reduce list, Keyword.new, fn map, acc ->
+    Enum.reduce(list, Keyword.new(), fn map, acc ->
       currency = Map.to_list(map) |> hd
       [currency | acc]
-    end
+    end)
   end
 
   defp atomize_language_population(territories) do
@@ -841,12 +868,14 @@ defmodule Cldr.Config do
         |> Map.get(:language_population)
         |> atomize_language_keys
         |> Enum.into(%{})
+
       {territory, Map.put(data, :language_population, languages)}
     end)
     |> Enum.into(%{})
   end
 
   defp atomize_language_keys(nil), do: []
+
   defp atomize_language_keys(lang) do
     Enum.map(lang, fn {language, values} -> {language, Cldr.Map.atomize_keys(values)} end)
   end
@@ -858,7 +887,7 @@ defmodule Cldr.Config do
   def aliases do
     client_data_dir()
     |> Path.join("aliases.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> Enum.into(%{})
@@ -866,11 +895,12 @@ defmodule Cldr.Config do
   end
 
   defp structify_languages(map) do
-    languages = Enum.map(map.language, fn {k, v} ->
-      values = Cldr.Map.atomize_keys(v)
-      {k, struct(Cldr.LanguageTag, values)}
-    end)
-    |> Enum.into(%{})
+    languages =
+      Enum.map(map.language, fn {k, v} ->
+        values = Cldr.Map.atomize_keys(v)
+        {k, struct(Cldr.LanguageTag, values)}
+      end)
+      |> Enum.into(%{})
 
     Map.put(map, :language, languages)
   end
@@ -883,7 +913,7 @@ defmodule Cldr.Config do
   def likely_subtags do
     client_data_dir()
     |> Path.join("likely_subtags.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
     |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, Cldr.Map.atomize_keys(v))} end)
     |> Enum.into(%{})
@@ -896,13 +926,13 @@ defmodule Cldr.Config do
   def week_info do
     client_data_dir()
     |> Path.join("week_data.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
-    |> Cldr.Map.underscore_keys
+    |> Cldr.Map.underscore_keys()
     |> Enum.map(&upcase_territory_codes/1)
     |> Enum.into(%{})
-    |> Cldr.Map.atomize_keys
-    |> Cldr.Map.integerize_values
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.integerize_values()
     |> Map.take([:weekend_start, :weekend_end, :min_days, :first_day])
   end
 
@@ -937,7 +967,7 @@ defmodule Cldr.Config do
   def day_period_info do
     client_data_dir()
     |> Path.join("day_periods.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
   end
 
@@ -954,10 +984,10 @@ defmodule Cldr.Config do
   def calendar_info do
     client_data_dir()
     |> Path.join("calendar_data.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
-    |> Cldr.Map.atomize_keys
-    |> Cldr.Map.integerize_keys
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.integerize_keys()
     |> add_era_end_dates
   end
 
@@ -977,23 +1007,25 @@ defmodule Cldr.Config do
     |> get_locale()
     |> Map.get(:dates)
     |> Map.get(:calendars)
-    |> Map.keys
+    |> Map.keys()
   end
 
   def calendars_for_locale(%{} = locale_data) do
     locale_data
     |> Map.get(:dates)
     |> Map.get(:calendars)
-    |> Map.keys
+    |> Map.keys()
   end
 
   defp add_era_end_dates(calendars) do
     Enum.map(calendars, fn {calendar, content} ->
-      new_content = Enum.map(content, fn
-        {:eras, eras} -> {:eras, add_end_dates(eras)}
-        {k, v} -> {k, v}
-      end)
-      |> Enum.into(%{})
+      new_content =
+        Enum.map(content, fn
+          {:eras, eras} -> {:eras, add_end_dates(eras)}
+          {k, v} -> {k, v}
+        end)
+        |> Enum.into(%{})
+
       {calendar, new_content}
     end)
     |> Enum.into(%{})
@@ -1038,7 +1070,7 @@ defmodule Cldr.Config do
   @doc false
   def extract_formats(formats) when is_map(formats) do
     formats
-    |> Map.values
+    |> Map.values()
     |> Enum.map(&hd/1)
   end
 
@@ -1051,24 +1083,24 @@ defmodule Cldr.Config do
     locale
     |> get_locale
     |> Map.get(:number_formats)
-    |> Map.values
-    |> Enum.map(&(Map.delete(&1, :currency_spacing)))
-    |> Enum.map(&(Map.delete(&1, :currency_long)))
+    |> Map.values()
+    |> Enum.map(&Map.delete(&1, :currency_spacing))
+    |> Enum.map(&Map.delete(&1, :currency_long))
     |> Enum.map(&Map.values/1)
-    |> List.flatten
+    |> List.flatten()
     |> Enum.reject(&is_integer/1)
     |> Enum.map(&extract_formats/1)
-    |> List.flatten
-    |> Enum.uniq
-    |> Enum.sort
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   def number_systems do
     cldr_data_dir()
     |> Path.join("number_systems.json")
-    |> File.read!
+    |> File.read!()
     |> json_lib().decode!
-    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
     |> Enum.into(%{})
   end
@@ -1082,20 +1114,22 @@ defmodule Cldr.Config do
 
         function =
           rule
-          |> String.replace("-","_")
-          |> String.to_atom
+          |> String.replace("-", "_")
+          |> String.to_atom()
 
         locale =
           locale
-          |> String.replace("_","-")
+          |> String.replace("_", "-")
 
         module = Module.concat(Cldr.Rbnf, ruleset_module)
         {module, function, locale}
+
       [rule] ->
         function =
           rule
-          |> String.replace("-","_")
-          |> String.to_atom
+          |> String.replace("-", "_")
+          |> String.to_atom()
+
         {Cldr.Rbnf.NumberSystem, function, "root"}
     end
   end
@@ -1107,10 +1141,12 @@ defmodule Cldr.Config do
   defp assert_valid_keys!(content, locale) do
     for module <- required_modules() do
       if !Map.has_key?(content, module) and !System.get_env("DEV") do
-        raise RuntimeError, message:
-          "Locale file #{inspect locale} is invalid - map key #{inspect module} was not found."
+        raise RuntimeError,
+          message:
+            "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
       end
     end
+
     content
   end
 
@@ -1128,7 +1164,7 @@ defmodule Cldr.Config do
   3. To all conditional inclusion of CLDR content at compile time to help
   manage memory footprint.  This capability is not yet built into `Cldr`.
   """
-  @spec required_modules :: [String.t]
+  @spec required_modules :: [String.t()]
   def required_modules do
     @cldr_modules
   end
@@ -1137,28 +1173,31 @@ defmodule Cldr.Config do
   # number systems are ever added at runtime so
   # risk to overflowing the atom table is very low.
   defp atomize_number_systems(content) do
-    number_systems = content
-    |> Map.get(:number_systems)
-    |> Enum.map(fn {k, v} -> {k, atomize(v)} end)
-    |> Enum.into(%{})
+    number_systems =
+      content
+      |> Map.get(:number_systems)
+      |> Enum.map(fn {k, v} -> {k, atomize(v)} end)
+      |> Enum.into(%{})
 
     Map.put(content, :number_systems, number_systems)
   end
 
   defp structure_date_formats(content) do
-    dates = content.dates
-    |> Cldr.Map.integerize_keys
+    dates =
+      content.dates
+      |> Cldr.Map.integerize_keys()
 
     Map.put(content, :dates, dates)
   end
 
   # Put the rbnf rules into a %Rule{} struct
   defp structure_rbnf(content) do
-    rbnf = content[:rbnf]
-    |> Enum.map(fn {group, sets} ->
-      {group, structure_sets(sets)}
-    end)
-    |> Enum.into(%{})
+    rbnf =
+      content[:rbnf]
+      |> Enum.map(fn {group, sets} ->
+        {group, structure_sets(sets)}
+      end)
+      |> Enum.into(%{})
 
     Map.put(content, :rbnf, rbnf)
   end
@@ -1175,19 +1214,19 @@ defmodule Cldr.Config do
   defp group_units(units) do
     units
     |> Enum.map(fn {k, v} ->
-         [group | key] = String.split(k, "_", parts: 2)
-         if key == [] do
-           nil
-         else
-           [key] = key
-           {group, key, v}
-         end
-       end)
+      [group | key] = String.split(k, "_", parts: 2)
+
+      if key == [] do
+        nil
+      else
+        [key] = key
+        {group, key, v}
+      end
+    end)
     |> Enum.reject(&is_nil/1)
-    |> Enum.group_by(
-         fn {group, _key, _value} -> group end,
-         fn {_group, key, value} -> {key, value} end
-       )
+    |> Enum.group_by(fn {group, _key, _value} -> group end, fn {_group, key, value} ->
+      {key, value}
+    end)
     |> Enum.map(fn {k, v} -> {k, Enum.into(v, %{})} end)
     |> Enum.into(%{})
   end
@@ -1202,8 +1241,9 @@ defmodule Cldr.Config do
 
   defp underscore(string) when is_binary(string) do
     string
-    |> String.replace("-","_")
+    |> String.replace("-", "_")
   end
+
   defp underscore(other), do: other
 
   # Convert to an atom but only if

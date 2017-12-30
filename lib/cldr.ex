@@ -39,30 +39,32 @@ defmodule Cldr do
   # Ensure locales are all installed.  We do this once during
   # compilation of `Cldr` because this is the module we define
   # as the root of the dependency tree.
-  Install.install_known_locale_names
+  Install.install_known_locale_names()
 
   if Enum.any?(Config.unknown_locale_names()) do
     raise Cldr.UnknownLocaleError,
-      "Some locale names are configured that are not known to CLDR. " <>
-      "Compilation cannot continue until the configuration includes only " <>
-      "locales names known in CLDR.\n\n" <>
-      "Configured locales names: #{inspect Config.requested_locale_names()}\n" <>
-      "Gettext locales names:    #{inspect Config.gettext_locales()}\n" <>
-      "Unknown locales names:    " <>
-      "#{IO.ANSI.red()}#{inspect Config.unknown_locale_names()}" <>
-      "#{IO.ANSI.default_color()}\n"
+          "Some locale names are configured that are not known to CLDR. " <>
+            "Compilation cannot continue until the configuration includes only " <>
+            "locales names known in CLDR.\n\n" <>
+            "Configured locales names: #{inspect(Config.requested_locale_names())}\n" <>
+            "Gettext locales names:    #{inspect(Config.gettext_locales())}\n" <>
+            "Unknown locales names:    " <>
+            "#{IO.ANSI.red()}#{inspect(Config.unknown_locale_names())}" <>
+            "#{IO.ANSI.default_color()}\n"
   end
 
   @warn_if_greater_than 100
   @known_locale_count Enum.count(Config.known_locale_names())
   @locale_string if @known_locale_count > 1, do: "locales named ", else: "locale named "
-  IO.puts "Generating Cldr for #{@known_locale_count} " <>
-    @locale_string <>
-    "#{inspect Config.known_locale_names, limit: 5} with " <>
-    "a default locale named #{inspect Config.default_locale()}"
+  IO.puts(
+    "Generating Cldr for #{@known_locale_count} " <>
+      @locale_string <>
+      "#{inspect(Config.known_locale_names(), limit: 5)} with " <>
+      "a default locale named #{inspect(Config.default_locale())}"
+  )
+
   if @known_locale_count > @warn_if_greater_than do
-    IO.puts "Please be patient, generating functions for many locales " <>
-    "can take some time"
+    IO.puts("Please be patient, generating functions for many locales " <> "can take some time")
   end
 
   @doc """
@@ -70,7 +72,7 @@ defmodule Cldr do
   is kept.
   """
   @data_dir Config.client_data_dir()
-  @spec data_dir :: String.t
+  @spec data_dir :: String.t()
   def data_dir do
     @data_dir
   end
@@ -85,9 +87,9 @@ defmodule Cldr do
 
   """
   @version Config.version()
-  |> String.split(".")
-  |> Enum.map(&String.to_integer/1)
-  |> List.to_tuple
+           |> String.split(".")
+           |> Enum.map(&String.to_integer/1)
+           |> List.to_tuple()
 
   @spec version :: {non_neg_integer, non_neg_integer, non_neg_integer}
   def version do
@@ -118,7 +120,7 @@ defmodule Cldr do
        }
 
   """
-  @spec get_current_locale :: LanguageTag.t
+  @spec get_current_locale :: LanguageTag.t()
   def get_current_locale do
     Process.get(:cldr, default_locale())
   end
@@ -163,8 +165,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec set_current_locale(Locale.locale_name | LanguageTag.t) ::
-    {:ok, LanguageTag.t} | {:error, {Exception.t, String.t}}
+  @spec set_current_locale(Locale.locale_name() | LanguageTag.t()) ::
+          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
 
   def set_current_locale(locale_name) when is_binary(locale_name) do
     case Cldr.Locale.canonical_language_tag(locale_name) do
@@ -195,8 +197,8 @@ defmodule Cldr do
         variant: nil}
 
   """
-  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!
-  @spec default_locale :: LanguageTag.t
+  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!()
+  @spec default_locale :: LanguageTag.t()
   def default_locale do
     @default_locale
   end
@@ -212,8 +214,8 @@ defmodule Cldr do
 
   """
   @default_territory @default_locale
-  |> Map.get(:territory)
-  |> String.to_atom
+                     |> Map.get(:territory)
+                     |> String.to_atom()
 
   @spec default_territory :: atom()
   def default_territory do
@@ -232,7 +234,7 @@ defmodule Cldr do
   See also: `requested_locales/0` and `known_locales/0`
   """
   @all_locale_names Config.all_locale_names()
-  @spec all_locale_names :: [Locale.locale_name, ...]
+  @spec all_locale_names :: [Locale.locale_name(), ...]
   def all_locale_names do
     @all_locale_names
   end
@@ -246,7 +248,7 @@ defmodule Cldr do
   See also `known_locales/0` and `all_locales/0`
   """
   @requested_locale_names Config.requested_locale_names()
-  @spec requested_locale_names :: [Locale.locale_name, ...] | []
+  @spec requested_locale_names :: [Locale.locale_name(), ...] | []
   def requested_locale_names do
     @requested_locale_names
   end
@@ -261,7 +263,7 @@ defmodule Cldr do
   in `Gettext`.
   """
   @known_locale_names Config.known_locale_names()
-  @spec known_locale_names :: [Locale.locale_name, ...] | []
+  @spec known_locale_names :: [Locale.locale_name(), ...] | []
   def known_locale_names do
     @known_locale_names
   end
@@ -275,7 +277,7 @@ defmodule Cldr do
   return an empty list.
   """
   @unknown_locale_names Config.unknown_locale_names()
-  @spec unknown_locale_names :: [Locale.locale_name, ...] | []
+  @spec unknown_locale_names :: [Locale.locale_name(), ...] | []
   def unknown_locale_names do
     @unknown_locale_names
   end
@@ -284,8 +286,8 @@ defmodule Cldr do
   Returns a list of locale names which have rules based number
   formats (RBNF).
   """
-  @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names
-  @spec known_rbnf_locale_names :: [Locale.locale_name, ...] | []
+  @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names()
+  @spec known_rbnf_locale_names :: [Locale.locale_name(), ...] | []
   def known_rbnf_locale_names do
     @known_rbnf_locale_names
   end
@@ -296,9 +298,9 @@ defmodule Cldr do
   with Cldr locale names.
   """
   @known_gettext_locale_names Config.gettext_locales()
-  |> Enum.map(&Locale.locale_name_from_posix/1)
+                              |> Enum.map(&Locale.locale_name_from_posix/1)
 
-  @spec known_gettext_locale_names :: [Locale.locale_name, ...] | []
+  @spec known_gettext_locale_names :: [Locale.locale_name(), ...] | []
   def known_gettext_locale_names do
     @known_gettext_locale_names
   end
@@ -320,7 +322,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale_name?(Locale.locale_name) :: boolean
+  @spec known_locale_name?(Locale.locale_name()) :: boolean
   def known_locale_name?(locale_name) when is_binary(locale_name) do
     locale_name in known_locale_names()
   end
@@ -343,7 +345,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale_name?(Locale.locale_name) :: boolean
+  @spec known_rbnf_locale_name?(Locale.locale_name()) :: boolean
   def known_rbnf_locale_name?(locale_name) when is_binary(locale_name) do
     locale_name in known_rbnf_locale_names()
   end
@@ -365,7 +367,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_gettext_locale_name?(Locale.locale_name) :: boolean
+  @spec known_gettext_locale_name?(Locale.locale_name()) :: boolean
   def known_gettext_locale_name?(locale_name) when is_binary(locale_name) do
     locale_name in known_gettext_locale_names()
   end
@@ -390,7 +392,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale_name(Locale.locale_name) :: String.t | false
+  @spec known_locale_name(Locale.locale_name()) :: String.t() | false
   def known_locale_name(locale_name) when is_binary(locale_name) do
     if known_locale_name?(locale_name) do
       locale_name
@@ -417,7 +419,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale_name(Locale.locale_name) :: String.t | false
+  @spec known_rbnf_locale_name(Locale.locale_name()) :: String.t() | false
   def known_rbnf_locale_name(locale_name) when is_binary(locale_name) do
     if known_rbnf_locale_name?(locale_name) do
       locale_name
@@ -444,7 +446,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_gettext_locale_name(Locale.locale_name) :: String.t | false
+  @spec known_gettext_locale_name(Locale.locale_name()) :: String.t() | false
   def known_gettext_locale_name(locale_name) when is_binary(locale_name) do
     if known_gettext_locale_name?(locale_name) do
       locale_name
@@ -452,7 +454,6 @@ defmodule Cldr do
       false
     end
   end
-
 
   @doc """
   Returns a boolean indicating if the specified locale
@@ -477,7 +478,7 @@ defmodule Cldr do
       false
 
   """
-  @spec available_locale_name?(Locale.locale_name | LanguageTag.t) :: boolean
+  @spec available_locale_name?(Locale.locale_name() | LanguageTag.t()) :: boolean
   def available_locale_name?(locale_name) when is_binary(locale_name) do
     locale_name in Config.all_locale_names()
   end
@@ -531,8 +532,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec validate_locale(Locale.locale_name | LanguageTag.t) ::
-    {:ok, String.t} | {:error, {Exception.t, String.t}}
+  @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
+          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   def validate_locale(locale_name) when is_binary(locale_name) do
     case Cldr.Locale.new(locale_name) do
@@ -601,7 +602,7 @@ defmodule Cldr do
        :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
 
   """
-  @known_calendars Cldr.Config.known_calendars
+  @known_calendars Cldr.Config.known_calendars()
   @spec known_calendars :: [atom(), ...]
   def known_calendars do
     @known_calendars
@@ -629,8 +630,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownCalendarError, "The calendar name :invalid is invalid"}}
 
   """
-  @spec validate_calendar(atom() | String.t) ::
-    {:ok, atom()} | {:error, {Exception.t, String.t}}
+  @spec validate_calendar(atom() | String.t()) ::
+          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_calendar(calendar) when is_atom(calendar) and calendar in @known_calendars do
     {:ok, calendar}
@@ -645,11 +646,12 @@ defmodule Cldr do
 
   def validate_calendar(calendar) when is_binary(calendar) do
     calendar
-    |> String.downcase
-    |> String.to_existing_atom
+    |> String.downcase()
+    |> String.to_existing_atom()
     |> validate_calendar
-  rescue ArgumentError ->
-    {:error, unknown_calendar_error(calendar)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_calendar_error(calendar)}
   end
 
   @doc """
@@ -670,7 +672,7 @@ defmodule Cldr do
 
   """
   def unknown_calendar_error(calendar) do
-    {Cldr.UnknownCalendarError, "The calendar name #{inspect calendar} is invalid"}
+    {Cldr.UnknownCalendarError, "The calendar name #{inspect(calendar)} is invalid"}
   end
 
   @doc """
@@ -708,7 +710,7 @@ defmodule Cldr do
        :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
-  @known_territories Cldr.Config.known_territories
+  @known_territories Cldr.Config.known_territories()
   @spec known_territories :: [atom(), ...]
   def known_territories do
     @known_territories
@@ -745,8 +747,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownTerritoryError, "The territory %{} is unknown"}}
 
   """
-  @spec validate_territory(atom() | String.t) ::
-    {:ok, atom()} | {:error, {Exception.t, String.t}}
+  @spec validate_territory(atom() | String.t()) ::
+          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_territory(territory) when is_atom(territory) and territory in @known_territories do
     {:ok, territory}
@@ -758,11 +760,12 @@ defmodule Cldr do
 
   def validate_territory(territory) when is_binary(territory) do
     territory
-    |> String.upcase
-    |> String.to_existing_atom
+    |> String.upcase()
+    |> String.to_existing_atom()
     |> validate_territory
-  rescue ArgumentError ->
-    {:error, unknown_territory_error(territory)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_territory_error(territory)}
   end
 
   def validate_territory(%LanguageTag{territory: nil} = locale) do
@@ -794,9 +797,9 @@ defmodule Cldr do
       {Cldr.UnknownTerritoryError, "The territory \\"invalid\\" is unknown"}
 
   """
-  @spec unknown_territory_error(any()) :: {Cldr.UnknownTerritoryError, String.t}
+  @spec unknown_territory_error(any()) :: {Cldr.UnknownTerritoryError, String.t()}
   def unknown_territory_error(territory) do
-    {Cldr.UnknownTerritoryError, "The territory #{inspect territory} is unknown"}
+    {Cldr.UnknownTerritoryError, "The territory #{inspect(territory)} is unknown"}
   end
 
   @doc """
@@ -831,8 +834,8 @@ defmodule Cldr do
        :XAF]
 
   """
-  @known_currencies Cldr.Config.known_currencies
-  @spec known_currencies :: [String.t, ...] | []
+  @known_currencies Cldr.Config.known_currencies()
+  @spec known_currencies :: [String.t(), ...] | []
   def known_currencies do
     @known_currencies
   end
@@ -865,8 +868,8 @@ defmodule Cldr do
       {:error, {Cldr.UnknownCurrencyError, "The currency :invalid is invalid"}}
 
   """
-  @spec validate_currency(atom() | String.t) ::
-    {:ok, atom()} | {:error, {Exception.t, String.t}}
+  @spec validate_currency(atom() | String.t()) ::
+          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_currency(currency) when is_atom(currency) and currency in @known_currencies do
     {:ok, currency}
@@ -878,11 +881,12 @@ defmodule Cldr do
 
   def validate_currency(currency) when is_binary(currency) do
     currency
-    |> String.upcase
-    |> String.to_existing_atom
+    |> String.upcase()
+    |> String.to_existing_atom()
     |> validate_currency
-  rescue ArgumentError ->
-    {:error, unknown_currency_error(currency)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_currency_error(currency)}
   end
 
   @doc """
@@ -902,9 +906,9 @@ defmodule Cldr do
       {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}
 
   """
-  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t}
+  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t()}
   def unknown_currency_error(currency) do
-    {Cldr.UnknownCurrencyError, "The currency #{inspect currency} is invalid"}
+    {Cldr.UnknownCurrencyError, "The currency #{inspect(currency)} is invalid"}
   end
 
   @doc """
@@ -923,7 +927,7 @@ defmodule Cldr do
        :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :vaii, :wara]
 
   """
-  @known_number_systems Cldr.Config.known_number_systems
+  @known_number_systems Cldr.Config.known_number_systems()
   @spec known_number_systems :: [atom(), ...] | []
   def known_number_systems do
     @known_number_systems
@@ -959,20 +963,21 @@ defmodule Cldr do
 
   """
   @spec validate_number_system(String.t() | any()) ::
-    {:ok, String.t} | {:error, {Exception.t, String.t}}
+          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system(number_system)
-  when is_atom(number_system) and number_system in @known_number_systems do
+      when is_atom(number_system) and number_system in @known_number_systems do
     {:ok, number_system}
   end
 
   def validate_number_system(number_system) when is_binary(number_system) do
     number_system
-    |> String.downcase
-    |> String.to_existing_atom
+    |> String.downcase()
+    |> String.to_existing_atom()
     |> validate_number_system
-  rescue ArgumentError ->
-    {:error, unknown_number_system_error(number_system)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_number_system_error(number_system)}
   end
 
   def validate_number_system(number_system) do
@@ -999,13 +1004,13 @@ defmodule Cldr do
       {Cldr.UnknownNumberSystemError, "The number system :invalid is unknown"}
 
   """
-  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t}
+  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t()}
   def unknown_number_system_error(number_system) when is_atom(number_system) do
-    {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is unknown"}
+    {Cldr.UnknownNumberSystemError, "The number system #{inspect(number_system)} is unknown"}
   end
 
   def unknown_number_system_error(number_system) do
-    {Cldr.UnknownNumberSystemError, "The number system #{inspect number_system} is invalid"}
+    {Cldr.UnknownNumberSystemError, "The number system #{inspect(number_system)} is invalid"}
   end
 
   @doc """
@@ -1017,7 +1022,7 @@ defmodule Cldr do
       [:default, :finance, :native, :traditional]
 
   """
-  @known_number_system_types Cldr.Config.known_number_system_types
+  @known_number_system_types Cldr.Config.known_number_system_types()
   def known_number_system_types do
     @known_number_system_types
   end
@@ -1052,20 +1057,21 @@ defmodule Cldr do
 
   """
   @spec validate_number_system_type(String.t() | any()) ::
-    {:ok, String.t} | {:error, {Exception.t, String.t}}
+          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system_type(number_system_type)
-  when is_atom(number_system_type) and number_system_type in @known_number_system_types do
+      when is_atom(number_system_type) and number_system_type in @known_number_system_types do
     {:ok, number_system_type}
   end
 
   def validate_number_system_type(number_system_type) when is_binary(number_system_type) do
     number_system_type
-    |> String.downcase
-    |> String.to_existing_atom
+    |> String.downcase()
+    |> String.to_existing_atom()
     |> validate_number_system_type
-  rescue ArgumentError ->
-    {:error, unknown_number_system_type_error(number_system_type)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_number_system_type_error(number_system_type)}
   end
 
   def validate_number_system_type(number_system_type) do
@@ -1093,16 +1099,20 @@ defmodule Cldr do
       {Cldr.UnknownNumberSystemTypeError, "The number system type :invalid is unknown"}
 
   """
-  @spec unknown_number_system_type_error(any()) :: {Cldr.UnknownNumberSystemTypeError, String.t}
+  @spec unknown_number_system_type_error(any()) :: {Cldr.UnknownNumberSystemTypeError, String.t()}
 
   def unknown_number_system_type_error(number_system_type) when is_atom(number_system_type) do
-    {Cldr.UnknownNumberSystemTypeError,
-      "The number system type #{inspect number_system_type} is unknown"}
+    {
+      Cldr.UnknownNumberSystemTypeError,
+      "The number system type #{inspect(number_system_type)} is unknown"
+    }
   end
 
   def unknown_number_system_type_error(number_system_type) do
-    {Cldr.UnknownNumberSystemTypeError,
-      "The number system type #{inspect number_system_type} is invalid"}
+    {
+      Cldr.UnknownNumberSystemTypeError,
+      "The number system type #{inspect(number_system_type)} is invalid"
+    }
   end
 
   def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)

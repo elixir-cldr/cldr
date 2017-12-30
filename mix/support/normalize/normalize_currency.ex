@@ -10,23 +10,35 @@ defmodule Cldr.Normalize.Currency do
     currency_data = get_currency_data()["fractions"]
     default = currency_data["DEFAULT"]
     currencies = get_in(content, ["numbers", "currencies"])
-    currencies = Enum.map(currencies, fn {code, currency} ->
-      code = String.upcase(to_string(code))
-      currency_map = %{
-        code:          code,
-        name:          currency["display_name"],
-        symbol:        currency["symbol"],
-        narrow_symbol: currency["symbol_alt_narrow"],
-        tender:        String.to_atom(currency_data[code]["_tender"]   || "true"),
-        digits:        String.to_integer(currency_data[code]["_digits"] || default["_digits"]),
-        rounding:      String.to_integer(currency_data[code]["_rounding"] || default["_rounding"]),
-        cash_digits:   String.to_integer(currency_data[code]["_cash_digits"] || currency_data[code]["_digits"]   || default["_digits"]),
-        cash_rounding: String.to_integer(currency_data[code]["_cash_rounding"] || currency_data[code]["_rounding"] || default["_rounding"]),
-        count:         currency_counts(currency)
-      }
-      {code, currency_map}
-    end)
-    |> Enum.into(%{})
+
+    currencies =
+      Enum.map(currencies, fn {code, currency} ->
+        code = String.upcase(to_string(code))
+
+        currency_map = %{
+          code: code,
+          name: currency["display_name"],
+          symbol: currency["symbol"],
+          narrow_symbol: currency["symbol_alt_narrow"],
+          tender: String.to_atom(currency_data[code]["_tender"] || "true"),
+          digits: String.to_integer(currency_data[code]["_digits"] || default["_digits"]),
+          rounding: String.to_integer(currency_data[code]["_rounding"] || default["_rounding"]),
+          cash_digits:
+            String.to_integer(
+              currency_data[code]["_cash_digits"] || currency_data[code]["_digits"] ||
+                default["_digits"]
+            ),
+          cash_rounding:
+            String.to_integer(
+              currency_data[code]["_cash_rounding"] || currency_data[code]["_rounding"] ||
+                default["_rounding"]
+            ),
+          count: currency_counts(currency)
+        }
+
+        {code, currency_map}
+      end)
+      |> Enum.into(%{})
 
     Map.put(content, "currencies", currencies)
   end
@@ -34,23 +46,26 @@ defmodule Cldr.Normalize.Currency do
   @count_types [:zero, :one, :two, :few, :many, :other]
   @spec currency_counts(%{}) :: %{}
   def currency_counts(currency) do
-    Enum.reduce @count_types, %{}, fn (category, counts) ->
+    Enum.reduce(@count_types, %{}, fn category, counts ->
       if display_count = currency["display_name_count_#{category}"] do
         Map.put(counts, category, display_count)
       else
         counts
       end
-    end
+    end)
   end
 
-  @currency_path Path.join(Cldr.Config.download_data_dir(),
-    ["cldr-core", "/supplemental", "/currencyData.json"])
+  @currency_path Path.join(Cldr.Config.download_data_dir(), [
+                   "cldr-core",
+                   "/supplemental",
+                   "/currencyData.json"
+                 ])
 
   def get_currency_data do
     @currency_path
-    |> File.read!
-    |> Poison.decode!
-    |> Cldr.Map.underscore_keys
+    |> File.read!()
+    |> Poison.decode!()
+    |> Cldr.Map.underscore_keys()
     |> get_in(["supplemental", "currency_data"])
     |> upcase_currency_codes
     |> upcase_territory_codes
@@ -70,13 +85,17 @@ defmodule Cldr.Normalize.Currency do
       currencies["region"]
       |> Enum.map(fn {k, v} -> {String.upcase(k), v} end)
       |> Enum.map(fn {k, v} ->
-          {k, Enum.map(v, &Cldr.Map.remove_leading_underscores/1)}
-         end)
+        {k, Enum.map(v, &Cldr.Map.remove_leading_underscores/1)}
+      end)
       |> Enum.map(fn {k, v} ->
-           {k, Enum.map(v, fn list ->
-                 Enum.map(list, fn {k, v} -> {String.upcase(k), v} end) |> Enum.into(%{})
-               end) |> make_list}
-         end)
+        {
+          k,
+          Enum.map(v, fn list ->
+            Enum.map(list, fn {k, v} -> {String.upcase(k), v} end) |> Enum.into(%{})
+          end)
+          |> make_list
+        }
+      end)
       |> Enum.into(%{})
 
     Map.put(currencies, "region", regions)
@@ -85,5 +104,4 @@ defmodule Cldr.Normalize.Currency do
   defp make_list(list) when is_list(list) do
     List.flatten(list)
   end
-
 end

@@ -1,5 +1,5 @@
 defmodule Cldr.Macros do
-@moduledoc false
+  @moduledoc false
 
   defmacro is_false(value) do
     quote do
@@ -10,6 +10,5 @@ defmodule Cldr.Macros do
   # Use for multiline comments
   # that compile to nothing
   defmacro docp(_comment) do
-
   end
 end

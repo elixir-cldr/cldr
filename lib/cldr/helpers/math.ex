@@ -5,13 +5,14 @@ defmodule Cldr.Math do
   alias Cldr.Digits
   require Integer
 
-  @type rounding :: :down |
-                    :half_up |
-                    :half_even |
-                    :ceiling |
-                    :floor |
-                    :half_down |
-                    :up
+  @type rounding ::
+          :down
+          | :half_up
+          | :half_even
+          | :ceiling
+          | :floor
+          | :half_down
+          | :up
 
   @type number_or_decimal :: number | %Decimal{}
   @type normalised_decimal :: {%Decimal{}, integer}
@@ -63,7 +64,7 @@ defmodule Cldr.Math do
       false
 
   """
-  @spec within(number, integer | Range.t) :: boolean
+  @spec within(number, integer | Range.t()) :: boolean
   def within(number, range) when is_integer(number) do
     number in range
   end
@@ -103,23 +104,25 @@ defmodule Cldr.Math do
   @spec mod(number_or_decimal, number_or_decimal) :: number_or_decimal
 
   def mod(number, modulus) when is_float(number) and is_number(modulus) do
-    number - (Float.floor(number / modulus) * modulus)
+    number - Float.floor(number / modulus) * modulus
   end
 
   def mod(number, modulus) when is_integer(number) and is_number(modulus) do
-    modulo = number
-    |> Kernel./(modulus)
-    |> Float.floor
-    |> Kernel.*(modulus)
+    modulo =
+      number
+      |> Kernel./(modulus)
+      |> Float.floor()
+      |> Kernel.*(modulus)
 
     number - modulo
   end
 
   def mod(%Decimal{} = number, %Decimal{} = modulus) do
-    modulo = number
-    |> Decimal.div(modulus)
-    |> Decimal.round(0, :floor)
-    |> Decimal.mult(modulus)
+    modulo =
+      number
+      |> Decimal.div(modulus)
+      |> Decimal.round(0, :floor)
+      |> Decimal.mult(modulus)
 
     Decimal.sub(number, modulo)
   end
@@ -137,6 +140,7 @@ defmodule Cldr.Math do
     case mod = mod(x, y) do
       %Decimal{} = decimal_mod ->
         if Decimal.cmp(decimal_mod, @decimal_zero) == :eq, do: y, else: mod
+
       _ ->
         if mod == 0, do: y, else: mod
     end
@@ -148,7 +152,7 @@ defmodule Cldr.Math do
   @spec div_mod(integer, integer) :: {integer, integer}
   def div_mod(int1, int2) do
     div = div(int1, int2)
-    mod = int1 - (div * int2)
+    mod = int1 - div * int2
     {div, mod}
   end
 
@@ -234,35 +238,40 @@ defmodule Cldr.Math do
     d = Float.ceil(:math.log10(number))
     power = n - d
 
-    magnitude = :math.pow(10,power)
+    magnitude = :math.pow(10, power)
     shifted = Float.round(number * magnitude)
     rounded = shifted / magnitude
 
-    sign * if is_integer(number) do
-      trunc(rounded)
-    else
-      rounded
-    end
+    sign *
+      if is_integer(number) do
+        trunc(rounded)
+      else
+        rounded
+      end
   end
 
   def round_significant(%Decimal{sign: sign} = number, n) when sign < 0 do
     round_significant(Decimal.abs(number), n)
-    |> Decimal.minus
+    |> Decimal.minus()
   end
 
   def round_significant(%Decimal{sign: sign} = number, n) when sign > 0 do
-    d = number
-    |> log10
-    |> Decimal.round(0, :ceiling)
+    d =
+      number
+      |> log10
+      |> Decimal.round(0, :ceiling)
 
-    raised = n
-    |> Decimal.new
-    |> Decimal.sub(d)
+    raised =
+      n
+      |> Decimal.new()
+      |> Decimal.sub(d)
 
     magnitude = power(@ten, raised)
-    shifted = number
-    |> Decimal.mult(magnitude)
-    |> Decimal.round(0)
+
+    shifted =
+      number
+      |> Decimal.mult(magnitude)
+      |> Decimal.round(0)
 
     Decimal.div(shifted, magnitude)
     |> Decimal.mult(Decimal.new(sign))
@@ -298,26 +307,26 @@ defmodule Cldr.Math do
     ln1 = Decimal.mult(exp, @ln10)
 
     sqrt_mantissa = sqrt(mantissa)
-    y = Decimal.div(Decimal.sub(sqrt_mantissa, @one),
-                    Decimal.add(sqrt_mantissa, @one))
+    y = Decimal.div(Decimal.sub(sqrt_mantissa, @one), Decimal.add(sqrt_mantissa, @one))
 
-    ln2 = y
-    |> log_polynomial([3,5,7])
-    |> Decimal.add(y)
-    |> Decimal.mult(@two)
+    ln2 =
+      y
+      |> log_polynomial([3, 5, 7])
+      |> Decimal.add(y)
+      |> Decimal.mult(@two)
 
     Decimal.add(Decimal.mult(@two, ln2), ln1)
   end
 
   defp log_polynomial(%Decimal{} = value, iterations) do
-    Enum.reduce iterations, @zero, fn (i, acc) ->
+    Enum.reduce(iterations, @zero, fn i, acc ->
       i = Decimal.new(i)
 
       value
       |> power(i)
       |> Decimal.div(i)
       |> Decimal.add(acc)
-    end
+    end)
   end
 
   @doc """
@@ -434,17 +443,17 @@ defmodule Cldr.Math do
   end
 
   def power(number, n) when n < 1 do
-     1 / do_power(number, abs(n), mod(abs(n), 2))
+    1 / do_power(number, abs(n), mod(abs(n), 2))
   end
 
   # Decimal number and decimal n
   defp do_power(%Decimal{} = number, %Decimal{coef: coef}, %Decimal{coef: mod})
-  when mod == 0 and coef == 2 do
+       when mod == 0 and coef == 2 do
     Decimal.mult(number, number)
   end
 
   defp do_power(%Decimal{} = number, %Decimal{coef: coef} = n, %Decimal{coef: mod})
-  when mod == 0 and coef != 2 do
+       when mod == 0 and coef != 2 do
     power(power(number, Decimal.div(n, @two)), @two)
   end
 
@@ -454,41 +463,43 @@ defmodule Cldr.Math do
 
   # Decimal number but integer n
   defp do_power(%Decimal{} = number, n, mod)
-  when is_number(n) and mod == 0 and n == 2 do
+       when is_number(n) and mod == 0 and n == 2 do
     Decimal.mult(number, number)
   end
 
   defp do_power(%Decimal{} = number, n, mod)
-  when is_number(n) and mod == 0 and n != 2 do
+       when is_number(n) and mod == 0 and n != 2 do
     power(power(number, n / 2), 2)
   end
 
   defp do_power(%Decimal{} = number, n, _mod)
-  when is_number(n) do
+       when is_number(n) do
     Decimal.mult(number, power(number, n - 1))
   end
 
   # integer/float number and integer/float n
   defp do_power(number, n, mod)
-  when is_number(n) and mod == 0 and n == 2 do
+       when is_number(n) and mod == 0 and n == 2 do
     number * number
   end
 
   defp do_power(number, n, mod)
-  when is_number(n) and mod == 0 and n != 2 do
+       when is_number(n) and mod == 0 and n != 2 do
     power(power(number, n / 2), 2)
   end
 
   defp do_power(number, n, _mod) do
     number * power(number, n - 1)
   end
+
   #
   # Precompute powers of 10 up to 10^326
   # FIXME: duplicating existing function in Float, which only goes up to 15.
-  Enum.reduce 0..326, 1, fn x, acc ->
+  Enum.reduce(0..326, 1, fn x, acc ->
     def power_of_10(unquote(x)), do: unquote(acc)
     acc * 10
-  end
+  end)
+
   def power_of_10(n) when n < 0 do
     1 / power_of_10(abs(n))
   end
@@ -545,7 +556,7 @@ defmodule Cldr.Math do
       {{[4, 6, 5, 4], 1, -1}, 1}
 
   """
-  @spec coef_exponent_digits(number_or_decimal) :: {Digits.t, integer()}
+  @spec coef_exponent_digits(number_or_decimal) :: {Digits.t(), integer()}
   def coef_exponent_digits(number) do
     {digits, place, sign} = Digits.to_digits(number)
     {{digits, 1, sign}, place - 1}
@@ -577,19 +588,20 @@ defmodule Cldr.Math do
   def sqrt(number, precision \\ @precision)
 
   def sqrt(%Decimal{sign: sign} = number, _precision)
-  when sign == -1 do
-    raise ArgumentError, "bad argument in arithmetic expression #{inspect number}"
+      when sign == -1 do
+    raise ArgumentError, "bad argument in arithmetic expression #{inspect(number)}"
   end
 
   # Get an initial estimate of the sqrt by using the built in `:math.sqrt`
   # function.  This means typically its only two iterations to get the default
   # the sqrt at the specified precision.
   def sqrt(%Decimal{} = number, precision)
-  when is_number(precision) do
-    initial_estimate = number
-    |> to_float
-    |> :math.sqrt
-    |> Decimal.new
+      when is_number(precision) do
+    initial_estimate =
+      number
+      |> to_float
+      |> :math.sqrt()
+      |> Decimal.new()
 
     decimal_precision = Decimal.new(precision)
     do_sqrt(number, initial_estimate, @decimal_precision, decimal_precision)
@@ -599,19 +611,28 @@ defmodule Cldr.Math do
     :math.sqrt(number)
   end
 
-  defp do_sqrt(%Decimal{} = number, %Decimal{} = estimate,
-      %Decimal{} = old_estimate, %Decimal{} = precision) do
-    diff = estimate
-    |> Decimal.sub(old_estimate)
-    |> Decimal.abs
+  defp do_sqrt(
+         %Decimal{} = number,
+         %Decimal{} = estimate,
+         %Decimal{} = old_estimate,
+         %Decimal{} = precision
+       ) do
+    diff =
+      estimate
+      |> Decimal.sub(old_estimate)
+      |> Decimal.abs()
 
-    if Decimal.cmp(diff, old_estimate) == :lt
-       || Decimal.cmp(diff, old_estimate) == :eq do
+    if Decimal.cmp(diff, old_estimate) == :lt || Decimal.cmp(diff, old_estimate) == :eq do
       estimate
     else
       Decimal.div(number, Decimal.mult(@two, estimate))
-      new_estimate = Decimal.add(Decimal.div(estimate, @two),
-        Decimal.div(number, Decimal.mult(@two, estimate)))
+
+      new_estimate =
+        Decimal.add(
+          Decimal.div(estimate, @two),
+          Decimal.div(number, Decimal.mult(@two, estimate))
+        )
+
       do_sqrt(number, new_estimate, estimate, precision)
     end
   end
@@ -636,20 +657,22 @@ defmodule Cldr.Math do
 
   """
   def root(%Decimal{} = number, nth) when is_integer(nth) and nth > 0 do
-    guess = :math.pow(to_float(number), 1 / nth)
-    |> Decimal.new
+    guess =
+      :math.pow(to_float(number), 1 / nth)
+      |> Decimal.new()
 
-    do_root number, Decimal.new(nth), guess
+    do_root(number, Decimal.new(nth), guess)
   end
 
   def root(number, nth) when is_number(number) and is_integer(nth) and nth > 0 do
     guess = :math.pow(number, 1 / nth)
-    do_root number, nth, guess
+    do_root(number, nth, guess)
   end
 
   @root_precision 0.0001
   defp do_root(number, nth, root) when is_number(number) do
-    delta = (1 / nth) * (number / :math.pow(root, nth - 1)) - root
+    delta = 1 / nth * (number / :math.pow(root, nth - 1)) - root
+
     if delta > @root_precision do
       do_root(number, nth, root + delta)
     else
@@ -707,7 +730,7 @@ defmodule Cldr.Math do
   # The canonical function head that takes a number and returns a number.
   def round(number, places \\ 0, mode \\ :half_up) when is_integer(places) and is_atom(mode) do
     number
-    |> Digits.to_digits
+    |> Digits.to_digits()
     |> round_digits(%{decimals: places, rounding: mode})
     |> Digits.to_number(number)
   end
@@ -724,10 +747,8 @@ defmodule Cldr.Math do
   def round_digits(digits_t, %{decimals: true}), do: digits_t
 
   # rounded away all the decimals... return 0
-  def round_digits(_, %{scientific: dp}) when dp <= 0,
-    do: {[0], 1, true}
-  def round_digits({_, place, _}, %{decimals: dp}) when dp + place <= 0,
-    do: {[0], 1, true}
+  def round_digits(_, %{scientific: dp}) when dp <= 0, do: {[0], 1, true}
+  def round_digits({_, place, _}, %{decimals: dp}) when dp + place <= 0, do: {[0], 1, true}
 
   def round_digits(digits_t = {_, place, _}, options = %{decimals: dp}) do
     {digits, place, sign} = do_round(digits_t, dp + place - 1, options)
@@ -740,15 +761,19 @@ defmodule Cldr.Math do
   end
 
   defp do_round({digits, place, positive}, round_at, %{rounding: rounding}) do
-      case Enum.split(digits, round_at) do
-        {l, [least_sig | [tie | rest]]} ->
-          case do_incr(l, least_sig, increment?(positive, least_sig, tie, rest, rounding)) do
-            [:rollover | digits] -> {digits, place + 1, positive}
-            digits               -> {digits, place, positive}
-          end
-        {l, [least_sig | []]}           -> {[l, least_sig], place, positive}
-        {l, []}                         -> {l, place, positive}
-      end
+    case Enum.split(digits, round_at) do
+      {l, [least_sig | [tie | rest]]} ->
+        case do_incr(l, least_sig, increment?(positive, least_sig, tie, rest, rounding)) do
+          [:rollover | digits] -> {digits, place + 1, positive}
+          digits -> {digits, place, positive}
+        end
+
+      {l, [least_sig | []]} ->
+        {[l, least_sig], place, positive}
+
+      {l, []} ->
+        {l, place, positive}
+    end
   end
 
   # Helper functions for round/2-3
@@ -757,18 +782,18 @@ defmodule Cldr.Math do
   # else need to cascade the increment
   defp do_incr(l, 9, true) do
     l
-    |> Enum.reverse
+    |> Enum.reverse()
     |> cascade_incr
     |> Enum.reverse([0])
   end
 
   # cascade an increment of decimal digits which could be rolling over 9 -> 0
   defp cascade_incr([9 | rest]), do: [0 | cascade_incr(rest)]
-  defp cascade_incr([d | rest]), do: [d+1 | rest]
+  defp cascade_incr([d | rest]), do: [d + 1 | rest]
   defp cascade_incr([]), do: [1, :rollover]
 
   @spec increment?(boolean, non_neg_integer | nil, non_neg_integer | nil, list(), atom()) ::
-    boolean
+          boolean
   defp increment?(positive, least_sig, tie, rest, round)
 
   # Directed rounding towards 0 (truncate)

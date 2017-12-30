@@ -19,21 +19,20 @@ defmodule Cldr.Normalize.LanguageNames do
         case String.split(k, "_alt_") do
           [lang] ->
             {Cldr.Locale.normalize_locale_name(lang), v}
+
           [lang, alt] ->
             {Cldr.Locale.normalize_locale_name(lang) <> "_alt_" <> alt, v}
         end
       end)
-      |> Enum.group_by(
-          fn {k, _v} -> hd(String.split(k, "_alt_")) end,
-          fn {k, v} ->
-            parts = String.split(k, "_alt_")
-            if length(parts) == 1 do
-              %{"standard" => v}
-            else
-              %{String.downcase(hd(Enum.reverse(parts))) => v}
-            end
-          end
-        )
+      |> Enum.group_by(fn {k, _v} -> hd(String.split(k, "_alt_")) end, fn {k, v} ->
+        parts = String.split(k, "_alt_")
+
+        if length(parts) == 1 do
+          %{"standard" => v}
+        else
+          %{String.downcase(hd(Enum.reverse(parts))) => v}
+        end
+      end)
       |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
       |> Enum.into(%{})
 

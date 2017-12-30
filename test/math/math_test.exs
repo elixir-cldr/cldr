@@ -55,5 +55,4 @@ defmodule Math.Test do
   test "power of integer when n < 1" do
     assert Math.power(4, -2) == 0.0625
   end
-
 end

@@ -14,7 +14,7 @@ defmodule Cldr.Locale.Cache do
 
   def get_locale(locale, path) do
     if compiling?() and not gen_server_started?() do
-      Cldr.Locale.Cache.start
+      Cldr.Locale.Cache.start()
     end
 
     GenServer.call(@gen_server_name, {:get_locale, locale, path})
@@ -51,7 +51,7 @@ defmodule Cldr.Locale.Cache do
   end
 
   def gen_server_started? do
-    case Process.whereis(@gen_server_name)  do
+    case Process.whereis(@gen_server_name) do
       nil -> false
       pid when is_pid(pid) -> true
     end
@@ -69,13 +69,15 @@ defmodule Cldr.Locale.Cache do
         try do
           :ets.insert(@table_name, {locale, locale_data})
           # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
-        rescue ArgumentError ->
-          nil
-          # This may actually happen because of timing conditions: someone else may
-          # have inserted behind our back.  But since we've now already generated
-          # the locale again just use it.
-          # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
+        rescue
+          ArgumentError ->
+            nil
+            # This may actually happen because of timing conditions: someone else may
+            # have inserted behind our back.  But since we've now already generated
+            # the locale again just use it.
+            # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
         end
+
         locale_data
     end
   end
@@ -87,10 +89,10 @@ defmodule Cldr.Locale.Cache do
     case :ets.info(@table_name) do
       :undefined ->
         :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
-        # Logger.debug "#{inspect self()}:  Created :ets table"
+
+      # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end
   end
-
 end

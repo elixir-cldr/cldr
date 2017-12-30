@@ -11,8 +11,15 @@ defmodule Cldr.Number.Cardinal do
   @type operand :: non_neg_integer
 
   # Generate the functions to process plural rules
-  @spec do_plural_rule(LanguageTag.t, number, operand, operand, operand, operand,
-    [integer(),...] | integer()) :: :zero | :one | :two | :few | :many | :other
+  @spec do_plural_rule(
+          LanguageTag.t(),
+          number,
+          operand,
+          operand,
+          operand,
+          operand,
+          [integer(), ...] | integer()
+        ) :: :zero | :one | :two | :few | :many | :other
 
   # Function body is the AST of the function which needs to be injected
   # into the function definition.
@@ -31,7 +38,13 @@ defmodule Cldr.Number.Cardinal do
   # but the language might
   defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t) do
     if language_tag.language == language_tag.cldr_locale_name do
-      {:error, {Cldr.UnknownPluralRules, "No #{@module_name} plural rules available for #{inspect language_tag}"}}
+      {
+        :error,
+        {
+          Cldr.UnknownPluralRules,
+          "No #{@module_name} plural rules available for #{inspect(language_tag)}"
+        }
+      }
     else
       language_tag = Map.put(language_tag, :cldr_locale_name, language_tag.language)
       do_plural_rule(language_tag, n, i, v, w, f, t)

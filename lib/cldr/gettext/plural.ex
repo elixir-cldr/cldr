@@ -25,12 +25,10 @@ if Code.ensure_loaded?(Gettext) do
         2
 
     """
-    @spec nplurals(Locale.locale_name) :: non_neg_integer
+    @spec nplurals(Locale.locale_name()) :: non_neg_integer
     def nplurals(locale_name) when is_binary(locale_name) do
-      with \
-        {:ok, _locale} <- Cldr.validate_locale(locale_name)
-      do
-        Cardinal.plural_rules_for(locale_name) |> Enum.count
+      with {:ok, _locale} <- Cldr.validate_locale(locale_name) do
+        Cardinal.plural_rules_for(locale_name) |> Enum.count()
       else
         {:error, _reason} -> apply(Gettext.Plural, :nplurals, [locale_name])
       end
@@ -67,34 +65,32 @@ if Code.ensure_loaded?(Gettext) do
         1
 
     """
-    @spec plural(Locale.locale_name | LanguageTag.t, Math.number_or_decimal)
-      :: non_neg_integer | {:error, String.t}
+    @spec plural(Locale.locale_name() | LanguageTag.t(), Math.number_or_decimal()) ::
+            non_neg_integer | {:error, String.t()}
 
     def plural(%LanguageTag{cldr_locale_name: cldr_locale_name}, n) do
       plural(cldr_locale_name, n)
     end
 
     def plural(locale_name, n) when is_binary(locale_name) do
-      with \
-        {:ok, locale} <- Cldr.validate_locale(locale_name)
-      do
+      with {:ok, locale} <- Cldr.validate_locale(locale_name) do
         rule = Cardinal.plural_rule(n, locale)
-        n = Cardinal.plural_rules_for(locale_name) |> Enum.count
+        n = Cardinal.plural_rules_for(locale_name) |> Enum.count()
         gettext_return(rule, n)
       else
         {:error, _reason} -> apply(Gettext.Plural, :plural, [locale_name, n])
       end
     end
 
-    defp gettext_return(:zero, _n),  do: 0
-    defp gettext_return(:one,  _n),  do: 1
-    defp gettext_return(:two,  _n),  do: 2
-    defp gettext_return(:few,  _n),  do: 3
-    defp gettext_return(:many, _n),  do: 4
+    defp gettext_return(:zero, _n), do: 0
+    defp gettext_return(:one, _n), do: 1
+    defp gettext_return(:two, _n), do: 2
+    defp gettext_return(:few, _n), do: 3
+    defp gettext_return(:many, _n), do: 4
 
     # Since :other is the catch-all it should
     # return a number 1 greater than the number
     # of rules defined in Cldr
-    defp gettext_return(:other, n),  do: n - 1
+    defp gettext_return(:other, n), do: n - 1
   end
 end

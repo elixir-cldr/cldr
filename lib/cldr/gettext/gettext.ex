@@ -4,7 +4,6 @@ if Code.ensure_loaded?(Gettext) do
     Implements a Gettext-compatible module but using Cldr locales.  Its an example
     only.
     """
-    use Gettext, otp_app: :ex_cldr, priv: "priv/gettext_test",
-                                    plural_forms: Cldr.Gettext.Plural
+    use Gettext, otp_app: :ex_cldr, priv: "priv/gettext_test", plural_forms: Cldr.Gettext.Plural
   end
 end
