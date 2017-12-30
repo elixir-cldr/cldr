@@ -76,8 +76,9 @@ Here's an example configuration that uses all of the available configuration key
        locales: ["fr", "en", "bs", "si", "ak", "th"],
        gettext: MyApp.Gettext,
        data_dir: "./priv/cldr",
-       precompile_number_formats: ["¤¤#,##0.##"]
-       precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+       precompile_number_formats: ["¤¤#,##0.##"],
+       precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
+       json_lib: Poison
 
 ### Configuration Keys
 
@@ -105,6 +106,8 @@ The configuration keys available for `Cldr` are:
  * `precompile_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
 
  * `precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
+
+ * `json_lib`: Configures the json library to be used for decoding the locale definition files. The default is `Poison`.  Any library that provides the functions `encode!/1` and `decode!/1` can be used.  One alternative to `Poison` is [Jason](https://hex.pm/packages/jason).  Since the json library is configurable it will also need to be configured in the project's `mix.exs`.
 
 ### Recompiling after a configuration change
 

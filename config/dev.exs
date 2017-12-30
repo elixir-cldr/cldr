@@ -5,4 +5,5 @@ config :ex_cldr,
   locales: ["root", "fr", "zh-Hant", "en-GB", "bs", "pl", "ru", "th", "he", "af"],
   gettext: Cldr.Gettext,
   precompile_number_formats: ["¤¤#,##0.##"],
-  precompile_transliterations: [{:latn, :arab}, {:arab, :thai}]
+  precompile_transliterations: [{:latn, :arab}, {:arab, :thai}],
+  json_library: Jason

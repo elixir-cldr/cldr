@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "1.1.0-dev"
+  @version "1.1.0"
 
   def project do
     [
@@ -39,12 +39,13 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:poison, "~> 2.1 or ~> 3.0"},
+      {:poison, "~> 2.1 or ~> 3.0", optional: true},
+      {:jason, "~> 1.0.0-rc.1 or ~> 1.0", optional: true},
       {:decimal, "~> 1.4"},
       {:ex_doc, "~> 0.18", only: [:dev, :docs]},
       {:abnf2, "~> 0.1"},
       {:gettext, "~> 0.13", optional: true},
-      {:plug, "~> 1.3", optional: true, only: [:dev, :test]},
+      {:plug, "~> 1.4", optional: true, only: [:dev, :test]},
       {:stream_data, "~> 0.4.0", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}
     ]
