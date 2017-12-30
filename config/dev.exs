@@ -6,4 +6,4 @@ config :ex_cldr,
   gettext: Cldr.Gettext,
   precompile_number_formats: ["¤¤#,##0.##"],
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}],
-  json_library: Jason
+  json_library: Poison

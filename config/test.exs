@@ -6,7 +6,7 @@ config :ex_cldr,
   locales: :all,
   gettext: Cldr.Gettext,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}],
-  json_decoder: Jason
+  json_decoder: Poison
 
 config :plug,
   validate_header_keys_during_test: true
