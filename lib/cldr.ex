@@ -835,7 +835,7 @@ defmodule Cldr do
 
   """
   @known_currencies Cldr.Config.known_currencies()
-  @spec known_currencies :: [String.t(), ...] | []
+  @spec known_currencies :: [atom(), ...] | []
   def known_currencies do
     @known_currencies
   end
