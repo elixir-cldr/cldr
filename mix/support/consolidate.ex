@@ -105,7 +105,7 @@ defmodule Cldr.Consolidate do
 
   defp save_locale(content, locale) do
     output_path = Path.join(consolidated_locales_dir(), "#{locale}.json")
-    File.write!(output_path, Cldr.Config.json_lib().encode!(content))
+    File.write!(output_path, Cldr.Config.json_library().encode!(content))
   end
 
   defp merge_maps([file_1]) do
@@ -378,7 +378,7 @@ defmodule Cldr.Consolidate do
   end
 
   defp save_file(content, path) do
-    File.write!(path, Cldr.Config.json_lib().encode!(content))
+    File.write!(path, Cldr.Config.json_library().encode!(content))
   end
 
   defp parse_language_aliases(map) do

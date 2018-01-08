@@ -114,9 +114,9 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @default_json_lib Poison
-  def json_lib do
-    Application.get_env(:ex_cldr, :json_lib) || @default_json_lib
+  @default_json_library Poison
+  def json_library do
+    Application.get_env(:ex_cldr, :json_library) || @default_json_library
   end
 
   @doc """
@@ -171,7 +171,7 @@ defmodule Cldr.Config do
     @client_data_dir
     |> Path.join("version.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
   end
 
   @doc """
@@ -255,7 +255,7 @@ defmodule Cldr.Config do
   def all_locale_names do
     @locales_path
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Enum.sort()
   end
 
@@ -449,7 +449,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("currencies.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Enum.map(&String.to_atom/1)
   end
 
@@ -646,7 +646,7 @@ defmodule Cldr.Config do
   def do_get_locale(locale, path, false) do
     path
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> assert_valid_keys!(locale)
     |> structure_units
     |> atomize_keys(required_modules() -- ["languages"])
@@ -680,7 +680,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("territory_containment.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Cldr.Map.atomize_values()
   end
@@ -740,7 +740,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("territory_info.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> atomize_territory_keys
     |> adjust_currency_codes
@@ -888,7 +888,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("aliases.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> Enum.into(%{})
     |> structify_languages
@@ -914,7 +914,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("likely_subtags.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, Cldr.Map.atomize_keys(v))} end)
     |> Enum.into(%{})
   end
@@ -927,7 +927,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("week_data.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Cldr.Map.underscore_keys()
     |> Enum.map(&upcase_territory_codes/1)
     |> Enum.into(%{})
@@ -968,7 +968,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("day_periods.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
   end
 
   @doc """
@@ -985,7 +985,7 @@ defmodule Cldr.Config do
     client_data_dir()
     |> Path.join("calendar_data.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Cldr.Map.integerize_keys()
     |> add_era_end_dates
@@ -1099,7 +1099,7 @@ defmodule Cldr.Config do
     cldr_data_dir()
     |> Path.join("number_systems.json")
     |> File.read!()
-    |> json_lib().decode!
+    |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
     |> Enum.into(%{})

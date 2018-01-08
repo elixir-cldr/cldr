@@ -1,10 +1,14 @@
-# Changelog for Cldr v1.1.1
+# Changelog for Cldr v1.2,0
 
-This is the changelog for Cldr v1.1.1 released on ____.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.2.0 released on January 9th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* The changelog refers to the configuration key `json_library` but the readme and the code refer to `json_lib`.  Standardise on `json_library`.  Thanks to @lostkobrakai.
 
 ### Enhancements
 
-* Fix the spec for `Cldr.known_currencies/0`.  Thanks to @lostkobrakai
+* Fix the spec for `Cldr.known_currencies/0`.  Thanks to @lostkobrakai.
 
 # Changelog for Cldr v1.1.0
 
