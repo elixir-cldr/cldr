@@ -39,7 +39,9 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 1.0"}
+        {:ex_cldr, "~> 1.0"},
+        # Posion or any other compatible json library
+        {:poison, "~> 2.1 or ~> 3.0"}  
       ]
     end
 
