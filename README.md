@@ -17,7 +17,7 @@ The functions you are mostly likely to user are in the modules `Cldr` and `Cldr.
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
 
-* `Cldr.Config.get_locale/1` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with high performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/1`.
+* `Cldr.Config.get_locale/1` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with higher performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/1`.
 
 ## Use this package when you have a requirement to...
 
@@ -41,7 +41,9 @@ Add `ex_cldr` as a dependency to your `mix` project:
       [
         {:ex_cldr, "~> 1.0"},
         # Posion or any other compatible json library
-        {:poison, "~> 2.1 or ~> 3.0"}  
+        # that implements `encode!/1` and `decode!/1`
+        # {:jason, "~> 1.0 or ~> 1.0-rc"}
+        {:poison, "~> 2.1 or ~> 3.0"}
       ]
     end
 
@@ -64,6 +66,8 @@ Although `Cldr` is purely a library application, it should be added to your appl
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
+* Territories localization and information: [ex_cldr_territories](https://hex.pm/packages/ex_cldr_territories) by @Schultzer
+* Languages localization: [ex_cldr_languages](https://hex.pm/packages/ex_cldr_languages) by @lostkobrakai
 
 Each of these packages includes `ex_cldr` as a dependency so configuring any of these additional packages will automatically install `ex_cldr`.
 
@@ -122,6 +126,8 @@ Note that Elixir can't determine dependencies based upon configuration so when y
     iex> mix deps.compile ex_cldr_lists --force
     iex> mix deps.compile ex_cldr_units --force
     iex> mix deps.compile ex_cldr_dates_times --force
+    iex> mix deps.compile ex_cldr_territories --force
+    iex> mix deps.compile ex_cldr_languages --force
 
 `Cldr` pre-computes a lot of the CLDR specification and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
 

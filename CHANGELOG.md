@@ -1,4 +1,4 @@
-# Changelog for Cldr v1.2,0
+# Changelog for Cldr v1.2.0
 
 This is the changelog for Cldr v1.2.0 released on January 9th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
