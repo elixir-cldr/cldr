@@ -1,6 +1,29 @@
-# Changelog for Cldr v1.2.0
+# Changelog for Cldr v1.3.0
 
-This is the changelog for Cldr v1.2.0 released on January 9th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.3.0 released on January 14th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Add `Cldr.Digits.number_of_digits/1` that returns the number of digits (precision) of a float, integer or Decimal.  The primary intent is to support better detection of precision errors after parsing a float string.  A double precision 64-bit float (which is what Erlang/Elixir use) can safely support 15 digits.  According to [Wikipedia](https://en.wikipedia.org/wiki/IEEE_754#Character_representation) a decimal floating point number should round-trip convert to string representation and back for 16 digits without rounding (and 17 using "round to even").  Some examples:
+
+```
+iex> Cldr.Digits.number_of_digits(1234)
+4
+
+iex> Cldr.Digits.number_of_digits(Decimal.new("123456789"))
+9
+
+iex> Cldr.Digits.number_of_digits(1234.456)
+7
+
+iex> Cldr.Digits.number_of_digits(1234.56789098765)
+15
+
+iex> Cldr.Digits.number_of_digits '12345'
+5
+```
+
+# Changelog for Cldr v1.2.0
 
 ### Bug Fixes
 

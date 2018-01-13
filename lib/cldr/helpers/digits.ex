@@ -55,6 +55,7 @@ defmodule Cldr.Digits do
 
       iex> Cldr.Digits.fraction_as_integer(1999)
       0
+      
   """
   @spec fraction_as_integer(Math.number_or_decimal() | {list, list, 1 | -1}) :: integer
   def fraction_as_integer({_integer, fraction, _sign})
