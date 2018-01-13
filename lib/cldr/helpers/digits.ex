@@ -47,13 +47,13 @@ defmodule Cldr.Digits do
 
   ## Examples
 
-      iex> Cldr.Math.fraction_as_integer(123.456)
+      iex> Cldr.Digits.fraction_as_integer(123.456)
       456
 
-      iex> Cldr.Math.fraction_as_integer(Decimal.new("123.456"))
+      iex> Cldr.Digits.fraction_as_integer(Decimal.new("123.456"))
       456
 
-      iex> Cldr.Math.fraction_as_integer(1999)
+      iex> Cldr.Digits.fraction_as_integer(1999)
       0
   """
   @spec fraction_as_integer(Math.number_or_decimal() | {list, list, 1 | -1}) :: integer
@@ -78,21 +78,77 @@ defmodule Cldr.Digits do
   end
 
   @doc """
+  Returns the number of decimal digits in a number
+  (integer, float, Decimal)
+
+  ## Options
+
+  * `number` is an integer, float or `Decimal`
+  or a list (which is assumed to contain digits).
+
+  ## Examples
+
+      iex> Cldr.Digits.number_of_digits(1234)
+      4
+
+      iex> Cldr.Digits.number_of_digits(Decimal.new("123456789"))
+      9
+
+      iex> Cldr.Digits.number_of_digits(1234.456)
+      7
+
+      iex> Cldr.Digits.number_of_digits(1234.56789098765)
+      15
+
+      iex> Cldr.Digits.number_of_digits '12345'
+      5
+
+  """
+  @spec number_of_digits(
+          Math.number_or_decimal()
+          | list()
+          | {[integer(), ...], integer | [integer(), ...], -1 | 1}
+        ) :: integer
+
+  def number_of_digits(%Decimal{} = number) do
+    number
+    |> to_digits
+    |> number_of_digits
+  end
+
+  def number_of_digits(number) when is_number(number) do
+    number
+    |> to_digits
+    |> number_of_digits
+  end
+
+  def number_of_digits(list) when is_list(list) do
+    length(list)
+  end
+
+  def number_of_digits({integer, place, _sign})
+      when is_list(integer) and is_integer(place) do
+    length(integer)
+  end
+
+  @doc """
   Returns the number of decimal digits in the integer
   part of a number.
+
+  ## Options
 
   * `number` is an integer, float or `Decimal` or
   a list (which is assumed to contain digits).
 
   ## Examples
 
-      iex> Cldr.Math.number_of_integer_digits(1234)
+      iex> Cldr.Digits.number_of_integer_digits(1234)
       4
 
-      iex> Cldr.Math.number_of_integer_digits(Decimal.new("123456789"))
+      iex> Cldr.Digits.number_of_integer_digits(Decimal.new("123456789"))
       9
 
-      iex> Cldr.Math.number_of_integer_digits(1234.456)
+      iex> Cldr.Digits.number_of_integer_digits(1234.456)
       4
 
       iex> Cldr.Digits.number_of_integer_digits '12345'
@@ -153,7 +209,7 @@ defmodule Cldr.Digits do
 
   ## Examples
 
-      iex> Cldr.Math.remove_trailing_zeros(1234000)
+      iex> Cldr.Digits.remove_trailing_zeros(1234000)
       1234
 
   """
@@ -193,7 +249,7 @@ defmodule Cldr.Digits do
 
   ## Examples
 
-      iex> Cldr.Math.number_of_leading_zeros(Decimal.new(0.0001))
+      iex> Cldr.Digits.number_of_leading_zeros(Decimal.new(0.0001))
       3
 
   """
