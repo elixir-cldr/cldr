@@ -203,7 +203,7 @@ defmodule Cldr.Config do
   In order of priority return either:
 
   * The default locale specified in the `mix.exs` file
-  * The `Gettext.get_locale/1` for the current configuratioh
+  * The `Gettext.get_locale/1` for the current configuration
   * "en"
   """
   @spec default_locale :: Locale.locale_name()
@@ -217,7 +217,7 @@ defmodule Cldr.Config do
       gettext_configured?() ->
         Gettext
         |> apply(:get_locale, [gettext()])
-        |> Enum.map(&String.replace(&1, "_", "-"))
+        |> Locale.locale_name_from_posix
 
       true ->
         @default_locale
@@ -235,7 +235,7 @@ defmodule Cldr.Config do
     if gettext_configured?() do
       Gettext
       |> apply(:known_locales, [gettext()])
-      |> Enum.map(&String.replace(&1, "_", "-"))
+      |> Enum.map(&Locale.locale_name_from_posix/1)
     else
       []
     end

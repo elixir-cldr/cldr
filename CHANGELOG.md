@@ -1,10 +1,12 @@
 # Changelog for Cldr v1.3.1
 
-This is the changelog for Cldr v1.3.0 released on January 14th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.3.0 released on January ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 
 * Correctly use `conn.path_params` not the incorrect `conn.url_params` in `Cldr.Plug.SetLocale`. Fixes #33.
+
+* Correctly set the default locale using the Gettext default locale if the Cldr default locale isn't set but Gettext is.
 
 # Changelog for Cldr v1.3.0
 
