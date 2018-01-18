@@ -14,8 +14,8 @@ if Code.ensure_loaded?(Plug) do
         The default is `[:session, :accept_language]`. The valid
         options are:
         * `:accept_language` will parse the `accept-language` header
-        and finds the best matched configured locale
-        * `:url` will look for a locale by examining `conn.url_params`
+           and finds the best matched configured locale
+        * `:path` will look for a locale by examining `conn.path_params`
         * `:query` will look for a locale by examining `conn.query_params`
         * `:body` will look for a locale by examining `conn.body_params`
         * `:session` will look for a locale in the session
@@ -38,7 +38,7 @@ if Code.ensure_loaded?(Plug) do
 
         plug Cldr.Plug.SetLocale,
           apps:    [:cldr, :gettext],
-          from:    [:accept_language, :url, :query, :body],
+          from:    [:accept_language, :path, :query, :body],
           param:   "locale",
           default: Cldr.default_locale,
           gettext: GetTextModule,
@@ -55,7 +55,7 @@ if Code.ensure_loaded?(Plug) do
     @default_param_name "locale"
     @default_session_key "cldr_locale"
 
-    @from_options [:accept_language, :url, :body, :query, :session]
+    @from_options [:accept_language, :path, :body, :query, :session]
     @app_options [:cldr, :gettext]
 
     @language_header "accept-language"
@@ -136,9 +136,9 @@ if Code.ensure_loaded?(Plug) do
       |> Cldr.validate_locale()
     end
 
-    defp fetch_param(conn, :url, param, _options) do
+    defp fetch_param(conn, :path, param, _options) do
       conn
-      |> Map.get(:url_params, param)
+      |> Map.get(:path_params, param)
       |> Cldr.validate_locale()
     end
 
