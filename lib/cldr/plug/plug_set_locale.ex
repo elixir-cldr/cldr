@@ -129,23 +129,24 @@ if Code.ensure_loaded?(Plug) do
       fetch_param(conn, :query, param, options)
     end
 
-    defp fetch_param(conn, :query, param, options) do
+    defp fetch_param(conn, :query, param, _options) do
       conn
-      |> Map.get(:query_params, param)
-      |> Map.get(options[:param])
+      |> Map.get(:query_params)
+      |> Map.get(param)
       |> Cldr.validate_locale()
     end
 
     defp fetch_param(conn, :path, param, _options) do
       conn
-      |> Map.get(:path_params, param)
+      |> Map.get(:path_params)
+      |> Map.get(param)
       |> Cldr.validate_locale()
     end
 
-    defp fetch_param(conn, :body, param, options) do
+    defp fetch_param(conn, :body, param, _options) do
       conn
-      |> Map.get(:body_params, param)
-      |> Map.get(options[:param])
+      |> Map.get(:body_params)
+      |> Map.get(param)
       |> Cldr.validate_locale()
     end
 

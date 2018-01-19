@@ -47,7 +47,8 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.13", optional: true},
       {:plug, "~> 1.4", optional: true, only: [:dev, :test]},
       {:stream_data, "~> 0.4.0", only: :test},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false}
+      {:dialyxir, "~> 0.5", only: :dev, runtime: false},
+      {:phoenix, "~> 1.3", only: :test, optional: true}
     ]
   end
 
