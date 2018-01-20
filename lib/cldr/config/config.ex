@@ -342,6 +342,7 @@ defmodule Cldr.Config do
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
+  @doc false
   def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
     rbnf_locale_name =
       known_rbnf_locale_name(Locale.locale_name_from(language, script, nil, nil)) ||
