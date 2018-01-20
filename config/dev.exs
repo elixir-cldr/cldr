@@ -9,5 +9,5 @@ config :ex_cldr,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}],
   json_library: Poison
 
-config :gettext,
+config :ex_cldr, Cldr.Gettext,
   default_locale: "en"

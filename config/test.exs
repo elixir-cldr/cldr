@@ -8,6 +8,9 @@ config :ex_cldr,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}],
   json_library: Poison
 
+config :ex_cldr, Cldr.Gettext,
+  default_locale: "en"
+
 config :plug,
   validate_header_keys_during_test: true
 
@@ -16,5 +19,4 @@ config :ex_unit,
   case_load_timeout: 220_000,
   timeout: 120_000
 
-config :gettext,
-  default_locale: "en"
+
