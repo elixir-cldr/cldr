@@ -297,12 +297,9 @@ defmodule Cldr do
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
   """
-  @known_gettext_locale_names Config.gettext_locales()
-                              |> Enum.map(&Locale.locale_name_from_posix/1)
-
   @spec known_gettext_locale_names :: [Locale.locale_name(), ...] | []
   def known_gettext_locale_names do
-    @known_gettext_locale_names
+    Config.gettext_locales()
   end
 
   @doc """
