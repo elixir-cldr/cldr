@@ -87,7 +87,7 @@ atomize(Token) ->
   list_to_atom(unwrap(Token)).
 
 
--file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/yeccpre.hrl", 0).
+-file("/usr/local/Cellar/erlang/20.2.2/lib/erlang/lib/parsetools-2.1.6/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%

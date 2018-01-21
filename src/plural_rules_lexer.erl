@@ -1,4 +1,4 @@
--file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/leexinc.hrl", 0).
+-file("/usr/local/Cellar/erlang/20.2.2/lib/erlang/lib/parsetools-2.1.6/include/leexinc.hrl", 0).
 %% The source of this file is part of leex distribution, as such it
 %% has the same Copyright as the other files in the leex
 %% distribution. The Copyright is defined in the accompanying file
@@ -15,7 +15,7 @@
 -file("src/plural_rules_lexer.xrl", 56).
 
 -import('Elixir.Decimal', [new/1]).
--file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/leexinc.hrl", 14).
+-file("/usr/local/Cellar/erlang/20.2.2/lib/erlang/lib/parsetools-2.1.6/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
 format_error({user,S}) -> S.
@@ -276,6 +276,8 @@ skip_cont(Rest, Line, {skip_token,Push}, Error) ->
 skip_cont(Rest, Line, {error,_S}, Error) ->
     skip_tokens(yystate(), Rest, Line, Rest, 0, Line, Error, reject, 0).
 
+-compile({nowarn_unused_function, [yyrev/1, yyrev/2, yypre/2, yysuf/2]}).
+
 yyrev(List) -> lists:reverse(List).
 yyrev(List, Tail) -> lists:reverse(List, Tail).
 yypre(List, N) -> lists:sublist(List, N).
@@ -285,6 +287,8 @@ yysuf(List, N) -> lists:nthtail(N, List).
 %% Make sure that newlines in Chars are not counted twice.
 %% Line has been updated with respect to newlines in the prefix of
 %% Chars consisting of (TokenLength - AcceptLength) characters.
+
+-compile({nowarn_unused_function, adjust_line/4}).
 
 adjust_line(N, N, _Cs, L) -> L;
 adjust_line(T, A, [$\n|Cs], L) ->
@@ -302,7 +306,7 @@ adjust_line(T, A, [_|Cs], L) ->
 %% return signal either an unrecognised character or end of current
 %% input.
 
--file("src/plural_rules_lexer.erl", 305).
+-file("src/plural_rules_lexer.erl", 309).
 yystate() -> 45.
 
 yystate(48, [110|Ics], Line, Tlen, Action, Alen) ->
@@ -679,4 +683,4 @@ yyaction_17(TokenChars, TokenLine) ->
 yyaction_18() ->
      skip_token .
 
--file("/usr/local/Cellar/erlang/20.0/lib/erlang/lib/parsetools-2.1.5/include/leexinc.hrl", 309).
+-file("/usr/local/Cellar/erlang/20.2.2/lib/erlang/lib/parsetools-2.1.6/include/leexinc.hrl", 313).
