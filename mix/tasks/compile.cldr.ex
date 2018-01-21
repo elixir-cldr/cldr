@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   def run(_args) do
     if configured_locales() != previous_locales() do
       try do
-        Mix.Task.run("deps.compile", ["ex_cldr"])
+        Mix.Task.run("deps.compile", ["ex_cldr", "--force"])
       after
         create_manifest()
       end
