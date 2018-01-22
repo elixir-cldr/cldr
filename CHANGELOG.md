@@ -1,3 +1,29 @@
+# Changelog for Cldr v1.4.0
+
+This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+## Enhancements
+
+* The primary focus on this release to automate the process of recompiling those parts of Cldr that are sensitive to configuration change.  This release:
+
+  * Adds a `compiler.cldr` as a Mix compiler.  This provides the functions that identify a locale configuration change and then recompile the relevant modules of Cldr.  Basically it looks in all dependencies for any module that calls functions in `Cldr.Config`  Therefore it is expected to work for Cldr and any package that depends on Cldr.
+
+  * To enable this functionality, the `compiler.cldr` mix task needs to be added in `mix.exs` as the last compiler in the list.  For example
+
+```
+  def project do
+    [
+      app: :app_name,
+      ...
+      compilers: Mix.compilers ++ [:cldr],
+      start_permanent: Mix.env == :prod,
+      deps: deps()
+    ]
+  end
+```
+
+  * With this enhancement it will be no longer necessary to force recompile Cldr or packages that depend on it since they will be compiled whenever a locale configuration change is detected.
+
 # Changelog for Cldr v1.3.2
 
 This is the changelog for Cldr v1.3.2 released on January 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

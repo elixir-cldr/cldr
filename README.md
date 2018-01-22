@@ -117,19 +117,21 @@ The configuration keys available for `Cldr` are:
 
 ### Recompiling after a configuration change
 
-Note that Elixir can't determine dependencies based upon configuration so when you make changes to your `Cldr` configuration a forced recompilation is required in order for the changes to take affect.  To recompile:
+Cldr includes a "compiler" that will detect locale configuration changes and compile the necessary components of Cldr that depend on that configuration.  To make this automatic recompilation happen the `[:cldr]` compiler needs to be added to you `mix.exs`.  For example:
 
-    iex> mix deps.compile ex_cldr --force
+```
+  def project do
+    [
+      app: :app_name,
+      ...
+      compilers: Mix.compilers ++ [:cldr],
+      start_permanent: Mix.env == :prod,
+      deps: deps()
+    ]
+  end
+```
 
-    # If you have dependent packages installed
-    iex> mix deps.compile ex_cldr_numbers --force
-    iex> mix deps.compile ex_cldr_lists --force
-    iex> mix deps.compile ex_cldr_units --force
-    iex> mix deps.compile ex_cldr_dates_times --force
-    iex> mix deps.compile ex_cldr_territories --force
-    iex> mix deps.compile ex_cldr_languages --force
-
-`Cldr` pre-computes a lot of the CLDR specification and compiles them into functions to provide better runtime performance.  Needing to recompile the dependency after a configuration change comes as a result of that.
+Note the addition of `[:cldr]` as the **last** compiler on the list.  This is a firm requirement.
 
 ## Downloading Configured Locales
 
