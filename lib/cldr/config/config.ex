@@ -244,7 +244,7 @@ defmodule Cldr.Config do
         Application.get_env(:gettext, :default_locale)
 
       locales =
-        Gettext.known_locales(gettext()) ++
+        apply(Gettext, :known_locales, [gettext()]) ++
         [backend_default, global_default]
 
       locales

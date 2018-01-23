@@ -6,6 +6,8 @@ defmodule Cldr.Locale.Cache do
 
   @table_name :cldr_locales
   @gen_server_name :cldr_locale_cache
+  @timeout 5_000
+
   # Client
 
   def start(args \\ []) do
@@ -14,10 +16,10 @@ defmodule Cldr.Locale.Cache do
 
   def get_locale(locale, path) do
     if compiling?() and not gen_server_started?() do
-      Cldr.Locale.Cache.start()
+      {:ok, _pid} = Cldr.Locale.Cache.start()
     end
 
-    GenServer.call(@gen_server_name, {:get_locale, locale, path})
+    GenServer.call(@gen_server_name, {:get_locale, locale, path}, @timeout)
   end
 
   # Server (callbacks)
@@ -30,8 +32,9 @@ defmodule Cldr.Locale.Cache do
     {:ok, @table_name}
   end
 
-  def handle_call({:get_locale, locale, path}, _from, state) do
-    {:reply, do_get_locale(locale, path), state}
+  def handle_call({:get_locale, locale_name, path}, _from, state) do
+    locale = do_get_locale(locale_name, path)
+    {:reply, locale, state}
   end
 
   def handle_call(request, from, state) do
@@ -41,6 +44,10 @@ defmodule Cldr.Locale.Cache do
 
   def handle_cast(request, state) do
     super(request, state)
+  end
+
+  def terminate(_, _) do
+    IO.inspect :terminating
   end
 
   def compiling? do
@@ -79,6 +86,9 @@ defmodule Cldr.Locale.Cache do
         end
 
         locale_data
+
+      other ->
+        raise RuntimeError, inspect(other)
     end
   end
 
@@ -90,7 +100,7 @@ defmodule Cldr.Locale.Cache do
       :undefined ->
         :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
 
-      # Logger.debug "#{inspect self()}:  Created :ets table"
+        # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end

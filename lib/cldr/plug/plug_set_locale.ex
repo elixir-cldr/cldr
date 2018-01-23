@@ -181,7 +181,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp set_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: locale_name}, options) do
-      {:ok, Gettext.put_locale(options[:gettext], locale_name)}
+      {:ok, apply(Gettext, :put_locale, [options[:gettext], locale_name])}
     end
 
     defp validate_apps(options, nil), do: Keyword.put(options, :apps, @default_apps)
