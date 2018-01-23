@@ -197,6 +197,7 @@ defmodule Mix.Tasks.Compile.Cldr do
     |> hd
     |> Map.get(:opts)
     |> Keyword.get(:build)
+    |> String.replace_suffix("","/ebin")
   end
 
   defp sources([]) do
