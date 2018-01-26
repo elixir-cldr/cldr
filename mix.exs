@@ -40,7 +40,7 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.1 or ~> 3.0", optional: true},
-      # {:jason, "~> 1.0", optional: true},
+      {:jason, "~> 1.0", optional: true},
       {:decimal, "~> 1.4"},
       {:ex_doc, "~> 0.18", only: [:dev, :docs]},
       {:abnf2, "~> 0.1"},
