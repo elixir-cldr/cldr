@@ -45,10 +45,10 @@ defmodule Cldr.Mixfile do
       {:ex_doc, "~> 0.18", only: [:dev, :docs]},
       {:abnf2, "~> 0.1"},
       {:gettext, "~> 0.13", optional: true},
-      {:plug, "~> 1.4", optional: true, only: [:dev, :test]},
       {:stream_data, "~> 0.4.0", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
-      {:phoenix, "~> 1.3", only: :test, optional: true}
+      {:phoenix, "~> 1.3", optional: true},
+      {:plug, "~> 1.4", optional: true}
     ]
   end
 
