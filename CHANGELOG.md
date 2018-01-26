@@ -24,6 +24,8 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
   * With this enhancement it will be no longer necessary to force recompile Cldr or packages that depend on it since they will be compiled whenever a locale configuration change is detected.
 
+* The [Jason](https://hex.pm/packages/jason) is added to the dependency list as an optional dependency.
+
 # Changelog for Cldr v1.3.2
 
 This is the changelog for Cldr v1.3.2 released on January 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
