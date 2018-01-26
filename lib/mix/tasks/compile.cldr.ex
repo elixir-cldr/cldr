@@ -48,16 +48,18 @@ defmodule Mix.Tasks.Compile.Cldr do
     ]
   end
   ```
-
   """
   use Mix.Task
   require Logger
 
   @manifest "compile.cldr"
 
+  @callee_references [Cldr.Config]
+  @dont_recompile @callee_references ++ [Cldr.Locale.Cache, __MODULE__]
+
   def run(_args) do
     if configured_locales() != previous_locales() do
-      case compile_files() do
+      case compile_cldr_files() do
         :ok ->
           create_manifest(configured_locales())
         _ ->
@@ -73,18 +75,7 @@ defmodule Mix.Tasks.Compile.Cldr do
     Path.join(Mix.Project.manifest_path(), @manifest)
   end
 
-  def create_manifest(locales \\ []) do
-    File.write!(manifest(), :erlang.term_to_binary(locales))
-  end
-
-  defp return(list) do
-    return_codes = Enum.map(list, fn {_, {:ok, _, _}} -> :ok; _ -> :error end)
-    if Enum.all?(return_codes, &(&1 == :ok)), do: :ok, else: :error
-  end
-
-  defp compile_files do
-    saved_compiler_options = Code.compiler_options
-    Code.compiler_options(ignore_module_conflict: true)
+  def compile_cldr_files do
     deps = Mix.Dep.loaded(env: Mix.env())
 
     apps_to_compile =
@@ -95,12 +86,19 @@ defmodule Mix.Tasks.Compile.Cldr do
 
     compile_results =
       deps_in_order deps, apps_to_compile, %{}, fn {app, modules} ->
-        Kernel.ParallelCompiler.compile_to_path(sources(modules), build_dir(app))
-        |> reload_modules
+        build_dir = build_dir(app)
+        sources = sources(modules)
+
+        purge_modules(modules, build_dir)
+        Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
       end
 
-    Code.compiler_options(saved_compiler_options)
     return(compile_results)
+  end
+
+  defp return(list) do
+    return_codes = Enum.map(list, fn {_, {:ok, _, _}} -> :ok; _ -> :error end)
+    if Enum.all?(return_codes, &(&1 == :ok)), do: :ok, else: :error
   end
 
   defp print_console_note(apps_to_compile) do
@@ -138,9 +136,6 @@ defmodule Mix.Tasks.Compile.Cldr do
     []
   end
 
-  @callee_reference Cldr.Config
-  @dont_recompile [Cldr.Config, Cldr.Locale.Cache, __MODULE__]
-
   defp modules_to_compile(deps) do
     for dep <-  deps do
       callers(dep) ++ modules_to_compile(dep.deps)
@@ -161,7 +156,7 @@ defmodule Mix.Tasks.Compile.Cldr do
     try do
       Mix.Dep.in_dependency(dep, fn _module ->
         Mix.Tasks.Xref.calls
-        |> Enum.filter(fn %{callee: {@callee_reference, _, _}} -> true; _ -> false end)
+        |> Enum.filter(&compile_module?/1)
         |> Enum.map(fn callee -> {dep.app, callee} end)
       end)
     rescue File.Error ->
@@ -169,30 +164,22 @@ defmodule Mix.Tasks.Compile.Cldr do
     end
   end
 
-  defp reload_modules({:ok, modules, _} = compiler_result) do
-    reload_modules(modules)
-    compiler_result
+  def compile_module?(%{callee: {reference, _, _}}) do
+    reference in @callee_references
   end
 
-  defp reload_modules({:error, _modules, _} = compiler_result) do
-    compiler_result
+  def purge_modules([], _build_dir) do
+    :ok
   end
 
-  defp reload_modules([]) do
-    nil
-  end
-
-  defp reload_modules([module | modules]) do
-    reload_module(module)
-    reload_modules(modules)
-  end
-
-  defp reload_module(module) when is_atom(module) do
+  def purge_modules([module | modules], build_dir) do
     :code.purge(module)
-    :code.load_file(module)
+    :code.delete(module)
+    File.rm!(build_dir <> "/Elixir." <> inspect(module) <> ".beam")
+    purge_modules(modules, build_dir)
   end
 
-  defp build_dir(dep) do
+  def build_dir(dep) do
     Mix.Dep.loaded_by_name([dep], [])
     |> hd
     |> Map.get(:opts)
@@ -200,11 +187,11 @@ defmodule Mix.Tasks.Compile.Cldr do
     |> String.replace_suffix("","/ebin")
   end
 
-  defp sources([]) do
+  def sources([]) do
     []
   end
 
-  defp sources([module | modules]) do
+  def sources([module | modules]) do
     if source = source(module) do
       [source | sources(modules)]
     else
@@ -212,18 +199,22 @@ defmodule Mix.Tasks.Compile.Cldr do
     end
   end
 
-  defp source(module) do
+  def source(module) do
     case Code.ensure_loaded(module) do
       {:module, _} -> List.to_string(module.module_info(:compile)[:source])
       _ -> nil
     end
   end
 
-  defp configured_locales do
+  def create_manifest(locales \\ []) do
+    File.write!(manifest(), :erlang.term_to_binary(locales))
+  end
+
+  def configured_locales do
     Cldr.Config.known_locale_names
   end
 
-  defp previous_locales do
+  def previous_locales do
     case File.read(manifest()) do
       {:error, :enoent} ->
         create_manifest([])
