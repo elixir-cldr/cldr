@@ -225,7 +225,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a list of the lcoales defined in `Gettext`.
+  Return a list of the locales defined in `Gettext`.
 
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
