@@ -251,6 +251,7 @@ defmodule Cldr.Config do
       |> Enum.reject(&is_nil/1)
       |> Enum.map(&Locale.locale_name_from_posix/1)
       |> Enum.uniq()
+	  |> Enum.sort
     else
       []
     end
