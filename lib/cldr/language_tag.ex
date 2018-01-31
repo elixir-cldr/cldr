@@ -152,7 +152,7 @@ defmodule Cldr.LanguageTag do
   """
   alias Cldr.LanguageTag.Parser
 
-  if Code.ensure_loaded(Jaon) do
+  if Code.ensure_loaded?(Jason) do
     @derive Jason.Encoder
   end
 
