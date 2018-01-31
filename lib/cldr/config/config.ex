@@ -114,9 +114,13 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @default_json_library Poison
+  @json_lib Application.get_env(:ex_cldr, :json_library) || Poison
+  unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
+		raise "The configured json library #{inspect @json_lib} does not define the function decode!/1"
+  end
+
   def json_library do
-    Application.get_env(:ex_cldr, :json_library) || @default_json_library
+		@json_lib
   end
 
   @doc """
@@ -225,7 +229,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a list of the lcoales defined in `Gettext`.
+  Return a list of the locales defined in `Gettext`.
 
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
@@ -251,6 +255,7 @@ defmodule Cldr.Config do
       |> Enum.reject(&is_nil/1)
       |> Enum.map(&Locale.locale_name_from_posix/1)
       |> Enum.uniq()
+	  |> Enum.sort
     else
       []
     end
@@ -290,7 +295,7 @@ defmodule Cldr.Config do
   The locale "root" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
-  This is not recommended since all 516 locales take
+  The use of `:all` is not recommended since all 523 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
