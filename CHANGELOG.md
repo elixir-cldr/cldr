@@ -26,6 +26,10 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
 * The [Jason](https://hex.pm/packages/jason) is added to the dependency list as an optional dependency.
 
+* Adds `:iso_digits` to the currency data maintained in CLDR.  Cldr currency data does not always align with the ISO definition of a currency - notable for digits (subunit) definitions.  For example, the Colombian Peso has an official subunit of the _pesavo_.  One hundred _pesavos_ equals one peso.  There are no notes/cash/coins for the _centavo_ but it is an offical part of the currency and its important to be maintained for financial transactions.
+
+* Adds a `Mix` task to download the ISO currency data that is used during locale consoldiation to include ISO currency digits (subunits) in the currency definition.
+
 # Changelog for Cldr v1.3.2
 
 This is the changelog for Cldr v1.3.2 released on January 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
