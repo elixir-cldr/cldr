@@ -236,13 +236,13 @@ defmodule Cldr.Config do
   """
   @spec gettext_locales :: [Locale.locale_name()]
   def gettext_locales do
-    if gettext_configured?() do
+    if gettext_configured?() and Application.ensure_all_started(:gettext) do
       otp_app = gettext().__gettext__(:otp_app)
 
       backend_default =
-        otp_app
-        |> Application.get_env(gettext())
-        |> Keyword.get(:default_locale)
+        gettext()
+        |> Application.get_env(otp_app)
+        |> gettext_default_locale
 
       global_default =
         Application.get_env(:gettext, :default_locale)
@@ -255,10 +255,18 @@ defmodule Cldr.Config do
       |> Enum.reject(&is_nil/1)
       |> Enum.map(&Locale.locale_name_from_posix/1)
       |> Enum.uniq()
-	  |> Enum.sort
+	    |> Enum.sort
     else
       []
     end
+  end
+
+  defp gettext_default_locale(nil) do
+    nil
+  end
+
+  defp gettext_default_locale(gettext_config) do
+    Keyword.get(gettext_config, :default_locale)
   end
 
   @doc """
