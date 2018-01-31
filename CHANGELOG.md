@@ -30,6 +30,10 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
 * Adds a `Mix` task to download the ISO currency data that is used during locale consoldiation to include ISO currency digits (subunits) in the currency definition.
 
+## Bug Fixes
+
+* Don't crash if a Gettext backend is defined by it has no configuration for `:default_locale`.  Closes #38.  Thanks to @schultzer.
+
 # Changelog for Cldr v1.3.2
 
 This is the changelog for Cldr v1.3.2 released on January 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
