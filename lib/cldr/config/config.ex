@@ -236,7 +236,7 @@ defmodule Cldr.Config do
   """
   @spec gettext_locales :: [Locale.locale_name()]
   def gettext_locales do
-    if gettext_configured?() and Application.ensure_all_started(:gettext) do
+    if gettext_configured?() && Application.ensure_all_started(:gettext) do
       otp_app = gettext().__gettext__(:otp_app)
 
       backend_default =
