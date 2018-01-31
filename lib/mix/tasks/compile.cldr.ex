@@ -227,4 +227,10 @@ if Version.match?(System.version, ">= 1.6.0") do
       end
     end
   end
+else
+  defmodule Mix.Tasks.Compile.Cldr do
+    def run(_args) do
+      :noop
+    end
+  end
 end
