@@ -33,7 +33,8 @@ defmodule Cldr.Normalize.Currency do
               currency_data[code]["_cash_rounding"] || currency_data[code]["_rounding"] ||
                 default["_rounding"]
             ),
-          count: currency_counts(currency)
+          count: currency_counts(currency),
+          iso_digits: Cldr.IsoCurrency.currencies[String.to_atom(code)]
         }
 
         {code, currency_map}

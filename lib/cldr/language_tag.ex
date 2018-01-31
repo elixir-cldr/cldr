@@ -152,6 +152,10 @@ defmodule Cldr.LanguageTag do
   """
   alias Cldr.LanguageTag.Parser
 
+  if Code.ensure_loaded(Jaon) do
+    @derive Jason.Encoder
+  end
+
   defstruct language: nil,
             script: nil,
             territory: nil,
