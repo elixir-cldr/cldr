@@ -24,11 +24,11 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
   * With this enhancement it will be no longer necessary to force recompile Cldr or packages that depend on it since they will be compiled whenever a locale configuration change is detected.
 
-* The [Jason](https://hex.pm/packages/jason) is added to the dependency list as an optional dependency.
+* The [Jason](https://hex.pm/packages/jason) json library is added to the dependency list as an optional dependency.
 
-* Adds `:iso_digits` to the currency data maintained in CLDR.  Cldr currency data does not always align with the ISO definition of a currency - notable for digits (subunit) definitions.  For example, the Colombian Peso has an official subunit of the _pesavo_.  One hundred _pesavos_ equals one peso.  There are no notes/cash/coins for the _centavo_ but it is an offical part of the currency and its important to be maintained for financial transactions.
+* Adds `:iso_digits` to the currency data maintained in CLDR.  Cldr currency data does not always align with the ISO definition of a currency - notably for digits (subunit) definitions.  For example, the Colombian Peso has an official subunit of the _pesavo_.  One hundred _pesavos_ equals one _peso_.  There are no notes/cash/coins for the _centavo_ but it is an offical part of the currency and it's important to be maintained for financial transactions.
 
-* Adds a `Mix` task to download the ISO currency data that is used during locale consoldiation to include ISO currency digits (subunits) in the currency definition.
+* Adds a `Mix` task to download the ISO currency data that is used during locale consolidation to include ISO currency digits (subunits) in the currency definition.
 
 ## Bug Fixes
 

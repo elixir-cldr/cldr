@@ -19,7 +19,8 @@ defmodule Cldr.Mixfile do
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      dialyzer: [ignore_warnings: ".dialyzer_ignore_warnings"]
+      dialyzer: [ignore_warnings: ".dialyzer_ignore_warnings"],
+      compilers: Mix.compilers ++ [:cldr]
     ]
   end
 
