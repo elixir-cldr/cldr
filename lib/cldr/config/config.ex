@@ -240,8 +240,8 @@ defmodule Cldr.Config do
       otp_app = gettext().__gettext__(:otp_app)
 
       backend_default =
-        gettext()
-        |> Application.get_env(otp_app)
+        otp_app
+        |> Application.get_env(gettext())
         |> gettext_default_locale
 
       global_default =
