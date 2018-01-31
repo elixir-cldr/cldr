@@ -3,8 +3,6 @@ defmodule Cldr.Number.Ordinal do
   Implements ordinal plural rules for numbers.
   """
 
-  @compile :nowarn_unused_vars
-
   use Cldr.Number.PluralRule, :ordinal
   alias Cldr.LanguageTag
 
@@ -30,6 +28,8 @@ defmodule Cldr.Number.Ordinal do
       |> rules_to_condition_statement(__MODULE__)
 
     defp do_plural_rule(%LanguageTag{cldr_locale_name: unquote(locale_name)}, n, i, v, w, f, t) do
+      # silence unused variable warnings
+      _ = {n, i, v, w, f, t}
       unquote(function_body)
     end
   end
