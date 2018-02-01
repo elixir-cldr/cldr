@@ -2,23 +2,22 @@ defmodule Cldr.TestApp.Router do
   use Phoenix.Router
 
   pipeline :locale_pipeline do
-    plug Cldr.Plug.SetLocale, from: :path
+    plug(Cldr.Plug.SetLocale, from: :path)
   end
 
   scope "/thing" do
-    pipe_through :locale_pipeline
-    get "/:locale", Cldr.PageController, :show
+    pipe_through(:locale_pipeline)
+    get("/:locale", Cldr.PageController, :show)
   end
 
   scope "/thing/:locale" do
-    pipe_through :locale_pipeline
-    get "/other", Cldr.PageController, :show
+    pipe_through(:locale_pipeline)
+    get("/other", Cldr.PageController, :show)
   end
 end
 
 defmodule Cldr.PageController do
   def init(_) do
-
   end
 
   def call(conn, _) do
@@ -39,36 +38,38 @@ defmodule Cldr.Plug.Router.Test do
       |> Cldr.TestApp.Router.call(opts)
 
     assert conn.path_params["locale"] == "fr"
+
     assert conn.private[:cldr_locale] == %Cldr.LanguageTag{
-              canonical_locale_name: "fr-Latn-FR",
-              cldr_locale_name: "fr",
-              extensions: %{},
-              gettext_locale_name: nil,
-              language: "fr",
-              locale: %{},
-              private_use: [],
-              rbnf_locale_name: "fr",
-              requested_locale_name: "fr",
-              script: "Latn",
-              territory: "FR",
-              transform: %{},
-              variant: nil
-            }
-    assert Cldr.get_current_locale == %Cldr.LanguageTag{
-              canonical_locale_name: "fr-Latn-FR",
-              cldr_locale_name: "fr",
-              extensions: %{},
-              gettext_locale_name: nil,
-              language: "fr",
-              locale: %{},
-              private_use: [],
-              rbnf_locale_name: "fr",
-              requested_locale_name: "fr",
-              script: "Latn",
-              territory: "FR",
-              transform: %{},
-              variant: nil
-            }
+             canonical_locale_name: "fr-Latn-FR",
+             cldr_locale_name: "fr",
+             extensions: %{},
+             gettext_locale_name: nil,
+             language: "fr",
+             locale: %{},
+             private_use: [],
+             rbnf_locale_name: "fr",
+             requested_locale_name: "fr",
+             script: "Latn",
+             territory: "FR",
+             transform: %{},
+             variant: nil
+           }
+
+    assert Cldr.get_current_locale() == %Cldr.LanguageTag{
+             canonical_locale_name: "fr-Latn-FR",
+             cldr_locale_name: "fr",
+             extensions: %{},
+             gettext_locale_name: nil,
+             language: "fr",
+             locale: %{},
+             private_use: [],
+             rbnf_locale_name: "fr",
+             requested_locale_name: "fr",
+             script: "Latn",
+             territory: "FR",
+             transform: %{},
+             variant: nil
+           }
   end
 
   test "set the locale from the path params with scope parameter" do

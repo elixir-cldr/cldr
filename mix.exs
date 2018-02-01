@@ -20,7 +20,7 @@ defmodule Cldr.Mixfile do
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [ignore_warnings: ".dialyzer_ignore_warnings"],
-      compilers: Mix.compilers ++ [:cldr]
+      compilers: Mix.compilers() ++ [:cldr]
     ]
   end
 

@@ -1,4 +1,4 @@
-if Mix.env in [:dev, :test] do
+if Mix.env() in [:dev, :test] do
   defmodule Cldr.Gettext do
     @moduledoc """
     Implements a Gettext-compatible module but using Cldr locales.  Its an example

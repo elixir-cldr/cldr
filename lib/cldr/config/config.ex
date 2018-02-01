@@ -116,11 +116,11 @@ defmodule Cldr.Config do
   """
   @json_lib Application.get_env(:ex_cldr, :json_library) || Poison
   unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
-		raise "The configured json library #{inspect @json_lib} does not define the function decode!/1"
+    raise "The configured json library #{inspect(@json_lib)} does not define the function decode!/1"
   end
 
   def json_library do
-		@json_lib
+    @json_lib
   end
 
   @doc """
@@ -221,7 +221,7 @@ defmodule Cldr.Config do
       gettext_configured?() ->
         Gettext
         |> apply(:get_locale, [gettext()])
-        |> Locale.locale_name_from_posix
+        |> Locale.locale_name_from_posix()
 
       true ->
         @default_locale
@@ -244,18 +244,15 @@ defmodule Cldr.Config do
         |> Application.get_env(gettext())
         |> gettext_default_locale
 
-      global_default =
-        Application.get_env(:gettext, :default_locale)
+      global_default = Application.get_env(:gettext, :default_locale)
 
-      locales =
-        apply(Gettext, :known_locales, [gettext()]) ++
-        [backend_default, global_default]
+      locales = apply(Gettext, :known_locales, [gettext()]) ++ [backend_default, global_default]
 
       locales
       |> Enum.reject(&is_nil/1)
       |> Enum.map(&Locale.locale_name_from_posix/1)
       |> Enum.uniq()
-	    |> Enum.sort
+      |> Enum.sort()
     else
       []
     end

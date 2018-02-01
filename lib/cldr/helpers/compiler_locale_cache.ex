@@ -47,7 +47,7 @@ defmodule Cldr.Locale.Cache do
   end
 
   def terminate(_, _) do
-    IO.inspect :terminating
+    IO.inspect(:terminating)
   end
 
   def compiling? do
@@ -100,7 +100,7 @@ defmodule Cldr.Locale.Cache do
       :undefined ->
         :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
 
-        # Logger.debug "#{inspect self()}:  Created :ets table"
+      # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end

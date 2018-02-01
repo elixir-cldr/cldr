@@ -9,5 +9,4 @@ config :ex_cldr,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}],
   json_library: Jason
 
-config :ex_cldr, Cldr.Gettext,
-  default_locale: "it"
+config :ex_cldr, Cldr.Gettext, default_locale: "it"

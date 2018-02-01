@@ -56,14 +56,13 @@ defmodule Mix.Tasks.Compile.Cldr do
 
   @callee_references [Cldr.Config]
   @dont_recompile @callee_references ++ [Cldr.Locale.Cache, __MODULE__]
-	@cldr_deps [:ex_cldr, :ex_cldr_numbers, :ex_cldr_datetimes, :ex_cldr_units,
-							:ex_cldr_lists, :ex_cldr_territories, :ex_cldr_languages]
 
   def run(_args) do
     if configured_locales() != previous_locales() do
       case compile_cldr_files() do
         :ok ->
           create_manifest(configured_locales())
+
         _ ->
           :noop
       end
@@ -73,78 +72,95 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def manifests, do: [manifest()]
+
   def manifest do
     Path.join(Mix.Project.manifest_path(), @manifest)
   end
 
-	if Version.compare(System.version, "1.6.0") in [:gt, :eq] do
+  if Version.compare(System.version(), "1.6.0") in [:gt, :eq] do
     def compile_cldr_files do
       deps = Mix.Dep.loaded(env: Mix.env())
 
       apps_to_compile =
         deps
         |> modules_to_compile()
-        |> Enum.group_by(fn {app, _module} -> app end,fn {_app, module} -> module end)
+        |> Enum.group_by(fn {app, _module} -> app end, fn {_app, module} -> module end)
         |> print_console_note
 
       compile_results =
-        deps_in_order deps, apps_to_compile, %{}, fn {app, modules} ->
+        deps_in_order(deps, apps_to_compile, %{}, fn {app, modules} ->
           build_dir = build_dir(app)
           sources = sources(modules)
 
           purge_modules(modules, build_dir)
           Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
-        end
+        end)
 
       return(compile_results)
     end
 
-	  defp callers(dep) do
-	    try do
-	      Mix.Dep.in_dependency(dep, fn _module ->
-	        Mix.Tasks.Xref.calls
-	        |> Enum.filter(&compile_module?/1)
-	        |> Enum.map(fn callee -> {dep.app, callee} end)
-	      end)
-	    rescue File.Error ->
-	      []
-	    end
-	  end
-	else
-		def compile_cldr_files do
-			deps = Mix.Dep.loaded(env: Mix.env())
-			for dep <- @cldr_deps,
-					dep in deps do
-				compile_dep(dep)
-			end
-		end
+    defp callers(dep) do
+      try do
+        Mix.Dep.in_dependency(dep, fn _module ->
+          Mix.Tasks.Xref.calls()
+          |> Enum.filter(&compile_module?/1)
+          |> Enum.map(fn callee -> {dep.app, callee} end)
+        end)
+      rescue
+        File.Error ->
+          []
+      end
+    end
+  else
+	  @cldr_deps [
+	    :ex_cldr,
+	    :ex_cldr_numbers,
+	    :ex_cldr_datetimes,
+	    :ex_cldr_units,
+	    :ex_cldr_lists,
+	    :ex_cldr_territories,
+	    :ex_cldr_languages
+	  ]
 
-		defp callers(_dep) do
-			[]
-		end
-	end
+    def compile_cldr_files do
+      deps = Mix.Dep.loaded(env: Mix.env())
 
-	@compile_task "deps.compile"
-	def compile_dep(dep) do
-		IO.puts "Recompiling dependency #{inspect dep}"
-		Mix.Task.reenable(@compile_task)
-		Mix.Task.run @compile_task, [dep, "--force"]
-	end
+      for dep <- @cldr_deps, dep in deps do
+        compile_dep(dep)
+      end
+    end
+
+    defp callers(_dep) do
+      []
+    end
+  end
+
+  @compile_task "deps.compile"
+  def compile_dep(dep) do
+    IO.puts("Recompiling dependency #{inspect(dep)}")
+    Mix.Task.reenable(@compile_task)
+    Mix.Task.run(@compile_task, [dep, "--force"])
+  end
 
   def return(list) do
-    return_codes = Enum.map(list, fn {_, {:ok, _, _}} -> :ok; _ -> :error end)
+    return_codes =
+      Enum.map(list, fn
+        {_, {:ok, _, _}} -> :ok
+        _ -> :error
+      end)
+
     if Enum.all?(return_codes, &(&1 == :ok)), do: :ok, else: :error
   end
 
   def print_console_note(apps_to_compile) do
-    module_count = Enum.reduce(apps_to_compile, 0,
-      fn {_app, modules}, acc -> acc + Enum.count(modules)
-    end)
+    module_count =
+      Enum.reduce(apps_to_compile, 0, fn {_app, modules}, acc -> acc + Enum.count(modules) end)
 
     if module_count > 0 do
-      IO.puts "Recompiling #{module_count} modules from " <>
-            "#{inspect Map.keys(apps_to_compile)} " <>
-            "due to a locale configuration change"
+      IO.puts(
+        "Recompiling #{module_count} modules from " <>
+          "#{inspect(Map.keys(apps_to_compile))} " <> "due to a locale configuration change"
+      )
     end
 
     apps_to_compile
@@ -155,7 +171,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def deps_in_order(deps, apps, already_done, fun) do
-    Enum.reduce deps, already_done, fn dep, acc ->
+    Enum.reduce(deps, already_done, fn dep, acc ->
       acc = deps_in_order(dep.deps, apps, acc, fun)
       app = dep.app
 
@@ -164,7 +180,7 @@ defmodule Mix.Tasks.Compile.Cldr do
       else
         acc
       end
-    end
+    end)
   end
 
   def modules_to_compile(nil) do
@@ -172,19 +188,19 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def modules_to_compile(deps) do
-    for dep <-  deps do
+    for dep <- deps do
       callers(dep) ++ modules_to_compile(dep.deps)
     end
-    |> List.flatten
-    |> Enum.map(fn {app,
-      %{caller_module: caller_module}} -> {app, caller_module}
+    |> List.flatten()
+    |> Enum.map(fn
+      {app, %{caller_module: caller_module}} -> {app, caller_module}
       {app, caller} -> {app, caller}
     end)
     |> Enum.reject(fn
       {_app, module} when module in @dont_recompile -> true
-       _ -> false
+      _ -> false
     end)
-    |> Enum.uniq
+    |> Enum.uniq()
   end
 
   def compile_module?(%{callee: {reference, _, _}}) do
@@ -207,7 +223,7 @@ defmodule Mix.Tasks.Compile.Cldr do
     |> hd
     |> Map.get(:opts)
     |> Keyword.get(:build)
-    |> String.replace_suffix("","/ebin")
+    |> String.replace_suffix("", "/ebin")
   end
 
   def sources([]) do
@@ -234,7 +250,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def configured_locales do
-    Cldr.Config.known_locale_names
+    Cldr.Config.known_locale_names()
   end
 
   def previous_locales do
@@ -242,8 +258,10 @@ defmodule Mix.Tasks.Compile.Cldr do
       {:error, :enoent} ->
         create_manifest([])
         previous_locales()
+
       {:ok, ""} ->
         []
+
       {:ok, binary} ->
         :erlang.binary_to_term(binary)
     end

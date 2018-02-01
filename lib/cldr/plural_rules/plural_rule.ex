@@ -116,7 +116,8 @@ defmodule Cldr.Number.PluralRule do
       """
       @default_substitution :other
       @spec pluralize(Math.number_or_decimal(), LanguageTag.t(), %{}) :: any()
-      def pluralize(number, %LanguageTag{} = locale, %{} = substitutions) when is_number(number) do
+      def pluralize(number, %LanguageTag{} = locale, %{} = substitutions)
+          when is_number(number) do
         do_pluralize(number, locale, substitutions)
       end
 
