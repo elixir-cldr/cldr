@@ -138,8 +138,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   @compile_task "deps.compile"
   def compile_dep(dep) do
     IO.puts("Recompiling dependency #{inspect(dep)}")
-    Mix.Task.reenable(@compile_task)
-    Mix.Task.run(@compile_task, [dep, "--force"])
+    Mix.Task.rerun(@compile_task, [dep, "--force"])
   end
 
   def return(list) do
