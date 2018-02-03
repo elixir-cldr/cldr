@@ -77,7 +77,7 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 
 Here's an example configuration that uses all of the available configuration keys:
 
-     config :cldr,
+     config :ex_cldr,
        default_locale: "en",
        locales: ["fr", "en", "bs", "si", "ak", "th"],
        gettext: MyApp.Gettext,
@@ -99,7 +99,7 @@ The configuration keys available for `Cldr` are:
  * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenince it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
 
-          config :cldr,
+          config :ex_cldr,
             default_locale: "en",
             locales: ["en-*", "fr"]
 
