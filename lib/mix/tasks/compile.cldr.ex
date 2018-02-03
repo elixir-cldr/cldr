@@ -77,28 +77,28 @@ defmodule Mix.Tasks.Compile.Cldr do
     Path.join(Mix.Project.manifest_path(), @manifest)
   end
 
+  def compile_cldr_files do
+    deps = Mix.Dep.loaded(env: Mix.env())
+
+    apps_to_compile =
+      deps
+      |> modules_to_compile()
+      |> Enum.group_by(fn {app, _module} -> app end, fn {_app, module} -> module end)
+      |> print_console_note
+
+    compile_results =
+      deps_in_order(deps, apps_to_compile, %{}, fn {app, modules} ->
+        build_dir = build_dir(app)
+        sources = sources(modules)
+
+        purge_modules(modules, build_dir)
+        Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
+      end)
+
+    return(compile_results)
+  end
+
   if Version.compare(System.version(), "1.6.0") in [:gt, :eq] do
-    def compile_cldr_files do
-      deps = Mix.Dep.loaded(env: Mix.env())
-
-      apps_to_compile =
-        deps
-        |> modules_to_compile()
-        |> Enum.group_by(fn {app, _module} -> app end, fn {_app, module} -> module end)
-        |> print_console_note
-
-      compile_results =
-        deps_in_order(deps, apps_to_compile, %{}, fn {app, modules} ->
-          build_dir = build_dir(app)
-          sources = sources(modules)
-
-          purge_modules(modules, build_dir)
-          Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
-        end)
-
-      return(compile_results)
-    end
-
     defp callers(dep) do
       try do
         Mix.Dep.in_dependency(dep, fn _module ->
@@ -112,33 +112,10 @@ defmodule Mix.Tasks.Compile.Cldr do
       end
     end
   else
-	  @cldr_deps [
-	    :ex_cldr,
-	    :ex_cldr_numbers,
-	    :ex_cldr_datetimes,
-	    :ex_cldr_units,
-	    :ex_cldr_lists,
-	    :ex_cldr_territories,
-	    :ex_cldr_languages
-	  ]
-
-    def compile_cldr_files do
-      deps = Mix.Dep.loaded(env: Mix.env())
-
-      for dep <- @cldr_deps, dep in deps do
-        compile_dep(dep)
-      end
-    end
-
-    defp callers(_dep) do
+    defp callers(dep) do
+      IO.puts "Compile all modules for #{inspect dep}."
       []
     end
-  end
-
-  @compile_task "deps.compile"
-  def compile_dep(dep) do
-    IO.puts("Recompiling dependency #{inspect(dep)}")
-    Mix.Task.rerun(@compile_task, [dep, "--force"])
   end
 
   def return(list) do
