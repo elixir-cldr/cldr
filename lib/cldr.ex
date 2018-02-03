@@ -83,7 +83,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {32, 0, 0}
+      {32, 0, 1}
 
   """
   @version Config.version()
