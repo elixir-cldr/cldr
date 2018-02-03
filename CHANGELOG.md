@@ -34,13 +34,13 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
 ## Bug Fixes
 
-* Don't crash if a Gettext backend is defined by it has no configuration for `:default_locale`.  Closes #38.  Thanks to @schultzer.
+* Don't crash if a Gettext backend is defined by it has no configuration for `:default_locale`.  Fixes #38.  Thanks to @schultzer.
 
-* Fix incorrect boolean expression, replace with `&&` when determining if `Gettext` is configured
+* Fix incorrect boolean expression, replace with `&&` when determining if `Gettext` is configured.
 
-* Create a "null" Cldr compiler so that on Elixir versions less than 1.6 we don't raise an exception if the compiler is configured.
+* Remove unused var warnings when compiing on Elixir 1.7.0 master branch.  Fixes #40. Thanks to @michalmuskala.
 
-* Remove unused var warnings when compiing on Elixir 1.7.0 master branch
+* Fix README `config.exs` examples to use the correct config key `;ex_cldr`.  Fixes #41.  Thanks to @phtrivier.
 
 # Changelog for Cldr v1.3.2
 
