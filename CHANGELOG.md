@@ -30,7 +30,7 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
 * Adds `:iso_digits` to the currency data maintained in CLDR.  Cldr currency data does not always align with the ISO definition of a currency - notably for digits (subunit) definitions.  For example, the Colombian Peso has an official subunit of the _pesavo_.  One hundred _pesavos_ equals one _peso_.  There are no notes/cash/coins for the _centavo_ but it is an offical part of the currency and it's important to be maintained for financial transactions.
 
-* Adds a `Mix` task to download the ISO currency data that is used during locale consolidation to include ISO currency digits (subunits) in the currency definition.
+* Adds a `Mix` task to download the ISO currency data that is used during locale consolidation to include ISO currency digits (subunits) in the currency definition.  This is used downstream in the `ex_money` package.
 
 ## Bug Fixes
 
@@ -41,6 +41,10 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 * Remove unused var warnings when compiing on Elixir 1.7.0 master branch.  Fixes #40. Thanks to @michalmuskala.
 
 * Fix README `config.exs` examples to use the correct config key `;ex_cldr`.  Fixes #41.  Thanks to @phtrivier.
+
+* Fix detecting Gettext locale configuration byt adding the `:cldr` compiler.  Fixes #31.  Thanks to @BrummbQ.
+
+* Ensure that the default locale is also expanded. If no default locale is configured, the package  default "en-001" is defined.  This locale should also be expanded to include "en" since plural rules are often defined on the language rather than the territory-specific locale.
 
 # Changelog for Cldr v1.3.2
 

@@ -309,7 +309,7 @@ defmodule Cldr.Config do
     locale_names =
       case app_locale_names = Application.get_env(:ex_cldr, :locales) do
         :all -> all_locale_names()
-        nil -> [default_locale()]
+        nil -> expand_locale_names([default_locale()])
         _ -> expand_locale_names(app_locale_names)
       end
 
