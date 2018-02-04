@@ -1,8 +1,10 @@
 # Changelog for Cldr v1.4.0
 
-This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.0 released on February 4th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ## Enhancements
+
+* Updates CLDR data to version 32.0.1
 
 * The primary focus on this release to automate the process of recompiling those parts of Cldr that are sensitive to configuration change.  This release:
 
@@ -24,8 +26,6 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
   * With this enhancement it will be no longer necessary to force recompile Cldr or packages that depend on it since they will be compiled whenever a locale configuration change is detected.
 
-  * **Please note that the `:cldr` compiler is only available on Elixir version 1.6.0 and later since it depends on `Mix.Tasks.Xref.calls/0`**.  In the case of Elixir versions up to 1.5 a manual `mix deps.compile ex_cldr --force` will be required if the locale configuration changes.
-
 * The [Jason](https://hex.pm/packages/jason) json library is added to the dependency list as an optional dependency.
 
 * Adds `:iso_digits` to the currency data maintained in CLDR.  Cldr currency data does not always align with the ISO definition of a currency - notably for digits (subunit) definitions.  For example, the Colombian Peso has an official subunit of the _pesavo_.  One hundred _pesavos_ equals one _peso_.  There are no notes/cash/coins for the _centavo_ but it is an offical part of the currency and it's important to be maintained for financial transactions.
@@ -34,15 +34,15 @@ This is the changelog for Cldr v1.4.0 released on _, 2018.  For older changelogs
 
 ## Bug Fixes
 
-* Don't crash if a Gettext backend is defined by it has no configuration for `:default_locale`.  Fixes #38.  Thanks to @schultzer.
+* Don't raise an exception if a Gettext backend is defined but it has no configuration for `:default_locale`.  Fixes #38.  Thanks to @schultzer.
 
 * Fix incorrect boolean expression, replace with `&&` when determining if `Gettext` is configured.
 
 * Remove unused var warnings when compiing on Elixir 1.7.0 master branch.  Fixes #40. Thanks to @michalmuskala.
 
-* Fix README `config.exs` examples to use the correct config key `;ex_cldr`.  Fixes #41.  Thanks to @phtrivier.
+* Fix README `config.exs` examples to use the correct config key `:ex_cldr`.  Fixes #41.  Thanks to @phtrivier.
 
-* Fix detecting Gettext locale configuration byt adding the `:cldr` compiler.  Fixes #31.  Thanks to @BrummbQ.
+* Fix detecting a Gettext locale configuration by adding the `:cldr` compiler.  Fixes #31.  Thanks to @BrummbQ.
 
 * Ensure that the default locale is also expanded. If no default locale is configured, the package  default "en-001" is defined.  This locale should also be expanded to include "en" since plural rules are often defined on the language rather than the territory-specific locale.
 

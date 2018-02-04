@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   use Mix.Task
   require Logger
 
-  @manifest "compile.cldr"
+  @manifest ".compile.cldr"
 
   @callee_references [Cldr.Config]
   @dont_recompile @callee_references ++ [Cldr.Locale.Cache, __MODULE__]
@@ -92,30 +92,10 @@ defmodule Mix.Tasks.Compile.Cldr do
         sources = sources(modules)
 
         purge_modules(modules, build_dir)
-        Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
+        compile_files(sources, build_dir)
       end)
 
     return(compile_results)
-  end
-
-  if Version.compare(System.version(), "1.6.0") in [:gt, :eq] do
-    defp callers(dep) do
-      try do
-        Mix.Dep.in_dependency(dep, fn _module ->
-          Mix.Tasks.Xref.calls()
-          |> Enum.filter(&compile_module?/1)
-          |> Enum.map(fn callee -> {dep.app, callee} end)
-        end)
-      rescue
-        File.Error ->
-          []
-      end
-    end
-  else
-    defp callers(dep) do
-      IO.puts "Compile all modules for #{inspect dep}."
-      []
-    end
   end
 
   def return(list) do
@@ -177,6 +157,37 @@ defmodule Mix.Tasks.Compile.Cldr do
       _ -> false
     end)
     |> Enum.uniq()
+  end
+
+  defp callers(dep) do
+    try do
+      Mix.Dep.in_dependency(dep, fn _module ->
+        calls()
+        |> Enum.filter(&compile_module?/1)
+        |> Enum.map(fn callee -> {dep.app, callee} end)
+      end)
+    rescue
+      File.Error ->
+        []
+    end
+  end
+
+  if Version.compare(System.version(), "1.6.0") in [:gt, :eq] do
+    def compile_files(sources, build_dir) do
+      Kernel.ParallelCompiler.compile_to_path(sources, build_dir)
+    end
+
+    def calls do
+      Mix.Tasks.Xref.calls
+    end
+  else
+    def compile_files(sources, build_dir) do
+      Kernel.ParallelCompiler.files_to_path(sources, build_dir)
+    end
+
+    def calls do
+      pre6_calls()
+    end
   end
 
   def compile_module?(%{callee: {reference, _, _}}) do
@@ -241,5 +252,60 @@ defmodule Mix.Tasks.Compile.Cldr do
       {:ok, binary} ->
         :erlang.binary_to_term(binary)
     end
+  end
+
+  # Here is where we simulate the results
+  # of Mix.Tasks.Xref.calls/0 which does
+  # not exist before Elixir 1.6
+  @elixir_manifest ".compile.elixir"
+  @references MapSet.new(@callee_references)
+  @doc false
+  def pre6_calls do
+    manifest_path =
+      Mix.Project.manifest_path()
+      |> Path.join(@elixir_manifest)
+
+    data =
+      manifest_path
+      |> File.read!
+      |> :erlang.binary_to_term
+      |> Enum.reduce([], fn
+        version, acc when is_atom(version) ->
+          acc
+        {:source, path, _, depends_on, _, _, _, _, _}, acc ->
+          if cldr_file?(depends_on, @references) do
+            [path | acc]
+          else
+            acc
+          end
+        {:module, module, :module, [path], _destination, _}, acc ->
+          [{path, module} | acc]
+        _other, acc ->
+          acc
+      end)
+
+    # Now we have a list where the first part is the
+    # paths we need and the second part is the module
+    # defined in the file we want
+    select_paths = Enum.filter(data, fn p -> if is_binary(p), do: true, else: false end)
+    potential_modules = Enum.filter(data, fn t -> if is_tuple(t), do: true, else: false end)
+
+    Enum.reduce(potential_modules, [], fn {path, module}, acc ->
+      if path in select_paths do
+        [%{
+          callee: {hd(@callee_references), :no_function, 0},
+          caller_module: module,
+          line: 0,
+          file: ""
+          } | acc]
+      else
+        acc
+      end
+    end)
+  end
+
+  @doc false
+  def cldr_file?(calls, references) do
+    MapSet.size(MapSet.intersection(references, MapSet.new(calls))) > 0
   end
 end
