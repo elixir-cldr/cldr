@@ -101,7 +101,12 @@ defmodule Mix.Tasks.Compile.Cldr do
   def return(list) do
     return_codes =
       Enum.map(list, fn
+        # Elixir 1.6+ compiler return
         {_, {:ok, _, _}} -> :ok
+
+        # Elixir 1.5 compiler return
+        {_, mods} when is_list(mods) -> :ok
+
         _ -> :error
       end)
 

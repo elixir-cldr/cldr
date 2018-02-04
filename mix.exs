@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "1.4.0-rc.3"
+  @version "1.4.0"
 
   def project do
     [
@@ -34,7 +34,7 @@ defmodule Cldr.Mixfile do
 
   def application do
     [
-      extra_applications: [:ssl, :logger]
+      extra_applications: [:logger]
     ]
   end
 
