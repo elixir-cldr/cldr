@@ -98,7 +98,7 @@ defmodule Cldr.Mixfile do
   def docs do
     [
       source_ref: "v#{@version}",
-      main: "README",
+      main: "readme",
       logo: "logo.png",
       extras: [
         "README.md",
