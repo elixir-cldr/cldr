@@ -220,4 +220,8 @@ defmodule Cldr.Test do
                JOD: %{from: ~D[1950-07-01], to: ~D[1967-06-01]}
              ]
   end
+
+  test "that we get the correct default json library" do
+    assert Cldr.Config.json_library == Jason
+  end
 end

@@ -114,9 +114,24 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @json_lib Application.get_env(:ex_cldr, :json_library) || Poison
+  Module.put_attribute __MODULE__, :poison,
+           (case Code.ensure_loaded(Poison) do
+             {:module, _} -> Poison
+             _ -> nil
+           end)
+
+  Module.put_attribute __MODULE__, :jason,
+          (case Code.ensure_loaded(Jason) do
+            {:module, _} -> Jason
+            _ -> nil
+          end)
+
+  # Prefer Jason if its confiured over Poison
+  @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
+
   unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
-    raise "The configured json library #{inspect(@json_lib)} does not define the function decode!/1"
+    raise "The json library #{inspect(@json_lib)} is either not configured or does " <>
+          "not define the function decode!/1"
   end
 
   def json_library do
