@@ -6,5 +6,4 @@ config :ex_cldr,
   precompile_number_formats: ["¤¤#,##0.##"],
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}]
 
-config :ex_cldr, Cldr.Gettext,
-  default_locale: "it"
+config :ex_cldr, Cldr.Gettext, default_locale: "it"

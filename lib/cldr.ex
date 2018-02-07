@@ -197,7 +197,7 @@ defmodule Cldr do
         variant: nil}
 
   """
-  @default_locale Config.default_locale() |> Cldr.Config.canonical_language_tag!()
+  @default_locale Config.default_locale() |> Cldr.Config.language_tag()
   @spec default_locale :: LanguageTag.t()
   def default_locale do
     @default_locale
@@ -501,11 +501,12 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.validate_locale "en"
-      {:ok, %Cldr.LanguageTag{
+      {:ok,
+      %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
-        gettext_locale_name: "en",
+        gettext_locale_name: nil,
         language: "en",
         locale: %{},
         private_use: [],
@@ -519,11 +520,21 @@ defmodule Cldr do
 
       iex> Cldr.validate_locale Cldr.default_locale
       {:ok,
-       %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{}, language: "en", locale: %{},
-        private_use: [], rbnf_locale_name: "en", territory: "001",
-        requested_locale_name: "en-001", script: "Latn", transform: %{},
-        variant: nil}}
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{},
+        variant: nil
+      }}
 
       iex> Cldr.validate_locale "zzz"
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
@@ -531,6 +542,18 @@ defmodule Cldr do
   """
   @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
           {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+
+  # Precompile the known locales.  In benchmarking this
+  # is 20x faster.
+  @language_tags Cldr.Config.all_language_tags()
+
+  for locale_name <- Cldr.Config.known_locale_names() do
+    language_tag = Map.get(@language_tags, locale_name)
+
+    def validate_locale(unquote(locale_name)) do
+      {:ok, unquote(Macro.escape(language_tag))}
+    end
+  end
 
   def validate_locale(locale_name) when is_binary(locale_name) do
     case Cldr.Locale.new(locale_name) do

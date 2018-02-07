@@ -295,7 +295,7 @@ defmodule Cldr.Locale do
   end
 
   @spec set_gettext_locale_name(LanguageTag.t()) :: LanguageTag.t()
-  defp set_gettext_locale_name(%LanguageTag{} = language_tag) do
+  def set_gettext_locale_name(%LanguageTag{} = language_tag) do
     gettext_locale_name = gettext_locale_name(language_tag)
     %{language_tag | gettext_locale_name: gettext_locale_name}
   end

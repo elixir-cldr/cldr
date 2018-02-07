@@ -1,6 +1,14 @@
-# Changelog for Cldr v1.4.0
+# Changelog for Cldr v1.4.1
 
 This is the changelog for Cldr v1.4.0 released on February 4th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+## Enhancements
+
+* Precompiles all known locale names into a language tag which are then used to generate locale specific versions of `Cldr.validate_locale/1` when the parameter is a binary.
+
+* Automatically detects the presence of `Jason` and `Poison` and configures the default `:json_library` appropriately.
+
+# Changelog for Cldr v1.4.0
 
 ## Enhancements
 

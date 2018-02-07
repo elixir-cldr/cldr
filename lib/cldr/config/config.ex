@@ -114,24 +114,30 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  Module.put_attribute __MODULE__, :poison,
-           (case Code.ensure_loaded(Poison) do
-             {:module, _} -> Poison
-             _ -> nil
-           end)
+  Module.put_attribute(
+    __MODULE__,
+    :poison,
+    case Code.ensure_loaded(Poison) do
+      {:module, _} -> Poison
+      _ -> nil
+    end
+  )
 
-  Module.put_attribute __MODULE__, :jason,
-          (case Code.ensure_loaded(Jason) do
-            {:module, _} -> Jason
-            _ -> nil
-          end)
+  Module.put_attribute(
+    __MODULE__,
+    :jason,
+    case Code.ensure_loaded(Jason) do
+      {:module, _} -> Jason
+      _ -> nil
+    end
+  )
 
   # Prefer Jason if its confiured over Poison
   @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
 
   unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
     raise "The json library #{inspect(@json_lib)} is either not configured or does " <>
-          "not define the function decode!/1"
+            "not define the function decode!/1"
   end
 
   def json_library do
@@ -300,6 +306,25 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the map of language tags for all
+  available locales
+  """
+  @language_tags_path Path.join(@cldr_data_dir, "language_tags")
+  def all_language_tags do
+    @language_tags_path
+    |> File.read!()
+    |> :erlang.binary_to_term()
+  end
+
+  @doc """
+  Return the saved language tag for the
+  given locale name
+  """
+  def language_tag(locale_name) do
+    Map.get(all_language_tags(), locale_name)
+  end
+
+  @doc """
   Returns a list of all locales configured in the `config.exs`
   file.
 
@@ -331,50 +356,6 @@ defmodule Cldr.Config do
     ["root" | locale_names]
     |> Enum.uniq()
     |> Enum.sort()
-  end
-
-  @doc false
-  # This is basically a duplication of `Cldr.Locale.canonical_language_tag` but
-  # written to be available at compile time in `Cldr` which is definitely hacky,
-  def canonical_language_tag!(locale_name) do
-    language_tag = LanguageTag.Parser.parse!(locale_name)
-    requested_locale_name = Locale.locale_name_from(language_tag)
-
-    canonical_tag =
-      language_tag
-      |> Locale.substitute_aliases()
-      |> Locale.add_likely_subtags()
-
-    canonical_tag
-    |> Map.put(:requested_locale_name, requested_locale_name)
-    |> Map.put(:canonical_locale_name, Locale.locale_name_from(canonical_tag))
-    |> set_cldr_locale_name
-    |> set_rbnf_locale_name
-  end
-
-  @doc false
-  def set_cldr_locale_name(
-        %LanguageTag{language: language, script: script, territory: territory, variant: variant} =
-          language_tag
-      ) do
-    cldr_locale_name =
-      known_locale_name(Locale.locale_name_from(language, script, territory, variant)) ||
-        known_locale_name(Locale.locale_name_from(language, nil, territory, variant)) ||
-        known_locale_name(Locale.locale_name_from(language, script, nil, variant)) ||
-        known_locale_name(Locale.locale_name_from(language, nil, nil, variant)) ||
-        known_locale_name(language_tag.requested_locale_name) || nil
-
-    %{language_tag | cldr_locale_name: cldr_locale_name}
-  end
-
-  @doc false
-  def set_rbnf_locale_name(%LanguageTag{language: language, script: script} = language_tag) do
-    rbnf_locale_name =
-      known_rbnf_locale_name(Locale.locale_name_from(language, script, nil, nil)) ||
-        known_rbnf_locale_name(Locale.locale_name_from(language, nil, nil, nil)) ||
-        known_rbnf_locale_name(language_tag.requested_locale_name) || nil
-
-    %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
   @doc """
