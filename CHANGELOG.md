@@ -1,6 +1,12 @@
 # Changelog for Cldr v1.4.1
 
-This is the changelog for Cldr v1.4.0 released on February 4th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.1 released on February 8th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+As reported by @marceldegraaf there has been a regression in the performance of `Cldr.DateTime.to_string/2`.  The use case he reported involved calls with `locale: "nl"`; ie using a binary `:locale`.
+
+In all cases, locale resolution is passed through `Cldr.validate_locale/1`.  In prior releases of `Cldr` this would require parsing the locale name which is a relatively expensive operation.
+
+Therefore the major focus on this small release is to pre-parse all configured locale names into their corresponding language tag.  As a result performance is largely the same whether locale is specified as a binary or as a language tag.
 
 ## Enhancements
 

@@ -314,8 +314,16 @@ defmodule Cldr.Locale do
   @spec gettext_locale_name(LanguageTag.t()) :: locale_name | nil
   defp gettext_locale_name(%LanguageTag{} = language_tag) do
     language_tag
-    |> first_match(&Cldr.known_gettext_locale_name/1)
+    |> first_match(&known_gettext_locale_name/1)
     |> locale_name_to_posix
+  end
+
+  def known_gettext_locale_name(locale_name) do
+    if locale_name in Cldr.Config.gettext_locales() do
+      locale_name
+    else
+      false
+    end
   end
 
   defp first_match(

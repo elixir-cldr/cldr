@@ -445,11 +445,7 @@ defmodule Cldr do
   """
   @spec known_gettext_locale_name(Locale.locale_name()) :: String.t() | false
   def known_gettext_locale_name(locale_name) when is_binary(locale_name) do
-    if known_gettext_locale_name?(locale_name) do
-      locale_name
-    else
-      false
-    end
+    Cldr.Locale.known_gettext_locale_name(locale_name)
   end
 
   @doc """
@@ -506,7 +502,7 @@ defmodule Cldr do
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
-        gettext_locale_name: nil,
+        gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
@@ -517,6 +513,7 @@ defmodule Cldr do
         transform: %{},
         variant: nil
       }}
+
 
       iex> Cldr.validate_locale Cldr.default_locale
       {:ok,
@@ -548,7 +545,9 @@ defmodule Cldr do
   @language_tags Cldr.Config.all_language_tags()
 
   for locale_name <- Cldr.Config.known_locale_names() do
-    language_tag = Map.get(@language_tags, locale_name)
+    language_tag =
+      Map.get(@language_tags, locale_name)
+      |> Cldr.Locale.set_gettext_locale_name
 
     def validate_locale(unquote(locale_name)) do
       {:ok, unquote(Macro.escape(language_tag))}
