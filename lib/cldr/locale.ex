@@ -224,8 +224,9 @@ defmodule Cldr.Locale do
   @spec canonical_language_tag(locale_name | LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}}
 
-  @known_locale_names Cldr.Config.known_locale_names
-  def canonical_language_tag(locale_name) when is_binary(locale_name) and locale_name in @known_locale_names do
+  @known_locale_names Cldr.Config.known_locale_names()
+  def canonical_language_tag(locale_name)
+      when is_binary(locale_name) and locale_name in @known_locale_names do
     Cldr.validate_locale(locale_name)
   end
 

@@ -102,12 +102,15 @@ defmodule Mix.Tasks.Compile.Cldr do
     return_codes =
       Enum.map(list, fn
         # Elixir 1.6+ compiler return
-        {_, {:ok, _, _}} -> :ok
+        {_, {:ok, _, _}} ->
+          :ok
 
         # Elixir 1.5 compiler return
-        {_, mods} when is_list(mods) -> :ok
+        {_, mods} when is_list(mods) ->
+          :ok
 
-        _ -> :error
+        _ ->
+          :error
       end)
 
     if Enum.all?(return_codes, &(&1 == :ok)), do: :ok, else: :error
@@ -183,7 +186,7 @@ defmodule Mix.Tasks.Compile.Cldr do
     end
 
     def calls do
-      Mix.Tasks.Xref.calls
+      Mix.Tasks.Xref.calls()
     end
   else
     def compile_files(sources, build_dir) do
@@ -272,19 +275,22 @@ defmodule Mix.Tasks.Compile.Cldr do
 
     data =
       manifest_path
-      |> File.read!
-      |> :erlang.binary_to_term
+      |> File.read!()
+      |> :erlang.binary_to_term()
       |> Enum.reduce([], fn
         version, acc when is_atom(version) ->
           acc
+
         {:source, path, _, depends_on, _, _, _, _, _}, acc ->
           if cldr_file?(depends_on, @references) do
             [path | acc]
           else
             acc
           end
+
         {:module, module, :module, [path], _destination, _}, acc ->
           [{path, module} | acc]
+
         _other, acc ->
           acc
       end)
@@ -297,12 +303,15 @@ defmodule Mix.Tasks.Compile.Cldr do
 
     Enum.reduce(potential_modules, [], fn {path, module}, acc ->
       if path in select_paths do
-        [%{
-          callee: {hd(@callee_references), :no_function, 0},
-          caller_module: module,
-          line: 0,
-          file: ""
-          } | acc]
+        [
+          %{
+            callee: {hd(@callee_references), :no_function, 0},
+            caller_module: module,
+            line: 0,
+            file: ""
+          }
+          | acc
+        ]
       else
         acc
       end

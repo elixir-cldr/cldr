@@ -11,41 +11,38 @@ defmodule Cldr.Currency.Evaluator do
   """
   def check do
     currencies =
-      Cldr.get_current_locale
+      Cldr.get_current_locale()
       |> Map.get(:cldr_locale_name)
-      |> Cldr.Config.get_locale
+      |> Cldr.Config.get_locale()
       |> Map.get(:currencies)
 
     currency_has_no_iso =
-      Enum.reduce currencies, [], fn {code, _currency}, acc ->
-        if !Keyword.get(Cldr.IsoCurrency.currencies, code) do
+      Enum.reduce(currencies, [], fn {code, _currency}, acc ->
+        if !Keyword.get(Cldr.IsoCurrency.currencies(), code) do
           [code | acc]
         else
           acc
         end
-      end
+      end)
 
     iso_has_no_currency =
-      Enum.filter Cldr.IsoCurrency.currencies, fn {code, _digits} ->
+      Enum.filter(Cldr.IsoCurrency.currencies(), fn {code, _digits} ->
         is_nil(currencies[code])
-      end
+      end)
 
     digits_are_different =
-      Enum.reduce currencies, %{}, fn {code, currency}, acc ->
+      Enum.reduce(currencies, %{}, fn {code, currency}, acc ->
         if currency[:digits] != currency[:iso_digits] && code not in currency_has_no_iso do
           Map.put(acc, code, %{digits: currency[:digits], iso_digits: currency[:iso_digits]})
         else
           acc
         end
-      end
+      end)
 
     tender_with_different_digits =
-      Enum.filter digits_are_different, fn {code, _digits} -> currencies[code][:tender]
-    end
+      Enum.filter(digits_are_different, fn {code, _digits} -> currencies[code][:tender] end)
 
-    iso_nil_is_tender =
-      Enum.filter currency_has_no_iso, fn code -> currencies[code][:tender]
-    end
+    iso_nil_is_tender = Enum.filter(currency_has_no_iso, fn code -> currencies[code][:tender] end)
 
     %{
       currency_definition_has_no_iso_definition: currency_has_no_iso,

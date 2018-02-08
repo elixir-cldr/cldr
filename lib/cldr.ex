@@ -547,7 +547,7 @@ defmodule Cldr do
   for locale_name <- Cldr.Config.known_locale_names() do
     language_tag =
       Map.get(@language_tags, locale_name)
-      |> Cldr.Locale.set_gettext_locale_name
+      |> Cldr.Locale.set_gettext_locale_name()
 
     def validate_locale(unquote(locale_name)) do
       {:ok, unquote(Macro.escape(language_tag))}
