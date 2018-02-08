@@ -165,6 +165,9 @@ defmodule Cldr.Locale do
   defdelegate new(locale_name), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name), to: __MODULE__, as: :canonical_language_tag!
 
+  defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
+  defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
+
   @doc """
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale.
@@ -220,6 +223,11 @@ defmodule Cldr.Locale do
   """
   @spec canonical_language_tag(locale_name | LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}}
+
+  @known_locale_names Cldr.Config.known_locale_names
+  def canonical_language_tag(locale_name) when is_binary(locale_name) and locale_name in @known_locale_names do
+    Cldr.validate_locale(locale_name)
+  end
 
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
@@ -826,16 +834,4 @@ defmodule Cldr.Locale do
 
     %{language_tag | territory: territory}
   end
-
-  @doc """
-  Transforms a locale name from the Posix format to the Cldr format
-  """
-  def locale_name_from_posix(nil), do: nil
-  def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
-
-  @doc """
-  Transforms a locale name from the CLDR format to the Posix format
-  """
-  def locale_name_to_posix(nil), do: nil
-  def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
 end

@@ -242,7 +242,7 @@ defmodule Cldr.Config do
       gettext_configured?() ->
         Gettext
         |> apply(:get_locale, [gettext()])
-        |> Locale.locale_name_from_posix()
+        |> locale_name_from_posix()
 
       true ->
         @default_locale
@@ -271,7 +271,7 @@ defmodule Cldr.Config do
 
       locales
       |> Enum.reject(&is_nil/1)
-      |> Enum.map(&Locale.locale_name_from_posix/1)
+      |> Enum.map(&locale_name_from_posix/1)
       |> Enum.uniq()
       |> Enum.sort()
     else
@@ -1155,6 +1155,18 @@ defmodule Cldr.Config do
         {Cldr.Rbnf.NumberSystem, function, "root"}
     end
   end
+
+  @doc """
+  Transforms a locale name from the Posix format to the Cldr format
+  """
+  def locale_name_from_posix(nil), do: nil
+  def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
+
+  @doc """
+  Transforms a locale name from the CLDR format to the Posix format
+  """
+  def locale_name_to_posix(nil), do: nil
+  def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
 
   # ------ Helpers ------
 
