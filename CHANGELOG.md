@@ -12,7 +12,7 @@ Therefore the major focus on this small release is to pre-parse all configured l
 
 * Precompiles all known locale names into a language tag which are then used to generate locale specific versions of `Cldr.validate_locale/1` when the parameter is a binary.
 
-* Adds a mix task (available in github, not in the hex package) to generate the language tags for all available locales to support the performance optimization of locale to langauge tag lookup which is used in `Cldr.validate_locale/1` in many places in `Cldr.
+* Adds a mix task (available in github, not in the hex package) to generate the language tags for all available locales to support the performance optimization of locale to langauge tag lookup which is used in `Cldr.validate_locale/1` in many places in `Cldr`.
 
 * Automatically detects the presence of `Jason` and `Poison` and configures the default `:json_library` appropriately.
 

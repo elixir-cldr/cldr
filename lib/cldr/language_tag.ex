@@ -128,7 +128,7 @@ defmodule Cldr.LanguageTag do
   rg        | Region override                  | The value is a unicode_region_subtag for a regular region (not a macroregion), suffixed by "ZZZZ"
   sd        | Subdivision identifier           | A unicode_subdivision_id, which is a unicode_region_subtagconcatenated with a unicode_subdivision_suffix.
   ss        | Break supressions identifier     | none, standard
-  tz        | Timezone idenfitifier            | Short identifiers defined in terms of a TZ time zone database
+  tz        | Timezone identifier              | Short identifiers defined in terms of a TZ time zone database
   va        | Common variant type              | POSIX style locale variant
 
   ## Unicode BCP 47 Extension type "t" - Transforms
