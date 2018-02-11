@@ -103,7 +103,7 @@ defmodule Cldr.Rbnf.Config do
         locale_name
         |> locale_path
         |> File.read!()
-        |> Poison.decode!()
+        |> Cldr.Config.json_library().decode!()
         |> Map.get("rbnf")
         |> Map.get("rbnf")
         |> rules_from_rule_sets

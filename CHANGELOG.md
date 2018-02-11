@@ -1,6 +1,16 @@
-# Changelog for Cldr v1.4.1
+# Changelog for Cldr v1.4.2
 
-This is the changelog for Cldr v1.4.1 released on February 8th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.1 released on February 11th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Remove the hard-coded reference to the `Poison` library in `Cldr.Rbnf.Config` and replace it with the canonical `Cldr.Config.json_library/0`
+
+### Enhancements
+
+* Improve the error message raised at compile time if no valid json library has been detected
+
+# Changelog for Cldr v1.4.1
 
 As reported by @marceldegraaf there has been a regression in the performance of `Cldr.DateTime.to_string/2`.  The use case he reported involved calls with `locale: "nl"`; ie using a binary `:locale`.
 
