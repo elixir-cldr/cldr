@@ -1,6 +1,12 @@
-# Changelog for Cldr v1.4.2
+# Changelog for Cldr v1.5.0
 
-This is the changelog for Cldr v1.4.1 released on February 11th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.5.0 released on _, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* When a locale configuration change is detected a coloured diff of the locale configuration is printed.
+
+# Changelog for Cldr v1.4.2
 
 ### Bug Fixes
 
