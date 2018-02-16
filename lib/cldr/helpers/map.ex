@@ -7,16 +7,25 @@ defmodule Cldr.Map do
   Recursively traverse a map and invoke a function for each key/
   value pair that transforms the map.
 
+  ## Arguments
+
   * `map` is any `Map.t`
 
   * `function` is a function or function reference that
     is called for each key/value pair of the provided map
 
-  Returns:
+  ## Returns:
 
   * The `map` transformed by the recursive application of `function`
 
   ## Examples
+
+      iex> map = %{a: "a", b: %{c: "c"}}
+      %{a: "a", b: %{c: "c"}}
+      iex> Cldr.Map.deep_map map, fn {k, v} ->
+      ....   {k, String.upcase(v)}
+      .... end
+      %{a: "A", b: %{c: "C"}}
 
   """
   @spec deep_map(Map.t(), function :: function()) :: Map.t()
