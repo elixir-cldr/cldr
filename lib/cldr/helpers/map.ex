@@ -14,11 +14,12 @@ defmodule Cldr.Map do
   * `function` is a function or function reference that
     is called for each key/value pair of the provided map
 
-  ## Returns:
+  ## Returns
 
-  * The `map` transformed by the recursive application of `function`
+  * The `map` transformed by the recursive application of
+    `function`
 
-  ## Examples
+  ## Example
 
       iex> map = %{a: "a", b: %{c: "c"}}
       %{a: "a", b: %{c: "c"}}
