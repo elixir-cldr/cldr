@@ -1,10 +1,12 @@
-# Changelog for Cldr v1.5.0
+# Changelog for Cldr v1.4.3
 
-This is the changelog for Cldr v1.5.0 released on _, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.3 released on February 19th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Enhancements
 
 * When a locale configuration change is detected a coloured diff of the locale configuration is printed.
+
+* When the `:cldr` compiler runs, call `Mix.Project.build_structure/0` for each `Cldr` dependency to ensure the `priv` directory is copied to the build directory.
 
 # Changelog for Cldr v1.4.2
 
