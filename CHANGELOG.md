@@ -1,6 +1,16 @@
-# Changelog for Cldr v1.4.3
+# Changelog for Cldr v1.4.4
 
-This is the changelog for Cldr v1.4.3 released on February 19th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.4 released on __, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Cldr.Config functions that deal with directory and file paths now return results generated at runtime rather than at compile time
+
+* An exception is raised at compile time is the `:cldr` compiler is configured but it is not the last compiler in the list returned by `Mix.Project.config[:compilers]`
+
+* Renamed `language_tags` to `language_tags.ebin` to better reflect that its a file containing erlang binary terms
+
+# Changelog for Cldr v1.4.3
 
 ### Enhancements
 
