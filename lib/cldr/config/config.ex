@@ -167,9 +167,8 @@ defmodule Cldr.Config do
   @doc """
   Return the root path of the cldr application
   """
-  @cldr_home_dir Path.join(__DIR__, "/../../..") |> Path.expand()
   def cldr_home do
-    @cldr_home_dir
+    Path.join(__DIR__, "/../../..") |> Path.expand()
   end
 
   @doc """
@@ -178,42 +177,37 @@ defmodule Cldr.Config do
   CLdr since it points to a source directory.
   """
   @cldr_relative_dir "/priv/cldr"
-  @source_data_dir Path.join(@cldr_home_dir, @cldr_relative_dir)
   def source_data_dir do
-    @source_data_dir
+    Path.join(cldr_home(), @cldr_relative_dir)
   end
 
   @doc """
   Returns the path of the CLDR data directory for the ex_cldr app
   """
-  @cldr_data_dir [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary()
   def cldr_data_dir do
-    @cldr_data_dir
+    [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary()
   end
 
   @doc """
   Return the path name of the CLDR data directory for a client application.
   """
-  @client_data_dir Application.get_env(:ex_cldr, :data_dir, @cldr_data_dir)
-                   |> Path.expand()
-
   def client_data_dir do
-    @client_data_dir
+    Application.get_env(:ex_cldr, :data_dir, cldr_data_dir())
+    |> Path.expand()
   end
 
   @doc """
   Returns the directory where the CLDR locales files are located.
   """
-  @client_locales_dir @client_data_dir <> "/" <> "locales"
   def client_locales_dir do
-    @client_locales_dir
+    Path.join(client_data_dir() , "locales")
   end
 
   @doc """
   Returns the version string of the CLDR data repository
   """
   def version do
-    @client_data_dir
+    client_data_dir()
     |> Path.join("version.json")
     |> File.read!()
     |> json_library().decode!
@@ -316,10 +310,9 @@ defmodule Cldr.Config do
   Any configured locales that are not present in this list will
   raise an exception at compile time.
   """
-  @locales_path Path.join(@cldr_data_dir, "available_locales.json")
   @spec all_locale_names :: [Locale.locale_name(), ...]
   def all_locale_names do
-    @locales_path
+    Path.join(cldr_data_dir(), "available_locales.json")
     |> File.read!()
     |> json_library().decode!
     |> Enum.sort()
@@ -329,9 +322,8 @@ defmodule Cldr.Config do
   Returns the map of language tags for all
   available locales
   """
-  @language_tags_path Path.join(@cldr_data_dir, "language_tags")
   def all_language_tags do
-    @language_tags_path
+    Path.join(cldr_data_dir(), "language_tags")
     |> File.read!()
     |> :erlang.binary_to_term()
   end
