@@ -136,35 +136,38 @@ defmodule Cldr.Config do
   @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
 
   unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
-    message = if is_nil(@json_lib) do
-      """
-      A json library has not been configured.  Please configure one in
-      your `mix.exs` file.  Two common packages are Poison and Jason.
-      For example in your `mix.exs`:
+    message =
+      if is_nil(@json_lib) do
+        """
+        A json library has not been configured.  Please configure one in
+        your `mix.exs` file.  Two common packages are Poison and Jason.
+        For example in your `mix.exs`:
 
-        def deps() do
-          [
-            {:jason, "~> 1.0"},
-            ...
-          ]
-        end
+          def deps() do
+            [
+              {:jason, "~> 1.0"},
+              ...
+            ]
+          end
 
-      """
-    else
-      """
-      The json library #{inspect(@json_lib)} is either
-      not configured or does not define the function decode!/1
-      """
-    end
+        """
+      else
+        """
+        The json library #{inspect(@json_lib)} is either
+        not configured or does not define the function decode!/1
+        """
+      end
 
     raise ArgumentError, message
   end
-  
+
   # Check that the :cldr compiler is the last in the compiler list
   # if it is configured
-  if :cldr in Mix.Project.config[:compilers] and hd(Enum.reverse(Mix.Project.config[:compilers])) != :cldr do
-	 raise ArgumentError, "If configured, the :cldr compiler must be the last compiler in the list. " <>
-	 	"Found #{inspect Mix.Project.config[:compilers]}" 
+  if :cldr in Mix.Project.config()[:compilers] and
+       hd(Enum.reverse(Mix.Project.config()[:compilers])) != :cldr do
+    raise ArgumentError,
+          "If configured, the :cldr compiler must be the last compiler in the list. " <>
+            "Found #{inspect(Mix.Project.config()[:compilers])}"
   end
 
   def json_library do
@@ -207,7 +210,7 @@ defmodule Cldr.Config do
   Returns the directory where the CLDR locales files are located.
   """
   def client_locales_dir do
-    Path.join(client_data_dir() , "locales")
+    Path.join(client_data_dir(), "locales")
   end
 
   @doc """

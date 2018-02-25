@@ -59,8 +59,10 @@ defmodule Mix.Tasks.Compile.Cldr do
 
   def run(_args) do
     if configured_locales() != previous_locales() do
-      IO.puts "Locale configuration has changed to [" <>
-              "#{format_changes(previous_locales(), configured_locales())}]"
+      IO.puts(
+        "Locale configuration has changed to [" <>
+          "#{format_changes(previous_locales(), configured_locales())}]"
+      )
 
       case compile_cldr_files() do
         :ok ->
@@ -125,8 +127,7 @@ defmodule Mix.Tasks.Compile.Cldr do
 
     if module_count > 0 do
       IO.puts(
-        "Recompiling #{module_count} modules from " <>
-          "#{inspect(Map.keys(apps_to_compile))} "
+        "Recompiling #{module_count} modules from " <> "#{inspect(Map.keys(apps_to_compile))} "
       )
     end
 
@@ -173,7 +174,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   defp callers(dep) do
     try do
       Mix.Dep.in_dependency(dep, fn _module ->
-        Mix.Project.build_structure
+        Mix.Project.build_structure()
 
         calls()
         |> Enum.filter(&compile_module?/1)
@@ -343,14 +344,14 @@ defmodule Mix.Tasks.Compile.Cldr do
   defp colorize_diff([element | tail]) do
     case element do
       {:eq, items} -> [wrap(items) | colorize_diff(tail)]
-      {:del, items} -> [wrap(items, IO.ANSI.red) | colorize_diff(tail)]
-      {:ins, items} -> [wrap(items, IO.ANSI.green) | colorize_diff(tail)]
+      {:del, items} -> [wrap(items, IO.ANSI.red()) | colorize_diff(tail)]
+      {:ins, items} -> [wrap(items, IO.ANSI.green()) | colorize_diff(tail)]
     end
   end
 
   defp wrap(items, colour \\ "") do
     items
-    |> Enum.map(fn item -> colour <> inspect(item) <> IO.ANSI.reset end)
+    |> Enum.map(fn item -> colour <> inspect(item) <> IO.ANSI.reset() end)
     |> Enum.join(", ")
   end
 end
