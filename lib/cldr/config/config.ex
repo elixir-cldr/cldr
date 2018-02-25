@@ -111,6 +111,16 @@ defmodule Cldr.Config do
     "languages"
   ]
 
+
+  # Check that the :cldr compiler is the last in the compiler list
+  # if it is configured
+  if :cldr in Mix.Project.config()[:compilers] and
+       hd(Enum.reverse(Mix.Project.config()[:compilers])) != :cldr do
+    raise ArgumentError,
+          "If configured, the :cldr compiler must be the last compiler in the list. " <>
+            "Found #{inspect(Mix.Project.config()[:compilers])}"
+  end
+
   @doc """
   Return the configured json lib
   """
@@ -135,7 +145,7 @@ defmodule Cldr.Config do
   # Prefer Jason if its confiured over Poison
   @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
 
-  unless Code.ensure_loaded(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
+  unless Code.ensure_loaded?(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
     message =
       if is_nil(@json_lib) do
         """
@@ -149,8 +159,7 @@ defmodule Cldr.Config do
               ...
             ]
           end
-
-        """
+      	"""
       else
         """
         The json library #{inspect(@json_lib)} is either
@@ -159,15 +168,6 @@ defmodule Cldr.Config do
       end
 
     raise ArgumentError, message
-  end
-
-  # Check that the :cldr compiler is the last in the compiler list
-  # if it is configured
-  if :cldr in Mix.Project.config()[:compilers] and
-       hd(Enum.reverse(Mix.Project.config()[:compilers])) != :cldr do
-    raise ArgumentError,
-          "If configured, the :cldr compiler must be the last compiler in the list. " <>
-            "Found #{inspect(Mix.Project.config()[:compilers])}"
   end
 
   def json_library do
