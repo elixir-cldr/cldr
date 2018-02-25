@@ -333,7 +333,7 @@ defmodule Cldr.Config do
   available locales
   """
   def all_language_tags do
-    Path.join(cldr_data_dir(), "language_tags")
+    Path.join(cldr_data_dir(), "language_tags.ebin")
     |> File.read!()
     |> :erlang.binary_to_term()
   end
