@@ -159,6 +159,13 @@ defmodule Cldr.Config do
 
     raise ArgumentError, message
   end
+  
+  # Check that the :cldr compiler is the last in the compiler list
+  # if it is configured
+  if :cldr in Mix.Project.config[:compilers] and hd(Enum.reverse(Mix.Project.config[:compilers])) != :cldr do
+	 raise ArgumentError, "If configured, the :cldr compiler must be the last compiler in the list. " <>
+	 	"Found #{inspect Mix.Project.config[:compilers]}" 
+  end
 
   def json_library do
     @json_lib
