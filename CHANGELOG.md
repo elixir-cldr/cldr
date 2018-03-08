@@ -1,6 +1,12 @@
-# Changelog for Cldr v1.4.4
+# Changelog for Cldr v1.4.5
 
-This is the changelog for Cldr v1.4.4 released on February 25th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.5 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Fixes
+
+* Correct typos in README.  Thanks to @zacca
+
+# Changelog for Cldr v1.4.4
 
 ### Enhancements
 
