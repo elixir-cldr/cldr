@@ -2,7 +2,9 @@
 
 This is the changelog for Cldr v1.4.5 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
-### Fixes
+### Bug Fixes
+
+* Fixed `Cldr.Math.power/2` for Decimal numbers with a coefficient of 10 and an exponent <> 1.  Thanks to @camonz
 
 * Correct typos in README.  Thanks to @zacca
 

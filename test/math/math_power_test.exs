@@ -62,5 +62,5 @@ defmodule Math.Power.Test do
      b = Decimal.new "0.00001242"
      x = Decimal.sub(a, b)
      assert Decimal.cmp(Cldr.Math.power(x, 2), Decimal.new("0.00000000000001")) == :eq
-   end
+  end
 end
