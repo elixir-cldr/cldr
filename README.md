@@ -7,7 +7,7 @@
 
 `Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of February 4th and Version 1.4, `Cldr` is based upon [CLDR version 32.0.1](http://cldr.unicode.org/index/downloads/cldr-32).
 
-The functions you are mostly likely to user are in the modules `Cldr` and `Cldr.Locale`.  In particular:
+The functions you are mostly likely to use are in the modules `Cldr` and `Cldr.Locale`.  In particular:
 
 * `Cldr.default_locale/0`
 * `Cldr.set_current_locale/1`
