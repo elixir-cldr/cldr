@@ -107,6 +107,15 @@ defmodule Cldr.Math do
     number - Float.floor(number / modulus) * modulus
   end
 
+  def mod(number, modulus) when is_integer(number) and is_integer(modulus) do
+    modulo =
+      number
+      |> div(modulus)
+      |> Kernel.*(modulus)
+
+    number - modulo
+  end
+
   def mod(number, modulus) when is_integer(number) and is_number(modulus) do
     modulo =
       number
@@ -417,8 +426,8 @@ defmodule Cldr.Math do
 
   # For a decimal we can short cut the multiplications by just
   # adjusting the exponent when the coefficient is 10
-  def power(%Decimal{coef: 10, sign: sign, exp: exp}, n) do
-    %Decimal{coef: 10, sign: sign, exp: exp + n - 1}
+  def power(%Decimal{coef: 10, exp: 1} = decimal, n) do
+    %Decimal{decimal | exp: n}
   end
 
   def power(%Decimal{} = number, n) when n > 1 do
