@@ -10,5 +10,5 @@ defmodule Doc.Test do
   doctest Cldr.LanguageTag.Parser
   doctest Cldr.AcceptLanguage
 	doctest Cldr.Map
-  # doctest Cldr.Gettext.Plural
+
 end
