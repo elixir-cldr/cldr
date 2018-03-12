@@ -21,11 +21,11 @@ defmodule Cldr.Map do
 
   ## Example
 
-      iex> map = %{a: "a", b: %{c: "c"}}
-      iex> Cldr.Map.deep_map map, fn {k, v} ->
-      ...>   {k, String.upcase(v)}
-      ...> end
-      %{a: "A", b: %{c: "C"}}
+    iex> map = %{a: "a", b: %{c: "c"}}
+    iex> Cldr.Map.deep_map map, fn {k, v} ->
+    ...>   {k, String.upcase(v)}
+    ...> end
+    %{a: "A", b: %{c: "C"}}
 
   """
   @spec deep_map(Map.t(), function :: function()) :: Map.t()
@@ -267,8 +267,8 @@ defmodule Cldr.Map do
 
   ## Examples
 
-			iex> Cldr.Map.merge_map_list [%{a: "a", b: "b"}, %{c: "c", d: "d"}]
-			%{a: "a", b: "b", c: "c", d: "d"}
+      iex> Cldr.Map.merge_map_list [%{a: "a", b: "b"}, %{c: "c", d: "d"}]
+      %{a: "a", b: "b", c: "c", d: "d"}
 
   """
   def merge_map_list([h | []]) do
@@ -292,11 +292,11 @@ defmodule Cldr.Map do
 
   ## Examples
 
-			iex> Cldr.Map.deep_merge %{a: "a", b: "b"}, %{c: "c", d: "d"}
-			%{a: "a", b: "b", c: "c", d: "d"}
+      iex> Cldr.Map.deep_merge %{a: "a", b: "b"}, %{c: "c", d: "d"}
+      %{a: "a", b: "b", c: "c", d: "d"}
 
-			iex> Cldr.Map.deep_merge %{a: "a", b: "b"}, %{c: "c", d: "d", a: "aa"}
-			%{a: "aa", b: "b", c: "c", d: "d"}
+      iex> Cldr.Map.deep_merge %{a: "a", b: "b"}, %{c: "c", d: "d", a: "aa"}
+      %{a: "aa", b: "b", c: "c", d: "d"}
 
   """
   def deep_merge(left, right) do
@@ -322,8 +322,8 @@ defmodule Cldr.Map do
 
   ## Examples
 
-			iex> Cldr.Map.delete_in %{a: "a", b: "b"}, [:a]
-			%{b: "b"}
+      iex> Cldr.Map.delete_in %{a: "a", b: "b"}, [:a]
+      %{b: "b"}
 
   """
   def delete_in(%{} = map, keys) when is_list(keys) do
