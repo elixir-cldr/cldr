@@ -29,6 +29,13 @@ defmodule Cldr.Map do
 
   """
   @spec deep_map(Map.t(), function :: function()) :: Map.t()
+
+  # Don't deep map structs since they have atom keys anyway and they
+  # also don't support enumerable
+  def deep_map(%{__struct__: _any} = map, _function) when is_map(map) do
+    map
+  end
+
   def deep_map(map, function) when is_map(map) do
     Enum.map(map, fn
       {k, v} when is_map(v) or is_list(v) ->
