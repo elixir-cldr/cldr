@@ -8,6 +8,8 @@ This is the changelog for Cldr v1.4.5 released on ____, 2018.  For older changel
 
 * Correct typos in README.  Thanks to @zacca
 
+* Fixed `Cldr.Map.deep_merge/2/3` to skip structs since their keys are atoms and they don't support Enumerable
+
 # Changelog for Cldr v1.4.4
 
 ### Enhancements
