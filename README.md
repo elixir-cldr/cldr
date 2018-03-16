@@ -264,13 +264,23 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
   * `accept-language` header
   * the `session`
 
-## About Locale strings
+## About Language Tags and Locale strings
 
-Note that `Cldr` defines locale string according to the Unicode standard:
+Note that `Cldr` defines locale strings according to the [IETF standard](https://en.wikipedia.org/wiki/IETF_language_tag) as defined in [RFC5646](https://tools.ietf.org/html/rfc5646).  `Cldr` also implements the `u` extension as defined in [RFC6067](https://tools.ietf.org/html/rfc6067) and the `t` extension defined in [RFC6497](https://tools.ietf.org/html/rfc6497). This is also the standard used by [W3C](https://www.w3.org/TR/ltli/).
 
-* Language codes are two lowercase letters (ie "en", not "EN")
+The IETF standard is slightly different to the [ISO/IEC 15897](http://www.open-std.org/jtc1/sc22/wg20/docs/n610.pdf) standard used by Posix-based systems; primarily in that ISO 15897 uses a "_" separator whereas IETF and W3C use "-".
+
+Locale string are case insensitive but there are common conventions:
+
+* Language codes are lower-cased
+* Territory codes are upper-cased
+* Script names are capital-cased
+
+### Notes
+
+* A language code is an ISO3166 language code.
 * Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
-* Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-BR` is the locale referring to Brazilian Portugese.
+* Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portugese as used in Portugal.
 * In `Cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `Cldr.LanguageTag` struct.
 * The locales known to `Cldr` can be retrieved by `Cldr.known_locale_names/0` to get the locales known to this configuration of `Cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
 
@@ -278,7 +288,7 @@ Note that `Cldr` defines locale string according to the Unicode standard:
 
 Tests cover the full 523 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.5.x.  `Cldr` will not run on Elixir version before 1.5.
+Tests are run on Elixir 1.5.x.  `Cldr` will not run on Elixir versions before 1.5.
 
 ### Updating the CDLR data repository if installing from Github
 
