@@ -12,7 +12,7 @@ This is the changelog for Cldr v1.4.5 released on March 25, 2018.  For older cha
 
 * Fixed the the mix task generation of language tags for all locales
 
-* Fixed exception when cldr compiler is removing old module Beam files
+* Fixed exception when cldr compiler is trying to removing old module Beam files
 
 * Removed .erl generated files from the repo (they will be created at compile time)
 
