@@ -15,3 +15,6 @@ erl_crash.dump
 
 # Ignore the generated json files
 /data
+
+# Generated erlang source
+/src/*.erl

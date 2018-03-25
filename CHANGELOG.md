@@ -1,6 +1,6 @@
 # Changelog for Cldr v1.4.5
 
-This is the changelog for Cldr v1.4.5 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.4.5 released on March 25, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 
@@ -9,6 +9,12 @@ This is the changelog for Cldr v1.4.5 released on ____, 2018.  For older changel
 * Correct typos in README.  Thanks to @zacca
 
 * Fixed `Cldr.Map.deep_merge/2/3` to skip structs since their keys are atoms and they don't support Enumerable
+
+* Fixed the the mix task generation of language tags for all locales
+
+* Fixed exception when cldr compiler is removing old module Beam files
+
+* Removed .erl generated files from the repo (they will be created at compile time)
 
 # Changelog for Cldr v1.4.4
 
