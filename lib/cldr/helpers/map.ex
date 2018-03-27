@@ -32,7 +32,7 @@ defmodule Cldr.Map do
 
   # Don't deep map structs since they have atom keys anyway and they
   # also don't support enumerable
-  def deep_map(%{__struct__: _any} = map, _function) when is_map(map) do
+  def deep_map(%_struct{} = map, _function) when is_map(map) do
     map
   end
 
@@ -86,7 +86,7 @@ defmodule Cldr.Map do
 
   # Don't deep map structs since they have atom keys anyway and they
   # also don't support enumerable
-  def deep_map(%{__struct__: _any} = map, _key_function, _value_function) when is_map(map) do
+  def deep_map(%_struct{} = map, _key_function, _value_function) when is_map(map) do
     map
   end
 
