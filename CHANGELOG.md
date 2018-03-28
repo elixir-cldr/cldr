@@ -4,7 +4,7 @@ This is the changelog for Cldr v1.5.0 released on March 29th, 2018.  For older c
 
 ### Enhancements
 
-* Updated the use CLDR version 33 released by the [Unicode Consortium](http://cldr.unicode.org) on March 28th 2018.  This data release adds no new locales.  The release notes for CLDR are at http://cldr.unicode.org/index/downloads/cldr-33
+* Updated to use CLDR version 33 data released by the [Unicode Consortium](http://cldr.unicode.org) on March 28th 2018.  This data release adds no new locales.  The release notes for CLDR are at http://cldr.unicode.org/index/downloads/cldr-33
 
 # Changelog for Cldr v1.4.5
 
