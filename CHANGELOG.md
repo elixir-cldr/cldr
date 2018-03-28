@@ -1,6 +1,12 @@
-# Changelog for Cldr v1.4.5
+# Changelog for Cldr v1.5.0
 
-This is the changelog for Cldr v1.4.5 released on March 25, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v1.5.0 released on March 29th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Updated the use CLDR version 33 released by the [Unicode Consortium](http://cldr.unicode.org) on March 28th 2018.  This data release adds no new locales.  The release notes for CLDR are at http://cldr.unicode.org/index/downloads/cldr-33
+
+# Changelog for Cldr v1.4.5
 
 ### Bug Fixes
 
