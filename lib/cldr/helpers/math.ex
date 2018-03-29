@@ -110,7 +110,7 @@ defmodule Cldr.Math do
   def mod(number, modulus) when is_integer(number) and is_integer(modulus) do
     modulo =
       number
-      |> div(modulus)
+      |> Integer.floor_div(modulus)
       |> Kernel.*(modulus)
 
     number - modulo
