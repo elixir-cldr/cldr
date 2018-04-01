@@ -111,7 +111,6 @@ defmodule Cldr.Config do
     "languages"
   ]
 
-
   # Check that the :cldr compiler is the last in the compiler list
   # if it is configured
   if :cldr in Mix.Project.config()[:compilers] and
@@ -142,8 +141,13 @@ defmodule Cldr.Config do
     end
   )
 
+  @app_name Mix.Project.config[:app]
+  def app_name do
+    @app_name
+  end
+
   # Prefer Jason if its confiured over Poison
-  @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
+  @json_lib Application.get_env(@app_name, :json_library) || @jason || @poison
 
   unless Code.ensure_loaded?(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
     message =
@@ -184,7 +188,7 @@ defmodule Cldr.Config do
   @doc """
   Return the directory where `Cldr` stores its source core data,  This
   directory should not be expected to be available other than when developing
-  CLdr since it points to a source directory.
+  Cldr since it points to a source directory.
   """
   @cldr_relative_dir "/priv/cldr"
   def source_data_dir do
@@ -195,14 +199,14 @@ defmodule Cldr.Config do
   Returns the path of the CLDR data directory for the ex_cldr app
   """
   def cldr_data_dir do
-    [:code.priv_dir(:ex_cldr), "/cldr"] |> :erlang.iolist_to_binary()
+    [:code.priv_dir(app_name()), "/cldr"] |> :erlang.iolist_to_binary()
   end
 
   @doc """
   Return the path name of the CLDR data directory for a client application.
   """
   def client_data_dir do
-    Application.get_env(:ex_cldr, :data_dir, cldr_data_dir())
+    Application.get_env(app_name(), :data_dir, cldr_data_dir())
     |> Path.expand()
   end
 
@@ -243,7 +247,7 @@ defmodule Cldr.Config do
   """
   @spec gettext :: atom
   def gettext do
-    Application.get_env(:ex_cldr, :gettext)
+    Application.get_env(app_name(), :gettext)
   end
 
   @doc """
@@ -257,7 +261,7 @@ defmodule Cldr.Config do
   """
   @spec default_locale :: Locale.locale_name()
   def default_locale do
-    app_default = Application.get_env(:ex_cldr, :default_locale)
+    app_default = Application.get_env(app_name(), :default_locale)
 
     cond do
       app_default ->
@@ -369,7 +373,7 @@ defmodule Cldr.Config do
   @spec configured_locale_names :: [Locale.locale_name()]
   def configured_locale_names do
     locale_names =
-      case app_locale_names = Application.get_env(:ex_cldr, :locales) do
+      case app_locale_names = Application.get_env(app_name(), :locales) do
         :all -> all_locale_names()
         nil -> expand_locale_names([default_locale()])
         _ -> expand_locale_names(app_locale_names)
@@ -1107,7 +1111,7 @@ defmodule Cldr.Config do
 
   """
   def get_precompile_number_formats do
-    Application.get_env(:ex_cldr, :precompile_number_formats, [])
+    Application.get_env(app_name(), :precompile_number_formats, [])
   end
 
   # Extract number formats from short and long lists

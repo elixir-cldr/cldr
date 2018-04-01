@@ -128,7 +128,7 @@ defmodule Cldr.Install do
   # Returns the version of ex_cldr
   defp app_version do
     cond do
-      spec = Application.spec(:ex_cldr) ->
+      spec = Application.spec(Cldr.Config.app_name) ->
         Keyword.get(spec, :vsn) |> :erlang.list_to_binary()
 
       Code.ensure_loaded?(Cldr.Mixfile) ->
