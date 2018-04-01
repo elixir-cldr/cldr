@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.5.1
+
+This is the changelog for Cldr v1.5.1 released on April 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Replace all fixed references to the app name `:ex_cldr` and replace with a function `Cldr.Config.app_name/0` instead.  This function will also be used amongst dependencies that use the same configuration block like `ex_cldr_numbers` (and others).
+
 # Changelog for Cldr v1.5.0
 
 This is the changelog for Cldr v1.5.0 released on March 29th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
