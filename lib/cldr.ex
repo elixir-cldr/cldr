@@ -35,6 +35,7 @@ defmodule Cldr do
   alias Cldr.Locale
   alias Cldr.Install
   alias Cldr.LanguageTag
+  require Config
 
   # Ensure locales are all installed.  We do this once during
   # compilation of `Cldr` because this is the module we define
@@ -865,6 +866,8 @@ defmodule Cldr do
   ## Options
 
   * `currency` is any ISO 4217 currency code as returned by `Cldr.known_currencies/0`
+    or any valid private use ISO4217 code which is a three-letter alphabetic code that
+    starts with "X".
 
   ## Returns
 
@@ -879,6 +882,12 @@ defmodule Cldr do
 
       iex> Cldr.validate_currency "USD"
       {:ok, :USD}
+
+      iex> Cldr.validate_currency :XTC
+      {:ok, :XTC}
+
+      iex> Cldr.validate_currency "xtc"
+      {:ok, :XTC}
 
       iex> Cldr.validate_currency "invalid"
       {:error, {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}}
@@ -895,17 +904,40 @@ defmodule Cldr do
   end
 
   def validate_currency(currency) when is_atom(currency) do
-    {:error, unknown_currency_error(currency)}
+    currency
+    |> Atom.to_string
+    |> validate_currency
+    |> case do
+      {:error, _} -> {:error, unknown_currency_error(currency)}
+      ok -> ok
+    end
   end
 
-  def validate_currency(currency) when is_binary(currency) do
-    currency
-    |> String.upcase()
-    |> String.to_existing_atom()
-    |> validate_currency
+  def validate_currency(<< char_1 :: integer-size(8), char_2 :: integer-size(8), char_3 :: integer-size(8) >> = currency)
+      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and Config.is_alphabetic(char_3) and
+      char_1 in [?x, ?X] do
+    {:ok, String.to_atom(String.upcase(currency))}
+  end
+
+  def validate_currency(<< char_1 :: integer-size(8), char_2 :: integer-size(8), char_3 :: integer-size(8) >> = currency)
+      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and Config.is_alphabetic(char_3) do
+    currency_code =
+      currency
+      |> String.upcase()
+      |> String.to_existing_atom()
+
+    if currency_code in @known_currencies do
+      {:ok, currency_code}
+    else
+      {:error, unknown_currency_error(currency)}
+    end
   rescue
     ArgumentError ->
       {:error, unknown_currency_error(currency)}
+  end
+
+  def validate_currency(invalid_currency) do
+    {:error, unknown_currency_error(invalid_currency)}
   end
 
   @doc """

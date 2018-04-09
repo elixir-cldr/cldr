@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.5.2
+
+This is the changelog for Cldr v1.5.1 released on April 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* ISO4217 private use currency codes are now properly supported.  These are currency codes that are three upper case alphabetic ASCII characters with the first character being "X".
+
 # Changelog for Cldr v1.5.1
 
 This is the changelog for Cldr v1.5.1 released on April 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

@@ -111,6 +111,13 @@ defmodule Cldr.Config do
     "languages"
   ]
 
+
+  defmacro is_alphabetic(char) do
+    quote do
+      (unquote(char) in ?a..?z or unquote(char) in ?A..?Z)
+    end
+  end
+
   # Check that the :cldr compiler is the last in the compiler list
   # if it is configured
   if :cldr in Mix.Project.config()[:compilers] and
