@@ -2,7 +2,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   use ExUnit.Case
   use Plug.Test
 
-  import Plug.Conn, only: [put_req_header: 3, put_session: 3, fetch_session: 2]
+  import Plug.Conn, only: [put_req_header: 3, put_session: 3, fetch_session: 2, put_resp_cookie: 3, fetch_cookies: 1]
 
   test "init returns the default options" do
     opts = Cldr.Plug.SetLocale.init()
@@ -110,6 +110,36 @@ defmodule Cldr.Plug.SetLocale.Test do
       :get
       |> conn("/?locale=fr", json)
       |> Plug.Parsers.call(parser_opts)
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale] ==
+             %Cldr.LanguageTag{
+               extensions: %{},
+               gettext_locale_name: nil,
+               locale: %{},
+               private_use: [],
+               transform: %{},
+               variant: nil,
+               canonical_locale_name: "zh-Hant-TW",
+               cldr_locale_name: "zh-Hant",
+               language: "zh",
+               rbnf_locale_name: "zh-Hant",
+               requested_locale_name: "zh-Hant",
+               script: "Hant",
+               territory: "TW"
+             }
+
+    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+  end
+
+  test "set the locale from a cookie param" do
+    opts = Cldr.Plug.SetLocale.init(from: :cookie)
+
+    conn =
+      :get
+      |> conn("/?locale=fr")
+      |> fetch_cookies()
+      |> put_resp_cookie("locale", "zh-Hant")
       |> Cldr.Plug.SetLocale.call(opts)
 
     assert conn.private[:cldr_locale] ==
