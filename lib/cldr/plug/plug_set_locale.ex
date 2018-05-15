@@ -39,7 +39,7 @@ if Code.ensure_loaded?(Plug) do
 
         plug Cldr.Plug.SetLocale,
           apps:    [:cldr, :gettext],
-          from:    [:accept_language, :path, :query, :body],
+          from:    [:query, :path, :body, :cookie, :accept_language],
           param:   "locale",
           default: Cldr.default_locale,
           gettext: GetTextModule,
