@@ -228,7 +228,7 @@ defmodule Cldr.LanguageTag.Parser do
   defp canonicalize_key([key, valid, default], param) when is_function(valid) do
     case valid.(param) do
       {:ok, value} -> {key, value}
-      {:error, _} -> default
+      {:error, _} -> {key, default}
     end
   end
 
