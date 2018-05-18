@@ -261,8 +261,11 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
   * `url_params`
   * `query_params`
   * `body_params`
+  * 'cookies`
   * `accept-language` header
   * the `session`
+
+* See `Cldr.Plug.SetLocale` for a description of how to configure the plug.
 
 ## About Language Tags and Locale strings
 
