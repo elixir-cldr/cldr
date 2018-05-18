@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.6.0
+
+This is the changelog for Cldr v1.6.0 released on May 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Add support to retrieve the requested locale from a cookie in `Cldr.Plug.SetLocale`.  Thanks to @danschultzer.
+
 # Changelog for Cldr v1.5.2
 
 This is the changelog for Cldr v1.5.2 released on April 9th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
