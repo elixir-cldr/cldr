@@ -261,7 +261,7 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
   * `url_params`
   * `query_params`
   * `body_params`
-  * 'cookies`
+  * `cookies`
   * `accept-language` header
   * the `session`
 
