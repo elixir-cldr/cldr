@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "1.6.0"
+  @version "1.6.1"
 
   def project do
     [
@@ -47,7 +47,8 @@ defmodule Cldr.Mixfile do
       {:abnf2, "~> 0.1"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4.0", only: :test},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false},
+      # {:dialyxir, "~> 0.5", only: :dev, runtime: false},
+      {:dialyxir, git: "https://github.com/jeremyjh/dialyxir", runtime: false},
       {:phoenix, "~> 1.3", optional: true},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", optional: true}

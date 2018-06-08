@@ -2,7 +2,14 @@ defmodule Cldr.Plug.SetLocale.Test do
   use ExUnit.Case
   use Plug.Test
 
-  import Plug.Conn, only: [put_req_header: 3, put_session: 3, fetch_session: 2, put_resp_cookie: 3, fetch_cookies: 1]
+  import Plug.Conn,
+    only: [
+      put_req_header: 3,
+      put_session: 3,
+      fetch_session: 2,
+      put_resp_cookie: 3,
+      fetch_cookies: 1
+    ]
 
   test "init returns the default options" do
     opts = Cldr.Plug.SetLocale.init()

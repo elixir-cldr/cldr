@@ -58,9 +58,9 @@ defmodule Math.Power.Test do
   end
 
   test "A specific bug fix" do
-     a = Decimal.new "0.00001232"
-     b = Decimal.new "0.00001242"
-     x = Decimal.sub(a, b)
-     assert Decimal.cmp(Cldr.Math.power(x, 2), Decimal.new("0.00000000000001")) == :eq
+    a = Decimal.new("0.00001232")
+    b = Decimal.new("0.00001242")
+    x = Decimal.sub(a, b)
+    assert Decimal.cmp(Cldr.Math.power(x, 2), Decimal.new("0.00000000000001")) == :eq
   end
 end

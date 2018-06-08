@@ -130,7 +130,7 @@ defmodule Cldr do
   Set the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
@@ -307,7 +307,7 @@ defmodule Cldr do
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -330,7 +330,7 @@ defmodule Cldr do
   name is configured and available in Cldr and supports
   rules based number formats (RBNF).
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -352,7 +352,7 @@ defmodule Cldr do
   Returns a boolean indicating if the specified locale
   name is configured and available in Gettext.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -377,7 +377,7 @@ defmodule Cldr do
   This is helpful when building a list of `or` expressions
   to return the first known locale name from a list.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -404,7 +404,7 @@ defmodule Cldr do
   whether the locale name is configured in `Cldr`
   and has RBNF rules defined.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -431,7 +431,7 @@ defmodule Cldr do
   `false` based upon whether the locale name is configured in
   `GetText`.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
 
@@ -458,7 +458,7 @@ defmodule Cldr do
   mean the locale is configured for Cldr.  See also
   `Cldr.known_locale?/1`.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
@@ -484,7 +484,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a locale name.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
@@ -577,7 +577,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a gettext locale name.
 
-  ## Options
+  ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
@@ -631,7 +631,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a calendar name.
 
-  ## Options
+  ## Arguments
 
   * `calendar` is any calendar name returned by `Cldr.known_calendars/0`
 
@@ -677,7 +677,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an invalid calendar.
 
-  ## Options
+  ## Arguments
 
     * `calendar` is any calendar name **not** returned by `Cldr.known_calendars/0`
 
@@ -739,7 +739,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a territory code.
 
-  ## Options
+  ## Arguments
 
   * `territory` is any territory code returned by `Cldr.known_territories/0`
 
@@ -803,7 +803,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown territory.
 
-  ## Options
+  ## Arguments
 
   * `territory` is any territory code **not** returned by `Cldr.known_territories/0`
 
@@ -863,7 +863,7 @@ defmodule Cldr do
   @doc """
   Normalize and validate a currency code.
 
-  ## Options
+  ## Arguments
 
   * `currency` is any ISO 4217 currency code as returned by `Cldr.known_currencies/0`
     or any valid private use ISO4217 code which is a three-letter alphabetic code that
@@ -905,7 +905,7 @@ defmodule Cldr do
 
   def validate_currency(currency) when is_atom(currency) do
     currency
-    |> Atom.to_string
+    |> Atom.to_string()
     |> validate_currency
     |> case do
       {:error, _} -> {:error, unknown_currency_error(currency)}
@@ -913,14 +913,19 @@ defmodule Cldr do
     end
   end
 
-  def validate_currency(<< char_1 :: integer-size(8), char_2 :: integer-size(8), char_3 :: integer-size(8) >> = currency)
-      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and Config.is_alphabetic(char_3) and
-      char_1 in [?x, ?X] do
+  def validate_currency(
+        <<char_1::integer-size(8), char_2::integer-size(8), char_3::integer-size(8)>> = currency
+      )
+      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and
+             Config.is_alphabetic(char_3) and char_1 in [?x, ?X] do
     {:ok, String.to_atom(String.upcase(currency))}
   end
 
-  def validate_currency(<< char_1 :: integer-size(8), char_2 :: integer-size(8), char_3 :: integer-size(8) >> = currency)
-      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and Config.is_alphabetic(char_3) do
+  def validate_currency(
+        <<char_1::integer-size(8), char_2::integer-size(8), char_3::integer-size(8)>> = currency
+      )
+      when Config.is_alphabetic(char_1) and Config.is_alphabetic(char_2) and
+             Config.is_alphabetic(char_3) do
     currency_code =
       currency
       |> String.upcase()
@@ -943,7 +948,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an invalid currency.
 
-  ## Options
+  ## Arguments
 
   * `currency` is any currency code **not** returned by `Cldr.known_currencies/0`
 
@@ -987,7 +992,7 @@ defmodule Cldr do
   @doc """
   Normalize and validate a number system name.
 
-  ## Options
+  ## Arguments
 
   * `number_system` is any number system name returned by
     `Cldr.known_number_systems/0`
@@ -1013,7 +1018,7 @@ defmodule Cldr do
       }
 
   """
-  @spec validate_number_system(String.t() | any()) ::
+  @spec validate_number_system(atom() | binary()) ::
           {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system(number_system)
@@ -1038,7 +1043,7 @@ defmodule Cldr do
   @doc """
   Returns an error tuple for an unknown number system.
 
-  ## Options
+  ## Arguments
 
   * `number_system` is any number system name **not** returned by `Cldr.known_number_systems/0`
 
@@ -1081,7 +1086,7 @@ defmodule Cldr do
   @doc """
   Normalise and validate a number system type.
 
-  ## Options
+  ## Arguments
 
   * `number_system_type` is any number system type returned by
     `Cldr.known_number_system_types/0`
@@ -1107,7 +1112,7 @@ defmodule Cldr do
       }
 
   """
-  @spec validate_number_system_type(String.t() | any()) ::
+  @spec validate_number_system_type(String.t() | atom()) ::
           {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system_type(number_system_type)

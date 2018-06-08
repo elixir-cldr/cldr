@@ -87,11 +87,11 @@ defmodule Cldr.Install do
         output_file_name
         |> File.write!(:erlang.list_to_binary(body))
 
-        Logger.info("Downloaded locale #{inspect(locale_name)}")
+        Logger.bare_log(:info, "Downloaded locale #{inspect(locale_name)}")
         {:ok, output_file_name}
 
       {_, {{_version, code, message}, _headers, _body}} ->
-        Logger.error(
+        Logger.bare_log(:error,
           "Failed to download locale #{inspect(locale_name)} from #{url}. " <>
             "HTTP Error: (#{code}) #{inspect(message)}"
         )
@@ -99,7 +99,7 @@ defmodule Cldr.Install do
         {:error, code}
 
       {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
-        Logger.error(
+        Logger.bare_log(:error,
           "Failed to connect to #{inspect(host)} to download " <>
             "locale #{inspect(locale_name)}. Reason: #{inspect(sys_message)}"
         )
@@ -128,7 +128,7 @@ defmodule Cldr.Install do
   # Returns the version of ex_cldr
   defp app_version do
     cond do
-      spec = Application.spec(Cldr.Config.app_name) ->
+      spec = Application.spec(Cldr.Config.app_name()) ->
         Keyword.get(spec, :vsn) |> :erlang.list_to_binary()
 
       Code.ensure_loaded?(Cldr.Mixfile) ->

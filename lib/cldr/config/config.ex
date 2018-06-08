@@ -111,10 +111,9 @@ defmodule Cldr.Config do
     "languages"
   ]
 
-
   defmacro is_alphabetic(char) do
     quote do
-      (unquote(char) in ?a..?z or unquote(char) in ?A..?Z)
+      unquote(char) in ?a..?z or unquote(char) in ?A..?Z
     end
   end
 
@@ -148,7 +147,7 @@ defmodule Cldr.Config do
     end
   )
 
-  @app_name Mix.Project.config[:app]
+  @app_name Mix.Project.config()[:app]
   def app_name do
     @app_name
   end
@@ -160,17 +159,17 @@ defmodule Cldr.Config do
     message =
       if is_nil(@json_lib) do
         """
-        A json library has not been configured.  Please configure one in
-        your `mix.exs` file.  Two common packages are Poison and Jason.
-        For example in your `mix.exs`:
+         A json library has not been configured.  Please configure one in
+         your `mix.exs` file.  Two common packages are Poison and Jason.
+         For example in your `mix.exs`:
 
-          def deps() do
-            [
-              {:jason, "~> 1.0"},
-              ...
-            ]
-          end
-      	"""
+           def deps() do
+             [
+               {:jason, "~> 1.0"},
+               ...
+             ]
+           end
+        """
       else
         """
         The json library #{inspect(@json_lib)} is either

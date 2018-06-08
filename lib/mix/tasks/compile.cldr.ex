@@ -216,11 +216,13 @@ defmodule Mix.Tasks.Compile.Cldr do
     :code.purge(module)
     :code.delete(module)
     beam_file = build_dir <> "/Elixir." <> inspect(module) <> ".beam"
+
     case File.rm(beam_file) do
       :ok -> :ok
       {:error, :enoent} -> :ok
-      error -> raise "Cldr compiler could not delete #{beam_file}: #{inspect error}"
+      error -> raise "Cldr compiler could not delete #{beam_file}: #{inspect(error)}"
     end
+
     purge_modules(modules, build_dir)
   end
 

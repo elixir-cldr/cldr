@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.6.1
+
+This is the changelog for Cldr v1.6.1 released on June 8th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Use `Logger.bare_log/3` instead of the logger macros when installing locales.  This is because the installation occurs at compile time and its possible that the log level configured is resolved in Distillery at a later stage.  Thanks to @erikreedstrom.  Closes #62.
+
 # Changelog for Cldr v1.6.0
 
 This is the changelog for Cldr v1.6.0 released on May 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

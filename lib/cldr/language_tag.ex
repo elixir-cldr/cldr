@@ -197,7 +197,7 @@ defmodule Cldr.LanguageTag do
   * `{:error, reason}`
 
   """
-  @spec parse(Locale.local_name()) ::
+  @spec parse(Cldr.Locale.locale_name()) ::
           {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
   def parse(locale_name) when is_binary(locale_name) do
     Parser.parse(locale_name)
@@ -215,7 +215,7 @@ defmodule Cldr.LanguageTag do
   * raises and exception
 
   """
-  @spec parse(Locale.local_name()) :: LanguageTag.t() | none()
+  @spec parse(Cldr.Locale.locale_name()) :: t() | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
   end
