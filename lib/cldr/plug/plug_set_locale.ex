@@ -90,7 +90,7 @@ if Code.ensure_loaded?(Plug) do
     def call(conn, options) do
       if locale = locale_from_params(conn, options[:from], options) || options[:default] do
         Enum.each(options[:apps], fn app ->
-          set_locale(app, locale, options)
+          put_locale(app, locale, options)
         end)
       end
 
@@ -175,8 +175,8 @@ if Code.ensure_loaded?(Plug) do
       {:halt, locale}
     end
 
-    defp set_locale(:cldr, locale, _options) do
-      Cldr.set_current_locale(locale)
+    defp put_locale(:cldr, locale, _options) do
+      Cldr.put_current_locale(locale)
     end
 
     defp set_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do

@@ -222,23 +222,23 @@ defmodule Cldr.Locale do
 
   """
 
-  @known_locale_names Cldr.Config.known_locale_names()
-  def canonical_language_tag(locale_name)
-      when is_binary(locale_name) and locale_name in @known_locale_names do
-    Cldr.validate_locale(locale_name)
-  end
+  def canonical_language_tag(locale_name, backend \\ Cldr.Config.default_backend)
+  def canonical_language_tag(locale_name, backend)
+      when is_binary(locale_name)  do
+    if locale_name in Cldr.Config.known_locale_names(backend) do
+      Cldr.validate_locale(locale_name, backend)
+    else
+      case LanguageTag.parse(locale_name) do
+        {:ok, language_tag} ->
+          canonical_language_tag(language_tag)
 
-  def canonical_language_tag(locale_name) when is_binary(locale_name) do
-    case LanguageTag.parse(locale_name) do
-      {:ok, language_tag} ->
-        canonical_language_tag(language_tag)
-
-      {:error, reason} ->
-        {:error, reason}
+        {:error, reason} ->
+          {:error, reason}
+      end
     end
   end
 
-  def canonical_language_tag(%LanguageTag{} = language_tag) do
+  def canonical_language_tag(%LanguageTag{} = language_tag, _backend) do
     supress_requested_locale_substitution? = !language_tag.language
 
     canonical_tag =

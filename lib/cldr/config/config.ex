@@ -217,8 +217,9 @@ defmodule Cldr.Config do
   @doc """
   Return the path name of the CLDR data directory for a client application.
   """
+  @default_client_data_dir Path.join(".", @cldr_relative_dir)
   def client_data_dir do
-    Application.get_env(app_name(), :data_dir, cldr_data_dir())
+    Application.get_env(app_name(), :data_dir, @default_client_data_dir)
     |> Path.expand()
   end
 
@@ -263,6 +264,13 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the default backend module
+  """
+  def default_backend do
+    Application.get_env(app_name(), :default_backend)
+  end
+
+  @doc """
   Return the default locale.
 
   In order of priority return either:
@@ -271,13 +279,14 @@ defmodule Cldr.Config do
   * The `Gettext.get_locale/1` for the current configuration
   * "en"
   """
-  @spec default_locale :: Locale.locale_name()
-  def default_locale do
-    app_default = Application.get_env(app_name(), :default_locale)
-
+  @spec default_locale(Cldr.backend) :: Locale.locale_name()
+  def default_locale(backend \\ default_backend()) do
     cond do
-      app_default ->
-        app_default
+      backend_default = backend.default_locale ->
+        backend_default
+
+      cldr_default = Application.get_env(app_name(), :default_locale) ->
+        cldr_default
 
       gettext_configured?() ->
         Gettext

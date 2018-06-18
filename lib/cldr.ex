@@ -30,53 +30,21 @@ defmodule Cldr do
     hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
 
   """
+
   @external_resource "priv/cldr/language_tags.ebin"
+  @type backend :: module()
 
   alias Cldr.Config
   alias Cldr.Locale
-  alias Cldr.Install
   alias Cldr.LanguageTag
   require Config
 
-  # Ensure locales are all installed.  We do this once during
-  # compilation of `Cldr` because this is the module we define
-  # as the root of the dependency tree.
-  Install.install_known_locale_names()
-
-  if Enum.any?(Config.unknown_locale_names()) do
-    raise Cldr.UnknownLocaleError,
-          "Some locale names are configured that are not known to CLDR. " <>
-            "Compilation cannot continue until the configuration includes only " <>
-            "locales names known in CLDR.\n\n" <>
-            "Configured locales names: #{inspect(Config.requested_locale_names())}\n" <>
-            "Gettext locales names:    #{inspect(Config.gettext_locales())}\n" <>
-            "Unknown locales names:    " <>
-            "#{IO.ANSI.red()}#{inspect(Config.unknown_locale_names())}" <>
-            "#{IO.ANSI.default_color()}\n"
-  end
-
-  @warn_if_greater_than 100
-  @known_locale_count Enum.count(Config.known_locale_names())
-  @locale_string if @known_locale_count > 1, do: "locales named ", else: "locale named "
-  IO.puts(
-    "Generating Cldr for #{@known_locale_count} " <>
-      @locale_string <>
-      "#{inspect(Config.known_locale_names(), limit: 5)} with " <>
-      "a default locale named #{inspect(Config.default_locale())}"
-  )
-
-  if @known_locale_count > @warn_if_greater_than do
-    IO.puts("Please be patient, generating functions for many locales " <> "can take some time")
-  end
-
-  @doc """
-  Returns the directory path name where the CLDR json data
-  is kept.
-  """
-  @data_dir Config.client_data_dir()
-  @spec data_dir :: String.t()
-  def data_dir do
-    @data_dir
+  @doc false
+  defmacro __using__(opts) do
+    quote do
+      @cldr_opts unquote(opts)
+      @before_compile Cldr.Compiler
+    end
   end
 
   @doc """
@@ -168,21 +136,21 @@ defmodule Cldr do
         "Invalid language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
 
   """
-  @spec set_current_locale(Locale.locale_name() | LanguageTag.t()) ::
+  @spec put_current_locale(Locale.locale_name() | LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
 
-  def set_current_locale(locale_name) when is_binary(locale_name) do
+  def put_current_locale(locale_name) when is_binary(locale_name) do
     case Cldr.Locale.canonical_language_tag(locale_name) do
-      {:ok, language_tag} -> set_current_locale(language_tag)
+      {:ok, language_tag} -> put_current_locale(language_tag)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def set_current_locale(%LanguageTag{cldr_locale_name: nil} = language_tag) do
+  def put_current_locale(%LanguageTag{cldr_locale_name: nil} = language_tag) do
     {:error, Cldr.Locale.locale_error(language_tag)}
   end
 
-  def set_current_locale(%LanguageTag{} = language_tag) do
+  def put_current_locale(%LanguageTag{} = language_tag) do
     Process.put(:cldr, language_tag)
     {:ok, language_tag}
   end
@@ -211,10 +179,9 @@ defmodule Cldr do
       }
 
   """
-  @default_locale Config.default_locale() |> Cldr.Config.language_tag()
   @spec default_locale :: LanguageTag.t()
-  def default_locale do
-    @default_locale
+  def default_locale(backend \\ Cldr.Config.default_backend) do
+    Config.default_locale(backend) |> Cldr.Config.language_tag()
   end
 
   @doc """
@@ -227,14 +194,76 @@ defmodule Cldr do
       :"001"
 
   """
-  @default_territory @default_locale
-                     |> Map.get(:territory)
-                     |> String.to_atom()
-
   @spec default_territory :: atom()
-  def default_territory do
-    @default_territory
+  def default_territory(backend \\ Cldr.Config.default_backend) do
+    default_locale(backend)
+    |> Map.get(:territory)
+    |> String.to_atom()
   end
+
+  @doc """
+  Normalise and validate a locale name.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  ## Returns
+
+  * `{:ok, language_tag}`
+
+  * `{:error, reason}`
+
+  ## Examples
+
+      iex> Cldr.validate_locale "en"
+      {:ok,
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-US",
+        cldr_locale_name: "en",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en",
+        script: "Latn",
+        territory: "US",
+        transform: %{},
+        variant: nil
+      }}
+
+
+      iex> Cldr.validate_locale Cldr.default_locale
+      {:ok,
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{},
+        variant: nil
+      }}
+
+      iex> Cldr.validate_locale "zzz"
+      {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+
+  """
+  @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
+          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+  def validate_locale(locale, backend \\ Cldr.Config.default_backend) do
+    backend.validate_locale(locale)
+  end
+
 
   @doc """
   Returns a list of all the locale names defined in
@@ -261,10 +290,9 @@ defmodule Cldr do
 
   See also `known_locales/0` and `all_locales/0`
   """
-  @requested_locale_names Config.requested_locale_names()
-  @spec requested_locale_names :: [Locale.locale_name(), ...] | []
-  def requested_locale_names do
-    @requested_locale_names
+  @spec requested_locale_names(backend) :: [Locale.locale_name(), ...] | []
+  def requested_locale_names(backend \\ Config.default_backend) do
+    Config.requested_locale_names(backend)
   end
 
   @doc """
@@ -276,10 +304,9 @@ defmodule Cldr do
   directly in the `config.exs` file or
   in `Gettext`.
   """
-  @known_locale_names Config.known_locale_names()
-  @spec known_locale_names :: [Locale.locale_name(), ...] | []
-  def known_locale_names do
-    @known_locale_names
+  @spec known_locale_names(backend) :: [Locale.locale_name(), ...] | []
+  def known_locale_names(backend \\ Config.default_backend) do
+    Config.known_locale_names(backend)
   end
 
   @doc """
@@ -290,20 +317,18 @@ defmodule Cldr do
   any unknown locales this function should always
   return an empty list.
   """
-  @unknown_locale_names Config.unknown_locale_names()
-  @spec unknown_locale_names :: [Locale.locale_name(), ...] | []
-  def unknown_locale_names do
-    @unknown_locale_names
+  @spec unknown_locale_names(backend) :: [Locale.locale_name(), ...] | []
+  def unknown_locale_names(backend \\ Config.default_backend) do
+    Config.unknown_locale_names(backend)
   end
 
   @doc """
   Returns a list of locale names which have rules based number
   formats (RBNF).
   """
-  @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names()
-  @spec known_rbnf_locale_names :: [Locale.locale_name(), ...] | []
-  def known_rbnf_locale_names do
-    @known_rbnf_locale_names
+  @spec known_rbnf_locale_names(backend) :: [Locale.locale_name(), ...] | []
+  def known_rbnf_locale_names(backend \\ Config.default_backend) do
+    Cldr.Config.known_rbnf_locale_names(backend)
   end
 
   @doc """
@@ -311,9 +336,9 @@ defmodule Cldr do
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
   """
-  @spec known_gettext_locale_names :: [Locale.locale_name(), ...] | []
-  def known_gettext_locale_names do
-    Config.gettext_locales()
+  @spec known_gettext_locale_names(backend) :: [Locale.locale_name(), ...] | []
+  def known_gettext_locale_names(backend \\ Config.default_backend) do
+    Config.gettext_locales(backend)
   end
 
   @doc """
@@ -333,9 +358,9 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale_name?(Locale.locale_name()) :: boolean
-  def known_locale_name?(locale_name) when is_binary(locale_name) do
-    locale_name in known_locale_names()
+  @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
+  def known_locale_name?(locale_name, backend \\ Config.default_backend) when is_binary(locale_name) do
+    locale_name in known_locale_names(backend)
   end
 
   @doc """
@@ -495,6 +520,7 @@ defmodule Cldr do
   end
 
   @doc """
+<<<<<<< 5e718fa53bfc5133338ebdb516247342b060ee29
   Normalise and validate a locale name.
 
   ## Arguments
@@ -602,7 +628,6 @@ defmodule Cldr do
   * `{:error, reason}`
 
   ## Examples
-
 
   """
   def validate_gettext_locale(locale_name) when is_binary(locale_name) do
@@ -994,10 +1019,9 @@ defmodule Cldr do
        :tirh, :vaii, :wara]
 
   """
-  @known_number_systems Cldr.Config.known_number_systems()
   @spec known_number_systems :: [atom(), ...] | []
-  def known_number_systems do
-    @known_number_systems
+  def known_number_systems(backend \\ Config.default_backend) do
+    Cldr.Config.known_number_systems(backend)
   end
 
   @doc """
@@ -1029,26 +1053,27 @@ defmodule Cldr do
       }
 
   """
+
   @spec validate_number_system(atom() | String.t()) ::
           {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
-  def validate_number_system(number_system)
-      when is_atom(number_system) and number_system in @known_number_systems do
-    {:ok, number_system}
+  def validate_number_system(number_system, backend \\ Config.default_backend)
+  def validate_number_system(number_system, backend) when is_atom(number_system) do
+    if number_system in Config.known_number_systems(backend) do
+      {:ok, number_system}
+    else
+      {:error, unknown_number_system_error(number_system)}
+    end
   end
 
-  def validate_number_system(number_system) when is_binary(number_system) do
+  def validate_number_system(number_system, backend) when is_binary(number_system) do
     number_system
     |> String.downcase()
     |> String.to_existing_atom()
-    |> validate_number_system
+    |> validate_number_system(backend)
   rescue
     ArgumentError ->
       {:error, unknown_number_system_error(number_system)}
-  end
-
-  def validate_number_system(number_system) do
-    {:error, unknown_number_system_error(number_system)}
   end
 
   @doc """
@@ -1089,9 +1114,8 @@ defmodule Cldr do
       [:default, :finance, :native, :traditional]
 
   """
-  @known_number_system_types Cldr.Config.known_number_system_types()
-  def known_number_system_types do
-    @known_number_system_types
+  def known_number_system_types(backend \\ Config.default_backend) do
+    Cldr.Config.known_number_system_types(backend)
   end
 
   @doc """
@@ -1126,23 +1150,23 @@ defmodule Cldr do
   @spec validate_number_system_type(String.t() | atom()) ::
           {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
-  def validate_number_system_type(number_system_type)
-      when is_atom(number_system_type) and number_system_type in @known_number_system_types do
-    {:ok, number_system_type}
+  def validate_number_system_type(number_system_type, backend \\ Config.default_backend)
+  def validate_number_system_type(number_system_type, backend) when is_atom(number_system_type) do
+    if number_system_type in known_number_system_types(backend) do
+      {:ok, number_system_type}
+    else
+      {:error, unknown_number_system_type_error(number_system_type)}
+    end
   end
 
-  def validate_number_system_type(number_system_type) when is_binary(number_system_type) do
+  def validate_number_system_type(number_system_type, backend) when is_binary(number_system_type) do
     number_system_type
     |> String.downcase()
     |> String.to_existing_atom()
-    |> validate_number_system_type
+    |> validate_number_system_type(backend)
   rescue
     ArgumentError ->
       {:error, unknown_number_system_type_error(number_system_type)}
-  end
-
-  def validate_number_system_type(number_system_type) do
-    {:error, unknown_number_system_type_error(number_system_type)}
   end
 
   @doc """

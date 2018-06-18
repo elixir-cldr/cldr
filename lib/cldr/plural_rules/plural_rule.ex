@@ -41,12 +41,6 @@ defmodule Cldr.Number.PluralRule do
         @rules_locales
       end
 
-      @known_locale_names @rules_locales
-                          |> MapSet.new()
-                          |> MapSet.intersection(MapSet.new(Cldr.known_locale_names()))
-                          |> MapSet.to_list()
-                          |> Enum.sort()
-
       @doc """
       The configured locales for which plural rules are defined.
 
@@ -58,8 +52,12 @@ defmodule Cldr.Number.PluralRule do
       locales and those that have rules.
       """
       @spec known_locale_names :: [Locale.locale_name(), ...]
-      def known_locale_names do
-        @known_locale_names
+      def known_locale_names(backend \\ Cldr.Config.default_backend) do
+        @rules_locales
+        |> MapSet.new()
+        |> MapSet.intersection(MapSet.new(Cldr.known_locale_names(backend)))
+        |> MapSet.to_list()
+        |> Enum.sort()
       end
 
       @doc """
