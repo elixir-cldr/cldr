@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.6.2
+
+This is the changelog for Cldr v1.6.1 released on June 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Cldr data files are always located in `Cldr.Config.cldr_data_dir/0`; some functions were incorrectly using `Cldr.Config.client_data_dir/0` which should only be used to located user configured data like locales.
+
 # Changelog for Cldr v1.6.1
 
 This is the changelog for Cldr v1.6.1 released on June 8th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
