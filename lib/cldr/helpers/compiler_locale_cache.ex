@@ -37,15 +37,6 @@ defmodule Cldr.Locale.Cache do
     {:reply, locale, state}
   end
 
-  def handle_call(request, from, state) do
-    # Call the default implementation from GenServer
-    super(request, from, state)
-  end
-
-  def handle_cast(request, state) do
-    super(request, state)
-  end
-
   def terminate(_, _) do
     IO.inspect(:terminating)
   end

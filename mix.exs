@@ -43,7 +43,7 @@ defmodule Cldr.Mixfile do
       {:poison, "~> 2.1 or ~> 3.0", optional: true},
       {:jason, "~> 1.0", optional: true},
       {:decimal, "~> 1.4"},
-      {:ex_doc, "~> 0.18", only: [:dev, :docs]},
+      {:ex_doc, "~> 0.18 or ~> 0.19.0-rc", only: [:dev, :docs]},
       {:abnf2, "~> 0.1"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4.0", only: :test},
