@@ -1,5 +1,5 @@
 %{
-  "abnf2": {:hex, :abnf2, "0.1.2", "6f8792b8ac3288dba5fc889c2bceae9fe78f74e1a7b36bea9726ffaa9d7bef95", [:mix], [], "hexpm"},
+  "abnf2": {:hex, :abnf2, "0.1.4", "9a424cfe94556c0e3e58b02326c39383b170dde4777913fcbdbdfcd2f1b0a97f", [:mix], [], "hexpm"},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], [], "hexpm"},
   "certifi": {:hex, :certifi, "2.0.0", "a0c0e475107135f76b8c1d5bc7efb33cd3815cb3cf3dea7aefdd174dabead064", [:rebar3], []},
   "decimal": {:hex, :decimal, "1.5.0", "b0433a36d0e2430e3d50291b1c65f53c37d56f83665b43d79963684865beab68", [:mix], [], "hexpm"},
