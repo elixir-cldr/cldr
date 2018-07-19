@@ -227,7 +227,7 @@ defmodule Cldr.Config do
   Returns the version string of the CLDR data repository
   """
   def version do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("version.json")
     |> File.read!()
     |> json_library().decode!
@@ -500,7 +500,7 @@ defmodule Cldr.Config do
 
   """
   def known_currencies do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("currencies.json")
     |> File.read!()
     |> json_library().decode!
@@ -731,7 +731,7 @@ defmodule Cldr.Config do
   Returns a map of territory containments
   """
   def territory_containment do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("territory_containment.json")
     |> File.read!()
     |> json_library().decode!
@@ -791,7 +791,7 @@ defmodule Cldr.Config do
 
   """
   def territory_info do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("territory_info.json")
     |> File.read!()
     |> json_library().decode!
@@ -939,7 +939,7 @@ defmodule Cldr.Config do
   scripts and regions
   """
   def aliases do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("aliases.json")
     |> File.read!()
     |> json_library().decode!
@@ -965,7 +965,7 @@ defmodule Cldr.Config do
   the likely subtags for that locale string
   """
   def likely_subtags do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("likely_subtags.json")
     |> File.read!()
     |> json_library().decode!
@@ -978,7 +978,7 @@ defmodule Cldr.Config do
   calendar weeks, weekends and years
   """
   def week_info do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("week_data.json")
     |> File.read!()
     |> json_library().decode!
@@ -1019,7 +1019,7 @@ defmodule Cldr.Config do
 
   """
   def day_period_info do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("day_periods.json")
     |> File.read!()
     |> json_library().decode!
@@ -1036,7 +1036,7 @@ defmodule Cldr.Config do
 
   """
   def calendar_info do
-    client_data_dir()
+    cldr_data_dir()
     |> Path.join("calendar_data.json")
     |> File.read!()
     |> json_library().decode!
