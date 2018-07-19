@@ -83,7 +83,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def compile_cldr_files do
-    deps = Mix.Dep.loaded(env: Mix.env())
+    deps = loaded(env: Mix.env())
 
     apps_to_compile =
       deps
@@ -92,7 +92,7 @@ defmodule Mix.Tasks.Compile.Cldr do
       |> print_console_note
 
     compile_results =
-      deps_in_order(deps, apps_to_compile, %{}, fn {app, modules} ->
+      deps_in_order(deps, apps_to_compile, fn {_dep, app, modules} ->
         build_dir = build_dir(app)
         sources = sources(modules)
 
@@ -134,6 +134,8 @@ defmodule Mix.Tasks.Compile.Cldr do
     apps_to_compile
   end
 
+  def deps_in_order(deps, apps, already_done \\ %{}, fun)
+
   def deps_in_order([], _apps, acc, _fun) do
     acc
   end
@@ -144,7 +146,7 @@ defmodule Mix.Tasks.Compile.Cldr do
       app = dep.app
 
       if app in Map.keys(apps) && app not in Map.keys(acc) do
-        Map.put(acc, app, fun.({app, Map.get(apps, app)}))
+        Map.put(acc, app, fun.({dep, app, Map.get(apps, app)}))
       else
         acc
       end
@@ -227,11 +229,32 @@ defmodule Mix.Tasks.Compile.Cldr do
   end
 
   def build_dir(dep) do
-    Mix.Dep.loaded_by_name([dep], [])
-    |> hd
+    loaded_by_name([dep], [])
     |> Map.get(:opts)
     |> Keyword.get(:build)
     |> String.replace_suffix("", "/ebin")
+  end
+
+  def loaded(opts) do
+    Mix.Dep.Converger.converge(nil, nil, opts, &{&1, &2, &3}) |> elem(0)
+  end
+
+  defp loaded_by_name(given, all_deps \\ nil, opts) do
+    all_deps = all_deps || loaded(opts)
+    apps = Cldr.Map.atomize_keys(given)
+    deps = get_deps(all_deps, apps)
+
+    Enum.each(apps, fn app ->
+      unless Enum.any?(all_deps, &(&1.app == app)) do
+        Mix.raise("Unknown dependency #{app} for environment #{Mix.env()}")
+      end
+    end)
+
+    hd(deps)
+  end
+
+  defp get_deps(all_deps, apps) do
+    Enum.filter(all_deps, &(&1.app in apps))
   end
 
   def sources([]) do
