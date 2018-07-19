@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.6.4
+
+This is the changelog for Cldr v1.6.4 released on July 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Removes `src/*.erl` files from the package to ensure that they are generated on the correct erlang version
+
 # Changelog for Cldr v1.6.3
 
 This is the changelog for Cldr v1.6.3 released on July 19th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "1.6.3"
+  @version "1.6.4"
 
   def project do
     [
@@ -62,7 +62,8 @@ defmodule Cldr.Mixfile do
       links: links(),
       files: [
         "lib",
-        "src",
+        "src/plural_rules_lexer.xrl",
+        "src/plural_rules_parser.yrl",
         "config",
         "mix.exs",
         "README*",
