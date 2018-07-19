@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.6.2
+
+This is the changelog for Cldr v1.6.2 released on July 19th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fixes `Cldr.Compiler` to support Elixir 1.7.  Closes #69.
+
 # Changelog for Cldr v1.6.1
 
 This is the changelog for Cldr v1.6.1 released on June 8th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
