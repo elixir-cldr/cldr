@@ -19,7 +19,10 @@ defmodule Cldr.Mixfile do
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      dialyzer: [ignore_warnings: ".dialyzer_ignore_warnings"],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore_warnings",
+        plt_add_apps: ~w(gettext inets jason mix poison plug)a
+      ],
       compilers: Mix.compilers()
     ]
   end

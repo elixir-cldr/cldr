@@ -13,7 +13,7 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.Locale
 
   @doc """
-  Parse a locale name into a `Cldr.LanguageTag.t`
+  Parse a locale name into a `t:Cldr.LanguageTag.t/0`
 
   * `locale_name` is a string representation of a language tag
     as defined by RFC5646
@@ -50,7 +50,7 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   @doc """
-  Parse a locale name into a `Cldr.LanguageTag.t`
+  Parse a locale name into a `t:Cldr.LanguageTag.t/0`
 
   * `locale_name` is a string representation of a language tag
     as defined by RFC5646

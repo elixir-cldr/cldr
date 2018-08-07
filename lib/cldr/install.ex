@@ -91,7 +91,8 @@ defmodule Cldr.Install do
         {:ok, output_file_name}
 
       {_, {{_version, code, message}, _headers, _body}} ->
-        Logger.bare_log(:error,
+        Logger.bare_log(
+          :error,
           "Failed to download locale #{inspect(locale_name)} from #{url}. " <>
             "HTTP Error: (#{code}) #{inspect(message)}"
         )
@@ -99,7 +100,8 @@ defmodule Cldr.Install do
         {:error, code}
 
       {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
-        Logger.bare_log(:error,
+        Logger.bare_log(
+          :error,
           "Failed to connect to #{inspect(host)} to download " <>
             "locale #{inspect(locale_name)}. Reason: #{inspect(sys_message)}"
         )

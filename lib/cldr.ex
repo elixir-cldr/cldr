@@ -538,8 +538,6 @@ defmodule Cldr do
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
-  @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
-          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
 
   # Precompile the known locales.  In benchmarking this
   # is 20x faster.
@@ -896,8 +894,6 @@ defmodule Cldr do
       {:error, {Cldr.UnknownCurrencyError, "The currency :invalid is invalid"}}
 
   """
-  @spec validate_currency(atom() | String.t()) ::
-          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_currency(currency) when is_atom(currency) and currency in @known_currencies do
     {:ok, currency}
@@ -962,7 +958,6 @@ defmodule Cldr do
       {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}
 
   """
-  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t()}
   def unknown_currency_error(currency) do
     {Cldr.UnknownCurrencyError, "The currency #{inspect(currency)} is invalid"}
   end
@@ -1018,8 +1013,8 @@ defmodule Cldr do
       }
 
   """
-  @spec validate_number_system(atom() | binary()) ::
-          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+  @spec validate_number_system(atom() | String.t()) ::
+          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system(number_system)
       when is_atom(number_system) and number_system in @known_number_systems do
@@ -1113,7 +1108,7 @@ defmodule Cldr do
 
   """
   @spec validate_number_system_type(String.t() | atom()) ::
-          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system_type(number_system_type)
       when is_atom(number_system_type) and number_system_type in @known_number_system_types do

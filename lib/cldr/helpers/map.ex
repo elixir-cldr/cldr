@@ -9,7 +9,7 @@ defmodule Cldr.Map do
 
   ## Arguments
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   * `function` is a function or function reference that
     is called for each key/value pair of the provided map
@@ -28,7 +28,7 @@ defmodule Cldr.Map do
     %{a: "A", b: %{c: "C"}}
 
   """
-  @spec deep_map(Map.t(), function :: function()) :: Map.t()
+  @spec deep_map(map(), function :: function()) :: map()
 
   # Don't deep map structs since they have atom keys anyway and they
   # also don't support enumerable
@@ -63,7 +63,7 @@ defmodule Cldr.Map do
   Recursively traverse a map and invoke a function for each key
   and a function for each value that transform the map.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   * `key_function` is a function or function reference that
     is called for each key of the provided map and any keys
@@ -81,7 +81,7 @@ defmodule Cldr.Map do
   ## Examples
 
   """
-  @spec deep_map(Map.t(), key_function :: function(), value_function :: function()) :: Map.t()
+  @spec deep_map(term(), key_function :: function(), value_function :: function()) :: term()
   def deep_map(map, key_function, value_function)
 
   # Don't deep map structs since they have atom keys anyway and they
@@ -116,7 +116,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s `String.t` keys to `atom()` keys.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   * `options` is a keyword list of options.  The
     available option is:
@@ -135,7 +135,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s `String.t` values to `atom()` values.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   * `options` is a keyword list of options.  The
     available option is:
@@ -154,7 +154,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s `atom()` keys to `String.t` keys.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   ## Examples
 
@@ -173,7 +173,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s keys to `Integer.t` keys.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   The map key is converted to an `integer` from
   either an `atom` or `String.t` only when the
@@ -192,7 +192,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s values to `Integer.t` values.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   The map value is converted to an `integer` from
   either an `atom` or `String.t` only when the
@@ -211,7 +211,7 @@ defmodule Cldr.Map do
   @doc """
   Transforms a `map`'s values to `Float.t` values.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   The map value is converted to a `float` from
   either an `atom` or `String.t` only when the
@@ -230,7 +230,7 @@ defmodule Cldr.Map do
   @doc """
   Rename map keys from `from` to `to`
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   * `from` is any value map key
 
@@ -253,12 +253,12 @@ defmodule Cldr.Map do
   @doc """
   Convert map keys from `camelCase` to `snake_case`
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   ## Examples
 
   """
-  def underscore_keys(map = %{}) do
+  def underscore_keys(map) when is_map(map) or is_nil(map) do
     deep_map(map, &underscore/1, &identity/1)
   end
 
@@ -266,7 +266,7 @@ defmodule Cldr.Map do
   Removes any leading underscores from `map`
   keys.
 
-  * `map` is any `Map.t`
+  * `map` is any `t:map/0`
 
   ## Examples
 
@@ -299,9 +299,9 @@ defmodule Cldr.Map do
   @doc """
   Deep merge two maps
 
-  * `left` is any `Map.t`
+  * `left` is any `t:map/0`
 
-  * `right` is any `Map.t`
+  * `right` is any `t:map/0`
 
   ## Examples
 

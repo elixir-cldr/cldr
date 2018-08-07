@@ -131,6 +131,7 @@ defmodule Cldr.AcceptLanguage do
              {float(), LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}},
              ...
            ]}
+          | {:error, {Cldr.AcceptLanguageError, String.t()}}
 
   def parse(tokens) when is_list(tokens) do
     accept_language =

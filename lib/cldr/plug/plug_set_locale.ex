@@ -23,7 +23,7 @@ if Code.ensure_loaded?(Plug) do
 
       * `:default` - the default locale to set if no locale is
         found by other configured methods.  It can be a string like "en"
-        or a `Cldr.LanguageTag.t` struct. The default is
+        or a `t:Cldr.LanguageTag.t/0` struct. The default is
         `Cldr.default_locale()`
 
       * `:gettext` - the name of the `Gettext` module upon which
@@ -255,11 +255,7 @@ if Code.ensure_loaded?(Plug) do
     defp validate_param(options, param) when is_binary(param), do: options
 
     defp validate_param(options, param) when is_atom(param) do
-      param = Atom.to_string(param)
-
-      options
-      |> Keyword.put(:param, param)
-      |> validate_from(param)
+      validate_from(options, param)
     end
 
     defp validate_param(_options, param) do

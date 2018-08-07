@@ -304,7 +304,6 @@ defmodule Cldr.Math do
       #Decimal<9.103886231350952380952380952>
 
   """
-  @spec log(number_or_decimal) :: number_or_decimal
   def log(number) when is_number(number) do
     :math.log(number)
   end
@@ -604,7 +603,7 @@ defmodule Cldr.Math do
       number
       |> to_float
       |> :math.sqrt()
-      |> Decimal.new()
+      |> Decimal.from_float()
 
     decimal_precision = Decimal.new(precision)
     do_sqrt(number, initial_estimate, @decimal_precision, decimal_precision)
@@ -661,8 +660,10 @@ defmodule Cldr.Math do
   """
   def root(%Decimal{} = number, nth) when is_integer(nth) and nth > 0 do
     guess =
-      :math.pow(to_float(number), 1 / nth)
-      |> Decimal.new()
+      number
+      |> to_float()
+      |> :math.pow(1 / nth)
+      |> Decimal.from_float()
 
     do_root(number, Decimal.new(nth), guess)
   end
