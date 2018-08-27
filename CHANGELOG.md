@@ -1,3 +1,13 @@
+# Changelog for Cldr v1.6.5
+
+This is the changelog for Cldr v1.6.5 released on ______, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fixes some dyalizer warnings (thanks to @kronicdeth)
+
+* Bump ex_doc version now that 0.19 is out (required for Elixir 1.7)
+
 # Changelog for Cldr v1.6.4
 
 This is the changelog for Cldr v1.6.4 released on July 20th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
