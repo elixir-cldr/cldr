@@ -96,7 +96,8 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.locale_name()) :: %{} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
+  @spec for_locale(Locale.locale_name()) ::
+          {:ok, map()} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
   def for_locale(locale_name) when is_binary(locale_name) do
     with true <- File.exists?(locale_path(locale_name)) do
       rules =
@@ -177,10 +178,6 @@ defmodule Cldr.Rbnf.Config do
   @spec locale_path(binary) :: String.t()
   defp locale_path(locale) when is_binary(locale) do
     Path.join(rbnf_dir(), "/#{locale}.json")
-  end
-
-  defp to_integer(nil) do
-    nil
   end
 
   defp to_integer(value) do

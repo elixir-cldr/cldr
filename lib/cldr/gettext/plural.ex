@@ -5,8 +5,9 @@ if Code.ensure_loaded?(Gettext) do
     """
     @behaviour Gettext.Plural
 
+    @dialyzer [no_match: [gettext_return: 2]]
+
     alias Cldr.Number.Cardinal
-    alias Cldr.Math
     alias Cldr.LanguageTag
     alias Cldr.Locale
 
@@ -25,7 +26,7 @@ if Code.ensure_loaded?(Gettext) do
         2
 
     """
-    @spec nplurals(Locale.locale_name()) :: non_neg_integer
+    @spec nplurals(Locale.locale_name()) :: pos_integer
     def nplurals(locale_name) when is_binary(locale_name) do
       with {:ok, _locale} <- Cldr.validate_locale(locale_name) do
         Cardinal.plural_rules_for(locale_name) |> Enum.count()
@@ -65,8 +66,6 @@ if Code.ensure_loaded?(Gettext) do
         1
 
     """
-    @spec plural(Locale.locale_name() | LanguageTag.t(), Math.number_or_decimal()) ::
-            non_neg_integer | {:error, String.t()}
 
     def plural(%LanguageTag{cldr_locale_name: cldr_locale_name}, n) do
       plural(cldr_locale_name, n)

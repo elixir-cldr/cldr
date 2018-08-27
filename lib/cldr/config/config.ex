@@ -685,10 +685,6 @@ defmodule Cldr.Config do
 
         {:error, :not_found} ->
           raise RuntimeError, message: "Locale definition was not found for #{locale}"
-
-        error ->
-          raise RuntimeError,
-            message: "Unexpected return from locale_path(#{inspect(locale)}) => #{inspect(error)}"
       end
 
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())

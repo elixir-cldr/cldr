@@ -302,7 +302,6 @@ defmodule Mix.Tasks.Compile.Cldr do
   # of Mix.Tasks.Xref.calls/0 which does
   # not exist before Elixir 1.6
   @elixir_manifest ".compile.elixir"
-  @references MapSet.new(@callee_references)
   @doc false
   def pre6_calls do
     manifest_path =
@@ -318,7 +317,7 @@ defmodule Mix.Tasks.Compile.Cldr do
           acc
 
         {:source, path, _, depends_on, _, _, _, _, _}, acc ->
-          if cldr_file?(depends_on, @references) do
+          if cldr_file?(depends_on, MapSet.new(@callee_references)) do
             [path | acc]
           else
             acc

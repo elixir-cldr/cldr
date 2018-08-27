@@ -221,8 +221,6 @@ defmodule Cldr.Locale do
       }
 
   """
-  @spec canonical_language_tag(locale_name() | Cldr.LanguageTag.t()) ::
-          {:ok, LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}}
 
   @known_locale_names Cldr.Config.known_locale_names()
   def canonical_language_tag(locale_name)
@@ -565,7 +563,7 @@ defmodule Cldr.Locale do
   defp remove_unknown(%LanguageTag{} = language_tag, :territory), do: language_tag
 
   @doc """
-  Replace empty subtags within a `Cldr.LanguageTag.t` with the most likely
+  Replace empty subtags within a `t:Cldr.LanguageTag.t/0` with the most likely
   subtag.
 
   ## Options
@@ -728,7 +726,6 @@ defmodule Cldr.Locale do
 
   """
   @likely_subtags Cldr.Config.likely_subtags()
-  @spec likely_subtags :: %{locale_name() => LanguageTag.t()}
   def likely_subtags do
     @likely_subtags
   end
@@ -762,7 +759,7 @@ defmodule Cldr.Locale do
       }
 
   """
-  @spec likely_subtags(locale_name) :: LanguageTag.t()
+  @spec likely_subtags(locale_name) :: LanguageTag.t() | nil
   def likely_subtags(locale_name) when is_binary(locale_name) do
     Map.get(likely_subtags(), locale_name)
   end
@@ -775,7 +772,7 @@ defmodule Cldr.Locale do
   Return a map of the known aliases for Language, Script and Territory
   """
   @aliases Cldr.Config.aliases()
-  @spec aliases :: Map.t()
+  @spec aliases :: map()
   def aliases do
     @aliases
   end
@@ -791,7 +788,7 @@ defmodule Cldr.Locale do
 
   """
   @alias_keys Map.keys(@aliases)
-  @spec aliases(locale_name(), atom()) :: Map.t()
+  @spec aliases(locale_name(), atom()) :: map() | nil
   def aliases(key, type) when type in @alias_keys do
     aliases()
     |> Map.get(type)

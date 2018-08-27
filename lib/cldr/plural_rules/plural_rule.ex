@@ -65,7 +65,7 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       Returns all the plural rules defined in CLDR.
       """
-      @spec plural_rules :: Map.t()
+      @spec plural_rules :: map()
       def plural_rules do
         @rules
       end
@@ -179,8 +179,11 @@ defmodule Cldr.Number.PluralRule do
           :one
 
       """
-      @spec plural_rule(Math.number_or_decimal(), Locale.locale_name() | LanguageTag.t(), atom()) ::
-              :zero | :one | :two | :few | :many | :other
+      @spec plural_rule(
+              Math.number_or_decimal(),
+              Locale.locale_name() | LanguageTag.t(),
+              atom() | pos_integer()
+            ) :: :zero | :one | :two | :few | :many | :other
 
       def plural_rule(
             number,

@@ -181,7 +181,7 @@ defmodule Cldr.LanguageTag do
           private_use: [String.t(), ...] | [],
           requested_locale_name: String.t(),
           canonical_locale_name: String.t(),
-          cldr_locale_name: String.t(),
+          cldr_locale_name: String.t() | nil,
           rbnf_locale_name: String.t()
         }
 
@@ -197,8 +197,6 @@ defmodule Cldr.LanguageTag do
   * `{:error, reason}`
 
   """
-  @spec parse(Cldr.Locale.locale_name()) ::
-          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
   def parse(locale_name) when is_binary(locale_name) do
     Parser.parse(locale_name)
   end
@@ -215,7 +213,7 @@ defmodule Cldr.LanguageTag do
   * raises and exception
 
   """
-  @spec parse(Cldr.Locale.locale_name()) :: t() | none()
+  @spec parse!(Cldr.Locale.locale_name()) :: t() | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
   end
