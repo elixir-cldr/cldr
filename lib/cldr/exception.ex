@@ -191,3 +191,27 @@ defmodule Cldr.AcceptLanguageError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.LanguageTag.ParseError do
+  @moduledoc """
+  Exception raised when a language tag cannot
+  be parsed (there is unparsed content).
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.LanguageTag.ParseFailure do
+  @moduledoc """
+  Exception raised when language tag parsing fails
+  (more than a parse error)
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

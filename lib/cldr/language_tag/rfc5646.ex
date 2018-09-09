@@ -5,6 +5,10 @@ defmodule Cldr.Rfc5646 do
 
   import(Abnf.Operators)
 
+  def parse(input) when is_binary(input) do
+    parse(:"language-tag", input)
+  end
+
   def parse(rule, input) when is_binary(input) do
     parse(rule, String.to_charlist(input))
   end
