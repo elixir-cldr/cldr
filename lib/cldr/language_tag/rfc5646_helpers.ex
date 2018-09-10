@@ -85,11 +85,4 @@ defmodule Cldr.Rfc5646.Helpers do
     {List.flatten(args), context}
   end
 
-  def unwrap_region_code([region: l]) when is_list(l) and length(l) == 1 do
-    [region: hd(l)]
-  end
-
-  def unwrap_region_code(other) do
-    other
-  end
 end

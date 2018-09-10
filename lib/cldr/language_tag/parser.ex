@@ -25,13 +25,17 @@ defmodule Cldr.LanguageTag.Parser do
   * `{:error, reasons}`
 
   """
-  def parse(locale) when is_list(locale) do
-    case return_parse_result(Cldr.Rfc5646.parse(:"language-tag", locale), locale) do
+  def parse(locale) do
+    case Cldr.Rfc5646.parse(normalize_locale_name(locale)) do
       {:ok, language_tag} ->
         normalized_tag =
           language_tag
-          |> extract_keys
-          |> Map.put(:requested_locale_name, List.to_string(locale))
+          |> structify(LanguageTag)
+          |> Map.put(:requested_locale_name, locale)
+          |> normalize_language
+          |> normalize_script
+          |> normalize_variant
+          |> normalize_territory
           |> canonicalize_locale_keys
           |> canonicalize_transform_keys
 
@@ -42,11 +46,8 @@ defmodule Cldr.LanguageTag.Parser do
     end
   end
 
-  def parse(locale_name) when is_binary(locale_name) do
-    locale_name
-    |> normalize_locale_name
-    |> String.to_charlist()
-    |> parse
+  defp structify(list, module) do
+    struct(module, list)
   end
 
   @doc """
@@ -67,80 +68,6 @@ defmodule Cldr.LanguageTag.Parser do
       {:ok, language_tag} -> language_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
-  end
-
-  defp extract_keys([{:langtag, _value, subtags}]) do
-    Enum.reduce(subtags, %LanguageTag{}, fn {key, value, children}, language_tag ->
-      extract_key(key, value, children, language_tag)
-    end)
-  end
-
-  defp extract_keys([{:privateuse = key, value, subtags}]) do
-    extract_key(key, value, subtags, %LanguageTag{})
-    |> Map.put(:requested_locale_name, value)
-  end
-
-  defp extract_keys([{:grandfathered = key, value, subtags}]) do
-    extract_key(key, value, subtags, %LanguageTag{})
-    |> Map.put(:requested_locale_name, value)
-  end
-
-  defp extract_key(:language = key, value, _children, language_tag) do
-    language = normalize_language(value)
-    Map.put(language_tag, key, language)
-  end
-
-  defp extract_key(:grandfathered, value, _subtags, language_tag) do
-    Map.put(language_tag, :requested_locale_name, value)
-  end
-
-  defp extract_key(:script = key, value, _children, language_tag) do
-    script = normalize_script(value)
-    Map.put(language_tag, key, script)
-  end
-
-  defp extract_key(:region, value, _children, language_tag) do
-    territory = normalize_territory(value)
-    Map.put(language_tag, :territory, territory)
-  end
-
-  defp extract_key(:variant = key, value, _children, language_tag) do
-    variant = normalize_variant(value)
-    Map.put(language_tag, key, variant)
-  end
-
-  defp extract_key(:privateuse, value, _children, language_tag) do
-    Map.put(language_tag, :private_use, value)
-  end
-
-  defp extract_key(:extensions, _value, extensions, language_tag) do
-    Enum.reduce(extensions, language_tag, fn
-      {extension, value, subtags}, language_tag when extension in [:locale, :transform] ->
-        Map.put(language_tag, extension, extract_extension(extension, value, subtags))
-
-      {:extension = extension, value, subtags}, language_tag ->
-        [key, value] = extract_extension(extension, value, subtags)
-        extensions = language_tag.extensions
-        Map.put(language_tag, :extensions, Map.put(extensions, key, value))
-    end)
-  end
-
-  defp extract_key(_key, _value, _children, language_tag) do
-    language_tag
-  end
-
-  def extract_extension(:extension, value, _subtags) do
-    String.split(value, "-", parts: 2)
-  end
-
-  def extract_extension(:locale, _value, subtags) do
-    Enum.reduce(subtags, %{}, fn
-      {:keyword, _value, [{:key, key, _}, {:literal, _, _}, {:type, value, _}]}, locale_tags ->
-        Map.put(locale_tags, key, value)
-
-      _, locale_tags ->
-        locale_tags
-    end)
   end
 
   defp canonicalize_locale_keys(%Cldr.LanguageTag{locale: nil} = language_tag) do
@@ -185,44 +112,37 @@ defmodule Cldr.LanguageTag.Parser do
     |> Locale.locale_name_from_posix()
   end
 
-  defp normalize_language(nil), do: nil
+  defp normalize_language(%LanguageTag{language: nil} = language_tag), do: language_tag
 
-  defp normalize_language(language) do
-    String.downcase(language)
+  defp normalize_language(%LanguageTag{language: language} = language_tag) do
+    language_tag
+    |> Map.put(:language, String.downcase(language))
   end
 
-  defp normalize_script(nil), do: nil
+  defp normalize_script(%LanguageTag{script: nil} = language_tag), do: language_tag
 
-  defp normalize_script(script) do
-    script
-    |> String.downcase()
-    |> String.capitalize()
+  defp normalize_script(%LanguageTag{script: script} = language_tag) do
+    language_tag
+    |> Map.put(:script, script |> String.downcase() |> String.capitalize())
   end
 
-  defp normalize_territory(nil), do: nil
+  defp normalize_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
 
-  defp normalize_territory(territory) do
-    String.upcase(territory)
+  defp normalize_territory(%LanguageTag{territory: territory} = language_tag)
+  when is_integer(territory) do
+    language_tag
   end
 
-  defp normalize_variant(nil), do: nil
-
-  defp normalize_variant(variant) do
-    String.upcase(variant)
+  defp normalize_territory(%LanguageTag{territory: territory} = language_tag) do
+    language_tag
+    |> Map.put(:territory, String.upcase(territory))
   end
 
-  defp return_parse_result([{_rule, _name, children}], locale) do
-    remaining = Abnf.Operators.advance(children, locale)
+  defp normalize_variant(%LanguageTag{variant: nil} = language_tag), do: language_tag
 
-    if remaining == '' do
-      {:ok, children}
-    else
-      {:error, language_tag_error(remaining)}
-    end
-  end
-
-  defp return_parse_result(:error, locale_name) do
-    {:error, language_tag_error(locale_name)}
+  defp normalize_variant(%LanguageTag{variant: variant} = language_tag) do
+    language_tag
+    |> Map.put(:variant, String.upcase(variant))
   end
 
   defp canonicalize_key([key, valid, default], param) when is_function(valid) do
@@ -289,10 +209,4 @@ defmodule Cldr.LanguageTag.Parser do
     @transform_map
   end
 
-  defp language_tag_error(locale_name) do
-    {
-      Cldr.InvalidLanguageTag,
-      "Could not parse language tag.  Error was detected at #{inspect(locale_name)}"
-    }
-  end
 end
