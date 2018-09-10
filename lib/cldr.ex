@@ -541,15 +541,17 @@ defmodule Cldr do
 
   # Precompile the known locales.  In benchmarking this
   # is 20x faster.
-  @language_tags Cldr.Config.all_language_tags()
+  if Cldr.Config.all_language_tags? do
+    @language_tags Cldr.Config.all_language_tags()
 
-  for locale_name <- Cldr.Config.known_locale_names() do
-    language_tag =
-      Map.get(@language_tags, locale_name)
-      |> Cldr.Locale.set_gettext_locale_name()
+    for locale_name <- Cldr.Config.known_locale_names() -- Cldr.Config.non_language_locale_names do
+      language_tag =
+        Map.get(@language_tags, locale_name)
+        |> Cldr.Locale.set_gettext_locale_name()
 
-    def validate_locale(unquote(locale_name)) do
-      {:ok, unquote(Macro.escape(language_tag))}
+      def validate_locale(unquote(locale_name)) do
+        {:ok, unquote(Macro.escape(language_tag))}
+      end
     end
   end
 

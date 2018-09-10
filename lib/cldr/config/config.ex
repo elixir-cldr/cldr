@@ -111,6 +111,12 @@ defmodule Cldr.Config do
     "languages"
   ]
 
+  @doc false
+  @non_language_locale_names ["root"]
+  def non_language_locale_names do
+    @non_language_locale_names
+  end
+
   defmacro is_alphabetic(char) do
     quote do
       unquote(char) in ?a..?z or unquote(char) in ?A..?Z
@@ -342,10 +348,19 @@ defmodule Cldr.Config do
   Returns the map of language tags for all
   available locales
   """
+  @tag_file "language_tags.ebin"
   def all_language_tags do
-    Path.join(cldr_data_dir(), "language_tags.ebin")
+    Path.join(cldr_data_dir(), @tag_file)
     |> File.read!()
     |> :erlang.binary_to_term()
+  rescue
+    _e in File.Error -> %{}
+  end
+
+  def all_language_tags? do
+    cldr_data_dir()
+    |> Path.join(@tag_file)
+    |> File.exists?
   end
 
   @doc """

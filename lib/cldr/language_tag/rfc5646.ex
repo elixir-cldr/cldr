@@ -52,13 +52,17 @@ defmodule Cldr.Rfc5646 do
   #                 / 4ALPHA            ; or reserved for future use
   #                 / 5*8ALPHA
   defparsec :language,
-            choice([parsec(:iso639),
-              alpha4() |> tag(:reserved),
-              alpha5_8() |> tag(:reserved)])
+            parsec(:iso639)
+            # choice([
+            #   alpha5_8(),
+            #   alpha4(),
+            #   parsec(:iso639),
+            # ])
 
+  # Don't support extended language for now
   defparsec :iso639,
             alpha2_3() |> unwrap_and_tag(:language)
-            |> optional(ignore(dash()) |> parsec(:extlang))
+            # |> optional(ignore(dash()) |> parsec(:extlang))
 
   # extlang       = 3ALPHA              ; selected ISO 639 codes
   #                 *2("-" 3ALPHA)      ; permanently reserved
@@ -70,22 +74,21 @@ defmodule Cldr.Rfc5646 do
               alpha3() |> ignore(dash()) |> parsec(:alpha3),
               alpha3()
             ])
-            |> lookahead(:fail_if_no_trailing_dash)
             |> tag(:extended_language)
 
   # If there is a leading dash in the remaining text then ok
-  defp fail_if_no_trailing_dash(<<?-, _::binary>>, context, _line, _offset) do
+  def fail_if_no_trailing_dash(<<?-, _::binary>>, context, _line, _offset) do
     {[], context}
   end
 
   # If there is no more text, ok too
-  defp fail_if_no_trailing_dash(<<"">>, context, _line, _offset) do
+  def fail_if_no_trailing_dash(<<"">>, context, _line, _offset) do
     {[], context}
   end
 
   # We want to fail the :extlang parser, but not error the entire
   # parse operation.  Note that `:fail` is not supported
-  defp fail_if_no_trailing_dash(_rest, context, _line, _offset) do
+  def fail_if_no_trailing_dash(_rest, context, _line, _offset) do
     {:fail, context}
   end
 
