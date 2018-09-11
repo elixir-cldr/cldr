@@ -143,27 +143,28 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.set_current_locale("en")
-      {
-        :ok,
-        %Cldr.LanguageTag{
-          canonical_locale_name: "en-Latn-US",
-          cldr_locale_name: "en",
-          extensions: %{},
-          gettext_locale_name: "en",
-          language: "en",
-          locale: %{},
-          private_use: [],
-          rbnf_locale_name: "en",
-          territory: "US",
-          requested_locale_name: "en",
-          script: "Latn",
-          transform: %{},
-          variant: nil
-        }
-      }
+      {:ok,
+       %Cldr.LanguageTag{
+         canonical_locale_name: "en-Latn-US",
+         cldr_locale_name: "en",
+         extended_language: [],
+         extensions: %{},
+         gettext_locale_name: "en",
+         language: "en",
+         locale: %{},
+         private_use: [],
+         rbnf_locale_name: "en",
+         requested_locale_name: "en",
+         script: "Latn",
+         territory: "US",
+         transform: %{},
+         variant: nil
+       }}
 
-      iex> Cldr.set_current_locale("zzz")
-      {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+      iex> Cldr.set_current_locale("invalid_locale")
+      {:error,
+       {Cldr.LanguageTag.ParseError,
+        "Invalid language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
 
   """
   @spec set_current_locale(Locale.locale_name() | LanguageTag.t()) ::
@@ -191,11 +192,22 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.default_locale()
-      %Cldr.LanguageTag{canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001", extensions: %{}, language: "en",
-        locale: %{}, private_use: [], rbnf_locale_name: "en", territory: "001",
-        requested_locale_name: "en-001", script: "Latn", transform: %{},
-        variant: nil}
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extended_language: [],
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{},
+        variant: nil
+      }
 
   """
   @default_locale Config.default_locale() |> Cldr.Config.language_tag()
@@ -541,10 +553,10 @@ defmodule Cldr do
 
   # Precompile the known locales.  In benchmarking this
   # is 20x faster.
-  if Cldr.Config.all_language_tags? do
+  if Cldr.Config.all_language_tags?() do
     @language_tags Cldr.Config.all_language_tags()
 
-    for locale_name <- Cldr.Config.known_locale_names() -- Cldr.Config.non_language_locale_names do
+    for locale_name <- Cldr.Config.known_locale_names() -- Cldr.Config.non_language_locale_names() do
       language_tag =
         Map.get(@language_tags, locale_name)
         |> Cldr.Locale.set_gettext_locale_name()

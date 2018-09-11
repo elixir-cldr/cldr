@@ -173,7 +173,7 @@ defmodule Cldr.LanguageTag do
 
   @type t :: %__MODULE__{
           language: String.t(),
-          extended_language: [String.t, ...] | [],
+          extended_language: [String.t(), ...] | [],
           script: String.t() | nil,
           territory: String.t() | nil,
           variant: String.t() | nil,

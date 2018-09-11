@@ -76,5 +76,4 @@ defmodule Cldr.Rfc5646.Core do
   def alpha_numeric1_8 do
     ascii_string([?a..?z, ?A..?Z, ?0..?9], min: 1, max: 8)
   end
-
 end

@@ -123,10 +123,12 @@ defmodule Cldr.AcceptLanguage do
           }}
        ]}
 
-      iex> Cldr.AcceptLanguage.parse "zzzz"
-      {:error, {Cldr.AcceptLanguageError, "z"}}
+      iex> Cldr.AcceptLanguage.parse "invalid_tag"
+      {:error,
+       {Cldr.LanguageTag.ParseError,
+        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
-      iex> Cldr.AcceptLanguage.parse "da,zh-TW;q=0.3,zzzz"
+      iex> Cldr.AcceptLanguage.parse "da,zh-TW;q=0.3,invalid_tag"
       {:ok,
        [
          {1.0,
@@ -163,7 +165,9 @@ defmodule Cldr.AcceptLanguage do
             transform: %{},
             variant: nil
           }},
-         {:error, {Cldr.LanguageTag.ParseError, "z"}, "zzzz"}
+         {:error,
+          {Cldr.LanguageTag.ParseError,
+           "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
        ]}
 
   """
@@ -182,8 +186,8 @@ defmodule Cldr.AcceptLanguage do
       |> sort_by_quality
 
     case accept_language do
-      [{:error, reason, language_tag}] ->
-        {:error, accept_language_error(reason, language_tag)}
+      [error: reason] ->
+        {:error, reason}
 
       _ ->
         {:ok, accept_language}
@@ -254,11 +258,11 @@ defmodule Cldr.AcceptLanguage do
          }}
       ]
 
-      Cldr.AcceptLanguage.parse! "zzzz"
-      ** (Cldr.AcceptLanguageError) z
-          (ex_cldr) lib/cldr/accept_language.ex:312: Cldr.AcceptLanguage.parse!/1
+      Cldr.AcceptLanguage.parse! "invalid_tag"
+      ** (Cldr.AcceptLanguageError) Invalid language tag. Could not parse the remaining "g" starting at position 11
+          (ex_cldr) lib/cldr/accept_language.ex:304: Cldr.AcceptLanguage.parse!/1
 
-      iex> Cldr.AcceptLanguage.parse! "da,zh-TW;q=0.3,zzzz"
+      iex> Cldr.AcceptLanguage.parse! "da,zh-TW;q=0.3,invalid_tag"
       [
         {1.0,
          %Cldr.LanguageTag{
@@ -294,9 +298,10 @@ defmodule Cldr.AcceptLanguage do
            transform: %{},
            variant: nil
          }},
-        {:error, {Cldr.LanguageTag.ParseError, "z"}, "zzzz"}
+        {:error,
+         {Cldr.LanguageTag.ParseError,
+          "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
       ]
-
   """
   def parse!(accept_language) do
     case parse(accept_language) do
@@ -362,8 +367,10 @@ defmodule Cldr.AcceptLanguage do
        {Cldr.NoMatchingLocale,
         "No configured locale could be matched to \\"xx,yy;q=0.3\\""}}
 
-      iex> Cldr.AcceptLanguage.best_match("xxxx")
-      {:error, {Cldr.AcceptLanguageError, "x"}}
+      iex> Cldr.AcceptLanguage.best_match("invalid_tag")
+      {:error,
+       {Cldr.LanguageTag.ParseError,
+        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
   """
   @spec best_match(String.t()) ::
@@ -405,14 +412,17 @@ defmodule Cldr.AcceptLanguage do
 
   ## Example
 
-      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,xxxx") |> Cldr.AcceptLanguage.errors
-      [{:error, {Cldr.LanguageTag.ParseError, "x"}, "xxxx"}]
+      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,invalid_tag") |> Cldr.AcceptLanguage.errors
+      [
+        error: {Cldr.LanguageTag.ParseError,
+        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}
+      ]
 
   """
   @spec errors([tuple(), ...]) :: [{:error, {Cldr.InvalidLanguageTag, String.t()}}, ...]
   def errors(parse_result) when is_list(parse_result) do
     Enum.filter(parse_result, fn
-      {:error, _, _} -> true
+      {:error, _} -> true
       _ -> false
     end)
   end
@@ -431,7 +441,7 @@ defmodule Cldr.AcceptLanguage do
           {quality, tag}
 
         {:error, reason} ->
-          {:error, reason, language_tag}
+          {:error, reason}
       end
     end)
   end
@@ -442,13 +452,10 @@ defmodule Cldr.AcceptLanguage do
 
   defp sort_by_quality(tokens) do
     Enum.sort(tokens, fn
-      {:error, _, _}, {_quality_2, _} -> false
-      {_quality_2, _}, {:error, _, _} -> true
+      {:error, _}, {_quality_2, _} -> false
+      {_quality_2, _}, {:error, _} -> true
       {quality_1, _}, {quality_2, _} -> quality_1 > quality_2
     end)
   end
 
-  defp accept_language_error({_exception, reason}, _language_tag) do
-    {Cldr.AcceptLanguageError, reason}
-  end
 end

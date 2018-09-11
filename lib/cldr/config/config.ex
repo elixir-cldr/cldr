@@ -360,7 +360,7 @@ defmodule Cldr.Config do
   def all_language_tags? do
     cldr_data_dir()
     |> Path.join(@tag_file)
-    |> File.exists?
+    |> File.exists?()
   end
 
   @doc """

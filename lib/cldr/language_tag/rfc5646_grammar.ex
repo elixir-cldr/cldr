@@ -12,10 +12,11 @@ defmodule Cldr.Rfc5646.Grammar do
     language()
     |> optional(ignore(dash()) |> concat(script()))
     |> optional(ignore(dash()) |> concat(region()))
-    |> repeat(ignore(dash())   |> concat(variant()))
-    |> repeat(ignore(dash())   |> concat(extensions()) |> reduce(:collapse_extensions))
+    |> repeat(ignore(dash()) |> concat(variant()))
+    |> repeat(ignore(dash()) |> concat(extensions()) |> reduce(:collapse_extensions))
     |> optional(ignore(dash()) |> concat(private_use()))
     |> traverse({:flatten, []})
+    |> label("a valid language tag according to ")
   end
 
   # language      = 2*3ALPHA            ; shortest ISO 639 code
@@ -29,12 +30,14 @@ defmodule Cldr.Rfc5646.Grammar do
       alpha4() |> unwrap_and_tag(:language),
       iso639()
     ])
+    |> label("an ISO-639 country code or between 4 and 8 alphabetic characters")
   end
 
   # Don't support extended language for now
   def iso639 do
     alpha2_3() |> unwrap_and_tag(:language)
     # |> optional(ignore(dash()) |> extlang()))
+    |> label("an ISO-639 language code of two or three alphabetic characters")
   end
 
   # extlang       = 3ALPHA              ; selected ISO 639 codes
@@ -46,12 +49,14 @@ defmodule Cldr.Rfc5646.Grammar do
       alpha3()
     ])
     |> tag(:extended_language)
+    |> label("an ISO-639 language code of between one and three three alphabetic characters")
   end
 
   # script        = 4ALPHA
   def script do
     alpha4()
     |> unwrap_and_tag(:script)
+    |> label("a script id of four alphabetic character")
   end
 
   # region        = 2ALPHA              ; ISO 3166-1 code
@@ -59,6 +64,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def region do
     choice([alpha2(), integer3()])
     |> unwrap_and_tag(:territory)
+    |> label("a territory code of two alphabetic character ISO-3166-1 code or a three digit UN M.49")
   end
 
   # variant       = 5*8alphanum         ; registered variants
@@ -67,6 +73,8 @@ defmodule Cldr.Rfc5646.Grammar do
     choice([alpha5_8(), digit() |> concat(alpha_numeric3())])
     |> reduce({Enum, :join, []})
     |> unwrap_and_tag(:variant)
+    |> label("a language variant code of five to eight alphabetic character or " <>
+            "a single digit plus three alphanumeric characters")
   end
 
   # extensions    = locale / transform / extension
@@ -80,6 +88,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> choice([attributes() |> concat(keywords()), keywords()])
     |> reduce(:combine_attributes_and_keywords)
     |> unwrap_and_tag(:locale)
+    |> label("a BCP47 language tag locale extension")
   end
 
   def combine_attributes_and_keywords([{:attributes, attributes}, %{} = keywords]) do
@@ -93,25 +102,31 @@ defmodule Cldr.Rfc5646.Grammar do
   # transform     = "t" (1*("-" keyword))
   def transform do
     ignore(ascii_string([?t, ?T], 1))
-    |> ignore(dash()) |> concat(keyword()) |> reduce(:collapse_keywords)
+    |> ignore(dash())
+    |> concat(keyword())
+    |> reduce(:collapse_keywords)
     |> times(min: 1)
     |> unwrap_and_tag(:transform)
+    |> label("a BCP47 language tag transform extension")
   end
 
   # extension     = singleton 1*("-" (2*8alphanum))
   def extension do
-    singleton() |> unwrap_and_tag(:type)
+    singleton()
+    |> unwrap_and_tag(:type)
     |> times(ignore(dash()) |> concat(alpha_numeric2_8()) |> unwrap_and_tag(:attribute), min: 1)
     |> reduce(:collapse_extension)
     |> unwrap_and_tag(:extension)
+    |> label("a valid BCP47 language tag extension")
   end
 
   def collapse_extension(args) do
     type = args[:type]
+
     attributes =
       args
       |> Keyword.delete(:type)
-      |> Keyword.values
+      |> Keyword.values()
 
     %{type => attributes}
   end
@@ -129,6 +144,7 @@ defmodule Cldr.Rfc5646.Grammar do
   #                 / %x79-7A             ; y - z
   def singleton do
     ascii_string([?0..?9, ?a..?s, ?A..?S, ?v..?w, ?V..?W, ?y..?z, ?Y..?Z], 1)
+    |> label("a single alphanumeric character that is not 'x', 'u' or 't'")
   end
 
   def attributes do
@@ -146,23 +162,26 @@ defmodule Cldr.Rfc5646.Grammar do
     args
     |> Enum.chunk_every(2)
     |> Enum.into(%{}, fn
-        [key: key, type: type] ->
-          {key, type}
-        [key: key] ->
-          {key, nil}
-        end)
+      [key: key, type: type] ->
+        {key, type}
+
+      [key: key] ->
+        {key, nil}
+    end)
   end
 
   # keyword       = key ["-" type]
   def keyword do
     key()
     |> optional(ignore(dash()) |> concat(type()))
+    |> label("a valid keyword or keyword-type pair")
   end
 
   # key           = 2alphanum
   def key do
     alpha_numeric2()
     |> unwrap_and_tag(:key)
+    |> label("a key that is two alphanumeric characters")
   end
 
   # type          = 3*8alphanum *("-" 3*8alphanum)
@@ -170,6 +189,7 @@ defmodule Cldr.Rfc5646.Grammar do
     alpha_numeric3_8()
     |> unwrap_and_tag(:type)
     |> repeat(ignore(dash()) |> concat(alpha_numeric3_8()) |> unwrap_and_tag(:type))
+    |> label("a type that is one of more three to eight alphanumeric characters separated by a dash")
   end
 
   # attribute     = 3*8alphanum
@@ -182,6 +202,7 @@ defmodule Cldr.Rfc5646.Grammar do
     ignore(ascii_string([?x, ?X], 1))
     |> times(ignore(dash()) |> concat(alpha_numeric1_8()), min: 1)
     |> tag(:private_use)
+    |> label("an 'x' representing a private use tag")
   end
 
   # grandfathered = irregular           ; non-redundant tags registered
@@ -217,6 +238,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def grandfathered do
     choice([irregular(), regular()])
     |> tag(:grandfathered)
+    |> label("a grandfathered language tag")
   end
 
   def irregular do
@@ -240,6 +262,7 @@ defmodule Cldr.Rfc5646.Grammar do
       string("sgn-CH-DE")
     ])
     |> unwrap_and_tag(:irregular)
+    |> label("one of the irregular language tags in BCP-47")
   end
 
   def regular do
@@ -255,6 +278,7 @@ defmodule Cldr.Rfc5646.Grammar do
       string("zh-xiang")
     ])
     |> unwrap_and_tag(:regular)
+    |> label("one of the regular language tags in BCP-47")
   end
 
   def flatten(_rest, args, context, _line, _offset) do
@@ -264,12 +288,18 @@ defmodule Cldr.Rfc5646.Grammar do
   def collapse_extensions(args) do
     extensions =
       args
-      |> Enum.filter(fn {x, _y} -> x == :extension; _ -> false end)
-      |> Keyword.values
-      |> Cldr.Map.merge_map_list
+      |> Enum.filter(fn
+        {x, _y} -> x == :extension
+        _ -> false
+      end)
+      |> Keyword.values()
+      |> Cldr.Map.merge_map_list()
 
     args
-    |> Enum.reject(fn {x, _y} -> x == :extension; _ -> false end)
+    |> Enum.reject(fn
+      {x, _y} -> x == :extension
+      _ -> false
+    end)
     |> Keyword.put(:extensions, extensions)
   end
 end

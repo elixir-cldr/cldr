@@ -15,26 +15,27 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init()
 
     assert opts == [
-             session_key: "cldr_locale",
-             default: %Cldr.LanguageTag{
-               canonical_locale_name: "en-Latn-001",
-               cldr_locale_name: "en-001",
-               extensions: %{},
-               gettext_locale_name: nil,
-               language: "en",
-               locale: %{},
-               private_use: [],
-               rbnf_locale_name: "en",
-               requested_locale_name: "en-001",
-               script: "Latn",
-               territory: "001",
-               transform: %{},
-               variant: nil
-             },
-             param: "locale",
-             from: [:session, :accept_language],
-             apps: [:cldr]
-           ]
+      session_key: "cldr_locale",
+      default: %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extended_language: [],
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{},
+        variant: nil
+      },
+      param: "locale",
+      from: [:session, :accept_language],
+      apps: [:cldr]
+    ]
   end
 
   test "bad parameters raise exceptions" do

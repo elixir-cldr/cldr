@@ -129,8 +129,14 @@ defmodule Cldr.LanguageTag.Parser do
   defp normalize_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
 
   defp normalize_territory(%LanguageTag{territory: territory} = language_tag)
-  when is_integer(territory) do
-    language_tag
+       when is_integer(territory) do
+    territory = case territory do
+      territory when territory < 10 -> "00#{territory}"
+      territory when territory < 100 -> "0#{territory}"
+      _ -> Integer.to_string(territory)
+    end
+
+    Map.put(language_tag, :territory, territory)
   end
 
   defp normalize_territory(%LanguageTag{territory: territory} = language_tag) do
@@ -208,5 +214,4 @@ defmodule Cldr.LanguageTag.Parser do
   defp transform_key_map do
     @transform_map
   end
-
 end

@@ -17,7 +17,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     # We set the gettext locale name to nil because we can't tell in advance
     # what the gettext locale name will be (if any)
     language_tags =
-      for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names do
+      for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
         with {:ok, language_tag} <- Cldr.LanguageTag.parse(locale_name),
              {:ok, canonical_tag} <- Cldr.Locale.canonical_language_tag(language_tag) do
           language_tag =
