@@ -1,9 +1,5 @@
-defmodule Cldr.Rfc5646.Helpers do
+defmodule Cldr.Rfc5646.Core do
   import NimbleParsec
-
-  def unwrap_list(arg) do
-    IO.inspect arg
-  end
 
   def lowercase do
     ascii_string([?a..?z], 1)
@@ -79,10 +75,6 @@ defmodule Cldr.Rfc5646.Helpers do
 
   def alpha_numeric1_8 do
     ascii_string([?a..?z, ?A..?Z, ?0..?9], min: 1, max: 8)
-  end
-
-  def flatten(_rest, args, context, _line, _offset) do
-    {List.flatten(args), context}
   end
 
 end

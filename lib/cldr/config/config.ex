@@ -112,7 +112,7 @@ defmodule Cldr.Config do
   ]
 
   @doc false
-  @non_language_locale_names ["root"]
+  @non_language_locale_names []
   def non_language_locale_names do
     @non_language_locale_names
   end

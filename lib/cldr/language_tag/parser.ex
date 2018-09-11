@@ -26,7 +26,7 @@ defmodule Cldr.LanguageTag.Parser do
 
   """
   def parse(locale) do
-    case Cldr.Rfc5646.parse(normalize_locale_name(locale)) do
+    case Cldr.Rfc5646.Parser.parse(normalize_locale_name(locale)) do
       {:ok, language_tag} ->
         normalized_tag =
           language_tag
