@@ -10,13 +10,13 @@ This is the changelog for Cldr v1.7.0 released on ______, 2018.  For older chang
 
   * Correctly parses multiple language variants
 
-* There are changes to the `Cldr.LanguageTag` structure that does represent a small breaking change:
+* There are changes to the `Cldr.LanguageTag` structure that doe represent a small breaking change:
 
-  * `variant` is now renamed to `variants` and is now also a list rather than a string
+  * `:variant` is now renamed to `:language_variant`
 
-  * `language_subtags` is added.  It is a list of language subtags or `[]`
+  * `:language_subtags` is added.  It is a list of language subtags or `[]`
 
-There are some known limitations remaining in the parser that should not affect most users.  In particular language variants can only be placed after the script and region (territory/country) codes.  For example, according to the standard the language tag "sl-rozaj" is valid.  But the current parser does not support this combination.
+There are some known limitations remaining in the parser that should not affect most users.  In particular language variants can only be placed after the script and region (territory/country) codes.  For example, according to the standard the language tag "sl-rozaj" is valid.  But the current parser does not support this combination. "sl-sv-rozaj" if however acceptable.
 
 ### Bug Fixes
 

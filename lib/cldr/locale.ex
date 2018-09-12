@@ -57,7 +57,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "ES",
         transform: %{},
-        variants: []
+        language_variant: nil
       }}
 
   ### Matching locales to requested locale names
@@ -94,7 +94,7 @@ defmodule Cldr.Locale do
          cldr_locale_name: "ro-MD", extensions: %{}, language: "ro",
          locale: %{}, private_use: [], rbnf_locale_name: "ro",
          requested_locale_name: "mo", script: "Latn", territory: "MD",
-         transform: %{}, variants: []}}
+         transform: %{}, language_variant: nil}}
 
   ### Likely subtags
 
@@ -118,7 +118,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variants: []
+        language_variant: nil
       }}
 
   Which shows that a the likely subtag for the script is "Latn" and the likely
@@ -152,7 +152,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variants: []
+        language_variant: nil
       }}
 
   """
@@ -216,7 +216,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "US",
           transform: %{},
-          variants: []
+          language_variant: nil
         }
       }
 
@@ -334,26 +334,38 @@ defmodule Cldr.Locale do
     end
   end
 
+  # defp first_match(%{variants: variant} = langtag, fun) do
+  #   variant = case variant do
+  #     [variant] -> variant
+  #     [] -> nil
+  #     other -> other
+  #   end
+  #
+  #   list = Map.to_list(langtag)
+  #   s = struct(LanguageTag, list) |> Map.put(:language_variant, variant)
+  #   first_match(s, fun)
+  # end
+
   defp first_match(
          %LanguageTag{
            language: language,
            script: script,
            territory: territory,
-           variants: variants
+           language_variant: variant
          },
          fun
        )
        when is_function(fun) do
     # Including variant
     # Not including variant
-    fun.(locale_name_from(language, script, territory, variants)) ||
-      fun.(locale_name_from(language, nil, territory, variants)) ||
-      fun.(locale_name_from(language, script, nil, variants)) ||
-      fun.(locale_name_from(language, nil, nil, variants)) ||
-      fun.(locale_name_from(language, script, territory, [])) ||
-      fun.(locale_name_from(language, nil, territory, [])) ||
-      fun.(locale_name_from(language, script, nil, [])) ||
-      fun.(locale_name_from(language, nil, nil, [])) || nil
+    fun.(locale_name_from(language, script, territory, variant)) ||
+      fun.(locale_name_from(language, nil, territory, variant)) ||
+      fun.(locale_name_from(language, script, nil, variant)) ||
+      fun.(locale_name_from(language, nil, nil, variant)) ||
+      fun.(locale_name_from(language, script, territory, nil)) ||
+      fun.(locale_name_from(language, nil, territory, nil)) ||
+      fun.(locale_name_from(language, script, nil, nil)) ||
+      fun.(locale_name_from(language, nil, nil, nil)) || nil
   end
 
   @doc """
@@ -447,9 +459,9 @@ defmodule Cldr.Locale do
         language: language,
         script: script,
         territory: territory,
-        variants: variants
+        language_variant: variant
       }) do
-    locale_name_from(language, script, territory, variants)
+    locale_name_from(language, script, territory, variant)
   end
 
   @doc """
@@ -527,7 +539,7 @@ defmodule Cldr.Locale do
         script: nil,
         territory: "MD",
         transform: %{},
-        variants: []
+        language_variant: nil
       }
 
   """
@@ -627,7 +639,7 @@ defmodule Cldr.Locale do
         script: "Hans",
         territory: "SG",
         transform: %{},
-        variants: []
+        language_variant: nil
       }
 
   """
@@ -720,7 +732,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "TZ",
           transform: %{},
-          variants: []
+          language_variant: nil
         },
         "fuf" => %Cldr.LanguageTag{
           canonical_locale_name: nil,
@@ -734,7 +746,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "GN",
           transform: %{},
-          variants: []
+          language_variant: nil
         },
         ...
 
@@ -769,7 +781,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variants: []
+        language_variant: nil
       }
 
   """

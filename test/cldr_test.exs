@@ -57,7 +57,7 @@ defmodule Cldr.Test do
                script: "Latn",
                territory: "001",
                transform: %{},
-               variants: []
+               language_variant: nil
              }
   end
 
@@ -181,7 +181,7 @@ defmodule Cldr.Test do
                script: nil,
                territory: "US",
                transform: %{},
-               variants: []
+               language_variant: nil
              }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
@@ -199,7 +199,7 @@ defmodule Cldr.Test do
                script: "Arab",
                territory: "AQ",
                transform: %{},
-               variants: []
+               language_variant: nil
              }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
@@ -217,7 +217,7 @@ defmodule Cldr.Test do
                script: "Latn",
                territory: "AQ",
                transform: %{},
-               variants: []
+               language_variant: nil
              }
   end
 

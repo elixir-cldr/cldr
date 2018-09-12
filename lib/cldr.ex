@@ -118,7 +118,7 @@ defmodule Cldr do
          requested_locale_name: "pl",
          script: "Latn",
          transform: %{},
-         variants: []
+         language_variant: nil
        }
 
   """
@@ -159,7 +159,7 @@ defmodule Cldr do
          script: "Latn",
          territory: "US",
          transform: %{},
-         variants: []
+         language_variant: nil
        }}
 
       iex> Cldr.set_current_locale("invalid_locale")
@@ -207,7 +207,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variants: []
+        language_variant: nil
       }
 
   """
@@ -525,7 +525,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variants: []
+        language_variant: nil
       }}
 
 
@@ -544,7 +544,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variants: []
+        language_variant: nil
       }}
 
       iex> Cldr.validate_locale "zzz"

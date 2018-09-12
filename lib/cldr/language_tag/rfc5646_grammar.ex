@@ -94,9 +94,11 @@ defmodule Cldr.Rfc5646.Grammar do
   # variant       = 5*8alphanum         ; registered variants
   #                 / (DIGIT 3alphanum)
   def variant do
-    choice([alpha5_8(), digit() |> concat(alpha_numeric3())])
-    |> reduce({Enum, :join, []})
-    |> tag(:variant)
+    choice([
+      alpha_numeric5_8(),
+      digit() |> concat(alpha_numeric3()) |> reduce({Enum, :join, []})
+    ])
+    |> unwrap_and_tag(:language_variant)
     |> label(
       "a language variant code of five to eight alphabetic character or " <>
         "a single digit plus three alphanumeric characters"

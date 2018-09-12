@@ -102,7 +102,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Latn",
             territory: "DK",
             transform: %{},
-            variants: []
+            language_variant: nil
           }},
          {0.3,
           %Cldr.LanguageTag{
@@ -119,7 +119,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Hant",
             territory: "TW",
             transform: %{},
-            variants: []
+            language_variant: nil
           }}
        ]}
 
@@ -146,7 +146,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Latn",
             territory: "DK",
             transform: %{},
-            variants: []
+            language_variant: nil
           }},
          {0.3,
           %Cldr.LanguageTag{
@@ -163,7 +163,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Hant",
             territory: "TW",
             transform: %{},
-            variants: []
+            language_variant: nil
           }},
          {:error,
           {Cldr.LanguageTag.ParseError,
@@ -237,7 +237,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Latn",
            territory: "DK",
            transform: %{},
-           variants: []
+           language_variant: nil
          }},
         {0.3,
          %Cldr.LanguageTag{
@@ -254,7 +254,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Hant",
            territory: "TW",
            transform: %{},
-           variants: []
+           language_variant: nil
          }}
       ]
 
@@ -279,7 +279,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Latn",
            territory: "DK",
            transform: %{},
-           variants: []
+           language_variant: nil
          }},
         {0.3,
          %Cldr.LanguageTag{
@@ -296,7 +296,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Hant",
            territory: "TW",
            transform: %{},
-           variants: []
+           language_variant: nil
          }},
         {:error,
          {Cldr.LanguageTag.ParseError,
@@ -340,7 +340,7 @@ defmodule Cldr.AcceptLanguage do
          script: "Hant",
          territory: "TW",
          transform: %{},
-         variants: []
+         language_variant: nil
        }}
 
       iex(4)> Cldr.AcceptLanguage.best_match "da;q=0.1,zh-TW;q=0.3"
@@ -359,7 +359,7 @@ defmodule Cldr.AcceptLanguage do
          script: "Hant",
          territory: "TW",
          transform: %{},
-         variants: []
+         language_variant: nil
        }}
 
       iex> Cldr.AcceptLanguage.best_match "xx,yy;q=0.3"
