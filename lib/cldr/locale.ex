@@ -335,7 +335,12 @@ defmodule Cldr.Locale do
   end
 
   defp first_match(
-         %LanguageTag{language: language, script: script, territory: territory, variants: variants},
+         %LanguageTag{
+           language: language,
+           script: script,
+           territory: territory,
+           variants: variants
+         },
          fun
        )
        when is_function(fun) do
@@ -467,8 +472,12 @@ defmodule Cldr.Locale do
       "en-Latn-001"
 
   """
-  @spec locale_name_from(String.t() | nil, String.t() | nil, String.t() | nil,
-                    [String.t(), ...] | []) :: locale_name()
+  @spec locale_name_from(
+          String.t() | nil,
+          String.t() | nil,
+          String.t() | nil,
+          [String.t(), ...] | []
+        ) :: locale_name()
 
   def locale_name_from(language, script, territory, variants) when is_list(variants) do
     ([language, script, territory] ++ variants)

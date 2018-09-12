@@ -13,9 +13,11 @@ defmodule Cldr.Rfc5646.Parser do
     do: {:ok, acc}
 
   defp unwrap({:error, <<first::binary-size(1), reason::binary>>, rest, _, _, offset}),
-    do: {:error, {LanguageTag.ParseError,
-      "#{String.capitalize(first)}#{reason}. Could not parse the remaining #{inspect rest} " <>
-      "starting at position #{offset + 1}"}}
+    do:
+      {:error,
+       {LanguageTag.ParseError,
+        "#{String.capitalize(first)}#{reason}. Could not parse the remaining #{inspect(rest)} " <>
+          "starting at position #{offset + 1}"}}
 
   # language-tag  = langtag             ; normal language tags
   #               / privateuse          ; private use tag
@@ -24,7 +26,7 @@ defmodule Cldr.Rfc5646.Parser do
             choice([
               langtag(),
               private_use(),
-              grandfathered(),
+              grandfathered()
             ])
             |> lookahead(:error_on_remaining)
             |> label("a BCP47 language tag")

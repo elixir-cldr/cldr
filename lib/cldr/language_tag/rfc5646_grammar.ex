@@ -36,7 +36,8 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # Don't support extended language for now
   def iso639 do
-    alpha2_3() |> unwrap_and_tag(:language)
+    alpha2_3()
+    |> unwrap_and_tag(:language)
     |> optional(ignore(dash()) |> concat(extlangs()))
     |> label("an ISO-639 language code of two or three alphabetic characters")
   end
@@ -46,8 +47,20 @@ defmodule Cldr.Rfc5646.Grammar do
   def extlangs do
     choice([
       script(),
-      extlang() |> ignore(dash()) |> concat(extlang()) |> ignore(dash()) |> concat(extlang()) |> tag(:language_subtags) |> ignore(dash()) |> concat(script()),
-      extlang() |> ignore(dash()) |> concat(extlang()) |> tag(:language_subtags) |> ignore(dash()) |> concat(script()),
+      extlang()
+      |> ignore(dash())
+      |> concat(extlang())
+      |> ignore(dash())
+      |> concat(extlang())
+      |> tag(:language_subtags)
+      |> ignore(dash())
+      |> concat(script()),
+      extlang()
+      |> ignore(dash())
+      |> concat(extlang())
+      |> tag(:language_subtags)
+      |> ignore(dash())
+      |> concat(script()),
       extlang() |> ignore(dash()) |> tag(:language_subtags) |> concat(script()),
       extlang() |> ignore(dash()) |> concat(extlang()) |> ignore(dash()) |> concat(extlang()),
       extlang() |> ignore(dash()) |> concat(extlang()),
@@ -72,8 +85,10 @@ defmodule Cldr.Rfc5646.Grammar do
   def region do
     choice([alpha2(), integer3()])
     |> unwrap_and_tag(:territory)
-    |> label("a territory code of two alphabetic character ISO-3166-1 code " <>
-             "or a three digit UN M.49 code")
+    |> label(
+      "a territory code of two alphabetic character ISO-3166-1 code " <>
+        "or a three digit UN M.49 code"
+    )
   end
 
   # variant       = 5*8alphanum         ; registered variants
@@ -82,8 +97,10 @@ defmodule Cldr.Rfc5646.Grammar do
     choice([alpha5_8(), digit() |> concat(alpha_numeric3())])
     |> reduce({Enum, :join, []})
     |> tag(:variant)
-    |> label("a language variant code of five to eight alphabetic character or " <>
-             "a single digit plus three alphanumeric characters")
+    |> label(
+      "a language variant code of five to eight alphabetic character or " <>
+        "a single digit plus three alphanumeric characters"
+    )
   end
 
   # extensions    = locale / transform / extension
@@ -198,7 +215,9 @@ defmodule Cldr.Rfc5646.Grammar do
     alpha_numeric3_8()
     |> unwrap_and_tag(:type)
     |> repeat(ignore(dash()) |> concat(alpha_numeric3_8()) |> unwrap_and_tag(:type))
-    |> label("a type that is one or more three to eight alphanumeric characters separated by a dash")
+    |> label(
+      "a type that is one or more three to eight alphanumeric characters separated by a dash"
+    )
   end
 
   # attribute     = 3*8alphanum
@@ -311,5 +330,4 @@ defmodule Cldr.Rfc5646.Grammar do
     end)
     |> Keyword.put(:extensions, extensions)
   end
-
 end

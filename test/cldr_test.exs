@@ -43,22 +43,22 @@ defmodule Cldr.Test do
 
   test "default locale" do
     assert Cldr.default_locale() ==
-      %Cldr.LanguageTag{
-        canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001",
-        language_subtags: [],
-        extensions: %{},
-        gettext_locale_name: nil,
-        language: "en",
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: "en",
-        requested_locale_name: "en-001",
-        script: "Latn",
-        territory: "001",
-        transform: %{},
-        variants: []
-      }
+             %Cldr.LanguageTag{
+               canonical_locale_name: "en-Latn-001",
+               cldr_locale_name: "en-001",
+               language_subtags: [],
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "en",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: "en",
+               requested_locale_name: "en-001",
+               script: "Latn",
+               territory: "001",
+               transform: %{},
+               variants: []
+             }
   end
 
   test "locale name does not exist" do
@@ -167,58 +167,58 @@ defmodule Cldr.Test do
 
   test "that locale substitutions are applied" do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
-        %Cldr.LanguageTag{
-          canonical_locale_name: nil,
-          cldr_locale_name: nil,
-          language_subtags: [],
-          extensions: %{},
-          gettext_locale_name: nil,
-          language: "en",
-          locale: %{},
-          private_use: [],
-          rbnf_locale_name: nil,
-          requested_locale_name: "en-US",
-          script: nil,
-          territory: "US",
-          transform: %{},
-          variants: []
-        }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               language_subtags: [],
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "en",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "en-US",
+               script: nil,
+               territory: "US",
+               transform: %{},
+               variants: []
+             }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
-        %Cldr.LanguageTag{
-          canonical_locale_name: nil,
-          cldr_locale_name: nil,
-          language_subtags: [],
-          extensions: %{},
-          gettext_locale_name: nil,
-          language: "sr",
-          locale: %{},
-          private_use: [],
-          rbnf_locale_name: nil,
-          requested_locale_name: "sh_Arab_AQ",
-          script: "Arab",
-          territory: "AQ",
-          transform: %{},
-          variants: []
-        }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               language_subtags: [],
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "sr",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "sh_Arab_AQ",
+               script: "Arab",
+               territory: "AQ",
+               transform: %{},
+               variants: []
+             }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
-        %Cldr.LanguageTag{
-          canonical_locale_name: nil,
-          cldr_locale_name: nil,
-          language_subtags: [],
-          extensions: %{},
-          gettext_locale_name: nil,
-          language: "sr",
-          locale: %{},
-          private_use: [],
-          rbnf_locale_name: nil,
-          requested_locale_name: "sh_AQ",
-          script: "Latn",
-          territory: "AQ",
-          transform: %{},
-          variants: []
-        }
+             %Cldr.LanguageTag{
+               canonical_locale_name: nil,
+               cldr_locale_name: nil,
+               language_subtags: [],
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "sr",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: nil,
+               requested_locale_name: "sh_AQ",
+               script: "Latn",
+               territory: "AQ",
+               transform: %{},
+               variants: []
+             }
   end
 
   test "that we can have repeated currencies in a territory" do

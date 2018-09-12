@@ -457,5 +457,4 @@ defmodule Cldr.AcceptLanguage do
       {quality_1, _}, {quality_2, _} -> quality_1 > quality_2
     end)
   end
-
 end
