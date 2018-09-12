@@ -25,7 +25,7 @@ defmodule Cldr.Locale.Sigil do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        variants: []
       }
 
   """

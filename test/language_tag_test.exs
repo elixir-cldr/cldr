@@ -25,10 +25,9 @@ defmodule CldrLanguageTagTest do
   end
 
   test "Extended language subtags and their primary language subtag counterparts" do
-    # Implementation does not support language subtag parsing (yet)
-    # assert {:ok, _} = Cldr.LanguageTag.parse("zh-cmn-Hans-CN")
+    assert {:ok, _} = Cldr.LanguageTag.parse("zh-cmn-Hans-CN")
     assert {:ok, _} = Cldr.LanguageTag.parse("cmn-Hans-CN")
-    # assert {:ok, _} = Cldr.LanguageTag.parse("zh-yue-HK")
+    assert {:ok, _} = Cldr.LanguageTag.parse("zh-yue-HK")
     assert {:ok, _} = Cldr.LanguageTag.parse("yue-HK")
   end
 
@@ -39,7 +38,8 @@ defmodule CldrLanguageTagTest do
 
   test "Language-Variant" do
     # Implementation does not support language-variant,
-    # only language-region-variant
+    # only language-script-region-variant
+    # and language-region-variant
     # assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj")
     # assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj-biske")
     # assert {:ok, _} = Cldr.LanguageTag.parse("sl-nedis")

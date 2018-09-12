@@ -144,11 +144,11 @@ defmodule Cldr.LanguageTag.Parser do
     |> Map.put(:territory, String.upcase(territory))
   end
 
-  defp normalize_variant(%LanguageTag{variant: nil} = language_tag), do: language_tag
+  defp normalize_variant(%LanguageTag{variants: []} = language_tag), do: language_tag
 
-  defp normalize_variant(%LanguageTag{variant: variant} = language_tag) do
+  defp normalize_variant(%LanguageTag{variants: variants} = language_tag) do
     language_tag
-    |> Map.put(:variant, String.upcase(variant))
+    |> Map.put(:variant, Enum.map(variants, &String.upcase/1))
   end
 
   defp canonicalize_key([key, valid, default], param) when is_function(valid) do

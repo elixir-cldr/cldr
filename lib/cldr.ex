@@ -30,6 +30,7 @@ defmodule Cldr do
     hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
 
   """
+  @external_resource "priv/cldr/language_tags.ebin"
 
   alias Cldr.Config
   alias Cldr.Locale
@@ -117,7 +118,7 @@ defmodule Cldr do
          requested_locale_name: "pl",
          script: "Latn",
          transform: %{},
-         variant: nil
+         variants: []
        }
 
   """
@@ -147,7 +148,7 @@ defmodule Cldr do
        %Cldr.LanguageTag{
          canonical_locale_name: "en-Latn-US",
          cldr_locale_name: "en",
-         extended_language: [],
+         language_subtags: [],
          extensions: %{},
          gettext_locale_name: "en",
          language: "en",
@@ -158,7 +159,7 @@ defmodule Cldr do
          script: "Latn",
          territory: "US",
          transform: %{},
-         variant: nil
+         variants: []
        }}
 
       iex> Cldr.set_current_locale("invalid_locale")
@@ -195,7 +196,7 @@ defmodule Cldr do
       %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
-        extended_language: [],
+        language_subtags: [],
         extensions: %{},
         gettext_locale_name: nil,
         language: "en",
@@ -206,7 +207,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variant: nil
+        variants: []
       }
 
   """
@@ -524,7 +525,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        variants: []
       }}
 
 
@@ -543,7 +544,7 @@ defmodule Cldr do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variant: nil
+        variants: []
       }}
 
       iex> Cldr.validate_locale "zzz"

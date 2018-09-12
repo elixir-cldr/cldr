@@ -46,7 +46,7 @@ defmodule Cldr.Test do
       %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
-        extended_language: [],
+        language_subtags: [],
         extensions: %{},
         gettext_locale_name: nil,
         language: "en",
@@ -57,7 +57,7 @@ defmodule Cldr.Test do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variant: nil
+        variants: []
       }
   end
 
@@ -170,7 +170,7 @@ defmodule Cldr.Test do
         %Cldr.LanguageTag{
           canonical_locale_name: nil,
           cldr_locale_name: nil,
-          extended_language: [],
+          language_subtags: [],
           extensions: %{},
           gettext_locale_name: nil,
           language: "en",
@@ -181,14 +181,14 @@ defmodule Cldr.Test do
           script: nil,
           territory: "US",
           transform: %{},
-          variant: nil
+          variants: []
         }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
         %Cldr.LanguageTag{
           canonical_locale_name: nil,
           cldr_locale_name: nil,
-          extended_language: [],
+          language_subtags: [],
           extensions: %{},
           gettext_locale_name: nil,
           language: "sr",
@@ -199,14 +199,14 @@ defmodule Cldr.Test do
           script: "Arab",
           territory: "AQ",
           transform: %{},
-          variant: nil
+          variants: []
         }
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
         %Cldr.LanguageTag{
           canonical_locale_name: nil,
           cldr_locale_name: nil,
-          extended_language: [],
+          language_subtags: [],
           extensions: %{},
           gettext_locale_name: nil,
           language: "sr",
@@ -217,7 +217,7 @@ defmodule Cldr.Test do
           script: "Latn",
           territory: "AQ",
           transform: %{},
-          variant: nil
+          variants: []
         }
   end
 

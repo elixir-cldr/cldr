@@ -19,7 +19,7 @@ defmodule Cldr.Plug.SetLocale.Test do
       default: %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
-        extended_language: [],
+        language_subtags: [],
         extensions: %{},
         gettext_locale_name: nil,
         language: "en",
@@ -30,7 +30,7 @@ defmodule Cldr.Plug.SetLocale.Test do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variant: nil
+        variants: []
       },
       param: "locale",
       from: [:session, :accept_language],
@@ -71,7 +71,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                script: "Latn",
                territory: "FR",
                transform: %{},
-               variant: nil
+               variants: []
              }
 
     assert Cldr.get_current_locale() == conn.private[:cldr_locale]
@@ -96,7 +96,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                locale: %{},
                private_use: [],
                transform: %{},
-               variant: nil,
+               variants: [],
                canonical_locale_name: "ru-Cyrl-RU",
                cldr_locale_name: "ru",
                language: "ru",
@@ -127,7 +127,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                locale: %{},
                private_use: [],
                transform: %{},
-               variant: nil,
+               variants: [],
                canonical_locale_name: "zh-Hant-TW",
                cldr_locale_name: "zh-Hant",
                language: "zh",
@@ -157,7 +157,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                locale: %{},
                private_use: [],
                transform: %{},
-               variant: nil,
+               variants: [],
                canonical_locale_name: "zh-Hant-TW",
                cldr_locale_name: "zh-Hant",
                language: "zh",
@@ -193,7 +193,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                script: "Latn",
                territory: "PL",
                transform: %{},
-               variant: nil
+               variants: []
              }
 
     assert Cldr.get_current_locale() == conn.private[:cldr_locale]

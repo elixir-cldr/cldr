@@ -157,10 +157,10 @@ defmodule Cldr.LanguageTag do
   end
 
   defstruct language: nil,
-            extended_language: [],
+            language_subtags: [],
             script: nil,
             territory: nil,
-            variant: nil,
+            variants: [],
             locale: %{},
             transform: %{},
             extensions: %{},
@@ -173,10 +173,10 @@ defmodule Cldr.LanguageTag do
 
   @type t :: %__MODULE__{
           language: String.t(),
-          extended_language: [String.t(), ...] | [],
+          language_subtags: [String.t(), ...] | [],
           script: String.t() | nil,
           territory: String.t() | nil,
-          variant: String.t() | nil,
+          variants: [String.t() | [], ...],
           locale: %{},
           transform: %{},
           extensions: %{},

@@ -91,7 +91,7 @@ defmodule Cldr.AcceptLanguage do
           %Cldr.LanguageTag{
             canonical_locale_name: "da-Latn-DK",
             cldr_locale_name: "da",
-            extended_language: [],
+            language_subtags: [],
             extensions: %{},
             gettext_locale_name: nil,
             language: "da",
@@ -102,13 +102,13 @@ defmodule Cldr.AcceptLanguage do
             script: "Latn",
             territory: "DK",
             transform: %{},
-            variant: nil
+            variants: []
           }},
          {0.3,
           %Cldr.LanguageTag{
             canonical_locale_name: "zh-Hant-TW",
             cldr_locale_name: "zh-Hant",
-            extended_language: [],
+            language_subtags: [],
             extensions: %{},
             gettext_locale_name: nil,
             language: "zh",
@@ -119,7 +119,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Hant",
             territory: "TW",
             transform: %{},
-            variant: nil
+            variants: []
           }}
        ]}
 
@@ -135,7 +135,7 @@ defmodule Cldr.AcceptLanguage do
           %Cldr.LanguageTag{
             canonical_locale_name: "da-Latn-DK",
             cldr_locale_name: "da",
-            extended_language: [],
+            language_subtags: [],
             extensions: %{},
             gettext_locale_name: nil,
             language: "da",
@@ -146,13 +146,13 @@ defmodule Cldr.AcceptLanguage do
             script: "Latn",
             territory: "DK",
             transform: %{},
-            variant: nil
+            variants: []
           }},
          {0.3,
           %Cldr.LanguageTag{
             canonical_locale_name: "zh-Hant-TW",
             cldr_locale_name: "zh-Hant",
-            extended_language: [],
+            language_subtags: [],
             extensions: %{},
             gettext_locale_name: nil,
             language: "zh",
@@ -163,7 +163,7 @@ defmodule Cldr.AcceptLanguage do
             script: "Hant",
             territory: "TW",
             transform: %{},
-            variant: nil
+            variants: []
           }},
          {:error,
           {Cldr.LanguageTag.ParseError,
@@ -226,7 +226,7 @@ defmodule Cldr.AcceptLanguage do
          %Cldr.LanguageTag{
            canonical_locale_name: "da-Latn-DK",
            cldr_locale_name: "da",
-           extended_language: [],
+           language_subtags: [],
            extensions: %{},
            gettext_locale_name: nil,
            language: "da",
@@ -237,13 +237,13 @@ defmodule Cldr.AcceptLanguage do
            script: "Latn",
            territory: "DK",
            transform: %{},
-           variant: nil
+           variants: []
          }},
         {0.3,
          %Cldr.LanguageTag{
            canonical_locale_name: "zh-Hant-TW",
            cldr_locale_name: "zh-Hant",
-           extended_language: [],
+           language_subtags: [],
            extensions: %{},
            gettext_locale_name: nil,
            language: "zh",
@@ -254,7 +254,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Hant",
            territory: "TW",
            transform: %{},
-           variant: nil
+           variants: []
          }}
       ]
 
@@ -268,7 +268,7 @@ defmodule Cldr.AcceptLanguage do
          %Cldr.LanguageTag{
            canonical_locale_name: "da-Latn-DK",
            cldr_locale_name: "da",
-           extended_language: [],
+           language_subtags: [],
            extensions: %{},
            gettext_locale_name: nil,
            language: "da",
@@ -279,13 +279,13 @@ defmodule Cldr.AcceptLanguage do
            script: "Latn",
            territory: "DK",
            transform: %{},
-           variant: nil
+           variants: []
          }},
         {0.3,
          %Cldr.LanguageTag{
            canonical_locale_name: "zh-Hant-TW",
            cldr_locale_name: "zh-Hant",
-           extended_language: [],
+           language_subtags: [],
            extensions: %{},
            gettext_locale_name: nil,
            language: "zh",
@@ -296,7 +296,7 @@ defmodule Cldr.AcceptLanguage do
            script: "Hant",
            territory: "TW",
            transform: %{},
-           variant: nil
+           variants: []
          }},
         {:error,
          {Cldr.LanguageTag.ParseError,
@@ -329,7 +329,7 @@ defmodule Cldr.AcceptLanguage do
        %Cldr.LanguageTag{
          canonical_locale_name: "zh-Hant-TW",
          cldr_locale_name: "zh-Hant",
-         extended_language: [],
+         language_subtags: [],
          extensions: %{},
          gettext_locale_name: nil,
          language: "zh",
@@ -340,7 +340,7 @@ defmodule Cldr.AcceptLanguage do
          script: "Hant",
          territory: "TW",
          transform: %{},
-         variant: nil
+         variants: []
        }}
 
       iex(4)> Cldr.AcceptLanguage.best_match "da;q=0.1,zh-TW;q=0.3"
@@ -348,7 +348,7 @@ defmodule Cldr.AcceptLanguage do
        %Cldr.LanguageTag{
          canonical_locale_name: "zh-Hant-TW",
          cldr_locale_name: "zh-Hant",
-         extended_language: [],
+         language_subtags: [],
          extensions: %{},
          gettext_locale_name: nil,
          language: "zh",
@@ -359,7 +359,7 @@ defmodule Cldr.AcceptLanguage do
          script: "Hant",
          territory: "TW",
          transform: %{},
-         variant: nil
+         variants: []
        }}
 
       iex> Cldr.AcceptLanguage.best_match "xx,yy;q=0.3"

@@ -11,6 +11,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def langtag do
     language()
     |> optional(ignore(dash()) |> concat(script()))
+    |> repeat(ignore(dash()) |> concat(variant()))
     |> optional(ignore(dash()) |> concat(region()))
     |> repeat(ignore(dash()) |> concat(variant()))
     |> repeat(ignore(dash()) |> concat(extensions()) |> reduce(:collapse_extensions))
@@ -36,20 +37,27 @@ defmodule Cldr.Rfc5646.Grammar do
   # Don't support extended language for now
   def iso639 do
     alpha2_3() |> unwrap_and_tag(:language)
-    # |> optional(ignore(dash()) |> extlang()))
+    |> optional(ignore(dash()) |> concat(extlangs()))
     |> label("an ISO-639 language code of two or three alphabetic characters")
   end
 
   # extlang       = 3ALPHA              ; selected ISO 639 codes
   #                 *2("-" 3ALPHA)      ; permanently reserved
-  def extlang do
+  def extlangs do
     choice([
-      alpha3() |> ignore(dash()) |> concat(alpha3()) |> ignore(dash()) |> concat(alpha3()),
-      alpha3() |> ignore(dash()) |> concat(alpha3()),
-      alpha3()
+      script(),
+      extlang() |> ignore(dash()) |> concat(extlang()) |> ignore(dash()) |> concat(extlang()) |> tag(:language_subtags) |> ignore(dash()) |> concat(script()),
+      extlang() |> ignore(dash()) |> concat(extlang()) |> tag(:language_subtags) |> ignore(dash()) |> concat(script()),
+      extlang() |> ignore(dash()) |> tag(:language_subtags) |> concat(script()),
+      extlang() |> ignore(dash()) |> concat(extlang()) |> ignore(dash()) |> concat(extlang()),
+      extlang() |> ignore(dash()) |> concat(extlang()),
+      extlang() |> tag(:language_subtags)
     ])
-    |> tag(:extended_language)
     |> label("an ISO-639 language code of between one and three three alphabetic characters")
+  end
+
+  def extlang do
+    alpha3()
   end
 
   # script        = 4ALPHA
@@ -73,7 +81,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def variant do
     choice([alpha5_8(), digit() |> concat(alpha_numeric3())])
     |> reduce({Enum, :join, []})
-    |> unwrap_and_tag(:variant)
+    |> tag(:variant)
     |> label("a language variant code of five to eight alphabetic character or " <>
              "a single digit plus three alphanumeric characters")
   end
@@ -303,4 +311,5 @@ defmodule Cldr.Rfc5646.Grammar do
     end)
     |> Keyword.put(:extensions, extensions)
   end
+
 end

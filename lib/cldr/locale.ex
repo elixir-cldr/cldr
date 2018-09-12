@@ -57,7 +57,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "ES",
         transform: %{},
-        variant: nil
+        variants: []
       }}
 
   ### Matching locales to requested locale names
@@ -94,7 +94,7 @@ defmodule Cldr.Locale do
          cldr_locale_name: "ro-MD", extensions: %{}, language: "ro",
          locale: %{}, private_use: [], rbnf_locale_name: "ro",
          requested_locale_name: "mo", script: "Latn", territory: "MD",
-         transform: %{}, variant: nil}}
+         transform: %{}, variants: []}}
 
   ### Likely subtags
 
@@ -118,7 +118,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        variants: []
       }}
 
   Which shows that a the likely subtag for the script is "Latn" and the likely
@@ -152,7 +152,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        variants: []
       }}
 
   """
@@ -216,7 +216,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "US",
           transform: %{},
-          variant: nil
+          variants: []
         }
       }
 
@@ -335,20 +335,20 @@ defmodule Cldr.Locale do
   end
 
   defp first_match(
-         %LanguageTag{language: language, script: script, territory: territory, variant: variant},
+         %LanguageTag{language: language, script: script, territory: territory, variants: variants},
          fun
        )
        when is_function(fun) do
     # Including variant
     # Not including variant
-    fun.(locale_name_from(language, script, territory, variant)) ||
-      fun.(locale_name_from(language, nil, territory, variant)) ||
-      fun.(locale_name_from(language, script, nil, variant)) ||
-      fun.(locale_name_from(language, nil, nil, variant)) ||
-      fun.(locale_name_from(language, script, territory, nil)) ||
-      fun.(locale_name_from(language, nil, territory, nil)) ||
-      fun.(locale_name_from(language, script, nil, nil)) ||
-      fun.(locale_name_from(language, nil, nil, nil)) || nil
+    fun.(locale_name_from(language, script, territory, variants)) ||
+      fun.(locale_name_from(language, nil, territory, variants)) ||
+      fun.(locale_name_from(language, script, nil, variants)) ||
+      fun.(locale_name_from(language, nil, nil, variants)) ||
+      fun.(locale_name_from(language, script, territory, [])) ||
+      fun.(locale_name_from(language, nil, territory, [])) ||
+      fun.(locale_name_from(language, script, nil, [])) ||
+      fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   @doc """
@@ -442,9 +442,9 @@ defmodule Cldr.Locale do
         language: language,
         script: script,
         territory: territory,
-        variant: variant
+        variants: variants
       }) do
-    locale_name_from(language, script, territory, variant)
+    locale_name_from(language, script, territory, variants)
   end
 
   @doc """
@@ -467,13 +467,17 @@ defmodule Cldr.Locale do
       "en-Latn-001"
 
   """
-  @spec locale_name_from(String.t() | nil, String.t() | nil, String.t() | nil, String.t() | nil) ::
-          locale_name()
+  @spec locale_name_from(String.t() | nil, String.t() | nil, String.t() | nil,
+                    [String.t(), ...] | []) :: locale_name()
 
-  def locale_name_from(language, script, territory, variant) do
-    [language, script, territory, variant]
+  def locale_name_from(language, script, territory, variants) when is_list(variants) do
+    ([language, script, territory] ++ variants)
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
+  end
+
+  def locale_name_from(language, script, territory, variants) do
+    locale_name_from(language, script, territory, [variants])
   end
 
   @doc """
@@ -514,7 +518,7 @@ defmodule Cldr.Locale do
         script: nil,
         territory: "MD",
         transform: %{},
-        variant: nil
+        variants: []
       }
 
   """
@@ -603,7 +607,7 @@ defmodule Cldr.Locale do
       %Cldr.LanguageTag{
         canonical_locale_name: nil,
         cldr_locale_name: nil,
-        extended_language: [],
+        language_subtags: [],
         extensions: %{},
         gettext_locale_name: nil,
         language: "zh",
@@ -614,7 +618,7 @@ defmodule Cldr.Locale do
         script: "Hans",
         territory: "SG",
         transform: %{},
-        variant: nil
+        variants: []
       }
 
   """
@@ -622,12 +626,12 @@ defmodule Cldr.Locale do
         %LanguageTag{language: language, script: script, territory: territory} = language_tag
       ) do
     subtags =
-      likely_subtags(locale_name_from(language, script, territory, nil)) ||
-        likely_subtags(locale_name_from(language, nil, territory, nil)) ||
-        likely_subtags(locale_name_from(language, script, nil, nil)) ||
-        likely_subtags(locale_name_from(language, nil, nil, nil)) ||
-        likely_subtags(locale_name_from("und", script, nil, nil)) ||
-        likely_subtags(locale_name_from("und", nil, nil, nil))
+      likely_subtags(locale_name_from(language, script, territory, [])) ||
+        likely_subtags(locale_name_from(language, nil, territory, [])) ||
+        likely_subtags(locale_name_from(language, script, nil, [])) ||
+        likely_subtags(locale_name_from(language, nil, nil, [])) ||
+        likely_subtags(locale_name_from("und", script, nil, [])) ||
+        likely_subtags(locale_name_from("und", nil, nil, []))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
@@ -707,7 +711,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "TZ",
           transform: %{},
-          variant: nil
+          variants: []
         },
         "fuf" => %Cldr.LanguageTag{
           canonical_locale_name: nil,
@@ -721,7 +725,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: "GN",
           transform: %{},
-          variant: nil
+          variants: []
         },
         ...
 
@@ -756,7 +760,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        variants: []
       }
 
   """
