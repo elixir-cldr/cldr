@@ -4,19 +4,15 @@ This is the changelog for Cldr v1.7.0 released on ______, 2018.  For older chang
 
 ### Enhancements
 
-* Replaces the langauge tag parser with a new version based upon [NimbleParsec](https://hex.pm/packages/nimble_parsec).  This version is approximately six times faster than the old version. It also:
+* Replaces the language tag parser with a new version based upon [NimbleParsec](https://hex.pm/packages/nimble_parsec).  This version is approximately six times faster than the old version. It also correctly parses language subtags.
 
-  * Correctly parses language subtags
-
-  * Correctly parses multiple language variants
-
-* There are changes to the `Cldr.LanguageTag` structure that doe represent a small breaking change:
+* There are changes to the `Cldr.LanguageTag` structure that deliver a small breaking change:
 
   * `:variant` is now renamed to `:language_variant`
 
   * `:language_subtags` is added.  It is a list of language subtags or `[]`
 
-There are some known limitations remaining in the parser that should not affect most users.  In particular language variants can only be placed after the script and region (territory/country) codes.  For example, according to the standard the language tag "sl-rozaj" is valid.  But the current parser does not support this combination. "sl-sv-rozaj" if however acceptable.
+There are some known limitations remaining in the parser that should not affect most users.  In particular a language variant can only be placed after the script and region (territory/country) codes.  For example, according to the standard the language tag "sl-rozaj" is valid.  But the current parser does not support this combination. "sl-sv-rozaj" is, however, acceptable.
 
 ### Bug Fixes
 
