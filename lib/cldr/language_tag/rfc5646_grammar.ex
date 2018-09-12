@@ -43,7 +43,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> repeat(ignore(dash()) |> concat(extensions()) |> reduce(:collapse_extensions))
     |> optional(ignore(dash()) |> concat(private_use()))
     |> traverse({:flatten, []})
-    |> label("a valid language tag according to ")
+    |> label("a valid BCP-47 language tag")
   end
 
   # language      = 2*3ALPHA            ; shortest ISO 639 code
@@ -91,7 +91,8 @@ defmodule Cldr.Rfc5646.Grammar do
   def region do
     choice([alpha2(), integer3()])
     |> unwrap_and_tag(:territory)
-    |> label("a territory code of two alphabetic character ISO-3166-1 code or a three digit UN M.49")
+    |> label("a territory code of two alphabetic character ISO-3166-1 code " <>
+             "or a three digit UN M.49 code")
   end
 
   # variant       = 5*8alphanum         ; registered variants
@@ -101,7 +102,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> reduce({Enum, :join, []})
     |> unwrap_and_tag(:variant)
     |> label("a language variant code of five to eight alphabetic character or " <>
-            "a single digit plus three alphanumeric characters")
+             "a single digit plus three alphanumeric characters")
   end
 
   # extensions    = locale / transform / extension
@@ -115,7 +116,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> choice([attributes() |> concat(keywords()), keywords()])
     |> reduce(:combine_attributes_and_keywords)
     |> unwrap_and_tag(:locale)
-    |> label("a BCP47 language tag locale extension")
+    |> label("a BCP-47 language tag locale extension")
   end
 
   def combine_attributes_and_keywords([{:attributes, attributes}, %{} = keywords]) do
@@ -134,7 +135,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> reduce(:collapse_keywords)
     |> times(min: 1)
     |> unwrap_and_tag(:transform)
-    |> label("a BCP47 language tag transform extension")
+    |> label("a BCP-47 language tag transform extension")
   end
 
   # extension     = singleton 1*("-" (2*8alphanum))
@@ -144,7 +145,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> times(ignore(dash()) |> concat(alpha_numeric2_8()) |> unwrap_and_tag(:attribute), min: 1)
     |> reduce(:collapse_extension)
     |> unwrap_and_tag(:extension)
-    |> label("a valid BCP47 language tag extension")
+    |> label("a valid BCP-47 language tag extension")
   end
 
   def collapse_extension(args) do
@@ -208,7 +209,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def key do
     alpha_numeric2()
     |> unwrap_and_tag(:key)
-    |> label("a key that is two alphanumeric characters")
+    |> label("a key of two alphanumeric characters")
   end
 
   # type          = 3*8alphanum *("-" 3*8alphanum)
@@ -216,7 +217,7 @@ defmodule Cldr.Rfc5646.Grammar do
     alpha_numeric3_8()
     |> unwrap_and_tag(:type)
     |> repeat(ignore(dash()) |> concat(alpha_numeric3_8()) |> unwrap_and_tag(:type))
-    |> label("a type that is one of more three to eight alphanumeric characters separated by a dash")
+    |> label("a type that is one or more three to eight alphanumeric characters separated by a dash")
   end
 
   # attribute     = 3*8alphanum

@@ -53,7 +53,8 @@ defmodule Cldr.Mixfile do
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:phoenix, "~> 1.3", optional: true},
       {:plug, "~> 1.4", optional: true},
-      {:sweet_xml, "~> 0.6", optional: true}
+      {:sweet_xml, "~> 0.6", optional: true},
+      {:benchee, "~> 0.13", only: :dev, runtime: false}
     ]
   end
 
@@ -150,6 +151,6 @@ defmodule Cldr.Mixfile do
   end
 
   defp elixirc_paths(:test), do: ["lib", "mix", "test"]
-  defp elixirc_paths(:dev), do: ["lib", "mix"]
+  defp elixirc_paths(:dev), do: ["lib", "mix", "bench"]
   defp elixirc_paths(_), do: ["lib"]
 end
