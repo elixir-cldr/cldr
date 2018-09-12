@@ -2,33 +2,6 @@ defmodule Cldr.Rfc5646.Grammar do
   import NimbleParsec
   import Cldr.Rfc5646.Core
 
-  # NimblePersec 0.2 doesn't have this but its used
-  # in Cldr
-  if !function_exported?(NimbleParsec, :unwrap_and_tag, 3) do
-    def unwrap_and_tag(combinator \\ empty(), to_tag, tag) do
-      quoted_traverse(combinator, to_tag, {__MODULE__, :__unwrap_and_tag__, [Macro.escape(tag)]})
-    end
-
-    def __unwrap_and_tag__(_rest, acc, context, _line, _offset, tag) when is_list(acc) do
-      case acc do
-        [one] -> {[{tag, one}], context}
-        many -> raise "unwrap_and_tag/3 expected a single token, got: #{inspect(many)}"
-      end
-    end
-
-    def __unwrap_and_tag__(_rest, acc, context, _line, _offset, tag) do
-      quoted =
-        quote do
-          case :lists.reverse(unquote(acc)) do
-            [one] -> one
-            many -> raise "unwrap_and_tag/3 expected a single token, got: #{inspect(many)}"
-          end
-        end
-
-      {[{tag, quoted}], context}
-    end
-  end
-
   # langtag       = language
   #                 ["-" script]
   #                 ["-" region]
