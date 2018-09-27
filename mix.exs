@@ -46,7 +46,7 @@ defmodule Cldr.Mixfile do
       {:poison, "~> 2.1 or ~> 3.0", optional: true},
       {:jason, "~> 1.0", optional: true},
       {:decimal, "~> 1.4"},
-      {:ex_doc, "~> 0.18", only: [:docs]},
+      {:ex_doc, "~> 0.18", only: [:docs, :dev]},
       {:nimble_parsec, "~> 0.4"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
