@@ -291,7 +291,7 @@ Locale string are case insensitive but there are common conventions:
 
 Tests cover the full 523 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.5.x.  `Cldr` will not run on Elixir versions before 1.5.
+Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions before 1.5.
 
 ### Updating the CDLR data repository if installing from Github
 
