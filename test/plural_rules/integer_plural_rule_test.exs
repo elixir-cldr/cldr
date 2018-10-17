@@ -6,7 +6,7 @@ defmodule Integer.PluralRule.Test do
   @modules [Cldr.Number.Cardinal, Cldr.Number.Ordinal]
 
   for module <- @modules,
-      locale_name <- module.known_locale_names,
+      locale_name <- ["gd"], #module.known_locale_names,
       {category, rule} <- module.plural_rules_for(locale_name),
       sample_type <- @sample_types,
       one_rule <- rule[sample_type] || [] do

@@ -85,7 +85,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {33, 0, 0}
+      {34, 0, 0}
 
   """
   @version Config.version()
@@ -558,12 +558,12 @@ defmodule Cldr do
     @language_tags Cldr.Config.all_language_tags()
 
     for locale_name <- Cldr.Config.known_locale_names() -- Cldr.Config.non_language_locale_names() do
-      language_tag =
-        Map.get(@language_tags, locale_name)
-        |> Cldr.Locale.set_gettext_locale_name()
+      if language_tag = Map.get(@language_tags, locale_name) do
+        language_tag = Cldr.Locale.set_gettext_locale_name(language_tag)
 
-      def validate_locale(unquote(locale_name)) do
-        {:ok, unquote(Macro.escape(language_tag))}
+        def validate_locale(unquote(locale_name)) do
+          {:ok, unquote(Macro.escape(language_tag))}
+        end
       end
     end
   end
@@ -860,11 +860,11 @@ defmodule Cldr do
        :BSD, :XUA, :GRD, :CHE, :JPY, :EGP, :XAG, :LYD, :XAU, :USD, :BND, :XPT, :BRE,
        :ROL, :PLN, :MZM, :FRF, :MGF, :LUL, :SSP, :DZD, :IEP, :SDD, :ADP, :AFN, :IQD,
        :GHS, :TOP, :LVR, :YUN, :MRU, :MKD, :GNF, :MXP, :THB, :CNH, :TZS, :XPF, :AED,
-       :SVC, :RON, :BEC, :CUP, :USN, :LBP, :BOP, :BHD, :BAN, :MDC, :VUV, :MGA, :ISK,
-       :COP, :BYN, :UAK, :TRL, :SCR, :KRO, :ILS, :ETB, :CAD, :AZN, :VNN, :NIO, :COU,
-       :EEK, :KYD, :MNT, :HNL, :WST, :PEI, :YER, :MTL, :STN, :AFA, :ARM, :HKD, :NZD,
-       :UYI, :MXV, :GTQ, :BYB, :XXX, :XSU, :HRK, :OMR, :BEL, :MUR, :ESP, :YDD, :MVR,
-       :LKR, :XAF]
+       :SVC, :RON, :BEC, :CUP, :USN, :LBP, :BOP, :BHD, :UYW, :BAN, :MDC, :VUV, :MGA,
+       :ISK, :COP, :BYN, :UAK, :TRL, :SCR, :KRO, :ILS, :ETB, :CAD, :AZN, :VNN, :NIO,
+       :COU, :EEK, :KYD, :MNT, :HNL, :WST, :PEI, :YER, :MTL, :STN, :AFA, :ARM, :HKD,
+       :NZD, :VES, :UYI, :MXV, :GTQ, :BYB, :XXX, :XSU, :HRK, :OMR, :BEL, :MUR, :ESP,
+       :YDD, :MVR, :LKR, :XAF]
 
   """
   @known_currencies Cldr.Config.known_currencies()
@@ -984,13 +984,14 @@ defmodule Cldr do
 
       iex> Cldr.known_number_systems
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
-       :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :gonm, :grek, :greklow,
-       :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin, :hebr,
-       :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham, :laoo,
-       :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans,
-       :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :newa, :nkoo,
-       :olck, :orya, :osma, :roman, :romanlow, :saur, :shrd, :sind, :sinh, :sora,
-       :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :vaii, :wara]
+       :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
+       :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
+       :hebr, :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham,
+       :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
+       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
+       :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :shrd,
+       :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
+       :tirh, :vaii, :wara]
 
   """
   @known_number_systems Cldr.Config.known_number_systems()

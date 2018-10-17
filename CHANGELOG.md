@@ -1,3 +1,15 @@
+# Changelog for Cldr v1.8.0
+
+This is the changelog for Cldr v1.8.0 released on October 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Adopts [CLDR](http://cldr.unicode.org) [version 34](http://cldr.unicode.org/index/downloads/cldr-34) released on October 15th, 2018.  This increases the number of known locales from 523 to 537. See the release notes for CLDR for more detailed information.
+
+* The new locales added are ff-Latn-BF, ff-Latn-CM, ff-Latn-GH, ff-Latn-GM, ff-Latn-GN, ff-Latn-GW, ff-Latn-LR, ff-Latn-MR, ff-Latn-NE, ff-Latn-NG, ff-Latn-SL, ff-Latn, ia, jv, ku, mi and xh
+
+* Note that three tests will fail due to a data error in the "gd" locale.  The correct result for ` Cldr.Number.Ordinal.plural_rule/2` is calculated but the test data is incorrect.  A [ticket](https://unicode.org/cldr/trac/ticket/11500) has been filed with CLDR.
+
 # Changelog for Cldr v1.7.1
 
 This is the changelog for Cldr v1.7.1 released on October 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

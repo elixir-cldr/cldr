@@ -777,7 +777,7 @@ defmodule Cldr.Locale do
         locale: %{},
         private_use: [],
         rbnf_locale_name: nil,
-        requested_locale_name: "en-latn-us",
+        requested_locale_name: "en-Latn-US",
         script: "Latn",
         territory: "US",
         transform: %{},

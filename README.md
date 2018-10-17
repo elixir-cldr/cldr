@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of February 4th and Version 1.4, `Cldr` is based upon [CLDR version 32.0.1](http://cldr.unicode.org/index/downloads/cldr-32).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 18th 2018 and Version 1.8.0, `Cldr` is based upon [CLDR version 34.0.0](https://github.com/unicode-cldr/cldr-json).
 
 The functions you are mostly likely to use are in the modules `Cldr` and `Cldr.Locale`.  In particular:
 
@@ -42,8 +42,9 @@ Add `ex_cldr` as a dependency to your `mix` project:
         {:ex_cldr, "~> 1.0"},
         # Posion or any other compatible json library
         # that implements `encode!/1` and `decode!/1`
-        # {:jason, "~> 1.0 or ~> 1.0-rc"}
-        {:poison, "~> 2.1 or ~> 3.0"}
+        # :jason is recommended
+        {:jason, "~> 1.0 or ~> 1.0-rc"}
+        # {:poison, "~> 2.1 or ~> 3.0"}
       ]
     end
 
