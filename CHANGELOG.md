@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.7.1
+
+This is the changelog for Cldr v1.7.1 released on October 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Removes a call to `Mix.Project.build_structure/0` in `Mix.Tasks.Compile.Cldr` which would clear the `:priv_dir` for all dependencies in a project during `Cldr` compilation phase.  Thanks to @epilgrim. Closes $78.
+
 # Changelog for Cldr v1.7.0
 
 This is the changelog for Cldr v1.7.0 released on September 27th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

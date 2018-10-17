@@ -176,7 +176,7 @@ defmodule Mix.Tasks.Compile.Cldr do
   defp callers(dep) do
     try do
       Mix.Dep.in_dependency(dep, fn _module ->
-        calls()
+       calls()
         |> Enum.filter(&compile_module?/1)
         |> Enum.map(fn callee -> {dep.app, callee} end)
       end)
