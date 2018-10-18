@@ -43,7 +43,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
         # Posion or any other compatible json library
         # that implements `encode!/1` and `decode!/1`
         # :jason is recommended
-        {:jason, "~> 1.0 or ~> 1.0-rc"}
+        {:jason, "~> 1.0"}
         # {:poison, "~> 2.1 or ~> 3.0"}
       ]
     end
@@ -85,7 +85,7 @@ Here's an example configuration that uses all of the available configuration key
        data_dir: "./priv/cldr",
        precompile_number_formats: ["¤¤#,##0.##"],
        precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
-       json_library: Poison
+       json_library: Jason
 
 ### Configuration Keys
 
