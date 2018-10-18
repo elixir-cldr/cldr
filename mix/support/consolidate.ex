@@ -191,21 +191,24 @@ defmodule Cldr.Consolidate do
     |> get_in(["version"])
   end
 
-  defp save_cldr_version do
+  @doc false
+  def save_cldr_version do
     path = Path.join(consolidated_output_dir(), "version.json")
     save_file(cldr_version(), path)
 
     assert_package_file_configured!(path)
   end
 
-  defp save_locales do
+  @doc false
+  def save_locales do
     path = Path.join(consolidated_output_dir(), "available_locales.json")
     save_file(all_locales(), path)
 
     assert_package_file_configured!(path)
   end
 
-  defp save_plurals do
+  @doc false
+  def save_plurals do
     cardinal =
       download_data_dir()
       |> Path.join(["cldr-core", "/supplemental", "/plurals.json"])
@@ -227,7 +230,8 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
-  defp save_number_systems do
+  @doc false
+  def save_number_systems do
     path = Path.join(consolidated_output_dir(), "number_systems.json")
 
     download_data_dir()
@@ -241,6 +245,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_currencies do
     path = Path.join(consolidated_output_dir(), "currencies.json")
 
@@ -255,6 +260,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_territory_containment do
     path = Path.join(consolidated_output_dir(), "territory_containment.json")
 
@@ -269,6 +275,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_territory_info do
     path = Path.join(consolidated_output_dir(), "territory_info.json")
 
@@ -283,6 +290,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_week_data do
     path = Path.join(consolidated_output_dir(), "week_data.json")
 
@@ -296,6 +304,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_calendar_data do
     path = Path.join(consolidated_output_dir(), "calendar_data.json")
 
@@ -313,6 +322,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_day_periods do
     path = Path.join(consolidated_output_dir(), "day_periods.json")
 
@@ -328,6 +338,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_aliases do
     path = Path.join(consolidated_output_dir(), "aliases.json")
 
@@ -351,6 +362,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def save_likely_subtags do
     path = Path.join(consolidated_output_dir(), "likely_subtags.json")
 
@@ -366,6 +378,7 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @doc false
   def assert_package_file_configured!(path) do
     [_, path] = String.split(path, "/priv/")
     path = "priv/" <> path

@@ -8,7 +8,7 @@ This is the changelog for Cldr v1.8.0 released on October 18th, 2018.  For older
 
 * The new locales added are ff-Latn-BF, ff-Latn-CM, ff-Latn-GH, ff-Latn-GM, ff-Latn-GN, ff-Latn-GW, ff-Latn-LR, ff-Latn-MR, ff-Latn-NE, ff-Latn-NG, ff-Latn-SL, ff-Latn, ia, jv, ku, mi and xh
 
-* Note that three tests will fail due to a data error in the "gd" locale.  The correct result for ` Cldr.Number.Ordinal.plural_rule/2` is calculated but the test data is incorrect.  A [ticket](https://unicode.org/cldr/trac/ticket/11500) has been filed with CLDR.
+* Note that three tests will fail due to a data error in the "gd" locale.  The correct result for `Cldr.Number.Ordinal.plural_rule/2` is calculated but the test data is incorrect.  A [ticket](https://unicode.org/cldr/trac/ticket/11500) has been filed with CLDR.
 
 # Changelog for Cldr v1.7.1
 
