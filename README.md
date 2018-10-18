@@ -137,7 +137,7 @@ Note the addition of `[:cldr]` as the **last** compiler on the list.  This is a 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 523 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 537 locales are installed when the repo is cloned into your application deps.
 
 * If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
 
