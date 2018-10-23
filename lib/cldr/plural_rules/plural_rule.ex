@@ -5,8 +5,11 @@ defmodule Cldr.Number.PluralRule do
   Used to generate plural rule functions for
   `Cldr.Number.Ordinal` and `Cldr.Number.Cardinal`.
   """
+  @type operand :: any()
+
   defmacro __using__(opts) do
-    unless opts in [:cardinal, :ordinal] do
+    module_name = Keyword.get(opts, :type)
+    unless module_name in [:cardinal, :ordinal] do
       raise ArgumentError,
             "Invalid option #{inspect(opts)}. :cardinal or :ordinal are the only valid options"
     end
@@ -22,17 +25,25 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
-      @module_name Atom.to_string(unquote(opts)) |> String.capitalize()
+      @module Atom.to_string(unquote(module_name)) |> String.capitalize()
 
       @rules Cldr.Config.cldr_data_dir()
              |> Path.join("/plural_rules.json")
              |> File.read!()
              |> Cldr.Config.json_library().decode!
-             |> Map.get(Atom.to_string(unquote(opts)))
+             |> Map.get(Atom.to_string(unquote(module_name)))
 
       @rules_locales @rules
                      |> Map.keys()
                      |> Enum.sort()
+
+      @config Keyword.get(unquote(opts), :config)
+
+      @known_locale_names @rules_locales
+        |> MapSet.new()
+        |> MapSet.intersection(MapSet.new(Cldr.Config.known_locale_names(@config)))
+        |> MapSet.to_list()
+        |> Enum.sort()
 
       @doc """
       The locales for which plural rules are defined
@@ -44,20 +55,16 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       The configured locales for which plural rules are defined.
 
-      Returns the intersection of `Cldr.known_locale_names/0` and
-      the locales for which #{@module_name} plural rules are defined.
+      Returns the intersection of `Cldr.known_locale_names/1` and
+      the locales for which #{@module} plural rules are defined.
 
       There are many `Cldr` locales which don't have their own plural
       rules so this list is the intersection of `Cldr`'s configured
       locales and those that have rules.
       """
       @spec known_locale_names :: [Locale.locale_name(), ...]
-      def known_locale_names(backend \\ Cldr.Config.default_backend) do
-        @rules_locales
-        |> MapSet.new()
-        |> MapSet.intersection(MapSet.new(Cldr.known_locale_names(backend)))
-        |> MapSet.to_list()
-        |> Enum.sort()
+      def known_locale_names do
+        @known_locale_names
       end
 
       @doc """
@@ -79,35 +86,35 @@ defmodule Cldr.Number.PluralRule do
         The valid substitution keys are `:zero`, `:one`, `:two`,
         `:few`, `:many` and `:other`.
 
-      See also `Cldr.#{@module_name}.plural_rule/3`.
+      See also `Cldr.#{@module}.plural_rule/3`.
 
       ## Examples
 
-          iex> Cldr.Number.#{@module_name}.pluralize 1,
+          iex> Cldr.Number.#{@module}.pluralize 1,
           ...> Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.#{@module_name}.pluralize 2,
+          iex> Cldr.Number.#{@module}.pluralize 2,
           ...> Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.#{@module_name}.pluralize 2,
+          iex> Cldr.Number.#{@module}.pluralize 2,
           ...> Locale.new("en"), %{one: "one", two: "two"}
           "two"
 
-          iex> Cldr.Number.#{@module_name}.pluralize 22, Locale.new("en"),
+          iex> Cldr.Number.#{@module}.pluralize 22, Locale.new("en"),
           ...> %{one: "one", two: "two", other: "other"}
           "other"
 
-          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(1),
+          iex> Cldr.Number.#{@module}.pluralize Decimal.new(1),
           ...> Locale.new("en"), %{one: "one"}
           "one"
 
-          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(2),
+          iex> Cldr.Number.#{@module}.pluralize Decimal.new(2),
           ...> Locale.new("en"), %{one: "one"}
           nil
 
-          iex> Cldr.Number.#{@module_name}.pluralize Decimal.new(2),
+          iex> Cldr.Number.#{@module}.pluralize Decimal.new(2),
           ...> Locale.new("en"), %{one: "one", two: "two"}
           "two"
 
@@ -170,10 +177,10 @@ defmodule Cldr.Number.PluralRule do
 
       ## Examples
 
-          iex> Cldr.Number.#{@module_name}.plural_rule 0, "fr"
+          iex> Cldr.Number.#{@module}.plural_rule 0, "fr"
           :other
 
-          iex> Cldr.Number.#{@module_name}.plural_rule 1, "en"
+          iex> Cldr.Number.#{@module}.plural_rule 1, "en"
           :one
 
       """
@@ -260,16 +267,43 @@ defmodule Cldr.Number.PluralRule do
     end
   end
 
+  def define_ordinal_and_cardinal_modules(config) do
+    quote location: :keep do
+      defmodule Number.Ordinal do
+        @moduledoc """
+        Implements ordinal plural rules for numbers.
+        """
+
+        use Cldr.Number.PluralRule, type: :ordinal, config: unquote(Macro.escape(config))
+        alias Cldr.LanguageTag
+
+        unquote(Cldr.Number.PluralRule.define_plural_rules())
+      end
+
+      defmodule Number.Cardinal do
+        @moduledoc """
+        Implements cardinal plural rules for numbers.
+        """
+
+        use Cldr.Number.PluralRule, type: :cardinal, config: unquote(Macro.escape(config))
+        alias Cldr.LanguageTag
+
+        unquote(Cldr.Number.PluralRule.define_plural_rules())
+      end
+    end
+  end
+
   def define_plural_rules do
     quote unquote: false, location: :keep do
+      alias Cldr.Number.PluralRule
       # Generate the functions to process plural rules
       @spec do_plural_rule(
               LanguageTag.t(),
-              number,
-              operand,
-              operand,
-              operand,
-              operand,
+              number(),
+              PluralRule.operand(),
+              PluralRule.operand(),
+              PluralRule.operand(),
+              PluralRule.operand(),
               [integer(), ...] | integer()
             ) :: :zero | :one | :two | :few | :many | :other
 
@@ -281,10 +315,12 @@ defmodule Cldr.Number.PluralRule do
           |> Map.get(locale_name)
           |> rules_to_condition_statement(__MODULE__)
 
-        defp do_plural_rule(%LanguageTag{cldr_locale_name: unquote(locale_name)}, n, i, v, w, f, t) do
-          # silence unused variable warnings
-          _ = {n, i, v, w, f, t}
-          unquote(function_body)
+        quote bind_quoted: [locale_name: locale_name, function_body: function_body] do
+          defp do_plural_rule(%LanguageTag{cldr_locale_name: locale_name}, n, i, v, w, f, t) do
+            # silence unused variable warnings
+            _ = {n, i, v, w, f, t}
+            function_body
+          end
         end
       end
 
@@ -296,12 +332,13 @@ defmodule Cldr.Number.PluralRule do
             :error,
             {
               Cldr.UnknownPluralRules,
-              "No #{@module_name} plural rules available for #{inspect(language_tag)}"
+              "No #{@module} plural rules available for #{inspect(language_tag)}"
             }
           }
         else
-          language_tag = Map.put(language_tag, :cldr_locale_name, language_tag.language)
-          do_plural_rule(language_tag, n, i, v, w, f, t)
+          language_tag
+          |> Map.put(:cldr_locale_name, language_tag.language)
+          |> do_plural_rule(n, i, v, w, f, t)
         end
       end
     end

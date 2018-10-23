@@ -179,7 +179,7 @@ if Code.ensure_loaded?(Plug) do
       Cldr.put_current_locale(locale)
     end
 
-    defp set_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do
+    defp put_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do
       Logger.warn(
         "Locale #{inspect(locale.requested_locale_name)} does not have a known " <>
           "Gettext locale.  No Gettext locale has been set."
@@ -188,7 +188,7 @@ if Code.ensure_loaded?(Plug) do
       nil
     end
 
-    defp set_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: locale_name}, options) do
+    defp put_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: locale_name}, options) do
       {:ok, apply(Gettext, :put_locale, [options[:gettext], locale_name])}
     end
 

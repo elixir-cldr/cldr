@@ -238,7 +238,7 @@ defmodule Cldr.Locale do
     end
   end
 
-  def canonical_language_tag(%LanguageTag{} = language_tag, _backend) do
+  def canonical_language_tag(%LanguageTag{} = language_tag, backend) do
     supress_requested_locale_substitution? = !language_tag.language
 
     canonical_tag =
@@ -251,9 +251,9 @@ defmodule Cldr.Locale do
     canonical_tag =
       canonical_tag
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
-      |> put_cldr_locale_name
-      |> put_rbnf_locale_name
-      |> put_gettext_locale_name
+      |> put_cldr_locale_name(backend)
+      |> put_rbnf_locale_name(backend)
+      |> put_gettext_locale_name(backend)
 
     {:ok, canonical_tag}
   end
@@ -290,44 +290,45 @@ defmodule Cldr.Locale do
     Map.put(language_tag, :requested_locale_name, locale_name_from(language_tag))
   end
 
-  @spec put_cldr_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp put_cldr_locale_name(%LanguageTag{} = language_tag) do
-    cldr_locale_name = cldr_locale_name(language_tag)
+  @spec put_cldr_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
+  defp put_cldr_locale_name(%LanguageTag{} = language_tag, backend) do
+    cldr_locale_name = cldr_locale_name(language_tag, backend)
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec put_rbnf_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp put_rbnf_locale_name(%LanguageTag{} = language_tag) do
-    rbnf_locale_name = rbnf_locale_name(language_tag)
+  @spec put_rbnf_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, backend) do
+    rbnf_locale_name = rbnf_locale_name(language_tag, backend)
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
-  @spec put_gettext_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  def put_gettext_locale_name(%LanguageTag{} = language_tag) do
-    gettext_locale_name = gettext_locale_name(language_tag)
+  @spec put_gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(%LanguageTag{} = language_tag, backend) do
+    gettext_locale_name = gettext_locale_name(language_tag, backend)
     %{language_tag | gettext_locale_name: gettext_locale_name}
   end
 
-  @spec cldr_locale_name(Cldr.LanguageTag.t()) :: locale_name() | nil
-  defp cldr_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &Cldr.known_locale_name/1) ||
-      Cldr.known_locale_name(language_tag.requested_locale_name) || nil
+  @spec cldr_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name() | nil
+  defp cldr_locale_name(%LanguageTag{} = language_tag, backend) do
+    first_match(language_tag, &Cldr.known_locale_name(&1, backend)) ||
+      Cldr.known_locale_name(language_tag.requested_locale_name, backend) || nil
   end
 
-  @spec rbnf_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
-  defp rbnf_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &Cldr.known_rbnf_locale_name/1)
+  @spec rbnf_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name | nil
+  defp rbnf_locale_name(%LanguageTag{} = language_tag, backend) do
+    first_match(language_tag, &Cldr.known_rbnf_locale_name(&1, backend))
   end
 
-  @spec gettext_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
-  defp gettext_locale_name(%LanguageTag{} = language_tag) do
+  @spec gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name | nil
+  defp gettext_locale_name(%LanguageTag{} = language_tag, backend) do
     language_tag
-    |> first_match(&known_gettext_locale_name/1)
+    |> first_match(&known_gettext_locale_name(&1, backend))
     |> locale_name_to_posix
   end
 
-  def known_gettext_locale_name(locale_name) do
-    if locale_name in Cldr.Config.gettext_locales() do
+  @spec known_gettext_locale_name(Locale.locale_name(), Cldr.backend()) :: Locale.locale_name() | false
+  def known_gettext_locale_name(locale_name, backend) do
+    if locale_name in Cldr.Config.gettext_locales(backend) do
       locale_name
     else
       false

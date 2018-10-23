@@ -3,7 +3,24 @@ defmodule Cldr.Config do
 
   alias Cldr.Locale
   alias Cldr.LanguageTag
-  @type t :: map()
+
+  defstruct default_locale: "en-001",
+    locales: ["en-001"],
+    backend: nil,
+    gettext: nil,
+    data_dir: "./priv/cldr",
+    precompile_number_formats: [],
+    precompile_transliterations: []
+
+  @type t :: %__MODULE__{
+    default_locale: binary(),
+    locales: [binary(), ...],
+    backend: module(),
+    gettext: module() | nil,
+    data_dir: binary(),
+    precompile_number_formats: [binary(), ...],
+    precompile_transliterations: [{atom, atom}, ...]
+  }
 
   @default_locale "en-001"
 
@@ -34,34 +51,19 @@ defmodule Cldr.Config do
     end
   end
 
-  # Check that the :cldr compiler is the last in the compiler list
-  # if it is configured
-  if :cldr in Mix.Project.config()[:compilers] and
-       hd(Enum.reverse(Mix.Project.config()[:compilers])) != :cldr do
-    raise ArgumentError,
-          "If configured, the :cldr compiler must be the last compiler in the list. " <>
-            "Found #{inspect(Mix.Project.config()[:compilers])}"
-  end
-
   @doc """
   Return the configured json lib
   """
   Module.put_attribute(
     __MODULE__,
     :poison,
-    case Code.ensure_loaded(Poison) do
-      {:module, _} -> Poison
-      _ -> nil
-    end
+    if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   )
 
   Module.put_attribute(
     __MODULE__,
     :jason,
-    case Code.ensure_loaded(Jason) do
-      {:module, _} -> Jason
-      _ -> nil
-    end
+    if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
   )
 
   @app_name Mix.Project.config()[:app]
@@ -69,17 +71,18 @@ defmodule Cldr.Config do
     @app_name
   end
 
+  @jason_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
   def json_library do
-    Application.get_env(app_name(), :json_library) || @jason || @poison
+    @jason_lib
   end
 
-  def check_jason_lib_is_available do
+  def check_jason_lib_is_available! do
     unless Code.ensure_loaded?(json_library()) && function_exported?(json_library(), :decode!, 1) do
       message =
         if is_nil(json_library()) do
           """
            A json library has not been configured.  Please configure one in
-           your `mix.exs` file.  Two common packages are Jason and Poison.
+           your `mix.exs` file.  The preferred library is `:jason`.
            For example in your `mix.exs`:
 
              def deps() do
