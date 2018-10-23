@@ -244,16 +244,16 @@ defmodule Cldr.Locale do
     canonical_tag =
       language_tag
       |> check_valid_territory
-      |> set_requested_locale_name(supress_requested_locale_substitution?)
+      |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases
       |> add_likely_subtags
 
     canonical_tag =
       canonical_tag
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
-      |> set_cldr_locale_name
-      |> set_rbnf_locale_name
-      |> set_gettext_locale_name
+      |> put_cldr_locale_name
+      |> put_rbnf_locale_name
+      |> put_gettext_locale_name
 
     {:ok, canonical_tag}
   end
@@ -281,29 +281,29 @@ defmodule Cldr.Locale do
     end
   end
 
-  @spec set_requested_locale_name(Cldr.LanguageTag.t(), boolean()) :: Cldr.LanguageTag.t()
-  defp set_requested_locale_name(language_tag, true) do
+  @spec put_requested_locale_name(Cldr.LanguageTag.t(), boolean()) :: Cldr.LanguageTag.t()
+  defp put_requested_locale_name(language_tag, true) do
     language_tag
   end
 
-  defp set_requested_locale_name(language_tag, false) do
+  defp put_requested_locale_name(language_tag, false) do
     Map.put(language_tag, :requested_locale_name, locale_name_from(language_tag))
   end
 
-  @spec set_cldr_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp set_cldr_locale_name(%LanguageTag{} = language_tag) do
+  @spec put_cldr_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  defp put_cldr_locale_name(%LanguageTag{} = language_tag) do
     cldr_locale_name = cldr_locale_name(language_tag)
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec set_rbnf_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp set_rbnf_locale_name(%LanguageTag{} = language_tag) do
+  @spec put_rbnf_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag) do
     rbnf_locale_name = rbnf_locale_name(language_tag)
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
-  @spec set_gettext_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  def set_gettext_locale_name(%LanguageTag{} = language_tag) do
+  @spec put_gettext_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(%LanguageTag{} = language_tag) do
     gettext_locale_name = gettext_locale_name(language_tag)
     %{language_tag | gettext_locale_name: gettext_locale_name}
   end

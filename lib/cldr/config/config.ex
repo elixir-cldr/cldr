@@ -1,98 +1,9 @@
 defmodule Cldr.Config do
-  @moduledoc """
-  Provides the functions to manage the `Cldr` configuration.
-
-  Locales are configured for use in `Cldr` by either
-  specifying them directly or by using a configured
-  `Gettext` module.
-
-  Locales are configured in `config.exs` (or any included config).
-  For example the following will configure English and French as
-  the available locales.  Note that only locales that are contained
-  within the CLDR repository will be available for use.  There
-  are currently 516 locales defined in CLDR version 31.0.0.
-
-      config :ex_cldr,
-        locales: ["en", "fr"]
-
-  ## Working with Gettext
-
-  It's also possible to use the locales from a Gettext
-  configuration:
-
-      config :ex_cldr,
-        locales: ["en", "fr"]
-        gettext: App.Gettext
-
-  In which case the combination of locales "en", "fr" and
-  whatever is configured for App.Gettext will be generated.
-
-  ## Locale wildcards
-
-  Locales can also be configured by using a `regex` which is most
-  useful when dealing with locales that have many regional variants
-  like English (over 100!) and French.  For example:
-
-      config :ex_cldr,
-        locales: ["fr-*", "en-[A-Z]+"]
-
-  will configure all French locales and all English locales that have
-  alphabetic regional variants.  The expansion is made using
-  `Regex.match?` so any valid regex can be used.
-
-  ## Configuring all locales
-
-  As a special case, all locales in CLDR can be configured
-  by using the keyword `:all`.  For example:
-
-      config :ex_cldr,
-        locales: :all
-
-  **Configuring all locales is not recommended*. Doing so
-  imposes a significant compilation load as many functions
-  are created at compmile time for each locale.**
-
-  The `Cldr` test configuration does configure all locales in order
-  to ensure good test coverage.  This is done at the expense
-  of significant compile time.
-
-  ## Precompiling configured number formats
-
-  If your application heavily relies on one or more particular user-defined
-  number formats then there is a performance benefit to having them precompiled
-  when your app is compiled (up to double the performance).
-
-  To define the formats to be precompiled specify them in your config file with
-  the key `compile_number_formats`.
-
-  For example:
-
-      config :ex_cldr,
-        compile_number_formats: ["¤¤#,##0.##"]
-
-  ## Storage location for the locale definiton files
-
-  Locale files are downloaded and installed at compile time based upon the
-  configuration.  These files are only used at compile time, they contain
-  the `json` representation of the locale data.
-
-  By default the locale files are stored in `./priv/cldr/locales`.
-
-  The locale of the locales can be changed in the configuration with the
-  `:data_dir` key.  For example:
-
-      config :ex_cldr,
-        locales: ["en", "fr"]
-        data_dir: "/apps/data/cldr"
-
-  The directory will be created if it does not exist and an
-  exception will be raised if the directory cannot be created.
-  """
+  @moduledoc false
 
   alias Cldr.Locale
   alias Cldr.LanguageTag
-
-  @type t :: binary
+  @type t :: map()
 
   @default_locale "en-001"
 
@@ -158,36 +69,35 @@ defmodule Cldr.Config do
     @app_name
   end
 
-  # Prefer Jason if its confiured over Poison
-  @json_lib Application.get_env(@app_name, :json_library) || @jason || @poison
-
-  unless Code.ensure_loaded?(@json_lib) && function_exported?(@json_lib, :decode!, 1) do
-    message =
-      if is_nil(@json_lib) do
-        """
-         A json library has not been configured.  Please configure one in
-         your `mix.exs` file.  Two common packages are Poison and Jason.
-         For example in your `mix.exs`:
-
-           def deps() do
-             [
-               {:jason, "~> 1.0"},
-               ...
-             ]
-           end
-        """
-      else
-        """
-        The json library #{inspect(@json_lib)} is either
-        not configured or does not define the function decode!/1
-        """
-      end
-
-    raise ArgumentError, message
+  def json_library do
+    Application.get_env(app_name(), :json_library) || @jason || @poison
   end
 
-  def json_library do
-    @json_lib
+  def check_jason_lib_is_available do
+    unless Code.ensure_loaded?(json_library()) && function_exported?(json_library(), :decode!, 1) do
+      message =
+        if is_nil(json_library()) do
+          """
+           A json library has not been configured.  Please configure one in
+           your `mix.exs` file.  Two common packages are Jason and Poison.
+           For example in your `mix.exs`:
+
+             def deps() do
+               [
+                 {:jason, "~> 1.0"},
+                 ...
+               ]
+             end
+          """
+        else
+          """
+          The json library #{inspect(json_library())} is either
+          not configured or does not define the function decode!/1
+          """
+        end
+
+      raise ArgumentError, message
+    end
   end
 
   @doc """
@@ -252,15 +162,15 @@ defmodule Cldr.Config do
   are stored.
   """
   def download_data_dir do
-    Path.join(Cldr.Config.cldr_home(), "data")
+    Path.join(cldr_home(), "data")
   end
 
   @doc """
   Return the configured `Gettext` module name or `nil`.
   """
-  @spec gettext :: atom
-  def gettext do
-    Application.get_env(app_name(), :gettext)
+  @spec gettext(t()) :: module() | nil
+  def gettext(config) do
+    Map.get(config, :gettext)
   end
 
   @doc """
@@ -279,22 +189,21 @@ defmodule Cldr.Config do
   * The `Gettext.get_locale/1` for the current configuration
   * "en"
   """
-  @spec default_locale(Cldr.backend) :: Locale.locale_name()
-  def default_locale(backend \\ default_backend()) do
-    cond do
-      backend_default = backend.default_locale ->
-        backend_default
+  @spec default_locale(t()) :: Locale.locale_name()
+  def default_locale(config) do
+    Map.get(config, :default_locale) ||
+    Application.get_env(app_name(), :default_locale) ||
+    gettext_default_locale(config) ||
+    @default_locale
+  end
 
-      cldr_default = Application.get_env(app_name(), :default_locale) ->
-        cldr_default
-
-      gettext_configured?() ->
-        Gettext
-        |> apply(:get_locale, [gettext()])
-        |> locale_name_from_posix()
-
-      true ->
-        @default_locale
+  defp gettext_default_locale(config) do
+    if gettext_configured?(config) do
+      Gettext
+      |> apply(:get_locale, [gettext(config)])
+      |> locale_name_from_posix()
+    else
+      nil
     end
   end
 
@@ -304,19 +213,19 @@ defmodule Cldr.Config do
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
   """
-  @spec gettext_locales :: [Locale.locale_name()]
-  def gettext_locales do
-    if gettext_configured?() && Application.ensure_all_started(:gettext) do
-      otp_app = gettext().__gettext__(:otp_app)
+  @spec gettext_locales(t()) :: [Locale.locale_name()]
+  def gettext_locales(config) do
+    if gettext_configured?(config) && Application.ensure_all_started(:gettext) do
+      otp_app = gettext(config).__gettext__(:otp_app)
 
       backend_default =
         otp_app
-        |> Application.get_env(gettext())
+        |> Application.get_env(gettext(config))
         |> gettext_default_locale
 
       global_default = Application.get_env(:gettext, :default_locale)
 
-      locales = apply(Gettext, :known_locales, [gettext()]) ++ [backend_default, global_default]
+      locales = apply(Gettext, :known_locales, [gettext(config)]) ++ [backend_default, global_default]
 
       locales
       |> Enum.reject(&is_nil/1)
@@ -326,14 +235,6 @@ defmodule Cldr.Config do
     else
       []
     end
-  end
-
-  defp gettext_default_locale(nil) do
-    nil
-  end
-
-  defp gettext_default_locale(gettext_config) do
-    Keyword.get(gettext_config, :default_locale)
   end
 
   @doc """
@@ -400,12 +301,12 @@ defmodule Cldr.Config do
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
   """
-  @spec configured_locale_names :: [Locale.locale_name()]
-  def configured_locale_names do
+  @spec configured_locale_names(t()) :: [Locale.locale_name()]
+  def configured_locale_names(config) do
     locale_names =
-      case app_locale_names = Application.get_env(app_name(), :locales) do
+      case app_locale_names = Map.get(config, :locales) do
         :all -> all_locale_names()
-        nil -> expand_locale_names([default_locale()])
+        nil -> expand_locale_names([default_locale(config)])
         _ -> expand_locale_names(app_locale_names)
       end
 
@@ -418,30 +319,30 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured and available
   in the CLDR repository.
   """
-  @spec known_locale_names :: [Locale.locale_name()]
-  def known_locale_names do
-    requested_locale_names()
+  @spec known_locale_names(t()) :: [Locale.locale_name()]
+  def known_locale_names(config) do
+    requested_locale_names(config)
     |> MapSet.new()
     |> MapSet.intersection(MapSet.new(all_locale_names()))
     |> MapSet.to_list()
     |> Enum.sort()
   end
 
-  def known_rbnf_locale_names do
-    known_locale_names()
+  def known_rbnf_locale_names(config) do
+    known_locale_names(config)
     |> Enum.filter(fn locale -> Map.get(get_locale(locale), :rbnf) != %{} end)
   end
 
-  def known_locale_name(locale_name) do
-    if locale_name in known_locale_names() do
+  def known_locale_name(locale_name, config) do
+    if locale_name in known_locale_names(config) do
       locale_name
     else
       false
     end
   end
 
-  def known_rbnf_locale_name(locale_name) do
-    if locale_name in known_rbnf_locale_names() do
+  def known_rbnf_locale_name(locale_name, config) do
+    if locale_name in known_rbnf_locale_names(config) do
       locale_name
     else
       false
@@ -452,9 +353,9 @@ defmodule Cldr.Config do
   Returns a list of all locales that are configured but not available
   in the CLDR repository.
   """
-  @spec unknown_locale_names :: [Locale.locale_name()]
-  def unknown_locale_names do
-    requested_locale_names()
+  @spec unknown_locale_names(t()) :: [Locale.locale_name()]
+  def unknown_locale_names(config) do
+    requested_locale_names(config)
     |> MapSet.new()
     |> MapSet.difference(MapSet.new(all_locale_names()))
     |> MapSet.to_list()
@@ -468,9 +369,9 @@ defmodule Cldr.Config do
   specified in the mix.exs configuration file as well as the
   default locale.
   """
-  @spec requested_locale_names :: [Locale.locale_name()]
-  def requested_locale_names do
-    (configured_locale_names() ++ gettext_locales() ++ [default_locale()])
+  @spec requested_locale_names(t()) :: [Locale.locale_name()]
+  def requested_locale_names(config) do
+    (configured_locale_names(config) ++ gettext_locales(config) ++ [default_locale(config)])
     |> Enum.uniq()
     |> Enum.sort()
   end
@@ -549,12 +450,15 @@ defmodule Cldr.Config do
 
   """
   def known_number_systems do
-    number_systems() |> Map.keys() |> Enum.sort()
+    number_systems()
+    |> Map.keys()
+    |> Enum.sort()
   end
 
   @max_concurrency System.schedulers_online() * 2
-  def known_number_system_types do
-    known_locale_names()
+  def known_number_system_types(config) do
+    config
+    |> known_locale_names()
     |> Task.async_stream(__MODULE__, :number_systems_for, [], max_concurrency: @max_concurrency)
     |> Enum.to_list()
     |> Enum.flat_map(&elem(&1, 1))
@@ -614,9 +518,9 @@ defmodule Cldr.Config do
       iex> Cldr.Config.gettext_configured?
       true
   """
-  @spec gettext_configured? :: boolean
-  def gettext_configured? do
-    gettext() && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext())
+  @spec gettext_configured?(t()) :: boolean
+  def gettext_configured?(config) do
+    gettext(config) && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext(config))
   end
 
   @doc """
