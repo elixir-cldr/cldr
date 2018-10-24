@@ -76,6 +76,7 @@ if Code.ensure_loaded?(Plug) do
         |> validate_default(options[:default])
         |> validate_gettext(options[:gettext])
         |> validate_session_key(options[:session_key])
+        |> validate_cldr_backend(options[:cldr])
 
       if :gettext in options[:apps] and is_nil(options[:gettext]) do
         raise ArgumentError,
@@ -130,25 +131,25 @@ if Code.ensure_loaded?(Plug) do
       fetch_param(conn, :query, param, options)
     end
 
-    defp fetch_param(conn, :query, param, _options) do
+    defp fetch_param(conn, :query, param, options) do
       conn
       |> Map.get(:query_params)
       |> Map.get(param)
-      |> Cldr.validate_locale()
+      |> Cldr.validate_locale(options[:cldr])
     end
 
-    defp fetch_param(conn, :path, param, _options) do
+    defp fetch_param(conn, :path, param, options) do
       conn
       |> Map.get(:path_params)
       |> Map.get(param)
-      |> Cldr.validate_locale()
+      |> Cldr.validate_locale(options[:cldr])
     end
 
-    defp fetch_param(conn, :body, param, _options) do
+    defp fetch_param(conn, :body, param, options) do
       conn
       |> Map.get(:body_params)
       |> Map.get(param)
-      |> Cldr.validate_locale()
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp fetch_param(conn, :session, _param, options) do
@@ -156,11 +157,11 @@ if Code.ensure_loaded?(Plug) do
       |> get_session(options[:session_key])
     end
 
-    defp fetch_param(conn, :cookie, param, _options) do
+    defp fetch_param(conn, :cookie, param, options) do
       conn
       |> Map.get(:cookies)
       |> Map.get(param)
-      |> Cldr.validate_locale()
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp return_if_valid_locale(nil) do
@@ -265,10 +266,13 @@ if Code.ensure_loaded?(Plug) do
       )
     end
 
-    defp validate_default(options, nil), do: Keyword.put(options, :default, Cldr.default_locale())
+    defp validate_default(options, nil) do
+      default = Cldr.default_locale(options[:cldr])
+      Keyword.put(options, :default, default)
+    end
 
     defp validate_default(options, default) do
-      case Cldr.validate_locale(default) do
+      case Cldr.validate_locale(default, options[:cldr]) do
         {:ok, locale} -> Keyword.put(options, :default, locale)
         {:error, {exception, reason}} -> raise exception, reason
       end
@@ -297,6 +301,19 @@ if Code.ensure_loaded?(Plug) do
         "Invalid :session_key #{inspect(session_key)} detected. " <>
           ":session_key must be a string"
       )
+    end
+
+    def validate_cldr_backend(_options, nil) do
+      raise ArgumentError, "A :cldr backend module must be configured"
+    end
+
+    def validate_cldr_backend(options, backend) when is_atom(backend) do
+      unless Code.ensure_loaded?(backend) and function_exported?(backend, :__cldr__, 1) do
+        raise ArgumentError,
+          "#{inspect backend} is either not known or does not appear to be a Cldr backend module"
+      else
+        Keyword.put(options, :cldr, backend)
+      end
     end
   end
 end

@@ -3,7 +3,6 @@ defmodule Cldr.Backend.Compiler do
 
   @doc false
   defmacro __before_compile__(env) do
-    backend = env.module
     cldr_opts = Module.get_attribute(env.module, :cldr_opts)
     config = struct(Cldr.Config, cldr_opts)
 
@@ -12,12 +11,14 @@ defmodule Cldr.Backend.Compiler do
       |> Map.put(:backend, env.module)
       |> Map.put(:default_locale, Cldr.Config.default_locale(config))
 
+    [_, backend] = to_string(env.module) |> String.split(".", parts: 2)
+
     Cldr.Config.check_jason_lib_is_available!()
     Cldr.install_locales(config)
 
     quote location: :keep do
       @moduledoc """
-      ``#{unquote(backend)}` provides the core functions to retrieve and manage
+      Provides the core functions to retrieve and manage
       the CLDR data that supports formatting and localisation.
 
       It provides the core functions to access formatted
@@ -297,6 +298,10 @@ defmodule Cldr.Backend.Compiler do
 
       unquote(Cldr.define_validate_locale(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
+
+      if Code.ensure_loaded?(Gettext) do
+        unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
+      end
     end
   end
 

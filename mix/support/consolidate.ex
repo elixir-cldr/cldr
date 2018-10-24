@@ -49,9 +49,9 @@ defmodule Cldr.Consolidate do
   @doc """
   Consolidates known locales as defined by `Cldr.known_locale_names/0`.
   """
-  @spec consolidate_known_locales :: :ok
-  def consolidate_known_locales do
-    Cldr.known_locale_names()
+  @spec consolidate_known_locales(Cldr.backend()) :: :ok
+  def consolidate_known_locales(backend) do
+    Cldr.known_locale_names(backend)
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
     |> Enum.to_list()
 

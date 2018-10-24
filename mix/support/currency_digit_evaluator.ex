@@ -9,9 +9,9 @@ defmodule Cldr.Currency.Evaluator do
   Run some analysis of the differences between
   ISO 4217 and Cldr currency data.
   """
-  def check do
+  def check(backend) do
     currencies =
-      Cldr.get_current_locale()
+      Cldr.get_current_locale(backend)
       |> Map.get(:cldr_locale_name)
       |> Cldr.Config.get_locale()
       |> Map.get(:currencies)

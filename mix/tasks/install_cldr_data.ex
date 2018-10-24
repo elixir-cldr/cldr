@@ -10,8 +10,13 @@ if File.exists?(Cldr.Config.download_data_dir()) do
     @shortdoc "Install all configured `Cldr` locales."
 
     @doc false
-    def run(_) do
-      Cldr.Install.install_known_locale_names()
+    def run([]) do
+      raise ArgumentError, "A Cldr backend module must be provided"
+    end
+
+    def run([backend]) do
+      config = backend.__cldr__(:config)
+      Cldr.Install.install_known_locale_names(config)
     end
   end
 end

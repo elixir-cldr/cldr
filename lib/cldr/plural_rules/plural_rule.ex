@@ -9,6 +9,7 @@ defmodule Cldr.Number.PluralRule do
 
   defmacro __using__(opts) do
     module_name = Keyword.get(opts, :type)
+
     unless module_name in [:cardinal, :ordinal] do
       raise ArgumentError,
             "Invalid option #{inspect(opts)}. :cardinal or :ordinal are the only valid options"
@@ -38,6 +39,7 @@ defmodule Cldr.Number.PluralRule do
                      |> Enum.sort()
 
       @config Keyword.get(unquote(opts), :config)
+      @backend Map.get(@config, :backend)
 
       @known_locale_names @rules_locales
         |> MapSet.new()
@@ -192,7 +194,7 @@ defmodule Cldr.Number.PluralRule do
 
       def plural_rule(
             number,
-            locale \\ Cldr.get_current_locale(),
+            locale \\ Cldr.get_current_locale(@backend),
             rounding \\ Math.default_rounding()
           )
 

@@ -574,7 +574,7 @@ defmodule Cldr do
 
       ## Examples
 
-          iex> Cldr.validate_locale "en"
+          iex> #{config.backend}.validate_locale "en"
           {:ok,
           %Cldr.LanguageTag{
             canonical_locale_name: "en-Latn-US",
@@ -593,7 +593,7 @@ defmodule Cldr do
           }}
 
 
-          iex> Cldr.validate_locale Cldr.default_locale
+          iex> #{config.backend}.validate_locale Cldr.default_locale
           {:ok,
           %Cldr.LanguageTag{
             canonical_locale_name: "en-Latn-001",
@@ -611,7 +611,7 @@ defmodule Cldr do
             variant: nil
           }}
 
-          iex> Cldr.validate_locale "zzz"
+          iex> #{config.backend}.validate_locale "zzz"
           {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
       """
@@ -1243,6 +1243,7 @@ defmodule Cldr do
     }
   end
 
+  @doc false
   def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
   def locale_name(locale) when is_binary(locale), do: inspect(locale)
 end
