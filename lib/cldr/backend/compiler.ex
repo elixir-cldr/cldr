@@ -140,7 +140,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
@@ -163,7 +163,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
@@ -185,7 +185,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
@@ -210,7 +210,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
@@ -237,7 +237,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
@@ -264,7 +264,7 @@ defmodule Cldr.Backend.Compiler do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+      * `locale` is any valid locale name returned by `#{unquote(backend)}.known_locale_names/0`
 
       ## Examples
 
