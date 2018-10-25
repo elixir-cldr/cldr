@@ -200,10 +200,10 @@ defmodule Cldr.AcceptLanguage do
     end
   end
 
-  def parse(string) when is_binary(string) do
+  def parse(string, backend) when is_binary(string) do
     string
     |> tokenize
-    |> parse
+    |> parse(backend)
   end
 
   @doc """
@@ -226,7 +226,7 @@ defmodule Cldr.AcceptLanguage do
 
   ## Example
 
-      iex> Cldr.AcceptLanguage.parse! "da,zh-TW;q=0.3"
+      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3", TestBackend.Cldr)
       [
         {1.0,
          %Cldr.LanguageTag{
@@ -268,7 +268,7 @@ defmodule Cldr.AcceptLanguage do
       ** (Cldr.AcceptLanguageError) Invalid language tag. Could not parse the remaining "g" starting at position 11
           (ex_cldr) lib/cldr/accept_language.ex:304: Cldr.AcceptLanguage.parse!/1
 
-      iex> Cldr.AcceptLanguage.parse! "da,zh-TW;q=0.3,invalid_tag"
+      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,invalid_tag", TestBackend.Cldr)
       [
         {1.0,
          %Cldr.LanguageTag{
@@ -309,8 +309,8 @@ defmodule Cldr.AcceptLanguage do
           "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
       ]
   """
-  def parse!(accept_language) do
-    case parse(accept_language) do
+  def parse!(accept_language, backend) do
+    case parse(accept_language, backend) do
       {:ok, parse_result} -> parse_result
       {:error, {exception, reason}} -> raise exception, reason
     end
@@ -330,7 +330,7 @@ defmodule Cldr.AcceptLanguage do
 
   ## Examples
 
-      iex> Cldr.AcceptLanguage.best_match "da;q=0.1,zh-TW;q=0.3"
+      iex> Cldr.AcceptLanguage.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
       {:ok,
        %Cldr.LanguageTag{
          canonical_locale_name: "zh-Hant-TW",
@@ -349,7 +349,7 @@ defmodule Cldr.AcceptLanguage do
          language_variant: nil
        }}
 
-      iex(4)> Cldr.AcceptLanguage.best_match "da;q=0.1,zh-TW;q=0.3"
+      iex(4)> Cldr.AcceptLanguage.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
       {:ok,
        %Cldr.LanguageTag{
          canonical_locale_name: "zh-Hant-TW",
@@ -368,22 +368,22 @@ defmodule Cldr.AcceptLanguage do
          language_variant: nil
        }}
 
-      iex> Cldr.AcceptLanguage.best_match "xx,yy;q=0.3"
+      iex> Cldr.AcceptLanguage.best_match("xx,yy;q=0.3", TestBackend.Cldr)
       {:error,
        {Cldr.NoMatchingLocale,
         "No configured locale could be matched to \\"xx,yy;q=0.3\\""}}
 
-      iex> Cldr.AcceptLanguage.best_match("invalid_tag")
+      iex> Cldr.AcceptLanguage.best_match("invalid_tag", TestBackend.Cldr)
       {:error,
        {Cldr.LanguageTag.ParseError,
         "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
   """
-  @spec best_match(String.t()) ::
+  @spec best_match(String.t(), Cldr.backend()) ::
           {:ok, LanguageTag.t()} | {:error, {Cldr.AcceptLanguageError, String.t()}}
 
-  def best_match(accept_language) when is_binary(accept_language) do
-    with {:ok, languages} <- parse(accept_language) do
+  def best_match(accept_language, backend) when is_binary(accept_language) do
+    with {:ok, languages} <- parse(accept_language, backend) do
       candidates =
         Enum.filter(languages, fn
           {priority, %LanguageTag{cldr_locale_name: locale_name}}
@@ -418,7 +418,8 @@ defmodule Cldr.AcceptLanguage do
 
   ## Example
 
-      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,invalid_tag") |> Cldr.AcceptLanguage.errors
+      iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,invalid_tag", TestBackend.Cldr)
+      ...> |> Cldr.AcceptLanguage.errors
       [
         error: {Cldr.LanguageTag.ParseError,
         "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}

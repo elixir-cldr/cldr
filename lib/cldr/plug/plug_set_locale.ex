@@ -84,6 +84,10 @@ if Code.ensure_loaded?(Plug) do
                 "if the :gettext is configured as an :app"
       end
 
+      unless options[:cldr] do
+        raise ArgumentError, "A Cldr backend module must be specified under the key :cldr"
+      end
+
       options
     end
 
@@ -113,10 +117,10 @@ if Code.ensure_loaded?(Plug) do
       end)
     end
 
-    defp fetch_param(conn, :accept_language, _param, _options) do
+    defp fetch_param(conn, :accept_language, _param, options) do
       case get_req_header(conn, @language_header) do
-        [accept_language] -> AcceptLanguage.best_match(accept_language)
-        [accept_language | _] -> AcceptLanguage.best_match(accept_language)
+        [accept_language] -> AcceptLanguage.best_match(accept_language, options[:cldr])
+        [accept_language | _] -> AcceptLanguage.best_match(accept_language, options[:cldr])
         [] -> nil
       end
     end

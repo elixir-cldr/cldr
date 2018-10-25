@@ -5,7 +5,6 @@ if Code.ensure_loaded?(Plug) do
     `conn.private[:cldr_locale]` accordingly.  The locale can
     be later retrieved by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`
 
-    There are no configuration options for this plug.
     """
 
     import Plug.Conn
@@ -13,33 +12,28 @@ if Code.ensure_loaded?(Plug) do
 
     @language_header "accept-language"
 
-    def init(any) do
-      Logger.warn(
-        "#{__MODULE__} does not support configuration options. " <>
-          "Please remove #{inspect(any)} from the plug invokation."
-      )
+    def init(options) do
+      unless options[:cldr] do
+        raise ArgumentError, "A Cldr backend module must be specified under the key :cldr"
+      end
 
-      init()
+      Keyword.get(options, :cldr)
     end
 
-    def init do
-      nil
-    end
-
-    def call(conn, _default) do
+    def call(conn, backend) do
       case get_req_header(conn, @language_header) do
-        [accept_language] -> put_private(conn, :cldr_locale, best_match(accept_language))
-        [accept_language | _] -> put_private(conn, :cldr_locale, best_match(accept_language))
+        [accept_language] -> put_private(conn, :cldr_locale, best_match(accept_language, backend))
+        [accept_language | _] -> put_private(conn, :cldr_locale, best_match(accept_language, backend))
         [] -> put_private(conn, :cldr_locale, nil)
       end
     end
 
-    def best_match(nil) do
+    def best_match(nil, _) do
       nil
     end
 
-    def best_match(accept_language) do
-      case Cldr.AcceptLanguage.best_match(accept_language) do
+    def best_match(accept_language, backend) do
+      case Cldr.AcceptLanguage.best_match(accept_language, backend) do
         {:ok, locale} ->
           locale
 
