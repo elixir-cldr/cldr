@@ -133,8 +133,8 @@ defmodule Cldr do
 
   """
   @spec get_current_locale(backend()) :: LanguageTag.t()
-  def get_current_locale(backend) do
-    Process.get(:cldr, default_locale(backend))
+  def get_current_locale(default) do
+    Process.get(:cldr, default)
   end
 
   @doc """
@@ -231,7 +231,7 @@ defmodule Cldr do
   """
   @spec default_locale(backend()) :: LanguageTag.t()
   def default_locale(backend) do
-    Config.default_locale(backend) |> Cldr.Config.language_tag()
+    backend.default_locale
   end
 
   @doc """
@@ -251,9 +251,7 @@ defmodule Cldr do
   """
   @spec default_territory(backend()) :: atom()
   def default_territory(backend) do
-    default_locale(backend)
-    |> Map.get(:territory)
-    |> String.to_atom()
+    backend.default_territory
   end
 
   @doc """
@@ -289,25 +287,6 @@ defmodule Cldr do
         requested_locale_name: "en",
         script: "Latn",
         territory: "US",
-        transform: %{},
-        language_variant: nil
-      }}
-
-
-      iex> Cldr.validate_locale Cldr.default_locale(TestBackend.Cldr)
-      {:ok,
-      %Cldr.LanguageTag{
-        canonical_locale_name: "en-Latn-001",
-        cldr_locale_name: "en-001",
-        extensions: %{},
-        gettext_locale_name: nil,
-        language: "en",
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: "en",
-        requested_locale_name: "en-001",
-        script: "Latn",
-        territory: "001",
         transform: %{},
         language_variant: nil
       }}
@@ -348,9 +327,9 @@ defmodule Cldr do
 
   See also `known_locales/0` and `all_locales/0`
   """
-  @spec requested_locale_names(Cldr.Config.t()) :: [Locale.locale_name(), ...] | []
-  def requested_locale_names(config) do
-    Config.requested_locale_names(config)
+  @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
+  def requested_locale_names(backend) do
+    backend.requested_locale_names
   end
 
   @doc """
@@ -375,18 +354,18 @@ defmodule Cldr do
   any unknown locales this function should always
   return an empty list.
   """
-  @spec unknown_locale_names(Cldr.Config.t()) :: [Locale.locale_name(), ...] | []
-  def unknown_locale_names(config) do
-    Config.unknown_locale_names(config)
+  @spec unknown_locale_names(backend()) :: [Locale.locale_name(), ...] | []
+  def unknown_locale_names(backend) do
+    backend.unknown_locale_names
   end
 
   @doc """
   Returns a list of locale names which have rules based number
   formats (RBNF).
   """
-  @spec known_rbnf_locale_names(Cldr.Config.t()) :: [Locale.locale_name(), ...] | []
-  def known_rbnf_locale_names(config) do
-    Cldr.Config.known_rbnf_locale_names(config)
+  @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
+  def known_rbnf_locale_names(backend) do
+    backend.known_rbnf_locale_names
   end
 
   @doc """
@@ -394,9 +373,9 @@ defmodule Cldr do
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
   """
-  @spec known_gettext_locale_names(Cldr.Config.t()) :: [Locale.locale_name(), ...] | []
-  def known_gettext_locale_names(config) do
-    Config.gettext_locales(config)
+  @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
+  def known_gettext_locale_names(backend) do
+    backend.known_gettext_locale_names
   end
 
   @doc """
@@ -417,8 +396,8 @@ defmodule Cldr do
 
   """
   @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_locale_name?(locale_name, config) when is_binary(locale_name) do
-    locale_name in known_locale_names(config)
+  def known_locale_name?(locale_name, backend) when is_binary(locale_name) do
+    locale_name in backend.known_locale_names
   end
 
   @doc """
@@ -439,9 +418,9 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale_name?(Locale.locale_name(), Cldr.Config.t()) :: boolean
-  def known_rbnf_locale_name?(locale_name, config) when is_binary(locale_name) do
-    locale_name in known_rbnf_locale_names(config)
+  @spec known_rbnf_locale_name?(Locale.locale_name(), backend()) :: boolean
+  def known_rbnf_locale_name?(locale_name, backend) when is_binary(locale_name) do
+    locale_name in backend.known_rbnf_locale_names
   end
 
   @doc """
@@ -461,9 +440,9 @@ defmodule Cldr do
       false
 
   """
-  @spec known_gettext_locale_name?(Locale.locale_name(), Cldr.Config.t()) :: boolean
-  def known_gettext_locale_name?(locale_name, config) when is_binary(locale_name) do
-    locale_name in known_gettext_locale_names(config)
+  @spec known_gettext_locale_name?(Locale.locale_name(), backend) :: boolean
+  def known_gettext_locale_name?(locale_name, backend) when is_binary(locale_name) do
+    locale_name in backend.known_gettext_locale_names
   end
 
   @doc """
@@ -486,13 +465,9 @@ defmodule Cldr do
       false
 
   """
-  @spec known_locale_name(Locale.locale_name(), Cldr.Config.t()) :: String.t() | false
-  def known_locale_name(locale_name, config) when is_binary(locale_name) do
-    if known_locale_name?(locale_name, config) do
-      locale_name
-    else
-      false
-    end
+  @spec known_locale_name(Locale.locale_name(), backend()) :: String.t() | false
+  def known_locale_name(locale_name, backend) when is_binary(locale_name) do
+    backend.known_locale_name(locale_name)
   end
 
   @doc """
@@ -513,9 +488,9 @@ defmodule Cldr do
       false
 
   """
-  @spec known_rbnf_locale_name(Locale.locale_name(), Cldr.Config.t()) :: String.t() | false
-  def known_rbnf_locale_name(locale_name, config) when is_binary(locale_name) do
-    if known_rbnf_locale_name?(locale_name, config) do
+  @spec known_rbnf_locale_name(Locale.locale_name(), backend()) :: String.t() | false
+  def known_rbnf_locale_name(locale_name, backend) when is_binary(locale_name) do
+    if backend.known_rbnf_locale_name?(locale_name) do
       locale_name
     else
       false
@@ -543,7 +518,7 @@ defmodule Cldr do
   """
   @spec known_gettext_locale_name(Locale.locale_name(), backend()) :: String.t() | false
   def known_gettext_locale_name(locale_name, backend) when is_binary(locale_name) do
-    Cldr.Locale.known_gettext_locale_name(locale_name, backend)
+    backend.known_gettext_locale_name(locale_name)
   end
 
   @doc """
@@ -645,10 +620,10 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_calendar :gregorian
+      iex> Cldr.validate_calendar(:gregorian)
       {:ok, :gregorian}
 
-      iex> Cldr.validate_calendar :invalid
+      iex> Cldr.validate_calendar(:invalid)
       {:error, {Cldr.UnknownCalendarError, "The calendar name :invalid is invalid"}}
 
   """
@@ -689,7 +664,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.unknown_calendar_error "invalid"
+      iex> Cldr.unknown_calendar_error("invalid")
       {Cldr.UnknownCalendarError, "The calendar name \\"invalid\\" is invalid"}
 
   """
@@ -753,19 +728,19 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_territory "en"
+      iex> Cldr.validate_territory("en")
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"en\\" is unknown"}}
 
-      iex> Cldr.validate_territory "gb"
+      iex> Cldr.validate_territory("gb")
       {:ok, :GB}
 
-      iex> Cldr.validate_territory "001"
+      iex> Cldr.validate_territory("001")
       {:ok, :"001"}
 
-      iex> Cldr.validate_territory Cldr.Locale.new!("en")
+      iex> Cldr.validate_territory(Cldr.Locale.new!("en", TestBackend.Cldr))
       {:ok, :US}
 
-      iex> Cldr.validate_territory %{}
+      iex> Cldr.validate_territory(%{})
       {:error, {Cldr.UnknownTerritoryError, "The territory %{} is unknown"}}
 
   """
@@ -815,7 +790,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.unknown_territory_error "invalid"
+      iex> Cldr.unknown_territory_error("invalid")
       {Cldr.UnknownTerritoryError, "The territory \\"invalid\\" is unknown"}
 
   """
@@ -879,22 +854,22 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_currency :USD
+      iex> Cldr.validate_currency(:USD)
       {:ok, :USD}
 
-      iex> Cldr.validate_currency "USD"
+      iex> Cldr.validate_currency("USD")
       {:ok, :USD}
 
-      iex> Cldr.validate_currency :XTC
+      iex> Cldr.validate_currency(:XTC)
       {:ok, :XTC}
 
-      iex> Cldr.validate_currency "xtc"
+      iex> Cldr.validate_currency("xtc")
       {:ok, :XTC}
 
-      iex> Cldr.validate_currency "invalid"
+      iex> Cldr.validate_currency("invalid")
       {:error, {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}}
 
-      iex> Cldr.validate_currency :invalid
+      iex> Cldr.validate_currency(:invalid)
       {:error, {Cldr.UnknownCurrencyError, "The currency :invalid is invalid"}}
 
   """
@@ -958,7 +933,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.unknown_currency_error "invalid"
+      iex> Cldr.unknown_currency_error("invalid")
       {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}
 
   """
@@ -983,9 +958,10 @@ defmodule Cldr do
        :tirh, :vaii, :wara]
 
   """
+  @known_number_systems Cldr.Config.known_number_systems
   @spec known_number_systems :: [atom(), ...] | []
   def known_number_systems do
-    Cldr.Config.known_number_systems
+    @known_number_systems
   end
 
   @doc """
@@ -1074,12 +1050,12 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.Config.known_number_system_types
+      iex> Cldr.known_number_system_types(TestBackend.Cldr)
       [:default, :finance, :native, :traditional]
 
   """
   def known_number_system_types(backend) do
-    Cldr.Config.known_number_system_types(backend)
+    backend.known_number_system_types
   end
 
   @doc """
@@ -1088,7 +1064,7 @@ defmodule Cldr do
   ## Arguments
 
   * `number_system_type` is any number system type returned by
-    `Cldr.known_number_system_types/0`
+    `Cldr.known_number_system_types/1`
 
   ## Returns
 
@@ -1098,13 +1074,13 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_number_system_type :default
+      iex> Cldr.validate_number_system_type(:default, TestBackend.Cldr)
       {:ok, :default}
 
-      iex> Cldr.validate_number_system_type :traditional
+      iex> Cldr.validate_number_system_type(:traditional, TestBackend.Cldr)
       {:ok, :traditional}
 
-      iex> Cldr.validate_number_system_type :latn
+      iex> Cldr.validate_number_system_type(:latn, TestBackend.Cldr)
       {
         :error,
         {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}
@@ -1115,21 +1091,7 @@ defmodule Cldr do
           {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
   def validate_number_system_type(number_system_type, backend) when is_atom(number_system_type) do
-    if number_system_type in known_number_system_types(backend) do
-      {:ok, number_system_type}
-    else
-      {:error, unknown_number_system_type_error(number_system_type)}
-    end
-  end
-
-  def validate_number_system_type(number_system_type, backend) when is_binary(number_system_type) do
-    number_system_type
-    |> String.downcase()
-    |> String.to_existing_atom()
-    |> validate_number_system_type(backend)
-  rescue
-    ArgumentError ->
-      {:error, unknown_number_system_type_error(number_system_type)}
+    backend.validate_number_system_type(number_system_type)
   end
 
   @doc """
@@ -1146,10 +1108,10 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.unknown_number_system_type_error "invalid"
+      iex> Cldr.unknown_number_system_type_error("invalid")
       {Cldr.UnknownNumberSystemTypeError, "The number system type \\"invalid\\" is invalid"}
 
-      iex> Cldr.unknown_number_system_type_error :invalid
+      iex> Cldr.unknown_number_system_type_error(:invalid)
       {Cldr.UnknownNumberSystemTypeError, "The number system type :invalid is unknown"}
 
   """

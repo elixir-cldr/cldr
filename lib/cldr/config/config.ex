@@ -1285,8 +1285,10 @@ defmodule Cldr.Config do
     ]
   end
 
-  @doc false
-  def test_config do
-    TestBackend.Cldr.__cldr__(:config)
+  if Mix.env == :test do
+    @doc false
+    def test_config do
+      TestBackend.Cldr.__cldr__(:config)
+    end
   end
 end

@@ -412,6 +412,70 @@ defmodule Cldr.Backend do
         {:error, Locale.locale_error(locale)}
       end
 
+      @doc """
+      Returns a list of atoms representing the number systems types known to `Cldr`.
+
+      ## Example
+
+          iex> #{__MODULE__}.known_number_system_types
+          [:default, :finance, :native, :traditional]
+
+      """
+      @known_number_system_types Cldr.Config.known_number_system_types(config)
+      def known_number_system_types do
+        @known_number_system_types
+      end
+
+      @doc """
+      Normalise and validate a number system type.
+
+      ## Arguments
+
+      * `number_system_type` is any number system type returned by
+        `Cldr.known_number_system_types/0`
+
+      ## Returns
+
+      * `{:ok, normalized_number_system_type}` or
+
+      * `{:error, {exception, message}}`
+
+      ## Examples
+
+          iex> #{__MODULE__}.validate_number_system_type :default
+          {:ok, :default}
+
+          iex> #{__MODULE__}.validate_number_system_type :traditional
+          {:ok, :traditional}
+
+          iex> #{__MODULE__}.validate_number_system_type :latn
+          {
+            :error,
+            {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}
+          }
+
+      """
+      @spec validate_number_system_type(String.t() | atom()) ::
+              {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+
+      def validate_number_system_type(number_system_type) when is_atom(number_system_type) do
+        if number_system_type in known_number_system_types() do
+          {:ok, number_system_type}
+        else
+          {:error, Cldr.unknown_number_system_type_error(number_system_type)}
+        end
+      end
+
+      def validate_number_system_type(number_system_type) when is_binary(number_system_type) do
+        number_system_type
+        |> String.downcase()
+        |> String.to_existing_atom()
+        |> validate_number_system_type
+      rescue
+        ArgumentError ->
+          {:error, Cldr.unknown_number_system_type_error(number_system_type)}
+      end
+
       defdelegate available_locale_name?(locale_name), to: Cldr
 
       defdelegate known_calendars(), to: Cldr
