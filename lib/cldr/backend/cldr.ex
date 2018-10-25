@@ -95,7 +95,7 @@ defmodule Cldr.Backend do
       with `Cldr` locale names.
 
       """
-      @known_gettext_locale_names Config.gettext_locales(config)
+      @known_gettext_locale_names Config.known_gettext_locale_names(config)
       @spec known_gettext_locale_names() :: [Locale.locale_name(), ...] | []
       def known_gettext_locale_names do
         @known_gettext_locale_names

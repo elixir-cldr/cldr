@@ -43,7 +43,7 @@ defmodule Cldr.Locale do
   in Spain" local name.  Here `Cldr` will match to the nearest configured
   locale, which in this case will be "en".
 
-      iex> Cldr.Locale.new("en-ES")
+      iex> Cldr.Locale.new("en-ES", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-ES",
         cldr_locale_name: "en",
@@ -88,7 +88,7 @@ defmodule Cldr.Locale do
   following requests the locale name "mo" which is the deprecated
   code for "Moldovian".  The replacement code is "ro" (Romanian).
 
-      iex> Cldr.Locale.new("mo")
+      iex> Cldr.Locale.new("mo", TestBackend.Cldr)
       {:ok,
         %Cldr.LanguageTag{canonical_locale_name: "ro-Latn-MD",
          cldr_locale_name: "ro-MD", extensions: %{}, language: "ro",
@@ -104,7 +104,7 @@ defmodule Cldr.Locale do
   heuristically derived, and may change over time. For example, when
   requesting the locale "en", the following is returned:
 
-      iex> Cldr.Locale.new("en")
+      iex> Cldr.Locale.new("en", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
@@ -138,7 +138,7 @@ defmodule Cldr.Locale do
   name "en-XX" which requests the invalid territory "XX", the following
   will be returned:
 
-      iex> Cldr.Locale.new("en-XX")
+      iex> Cldr.Locale.new("en-XX", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
@@ -200,7 +200,7 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.canonical_language_tag "en"
+      iex> Cldr.Locale.canonical_language_tag("en", TestBackend.Cldr)
       {
         :ok,
         %Cldr.LanguageTag{
@@ -325,13 +325,19 @@ defmodule Cldr.Locale do
     |> locale_name_to_posix
   end
 
-  @spec known_gettext_locale_name(Locale.locale_name(), Cldr.backend()) :: Locale.locale_name() | false
-  def known_gettext_locale_name(locale_name, backend) do
-    if locale_name in Cldr.Config.gettext_locales(backend) do
-      locale_name
-    else
-      false
-    end
+  @spec known_gettext_locale_name(Locale.locale_name(), Cldr.backend() | Cldr.Config.t()) ::
+          Locale.locale_name() | false
+
+  def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
+    gettext_locales = backend.known_gettext_locale_names
+    Enum.find(gettext_locales, &Kernel.==(&1, locale_name)) || false
+  end
+
+  # This clause is only called at compile time when we're
+  # building a backend.  In normal use is should not be used.
+  def known_gettext_locale_name(locale_name, config) when is_map(config) do
+    gettext_locales = Cldr.Config.known_gettext_locale_names(config)
+    Enum.find(gettext_locales, &Kernel.==(&1, locale_name)) || false
   end
 
   # defp first_match(%{variants: variant} = langtag, fun) do
@@ -449,7 +455,7 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en")
+      iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
       "en-Latn-US"
 
   """

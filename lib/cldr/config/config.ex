@@ -228,8 +228,8 @@ defmodule Cldr.Config do
   `[]` if `Gettext` is not configured.
 
   """
-  @spec gettext_locales(t()) :: [Locale.locale_name()]
-  def gettext_locales(config) do
+  @spec known_gettext_locale_names(t()) :: [Locale.locale_name()]
+  def known_gettext_locale_names(config) do
     if gettext_configured?(config) && Application.ensure_all_started(:gettext) do
       otp_app = gettext(config).__gettext__(:otp_app)
 
@@ -386,7 +386,7 @@ defmodule Cldr.Config do
   """
   @spec requested_locale_names(t()) :: [Locale.locale_name()]
   def requested_locale_names(config) do
-    (configured_locale_names(config) ++ gettext_locales(config) ++ [default_locale(config)])
+    (configured_locale_names(config) ++ known_gettext_locale_names(config) ++ [default_locale(config)])
     |> Enum.uniq()
     |> Enum.sort()
   end

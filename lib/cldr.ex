@@ -85,7 +85,7 @@ defmodule Cldr do
               "Compilation cannot continue until the configuration includes only " <>
               "locales names known in CLDR.\n\n" <>
               "Configured locales names: #{inspect(Config.requested_locale_names(config))}\n" <>
-              "Gettext locales names:    #{inspect(Config.gettext_locales(config))}\n" <>
+              "Gettext locales names:    #{inspect(Config.known_gettext_locale_names(config))}\n" <>
               "Unknown locales names:    " <>
               "#{IO.ANSI.red()}#{inspect(Config.unknown_locale_names(config))}" <>
               "#{IO.ANSI.default_color()}\n"
