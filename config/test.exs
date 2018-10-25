@@ -7,7 +7,7 @@ config :ex_cldr,
   gettext: Cldr.Gettext,
   precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}]
 
-config :ex_cldr, Cldr.Gettext, default_locale: "en"
+config :ex_cldr, TestGettext.Gettext , default_locale: "en"
 
 config :plug, validate_header_keys_during_test: true
 

@@ -162,8 +162,8 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
 
-  defdelegate new(locale_name), to: __MODULE__, as: :canonical_language_tag
-  defdelegate new!(locale_name), to: __MODULE__, as: :canonical_language_tag!
+  defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
+  defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
   defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
@@ -222,15 +222,14 @@ defmodule Cldr.Locale do
 
   """
 
-  def canonical_language_tag(locale_name, backend \\ Cldr.Config.default_backend)
   def canonical_language_tag(locale_name, backend)
       when is_binary(locale_name)  do
-    if locale_name in Cldr.Config.known_locale_names(backend) do
+    if locale_name in backend.known_locale_names do
       Cldr.validate_locale(locale_name, backend)
     else
       case LanguageTag.parse(locale_name) do
         {:ok, language_tag} ->
-          canonical_language_tag(language_tag)
+          canonical_language_tag(language_tag, backend)
 
         {:error, reason} ->
           {:error, reason}
@@ -272,10 +271,10 @@ defmodule Cldr.Locale do
   See `Cldr.Locale.canonical_language_tag/1` for more information.
 
   """
-  @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t()) ::
+  @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t(), Cldr.backend()) ::
           Cldr.LanguageTag.t() | none()
-  def canonical_language_tag!(language_tag) do
-    case canonical_language_tag(language_tag) do
+  def canonical_language_tag!(language_tag, backend) do
+    case canonical_language_tag(language_tag, backend) do
       {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end

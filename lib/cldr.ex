@@ -107,10 +107,15 @@ defmodule Cldr do
   Return the current locale to be used for `Cldr` functions that
   take an optional locale parameter for which a locale is not supplied.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Example
 
-      iex> Cldr.set_current_locale("pl")
-      iex> Cldr.get_current_locale
+      iex> Cldr.put_current_locale("pl", TestBackend.Cldr)
+      iex> Cldr.get_current_locale(TestBackend.Cldr)
       %Cldr.LanguageTag{
          canonical_locale_name: "pl-Latn-PL",
          cldr_locale_name: "pl",
@@ -139,7 +144,10 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
   of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
@@ -148,7 +156,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.set_current_locale("en")
+      iex> Cldr.put_current_locale("en", TestBackend.Cldr)
       {:ok,
        %Cldr.LanguageTag{
          canonical_locale_name: "en-Latn-US",
@@ -167,27 +175,27 @@ defmodule Cldr do
          language_variant: nil
        }}
 
-      iex> Cldr.set_current_locale("invalid_locale")
+      iex> Cldr.put_current_locale("invalid_locale", TestBackend.Cldr)
       {:error,
        {Cldr.LanguageTag.ParseError,
         "Invalid language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
 
   """
-  @spec put_current_locale(Locale.locale_name() | LanguageTag.t()) ::
+  @spec put_current_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
 
-  def put_current_locale(locale_name) when is_binary(locale_name) do
-    case Cldr.Locale.canonical_language_tag(locale_name) do
-      {:ok, language_tag} -> put_current_locale(language_tag)
+  def put_current_locale(locale_name, backend) when is_binary(locale_name) do
+    case Cldr.Locale.canonical_language_tag(locale_name, backend) do
+      {:ok, language_tag} -> put_current_locale(language_tag, backend)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def put_current_locale(%LanguageTag{cldr_locale_name: nil} = language_tag) do
+  def put_current_locale(%LanguageTag{cldr_locale_name: nil} = language_tag, _backend) do
     {:error, Cldr.Locale.locale_error(language_tag)}
   end
 
-  def put_current_locale(%LanguageTag{} = language_tag) do
+  def put_current_locale(%LanguageTag{} = language_tag, _backend) do
     Process.put(:cldr, language_tag)
     {:ok, language_tag}
   end
@@ -195,9 +203,14 @@ defmodule Cldr do
   @doc """
   Returns the default `locale`.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Example
 
-      iex> Cldr.default_locale()
+      iex> Cldr.default_locale(TestBackend.Cldr)
       %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
@@ -225,9 +238,14 @@ defmodule Cldr do
   Returns the default territory when a locale
   does not specify one and none can be inferred.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Example
 
-      iex> Cldr.default_territory()
+      iex> Cldr.default_territory(TestBackend.Cldr)
       :"001"
 
   """
@@ -246,6 +264,9 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Returns
 
   * `{:ok, language_tag}`
@@ -254,7 +275,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_locale "en"
+      iex> Cldr.validate_locale("en", TestBackend.Cldr)
       {:ok,
       %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-US",
@@ -269,11 +290,11 @@ defmodule Cldr do
         script: "Latn",
         territory: "US",
         transform: %{},
-        variant: nil
+        language_variant: nil
       }}
 
 
-      iex> Cldr.validate_locale Cldr.default_locale
+      iex> Cldr.validate_locale Cldr.default_locale(TestBackend.Cldr)
       {:ok,
       %Cldr.LanguageTag{
         canonical_locale_name: "en-Latn-001",
@@ -288,10 +309,10 @@ defmodule Cldr do
         script: "Latn",
         territory: "001",
         transform: %{},
-        variant: nil
+        language_variant: nil
       }}
 
-      iex> Cldr.validate_locale "zzz"
+      iex> Cldr.validate_locale("zzz", TestBackend.Cldr)
       {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
   """
@@ -384,14 +405,14 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   ## Examples
 
-      iex> Cldr.known_locale_name?("en")
+      iex> Cldr.known_locale_name?("en", TestBackend.Cldr)
       true
 
-      iex> Cldr.known_locale_name?("!!")
+      iex> Cldr.known_locale_name?("!!", TestBackend.Cldr)
       false
 
   """
@@ -407,14 +428,14 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   ## Examples
 
-      iex> Cldr.known_rbnf_locale_name?("en")
+      iex> Cldr.known_rbnf_locale_name?("en", TestBackend.Cldr)
       true
 
-      iex> Cldr.known_rbnf_locale_name?("!!")
+      iex> Cldr.known_rbnf_locale_name?("!!", TestBackend.Cldr)
       false
 
   """
@@ -429,14 +450,14 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   ## Examples
 
-      iex> Cldr.known_gettext_locale_name?("en")
+      iex> Cldr.known_gettext_locale_name?("en", TestBackend.Cldr)
       true
 
-      iex> Cldr.known_gettext_locale_name?("!!")
+      iex> Cldr.known_gettext_locale_name?("!!", TestBackend.Cldr)
       false
 
   """
@@ -454,14 +475,14 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   ## Examples
 
-      iex> Cldr.known_locale_name "en-AU"
+      iex> Cldr.known_locale_name("en-AU", TestBackend.Cldr)
       "en-AU"
 
-      iex> Cldr.known_locale_name "en-SA"
+      iex> Cldr.known_locale_name("en-SA", TestBackend.Cldr)
       false
 
   """
@@ -481,14 +502,14 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   ## Examples
 
-      iex> Cldr.known_rbnf_locale_name "en"
+      iex> Cldr.known_rbnf_locale_name("en", TestBackend.Cldr)
       "en"
 
-      iex> Cldr.known_rbnf_locale_name "en-SA"
+      iex> Cldr.known_rbnf_locale_name("en-SA", TestBackend.Cldr)
       false
 
   """
@@ -509,13 +530,14 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2
 
   ## Examples
 
-      iex> Cldr.known_gettext_locale_name "en"
+      iex> Cldr.known_gettext_locale_name("en", TestBackend.Cldr)
       "en"
 
-      iex> Cldr.known_gettext_locale_name "en-SA"
+      iex> Cldr.known_gettext_locale_name("en-SA", TestBackend.Cldr)
       false
 
   """
@@ -536,14 +558,13 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
 
   ## Examples
 
-      iex> Cldr.available_locale_name? "en-AU"
+      iex> Cldr.available_locale_name?("en-AU")
       true
 
-      iex> Cldr.available_locale_name? "en-SA"
+      iex> Cldr.available_locale_name?("en-SA")
       false
 
   """
@@ -554,101 +575,6 @@ defmodule Cldr do
 
   def available_locale_name?(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
     available_locale_name?(cldr_locale_name)
-  end
-
-  def define_validate_locale(config) do
-    quote bind_quoted: [config: Macro.escape(config)] do
-      @doc """
-      Normalise and validate a locale name.
-
-      ## Arguments
-
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-        or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
-
-      ## Returns
-
-      * `{:ok, language_tag}`
-
-      * `{:error, reason}`
-
-      ## Examples
-
-          iex> #{config.backend}.validate_locale "en"
-          {:ok,
-          %Cldr.LanguageTag{
-            canonical_locale_name: "en-Latn-US",
-            cldr_locale_name: "en",
-            extensions: %{},
-            gettext_locale_name: "en",
-            language: "en",
-            locale: %{},
-            private_use: [],
-            rbnf_locale_name: "en",
-            requested_locale_name: "en",
-            script: "Latn",
-            territory: "US",
-            transform: %{},
-            variant: nil
-          }}
-
-
-          iex> #{config.backend}.validate_locale Cldr.default_locale
-          {:ok,
-          %Cldr.LanguageTag{
-            canonical_locale_name: "en-Latn-001",
-            cldr_locale_name: "en-001",
-            extensions: %{},
-            gettext_locale_name: nil,
-            language: "en",
-            locale: %{},
-            private_use: [],
-            rbnf_locale_name: "en",
-            requested_locale_name: "en-001",
-            script: "Latn",
-            territory: "001",
-            transform: %{},
-            variant: nil
-          }}
-
-          iex> #{config.backend}.validate_locale "zzz"
-          {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
-
-      """
-      @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
-              {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
-
-      @language_tags Cldr.Config.all_language_tags()
-
-      for locale_name <- Cldr.Config.known_locale_names(config) do
-        language_tag =
-          Map.get(@language_tags, locale_name)
-          |> Cldr.Locale.put_gettext_locale_name(config)
-
-        def validate_locale(unquote(locale_name)) do
-          {:ok, unquote(Macro.escape(language_tag))}
-        end
-      end
-
-      def validate_locale(locale_name) when is_binary(locale_name) do
-        case Cldr.Locale.new(locale_name) do
-          {:ok, locale} -> validate_locale(locale)
-          {:error, reason} -> {:error, reason}
-        end
-      end
-
-      def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
-        {:error, Locale.locale_error(locale)}
-      end
-
-      def validate_locale(%LanguageTag{} = language_tag) do
-        {:ok, language_tag}
-      end
-
-      def validate_locale(locale) do
-        {:error, Locale.locale_error(locale)}
-      end
-    end
   end
 
   @doc """
@@ -668,22 +594,22 @@ defmodule Cldr do
   ## Examples
 
   """
-  def validate_gettext_locale(locale_name) when is_binary(locale_name) do
-    case Cldr.Locale.new(locale_name) do
-      {:ok, locale} -> validate_gettext_locale(locale)
+  def validate_gettext_locale(locale_name, backend) when is_binary(locale_name) do
+    case Cldr.Locale.new(locale_name, backend) do
+      {:ok, locale} -> validate_gettext_locale(locale, backend)
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def validate_gettext_locale(%LanguageTag{gettext_locale_name: nil} = locale) do
+  def validate_gettext_locale(%LanguageTag{gettext_locale_name: nil} = locale, _backend) do
     {:error, Locale.gettext_locale_error(locale)}
   end
 
-  def validate_gettext_locale(%LanguageTag{} = language_tag) do
+  def validate_gettext_locale(%LanguageTag{} = language_tag, _backend) do
     {:ok, language_tag}
   end
 
-  def validate_gettext_locale(locale) do
+  def validate_gettext_locale(locale, _backend) do
     {:error, Locale.gettext_locale_error(locale)}
   end
 

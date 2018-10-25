@@ -70,9 +70,15 @@ defmodule Cldr.AcceptLanguage do
   or tokenized form to return a tuple of the form
   `{:ok, [{quality, %Cldr.LanguageTag{}}, ...]}` sorted by quality.
 
-  * `accept-language` is any string in the format defined by [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
+  ## Arguments
 
-  Returns:
+  * `accept-language` is any string in the format defined by
+    [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
+  ## Returns
 
   * `{:ok, [{quality, language_tag}, ...]}` or
 
@@ -84,7 +90,7 @@ defmodule Cldr.AcceptLanguage do
 
   ## Example
 
-      iex> Cldr.AcceptLanguage.parse "da,zh-TW;q=0.3"
+      iex> Cldr.AcceptLanguage.parse("da,zh-TW;q=0.3", TestBackend.Cldr)
       {:ok,
        [
          {1.0,
@@ -123,12 +129,12 @@ defmodule Cldr.AcceptLanguage do
           }}
        ]}
 
-      iex> Cldr.AcceptLanguage.parse "invalid_tag"
+      iex> Cldr.AcceptLanguage.parse("invalid_tag", TestBackend.Cldr)
       {:error,
        {Cldr.LanguageTag.ParseError,
         "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
-      iex> Cldr.AcceptLanguage.parse "da,zh-TW;q=0.3,invalid_tag"
+      iex> Cldr.AcceptLanguage.parse("da,zh-TW;q=0.3,invalid_tag", TestBackend.Cldr)
       {:ok,
        [
          {1.0,
@@ -171,7 +177,7 @@ defmodule Cldr.AcceptLanguage do
        ]}
 
   """
-  @spec parse([{float(), String.t()}, ...] | String.t()) ::
+  @spec parse([{float(), String.t()}, ...] | String.t(), Cldr.backend()) ::
           {:ok,
            [
              {float(), LanguageTag.t()} | {:error, {Cldr.InvalidLanguageTag, String.t()}},
@@ -179,10 +185,10 @@ defmodule Cldr.AcceptLanguage do
            ]}
           | {:error, {Cldr.AcceptLanguageError, String.t()}}
 
-  def parse(tokens) when is_list(tokens) do
+  def parse(tokens, backend) when is_list(tokens) do
     accept_language =
       tokens
-      |> parse_language_tags
+      |> parse_language_tags(backend)
       |> sort_by_quality
 
     case accept_language do
@@ -434,9 +440,9 @@ defmodule Cldr.AcceptLanguage do
     end
   end
 
-  defp parse_language_tags(tokens) do
+  defp parse_language_tags(tokens, backend) do
     Enum.map(tokens, fn {quality, language_tag} ->
-      case Locale.canonical_language_tag(language_tag) do
+      case Locale.canonical_language_tag(language_tag, backend) do
         {:ok, tag} ->
           {quality, tag}
 

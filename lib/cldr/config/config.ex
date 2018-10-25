@@ -10,7 +10,8 @@ defmodule Cldr.Config do
     gettext: nil,
     data_dir: "./priv/cldr",
     precompile_number_formats: [],
-    precompile_transliterations: []
+    precompile_transliterations: [],
+    otp_app: nil
 
   @type t :: %__MODULE__{
     default_locale: binary(),
@@ -19,7 +20,8 @@ defmodule Cldr.Config do
     gettext: module() | nil,
     data_dir: binary(),
     precompile_number_formats: [binary(), ...],
-    precompile_transliterations: [{atom, atom}, ...]
+    precompile_transliterations: [{atom(), atom()}, ...],
+    otp_app: atom() | nil
   }
 
   @default_locale "en-001"
@@ -45,15 +47,14 @@ defmodule Cldr.Config do
     @non_language_locale_names
   end
 
+  @doc false
   defmacro is_alphabetic(char) do
     quote do
       unquote(char) in ?a..?z or unquote(char) in ?A..?Z
     end
   end
 
-  @doc """
-  Return the configured json lib
-  """
+
   Module.put_attribute(
     __MODULE__,
     :poison,
@@ -66,16 +67,26 @@ defmodule Cldr.Config do
     if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
   )
 
+  @doc """
+  Return the configured application name
+  """
   @app_name Mix.Project.config()[:app]
   def app_name do
     @app_name
   end
 
+  @doc """
+  Return the configured json lib
+  """
   @jason_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
   def json_library do
     @jason_lib
   end
 
+  @doc """
+  Check that the configured json library is
+  configured and available for use
+  """
   def check_jason_lib_is_available! do
     unless Code.ensure_loaded?(json_library()) && function_exported?(json_library(), :decode!, 1) do
       message =
@@ -215,6 +226,7 @@ defmodule Cldr.Config do
 
   Return a list of locales configured in `Gettext` or
   `[]` if `Gettext` is not configured.
+
   """
   @spec gettext_locales(t()) :: [Locale.locale_name()]
   def gettext_locales(config) do
@@ -224,7 +236,7 @@ defmodule Cldr.Config do
       backend_default =
         otp_app
         |> Application.get_env(gettext(config))
-        |> gettext_default_locale
+        |> Keyword.get(:default_locale)
 
       global_default = Application.get_env(:gettext, :default_locale)
 
@@ -518,7 +530,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.gettext_configured?
+      iex> Cldr.Config.gettext_configured?(Cldr.Config.test_config())
       true
   """
   @spec gettext_configured?(t()) :: boolean
@@ -1271,5 +1283,10 @@ defmodule Cldr.Config do
       "trad",
       "unihan"
     ]
+  end
+
+  @doc false
+  def test_config do
+    TestBackend.Cldr.__cldr__(:config)
   end
 end

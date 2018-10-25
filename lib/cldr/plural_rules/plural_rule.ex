@@ -199,7 +199,7 @@ defmodule Cldr.Number.PluralRule do
           )
 
       def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
-        with {:ok, locale} <- Cldr.Locale.new(locale_name) do
+        with {:ok, locale} <- Cldr.Locale.new(locale_name, @backend) do
           plural_rule(number, locale, rounding)
         end
       end

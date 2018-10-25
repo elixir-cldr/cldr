@@ -6,7 +6,8 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
   use Mix.Task
 
-  @shortdoc "Generate langauge tags for all available locales"
+  @shortdoc "Generate language tags for all available locales"
+  @test_backend TestBackend.Cldr
 
   @doc false
   def run(_) do
@@ -19,7 +20,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     language_tags =
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
         with {:ok, language_tag} <- Cldr.LanguageTag.parse(locale_name),
-             {:ok, canonical_tag} <- Cldr.Locale.canonical_language_tag(language_tag) do
+             {:ok, canonical_tag} <- Cldr.Locale.canonical_language_tag(language_tag, @test_backend) do
           language_tag =
             canonical_tag
             |> Map.put(:cldr_locale_name, locale_name)
