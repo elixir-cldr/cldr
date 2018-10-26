@@ -162,7 +162,8 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
 
-  def define_new(config) do
+  @doc false
+  def define_locale_new(config) do
     quote location: :keep do
       defmodule Locale do
         def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))

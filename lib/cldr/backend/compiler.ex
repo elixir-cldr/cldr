@@ -30,15 +30,13 @@ defmodule Cldr.Backend.Compiler do
       alias Cldr.Locale
 
       def __cldr__(:backend), do: unquote(Map.get(config, :backend))
-      def __cldr__(:locales), do: unquote(Map.get(config, :locales))
-      def __cldr__(:default_locale), do: unquote(Map.get(config, :default_locale))
       def __cldr__(:gettext), do: unquote(Map.get(config, :gettext))
       def __cldr__(:data_dir), do: unquote(Map.get(config, :data_dir))
       def __cldr__(:otp_app), do: unquote(Map.get(config, :otp_app))
       def __cldr__(:config), do: unquote(Macro.escape(config))
 
       unquote(Cldr.Backend.define_backend_functions(config))
-      unquote(Cldr.Locale.define_new(config))
+      unquote(Cldr.Locale.define_locale_new(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
 
       if Code.ensure_loaded?(Gettext) do
