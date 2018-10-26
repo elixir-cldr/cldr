@@ -10,7 +10,7 @@ defmodule Cldr.Test do
   end
 
   test "that the client data directory is correct" do
-    assert String.ends_with?(Cldr.Config.client_data_dir(), "/_build/test/lib/ex_cldr/priv/cldr") ==
+    assert String.ends_with?(Cldr.Config.client_data_dir(), "/priv/cldr") ==
              true
   end
 
@@ -42,7 +42,8 @@ defmodule Cldr.Test do
   end
 
   test "default locale" do
-    assert Cldr.default_locale() ==
+
+    assert TestBackend.Cldr.default_locale() ==
              %Cldr.LanguageTag{
                canonical_locale_name: "en-Latn-001",
                cldr_locale_name: "en-001",
@@ -62,10 +63,12 @@ defmodule Cldr.Test do
   end
 
   test "locale name does not exist" do
+    alias TestBackend.Cldr
     refute Cldr.available_locale_name?("jabberwocky")
   end
 
   test "that we have the right number of rbnf locales" do
+    alias TestBackend.Cldr
     assert Cldr.known_rbnf_locale_names() ==
              [
                "af",

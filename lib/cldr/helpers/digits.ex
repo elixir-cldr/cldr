@@ -10,7 +10,6 @@ defmodule Cldr.Digits do
   """
 
   use Bitwise
-  import Cldr.Macros
   import Cldr.Math, only: [power_of_10: 1]
   require Integer
   alias Cldr.Math
@@ -55,7 +54,7 @@ defmodule Cldr.Digits do
 
       iex> Cldr.Digits.fraction_as_integer(1999)
       0
-      
+
   """
   @spec fraction_as_integer(Math.number_or_decimal() | {list, list, 1 | -1}) :: integer
   def fraction_as_integer({_integer, fraction, _sign})
@@ -390,11 +389,11 @@ defmodule Cldr.Digits do
   # http://www.cs.tufts.edu/~nr/cs257/archive/florian-loitsch/printf.pdf
   # See the paper for further explanation
 
-  docp("""
+  _ = """
   Set initial values {r, s, m+, m-}
   based on table 1 from FP-Printing paper
   Assumes frac is scaled to integer (and exponent scaled appropriately)
-  """)
+  """
 
   defp flonum(float, frac, exp) do
     round = Integer.is_even(frac)
@@ -476,14 +475,14 @@ defmodule Cldr.Digits do
   # FIXME: We don't handle +/-inf and NaN inputs. Not believed to be an issue in
   # Elixir, but beware future-self reading this...
 
-  docp("""
+  _ = """
   The frexp() function is as per the clib function with the same name. It breaks
   the floating-point number value into a normalized fraction and an integral
   power of 2.
 
   Returns {frac, exp}, where the magnitude of frac is in the interval
   [1/2, 1) or 0, and value = frac*(2^exp).
-  """)
+  """
 
   defp frexp(value) do
     <<sign::1, exp::11, frac::52>> = <<value::float>>
@@ -507,9 +506,9 @@ defmodule Cldr.Digits do
     {f, exp - @float_bias}
   end
 
-  docp("""
+  _ = """
   Return the number of significant bits needed to store the given number
-  """)
+  """
 
   defp bitwise_length(value) do
     bitwise_length(value, 0)

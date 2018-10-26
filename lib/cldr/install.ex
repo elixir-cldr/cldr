@@ -13,7 +13,6 @@ defmodule Cldr.Install do
   installed.
   """
 
-  import Cldr.Macros, only: [docp: 1]
   defdelegate client_data_dir(), to: Cldr.Config
   defdelegate client_locales_dir(), to: Cldr.Config
   defdelegate locale_filename(locale), to: Cldr.Config
@@ -110,7 +109,7 @@ defmodule Cldr.Install do
     end
   end
 
-  docp("""
+  _ = """
   Builds the base url to retrieve a locale file from github.
 
   The url is built using the version number of the `Cldr` application.
@@ -119,7 +118,7 @@ defmodule Cldr.Install do
 
   This requires that a branch is tagged with the version number before creating
   a release or publishing to hex.
-  """)
+  """
 
   @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
   defp base_url do

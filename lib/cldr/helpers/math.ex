@@ -698,6 +698,12 @@ defmodule Cldr.Math do
     end
   end
 
+  @rounding_modes [:down, :up, :ceiling, :floor, :half_even, :half_up, :half_down]
+  @doc false
+  def rounding_modes do
+    @rounding_modes
+  end
+
   @doc """
   Round a number to an arbitrary precision using one of several rounding algorithms.
 

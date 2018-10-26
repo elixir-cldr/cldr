@@ -311,7 +311,8 @@ defmodule Cldr do
   locales which is most cases will be a subset of locales
   defined in CLDR.
 
-  See also: `requested_locales/0` and `known_locales/0`
+  See also: `requested_locales/1` and `known_locales/1`
+
   """
   @all_locale_names Config.all_locale_names()
   @spec all_locale_names :: [Locale.locale_name(), ...]
@@ -325,7 +326,8 @@ defmodule Cldr do
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
 
-  See also `known_locales/0` and `all_locales/0`
+  See also `known_locales/1` and `all_locales/0`
+
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def requested_locale_names(backend) do
@@ -340,6 +342,7 @@ defmodule Cldr do
   have been configured for use either
   directly in the `config.exs` file or
   in `Gettext`.
+
   """
   @spec known_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_locale_names(backend) do
@@ -353,6 +356,7 @@ defmodule Cldr do
   Since there is a compile-time exception raise if there are
   any unknown locales this function should always
   return an empty list.
+
   """
   @spec unknown_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def unknown_locale_names(backend) do
@@ -362,6 +366,7 @@ defmodule Cldr do
   @doc """
   Returns a list of locale names which have rules based number
   formats (RBNF).
+
   """
   @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_rbnf_locale_names(backend) do
@@ -372,6 +377,7 @@ defmodule Cldr do
   Returns a list of GetText locale names but in CLDR format with
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
+
   """
   @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_gettext_locale_names(backend) do
@@ -385,6 +391,9 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Examples
 
@@ -409,6 +418,9 @@ defmodule Cldr do
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Examples
 
       iex> Cldr.known_rbnf_locale_name?("en", TestBackend.Cldr)
@@ -430,6 +442,9 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Examples
 
@@ -456,6 +471,9 @@ defmodule Cldr do
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Examples
 
       iex> Cldr.known_locale_name("en-AU", TestBackend.Cldr)
@@ -478,6 +496,9 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Examples
 
@@ -505,7 +526,10 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Examples
 
@@ -559,6 +583,9 @@ defmodule Cldr do
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Returns
 

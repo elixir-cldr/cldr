@@ -39,7 +39,7 @@ defmodule Cldr.Substitution do
   end
 
   def parse(_template) do
-    {:error, "#{__MODULE__}.parse/1 accepts only a binary parameter"}
+    {:error, "#{inspect(__MODULE__)}.parse/1 accepts only a binary parameter"}
   end
 
   @doc """

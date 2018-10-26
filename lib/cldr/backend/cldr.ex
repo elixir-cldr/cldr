@@ -22,7 +22,7 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{__MODULE__}.default_locale()
+          iex> #{inspect(__MODULE__)}.default_locale()
           %Cldr.LanguageTag{
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
@@ -53,7 +53,7 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{__MODULE__}.default_territory()
+          iex> #{inspect(__MODULE__)}.default_territory()
           :"001"
 
       """
@@ -107,14 +107,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_locale_name?("en")
+          iex> #{inspect(__MODULE__)}.known_locale_name?("en")
           true
 
-          iex> #{__MODULE__}.known_locale_name?("!!")
+          iex> #{inspect(__MODULE__)}.known_locale_name?("!!")
           false
 
       """
@@ -130,14 +130,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_rbnf_locale_name?("en")
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?("en")
           true
 
-          iex> #{__MODULE__}.known_rbnf_locale_name?("!!")
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?("!!")
           false
 
       """
@@ -152,14 +152,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_gettext_locale_name?("en")
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name?("en")
           true
 
-          iex> #{__MODULE__}.known_gettext_locale_name?("!!")
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name?("!!")
           false
 
       """
@@ -177,14 +177,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_locale_name "en-AU"
+          iex> #{inspect(__MODULE__)}.known_locale_name "en-AU"
           "en-AU"
 
-          iex> #{__MODULE__}.known_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_locale_name "en-SA"
           false
 
       """
@@ -204,14 +204,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_rbnf_locale_name "en"
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name "en"
           "en"
 
-          iex> #{__MODULE__}.known_rbnf_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name "en-SA"
           false
 
       """
@@ -231,14 +231,14 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{__MODULE__}.known_gettext_locale_name "en"
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name "en"
           "en"
 
-          iex> #{__MODULE__}.known_gettext_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name "en-SA"
           false
 
       """
@@ -257,8 +257,8 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{__MODULE__}.put_current_locale("pl")
-          iex> #{__MODULE__}.get_current_locale
+          iex> #{inspect(__MODULE__)}.put_current_locale("pl")
+          iex> #{inspect(__MODULE__)}.get_current_locale
           %Cldr.LanguageTag{
              canonical_locale_name: "pl-Latn-PL",
              cldr_locale_name: "pl",
@@ -296,7 +296,7 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{__MODULE__}.put_current_locale("en")
+          iex> #{inspect(__MODULE__)}.put_current_locale("en")
           {:ok,
            %Cldr.LanguageTag{
              canonical_locale_name: "en-Latn-US",
@@ -315,7 +315,7 @@ defmodule Cldr.Backend do
              language_variant: nil
            }}
 
-          iex> #{__MODULE__}.put_current_locale("invalid_locale")
+          iex> #{inspect(__MODULE__)}.put_current_locale("invalid_locale")
           {:error,
            {Cldr.LanguageTag.ParseError,
             "Invalid language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
@@ -333,7 +333,7 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{__MODULE__}.known_locale_names/0`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
         or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2
 
       ## Returns
@@ -344,7 +344,7 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{__MODULE__}.validate_locale("en")
+          iex> #{inspect(__MODULE__)}.validate_locale("en")
           {:ok,
           %Cldr.LanguageTag{
             canonical_locale_name: "en-Latn-US",
@@ -363,7 +363,7 @@ defmodule Cldr.Backend do
           }}
 
 
-          iex> #{__MODULE__}.validate_locale #{__MODULE__}.default_locale()
+          iex> #{inspect(__MODULE__)}.validate_locale #{inspect(__MODULE__)}.default_locale()
           {:ok,
           %Cldr.LanguageTag{
             canonical_locale_name: "en-Latn-001",
@@ -381,7 +381,7 @@ defmodule Cldr.Backend do
             language_variant: nil
           }}
 
-          iex> #{__MODULE__}.validate_locale("zzz")
+          iex> #{inspect(__MODULE__)}.validate_locale("zzz")
           {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
 
       """
@@ -417,7 +417,7 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{__MODULE__}.known_number_system_types
+          iex> #{inspect(__MODULE__)}.known_number_system_types
           [:default, :finance, :native, :traditional]
 
       """
@@ -442,13 +442,13 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{__MODULE__}.validate_number_system_type :default
+          iex> #{inspect(__MODULE__)}.validate_number_system_type :default
           {:ok, :default}
 
-          iex> #{__MODULE__}.validate_number_system_type :traditional
+          iex> #{inspect(__MODULE__)}.validate_number_system_type :traditional
           {:ok, :traditional}
 
-          iex> #{__MODULE__}.validate_number_system_type :latn
+          iex> #{inspect(__MODULE__)}.validate_number_system_type :latn
           {
             :error,
             {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}

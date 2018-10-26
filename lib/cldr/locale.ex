@@ -36,7 +36,7 @@ defmodule Cldr.Locale do
   ### Locale name validity
 
   When validating a locale name, `Cldr` will attempt to match the requested
-  locale name to a configured locale. Therefore `Cldr.Locale.new/1` may
+  locale name to a configured locale. Therefore `Cldr.Locale.new/2` may
   return an `{:ok, language_tag}` tuple even when the locale returned does
   not exactly match the requested locale name.  For example, the following
   attempts to create a locale matching the non-existent "english as spoken
@@ -162,6 +162,15 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
 
+  def define_new(config) do
+    quote location: :keep do
+      defmodule Locale do
+        def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
+        def new!(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
+      end
+    end
+  end
+
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
@@ -172,12 +181,13 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale.
 
-  ## Options
+  ## Arguments
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/2`
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
-    or a `Cldr.LanguageTag` struct
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Returns
 
@@ -261,14 +271,15 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale or raises on error.
 
-  ## Options
+  ## Arguments
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
-    or a `Cldr.LanguageTag` struct
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
-  See `Cldr.Locale.canonical_language_tag/1` for more information.
+  See `Cldr.Locale.canonical_language_tag/2` for more information.
 
   """
   @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t(), Cldr.backend()) ::
@@ -379,7 +390,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct
 
   ## Returns
@@ -450,8 +461,8 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
-    or a `Cldr.LanguageTag` struct
+  * `locale_name` is any `Cldr.LanguageTag` struct returned by
+    `Cldr.Locale.new!/2`
 
   ## Example
 
@@ -513,7 +524,7 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
 
   ## Method
 
@@ -599,7 +610,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/1`
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
 
   A subtag is called empty if it has a missing script or territory subtag, or it is
   a base language subtag with the value `und`. In the description below,
@@ -668,7 +679,7 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-    * `locale_name` is any locale name returned by `Cldr.known_locale_names/0`
+    * `locale_name` is any locale name returned by `Cldr.known_locale_names/1`
 
   ## Returns
 
@@ -694,7 +705,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-    * `locale_name` is any locale name returned by `Cldr.known_gettext_locale_names/0`
+    * `locale_name` is any locale name returned by `Cldr.known_gettext_locale_names/1`
 
   ## Returns
 
@@ -768,7 +779,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct
 
   ## Examples
@@ -832,7 +843,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-    * `locale_name` is any locale name returned by `Cldr.known_locale_names/0`
+    * `locale_name` is any locale name returned by `Cldr.known_locale_names/1`
 
   """
   @spec alias_error(locale_name() | LanguageTag.t(), String.t()) ::

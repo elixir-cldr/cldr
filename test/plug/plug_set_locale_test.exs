@@ -12,7 +12,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     ]
 
   test "init returns the default options" do
-    opts = Cldr.Plug.SetLocale.init()
+    opts = Cldr.Plug.SetLocale.init(cldr: TestBackend.Cldr)
 
     assert opts == [
              session_key: "cldr_locale",
@@ -50,7 +50,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   end
 
   test "set the locale from a query param" do
-    opts = Cldr.Plug.SetLocale.init(from: :query)
+    opts = Cldr.Plug.SetLocale.init(from: :query, cldr: TestBackend.Cldr)
 
     conn =
       :get
@@ -78,7 +78,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   end
 
   test "set the locale from the session" do
-    opts = Cldr.Plug.SetLocale.init(from: :session)
+    opts = Cldr.Plug.SetLocale.init(from: :session, cldr: TestBackend.Cldr)
     session_opts = Plug.Session.init(store: :cookie, key: "_key", signing_salt: "X")
 
     conn =
@@ -110,7 +110,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   end
 
   test "set the locale from a body param" do
-    opts = Cldr.Plug.SetLocale.init(from: :body)
+    opts = Cldr.Plug.SetLocale.init(from: :body, cldr: TestBackend.Cldr)
     parser_opts = Plug.Parsers.init(parsers: [:json], json_decoder: Poison)
     json = %{locale: "zh-Hant"}
 
@@ -141,7 +141,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   end
 
   test "set the locale from a cookie param" do
-    opts = Cldr.Plug.SetLocale.init(from: :cookie)
+    opts = Cldr.Plug.SetLocale.init(from: :cookie, cldr: TestBackend.Cldr)
 
     conn =
       :get
@@ -171,7 +171,7 @@ defmodule Cldr.Plug.SetLocale.Test do
   end
 
   test "locale is set according to the configured priority" do
-    opts = Cldr.Plug.SetLocale.init(from: [:accept_language, :query])
+    opts = Cldr.Plug.SetLocale.init(from: [:accept_language, :query], cldr: TestBackend.Cldr)
 
     conn =
       :get

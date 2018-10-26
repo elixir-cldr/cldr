@@ -232,15 +232,19 @@ defmodule Cldr.Config do
   def known_gettext_locale_names(config) do
     if gettext_configured?(config) && Application.ensure_all_started(:gettext) do
       otp_app = gettext(config).__gettext__(:otp_app)
+      gettext_backend = gettext(config)
 
       backend_default =
         otp_app
-        |> Application.get_env(gettext(config))
+        |> Application.get_env(gettext_backend)
         |> Keyword.get(:default_locale)
 
-      global_default = Application.get_env(:gettext, :default_locale)
+      global_default =
+        Application.get_env(:gettext, :default_locale)
 
-      locales = apply(Gettext, :known_locales, [gettext(config)]) ++ [backend_default, global_default]
+      locales =
+        apply(Gettext, :known_locales, [gettext_backend]) ++
+        [backend_default, global_default]
 
       locales
       |> Enum.reject(&is_nil/1)

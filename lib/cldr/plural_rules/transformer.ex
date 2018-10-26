@@ -37,12 +37,12 @@ defmodule Cldr.Number.PluralRule.Transformer do
 
   # Walk the AST and replace the variable context to that of the calling
   # module
-  defp set_operand_module(ast, module) do
+  defp set_operand_module(ast, _module) do
     Macro.prewalk(ast, [], fn expr, acc ->
       new_expr =
         case expr do
           {var, [], Elixir} ->
-            {:var!, [context: Elixir, import: Kernel], [{var, [], module}]}
+            {var, [],  Cldr.Number.PluralRule}
 
           # {var, [], module}
           {:mod, _context, [operand, value]} ->

@@ -7,8 +7,4 @@ defmodule Cldr.Macros do
     end
   end
 
-  # Use for multiline comments
-  # that compile to nothing
-  defmacro docp(_comment) do
-  end
 end

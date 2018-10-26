@@ -3,14 +3,14 @@ defmodule Decimal.PluralRule.Test do
 
   @moduletag :slow
   @sample_types [:decimal]
-  @modules [Cldr.Number.Cardinal, Cldr.Number.Ordinal]
+  @modules [TestBackend.Cldr.Number.Cardinal, TestBackend.Cldr.Number.Ordinal]
 
   for module <- @modules,
       locale_name <- module.known_locale_names,
       {category, rule} <- module.plural_rules_for(locale_name),
       sample_type <- @sample_types,
       one_rule <- rule[sample_type] || [] do
-    locale = Cldr.Locale.new!(locale_name)
+    locale = Cldr.Locale.new!(locale_name, TestBackend.Cldr)
 
     case one_rule do
       :ellipsis ->

@@ -38,6 +38,7 @@ defmodule Cldr.Backend.Compiler do
       def __cldr__(:config), do: unquote(Macro.escape(config))
 
       unquote(Cldr.Backend.define_backend_functions(config))
+      unquote(Cldr.Locale.define_new(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
 
       if Code.ensure_loaded?(Gettext) do

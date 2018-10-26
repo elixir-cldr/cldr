@@ -18,15 +18,15 @@ defmodule Cldr.Gettext.Plural do
         @doc """
         Returns how many plural forms exist for a given locale.
 
-        * `locale` is either a locale name in the list `#{unquote(config.backend)}.known_locales/0` or
-          a `%LanguageTag{}` as returned by `Cldr.Locale.new/1`
+        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locales/0` or
+          a `%LanguageTag{}` as returned by `Cldr.Locale.new/2`
 
         ## Examples
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.nplurals("pl")
+            iex> #{inspect(__MODULE__)}.nplurals("pl")
             3
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.nplurals("en")
+            iex> #{inspect(__MODULE__)}.nplurals("en")
             2
 
         """
@@ -43,30 +43,30 @@ defmodule Cldr.Gettext.Plural do
         Returns to what plural form a given number belongs to in a given
         locale.
 
-        * `locale` is either a locale name in the list `#{unquote(config.backend)}.known_locales/0` or
-          a `%LanguageTag{}` as returned by `Cldr.Locale.new/1`
+        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locales/0` or
+          a `%LanguageTag{}` as returned by `Cldr.Locale.new/2`
 
         ## Examples
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("pl", 1)
+            iex> #{inspect(__MODULE__)}.plural("pl", 1)
             0
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("pl", 2)
+            iex> #{inspect(__MODULE__)}.plural("pl", 2)
             1
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("pl", 5)
+            iex> #{inspect(__MODULE__)}.plural("pl", 5)
             2
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("pl", 112)
+            iex> #{inspect(__MODULE__)}.plural("pl", 112)
             2
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("en", 1)
+            iex> #{inspect(__MODULE__)}.plural("en", 1)
             0
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("en", 2)
+            iex> #{inspect(__MODULE__)}.plural("en", 2)
             1
 
-            iex> #{unquote(config.backend)}.Gettext.Plural.plural("en", 112)
+            iex> #{inspect(__MODULE__)}.plural("en", 112)
             1
 
         """

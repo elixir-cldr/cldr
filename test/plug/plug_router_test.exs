@@ -17,7 +17,7 @@ defmodule Cldr.TestApp.Router do
 end
 
 defmodule Cldr.PageController do
-  def init(_) do
+  def init(cldr: TestBackend.Cldr) do
   end
 
   def call(conn, _) do
@@ -30,7 +30,7 @@ defmodule Cldr.Plug.Router.Test do
   use Plug.Test
 
   test "set the locale from the path params" do
-    opts = Cldr.TestApp.Router.init([])
+    opts = Cldr.TestApp.Router.init(cldr: TestBackend.Cldr)
 
     conn =
       :get
@@ -73,7 +73,7 @@ defmodule Cldr.Plug.Router.Test do
   end
 
   test "set the locale from the path params with scope parameter" do
-    opts = Cldr.TestApp.Router.init([])
+    opts = Cldr.TestApp.Router.init(cldr: TestBackend.Cldr)
 
     conn =
       :get
