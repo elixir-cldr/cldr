@@ -80,8 +80,52 @@ defmodule Cldr.Number.PluralRule do
         @rules
       end
 
+      if unquote(module_name) == :cardinal do
       @doc """
-      Pluralize a number using plural rules and a substition map.
+      Pluralize a number using #{unquote(module_name)} plural rules
+      and a substition map.
+
+      ## Arguments
+
+      * `number` is an integer, float or Decimal
+
+      * `locale` is any locale returned by `Cldr.Locale.new!/1` or any
+        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+
+      * `substitutions` is a map that maps plural keys to a string.
+        The valid substitution keys are `:zero`, `:one`, `:two`,
+        `:few`, `:many` and `:other`.
+
+      See also `#{inspect(__MODULE__)}.#{@module}.plural_rule/3`.
+
+      ## Examples
+
+          iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
+          "one"
+
+          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
+          nil
+
+          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two", other: "other"}
+          "other"
+
+          iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+          "other"
+
+          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
+          "one"
+
+          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
+          nil
+
+          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+          nil
+
+      """
+      else
+      @doc """
+      Pluralize a number using #{unquote(module_name)} plural rules
+      and a substition map.
 
       ## Arguments
 
@@ -108,7 +152,7 @@ defmodule Cldr.Number.PluralRule do
           "two"
 
           iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
-          "other"
+          "two"
 
           iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
           "one"
@@ -120,6 +164,8 @@ defmodule Cldr.Number.PluralRule do
           "two"
 
       """
+      end
+
       @default_substitution :other
       @spec pluralize(Math.number_or_decimal(), LanguageTag.t() | Locale.locale_name(), %{}) :: any()
 
@@ -177,6 +223,42 @@ defmodule Cldr.Number.PluralRule do
       # f       visible fractional digits in n, with trailing zeros.
       # t       visible fractional digits in n, without trailing zeros.
 
+      if unquote(module_name) == :cardinal do
+      @doc """
+      Return the plural key for a given number in a given locale
+
+      Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
+      `:many` or `:other`) a given number fits into within the
+      context of a given locale.
+
+      Note that these key names should not be interpreted
+      literally.  For example, the key returned from
+      `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
+      `:other`, not `:zero`.
+
+      This key can then be used to format a number, date, time, unit,
+      list or other content in a plural-sensitive way.
+
+      ## Arguments
+
+      * `number` is any `integer`, `float` or `Decimal`
+
+      * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
+        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+
+      * `rounding` is one of ``#{inspect Cldr.Math.rounding_modes}`.  The
+        default is `#{inspect Cldr.Math.default_rounding_mode}`.
+
+      ## Examples
+
+          iex> #{inspect(__MODULE__)}.plural_rule 0, "fr"
+          :one
+
+          iex> #{inspect(__MODULE__)}.plural_rule 0, "en"
+          :other
+
+      """
+      else
       @doc """
       Return the plural key for a given number in a given locale
 
@@ -211,6 +293,8 @@ defmodule Cldr.Number.PluralRule do
           :one
 
       """
+      end
+
       @spec plural_rule(
               Math.number_or_decimal(),
               Locale.locale_name() | LanguageTag.t(),

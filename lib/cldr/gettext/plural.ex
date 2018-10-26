@@ -24,7 +24,7 @@ defmodule Cldr.Gettext.Plural do
         ## Examples
 
             iex> #{inspect(__MODULE__)}.nplurals("pl")
-            3
+            4
 
             iex> #{inspect(__MODULE__)}.nplurals("en")
             2
@@ -49,19 +49,19 @@ defmodule Cldr.Gettext.Plural do
         ## Examples
 
             iex> #{inspect(__MODULE__)}.plural("pl", 1)
-            0
-
-            iex> #{inspect(__MODULE__)}.plural("pl", 2)
             1
 
+            iex> #{inspect(__MODULE__)}.plural("pl", 2)
+            3
+
             iex> #{inspect(__MODULE__)}.plural("pl", 5)
-            2
+            4
 
             iex> #{inspect(__MODULE__)}.plural("pl", 112)
-            2
+            4
 
             iex> #{inspect(__MODULE__)}.plural("en", 1)
-            0
+            1
 
             iex> #{inspect(__MODULE__)}.plural("en", 2)
             1
