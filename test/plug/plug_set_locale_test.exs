@@ -34,19 +34,47 @@ defmodule Cldr.Plug.SetLocale.Test do
              },
              param: "locale",
              from: [:session, :accept_language],
-             apps: [:cldr]
+             apps: [:cldr],
+             cldr: TestBackend.Cldr
            ]
   end
 
   test "bad parameters raise exceptions" do
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(from: :nothing) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(from: [:nothing]) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(apps: :nothing) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(apps: [:nothing]) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(param: [:nothing]) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(apps: :gettext) end
-    assert_raise ArgumentError, fn -> Cldr.Plug.SetLocale.init(gettext: BlatherBalls) end
-    assert_raise Cldr.UnknownLocaleError, fn -> Cldr.Plug.SetLocale.init(default: :nothing) end
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(from: :nothing, cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(from: :nothing, cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(from: [:nothing], cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(apps: :nothing, cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(apps: [:nothing], cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(param: [:nothing], cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(apps: :gettext, cldr: TestBackend.Cldr)
+    end
+
+    assert_raise ArgumentError, fn ->
+      Cldr.Plug.SetLocale.init(gettext: BlatherBalls, cldr: TestBackend.Cldr)
+    end
+
+    assert_raise Cldr.UnknownLocaleError, fn ->
+      Cldr.Plug.SetLocale.init(default: :nothing, cldr: TestBackend.Cldr)
+    end
   end
 
   test "set the locale from a query param" do
@@ -74,7 +102,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variant: nil
              }
 
-    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr].get_current_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from the session" do
@@ -86,7 +114,7 @@ defmodule Cldr.Plug.SetLocale.Test do
       |> conn("/?locale=fr")
       |> Plug.Session.call(session_opts)
       |> fetch_session("cldr_locale")
-      |> put_session("cldr_locale", Cldr.Locale.new("ru"))
+      |> put_session("cldr_locale", Cldr.Locale.new("ru", opts[:cldr]))
       |> Cldr.Plug.SetLocale.call(opts)
 
     assert conn.private[:cldr_locale] ==
@@ -106,7 +134,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "RU"
              }
 
-    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr].get_current_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from a body param" do
@@ -137,7 +165,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "TW"
              }
 
-    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr].get_current_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from a cookie param" do
@@ -167,7 +195,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "TW"
              }
 
-    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr].get_current_locale() == conn.private[:cldr_locale]
   end
 
   test "locale is set according to the configured priority" do
@@ -196,6 +224,6 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variant: nil
              }
 
-    assert Cldr.get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr].get_current_locale() == conn.private[:cldr_locale]
   end
 end

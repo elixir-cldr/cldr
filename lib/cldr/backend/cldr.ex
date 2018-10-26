@@ -324,7 +324,7 @@ defmodule Cldr.Backend do
       @spec put_current_locale(Locale.locale_name() | LanguageTag.t()) ::
               {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
 
-      def put_current_locale(locale_name) when is_binary(locale_name) do
+      def put_current_locale(locale_name) do
         Cldr.put_current_locale(locale_name, __MODULE__)
       end
 

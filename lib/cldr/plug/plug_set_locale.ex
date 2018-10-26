@@ -62,21 +62,17 @@ if Code.ensure_loaded?(Plug) do
     @language_header "accept-language"
 
     @doc false
-    def init do
-      init([])
-    end
-
-    @doc false
     def init(options) do
       options =
         options
+        |> validate_cldr_backend(options[:cldr])
         |> validate_apps(options[:apps])
         |> validate_from(options[:from])
         |> validate_param(options[:param])
         |> validate_default(options[:default])
         |> validate_gettext(options[:gettext])
         |> validate_session_key(options[:session_key])
-        |> validate_cldr_backend(options[:cldr])
+
 
       if :gettext in options[:apps] and is_nil(options[:gettext]) do
         raise ArgumentError,
@@ -272,7 +268,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_default(options, nil) do
-      default = Cldr.default_locale(options[:cldr])
+      default = options[:cldr].default_locale()
       Keyword.put(options, :default, default)
     end
 
