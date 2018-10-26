@@ -2,7 +2,7 @@ defmodule Cldr.TestApp.Router do
   use Phoenix.Router
 
   pipeline :locale_pipeline do
-    plug(Cldr.Plug.SetLocale, from: :path)
+    plug(Cldr.Plug.SetLocale, from: :path, cldr: TestBackend.Cldr)
   end
 
   scope "/thing" do
@@ -17,7 +17,8 @@ defmodule Cldr.TestApp.Router do
 end
 
 defmodule Cldr.PageController do
-  def init(cldr: TestBackend.Cldr) do
+  def init(_) do
+
   end
 
   def call(conn, _) do
@@ -30,7 +31,7 @@ defmodule Cldr.Plug.Router.Test do
   use Plug.Test
 
   test "set the locale from the path params" do
-    opts = Cldr.TestApp.Router.init(cldr: TestBackend.Cldr)
+    opts = Cldr.TestApp.Router.init([])
 
     conn =
       :get
@@ -55,7 +56,7 @@ defmodule Cldr.Plug.Router.Test do
              language_variant: nil
            }
 
-    assert Cldr.get_current_locale() == %Cldr.LanguageTag{
+    assert Cldr.get_current_locale(TestBackend.Cldr) == %Cldr.LanguageTag{
              canonical_locale_name: "fr-Latn-FR",
              cldr_locale_name: "fr",
              extensions: %{},
@@ -73,7 +74,7 @@ defmodule Cldr.Plug.Router.Test do
   end
 
   test "set the locale from the path params with scope parameter" do
-    opts = Cldr.TestApp.Router.init(cldr: TestBackend.Cldr)
+    opts = Cldr.TestApp.Router.init([])
 
     conn =
       :get
