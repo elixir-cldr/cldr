@@ -3,13 +3,11 @@ defmodule Cldr.Backend.Compiler do
 
   @doc false
   defmacro __before_compile__(env) do
-    cldr_opts = Module.get_attribute(env.module, :cldr_opts)
-    config = struct(Cldr.Config, cldr_opts)
+    cldr_opts =
+      Module.get_attribute(env.module, :cldr_opts)
+      |> Keyword.put(:backend, env.module)
 
-    config =
-      config
-      |> Map.put(:backend, env.module)
-      |> Map.put(:default_locale, Cldr.Config.default_locale(config))
+    config = Cldr.Config.config_from_opts(cldr_opts)
 
     Cldr.Config.check_jason_lib_is_available!()
     Cldr.install_locales(config)

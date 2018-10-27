@@ -534,8 +534,10 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.gettext_configured?(Cldr.Config.test_config())
+      iex> test_config = TestBackend.Cldr.__cldr__(:config)
+      iex> Cldr.Config.gettext_configured?(test_config)
       true
+
   """
   @spec gettext_configured?(t()) :: boolean
   def gettext_configured?(config) do
@@ -1289,10 +1291,27 @@ defmodule Cldr.Config do
     ]
   end
 
-  if Mix.env == :test do
-    @doc false
-    def test_config do
-      TestBackend.Cldr.__cldr__(:config)
-    end
+  def config_from_opts(module_config) do
+    global_config =
+      Application.get_all_env(app_name())
+
+    otp_config =
+      if otp_app = module_config[:otp_app] do
+        Application.get_env(otp_app, app_name())
+      else
+        []
+      end
+
+    config =
+      global_config
+      |> Keyword.merge(otp_config)
+      |> Keyword.merge(module_config)
+      |> Map.new
+
+    config =
+      config
+      |> Map.put(:default_locale, Cldr.Config.default_locale(config))
+
+    struct(__MODULE__, config)
   end
 end

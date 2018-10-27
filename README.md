@@ -1,4 +1,4 @@
-# Getting Started with Cldr
+# Getting Started with Cldr 2.0
 ![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)
 [![Hex pm](http://img.shields.io/hexpm/v/ex_cldr.svg?style=flat)](https://hex.pm/packages/ex_cldr)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/kipcole9/cldr/blob/master/LICENSE)
@@ -9,11 +9,11 @@
 
 The functions you are mostly likely to use are in the modules `Cldr` and `Cldr.Locale`.  In particular:
 
-* `Cldr.default_locale/0`
-* `Cldr.set_current_locale/1`
-* `Cldr.get_current_locale/0`
-* `Cldr.known_locale_names/0`
-* `Cldr.Locale.new/1`
+* `Cldr.default_locale/1`
+* `Cldr.set_current_locale/2`
+* `Cldr.get_current_locale/1`
+* `Cldr.known_locale_names/1`
+* `Cldr.Locale.new/2`
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
 
@@ -21,7 +21,9 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 ## Use this package when you have a requirement to...
 
-* Support multiple languages and locales in your application and need to support formatting numbers, dates, times, date-times, SI units and lists in a locale-specific manner
+* Support multiple languages and locales in your application
+
+* Need to support formatting numbers, dates, times, date-times, SI units and lists in one language or many
 
 * Access the data maintained in the CLDR repository in a functional manner
 
@@ -39,7 +41,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
 
     defp deps do
       [
-        {:ex_cldr, "~> 1.0"},
+        {:ex_cldr, "~> 2.0"},
         # Posion or any other compatible json library
         # that implements `encode!/1` and `decode!/1`
         # :jason is recommended
@@ -52,12 +54,6 @@ then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
 
     mix deps.get
     mix deps.compile
-
-Although `Cldr` is purely a library application, it should be added to your application list so that it gets bundled correctly for release.  This applies for Elixir versions up to 1.3.x; version 1.4 and later will automatically do this for you.
-
-    def application do
-      [applications: [:ex_cldr]]
-    end
 
 ## Additional Cldr Packages
 
@@ -104,7 +100,7 @@ The configuration keys available for `Cldr` are:
             default_locale: "en",
             locales: ["en-*", "fr"]
 
-   There is one additional setting which is `:all` which will configure all 523 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
+   There is one additional setting which is `:all` which will configure all 537 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
  * `gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
@@ -116,22 +112,6 @@ The configuration keys available for `Cldr` are:
 
  * `json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used.  One alternative to `Poison` is [Jason](https://hex.pm/packages/jason).  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
 
-### Recompiling after a configuration change
-
-Cldr includes a "compiler" that will detect locale configuration changes and compile the necessary components of Cldr that depend on that configuration.  To make this automatic recompilation happen the `[:cldr]` compiler needs to be added to you `mix.exs`.  For example:
-
-```
-  def project do
-    [
-      app: :app_name,
-      compilers: Mix.compilers ++ [:cldr],
-      ...
-    ]
-  end
-```
-
-Note the addition of `[:cldr]` as the **last** compiler on the list.  This is a firm requirement.
-
 ## Downloading Configured Locales
 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
@@ -139,7 +119,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from github then all 537 locales are installed when the repo is cloned into your application deps.
 
-* If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.  Please note above the requirement for a force recompilation in this situation.
+* If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.
 
 ## Localizing and Formatting Numbers
 
@@ -290,7 +270,7 @@ Locale string are case insensitive but there are common conventions:
 
 ## Testing
 
-Tests cover the full 523 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 537 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions before 1.5.
 

@@ -11,14 +11,6 @@ defmodule Cldr.Gettext.Test do
     assert default_locale == "en"
   end
 
-  test "that Cldr.Config gets the list of locales" do
-    config = TestBackend.Cldr.__cldr__(:config)
-    :ok = Application.put_env(:gettext, :default_locale, "zh")
-
-    assert Cldr.Config.known_gettext_locale_names(config) == ["en", "en-GB", "zh"]
-    Application.put_env(:gettext, :default_locale, nil)
-  end
-
   test "that Cldr.Config gets the list of locales when there is no global default" do
     assert TestBackend.Cldr.known_gettext_locale_names == ["en", "en-GB"]
   end

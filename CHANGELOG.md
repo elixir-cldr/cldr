@@ -20,9 +20,9 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 
 TODO:
 
-* Correclty consoldiate config:  :cldr key, :otp_app key then module config
 * Check docs have `backend` argument documented
 * Dependency check and call "define_backend_modules" on each one -> this is how we integrate additional modules without having to release new code
+* Migration guide
 
 
 
