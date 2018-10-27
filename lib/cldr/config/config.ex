@@ -1176,7 +1176,7 @@ defmodule Cldr.Config do
   2. To provide a rudimentary way to validate that some json represents a
   valid locale file
 
-  3. To all conditional inclusion of CLDR content at compile time to help
+  3. To allow conditional inclusion of CLDR content at compile time to help
   manage memory footprint.  This capability is not yet built into `Cldr`.
   """
   @spec required_modules :: [String.t()]

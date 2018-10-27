@@ -20,9 +20,9 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 
 TODO:
 
-* [x] Check docs have `backend` argument documented
-* [x] Dependency check and call "define_backend_modules" on each one -> this is how we integrate additional modules without having to release new code
-* [] Migration guide
-* [] Udpate readme
+- [x] Check docs have `backend` argument documented
+- [x] Dependency check and call "define_backend_modules" on each one -> this is how we integrate additional modules without having to release new code
+- [ ] Migration guide
+- [ ] Udpate readme
 
 
