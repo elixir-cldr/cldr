@@ -42,7 +42,7 @@ defmodule Cldr do
   require Cldr.Backend.Compiler
 
   @doc false
-  defmacro __using__(opts) do
+  defmacro __using__(opts \\ []) do
     quote do
       @cldr_opts unquote(opts)
       @before_compile Cldr.Backend.Compiler
@@ -323,6 +323,11 @@ defmodule Cldr do
   @doc """
   Returns a list of all requested locale names.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
 
@@ -336,6 +341,11 @@ defmodule Cldr do
 
   @doc """
   Returns a list of the known locale names.
+
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   Known locales are those locales which
   are the subset of all CLDR locales that
@@ -353,6 +363,11 @@ defmodule Cldr do
   Returns a list of the locales names that are configured,
   but not known in CLDR.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   Since there is a compile-time exception raise if there are
   any unknown locales this function should always
   return an empty list.
@@ -367,6 +382,11 @@ defmodule Cldr do
   Returns a list of locale names which have rules based number
   formats (RBNF).
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   """
   @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_rbnf_locale_names(backend) do
@@ -377,6 +397,11 @@ defmodule Cldr do
   Returns a list of GetText locale names but in CLDR format with
   underscore replaces by hyphen in order to facilitate comparisons
   with Cldr locale names.
+
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   """
   @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
@@ -1024,7 +1049,6 @@ defmodule Cldr do
   @spec validate_number_system(atom() | String.t()) ::
           {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
-  def validate_number_system(number_system)
   def validate_number_system(number_system) when is_atom(number_system) do
     if number_system in Config.known_number_systems do
       {:ok, number_system}
@@ -1075,6 +1099,11 @@ defmodule Cldr do
   @doc """
   Returns a list of atoms representing the number systems types known to `Cldr`.
 
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
   ## Example
 
       iex> Cldr.known_number_system_types(TestBackend.Cldr)
@@ -1092,6 +1121,9 @@ defmodule Cldr do
 
   * `number_system_type` is any number system type returned by
     `Cldr.known_number_system_types/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
 
   ## Returns
 
@@ -1127,7 +1159,7 @@ defmodule Cldr do
   ## Options
 
   * `number_system_type` is any number system type name **not** returned
-      by `Cldr.known_number_system_types/0`
+    by `Cldr.known_number_system_types/0`
 
   ## Returns
 

@@ -12,7 +12,8 @@ defmodule Cldr.Number.PluralRule do
 
     unless module_name in [:cardinal, :ordinal] do
       raise ArgumentError,
-            "Invalid option #{inspect(opts)}. :cardinal or :ordinal are the only valid options"
+        "Invalid option #{inspect(opts)}. `type: :cardinal` or " <>
+        "`type: :ordinal` are the only valid options"
     end
 
     quote location: :keep do
