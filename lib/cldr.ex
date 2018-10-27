@@ -43,9 +43,10 @@ defmodule Cldr do
 
   @doc false
   defmacro __using__(opts \\ []) do
-    quote do
-      @cldr_opts unquote(opts)
+    quote bind_quoted: [opts: opts] do
+      @cldr_opts opts
       @before_compile Cldr.Backend.Compiler
+
     end
   end
 

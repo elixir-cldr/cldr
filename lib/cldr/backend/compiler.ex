@@ -3,11 +3,12 @@ defmodule Cldr.Backend.Compiler do
 
   @doc false
   defmacro __before_compile__(env) do
-    cldr_opts =
+    require Cldr.Config
+
+    config =
       Module.get_attribute(env.module, :cldr_opts)
       |> Keyword.put(:backend, env.module)
-
-    config = Cldr.Config.config_from_opts(cldr_opts)
+      |> Cldr.Config.config_from_opts
 
     Cldr.Config.check_jason_lib_is_available!()
     Cldr.install_locales(config)
@@ -36,11 +37,11 @@ defmodule Cldr.Backend.Compiler do
       unquote(Cldr.Backend.define_backend_functions(config))
       unquote(Cldr.Locale.define_locale_new(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
+      unquote(Cldr.Config.define_plugin_modules(config))
 
       if Code.ensure_loaded?(Gettext) do
         unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
       end
     end
   end
-
 end

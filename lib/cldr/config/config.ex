@@ -1079,6 +1079,7 @@ defmodule Cldr.Config do
     format
   end
 
+  @doc false
   def decimal_formats_for(locale) do
     locale
     |> get_locale
@@ -1095,6 +1096,7 @@ defmodule Cldr.Config do
     |> Enum.sort()
   end
 
+  @doc false
   def number_systems do
     cldr_data_dir()
     |> Path.join("number_systems.json")
@@ -1105,6 +1107,7 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
   end
 
+  @doc false
   def rbnf_rule_function(rule_name) do
     case String.split(rule_name, "/") do
       [locale, ruleset, rule] ->
@@ -1291,13 +1294,14 @@ defmodule Cldr.Config do
     ]
   end
 
+  @doc false
   def config_from_opts(module_config) do
     global_config =
       Application.get_all_env(app_name())
 
     otp_config =
       if otp_app = module_config[:otp_app] do
-        Application.get_env(otp_app, app_name())
+        Application.get_env(otp_app, app_name(), [])
       else
         []
       end
@@ -1313,5 +1317,13 @@ defmodule Cldr.Config do
       |> Map.put(:default_locale, Cldr.Config.default_locale(config))
 
     struct(__MODULE__, config)
+  end
+
+  # Returns the AST of any configured plugins
+  @doc false
+  def define_plugin_modules(config) do
+    for {module, function, _args} <-  Cldr.Config.Dependents.cldr_provider_modules do
+      apply(module, function, [config])
+    end
   end
 end
