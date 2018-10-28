@@ -53,7 +53,8 @@ defmodule Cldr.Mixfile do
       {:phoenix, "~> 1.3", optional: true},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", optional: true},
-      {:benchee, "~> 0.13", only: :dev, runtime: false}
+      {:benchee, "~> 0.13", only: :dev, runtime: false},
+      {:cldr_utils, "~> 2.0"}
     ]
   end
 
