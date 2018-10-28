@@ -9,6 +9,7 @@ defmodule Cldr.Config.Dependents do
     |> Map.to_list
     |> cldr_provider_modules
     |> List.flatten
+    |> maybe_add_this_app
     |> Enum.uniq
   end
 
@@ -34,6 +35,14 @@ defmodule Cldr.Config.Dependents do
 
   defp cldr_provider_modules([h | t]) do
     [cldr_provider_modules(h), cldr_provider_modules(t)]
+  end
+
+  def maybe_add_this_app(deps_list) do
+    if mfa = Keyword.get(Mix.Project.get!.project, :cldr_provider) do
+      [mfa | deps_list]
+    else
+      deps_list
+    end
   end
 
 end

@@ -3,8 +3,6 @@ defmodule Cldr.Backend.Compiler do
 
   @doc false
   defmacro __before_compile__(env) do
-    require Cldr.Config
-
     config =
       Module.get_attribute(env.module, :cldr_opts)
       |> Keyword.put(:backend, env.module)

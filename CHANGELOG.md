@@ -24,5 +24,6 @@ TODO:
 - [x] Dependency check and call "define_backend_modules" on each one -> this is how we integrate additional modules without having to release new code
 - [ ] Migration guide
 - [ ] Udpate readme
+- [ ] client_data_dir and client_locales_dir need to be calculated at runtime, not compile time
 
 
