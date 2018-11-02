@@ -1080,6 +1080,18 @@ defmodule Cldr.Config do
   end
 
   @doc false
+  def decimal_format_list(config) do
+    config
+    |> known_locale_names
+    |> Enum.map(&decimal_formats_for/1)
+    |> Kernel.++(get_precompile_number_formats())
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.reject(&is_nil/1)
+    |> Enum.sort()
+  end
+
+  @doc false
   def decimal_formats_for(locale) do
     locale
     |> get_locale

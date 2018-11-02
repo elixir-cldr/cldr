@@ -167,7 +167,7 @@ defmodule Cldr.Locale do
     quote location: :keep do
       defmodule Locale do
         def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
-        def new!(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
+        def new!(locale_name), do: Cldr.Locale.new!(locale_name, unquote(config.backend))
       end
     end
   end
