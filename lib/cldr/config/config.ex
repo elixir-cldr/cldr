@@ -489,7 +489,32 @@ defmodule Cldr.Config do
     locale_name
     |> get_locale
     |> Map.get(:number_systems)
+  end
+
+  def number_system_names_for(locale_name) do
+    number_systems_for(locale_name)
+    |> Enum.map(&elem(&1, 1))
+    |> Enum.uniq
+  end
+
+  def number_system_types_for(locale_name) do
+    number_systems_for(locale_name)
     |> Enum.map(&elem(&1, 0))
+  end
+
+  @doc """
+  Get the number symbol definitions
+  for a locale
+
+  """
+  def number_symbols_for(locale) do
+    locale
+    |> Map.get(:number_symbols)
+    |> Enum.map(fn
+      {k, nil} -> {k, nil}
+      {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
+    end)
+    |> Enum.into(%{})
   end
 
   @doc """
