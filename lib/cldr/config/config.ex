@@ -3,6 +3,7 @@ defmodule Cldr.Config do
 
   alias Cldr.Locale
   alias Cldr.LanguageTag
+  alias Cldr.Number.System
 
   defstruct default_locale: "en-001",
     locales: ["en-001"],
@@ -474,32 +475,159 @@ defmodule Cldr.Config do
     |> Enum.sort()
   end
 
-  @max_concurrency System.schedulers_online() * 2
+  @doc """
+  Returns locale and number systems that have the same digits and
+  separators as the supplied one.
+
+  Transliterating between locale & number systems is expensive.  To avoid
+  unncessary transliteration we look for locale and number systems that have
+  the same digits and separators.  Typically we are comparing to locale "en"
+  and number system "latn" since this is what the number formatting routines use
+  as placeholders.
+  """
+  @spec known_number_systems_like(LanguageTag.t() | Locale.locale_name(), Cldr.Number.System.system_name, t()) ::
+          {:ok, List.t()} | {:error, tuple}
+
+  def known_number_systems_like(locale_name, number_system, config) do
+    with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system),
+         {:ok, symbols} <- number_symbols_for(locale_name, number_system),
+         {:ok, names} <- number_system_names_for(locale_name) do
+      likes = do_number_systems_like(digits, symbols, names, config)
+      {:ok, likes}
+    end
+  end
+
+  defp do_number_systems_like(digits, symbols, names, config) do
+    Enum.map(known_locale_names(config), fn this_locale ->
+      Enum.reduce(names, [], fn this_system, acc ->
+        case number_system_for(this_locale, this_system) do
+          {:error, _} ->
+            acc
+
+          {:ok, %{digits: these_digits}} ->
+            {:ok, these_symbols} = number_symbols_for(this_locale, this_system)
+
+            if digits == these_digits && symbols == these_symbols do
+              acc ++ {this_locale, this_system}
+            end
+        end
+      end)
+    end)
+    |> Enum.reject(&(is_nil(&1) || &1 == []))
+  end
+
+  @max_concurrency :'Elixir.System'.schedulers_online() * 2
   def known_number_system_types(config) do
     config
     |> known_locale_names()
     |> Task.async_stream(__MODULE__, :number_systems_for, [], max_concurrency: @max_concurrency)
     |> Enum.to_list()
-    |> Enum.flat_map(&elem(&1, 1))
+    |> Enum.flat_map(fn {:ok, {:ok, systems}} -> Map.keys(systems) end)
     |> Enum.uniq()
     |> Enum.sort()
   end
 
   def number_systems_for(locale_name) do
-    locale_name
-    |> get_locale
-    |> Map.get(:number_systems)
+    number_systems =
+      locale_name
+      |> get_locale
+      |> Map.get(:number_systems)
+
+    {:ok, number_systems}
+  end
+
+  def number_system_for(locale_name, number_system) do
+    with {:ok, system_name} <- system_name_from(number_system, locale_name) do
+      {:ok, Map.get(number_systems(), system_name)}
+    end
+  end
+
+  def number_systems_for!(locale_name) do
+    with {:ok, systems} <- number_systems_for(locale_name) do
+      systems
+    end
   end
 
   def number_system_names_for(locale_name) do
-    number_systems_for(locale_name)
-    |> Enum.map(&elem(&1, 1))
-    |> Enum.uniq
+    with {:ok, number_systems} <- number_systems_for(locale_name) do
+      names =
+        number_systems
+        |> Enum.map(&elem(&1, 1))
+        |> Enum.uniq
+
+      {:ok, names}
+    end
   end
 
   def number_system_types_for(locale_name) do
-    number_systems_for(locale_name)
-    |> Enum.map(&elem(&1, 0))
+    with {:ok, number_systems} <- number_systems_for(locale_name) do
+      types =
+        number_systems
+        |> Enum.map(&elem(&1, 0))
+
+      {:ok, types}
+    end
+  end
+
+  @doc """
+  Returns a number system name for a given locale and number system reference.
+
+  * `system_name` is any number system name returned by
+    `Cldr.known_number_systems/0` or a number system type
+    returned by `Cldr.known_number_system_types/0`
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+
+  Number systems can be references in one of two ways:
+
+  * As a number system type such as :default, :native, :traditional and
+    :finance. This allows references to a number system for a locale in a
+    consistent fashion for a given use
+
+  * WIth the number system name directly, such as :latn, :arab or any of the
+    other 70 or so
+
+  This function dereferences the supplied `system_name` and returns the
+  actual system name.
+
+  ## Examples
+
+      ex> Cldr.Number.System.system_name_from(:default, Cldr.Locale.new!( "en"))
+      {:ok, :latn}
+
+      iex> Cldr.Number.System.system_name_from("latn", Cldr.Locale.new!("en"))
+      {:ok, :latn}
+
+      iex> Cldr.Number.System.system_name_from(:native, Cldr.Locale.new!("en"))
+      {:ok, :latn}
+
+      iex> Cldr.Number.System.system_name_from(:nope, Cldr.Locale.new!("en"))
+      {
+        :error,
+        {Cldr.UnknownNumberSystemError, "The number system :nope is unknown"}
+      }
+
+  Note that return value is not guaranteed to be a valid
+  number system for the given locale as demonstrated in the third example.
+
+  """
+  @spec system_name_from(System.system_name, Locale.locale_name() | LanguageTag.t()) :: atom
+  def system_name_from(number_system, locale_name) do
+    with {:ok, number_systems} <- number_systems_for(locale_name) do
+      cond do
+        Map.has_key?(number_systems, number_system) ->
+          {:ok, Map.get(number_systems, number_system)}
+
+        number_system in Map.values(number_systems) ->
+          {:ok, number_system}
+
+        true ->
+          {:error, System.unknown_number_system_for_locale_error(number_system, locale_name, number_systems)}
+      end
+    else
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   @doc """
@@ -508,13 +636,28 @@ defmodule Cldr.Config do
 
   """
   def number_symbols_for(locale) do
-    locale
-    |> Map.get(:number_symbols)
-    |> Enum.map(fn
-      {k, nil} -> {k, nil}
-      {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
-    end)
-    |> Enum.into(%{})
+    symbols =
+      locale
+      |> get_locale
+      |> Map.get(:number_symbols)
+      |> Enum.map(fn
+        {k, nil} -> {k, nil}
+        {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
+      end)
+
+    {:ok, symbols}
+  end
+
+  def number_symbols_for(locale, number_system) do
+    with {:ok, symbols} <- number_symbols_for(locale) do
+      {:ok, Keyword.get(symbols, number_system)}
+    end
+  end
+
+  def number_symbols_for!(locale_name) do
+    with {:ok, symbols} <- number_symbols_for(locale_name) do
+      symbols
+    end
   end
 
   @doc """
@@ -1087,8 +1230,8 @@ defmodule Cldr.Config do
       []
 
   """
-  def get_precompile_number_formats do
-    Application.get_env(app_name(), :precompile_number_formats, [])
+  def get_precompile_number_formats(config) do
+    Map.get(config, :precompile_number_formats, [])
   end
 
   # Extract number formats from short and long lists
@@ -1109,7 +1252,7 @@ defmodule Cldr.Config do
     config
     |> known_locale_names
     |> Enum.map(&decimal_formats_for/1)
-    |> Kernel.++(get_precompile_number_formats())
+    |> Kernel.++(get_precompile_number_formats(config))
     |> List.flatten()
     |> Enum.uniq()
     |> Enum.reject(&is_nil/1)
@@ -1192,7 +1335,7 @@ defmodule Cldr.Config do
   # by checking it has the keys we used when the locale was consolidated.
   defp assert_valid_keys!(content, locale) do
     for module <- required_modules() do
-      if !Map.has_key?(content, module) and !System.get_env("DEV") do
+      if !Map.has_key?(content, module) and !:'Elixir.System'.get_env("DEV") do
         raise RuntimeError,
           message:
             "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
