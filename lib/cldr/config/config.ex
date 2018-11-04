@@ -572,6 +572,8 @@ defmodule Cldr.Config do
   @doc """
   Returns a number system name for a given locale and number system reference.
 
+  ## Arguments
+
   * `system_name` is any number system name returned by
     `Cldr.known_number_systems/0` or a number system type
     returned by `Cldr.known_number_system_types/0`
@@ -585,24 +587,24 @@ defmodule Cldr.Config do
     :finance. This allows references to a number system for a locale in a
     consistent fashion for a given use
 
-  * WIth the number system name directly, such as :latn, :arab or any of the
-    other 70 or so
+  * With the number system name directly, such as :latn, :arab or any of the
+    other 80 or so
 
   This function dereferences the supplied `system_name` and returns the
   actual system name.
 
   ## Examples
 
-      ex> Cldr.Number.System.system_name_from(:default, Cldr.Locale.new!( "en"))
+      iex> Cldr.Config.system_name_from(:default, "en")
       {:ok, :latn}
 
-      iex> Cldr.Number.System.system_name_from("latn", Cldr.Locale.new!("en"))
+      iex> Cldr.Config.system_name_from("latn", "en")
       {:ok, :latn}
 
-      iex> Cldr.Number.System.system_name_from(:native, Cldr.Locale.new!("en"))
+      iex> Cldr.Config.system_name_from(:native, "en")
       {:ok, :latn}
 
-      iex> Cldr.Number.System.system_name_from(:nope, Cldr.Locale.new!("en"))
+      iex> Cldr.Config.system_name_from(:nope, "en")
       {
         :error,
         {Cldr.UnknownNumberSystemError, "The number system :nope is unknown"}
@@ -614,7 +616,8 @@ defmodule Cldr.Config do
   """
   @spec system_name_from(System.system_name, Locale.locale_name() | LanguageTag.t()) :: atom
   def system_name_from(number_system, locale_name) do
-    with {:ok, number_systems} <- number_systems_for(locale_name) do
+    with {:ok, number_systems} <- number_systems_for(locale_name),
+         {:ok, number_system} <- validate_number_system_or_type(number_system, locale_name) do
       cond do
         Map.has_key?(number_systems, number_system) ->
           {:ok, Map.get(number_systems, number_system)}
@@ -623,11 +626,47 @@ defmodule Cldr.Config do
           {:ok, number_system}
 
         true ->
-          {:error, System.unknown_number_system_for_locale_error(number_system, locale_name, number_systems)}
+          {:error, Cldr.unknown_number_system_error(number_system)}
       end
     else
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  defp validate_number_system_or_type(number_system, locale_name) do
+    with {:ok, number_system} <- Cldr.validate_number_system(number_system) do
+      {:ok, number_system}
+    else
+      {:error, _} ->
+        with {:ok, number_system} <- validate_number_system_type(number_system, locale_name) do
+          {:ok, number_system}
+        else
+          {:error, _reason} -> {:error, Cldr.unknown_number_system_error(number_system)}
+        end
+    end
+  end
+
+  defp validate_number_system_type(number_system_type, locale_name) when is_atom(number_system_type) do
+    known_types =
+      locale_name
+      |> get_locale
+      |> known_number_system_types
+
+    if number_system_type in known_types do
+      {:ok, number_system_type}
+    else
+      {:error, Cldr.unknown_number_system_type_error(number_system_type)}
+    end
+  end
+
+  defp validate_number_system_type(number_system_type, locale_name) when is_binary(number_system_type) do
+    number_system_type
+    |> String.downcase()
+    |> String.to_existing_atom()
+    |> validate_number_system_type(locale_name)
+  rescue
+    ArgumentError ->
+      {:error, Cldr.unknown_number_system_type_error(number_system_type)}
   end
 
   @doc """
@@ -1223,11 +1262,6 @@ defmodule Cldr.Config do
   @doc """
   Get the configured number formats that should be precompiled at application
   compilation time.
-
-  ## Example
-
-      iex> Cldr.Config.get_precompile_number_formats
-      []
 
   """
   def get_precompile_number_formats(config) do
