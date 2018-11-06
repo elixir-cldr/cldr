@@ -8,8 +8,8 @@ defmodule Cldr.Config.Dependents do
     Mix.Project.deps_paths
     |> Map.to_list
     |> cldr_provider_modules
-    |> List.flatten
     |> maybe_add_this_app
+    |> List.flatten
     |> Enum.uniq
   end
 
