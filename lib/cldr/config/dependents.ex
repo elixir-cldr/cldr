@@ -17,7 +17,7 @@ defmodule Cldr.Config.Dependents do
     [dep] = Mix.Dep.filter_by_name([app], Mix.Dep.cached())
 
     Mix.Dep.in_dependency dep, fn _module ->
-      if mfa = Keyword.get(Mix.Project.get!.project, :cldr_provider) do
+      if mfa = provider_from_project() do
         [mfa, cldr_provider_modules()]
       else
         cldr_provider_modules()
@@ -38,10 +38,19 @@ defmodule Cldr.Config.Dependents do
   end
 
   def maybe_add_this_app(deps_list) do
-    if mfa = Keyword.get(Mix.Project.get!.project, :cldr_provider) do
-      [mfa | deps_list]
+    if mfa = provider_from_project() do
+      [mfa, deps_list]
     else
       deps_list
+    end
+  end
+
+  defp provider_from_project do
+    project = Mix.Project.get
+    if !is_nil(project) do
+      Keyword.get(project.project, :cldr_provider)
+    else
+      nil
     end
   end
 
