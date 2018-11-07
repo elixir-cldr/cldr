@@ -375,6 +375,7 @@ defmodule Cldr.Number.PluralRule do
     end
   end
 
+  @doc false
   def define_ordinal_and_cardinal_modules(config) do
     quote location: :keep do
       defmodule Number.Ordinal do
@@ -401,6 +402,7 @@ defmodule Cldr.Number.PluralRule do
     end
   end
 
+  @doc false
   def define_plural_rules do
     quote bind_quoted: [], location: :keep do
       alias Cldr.Number.PluralRule

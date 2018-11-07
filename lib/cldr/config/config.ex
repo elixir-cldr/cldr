@@ -844,13 +844,13 @@ defmodule Cldr.Config do
           raise RuntimeError, message: "Locale definition was not found for #{locale}"
       end
 
-    do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
+    do_get_locale(locale, path)
   end
 
   @doc false
-  def do_get_locale(locale, path, compiling? \\ false)
+  def do_get_locale(locale, path)
 
-  def do_get_locale(locale, path, false) do
+  def do_get_locale(locale, path) do
     path
     |> File.read!()
     |> json_library().decode!
@@ -865,9 +865,15 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def do_get_locale(locale, path, true) do
-    Cldr.Locale.Cache.get_locale(locale, path)
+  def get_cached_locale(locale_name, backend) do
+    Module.get_attribute(backend, :locales)
+    |> Map.get(locale_name)
   end
+
+  @doc false
+  # def do_get_locale(locale, path, true) do
+  #   Cldr.Locale.Cache.get_locale(locale, path)
+  # end
 
   defp atomize_keys(content, modules) do
     Enum.map(content, fn {module, values} ->
@@ -1322,32 +1328,32 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def rbnf_rule_function(rule_name) do
+  def rbnf_rule_function(rule_name, backend) do
     case String.split(rule_name, "/") do
-      [locale, ruleset, rule] ->
+      [locale_name, ruleset, rule] ->
         ruleset_module =
           ruleset
           |> String.trim_trailing("Rules")
 
         function =
           rule
-          |> String.replace("-", "_")
+          |> locale_name_to_posix
           |> String.to_atom()
 
-        locale =
-          locale
-          |> String.replace("_", "-")
+        locale_name =
+          locale_name
+          |> locale_name_from_posix
 
-        module = Module.concat(Cldr.Rbnf, ruleset_module)
-        {module, function, locale}
+        module = Module.concat(backend, Rbnf) |> Module.concat(ruleset_module)
+        {module, function, locale_name}
 
       [rule] ->
         function =
           rule
-          |> String.replace("-", "_")
+          |> locale_name_to_posix
           |> String.to_atom()
 
-        {Cldr.Rbnf.NumberSystem, function, "root"}
+        {Module.concat(backend, Rbnf.NumberSystem), function, "root"}
     end
   end
 

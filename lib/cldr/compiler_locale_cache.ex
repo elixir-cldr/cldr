@@ -58,7 +58,6 @@ defmodule Cldr.Locale.Cache do
   defp do_get_locale(locale, path) do
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
-        # Logger.debug "#{inspect self()}:  Found cached locale #{inspect locale}"
         locale_data
 
       [] ->
@@ -66,7 +65,7 @@ defmodule Cldr.Locale.Cache do
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
-          # Logger.debug "#{inspect self()}:  Inserted #{inspect locale} into :ets"
+
         rescue
           ArgumentError ->
             nil
