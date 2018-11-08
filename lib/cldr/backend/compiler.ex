@@ -8,8 +8,8 @@ defmodule Cldr.Backend.Compiler do
       |> Keyword.put(:backend, env.module)
       |> Cldr.Config.config_from_opts
 
-    Cldr.install_locales(config)
     Module.put_attribute(env.module, :config, config)
+    Cldr.install_locales(config)
 
     quote location: :keep do
       @moduledoc """

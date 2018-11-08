@@ -844,13 +844,13 @@ defmodule Cldr.Config do
           raise RuntimeError, message: "Locale definition was not found for #{locale}"
       end
 
-    do_get_locale(locale, path)
+    do_get_locale(locale, path, Cldr.Locale.Cache.compiling?)
   end
 
   @doc false
-  def do_get_locale(locale, path)
+  def do_get_locale(locale, path, compiling? \\ false)
 
-  def do_get_locale(locale, path) do
+  def do_get_locale(locale, path, false) do
     path
     |> File.read!()
     |> json_library().decode!
@@ -865,15 +865,9 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def get_cached_locale(locale_name, backend) do
-    Module.get_attribute(backend, :locales)
-    |> Map.get(locale_name)
+  def do_get_locale(locale, path, true) do
+    Cldr.Locale.Cache.get_locale(locale, path)
   end
-
-  @doc false
-  # def do_get_locale(locale, path, true) do
-  #   Cldr.Locale.Cache.get_locale(locale, path)
-  # end
 
   defp atomize_keys(content, modules) do
     Enum.map(content, fn {module, values} ->
