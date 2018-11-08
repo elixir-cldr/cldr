@@ -139,7 +139,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
   test "set the locale from a body param" do
     opts = Cldr.Plug.SetLocale.init(from: :body, cldr: TestBackend.Cldr)
-    parser_opts = Plug.Parsers.init(parsers: [:json], json_decoder: Poison)
+    parser_opts = Plug.Parsers.init(parsers: [:json], json_decoder: Jason)
     json = %{locale: "zh-Hant"}
 
     conn =
