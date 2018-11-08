@@ -12,10 +12,11 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 
 ### Breaking Changes
 
-* Configuration
-* Public API
-* Remove sigil
+* Configuration changes to focus on the backend module, then otp app, then global config
+* Public API moves to a configured backend (a la Gettext)
+* Removed ~L sigil
 * Plugs need to have a config key :cldr_backend to specify the backend
+* :cldr compiler is obsolete.  It still exists to configuration doesn't break but its no a :noop
 
 TODO:
 
