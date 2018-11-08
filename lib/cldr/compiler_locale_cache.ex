@@ -6,7 +6,7 @@ defmodule Cldr.Locale.Cache do
 
   @table_name :cldr_locales
   @gen_server_name :cldr_locale_cache
-  @timeout 5_000
+  # @timeout 5_000
 
   # Client
 
@@ -19,7 +19,8 @@ defmodule Cldr.Locale.Cache do
       {:ok, _pid} = Cldr.Locale.Cache.start()
     end
 
-    GenServer.call(@gen_server_name, {:get_locale, locale, path}, @timeout)
+    # GenServer.call(@gen_server_name, {:get_locale, locale, path}, @timeout)
+    do_get_locale(locale, path)
   end
 
   # Server (callbacks)
@@ -58,6 +59,7 @@ defmodule Cldr.Locale.Cache do
   defp do_get_locale(locale, path) do
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
+        # Logger.debug "Found cached locale for #{inspect locale}"
         locale_data
 
       [] ->
@@ -88,9 +90,8 @@ defmodule Cldr.Locale.Cache do
   defp create_ets_table! do
     case :ets.info(@table_name) do
       :undefined ->
-        :ets.new(@table_name, [:named_table, {:read_concurrency, true}])
-
-      # Logger.debug "#{inspect self()}:  Created :ets table"
+        :ets.new(@table_name, [:named_table, :public, {:read_concurrency, true}])
+        # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end
