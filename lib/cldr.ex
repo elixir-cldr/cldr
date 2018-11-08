@@ -1150,7 +1150,7 @@ defmodule Cldr do
   @spec validate_number_system_type(String.t() | atom(), backend()) ::
           {:ok, atom()} | {:error, {Exception.t(), String.t()}}
 
-  def validate_number_system_type(number_system_type, backend) when is_atom(number_system_type) do
+  def validate_number_system_type(number_system_type, backend) do
     backend.validate_number_system_type(number_system_type)
   end
 

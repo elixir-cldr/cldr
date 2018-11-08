@@ -454,6 +454,12 @@ defmodule Cldr.Backend do
             {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}
           }
 
+          iex> #{inspect(__MODULE__)}.validate_number_system_type "bork"
+          {
+            :error,
+            {Cldr.UnknownNumberSystemTypeError, "The number system type \\"bork\\" is invalid"}
+          }
+
       """
       @spec validate_number_system_type(String.t() | atom()) ::
               {:ok, atom()} | {:error, {Exception.t(), String.t()}}
@@ -473,7 +479,7 @@ defmodule Cldr.Backend do
         |> validate_number_system_type
       rescue
         ArgumentError ->
-          {:error, Cldr.unknown_number_system_type_error(number_system_type)}
+          {:error, Cldr.unknown_number_system_type_error(to_string(number_system_type))}
       end
 
       defdelegate available_locale_name?(locale_name), to: Cldr
