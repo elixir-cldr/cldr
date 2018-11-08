@@ -65,7 +65,7 @@ if Code.ensure_loaded?(Plug) do
     def init(options) do
       options =
         options
-        |> validate_cldr_backend(options[:cldr])
+        |> validate_cldr_backend(options[:cldr_backend])
         |> validate_apps(options[:apps])
         |> validate_from(options[:from])
         |> validate_param(options[:param])
@@ -80,7 +80,7 @@ if Code.ensure_loaded?(Plug) do
                 "if the :gettext is configured as an :app"
       end
 
-      unless options[:cldr] do
+      unless options[:cldr_backend] do
         raise ArgumentError, "A Cldr backend module must be specified under the key :cldr"
       end
 
@@ -115,8 +115,8 @@ if Code.ensure_loaded?(Plug) do
 
     defp fetch_param(conn, :accept_language, _param, options) do
       case get_req_header(conn, @language_header) do
-        [accept_language] -> AcceptLanguage.best_match(accept_language, options[:cldr])
-        [accept_language | _] -> AcceptLanguage.best_match(accept_language, options[:cldr])
+        [accept_language] -> AcceptLanguage.best_match(accept_language, options[:cldr_backend])
+        [accept_language | _] -> AcceptLanguage.best_match(accept_language, options[:cldr_backend])
         [] -> nil
       end
     end
@@ -135,21 +135,21 @@ if Code.ensure_loaded?(Plug) do
       conn
       |> Map.get(:query_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr])
+      |> Cldr.validate_locale(options[:cldr_backend])
     end
 
     defp fetch_param(conn, :path, param, options) do
       conn
       |> Map.get(:path_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr])
+      |> Cldr.validate_locale(options[:cldr_backend])
     end
 
     defp fetch_param(conn, :body, param, options) do
       conn
       |> Map.get(:body_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr])
+      |> Cldr.validate_locale(options[:cldr_backend])
     end
 
     defp fetch_param(conn, :session, _param, options) do
@@ -161,7 +161,7 @@ if Code.ensure_loaded?(Plug) do
       conn
       |> Map.get(:cookies)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr])
+      |> Cldr.validate_locale(options[:cldr_backend])
     end
 
     defp return_if_valid_locale(nil) do
@@ -177,7 +177,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp put_locale(:cldr, locale, options) do
-      backend = options[:cldr]
+      backend = options[:cldr_backend]
       backend.put_current_locale(locale)
     end
 
@@ -268,12 +268,12 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_default(options, nil) do
-      default = options[:cldr].default_locale()
+      default = options[:cldr_backend].default_locale()
       Keyword.put(options, :default, default)
     end
 
     defp validate_default(options, default) do
-      case Cldr.validate_locale(default, options[:cldr]) do
+      case Cldr.validate_locale(default, options[:cldr_backend]) do
         {:ok, locale} -> Keyword.put(options, :default, locale)
         {:error, {exception, reason}} -> raise exception, reason
       end
@@ -313,7 +313,7 @@ if Code.ensure_loaded?(Plug) do
         raise ArgumentError,
           "#{inspect backend} is either not known or does not appear to be a Cldr backend module"
       else
-        Keyword.put(options, :cldr, backend)
+        Keyword.put(options, :cldr_backend, backend)
       end
     end
   end

@@ -2,7 +2,7 @@ defmodule Cldr.TestApp.Router do
   use Phoenix.Router
 
   pipeline :locale_pipeline do
-    plug(Cldr.Plug.SetLocale, from: :path, cldr: TestBackend.Cldr)
+    plug(Cldr.Plug.SetLocale, from: :path, cldr_backend: TestBackend.Cldr)
   end
 
   scope "/thing" do

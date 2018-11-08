@@ -13,11 +13,11 @@ if Code.ensure_loaded?(Plug) do
     @language_header "accept-language"
 
     def init(options) do
-      unless options[:cldr] do
+      unless options[:cldr_backend] do
         raise ArgumentError, "A Cldr backend module must be specified under the key :cldr"
       end
 
-      Keyword.get(options, :cldr)
+      Keyword.get(options, :cldr_backend)
     end
 
     def call(conn, backend) do

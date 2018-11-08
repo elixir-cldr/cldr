@@ -6,7 +6,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
   import Plug.Conn, only: [put_req_header: 3]
 
   test "that the locale is set if the accept-language header is a valid locale name" do
-    opts = Cldr.Plug.AcceptLanguage.init(cldr: TestBackend.Cldr)
+    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
 
     conn =
       :get
@@ -33,7 +33,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
   end
 
   test "that the locale is not set if the accept-language header is an invalid locale name" do
-    opts = Cldr.Plug.AcceptLanguage.init(cldr: TestBackend.Cldr)
+    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
 
     capture_log(fn ->
       conn =
@@ -47,7 +47,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
   end
 
   test "that the locale is not set if the accept-language header does not exists" do
-    opts = Cldr.Plug.AcceptLanguage.init(cldr: TestBackend.Cldr)
+    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
 
     capture_log(fn ->
       conn =

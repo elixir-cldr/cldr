@@ -15,7 +15,7 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 * Configuration
 * Public API
 * Remove sigil
-* Plugs need to have a config key :cldr to specify the backend
+* Plugs need to have a config key :cldr_backend to specify the backend
 
 TODO:
 
