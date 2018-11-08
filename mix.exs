@@ -50,7 +50,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
-      {:phoenix, "~> 1.3", optional: true},
+      {:phoenix, "~> 1.3", optional: true, only: :test},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", optional: true},
       {:benchee, "~> 0.13", only: :dev, runtime: false},
