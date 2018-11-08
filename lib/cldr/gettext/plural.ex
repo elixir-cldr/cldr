@@ -6,6 +6,7 @@ defmodule Cldr.Gettext.Plural do
       defmodule Gettext.Plural do
         @moduledoc """
         Defines a Plural module for Gettext that uses the `Cldr` plural rules.
+
         """
         @behaviour :"Elixir.Gettext.Plural"
 

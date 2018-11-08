@@ -27,6 +27,7 @@ defmodule Cldr.Substitution do
 
   This function is primarily intended to support compile-time generation
   of templates that simplify and speed up parameter substitution at runtime.
+
   """
   @spec parse(String.t()) :: [String.t() | integer, ...]
   def parse("") do

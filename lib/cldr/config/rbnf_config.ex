@@ -5,6 +5,7 @@ defmodule Cldr.Rbnf.Config do
   During the process of consolidating the various CLDR files into
   a standard format that is easily digestible for Cldr, these functions
   are used to do the parsing and normalising of RBNF data.
+
   """
   alias Cldr.Locale
 

@@ -1,10 +1,6 @@
 defmodule Cldr.Number.PluralRule do
-  @moduledoc """
-  Macro to define plural rule methods on a module.
+  @moduledoc false
 
-  Used to generate plural rule functions for
-  `Cldr.Number.Ordinal` and `Cldr.Number.Cardinal`.
-  """
   @type operand :: any()
 
   defmacro __using__(opts) do

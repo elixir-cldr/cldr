@@ -11,6 +11,7 @@ defmodule Cldr.Install do
 
   If `Cldr` is installed from github directly then all locales are already
   installed.
+
   """
 
   defdelegate client_data_dir(), to: Cldr.Config

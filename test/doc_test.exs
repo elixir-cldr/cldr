@@ -10,7 +10,7 @@ defmodule Doc.Test do
   doctest Cldr.LanguageTag
   doctest Cldr.LanguageTag.Parser
   doctest Cldr.AcceptLanguage
-  doctest Cldr.Map
+  doctest Cldr.Substitution
 
   doctest TestBackend.Cldr
   doctest TestBackend.Cldr.Number.Ordinal

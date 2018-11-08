@@ -1,4 +1,6 @@
 defmodule Cldr.Rfc5646.Core do
+  @moduledoc false
+
   import NimbleParsec
 
   def lowercase do

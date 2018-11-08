@@ -5,8 +5,6 @@ defmodule Cldr.LanguageTag.Parser do
   The applicable specification is from [CLDR](http://unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers)
   which is similar based upon [RFC5646](https://tools.ietf.org/html/rfc5646) with some variations.
 
-  This module provides functions to parse a language tag (locale string).  To be
-  consistent with the rest of `Cldr`, the term locale string will be preferred.
   """
   alias Cldr.LanguageTag
   alias Cldr.Config

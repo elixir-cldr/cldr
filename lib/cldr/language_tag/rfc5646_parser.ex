@@ -1,4 +1,6 @@
 defmodule Cldr.Rfc5646.Parser do
+  @moduledoc false
+
   import NimbleParsec
   import Cldr.Rfc5646.Grammar
 

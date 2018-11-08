@@ -1,13 +1,12 @@
 # http://unicode.org/reports/tr35/tr35-numbers.html#Language_Plural_Rules
 defmodule Cldr.Number.PluralRule.Compiler do
-  @moduledoc """
-  Function to tokenize and parse a plural rule.
-  """
+  @moduledoc false
 
   @doc """
   Tokenize a plural rule definition.
 
-  Using a leex lexer, tokenize a rule definition
+  Using a leex lexer, tokenize a rule definition.
+
   """
   def tokenize(definition) when is_binary(definition) do
     definition
@@ -20,6 +19,7 @@ defmodule Cldr.Number.PluralRule.Compiler do
 
   Using a yexx lexer, parse a rule definition into an Elixir
   AST that can then be `unquoted` into a function definition.
+
   """
   def parse(tokens) when is_list(tokens) do
     :plural_rules_parser.parse(tokens)

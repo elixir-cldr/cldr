@@ -286,8 +286,8 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-        or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
+        or a `Cldr.LanguageTag` struct returned by `#{inspect(__MODULE__)}.Locale.new!/1`
 
       See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
       of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
@@ -334,7 +334,7 @@ defmodule Cldr.Backend do
       ## Arguments
 
       * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
-        or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2
+        or a `Cldr.LanguageTag` struct returned by `#{inspect(__MODULE__)}.Locale.new!/1
 
       ## Returns
 

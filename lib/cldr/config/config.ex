@@ -265,10 +265,12 @@ defmodule Cldr.Config do
 
   Any configured locales that are not present in this list will
   raise an exception at compile time.
+
   """
+  @available_locales_file "available_locales.json"
   @spec all_locale_names :: [Locale.locale_name(), ...]
   def all_locale_names do
-    Path.join(cldr_data_dir(), "available_locales.json")
+    Path.join(cldr_data_dir(), @available_locales_file)
     |> File.read!()
     |> json_library().decode!
     |> Enum.sort()
@@ -287,6 +289,11 @@ defmodule Cldr.Config do
     _e in File.Error -> %{}
   end
 
+  @doc """
+  Returns a boolean indicating whether the language_tags.ebin
+  file exists
+
+  """
   def all_language_tags? do
     cldr_data_dir()
     |> Path.join(@tag_file)
@@ -320,6 +327,7 @@ defmodule Cldr.Config do
   The use of `:all` is not recommended since all 537 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
+
   """
   @spec configured_locale_names(t()) :: [Locale.locale_name()]
   def configured_locale_names(config) do
@@ -338,6 +346,7 @@ defmodule Cldr.Config do
   @doc """
   Returns a list of all locales that are configured and available
   in the CLDR repository.
+
   """
   @spec known_locale_names(t()) :: [Locale.locale_name()]
   def known_locale_names(config) do
@@ -353,6 +362,11 @@ defmodule Cldr.Config do
     |> Enum.filter(fn locale -> Map.get(get_locale(locale), :rbnf) != %{} end)
   end
 
+  @doc """
+  Returns either the locale name (if its known)
+  or `false` if the locale name is not known.
+
+  """
   def known_locale_name(locale_name, config) do
     if locale_name in known_locale_names(config) do
       locale_name
@@ -361,6 +375,12 @@ defmodule Cldr.Config do
     end
   end
 
+  @doc """
+  Returns either the locale name (if its known
+  and has an rbnf configuration)
+  or `false`.
+
+  """
   def known_rbnf_locale_name(locale_name, config) do
     if locale_name in known_rbnf_locale_names(config) do
       locale_name
@@ -372,6 +392,7 @@ defmodule Cldr.Config do
   @doc """
   Returns a list of all locales that are configured but not available
   in the CLDR repository.
+
   """
   @spec unknown_locale_names(t()) :: [Locale.locale_name()]
   def unknown_locale_names(config) do
@@ -388,6 +409,7 @@ defmodule Cldr.Config do
   The list contains locales configured both in `Gettext` and
   specified in the mix.exs configuration file as well as the
   default locale.
+
   """
   @spec requested_locale_names(t()) :: [Locale.locale_name()]
   def requested_locale_names(config) do
@@ -484,6 +506,10 @@ defmodule Cldr.Config do
   the same digits and separators.  Typically we are comparing to locale "en"
   and number system "latn" since this is what the number formatting routines use
   as placeholders.
+
+  This function is intended for use at compile time only and is
+  used to help optimise the generation of transliteration functions.
+
   """
   @spec known_number_systems_like(LanguageTag.t() | Locale.locale_name(), Cldr.Number.System.system_name, t()) ::
           {:ok, List.t()} | {:error, tuple}
@@ -516,6 +542,11 @@ defmodule Cldr.Config do
     |> Enum.reject(&(is_nil(&1) || &1 == []))
   end
 
+  @doc """
+  Returns the number system types that
+  are known.
+
+  """
   @max_concurrency :'Elixir.System'.schedulers_online() * 2
   def known_number_system_types(config) do
     config
@@ -527,6 +558,10 @@ defmodule Cldr.Config do
     |> Enum.sort()
   end
 
+  @doc """
+  Returns the number systems for a locale
+
+  """
   def number_systems_for(locale_name) do
     number_systems =
       locale_name
@@ -536,18 +571,33 @@ defmodule Cldr.Config do
     {:ok, number_systems}
   end
 
+  @doc """
+  Returns the number system for a given
+  locale and number system name.
+
+  """
   def number_system_for(locale_name, number_system) do
     with {:ok, system_name} <- system_name_from(number_system, locale_name) do
       {:ok, Map.get(number_systems(), system_name)}
     end
   end
 
+  @doc """
+  Returns the number systems for a locale
+  or raises if there is an error
+
+  """
   def number_systems_for!(locale_name) do
-    with {:ok, systems} <- number_systems_for(locale_name) do
-      systems
+   case number_systems_for(locale_name) do
+     {:ok, systems} -> systems
+     {:error, {exception, reason}} -> raise exception, reason
     end
   end
 
+  @doc """
+  Returns the number system names for a locale
+
+  """
   def number_system_names_for(locale_name) do
     with {:ok, number_systems} <- number_systems_for(locale_name) do
       names =
@@ -559,6 +609,10 @@ defmodule Cldr.Config do
     end
   end
 
+  @doc """
+  Returns the number system types for a locale
+
+  """
   def number_system_types_for(locale_name) do
     with {:ok, number_systems} <- number_systems_for(locale_name) do
       types =
@@ -693,9 +747,15 @@ defmodule Cldr.Config do
     end
   end
 
+  @doc """
+  Get the number symbol definitions
+  for a locale or raises if an error
+
+  """
   def number_symbols_for!(locale_name) do
-    with {:ok, symbols} <- number_symbols_for(locale_name) do
-      symbols
+    case number_symbols_for(locale_name) do
+      {:ok, symbols} -> symbols
+      {:error, {exception, reason}} -> raise exception, reason
     end
   end
 
@@ -808,7 +868,8 @@ defmodule Cldr.Config do
   Returns the location of the json data for a locale or `nil`
   if the locale can't be found.
 
-  * `locale` is any locale returned from `Cldr.known_locale_names()`
+  * `locale` is any locale returned from `Cldr.known_locale_names/1`
+
   """
   @spec locale_path(String.t()) :: {:ok, String.t()} | {:error, :not_found}
   def locale_path(locale) do
@@ -833,6 +894,7 @@ defmodule Cldr.Config do
   Additionally the intention is that this is read only at compile time
   and used to construct accessor functions in other modules so that
   during production run there is no file access or decoding.
+
   """
   def get_locale(locale) do
     {:ok, path} =
@@ -882,6 +944,7 @@ defmodule Cldr.Config do
 
   @doc """
   Returns a map of territory containments
+
   """
   def territory_containment do
     cldr_data_dir()
@@ -1090,6 +1153,7 @@ defmodule Cldr.Config do
   @doc """
   Returns the map of aliases for languages,
   scripts and regions
+
   """
   def aliases do
     cldr_data_dir()
@@ -1116,6 +1180,7 @@ defmodule Cldr.Config do
   Returns the likely subtags map which maps a
   locale string to %LaguageTag{} representing
   the likely subtags for that locale string
+
   """
   def likely_subtags do
     cldr_data_dir()
@@ -1129,6 +1194,7 @@ defmodule Cldr.Config do
   @doc """
   Returns the data that defines start and end of
   calendar weeks, weekends and years
+
   """
   def week_info do
     cldr_data_dir()
@@ -1353,12 +1419,14 @@ defmodule Cldr.Config do
 
   @doc """
   Transforms a locale name from the Posix format to the Cldr format
+
   """
   def locale_name_from_posix(nil), do: nil
   def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
 
   @doc """
   Transforms a locale name from the CLDR format to the Posix format
+
   """
   def locale_name_to_posix(nil), do: nil
   def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
@@ -1431,7 +1499,7 @@ defmodule Cldr.Config do
     Map.put(content, :rbnf, rbnf)
   end
 
-  def structure_units(content) do
+  defp structure_units(content) do
     units =
       content["units"]
       |> Enum.map(fn {style, units} -> {style, group_units(units)} end)

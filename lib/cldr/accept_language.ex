@@ -20,6 +20,7 @@ defmodule Cldr.AcceptLanguage do
          Accept-Language: da, en-gb;q=0.8, en;q=0.7
 
   would mean: "I prefer Danish, but will accept British English and other types of English."
+
   """
   alias Cldr.Locale
   alias Cldr.LanguageTag
@@ -308,6 +309,7 @@ defmodule Cldr.AcceptLanguage do
          {Cldr.LanguageTag.ParseError,
           "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
       ]
+
   """
   def parse!(accept_language, backend) do
     case parse(accept_language, backend) do

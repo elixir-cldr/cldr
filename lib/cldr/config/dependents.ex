@@ -3,6 +3,7 @@ defmodule Cldr.Config.Dependents do
 
   @doc """
   Returns a list of apps that depend on ex_cldr
+
   """
   def cldr_provider_modules do
     Mix.Project.deps_paths

@@ -44,6 +44,7 @@ if Code.ensure_loaded?(Plug) do
           default: Cldr.default_locale,
           gettext: GetTextModule,
           session_key: "cldr_locale"
+          cldr_backedn: MyApp.Cldr
 
     """
 
@@ -81,7 +82,7 @@ if Code.ensure_loaded?(Plug) do
       end
 
       unless options[:cldr_backend] do
-        raise ArgumentError, "A Cldr backend module must be specified under the key :cldr"
+        raise ArgumentError, "A Cldr backend module must be specified under the key :cldr_backend"
       end
 
       options
@@ -100,6 +101,7 @@ if Code.ensure_loaded?(Plug) do
 
     @doc """
     Return the locale set by `Cldr.Plug.SetLocale`
+
     """
     def get_cldr_locale(conn) do
       conn.private[:cldr_locale]
@@ -304,11 +306,11 @@ if Code.ensure_loaded?(Plug) do
       )
     end
 
-    def validate_cldr_backend(_options, nil) do
+    defp validate_cldr_backend(_options, nil) do
       raise ArgumentError, "A :cldr backend module must be configured"
     end
 
-    def validate_cldr_backend(options, backend) when is_atom(backend) do
+    defp validate_cldr_backend(options, backend) when is_atom(backend) do
       unless Code.ensure_loaded?(backend) and function_exported?(backend, :__cldr__, 1) do
         raise ArgumentError,
           "#{inspect backend} is either not known or does not appear to be a Cldr backend module"
