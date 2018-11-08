@@ -109,16 +109,15 @@ defmodule Cldr.Install do
     end
   end
 
-  _ = """
-  Builds the base url to retrieve a locale file from github.
 
-  The url is built using the version number of the `Cldr` application.
-  If the version is a `-dev` version then the locale file is downloaded
-  from the master branch.
-
-  This requires that a branch is tagged with the version number before creating
-  a release or publishing to hex.
-  """
+  # Builds the base url to retrieve a locale file from github.
+  #
+  # The url is built using the version number of the `Cldr` application.
+  # If the version is a `-dev` version then the locale file is downloaded
+  # from the master branch.
+  #
+  # This requires that a branch is tagged with the version number before creating
+  # a release or publishing to hex.
 
   @base_url "https://raw.githubusercontent.com/kipcole9/cldr/"
   defp base_url do
