@@ -6,3 +6,18 @@ defmodule TestBackend.Cldr do
     precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}]
 
 end
+
+defmodule DefaultBackend.Cldr do
+  use Cldr
+
+end
+
+defmodule WithGettextBackend.Cldr do
+  use Cldr, gettext: TestGettext.Gettext
+
+end
+
+defmodule WithOtpAppBackend.Cldr do
+  use Cldr, otp_app: :ex_cldr
+
+end

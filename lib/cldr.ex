@@ -93,7 +93,7 @@ defmodule Cldr do
     end
 
     IO.puts(
-      "Generating Cldr for #{known_locale_count} " <>
+      "Generating #{inspect config.backend} for #{known_locale_count} " <>
         locale_string <>
         "#{inspect(Config.known_locale_names(config), limit: 5)} with " <>
         "a default locale named #{inspect(Config.default_locale(config))}"

@@ -1,15 +1,20 @@
-# In test mode we compile and test all locales
 use Mix.Config
 
+# Global config
 config :ex_cldr,
   default_locale: "en-001",
-  locales: :all,
-  gettext: TestGettext.Gettext,
-  precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}]
+  locales: ["en"],
+  otp_app: :ex_cldr
 
-config :ex_cldr, TestGettext.Gettext, default_locale: "en"
+config :ex_cldr,
+  TestGettext.Gettext, default_locale: "en"
 
-config :plug, validate_header_keys_during_test: true
+# otp app config
+config :ex_cldr,
+  :ex_cldr, locales: ["fr"]
+
+config :plug,
+  validate_header_keys_during_test: true
 
 config :ex_unit,
   module_load_timeout: 220_000,
