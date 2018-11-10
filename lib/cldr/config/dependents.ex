@@ -14,15 +14,29 @@ defmodule Cldr.Config.Dependents do
     |> Enum.uniq
   end
 
-  defp cldr_provider_modules({app, _path}) do
-    [dep] = Mix.Dep.filter_by_name([app], Mix.Dep.cached())
+  if Version.compare(System.version, "1.7.0") == :lt do
+    def get_dep(app) do
+      [dep] = Mix.Dep.loaded_by_name([app], Mix.Dep.cached())
+      dep
+    end
+  else
+    def get_dep(app) do
+      [dep] = Mix.Dep.filter_by_name([app], Mix.Dep.cached())
+      dep
+    end
+  end
 
-    Mix.Dep.in_dependency dep, fn _module ->
-      if mfa = provider_from_project() do
-        [mfa, cldr_provider_modules()]
-      else
-        cldr_provider_modules()
+  defp cldr_provider_modules({app, path}) do
+    if File.exists?(path) do
+      Mix.Dep.in_dependency get_dep(app), fn _module ->
+        if mfa = provider_from_project() do
+          [mfa, cldr_provider_modules()]
+        else
+          cldr_provider_modules()
+        end
       end
+    else
+      []
     end
   end
 
