@@ -1,4 +1,4 @@
-# Changelog for Cldr v2.0.0-rc.0
+# Changelog for Cldr v2.0.0-rc.1
 
 This is the changelog for Cldr v2.0.0-rc.0 released on November 10th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
@@ -51,3 +51,7 @@ end
 ### Enhancements
 
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
+
+### Bug Fixes
+
+* Ensures `:ex_cldr` is started before attempting to download locales
