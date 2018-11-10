@@ -47,3 +47,7 @@ end
 * The `Mix` compiler `:cldr` is obsolete.  It still exists so configuration doesn't break but its no a `:noop`.  It should be removed from your configuration.
 * `Config.get_locale/1` now takes a `config` or `backend` parameter and has become `Cldr.Config.get_locale/2`.
 * `Cldr.set_currenct_locale` has changed to be `Cldr.put_current_locale` to be more consistent with idiomatic Elixir conventions.
+
+### Enhancements
+
+* Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
