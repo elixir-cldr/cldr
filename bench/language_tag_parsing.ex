@@ -1,4 +1,5 @@
 defmodule Cldr.Bench.LanguageTag do
+  @moduledoc false
   @path "bench/results/language_tag"
 
   def run do
