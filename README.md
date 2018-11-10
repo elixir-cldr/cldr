@@ -306,7 +306,7 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
 
 * `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.put_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
 
-  * `url_params`
+  * `path_params`
   * `query_params`
   * `body_params`
   * `cookies`
