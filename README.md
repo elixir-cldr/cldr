@@ -7,17 +7,35 @@
 
 `Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 18th 2018 and Version 1.8.0, `Cldr` is based upon [CLDR version 34.0.0](https://github.com/unicode-cldr/cldr-json).
 
-The functions you are mostly likely to use are in the modules `Cldr` and `Cldr.Locale`.  In particular:
+The first step is to define a module that will host the desired `Cldr` configuration and the functions that servce the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
-* `Cldr.default_locale/1`
-* `Cldr.set_current_locale/2`
-* `Cldr.get_current_locale/1`
-* `Cldr.known_locale_names/1`
-* `Cldr.Locale.new/2`
+    @doc """
+    Define a backend module that will host our
+    Cldr configuration and public API.
+
+    Most function calls in Cldr will be calls
+    to functions on this module.
+    """
+    defmodule MyApp.Cldr do
+      use Cldr, locales: ["en", "fr", "zh", "th"], default_locale: "en"
+
+    end
+
+This strategy means that different configurations can be defined and it also
+means that one `Cldr` implementation won't interfer with implementations in other,
+potentially dependent, applications.
+
+The functions you are mostly likely to use are:
+
+* `MyApp.Cldr.default_locale/0`
+* `MyApp.Cldr.put_current_locale/1`
+* `MyApp.Cldr.get_current_locale/0`
+* `MyApp.Cldr.known_locale_names/0`
+* `MyApp.Cldr.Locale.new/1`
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
 
-* `Cldr.Config.get_locale/1` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with higher performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/1`.
+* `Cldr.Config.get_locale/2` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with higher performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/2`.
 
 ## Use this package when you have a requirement to...
 
@@ -70,9 +88,13 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 
 ## Configuration
 
-`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 523 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use. You can do this in your `mix.exs` by specifying the locales you want to configure or by telling `Cldr` about a `Gettext` module you may already have configured - in which case `Cldr` will configure whatever locales you have configured in `Gettext` as well.
+`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 537 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use.
 
-Here's an example configuration that uses all of the available configuration keys:
+The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.  However configuration can also be defined in other ways:
+
+### Global configuration.
+
+In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Any configuration defined here will be overriden by configuration defined on the `use Cldr` call.  Here's an example configuration that uses all of the available configuration keys:
 
      config :ex_cldr,
        default_locale: "en",
@@ -82,6 +104,50 @@ Here's an example configuration that uses all of the available configuration key
        precompile_number_formats: ["¤¤#,##0.##"],
        precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
        json_library: Jason
+
+Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module if compiled.
+
+Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration.  The preferred configuration is in a backend module.
+
+### Backend Module Configuration
+
+The preferred configuration method is to define the configuration in the backend module.  The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
+
+     defmodule MyApp.Cldr do
+       use Cldr,
+         default_locale: "en",
+         locales: ["fr", "en", "bs", "si", "ak", "th"],
+         gettext: MyApp.Gettext,
+         data_dir: "./priv/cldr",
+         otp_app: :my_app
+         precompile_number_formats: ["¤¤#,##0.##"],
+         precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+      end
+
+### Otp App Configuration
+
+In the backend configuration example above the `:otp_app` key has been defined.  This means that conifguration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `:ex_cldr`.  For example:
+
+     defmodule MyApp.Cldr do
+       use Cldr, otp_app: :my_app
+     end
+
+     # In mix.exs
+     config :my_app, :ex_cldr,
+       default_locale: "en",
+       locales: ["fr", "en", "bs", "si", "ak", "th"],
+       gettext: MyApp.Gettext,
+       data_dir: "./priv/cldr",
+       precompile_number_formats: ["¤¤#,##0.##"],
+       precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+
+### Configuration Priority
+
+When building the consolidated configuration the following priority applies:
+
+* Consider the global configuration
+* Merge the otp_app configuration over the top of the global configuration
+* Merge the backend module configuration over the top
 
 ### Configuration Keys
 
@@ -96,7 +162,7 @@ The configuration keys available for `Cldr` are:
  * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenince it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
 
-          config :ex_cldr,
+          use Cldr,
             default_locale: "en",
             locales: ["en-*", "fr"]
 
@@ -104,13 +170,13 @@ The configuration keys available for `Cldr` are:
 
  * `gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
- * `data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(:ex_cldr)`. It is highly recommended you do not change this setting.
+ * `data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(otp_app)` where `otp_app` is the app defined under the `:otp_app` configuration key.  If that key is not specified then the `:ex_cldr` app is used. It is recommended that an `:otp_app` key is specified in your backend module configuration.
 
  * `precompile_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
 
  * `precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
 
- * `json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used.  One alternative to `Poison` is [Jason](https://hex.pm/packages/jason).  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
+ * `json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used. This key can only be specified in the global configuration in `mix.exs`.  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
 
 ## Downloading Configured Locales
 
@@ -123,63 +189,63 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 ## Localizing and Formatting Numbers
 
-The `Cldr.Number` module implemented in the [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers) package provides number formatting.  The public API for number formatting is `Cldr.Number.to_string/2`.  Some examples:
+The `Cldr.Number` module implemented in the [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers) package provides number formatting.  The public API for number formatting is `MyApp.Cldr.Number.to_string/2`.  Some examples:
 
-    iex> Cldr.Number.to_string 12345
+    iex> MyApp.Cldr.Number.to_string 12345
     "12,345"
 
-    iex> Cldr.Number.to_string 12345, locale: "fr"
+    iex> MyApp.Cldr.Number.to_string 12345, locale: "fr"
     "12 345"
 
-    iex> Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
+    iex> MyApp.Cldr.Number.to_string 12345, locale: "fr", currency: "USD"
     "12 345,00 $US"
 
-    iex> Cldr.Number.to_string 12345, format: "#E0"
+    iex> MyApp.Cldr.Number.to_string 12345, format: "#E0"
     "1.2345E4"
 
-    iex(> Cldr.Number.to_string 1234, format: :roman
+    iex(> MyApp.Cldr.Number.to_string 1234, format: :roman
     "MCCXXXIV"
 
-    iex> Cldr.Number.to_string 1234, format: :ordinal
+    iex> MyApp.Cldr.Number.to_string 1234, format: :ordinal
     "1,234th"
 
-    iex> Cldr.Number.to_string 1234, format: :spellout
+    iex> MyApp.Cldr.Number.to_string 1234, format: :spellout
     "one thousand two hundred thirty-four"
 
-See `h Cldr.Number` and `h Cldr.Number.to_string` in `iex` for further information.
+See `h MyApp.Cldr.Number` and `h MyApp.Cldr.Number.to_string` in `iex` for further information.
 
 ## Localizing Lists
 
 The `Cldr.List` module provides list formatting and is implemented in the [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) package.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
 
-    iex> Cldr.List.to_string(["a", "b", "c"], locale: "en")
+    iex> MyApp.Cldr.List.to_string(["a", "b", "c"], locale: "en")
     "a, b, and c"
 
-    iex> Cldr.List.to_string(["a", "b", "c"], locale: "en", format: :unit_narrow)
+    iex> MyApp.Cldr.List.to_string(["a", "b", "c"], locale: "en", format: :unit_narrow)
     "a b c"
 
-    iex> Cldr.List.to_string(["a", "b", "c"], locale: "fr")
+    iex> MyApp.Cldr.List.to_string(["a", "b", "c"], locale: "fr")
     "a, b et c"
 
-Seer `h Cldr.List` and `h Cldr.List.to_string` in `iex` for further information.
+Seer `h MyApp.Cldr.List` and `h MyApp.Cldr.List.to_string` in `iex` for further information.
 
 ## Localizing Units
 
 The `Cldr.Unit` module provides unit localization and is implemented in the [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) package.  The public API for unit localization is `Cldr.Unit.to_string/3`. Some examples:
 
-      iex> Cldr.Unit.to_string 123, :gallon
+      iex> MyApp.Cldr.Unit.to_string 123, :gallon
       "123 gallons"
 
-      iex> Cldr.Unit.to_string 1234, :gallon, format: :long
+      iex> MyApp.Cldr.Unit.to_string 1234, :gallon, format: :long
       "1 thousand gallons"
 
-      iex> Cldr.Unit.to_string 1234, :gallon, format: :short
+      iex> MyApp.Cldr.Unit.to_string 1234, :gallon, format: :short
       "1K gallons"
 
-      iex> Cldr.Unit.to_string 1234, :megahertz
+      iex> MyApp.Cldr.Unit.to_string 1234, :megahertz
       "1,234 megahertz"
 
-      iex> Cldr.Unit.available_units
+      iex> MyApp.Cldr.Unit.available_units
       [:acre, :acre_foot, :ampere, :arc_minute, :arc_second, :astronomical_unit, :bit,
        :bushel, :byte, :calorie, :carat, :celsius, :centiliter, :centimeter, :century,
        :cubic_centimeter, :cubic_foot, :cubic_inch, :cubic_kilometer, :cubic_meter,
@@ -189,34 +255,34 @@ The `Cldr.Unit` module provides unit localization and is implemented in the [ex_
        :gigawatt, :gram, :hectare, :hectoliter, :hectopascal, :hertz, :horsepower,
        :hour, :inch, ...]
 
-See `h Cldr.Unit` and `h Cldr.Unit.to_string` in `iex` for further information.
+See `h MyApp.Cldr.Unit` and `h MyApp.Cldr.Unit.to_string` in `iex` for further information.
 
 ## Localizing Dates, Times and DateTimes
 
-Formatting of relative dates and date times is supported in the `Cldr.DateTime.Relative` module implemented in the [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times) package.  The public API is `Cldr.DateTime.to_string/2` and `Cldr.DateTime.Relative.to_string/2`.  Some examples:
+Formatting of relative dates and date times is supported in the `Cldr.DateTime.Relative` module implemented in the [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times) package.  The public API is `MyApp.Cldr.DateTime.to_string/2` and `MyApp.Cldr.DateTime.Relative.to_string/2`.  Some examples:
 
-      iex> Cldr.Date.to_string Date.utc_today()
+      iex> MyApp.Cldr.Date.to_string Date.utc_today()
       {:ok, "Aug 18, 2017"}
 
-      iex> Cldr.Time.to_string Time.utc_now
+      iex> MyApp.Cldr.Time.to_string Time.utc_now
       {:ok, "11:38:55 AM"}
 
-      iex> Cldr.DateTime.to_string DateTime.utc_now
+      iex> MyApp.Cldr.DateTime.to_string DateTime.utc_now
       {:ok, "Aug 18, 2017, 11:39:08 AM"}
 
-      iex> Cldr.DateTime.Relative.to_string 1, unit: :day, format: :narrow
+      iex> MyApp.Cldr.DateTime.Relative.to_string 1, unit: :day, format: :narrow
       {:ok, "tomorrow"}
 
-      iex> Cldr.DateTime.Relative.to_string(1, unit: :day, locale: "fr")
+      iex> MyApp.Cldr.DateTime.Relative.to_string(1, unit: :day, locale: "fr")
       "demain"
 
-      iex> Cldr.DateTime.Relative.to_string(1, unit: :day, format: :narrow)
+      iex> MyApp.Cldr.DateTime.Relative.to_string(1, unit: :day, format: :narrow)
       "tomorrow"
 
-      iex> Cldr.DateTime.Relative.to_string(1234, unit: :year)
+      iex> MyApp.Cldr.DateTime.Relative.to_string(1234, unit: :year)
       "in 1,234 years"
 
-      iex> Cldr.DateTime.Relative.to_string(1234, unit: :year, locale: "fr")
+      iex> MyApp.Cldr.DateTime.Relative.to_string(1234, unit: :year, locale: "fr")
       "dans 1 234 ans"
 
 ## Gettext Backend Pluralization Support
@@ -237,7 +303,7 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
 
 * `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
 
-* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.set_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.put_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
 
   * `url_params`
   * `query_params`

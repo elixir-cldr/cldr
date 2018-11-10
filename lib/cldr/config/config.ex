@@ -969,6 +969,9 @@ defmodule Cldr.Config do
   during production run there is no file access or decoding.
 
   """
+  @spec get_locale(Cldr.Locale.local_name(), config_or_backend :: t() | Cldr.backend()) ::
+    Map.t() | no_return()
+
   def get_locale(locale, %{data_dir: _} = config) do
     do_get_locale(locale, config)
   end

@@ -107,7 +107,6 @@ defmodule Cldr.Mixfile do
       logo: "logo.png",
       extras: [
         "README.md",
-        "ROADMAP.md",
         "LICENSE.md",
         "CHANGELOG.md"
       ],
