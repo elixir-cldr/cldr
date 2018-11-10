@@ -22,7 +22,6 @@ defmodule Cldr.Install do
   Install all the configured locales.
   """
   def install_known_locale_names(config) do
-    Application.ensure_started Cldr.Config.app_name()
     Enum.each(Cldr.Config.known_locale_names(config), &install_locale_name(&1, config))
     :ok
   end
@@ -31,7 +30,6 @@ defmodule Cldr.Install do
   Install all available locales.
   """
   def install_all_locale_names(config) do
-    Application.ensure_started Cldr.Config.app_name()
     Enum.each(Cldr.Config.all_locale_names(), &install_locale_name(&1, config))
     :ok
   end
@@ -62,6 +60,7 @@ defmodule Cldr.Install do
       ensure_client_dirs_exist!(client_locales_dir(config))
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
+      Application.ensure_started Cldr.Config.app_name()
       do_install_locale_name(locale_name, config, locale_name in Cldr.Config.all_locale_names())
     else
       :already_installed
