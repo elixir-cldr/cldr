@@ -1,28 +1,16 @@
 defmodule Cldr.TestApp.Router do
-  use Phoenix.Router
+  use Plug.Router
 
-  pipeline :locale_pipeline do
-    plug(Cldr.Plug.SetLocale, from: :path, cldr_backend: TestBackend.Cldr)
+  plug(:match)
+  plug(Cldr.Plug.SetLocale, from: :path, cldr_backend: TestBackend.Cldr)
+  plug(:dispatch)
+
+  get "/thing/:locale" do
+    send_resp(conn, 200, "")
   end
 
-  scope "/thing" do
-    pipe_through(:locale_pipeline)
-    get("/:locale", Cldr.PageController, :show)
-  end
-
-  scope "/thing/:locale" do
-    pipe_through(:locale_pipeline)
-    get("/other", Cldr.PageController, :show)
-  end
-end
-
-defmodule Cldr.PageController do
-  def init(_) do
-
-  end
-
-  def call(conn, _) do
-    conn
+  get "/thing/:locale/other" do
+    send_resp(conn, 200, "")
   end
 end
 
