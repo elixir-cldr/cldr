@@ -14,23 +14,23 @@ defmodule Cldr.Install do
 
   """
 
-  defdelegate client_data_dir(), to: Cldr.Config
-  defdelegate client_locales_dir(), to: Cldr.Config
+  defdelegate client_data_dir(config), to: Cldr.Config
+  defdelegate client_locales_dir(config), to: Cldr.Config
   defdelegate locale_filename(locale), to: Cldr.Config
 
   @doc """
   Install all the configured locales.
   """
   def install_known_locale_names(config) do
-    Enum.each(Cldr.Config.known_locale_names(config), &install_locale_name/1)
+    Enum.each(Cldr.Config.known_locale_names(config), &install_locale_name(&1, config))
     :ok
   end
 
   @doc """
   Install all available locales.
   """
-  def install_all_locale_names do
-    Enum.each(Cldr.Config.all_locale_names(), &install_locale_name/1)
+  def install_all_locale_names(config) do
+    Enum.each(Cldr.Config.all_locale_names(), &install_locale_name(&1, config))
     :ok
   end
 
@@ -53,13 +53,14 @@ defmodule Cldr.Install do
   An https request to the master github repository for `Cldr` is made
   to download the correct version of the locale file which is then
   written to the configured data directory.
+
   """
-  def install_locale_name(locale_name, options \\ []) do
-    if !locale_installed?(locale_name) or options[:force] do
-      ensure_client_dirs_exist!(client_locales_dir())
+  def install_locale_name(locale_name, config, options \\ []) do
+    if !locale_installed?(locale_name, config) or options[:force] do
+      ensure_client_dirs_exist!(client_locales_dir(config))
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
-      do_install_locale_name(locale_name, locale_name in Cldr.Config.all_locale_names())
+      do_install_locale_name(locale_name, config, locale_name in Cldr.Config.all_locale_names())
     else
       :already_installed
     end
@@ -68,16 +69,16 @@ defmodule Cldr.Install do
   # Normally a library function shouldn't raise an exception (thats up
   # to the client app) but we install locales only at compilation time
   # and an exception then is the appropriate response.
-  defp do_install_locale_name(locale_name, false) do
+  defp do_install_locale_name(locale_name, _config, false) do
     raise Cldr.UnknownLocaleError,
           "Failed to install the locale named #{inspect(locale_name)}. The locale name is not known."
   end
 
-  defp do_install_locale_name(locale_name, true) do
+  defp do_install_locale_name(locale_name, config, true) do
     require Logger
 
     output_file_name =
-      [client_locales_dir(), "/", locale_filename(locale_name)]
+      [client_locales_dir(config), "/", locale_filename(locale_name)]
       |> :erlang.iolist_to_binary()
 
     url = String.to_charlist("#{base_url()}#{locale_filename(locale_name)}")
@@ -158,8 +159,8 @@ defmodule Cldr.Install do
   check is based upon whether there is a locale file installed in the
   client application or in `Cldr` itself.
   """
-  def locale_installed?(locale) do
-    case Cldr.Config.locale_path(locale) do
+  def locale_installed?(locale, config) do
+    case Cldr.Config.locale_path(locale, config) do
       {:ok, _path} -> true
       _ -> false
     end
@@ -172,8 +173,8 @@ defmodule Cldr.Install do
 
   No checking of locale validity is performed.
   """
-  def client_locale_file(locale) do
-    Path.join(client_locales_dir(), "#{locale}.json")
+  def client_locale_file(locale, config) do
+    Path.join(client_locales_dir(config), "#{locale}.json")
   end
 
   # Create the client app locales directory and any directories

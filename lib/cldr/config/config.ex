@@ -9,7 +9,8 @@ defmodule Cldr.Config do
     locales: ["en-001"],
     backend: nil,
     gettext: nil,
-    data_dir: "./priv/cldr",
+    data_dir: "cldr",
+
     precompile_number_formats: [],
     precompile_transliterations: [],
     otp_app: nil
@@ -70,6 +71,11 @@ defmodule Cldr.Config do
 
   @doc """
   Return the configured application name
+  for cldr
+
+  Note this is probably `:ex_cldr` which is
+  what this app is called on `hex.pm`
+
   """
   @app_name Mix.Project.config()[:app]
   def app_name do
@@ -123,36 +129,78 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the directory where `Cldr` stores its source core data,  This
-  directory should not be expected to be available other than when developing
-  Cldr since it points to a source directory.
+  Returns the directory where the downloaded CLDR repository files
+  are stored.
+
+  These are the real CLDR data files that are used only for the
+  development of ex_cldr.  They are not included in the hex
+  package.
+
   """
-  @cldr_relative_dir "/priv/cldr"
-  def source_data_dir do
-    Path.join(cldr_home(), @cldr_relative_dir)
+  def download_data_dir do
+    Path.join(cldr_home(), "data")
   end
 
   @doc """
-  Returns the path of the CLDR data directory for the ex_cldr app
+  Return the directory where `Cldr` stores its source core data,
+
+  This directory should not be expected to be available
+  other than when developing Cldr since it points to a source
+  directory.
+
+  These are the json files that result from the normalization
+  of the original CLDR data.
+
+  """
+  @cldr_source_dir "/priv/cldr" |> Path.expand()
+  def source_data_dir do
+    Path.join(cldr_home(), @cldr_source_dir)
+  end
+
+  @doc """
+  Returns the path of the CLDR data directory for the ex_cldr app.
+
+  This is the directory where base CLDR data files are stored
+  incuding included locale files.
+
   """
   def cldr_data_dir do
     [:code.priv_dir(app_name()), "/cldr"] |> :erlang.iolist_to_binary()
   end
 
   @doc """
-  Return the path name of the CLDR data directory for a client application.
+  Return the path name of the CLDR data directory for a client
+  application.
+
   """
-  @default_client_data_dir Path.join(".", @cldr_relative_dir)
-  def client_data_dir do
-    Application.get_env(app_name(), :data_dir, @default_client_data_dir)
-    |> Path.expand()
+  @spec client_data_dir(t()) :: String.t()
+  def client_data_dir(%{data_dir: nil, otp_app: nil}) do
+    cldr_data_dir()
+  end
+
+  def client_data_dir(%{data_dir: nil, otp_app: otp_app}) do
+    [:code.priv_dir(otp_app), "/cldr"] |> :erlang.iolist_to_binary()
+  end
+
+  def client_data_dir(%{data_dir: data_dir}) do
+    data_dir
+  end
+
+  def client_data_dir(config) when is_map(config) do
+    client_data_dir(%{data_dir: nil, otp_app: nil})
+  end
+
+  def client_data_dir(backend) when is_atom(backend) do
+    client_data_dir(backend.__cldr__(:config))
   end
 
   @doc """
-  Returns the directory where the CLDR locales files are located.
+  Returns the directory where downloaded ex_cldr locales files
+  are located.
+
   """
-  def client_locales_dir do
-    Path.join(client_data_dir(), "locales")
+  def client_locales_dir(config) do
+    Path.join(client_data_dir(config), "locales")
   end
 
   @doc """
@@ -166,22 +214,17 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the filename that contains the json representation of a locale
+  Returns the filename that contains the json representation
+  of a locale.
+
   """
   def locale_filename(locale) do
     "#{locale}.json"
   end
 
   @doc """
-  Returns the directory where the downloaded CLDR repository files
-  are stored.
-  """
-  def download_data_dir do
-    Path.join(cldr_home(), "data")
-  end
-
-  @doc """
   Return the configured `Gettext` module name or `nil`.
+
   """
   @spec gettext(t()) :: module() | nil
   def gettext(config) do
@@ -189,20 +232,18 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the default backend module
-  """
-  def default_backend do
-    Application.get_env(app_name(), :default_backend)
-  end
-
-  @doc """
-  Return the default locale.
+  Return the default locale for a given backend
+  configuration.
 
   In order of priority return either:
 
-  * The default locale specified in the `mix.exs` file
+  * The default locale for a given backend configuration
+  * The global default locale speficied in `mix.exs` under
+    the `ex_cldr` key
   * The `Gettext.get_locale/1` for the current configuration
-  * "en"
+  * The system-wide default locale which is currently
+    #{inspect @default_locale}
+
   """
   @spec default_locale(t()) :: Locale.locale_name()
   def default_locale(config) do
@@ -212,7 +253,12 @@ defmodule Cldr.Config do
     @default_locale
   end
 
-  defp gettext_default_locale(config) do
+  @doc """
+  Return the default gettext locale for a CLDR
+  config.
+
+  """
+  def gettext_default_locale(config) do
     if gettext_configured?(config) do
       Gettext
       |> apply(:get_locale, [gettext(config)])
@@ -359,7 +405,7 @@ defmodule Cldr.Config do
 
   def known_rbnf_locale_names(config) do
     known_locale_names(config)
-    |> Enum.filter(fn locale -> Map.get(get_locale(locale), :rbnf) != %{} end)
+    |> Enum.filter(fn locale -> Map.get(get_locale(locale, config), :rbnf) != %{} end)
   end
 
   @doc """
@@ -515,9 +561,9 @@ defmodule Cldr.Config do
           {:ok, List.t()} | {:error, tuple}
 
   def known_number_systems_like(locale_name, number_system, config) do
-    with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system),
+    with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
          {:ok, symbols} <- number_symbols_for(locale_name, number_system),
-         {:ok, names} <- number_system_names_for(locale_name) do
+         {:ok, names} <- number_system_names_for(locale_name, config) do
       likes = do_number_systems_like(digits, symbols, names, config)
       {:ok, likes}
     end
@@ -526,7 +572,7 @@ defmodule Cldr.Config do
   defp do_number_systems_like(digits, symbols, names, config) do
     Enum.map(known_locale_names(config), fn this_locale ->
       Enum.reduce(names, [], fn this_system, acc ->
-        case number_system_for(this_locale, this_system) do
+        case number_system_for(this_locale, this_system, config) do
           {:error, _} ->
             acc
 
@@ -551,7 +597,7 @@ defmodule Cldr.Config do
   def known_number_system_types(config) do
     config
     |> known_locale_names()
-    |> Task.async_stream(__MODULE__, :number_systems_for, [], max_concurrency: @max_concurrency)
+    |> Task.async_stream(__MODULE__, :number_systems_for, [config], max_concurrency: @max_concurrency)
     |> Enum.to_list()
     |> Enum.flat_map(fn {:ok, {:ok, systems}} -> Map.keys(systems) end)
     |> Enum.uniq()
@@ -562,24 +608,13 @@ defmodule Cldr.Config do
   Returns the number systems for a locale
 
   """
-  def number_systems_for(locale_name) do
+  def number_systems_for(locale_name, %__MODULE__{} = config) do
     number_systems =
       locale_name
-      |> get_locale
+      |> get_locale(config)
       |> Map.get(:number_systems)
 
     {:ok, number_systems}
-  end
-
-  @doc """
-  Returns the number system for a given
-  locale and number system name.
-
-  """
-  def number_system_for(locale_name, number_system) do
-    with {:ok, system_name} <- system_name_from(number_system, locale_name) do
-      {:ok, Map.get(number_systems(), system_name)}
-    end
   end
 
   @doc """
@@ -587,10 +622,21 @@ defmodule Cldr.Config do
   or raises if there is an error
 
   """
-  def number_systems_for!(locale_name) do
-   case number_systems_for(locale_name) do
+  def number_systems_for!(locale_name, config) do
+   case number_systems_for(locale_name, config) do
      {:ok, systems} -> systems
      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
+  @doc """
+  Returns the number system for a given
+  locale and number system name.
+
+  """
+  def number_system_for(locale_name, number_system, config) do
+    with {:ok, system_name} <- system_name_from(number_system, locale_name, config) do
+      {:ok, Map.get(number_systems(), system_name)}
     end
   end
 
@@ -598,8 +644,8 @@ defmodule Cldr.Config do
   Returns the number system names for a locale
 
   """
-  def number_system_names_for(locale_name) do
-    with {:ok, number_systems} <- number_systems_for(locale_name) do
+  def number_system_names_for(locale_name, config) do
+    with {:ok, number_systems} <- number_systems_for(locale_name, config) do
       names =
         number_systems
         |> Enum.map(&elem(&1, 1))
@@ -613,8 +659,8 @@ defmodule Cldr.Config do
   Returns the number system types for a locale
 
   """
-  def number_system_types_for(locale_name) do
-    with {:ok, number_systems} <- number_systems_for(locale_name) do
+  def number_system_types_for(locale_name, config) do
+    with {:ok, number_systems} <- number_systems_for(locale_name, config) do
       types =
         number_systems
         |> Enum.map(&elem(&1, 0))
@@ -632,46 +678,51 @@ defmodule Cldr.Config do
     `Cldr.known_number_systems/0` or a number system type
     returned by `Cldr.known_number_system_types/0`
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/0`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
-  Number systems can be references in one of two ways:
+  * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
 
-  * As a number system type such as :default, :native, :traditional and
-    :finance. This allows references to a number system for a locale in a
+  Number systems can be referenced in one of two ways:
+
+  * As a number system type such as `:default`, `:native`, `:traditional` and
+    `:finance`. This allows references to a number system for a locale in a
     consistent fashion for a given use
 
-  * With the number system name directly, such as :latn, :arab or any of the
-    other 80 or so
+  * With the number system name directly, such as :latn, :arab or any name
+    returned by `Cldr.known_number_systems/0`
 
   This function dereferences the supplied `system_name` and returns the
   actual system name.
 
   ## Examples
 
-      iex> Cldr.Config.system_name_from(:default, "en")
+      iex> Cldr.Config.system_name_from(:default, "en", TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from("latn", "en")
+      iex> Cldr.Config.system_name_from("latn", "en", TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from(:native, "en")
+      iex> Cldr.Config.system_name_from(:native, "en", TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from(:nope, "en")
+      iex> Cldr.Config.system_name_from(:nope, "en", TestBackend.Cldr)
       {
         :error,
         {Cldr.UnknownNumberSystemError, "The number system :nope is unknown"}
       }
 
-  Note that return value is not guaranteed to be a valid
-  number system for the given locale as demonstrated in the third example.
-
   """
-  @spec system_name_from(System.system_name, Locale.locale_name() | LanguageTag.t()) :: atom
-  def system_name_from(number_system, locale_name) do
-    with {:ok, number_systems} <- number_systems_for(locale_name),
-         {:ok, number_system} <- validate_number_system_or_type(number_system, locale_name) do
+  @spec system_name_from(System.system_name, Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend())
+    :: atom
+
+  def system_name_from(number_system, locale_name, backend) when is_atom(backend) do
+    system_name_from(number_system, locale_name, backend.__cldr__(:config))
+  end
+
+  def system_name_from(number_system, locale_name, %__MODULE__{} = config) do
+    with {:ok, number_systems} <- number_systems_for(locale_name, config),
+         {:ok, number_system} <- validate_number_system_or_type(number_system, locale_name, config) do
       cond do
         Map.has_key?(number_systems, number_system) ->
           {:ok, Map.get(number_systems, number_system)}
@@ -687,12 +738,12 @@ defmodule Cldr.Config do
     end
   end
 
-  defp validate_number_system_or_type(number_system, locale_name) do
+  defp validate_number_system_or_type(number_system, locale_name, config) do
     with {:ok, number_system} <- Cldr.validate_number_system(number_system) do
       {:ok, number_system}
     else
       {:error, _} ->
-        with {:ok, number_system} <- validate_number_system_type(number_system, locale_name) do
+        with {:ok, number_system} <- validate_number_system_type(number_system, locale_name, config) do
           {:ok, number_system}
         else
           {:error, _reason} -> {:error, Cldr.unknown_number_system_error(number_system)}
@@ -700,11 +751,8 @@ defmodule Cldr.Config do
     end
   end
 
-  defp validate_number_system_type(number_system_type, locale_name) when is_atom(number_system_type) do
-    known_types =
-      locale_name
-      |> get_locale
-      |> known_number_system_types
+  defp validate_number_system_type(number_system_type, locale_name, config) when is_atom(number_system_type) do
+    {:ok, known_types} = number_system_types_for(locale_name, config)
 
     if number_system_type in known_types do
       {:ok, number_system_type}
@@ -713,11 +761,11 @@ defmodule Cldr.Config do
     end
   end
 
-  defp validate_number_system_type(number_system_type, locale_name) when is_binary(number_system_type) do
+  defp validate_number_system_type(number_system_type, locale_name, config) when is_binary(number_system_type) do
     number_system_type
     |> String.downcase()
     |> String.to_existing_atom()
-    |> validate_number_system_type(locale_name)
+    |> validate_number_system_type(locale_name, config)
   rescue
     ArgumentError ->
       {:error, Cldr.unknown_number_system_type_error(number_system_type)}
@@ -728,10 +776,10 @@ defmodule Cldr.Config do
   for a locale
 
   """
-  def number_symbols_for(locale) do
+  def number_symbols_for(locale, config) do
     symbols =
       locale
-      |> get_locale
+      |> get_locale(config)
       |> Map.get(:number_symbols)
       |> Enum.map(fn
         {k, nil} -> {k, nil}
@@ -741,8 +789,8 @@ defmodule Cldr.Config do
     {:ok, symbols}
   end
 
-  def number_symbols_for(locale, number_system) do
-    with {:ok, symbols} <- number_symbols_for(locale) do
+  def number_symbols_for(locale, number_system, config) do
+    with {:ok, symbols} <- number_symbols_for(locale, config) do
       {:ok, Keyword.get(symbols, number_system)}
     end
   end
@@ -752,8 +800,8 @@ defmodule Cldr.Config do
   for a locale or raises if an error
 
   """
-  def number_symbols_for!(locale_name) do
-    case number_symbols_for(locale_name) do
+  def number_symbols_for!(locale_name, config) do
+    case number_symbols_for(locale_name, config) do
       {:ok, symbols} -> symbols
       {:error, {exception, reason}} -> raise exception, reason
     end
@@ -868,13 +916,23 @@ defmodule Cldr.Config do
   Returns the location of the json data for a locale or `nil`
   if the locale can't be found.
 
-  * `locale` is any locale returned from `Cldr.known_locale_names/1`
+  * `locale` is any locale returned from `Cldr.known_locale_names/2`
 
   """
-  @spec locale_path(String.t()) :: {:ok, String.t()} | {:error, :not_found}
-  def locale_path(locale) do
+  @spec locale_path(String.t(), Cldr.backend() | t()) ::
+    {:ok, String.t()} | {:error, :not_found}
+
+  def locale_path(locale, %{data_dir: _} = config) do
+    do_locale_path(locale, config)
+  end
+
+  def locale_path(locale, backend) when is_atom(backend) do
+    do_locale_path(locale, backend.__cldr__(:config))
+  end
+
+  defp do_locale_path(locale, config) do
     relative_locale_path = ["locales/", "#{locale}.json"]
-    client_path = Path.join(client_data_dir(), relative_locale_path)
+    client_path = Path.join(client_data_dir(config), relative_locale_path)
     cldr_path = Path.join(cldr_data_dir(), relative_locale_path)
 
     cond do
@@ -896,9 +954,17 @@ defmodule Cldr.Config do
   during production run there is no file access or decoding.
 
   """
-  def get_locale(locale) do
+  def get_locale(locale, %{data_dir: _} = config) do
+    do_get_locale(locale, config)
+  end
+
+  def get_locale(locale, backend) when is_atom(backend) do
+    do_get_locale(locale, backend.__cldr__(:config))
+  end
+
+  def do_get_locale(locale, config) do
     {:ok, path} =
-      case locale_path(locale) do
+      case locale_path(locale, config) do
         {:ok, path} ->
           {:ok, path}
 
@@ -910,8 +976,6 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def do_get_locale(locale, path, compiling? \\ false)
-
   def do_get_locale(locale, path, false) do
     path
     |> File.read!()
@@ -1269,21 +1333,25 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.calendars_for_locale "en"
+      iex> Cldr.Config.calendars_for_locale "en", TestBackend.Cldr
       [:buddhist, :chinese, :coptic, :dangi, :ethiopic, :ethiopic_amete_alem,
        :generic, :gregorian, :hebrew, :indian, :islamic, :islamic_civil,
        :islamic_rgsa, :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
 
   """
-  def calendars_for_locale(locale_name) when is_binary(locale_name) do
+  def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
     locale_name
-    |> get_locale()
+    |> get_locale(config)
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
   end
 
-  def calendars_for_locale(%{} = locale_data) do
+  def calendars_for_locale(locale_name, backend) when is_atom(backend) do
+    calendars_for_locale(locale_name, backend.__cldr__(:config))
+  end
+
+  def calendars_for_locale(%{} = locale_data, %{} = _config) do
     locale_data
     |> Map.get(:dates)
     |> Map.get(:calendars)
@@ -1351,7 +1419,7 @@ defmodule Cldr.Config do
   def decimal_format_list(config) do
     config
     |> known_locale_names
-    |> Enum.map(&decimal_formats_for/1)
+    |> Enum.map(&decimal_formats_for(&1, config))
     |> Kernel.++(get_precompile_number_formats(config))
     |> List.flatten()
     |> Enum.uniq()
@@ -1360,9 +1428,9 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def decimal_formats_for(locale) do
+  def decimal_formats_for(locale, config) do
     locale
-    |> get_locale
+    |> get_locale(config)
     |> Map.get(:number_formats)
     |> Map.values()
     |> Enum.map(&Map.delete(&1, :currency_spacing))
@@ -1596,7 +1664,8 @@ defmodule Cldr.Config do
 
     config =
       config
-      |> Map.put(:default_locale, Cldr.Config.default_locale(config))
+      |> Map.put(:default_locale, default_locale(config))
+      |> Map.put(:data_dir, client_data_dir(config))
 
     struct(__MODULE__, config)
   end

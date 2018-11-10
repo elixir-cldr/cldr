@@ -2,7 +2,7 @@ defmodule Cldr.Gettext.Test do
   use ExUnit.Case
 
   test "get the gettext module and find its configured locales" do
-    gettext_module = Application.get_env(Cldr.Config.app_name(), :gettext)
+    gettext_module = TestBackend.Cldr.__cldr__(:gettext)
     otp_app = gettext_module.__gettext__(:otp_app)
 
     config = Application.get_env(otp_app, gettext_module)

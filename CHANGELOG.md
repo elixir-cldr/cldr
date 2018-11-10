@@ -17,13 +17,14 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 * Removed ~L sigil
 * Plugs need to have a config key :cldr_backend to specify the backend
 * :cldr compiler is obsolete.  It still exists to configuration doesn't break but its no a :noop
+* Config.get_locale now takes a `config` parameter
 
 TODO:
 
 - [x] Check docs have `backend` argument documented
 - [x] Dependency check and call "define_backend_modules" on each one -> this is how we integrate additional modules without having to release new code
+- [x] client_data_dir and client_locales_dir need to be calculated at runtime, not compile time
 - [ ] Migration guide
 - [ ] Update readme
-- [ ] client_data_dir and client_locales_dir need to be calculated at runtime, not compile time
 
 

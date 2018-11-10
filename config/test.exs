@@ -6,13 +6,14 @@ config :ex_cldr,
   locales: ["en"],
   otp_app: :ex_cldr
 
-config :ex_cldr,
-  TestGettext.Gettext, default_locale: "en"
+config :ex_cldr, TestGettext.Gettext,
+  default_locale: "en"
 
 # otp app config
 config :ex_cldr,
   :ex_cldr, locales: ["fr"]
 
+# Other configs
 config :plug,
   validate_header_keys_during_test: true
 

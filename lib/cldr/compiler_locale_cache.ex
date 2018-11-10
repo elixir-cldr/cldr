@@ -63,7 +63,8 @@ defmodule Cldr.Locale.Cache do
         locale_data
 
       [] ->
-        locale_data = Cldr.Config.do_get_locale(locale, path)
+        # Logger.debug "#{inspect locale} not found in cache so retrieving"
+        locale_data = Cldr.Config.do_get_locale(locale, path, false)
 
         try do
           :ets.insert(@table_name, {locale, locale_data})

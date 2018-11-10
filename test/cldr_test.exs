@@ -10,7 +10,7 @@ defmodule Cldr.Test do
   end
 
   test "that the client data directory is correct" do
-    assert String.ends_with?(Cldr.Config.client_data_dir(), "/priv/cldr") ==
+    assert String.ends_with?(Cldr.Config.client_data_dir(TestBackend.Cldr), "/priv/cldr") ==
              true
   end
 
