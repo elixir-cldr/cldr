@@ -178,7 +178,15 @@ defmodule Cldr.Config do
     cldr_data_dir()
   end
 
+  def client_data_dir(%{otp_app: nil}) do
+    cldr_data_dir()
+  end
+
   def client_data_dir(%{data_dir: nil, otp_app: otp_app}) do
+    client_data_dir(%{otp_app: otp_app})
+  end
+
+  def client_data_dir(%{otp_app: otp_app}) do
     [:code.priv_dir(otp_app), "/cldr"] |> :erlang.iolist_to_binary()
   end
 
@@ -562,7 +570,7 @@ defmodule Cldr.Config do
 
   def known_number_systems_like(locale_name, number_system, config) do
     with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
-         {:ok, symbols} <- number_symbols_for(locale_name, number_system),
+         {:ok, symbols} <- number_symbols_for(locale_name, number_system, config),
          {:ok, names} <- number_system_names_for(locale_name, config) do
       likes = do_number_systems_like(digits, symbols, names, config)
       {:ok, likes}
@@ -577,7 +585,7 @@ defmodule Cldr.Config do
             acc
 
           {:ok, %{digits: these_digits}} ->
-            {:ok, these_symbols} = number_symbols_for(this_locale, this_system)
+            {:ok, these_symbols} = number_symbols_for(this_locale, this_system, config)
 
             if digits == these_digits && symbols == these_symbols do
               acc ++ {this_locale, this_system}
@@ -776,9 +784,9 @@ defmodule Cldr.Config do
   for a locale
 
   """
-  def number_symbols_for(locale, config) do
+  def number_symbols_for(locale_name, config) do
     symbols =
-      locale
+      locale_name
       |> get_locale(config)
       |> Map.get(:number_symbols)
       |> Enum.map(fn
@@ -802,6 +810,13 @@ defmodule Cldr.Config do
   """
   def number_symbols_for!(locale_name, config) do
     case number_symbols_for(locale_name, config) do
+      {:ok, symbols} -> symbols
+      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
+  def number_symbols_for!(locale_name, number_system, config) do
+    case number_symbols_for(locale_name, number_system, config) do
       {:ok, symbols} -> symbols
       {:error, {exception, reason}} -> raise exception, reason
     end
@@ -1645,13 +1660,26 @@ defmodule Cldr.Config do
   end
 
   @doc false
+  # Since this uses Mix it is only valid at compile
+  # time
   def config_from_opts(module_config) do
     global_config =
       Application.get_all_env(app_name())
+      |> Keyword.delete(:otp_app)
 
     otp_config =
       if otp_app = module_config[:otp_app] do
+        loaded_apps =
+          Application.loaded_applications
+          |> Enum.map(&(elem(&1, 0)))
+          |> Kernel.++([Mix.Project.config[:app]])
+
+        if module_config[:otp_app] && module_config[:otp_app] not in loaded_apps do
+          raise ArgumentError, "The :otp_app #{inspect module_config[:otp_app]} is not known"
+        end
+
         Application.get_env(otp_app, app_name(), [])
+        |> Keyword.delete(:otp_app)
       else
         []
       end
