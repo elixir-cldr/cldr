@@ -126,20 +126,22 @@ The preferred configuration method is to define the configuration in the backend
 
 ### Otp App Configuration
 
-In the backend configuration example above the `:otp_app` key has been defined.  This means that conifguration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `:ex_cldr`.  For example:
+In the backend configuration example above the `:otp_app` key has been defined.  This means that conifguration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
 
      defmodule MyApp.Cldr do
        use Cldr, otp_app: :my_app
      end
 
      # In mix.exs
-     config :my_app, :ex_cldr,
+     config :my_app, MyApp.Cldr,
        default_locale: "en",
        locales: ["fr", "en", "bs", "si", "ak", "th"],
        gettext: MyApp.Gettext,
        data_dir: "./priv/cldr",
        precompile_number_formats: ["¤¤#,##0.##"],
        precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+
+Multiple backends can be configured under a single `:otp_app` if required.
 
 ### Configuration Priority
 

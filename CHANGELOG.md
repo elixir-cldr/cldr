@@ -1,6 +1,15 @@
-# Changelog for Cldr v2.0.0-rc.1
+# Changelog for Cldr v2.0.0-rc.2
 
-This is the changelog for Cldr v2.0.0-rc.0 released on November 10th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
+
+### Bug Fixes
+
+* Ensures `:ex_cldr` is started before attempting to download locales
+* The subkey for an `:otp_app` is the module name (ie `MyApp.Cldr`), not `:ex_cldr`.
 
 ### Purpose
 
@@ -12,7 +21,7 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 
 ### New structure and configuration
 
-In line with the recommended strategy for configurable library applications, `Cldr` now requires a user module be defined that hosts the configuration and public API.  This is similar to the strategy used by `Gettext`, `Phoenix` and others.  These modules, called backend modules, are defined like this:
+In line with the recommended strategy for configurable library applications, `Cldr` now requires a backend module be defined that hosts the configuration and public API.  This is similar to the strategy used by `Gettext`, `Ecto`, `Phoenix` and others.  These backend modules are defined like this:
 
     defmodule MyApp.Cldr do
       use Cldr, locales: ["en", "zh"]
@@ -48,10 +57,3 @@ end
 * `Config.get_locale/1` now takes a `config` or `backend` parameter and has become `Cldr.Config.get_locale/2`.
 * `Cldr.set_currenct_locale` has changed to be `Cldr.put_current_locale` to be more consistent with idiomatic Elixir conventions.
 
-### Enhancements
-
-* Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
-
-### Bug Fixes
-
-* Ensures `:ex_cldr` is started before attempting to download locales

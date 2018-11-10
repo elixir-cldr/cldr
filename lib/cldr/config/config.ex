@@ -1681,7 +1681,7 @@ defmodule Cldr.Config do
           raise ArgumentError, "The :otp_app #{inspect module_config[:otp_app]} is not known"
         end
 
-        Application.get_env(otp_app, app_name(), [])
+        Application.get_env(otp_app, module_config[:backend], [])
         |> Keyword.delete(:otp_app)
       else
         []
