@@ -459,10 +459,11 @@ defmodule Cldr.AcceptLanguage do
     String.replace(accept_language, " ", "")
   end
 
-  defp sort_by_quality(tokens) do
+  def sort_by_quality(tokens) do
     Enum.sort(tokens, fn
       {:error, _}, {_quality_2, _} -> false
       {_quality_2, _}, {:error, _} -> true
+      {quality_1, _}, {quality_2, _} when quality_1 == quality_2 -> true
       {quality_1, _}, {quality_2, _} -> quality_1 > quality_2
     end)
   end
