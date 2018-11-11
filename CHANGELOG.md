@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.8.1
+
+This is the changelog for Cldr v1.8.1 released on November 11th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Preserves sort order of language tags in an AcceptLanguage header.  Thanks to @erikreedstrom.  Closes #87.
+
 # Changelog for Cldr v1.8.0
 
 This is the changelog for Cldr v1.8.0 released on October 18th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
