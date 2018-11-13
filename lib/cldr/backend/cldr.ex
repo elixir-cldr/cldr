@@ -231,7 +231,8 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
+      * `locale` is any valid locale name returned by
+        `#{inspect(__MODULE__)}.known_gettext_locale_names/0`
 
       ## Examples
 
@@ -257,8 +258,8 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{inspect(__MODULE__)}.put_current_locale("pl")
-          iex> #{inspect(__MODULE__)}.get_current_locale
+          iex> #{inspect(__MODULE__)}.put_locale("pl")
+          iex> #{inspect(__MODULE__)}.get_locale
           %Cldr.LanguageTag{
              canonical_locale_name: "pl-Latn-PL",
              cldr_locale_name: "pl",
@@ -275,9 +276,9 @@ defmodule Cldr.Backend do
            }
 
       """
-      @spec get_current_locale :: LanguageTag.t()
-      def get_current_locale do
-        Cldr.get_current_locale(default_locale())
+      @spec get_locale :: LanguageTag.t()
+      def get_locale do
+        Cldr.get_locale(__MODULE__)
       end
 
       @doc """
@@ -296,7 +297,7 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.put_current_locale("en")
+          iex> #{inspect(__MODULE__)}.put_locale("en")
           {:ok,
            %Cldr.LanguageTag{
              canonical_locale_name: "en-Latn-US",
@@ -315,17 +316,17 @@ defmodule Cldr.Backend do
              language_variant: nil
            }}
 
-          iex> #{inspect(__MODULE__)}.put_current_locale("invalid_locale")
-          {:error,
-           {Cldr.LanguageTag.ParseError,
-            "Invalid language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
+          iex> #{inspect(__MODULE__)}.put_locale("invalid_locale")
+          {:error, {Cldr.UnknownLocaleError, "The locale \\"invalid_locale\\" is not known."}}
 
       """
-      @spec put_current_locale(Locale.locale_name() | LanguageTag.t()) ::
+      @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
               {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
 
-      def put_current_locale(locale_name) do
-        Cldr.put_current_locale(locale_name, __MODULE__)
+      def put_locale(locale_name) do
+        with {:ok, locale} <- validate_locale(locale_name) do
+          Cldr.put_locale(__MODULE__, locale)
+        end
       end
 
       @doc """

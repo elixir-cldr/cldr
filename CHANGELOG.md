@@ -9,7 +9,7 @@ This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older ch
 ### Bug Fixes
 
 * Ensures `:ex_cldr` is started before attempting to download locales
-* The subkey for an `:otp_app` is the module name (ie `MyApp.Cldr`), not `:ex_cldr`.
+* The subkey for an `:otp_app` is the backend name (ie `MyApp.Cldr`), not `:ex_cldr`.
 
 ### Purpose
 
@@ -56,4 +56,6 @@ end
 * The `Mix` compiler `:cldr` is obsolete.  It still exists so configuration doesn't break but its no a `:noop`.  It should be removed from your configuration.
 * `Config.get_locale/1` now takes a `config` or `backend` parameter and has become `Cldr.Config.get_locale/2`.
 * `Cldr.set_currenct_locale` has changed to be `Cldr.put_current_locale` to be more consistent with idiomatic Elixir conventions.
+* `Cldr.get_current_locale/0` is renamed to `Cldr.get_locale/0` to better align with `Gettext`
+* `Cldr.put_current_locale/1` is renamed to `Cldr.put_locale/1` to better align with `Gettext`
 

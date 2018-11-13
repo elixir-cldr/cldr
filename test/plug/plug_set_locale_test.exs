@@ -102,7 +102,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variant: nil
              }
 
-    assert opts[:cldr_backend].get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from the session" do
@@ -134,7 +134,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "RU"
              }
 
-    assert opts[:cldr_backend].get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from a body param" do
@@ -165,7 +165,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "TW"
              }
 
-    assert opts[:cldr_backend].get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
 
   test "set the locale from a cookie param" do
@@ -195,7 +195,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                territory: "TW"
              }
 
-    assert opts[:cldr_backend].get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
 
   test "locale is set according to the configured priority" do
@@ -224,6 +224,6 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variant: nil
              }
 
-    assert opts[:cldr_backend].get_current_locale() == conn.private[:cldr_locale]
+    assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
 end

@@ -180,7 +180,7 @@ if Code.ensure_loaded?(Plug) do
 
     defp put_locale(:cldr, locale, options) do
       backend = options[:cldr_backend]
-      backend.put_current_locale(locale)
+      backend.put_locale(locale)
     end
 
     defp put_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do

@@ -237,4 +237,42 @@ defmodule Cldr.Test do
   test "that we get the correct default json library" do
     assert Cldr.Config.json_library() == Jason
   end
+
+  test "that configs merge correctly" do
+    assert WithOtpAppBackend.Cldr.__cldr__(:config) ==
+      %Cldr.Config{
+        backend: WithOtpAppBackend.Cldr,
+        data_dir: "/Users/kip/Development/cldr/_build/test/lib/ex_cldr/priv/cldr",
+        default_locale: "en-001",
+        gettext: nil,
+        locales: ["fr", "en-001", "root"],
+        otp_app: :ex_cldr,
+        precompile_number_formats: [],
+        precompile_transliterations: []
+      }
+
+    assert WithGettextBackend.Cldr.__cldr__(:config) ==
+      %Cldr.Config{
+        backend: WithGettextBackend.Cldr,
+        data_dir: "/Users/kip/Development/cldr/_build/test/lib/ex_cldr/priv/cldr",
+        default_locale: "en-001",
+        gettext: TestGettext.Gettext,
+        locales: ["en", "en-001", "root"],
+        otp_app: nil,
+        precompile_number_formats: [],
+        precompile_transliterations: []
+      }
+
+    assert TestBackend.Cldr.__cldr__(:config) ==
+      %Cldr.Config{
+        backend: TestBackend.Cldr,
+        data_dir: "/Users/kip/Development/cldr/_build/test/lib/ex_cldr/priv/cldr",
+        default_locale: "en-001",
+        gettext: TestGettext.Gettext,
+        locales: :all,
+        otp_app: nil,
+        precompile_number_formats: [],
+        precompile_transliterations: [latn: :arab, arab: :thai, arab: :latn]
+      }
+  end
 end

@@ -3,15 +3,14 @@ use Mix.Config
 # Global config
 config :ex_cldr,
   default_locale: "en-001",
-  locales: ["en"],
-  otp_app: :ex_cldr
+  locales: ["en"]
 
 config :ex_cldr, TestGettext.Gettext,
   default_locale: "en"
 
 # otp app config
-config :ex_cldr,
-  :ex_cldr, locales: ["fr"]
+config :ex_cldr, WithOtpAppBackend.Cldr,
+  locales: ["fr"]
 
 # Other configs
 config :plug,

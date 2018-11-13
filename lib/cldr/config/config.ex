@@ -254,11 +254,16 @@ defmodule Cldr.Config do
 
   """
   @spec default_locale(t()) :: Locale.locale_name()
-  def default_locale(config) do
+  def default_locale(%{} = config) do
     Map.get(config, :default_locale) ||
     Application.get_env(app_name(), :default_locale) ||
     gettext_default_locale(config) ||
-    @default_locale
+    all_language_tags()[@default_locale]
+  end
+
+  def default_locale do
+    Application.get_env(app_name(), :default_locale) ||
+    all_language_tags()[@default_locale]
   end
 
   @doc """
@@ -1666,31 +1671,11 @@ defmodule Cldr.Config do
   # Since this uses Mix it is only valid at compile
   # time
   def config_from_opts(module_config) do
-    global_config =
-      Application.get_all_env(app_name())
-      |> Keyword.delete(:otp_app)
-
-    otp_config =
-      if otp_app = module_config[:otp_app] do
-        loaded_apps =
-          Application.loaded_applications
-          |> Enum.map(&(elem(&1, 0)))
-          |> Kernel.++([Mix.Project.config[:app]])
-
-        if module_config[:otp_app] && module_config[:otp_app] not in loaded_apps do
-          raise ArgumentError, "The :otp_app #{inspect module_config[:otp_app]} is not known"
-        end
-
-        Application.get_env(otp_app, module_config[:backend], [])
-        |> Keyword.delete(:otp_app)
-      else
-        []
-      end
-
     config =
-      global_config
-      |> Keyword.merge(otp_config)
+      global_config()
+      |> Keyword.merge(otp_config(module_config))
       |> Keyword.merge(module_config)
+      |> merge_locales_with_default
       |> Map.new
 
     config =
@@ -1707,5 +1692,67 @@ defmodule Cldr.Config do
     for {module, function, _args} <-  Cldr.Config.Dependents.cldr_provider_modules do
       apply(module, function, [config])
     end
+  end
+
+  @doc false
+  def loaded_apps do
+    Application.loaded_applications
+    |> Enum.map(&(elem(&1, 0)))
+    |> Kernel.++([Mix.Project.config[:app]])
+  end
+
+  def raise_if_otp_app_not_loaded!(config) do
+    if config[:otp_app] && config[:otp_app] not in loaded_apps() do
+      raise ArgumentError, "The :otp_app #{inspect config[:otp_app]} is not known"
+    end
+  end
+
+  @doc false
+  def global_config do
+    Application.get_all_env(app_name())
+    |> Keyword.delete(:otp_app)
+  end
+
+  @doc false
+  def otp_config(config) do
+    if otp_app = config[:otp_app] do
+      raise_if_otp_app_not_loaded!(config)
+
+      Application.get_env(otp_app, config[:backend], [])
+      |> Keyword.delete(:otp_app)
+    else
+      []
+    end
+  end
+
+  @non_deprecated_keys [:json_library, :default_locale]
+  @doc false
+  def maybe_deprecate_global_config! do
+    remaining_config =
+      global_config()
+      |> Enum.reject(&(&1 in @non_deprecated_keys))
+      |> Enum.map(&(elem(&1, 0)))
+
+    if length(remaining_config) > 0 do
+      IO.puts IO.ANSI.yellow() <>
+      "Using the global configuration is deprecated.  Global configuration " <>
+      "only supports the #{inspect @non_deprecated_keys} keys. The keys " <>
+      "#{inspect remaining_config} should be configured in a backend module or " <>
+      "via the :otp_app configuration of a backend module.  See the readme for " <>
+      "further information." <> IO.ANSI.reset
+    end
+  end
+
+  @root_locale "root"
+  def merge_locales_with_default(config) do
+    locales =
+      if config[:locales] == :all do
+        config[:locales]
+      else
+        (config[:locales] ++ [config[:default_locale], @root_locale])
+        |>  Enum.uniq
+      end
+
+    Keyword.put(config, :locales, locales)
   end
 end
