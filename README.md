@@ -105,9 +105,12 @@ In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  An
        precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
        json_library: Jason
 
-Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module if compiled.
+Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
-Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration.  The preferred configuration is in a backend module.
+Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration.
+
+**If configuration beyond `:json_library` or `:default_locale` is defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
+
 
 ### Backend Module Configuration
 
@@ -306,7 +309,7 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
 
 * `Cldr.Plug.AcceptLanguage` which will parse an `accept-language` header and resolve the best matched and configured `Cldr` locale. The result is stored in `conn.private[:cldr_locale]` which is also returned by `Cldr.Plug.AcceptLanguage.get_cldr_locale/1`.
 
-* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.put_current_locale/1` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
+* `Cldr.Plug.SetLocale` which will look for a locale in the several places and then call `Cldr.put_locale/2` and `Gettext.put_locale/2` if configured so to do. Finally, The result is stored in `conn.private[:cldr_locale]` which is then available through `Cldr.Plug.SetLocale.get_cldr_locale/1`. The plug will look for a locale in the following locations depending on the plug configuration:
 
   * `path_params`
   * `query_params`

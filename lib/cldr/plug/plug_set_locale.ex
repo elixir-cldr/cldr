@@ -23,11 +23,12 @@ if Code.ensure_loaded?(Plug) do
 
       * `:default` - the default locale to set if no locale is
         found by other configured methods.  It can be a string like "en"
-        or a `t:Cldr.LanguageTag.t/0` struct. The default is
-        `Cldr.default_locale()`
+        or a `Cldr.LanguageTag.t/0` struct. The default is
+        `Cldr.default_locale/1`
 
       * `:gettext` - the name of the `Gettext` module upon which
-        the locale should be set
+        the locale should be set. It can be later retrieved by
+        `Gettext,get_locale(gettext_backend_module)`.
 
       * `:session_key` - defines the key used to look for the locale
       in the session.  The default is "locale".
