@@ -5,11 +5,13 @@ This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older ch
 ### Enhancements
 
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
+* Print deprecation message if global config is used for more than :json_library and :default_locale
 
 ### Bug Fixes
 
 * Ensures `:ex_cldr` is started before attempting to download locales
 * The subkey for an `:otp_app` is the backend name (ie `MyApp.Cldr`), not `:ex_cldr`.
+* Correct configuration merging from global, otp_app and backend module
 
 ### Purpose
 

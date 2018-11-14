@@ -226,4 +226,54 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert opts[:cldr_backend].get_locale() == conn.private[:cldr_locale]
   end
+
+  test "gettext locale is set" do
+    opts = Cldr.Plug.SetLocale.init(
+      from: [:query],
+      cldr_backend: TestBackend.Cldr,
+      gettext: TestGettext.Gettext,
+      apps: :gettext
+    )
+
+    conn =
+      :get
+      |> conn("/?locale=es")
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale] ==
+      %Cldr.LanguageTag{
+        extensions: %{},
+        gettext_locale_name: "es",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{},
+        private_use: [],
+        script: "Latn",
+        transform: %{},
+        canonical_locale_name: "es-Latn-ES",
+        cldr_locale_name: "es",
+        language: "es",
+        rbnf_locale_name: "es",
+        requested_locale_name: "es",
+        territory: "ES"
+      }
+
+    assert Gettext.get_locale(TestGettext.Gettext) == "es"
+  end
+
+  test "another gettext example" do
+    opts = Cldr.Plug.SetLocale.init(
+      apps: [:cldr, :gettext],
+      from: [:query, :path, :cookie, :accept_language],
+      cldr_backend: TestBackend.Cldr,
+      param: "locale",
+      gettext: TestGettext.Gettext
+    )
+
+    :get
+    |> conn("/?locale=es")
+    |> Cldr.Plug.SetLocale.call(opts)
+
+    assert Gettext.get_locale(TestGettext.Gettext) == "es"
+  end
 end
