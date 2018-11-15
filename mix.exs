@@ -37,7 +37,7 @@ defmodule Cldr.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :gettext]
+      extra_applications: [:logger]
     ]
   end
 
@@ -150,5 +150,5 @@ defmodule Cldr.Mixfile do
 
   defp elixirc_paths(:test), do: ["lib", "mix", "test"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "bench"]
-  defp elixirc_paths(_), do: ["lib"]
+  defp elixirc_paths(_), do: ["lib", "src"]
 end
