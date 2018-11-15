@@ -31,7 +31,9 @@ defmodule Cldr.Gettext.Plural do
         """
         @spec nplurals(Locale.locale_name() | Cldr.LanguageTag.t()) :: pos_integer
         def nplurals(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name}) do
-          Cardinal.plural_rules_for(cldr_locale_name) |> Enum.count()
+          Cardinal.gettext_nplurals()
+          |> Map.get(cldr_locale_name)
+          |> Enum.count
         end
 
         def nplurals(locale_name) when is_binary(locale_name) do
