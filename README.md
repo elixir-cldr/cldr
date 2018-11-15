@@ -98,15 +98,13 @@ In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Al
 
      config :ex_cldr,
        default_locale: "en",
-       default_backend: <backend module>,
-       default_gettext: <gettext module>
        json_library: Jason,
 
 Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
 Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration only.
 
-**If configuration beyond the keys `:default_locale`, `:default_backend`, `:default_gettext` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
+**If configuration beyond the keys `:default_locale` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
 
 ### Backend Module Configuration

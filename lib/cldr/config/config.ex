@@ -234,8 +234,8 @@ defmodule Cldr.Config do
   Return the configured `Gettext` module name or `nil`.
 
   """
-  @spec gettext(t()) :: module() | nil
-  def gettext(config) do
+  @spec gettext(t() | Map.t()) :: module() | nil
+  def gettext(%{} = config) do
     Map.get(config, :gettext)
   end
 
@@ -1675,8 +1675,8 @@ defmodule Cldr.Config do
       global_config()
       |> Keyword.merge(otp_config(module_config))
       |> Keyword.merge(module_config)
-      |> merge_locales_with_default
       |> Map.new
+      |> merge_locales_with_default
 
     config =
       config
@@ -1749,11 +1749,14 @@ defmodule Cldr.Config do
       if config[:locales] == :all do
         config[:locales]
       else
-        (config[:locales] ++ [config[:default_locale], @root_locale])
+        gettext = Cldr.Config.known_gettext_locale_names(config)
+        default = config[:default_locale]
+        locales = config[:locales]
+        (locales ++ gettext ++ [default, @root_locale])
         |>  Enum.uniq
       end
 
-    Keyword.put(config, :locales, locales)
+    Map.put(config, :locales, locales)
   end
 
   def normalize_plural_rules(rules) do

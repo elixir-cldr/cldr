@@ -15,13 +15,6 @@ This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older ch
 * The subkey for an `:otp_app` is the backend name (ie `MyApp.Cldr`), not `:ex_cldr`.
 * Correct configuration merging from global, otp_app and backend module
 
-### Todo before rc-2.0
-
-* [ ] `Cldr.default_locale/0` should consider the `:default_backend` and `:default_gettext` keys when resolving the locale
-* [ ] When resolving the locales in the config we should consider the configured gettext locales
-* [ ] Public API functions should consider the default backend and the default gettext module if they are configured
-* [ ] Public API functions should use a default locale returned by `<backend>.get_locale`
-
 ### Purpose
 
 Version 2.0 of Cldr is focused on re-architecting the module structure to more closely follow the model set by Phoenix, Gettext and others that also rely on generating a public API at compile time. In Cldr version 1.x, the compile functions were all hosted within the `ex_cldr` package itself which has created several challenges:
