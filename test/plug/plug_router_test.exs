@@ -2,7 +2,7 @@ defmodule Cldr.TestApp.Router do
   use Plug.Router
 
   plug(:match)
-  plug(Cldr.Plug.SetLocale, from: :path, cldr_backend: TestBackend.Cldr)
+  plug(Cldr.Plug.SetLocale, from: :path, cldr: TestBackend.Cldr)
   plug(:dispatch)
 
   get "/thing/:locale" do
@@ -44,7 +44,7 @@ defmodule Cldr.Plug.Router.Test do
              language_variant: nil
            }
 
-    assert Cldr.get_locale(TestBackend.Cldr) == %Cldr.LanguageTag{
+    assert Cldr.get_locale == %Cldr.LanguageTag{
              canonical_locale_name: "fr-Latn-FR",
              cldr_locale_name: "fr",
              extensions: %{},

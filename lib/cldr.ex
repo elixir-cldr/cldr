@@ -105,12 +105,16 @@ defmodule Cldr do
   end
 
   @doc """
-  Return the current locale foe the current process.
+  Return the backend's locale for the
+  current process.
 
   Note that the locale is set per-process. If the locale
-  is note set for the given process then:
+  is not set for the given process then:
 
-  * return the default locale of the specified backend
+  * return the current processes default locale
+
+  * or if not set, return the default locale of the
+    specified backend
 
   * or if that is not set, return the global default locale
     which is defined under the `:ex_cldr` key in `config.exs`
@@ -120,8 +124,7 @@ defmodule Cldr do
 
   Note that if there is no locale set for the current
   process then an error is not returned - a default locale
-  will be returned per the rules above and that may not
-  meet expectations.
+  will be returned per the rules above.
 
   ## Arguments
 
@@ -151,13 +154,56 @@ defmodule Cldr do
   @spec get_locale(backend()) :: LanguageTag.t()
   def get_locale(backend) do
     Process.get(backend) ||
+    Process.get(:cldr) ||
     backend.default_locale() ||
     default_locale()
   end
 
   @doc """
-  Set the current process's locale to be used for `Cldr` functions that
-  take an optional locale parameter for which a locale is not supplied.
+  Return the `Cldr` locale for the
+  current process.
+
+  Note that the locale is set per-process. If the locale
+  is not set for the given process then:
+
+  * Return the global default locale
+    which is defined under the `:ex_cldr` key in
+    `config.exs`
+
+  * Or the system-wide default locale which is
+    #{inspect Cldr.Config.default_locale()}
+
+  Note that if there is no locale set for the current
+  process then an error is not returned - a default locale
+  will be returned per the rules above.
+
+  ## Example
+
+      iex> Cldr.put_locale(TestBackend.Cldr.Locale.new!("pl"))
+      iex> Cldr.get_locale()
+      %Cldr.LanguageTag{
+         canonical_locale_name: "pl-Latn-PL",
+         cldr_locale_name: "pl",
+         extensions: %{},
+         language: "pl",
+         locale: %{},
+         private_use: [],
+         rbnf_locale_name: "pl",
+         territory: "PL",
+         requested_locale_name: "pl",
+         script: "Latn",
+         transform: %{},
+         language_variant: nil
+       }
+
+  """
+  def get_locale do
+    Process.get(:cldr) ||
+    default_locale()
+  end
+
+  @doc """
+  Set the current process's locale for a specified backend.
 
   ## Arguments
 
@@ -205,6 +251,49 @@ defmodule Cldr do
       Process.put(backend, locale)
       {:ok, locale}
     end
+  end
+
+  @doc """
+  Set the current process's locale for all backends.
+
+  This is the preferred approach.
+
+  ## Arguments
+
+  * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  Note that the argument must be a `Cldr.LanguageTag` struct with a non-nil
+  `:cldr_locale_name`.
+
+  ## Examples
+
+      iex> Cldr.put_locale(TestBackend.Cldr.Locale.new!("en"))
+      {:ok,
+       %Cldr.LanguageTag{
+         canonical_locale_name: "en-Latn-US",
+         cldr_locale_name: "en",
+         language_subtags: [],
+         extensions: %{},
+         gettext_locale_name: "en",
+         language: "en",
+         locale: %{},
+         private_use: [],
+         rbnf_locale_name: "en",
+         requested_locale_name: "en",
+         script: "Latn",
+         territory: "US",
+         transform: %{},
+         language_variant: nil
+       }}
+
+  """
+  @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
+          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+
+  def put_locale(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name} = locale)
+      when not is_nil(cldr_locale_name) do
+    Process.put(:cldr, locale)
+    {:ok, locale}
   end
 
   @doc """

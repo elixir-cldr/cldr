@@ -7,8 +7,8 @@ if Code.ensure_loaded?(Plug) do
 
     ## Options
 
-      * `:apps` - list of apps for which to set locale. Valid apps are
-        `:cldr` and `:gettext`.  The default is `:cldr`.
+      * `:apps` - list of apps for which to set locale.
+        See the apps configuration section.
 
       * `:from` - where in the request to look for the locale.
         The default is `[:session, :accept_language]`. The valid
@@ -23,29 +23,73 @@ if Code.ensure_loaded?(Plug) do
 
       * `:default` - the default locale to set if no locale is
         found by other configured methods.  It can be a string like "en"
-        or a `Cldr.LanguageTag.t/0` struct. The default is
+        or a `Cldr.LanguageTag` struct. The default is
         `Cldr.default_locale/1`
 
-      * `:gettext` - the name of the `Gettext` module upon which
-        the locale should be set. It can be later retrieved by
-        `Gettext,get_locale(gettext_backend_module)`.
+      * `:gettext` - the name of the `Gettext` backend module upon which
+        the locale will be validated. This option is not required if a
+        gettext module is specified in the `:apps` configuration.
+
+      * `:cldr` - the name of the `Cldr` backend module upon which
+        the locale will be validated.  This option is not required if a
+        gettext module is specified in the `:apps` configuration.
 
       * `:session_key` - defines the key used to look for the locale
-      in the session.  The default is "locale".
+        in the session.  The default is `locale`.
 
     If a locale is found then `conn.private[:cldr_locale]` is also set.
     It can be retrieved with `Cldr.Plug.SetLocale.get_cldr_locale/1`.
 
-    ## Example
+    ## App configuration
 
+    `Cldr.Plug.SetLocale` can set the locale for `cldr`, `gettext` or both.
+    The basic configuration of the `:app` key is an atom, or list of atoms,
+    containing one or both of these app names.  For example:
+
+        apps: :cldr
+        apps: :gettext
+        apps: [:cldr, :gettext]
+
+    In each of these cases, the locale is set for all backends
+    **for the current process**.  This is the preferred model.
+
+    Sometimes setting the locale for only a specific backend is required.
+    In this case, configure the `:apps` key as a keyword list pairing an
+    application with the required backend module.  The value `:all` signifies
+    setting the local for all backends. For example:
+
+        apps: [cldr: MyApp.Cldr]
+        apps: [gettext: MyAppGettext]
+        apps: [gettext: :all]
+        apps: [cldr: MyApp.Cldr, gettext: MyAppGettext]
+
+    ## Examples
+
+        # Will set the global locale for the current process
+        # for both `:cldr` and `:gettext`
         plug Cldr.Plug.SetLocale,
           apps:    [:cldr, :gettext],
           from:    [:query, :path, :body, :cookie, :accept_language],
           param:   "locale",
-          default: Cldr.default_locale,
           gettext: GetTextModule,
+          cldr:    MyApp.Cldr
           session_key: "cldr_locale"
-          cldr_backedn: MyApp.Cldr
+
+        # Will set the backend only locale for the current process
+        # for both `:cldr` and `:gettext`
+        plug Cldr.Plug.SetLocale,
+          apps:    [cldr: MyApp.Cldr, gettext: GetTextModule],
+          from:    [:query, :path, :body, :cookie, :accept_language],
+          param:   "locale",
+          session_key: "cldr_locale"
+
+        # Will set the backend only locale for the current process
+        # for `:cldr` and for all backends for `:gettext`
+        plug Cldr.Plug.SetLocale,
+          apps:    [cldr: MyApp.Cldr, gettext: :all],
+          from:    [:query, :path, :body, :cookie, :accept_language],
+          param:   "locale",
+          session_key: "cldr_locale"
 
     """
 
@@ -53,7 +97,7 @@ if Code.ensure_loaded?(Plug) do
     require Logger
     alias Cldr.AcceptLanguage
 
-    @default_apps [:cldr]
+    @default_apps [cldr: :all]
     @default_from [:session, :accept_language]
     @default_param_name "locale"
     @default_session_key "cldr_locale"
@@ -65,28 +109,14 @@ if Code.ensure_loaded?(Plug) do
 
     @doc false
     def init(options) do
-      options =
-        options
-        |> validate_cldr_backend(options[:cldr_backend])
-        |> validate_apps(options[:apps])
-        |> validate_from(options[:from])
-        |> validate_param(options[:param])
-        |> validate_default(options[:default])
-        |> validate_gettext(options[:gettext])
-        |> validate_session_key(options[:session_key])
-
-
-      if :gettext in options[:apps] and is_nil(options[:gettext]) do
-        raise ArgumentError,
-              "The option :gettext that specified a Gettext module must be set " <>
-                "if the :gettext is configured as an :app"
-      end
-
-      unless options[:cldr_backend] do
-        raise ArgumentError, "A Cldr backend module must be specified under the key :cldr_backend"
-      end
-
       options
+      |> validate_apps(options[:apps])
+      |> validate_from(options[:from])
+      |> validate_param(options[:param])
+      |> validate_cldr(options[:cldr])
+      |> validate_gettext(options[:gettext])
+      |> validate_default(options[:default])
+      |> validate_session_key(options[:session_key])
     end
 
     @doc false
@@ -118,8 +148,8 @@ if Code.ensure_loaded?(Plug) do
 
     defp fetch_param(conn, :accept_language, _param, options) do
       case get_req_header(conn, @language_header) do
-        [accept_language] -> AcceptLanguage.best_match(accept_language, options[:cldr_backend])
-        [accept_language | _] -> AcceptLanguage.best_match(accept_language, options[:cldr_backend])
+        [accept_language] -> AcceptLanguage.best_match(accept_language, options[:cldr])
+        [accept_language | _] -> AcceptLanguage.best_match(accept_language, options[:cldr])
         [] -> nil
       end
     end
@@ -138,21 +168,21 @@ if Code.ensure_loaded?(Plug) do
       conn
       |> Map.get(:query_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr_backend])
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp fetch_param(conn, :path, param, options) do
       conn
       |> Map.get(:path_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr_backend])
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp fetch_param(conn, :body, param, options) do
       conn
       |> Map.get(:body_params)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr_backend])
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp fetch_param(conn, :session, _param, options) do
@@ -164,7 +194,7 @@ if Code.ensure_loaded?(Plug) do
       conn
       |> Map.get(:cookies)
       |> Map.get(param)
-      |> Cldr.validate_locale(options[:cldr_backend])
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp return_if_valid_locale(nil) do
@@ -179,12 +209,15 @@ if Code.ensure_loaded?(Plug) do
       {:halt, locale}
     end
 
-    defp put_locale(:cldr, locale, options) do
-      backend = options[:cldr_backend]
+    defp put_locale({:cldr, :all}, locale, _options) do
+      Cldr.put_locale(locale)
+    end
+
+    defp put_locale({:cldr, backend}, locale, _options) do
       backend.put_locale(locale)
     end
 
-    defp put_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do
+    defp put_locale({:gettext, _}, %Cldr.LanguageTag{gettext_locale_name: nil} = locale, _options) do
       Logger.warn(
         "Locale #{inspect(locale.requested_locale_name)} does not have a known " <>
           "Gettext locale.  No Gettext locale has been set."
@@ -193,8 +226,12 @@ if Code.ensure_loaded?(Plug) do
       nil
     end
 
-    defp put_locale(:gettext, %Cldr.LanguageTag{gettext_locale_name: locale_name}, options) do
-      {:ok, apply(Gettext, :put_locale, [options[:gettext], locale_name])}
+    defp put_locale({:gettext, :all}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+      {:ok, apply(Gettext, :put_locale, [locale_name])}
+    end
+
+    defp put_locale({:gettext, backend}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+      {:ok, apply(Gettext, :put_locale, [backend, locale_name])}
     end
 
     defp validate_apps(options, nil), do: Keyword.put(options, :apps, @default_apps)
@@ -206,23 +243,46 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_apps(options, apps) when is_list(apps) do
-      Enum.each(apps, fn a ->
-        if a not in @app_options do
-          raise(
-            ArgumentError,
-            "Invalid :apps option #{inspect(a)} detected.  " <>
-              " Valid :apps options are #{inspect(@app_options)}"
-          )
-        end
-      end)
+      app_config =
+        Enum.map(apps, fn
+          {app, scope} ->
+            validate_app_and_scope!(app, scope)
+            {app, scope}
+          app ->
+            validate_app_and_scope!(app, nil)
+            {app, :all}
+        end)
 
-      options
+      Keyword.put(options, :apps, app_config)
     end
 
     defp validate_apps(_options, apps) do
       raise(
         ArgumentError,
-        "Invalid apps list: #{inspect(apps)}.  Valid apps are #{inspect(@app_options)}"
+        "Invalid apps list: #{inspect(apps)}."
+      )
+    end
+
+    defp validate_app_and_scope!(app, nil) when app in @app_options do
+      :ok
+    end
+
+    defp validate_app_and_scope!(app, :all) when app in @app_options do
+      :ok
+    end
+
+    defp validate_app_and_scope!(app, module) when not is_nil(app) and is_atom(module) do
+      cond do
+        app in @app_options && Code.ensure_loaded?(module) -> :ok
+        app in @app_options -> raise ArgumentError, "Backend module #{inspect module} is unavailable"
+        true -> raise ArgumentError, "App #{inspect app} is unknown"
+      end
+    end
+
+    defp validate_app_and_scope!(app, scope) do
+      raise(
+        ArgumentError,
+        "Invalid app #{inspect app} or scope #{inspect scope} detected."
       )
     end
 
@@ -271,18 +331,26 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_default(options, nil) do
-      default = options[:cldr_backend].default_locale()
+      default = options[:cldr].default_locale()
       Keyword.put(options, :default, default)
     end
 
     defp validate_default(options, default) do
-      case Cldr.validate_locale(default, options[:cldr_backend]) do
+      case Cldr.validate_locale(default, options[:cldr]) do
         {:ok, locale} -> Keyword.put(options, :default, locale)
         {:error, {exception, reason}} -> raise exception, reason
       end
     end
 
-    defp validate_gettext(options, nil), do: options
+    defp validate_gettext(options, nil) do
+      gettext_backend =  Keyword.get(options[:apps], :gettext)
+      if gettext_backend do
+        options = Keyword.put(options, :gettext, gettext_backend)
+        validate_gettext(options, gettext_backend)
+      else
+        options
+      end
+    end
 
     defp validate_gettext(options, gettext) do
       case Code.ensure_loaded(gettext) do
@@ -307,16 +375,22 @@ if Code.ensure_loaded?(Plug) do
       )
     end
 
-    defp validate_cldr_backend(_options, nil) do
-      raise ArgumentError, "A :cldr backend module must be configured"
+    defp validate_cldr(options, nil) do
+      cldr_backend =  Keyword.get(options[:apps], :cldr)
+      if cldr_backend && cldr_backend != :all do
+        options = Keyword.put(options, :cldr, cldr_backend)
+        validate_cldr(options, cldr_backend)
+      else
+        raise ArgumentError, "A Cldr backend module must be configured"
+      end
     end
 
-    defp validate_cldr_backend(options, backend) when is_atom(backend) do
+    defp validate_cldr(options, backend) when is_atom(backend) do
       unless Code.ensure_loaded?(backend) and function_exported?(backend, :__cldr__, 1) do
         raise ArgumentError,
           "#{inspect backend} is either not known or does not appear to be a Cldr backend module"
       else
-        Keyword.put(options, :cldr_backend, backend)
+        Keyword.put(options, :cldr, backend)
       end
     end
   end
