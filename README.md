@@ -98,13 +98,15 @@ In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Al
 
      config :ex_cldr,
        default_locale: "en",
-       json_library: Jason
+       default_backend: <backend module>,
+       default_gettext: <gettext module>
+       json_library: Jason,
 
 Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
 Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration only.
 
-**If configuration beyond `:json_library` or `:default_locale` is defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
+**If configuration beyond the keys `:default_locale`, `:default_backend`, `:default_gettext` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
 
 ### Backend Module Configuration
@@ -153,11 +155,11 @@ When building the consolidated configuration the following priority applies:
 
 The configuration keys available for `Cldr` are:
 
- * `default_locale` specifies the default locale to be used if none has been set by `Cldr.put_locale/2` and none has been set in a configured `Gettext` module.  The default locale in case no other locale has been set is `"en"`.  Default locale calculated by:
+ * `default_locale` specifies the default locale to be used for this backend.  The default locale in case no other locale has been set is `"en-001"`.  The default locale calculated as follows:
 
      * If set by the `:default_locale` key, then this is the priority
-     * If no `:default_locale` key, then a configured `Gettext` default locale is chosen
-     * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, then the default locale will be `en-001`
+     * If no `:default_locale` key, then a configured `Gettext` default locale for this backend is chosen
+     * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, use `Cldr.default_locale/0` which returns either the default locale configurated in `mix.exs` under the `ex_cldr` key or then the system default locale will is currently `en-001`
 
  * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenince it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 

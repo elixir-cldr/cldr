@@ -257,7 +257,7 @@ defmodule Cldr.Number.PluralRule do
       * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
 
-      * `rounding` is one of ``#{inspect Cldr.Math.rounding_modes}`.  The
+      * `rounding` is one of `#{inspect Cldr.Math.rounding_modes}`.  The
         default is `#{inspect Cldr.Math.default_rounding_mode}`.
 
       ## Examples
@@ -292,7 +292,7 @@ defmodule Cldr.Number.PluralRule do
       * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
 
-      * `rounding` is one of ``#{inspect Cldr.Math.rounding_modes}`.  The
+      * `rounding` is one of `#{inspect Cldr.Math.rounding_modes}`.  The
         default is `#{inspect Cldr.Math.default_rounding_mode}`.
 
       ## Examples

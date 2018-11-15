@@ -15,6 +15,13 @@ This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older ch
 * The subkey for an `:otp_app` is the backend name (ie `MyApp.Cldr`), not `:ex_cldr`.
 * Correct configuration merging from global, otp_app and backend module
 
+### Todo before rc-2.0
+
+* [ ] `Cldr.default_locale/0` should consider the `:default_backend` and `:default_gettext` keys when resolving the locale
+* [ ] When resolving the locales in the config we should consider the configured gettext locales
+* [ ] Public API functions should consider the default backend and the default gettext module if they are configured
+* [ ] Public API functions should use a default locale returned by `<backend>.get_locale`
+
 ### Purpose
 
 Version 2.0 of Cldr is focused on re-architecting the module structure to more closely follow the model set by Phoenix, Gettext and others that also rely on generating a public API at compile time. In Cldr version 1.x, the compile functions were all hosted within the `ex_cldr` package itself which has created several challenges:
@@ -56,10 +63,9 @@ end
 * Configuration has changed to focus on the backend module, then otp app, then global config.  All applications are required to define a backend module.
 * The Public API moves to a configured backend module. Functions previous called on `Cldr` should be called on `MyApp.Cldr`.
 * The `~L` sigil has been removed.  The public api functions support either a locale name (like "en") or a language tag.
-* `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.SetLocale` need to have a config key :cldr_backend to specify the `Cldr` backend to be used.
+* `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.SetLocale` need to have a config key :cldr to specify the `Cldr` backend to be used.
 * The `Mix` compiler `:cldr` is obsolete.  It still exists so configuration doesn't break but its no a `:noop`.  It should be removed from your configuration.
-* `Config.get_locale/1` now takes a `config` or `backend` parameter and has become `Cldr.Config.get_locale/2`.
-* `Cldr.set_currenct_locale` has changed to be `Cldr.put_current_locale` to be more consistent with idiomatic Elixir conventions.
+* `Cldr.Config.get_locale/1` now takes a `config` or `backend` parameter and has become `Cldr.Config.get_locale/2`.
 * `Cldr.get_current_locale/0` is renamed to `Cldr.get_locale/0` to better align with `Gettext`
 * `Cldr.put_current_locale/1` is renamed to `Cldr.put_locale/1` to better align with `Gettext`
 

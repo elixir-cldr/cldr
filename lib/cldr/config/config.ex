@@ -1725,7 +1725,7 @@ defmodule Cldr.Config do
     end
   end
 
-  @non_deprecated_keys [:json_library, :default_locale]
+  @non_deprecated_keys [:json_library, :default_locale, :default_backend, :default_gettext]
   @doc false
   def maybe_deprecate_global_config! do
     remaining_config =
