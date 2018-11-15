@@ -22,6 +22,8 @@ defmodule Cldr.Consolidate do
   operation.
   """
   @max_concurrency System.schedulers_online() * 2
+  @timeout 10_000
+
   @spec consolidate_locales :: :ok
   def consolidate_locales do
     ensure_output_dir_exists!(consolidated_output_dir())
@@ -41,7 +43,7 @@ defmodule Cldr.Consolidate do
     save_plural_ranges()
 
     all_locales()
-    |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
+    |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency, timeout: @timeout)
     |> Enum.to_list()
 
     :ok

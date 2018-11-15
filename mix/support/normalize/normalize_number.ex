@@ -21,6 +21,7 @@ defmodule Cldr.Normalize.Number do
         decimal_long_format = get_in(decimal_formats, ["long", "decimal_format"])
         decimal_short_format = get_in(decimal_formats, ["short", "decimal_format"])
         currency_short_format = get_in(currency_formats, ["short", "standard"])
+        currency_spacing = currency_formats["currency_spacing"]
 
         locale_formats = %{
           standard: decimal_formats["standard"],
@@ -32,7 +33,7 @@ defmodule Cldr.Normalize.Number do
           accounting: currency_formats["accounting"],
           scientific: scientific_formats["standard"],
           percent: percent_formats["standard"],
-          currency_spacing: currency_formats["currency_spacing"]
+          currency_spacing: normalize_currency_spacing(currency_spacing)
         }
 
         Map.put(formats, number_system, locale_formats)
@@ -59,6 +60,19 @@ defmodule Cldr.Normalize.Number do
       end)
 
     Map.put(content, "number_symbols", symbols)
+  end
+
+  def normalize_currency_spacing(nil) do
+    nil
+  end
+
+  def normalize_currency_spacing(currency_spacing) do
+    currency_spacing
+    |> Cldr.Map.deep_map(fn x -> x end, fn
+         "[:^S:]" -> "[^\\p{S}]"
+         other -> other
+       end)
+    |> Map.new
   end
 
   def number_system_names_from(numbers) do
