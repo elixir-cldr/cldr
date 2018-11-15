@@ -38,6 +38,7 @@ defmodule Cldr.Consolidate do
     save_likely_subtags()
     save_locales()
     save_territory_containment()
+    save_plural_ranges()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency)
@@ -373,6 +374,28 @@ defmodule Cldr.Consolidate do
     |> get_in(["supplemental", "likelySubtags"])
     |> Enum.map(fn {k, v} -> {k, LanguageTag.parse!(v)} end)
     |> Enum.into(%{})
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_plural_ranges do
+    import SweetXml
+    path = Path.join(consolidated_output_dir(), "plural_ranges.json")
+
+    download_data_dir()
+    |> Path.join(["pluralRanges.xml"])
+    |> File.read!()
+    |> xpath(~x"//pluralRanges"l,
+        locales: ~x"./@locales"s,
+        ranges: [~x"./pluralRange"l,
+          start: ~x"./@start"s,
+          end: ~x"./@end"s,
+          result: ~x"./@result"s
+       ])
+    |> Enum.map(fn %{locales: locales} = map ->
+         Map.put(map, :locales, String.split(locales, " "))
+       end)
     |> save_file(path)
 
     assert_package_file_configured!(path)

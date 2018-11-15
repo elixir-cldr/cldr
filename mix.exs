@@ -86,6 +86,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/aliases.json",
         "priv/cldr/territory_containment.json",
         "priv/cldr/territory_info.json",
+        "priv/cldr/plural_ranges.json",
         "priv/cldr/language_tags.ebin"
       ]
     ]

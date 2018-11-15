@@ -5,8 +5,6 @@ defmodule Cldr.Number.PluralRule.Transformer do
   # The transformations is primarily to convert the parse tree into an AST
   # representing a `cond` statement that implements the rule.
 
-  alias Cldr.Number.PluralRule
-
   @doc """
   Converts a map representing a set of plural rules and converts it
   to an `cond` statement.

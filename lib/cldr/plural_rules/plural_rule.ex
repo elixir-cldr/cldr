@@ -64,7 +64,7 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       The configured locales for which plural rules are defined.
 
-      Returns the intersection of `Cldr.known_locale_names/1` and
+      Returns the intersection of `#{inspect @backend}.known_locale_names/0` and
       the locales for which #{@module} plural rules are defined.
 
       There are many `Cldr` locales which don't have their own plural
@@ -86,6 +86,7 @@ defmodule Cldr.Number.PluralRule do
         @rules
       end
 
+      @doc false
       @spec gettext_nplurals :: map()
       def gettext_nplurals do
         @gettext_nplurals
@@ -100,7 +101,7 @@ defmodule Cldr.Number.PluralRule do
 
       * `number` is an integer, float or Decimal
 
-      * `locale` is any locale returned by `Cldr.Locale.new!/1` or any
+      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
 
       * `substitutions` is a map that maps plural keys to a string.
@@ -142,7 +143,7 @@ defmodule Cldr.Number.PluralRule do
 
       * `number` is an integer, float or Decimal
 
-      * `locale` is any locale returned by `Cldr.Locale.new!/1` or any
+      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
 
       * `substitutions` is a map that maps plural keys to a string.
@@ -181,7 +182,7 @@ defmodule Cldr.Number.PluralRule do
       @spec pluralize(Math.number_or_decimal(), LanguageTag.t() | Locale.locale_name(), %{}) :: any()
 
       def pluralize(number, locale_name, substitutions) when is_binary(locale_name) do
-        with {:ok, language_tag} <- Cldr.Locale.new(locale_name, @backend) do
+        with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
           pluralize(number, language_tag, substitutions)
         end
       end
@@ -205,19 +206,21 @@ defmodule Cldr.Number.PluralRule do
 
       ## Arguments
 
-      * `locale` is any locale returned by `Cldr.Locale.new!/1` or any
+      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
 
       The rules are returned in AST form after parsing.
 
       """
       @spec plural_rules_for(Locale.locale_name() | LanguageTag.t()) :: [{atom(), list()}, ...]
-      def plural_rules_for(%LanguageTag{cldr_locale_name: locale_name}) do
-        plural_rules_for(locale_name)
+      def plural_rules_for(%LanguageTag{cldr_locale_name: cldr_locale_name, language: language}) do
+        plural_rules()[cldr_locale_name] || plural_rules()[language]
       end
 
-      def plural_rules_for(locale_name) do
-        plural_rules()[locale_name]
+      def plural_rules_for(locale_name) when is_binary(locale_name) do
+        with {:ok, locale} <- @backend.validate_locale(locale_name) do
+          plural_rules_for(locale)
+        end
       end
 
       # Plural Operand Meanings as defined in CLDR plural rules and used
@@ -312,7 +315,7 @@ defmodule Cldr.Number.PluralRule do
       def plural_rule(number, locale, rounding \\ Math.default_rounding())
 
       def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
-        with {:ok, locale} <- Cldr.Locale.new(locale_name, @backend) do
+        with {:ok, locale} <- @backend.validate_locale(locale_name) do
           plural_rule(number, locale, rounding)
         end
       end
