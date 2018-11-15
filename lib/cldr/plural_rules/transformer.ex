@@ -17,10 +17,9 @@ defmodule Cldr.Number.PluralRule.Transformer do
   """
   def rules_to_condition_statement(rules, module) do
     branches =
-      Enum.map(rules, fn {"pluralRule-count-" <> category, rule} ->
-        {:ok, definition} = PluralRule.Compiler.parse(rule)
+      Enum.map(rules, fn {category, definition} ->
         {new_ast, _} = set_operand_module(definition[:rule], module)
-        rule_to_cond_branch(new_ast, String.to_atom(category))
+        rule_to_cond_branch(new_ast, category)
       end)
 
     {:cond, [], [[do: move_true_branch_to_end(branches)]]}

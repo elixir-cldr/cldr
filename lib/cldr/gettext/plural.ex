@@ -10,8 +10,6 @@ defmodule Cldr.Gettext.Plural do
         """
         @behaviour :"Elixir.Gettext.Plural"
 
-        @dialyzer [no_match: [gettext_return: 2]]
-
         alias Cldr.LanguageTag
         alias Cldr.Locale
         alias unquote(config.backend).Number.Cardinal
@@ -31,12 +29,16 @@ defmodule Cldr.Gettext.Plural do
             2
 
         """
-        @spec nplurals(Locale.locale_name()) :: pos_integer
+        @spec nplurals(Locale.locale_name() | Cldr.LanguageTag.t()) :: pos_integer
+        def nplurals(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name}) do
+          Cardinal.plural_rules_for(cldr_locale_name) |> Enum.count()
+        end
+
         def nplurals(locale_name) when is_binary(locale_name) do
-          with {:ok, _locale} <- unquote(config.backend).validate_locale(locale_name) do
-            Cardinal.plural_rules_for(locale_name) |> Enum.count()
+          with {:ok, locale} <- unquote(config.backend).validate_locale(locale_name) do
+            nplurals(locale)
           else
-            {:error, _reason} -> apply(Gettext.Plural, :nplurals, [locale_name])
+            {:error, _reason} -> raise :'Elixir.Gettext.Plural.UnknownLocaleError', locale_name
           end
         end
 
@@ -50,19 +52,19 @@ defmodule Cldr.Gettext.Plural do
         ## Examples
 
             iex> #{inspect(__MODULE__)}.plural("pl", 1)
-            1
+            0
 
             iex> #{inspect(__MODULE__)}.plural("pl", 2)
-            3
+            1
 
             iex> #{inspect(__MODULE__)}.plural("pl", 5)
-            4
+            2
 
             iex> #{inspect(__MODULE__)}.plural("pl", 112)
-            4
+            2
 
             iex> #{inspect(__MODULE__)}.plural("en", 1)
-            1
+            0
 
             iex> #{inspect(__MODULE__)}.plural("en", 2)
             1
@@ -71,31 +73,21 @@ defmodule Cldr.Gettext.Plural do
             1
 
         """
+        def plural(%LanguageTag{cldr_locale_name: cldr_locale_name} = locale, n) do
+          rule = Cardinal.plural_rule(n, cldr_locale_name)
 
-        def plural(%LanguageTag{cldr_locale_name: cldr_locale_name}, n) do
-          plural(cldr_locale_name, n)
+          Cardinal.gettext_nplurals()
+          |> Map.get(cldr_locale_name)
+          |> Keyword.get(rule)
         end
 
         def plural(locale_name, n) when is_binary(locale_name) do
           with {:ok, locale} <- unquote(config.backend).validate_locale(locale_name) do
-            rule = Cardinal.plural_rule(n, locale)
-            n = Cardinal.plural_rules_for(locale_name) |> Enum.count()
-            gettext_return(rule, n)
+            plural(locale, n)
           else
-            {:error, _reason} -> apply(Gettext.Plural, :plural, [locale_name, n])
+            {:error, _reason} -> raise :'Elixir.Gettext.Plural.UnknownLocaleError', locale_name
           end
         end
-
-        defp gettext_return(:zero, _n), do: 0
-        defp gettext_return(:one, _n), do: 1
-        defp gettext_return(:two, _n), do: 2
-        defp gettext_return(:few, _n), do: 3
-        defp gettext_return(:many, _n), do: 4
-
-        # Since :other is the catch-all it should
-        # return a number 1 greater than the number
-        # of rules defined in Cldr
-        defp gettext_return(:other, n), do: n - 1
       end
     end
   end

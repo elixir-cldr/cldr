@@ -1755,4 +1755,26 @@ defmodule Cldr.Config do
 
     Keyword.put(config, :locales, locales)
   end
+
+  def normalize_plural_rules(rules) do
+    Enum.map(rules, &normalize_rules_for_locale/1)
+  end
+
+  defp normalize_rules_for_locale({locale, rules}) do
+    sorted_rules =
+      Enum.map(rules, fn {"pluralRule-count-" <> category, rule} ->
+        {:ok, definition} = Cldr.Number.PluralRule.Compiler.parse(rule)
+        {String.to_atom(category), definition}
+      end)
+      |> Enum.sort(&plural_sorter/2)
+
+    {locale, sorted_rules}
+  end
+
+  defp plural_sorter({:zero, _}, _), do: true
+  defp plural_sorter({:one, _}, {other, _}) when other in [:two, :few, :many, :other], do: true
+  defp plural_sorter({:two, _}, {other, _}) when other in [:few, :many, :other], do: true
+  defp plural_sorter({:few, _}, {other, _}) when other in [:many, :other], do: true
+  defp plural_sorter({:many, _}, {other, _}) when other in [:other], do: true
+  defp plural_sorter(_, _), do: false
 end

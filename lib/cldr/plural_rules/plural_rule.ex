@@ -30,10 +30,19 @@ defmodule Cldr.Number.PluralRule do
              |> File.read!()
              |> Cldr.Config.json_library().decode!
              |> Map.get(Atom.to_string(unquote(module_name)))
+             |> Cldr.Config.normalize_plural_rules()
+             |> Map.new
 
       @rules_locales @rules
                      |> Map.keys()
                      |> Enum.sort()
+
+      @nplurals_range [0,1,2,3,4,5]
+      @gettext_nplurals @rules
+             |> Enum.map(fn {locale, rules} ->
+                 {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
+                end)
+             |> Map.new
 
       @config Keyword.get(unquote(opts), :config)
       @backend Map.get(@config, :backend)
@@ -75,6 +84,11 @@ defmodule Cldr.Number.PluralRule do
       @spec plural_rules :: map()
       def plural_rules do
         @rules
+      end
+
+      @spec gettext_nplurals :: map()
+      def gettext_nplurals do
+        @gettext_nplurals
       end
 
       if unquote(module_name) == :cardinal do
@@ -203,10 +217,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       def plural_rules_for(locale_name) do
-        Enum.map(plural_rules()[locale_name], fn {"pluralRule-count-" <> category, rule} ->
-          {:ok, definition} = parse(rule)
-          {String.to_atom(category), definition}
-        end)
+        plural_rules()[locale_name]
       end
 
       # Plural Operand Meanings as defined in CLDR plural rules and used

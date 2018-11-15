@@ -228,7 +228,7 @@ The `Cldr.List` module provides list formatting and is implemented in the [ex_cl
     iex> MyApp.Cldr.List.to_string(["a", "b", "c"], locale: "fr")
     "a, b et c"
 
-Seer `h MyApp.Cldr.List` and `h MyApp.Cldr.List.to_string` in `iex` for further information.
+See `h MyApp.Cldr.List` and `h MyApp.Cldr.List.to_string` in `iex` for further information.
 
 ## Localizing Units
 
