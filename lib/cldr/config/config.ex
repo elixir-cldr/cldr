@@ -349,6 +349,25 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return a map of plural ranges
+
+  """
+  @plural_range_file "plural_ranges.json"
+  def plural_ranges do
+    Path.join(cldr_data_dir(), @plural_range_file)
+    |> File.read!
+    |> json_library().decode!
+    |> Enum.map(fn
+         %{"locales" => locales, "ranges" => ranges} ->
+           %{locales: locales, ranges:
+              Enum.map(ranges, fn
+                range -> Cldr.Map.atomize_keys(range) |> Cldr.Map.atomize_values()
+              end)
+            }
+       end)
+  end
+
+  @doc """
   Returns a boolean indicating whether the language_tags.ebin
   file exists
 
