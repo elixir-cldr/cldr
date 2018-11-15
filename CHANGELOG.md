@@ -5,7 +5,8 @@ This is the changelog for Cldr v2.0.0-rc.2 released on ____, 2018.  For older ch
 ### Enhancements
 
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
-* Print deprecation message if global config is used for more than :json_library and :default_locale
+* Print deprecation message if the global config is used for more than :json_library and :default_locale
+* Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
 
 ### Bug Fixes
 

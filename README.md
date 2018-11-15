@@ -94,20 +94,15 @@ The preferred way to configure `Cldr` is to define the configuration in your bac
 
 ### Global configuration.
 
-In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Any configuration defined here will be overriden by configuration defined on the `use Cldr` call.  Here's an example configuration that uses all of the available configuration keys:
+In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library` and `default_locale` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
 
      config :ex_cldr,
        default_locale: "en",
-       locales: ["fr", "en", "bs", "si", "ak", "th"],
-       gettext: MyApp.Gettext,
-       data_dir: "./priv/cldr",
-       precompile_number_formats: ["¤¤#,##0.##"],
-       precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
        json_library: Jason
 
 Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
-Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration.
+Global configuration most closely approximates the configuration methods in `Cldr` version 1.x and therefore remains supported to ease migration only.
 
 **If configuration beyond `:json_library` or `:default_locale` is defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
