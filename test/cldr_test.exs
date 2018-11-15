@@ -239,8 +239,12 @@ defmodule Cldr.Test do
   end
 
   test "that configs merge correctly" do
-    assert WithOtpAppBackend.Cldr.__cldr__(:config).locales == ["fr", "en-001", "root"]
-    assert WithGettextBackend.Cldr.__cldr__(:config).locales == ["en", "en-001", "root"]
+    assert WithOtpAppBackend.Cldr.__cldr__(:config).locales ==
+      ["fr", "en-001", "root"]
+
+    assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
+      ["en", "en-GB", "es", "en-001", "root"]
+
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
 end
