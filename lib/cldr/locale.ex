@@ -347,22 +347,11 @@ defmodule Cldr.Locale do
 
   # This clause is only called at compile time when we're
   # building a backend.  In normal use is should not be used.
+  @doc false
   def known_gettext_locale_name(locale_name, config) when is_map(config) do
     gettext_locales = Cldr.Config.known_gettext_locale_names(config)
     Enum.find(gettext_locales, &Kernel.==(&1, locale_name)) || false
   end
-
-  # defp first_match(%{variants: variant} = langtag, fun) do
-  #   variant = case variant do
-  #     [variant] -> variant
-  #     [] -> nil
-  #     other -> other
-  #   end
-  #
-  #   list = Map.to_list(langtag)
-  #   s = struct(LanguageTag, list) |> Map.put(:language_variant, variant)
-  #   first_match(s, fun)
-  # end
 
   defp first_match(
          %LanguageTag{

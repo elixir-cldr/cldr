@@ -263,7 +263,7 @@ defmodule Cldr.Config do
 
   def default_locale do
     Application.get_env(app_name(), :default_locale) ||
-    all_language_tags()[@default_locale]
+    language_tag(@default_locale)
   end
 
   @doc """

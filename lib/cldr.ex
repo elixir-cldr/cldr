@@ -297,7 +297,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default `locale`.
+  Returns the default `locale` for a given backend.
 
   ## Arguments
 
@@ -330,8 +330,34 @@ defmodule Cldr do
     backend.default_locale
   end
 
+  @doc """
+  Returns the default `locale`.
+
+  ## Example
+
+      iex> Cldr.default_locale
+      %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        language_subtags: [],
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{},
+        language_variant: nil
+      }
+
+  """
+  @spec default_locale() :: LanguageTag.t()
+  @default_locale Cldr.Config.default_locale() |> Cldr.Config.language_tag()
   def default_locale do
-    Cldr.Config.default_locale()
+    @default_locale
   end
 
   @doc """
