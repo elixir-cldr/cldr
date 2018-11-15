@@ -1,9 +1,10 @@
-# Changelog for Cldr v2.0.0-rc.2
+# Changelog for Cldr v2.0.0-rc.3
 
-This is the changelog for Cldr v2.0.0-rc.2 released on November 16th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.0.0-rc.3 released on ______, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Enhancements
 
+* Transforms the regex's for currency spacing to be compatible with the elixir regex engine.  This will support improved conformance for currency formatting in cldr_numbers
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
 * Print deprecation message if the global config is used for more than :json_library and :default_locale
 * Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
