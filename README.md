@@ -357,6 +357,8 @@ From time-to-time ISO will update the repository of ISO3166 language codes.  Ens
 
     mix cldr.download.iso_currency
 
+The file `pluralRanges.xml` needs to be updated with each release.  This is manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation.
+
 After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
 
     mix cldr.consolidate
