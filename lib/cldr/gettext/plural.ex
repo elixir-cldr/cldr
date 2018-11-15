@@ -29,8 +29,8 @@ defmodule Cldr.Gettext.Plural do
             2
 
         """
-        @spec nplurals(Locale.locale_name() | Cldr.LanguageTag.t()) :: pos_integer
-        def nplurals(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name}) do
+        @spec nplurals(Locale.locale_name() | LanguageTag.t()) :: pos_integer() | no_return()
+        def nplurals(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
           Cardinal.gettext_nplurals()
           |> Map.get(cldr_locale_name)
           |> Enum.count
@@ -75,6 +75,8 @@ defmodule Cldr.Gettext.Plural do
             1
 
         """
+        @spec plural(Locale.locale_name() | LanguageTag.t(), number()) :: pos_integer() | no_return()
+
         def plural(%LanguageTag{cldr_locale_name: cldr_locale_name} = locale, n) do
           rule = Cardinal.plural_rule(n, cldr_locale_name)
 
