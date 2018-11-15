@@ -2,6 +2,7 @@ defmodule Cldr.Number.PluralRule do
   @moduledoc false
 
   @type operand :: any()
+  @type plural_type() :: :zero | :one | :two | :few | :many | :other
 
   defmacro __using__(opts) do
     module_name = Keyword.get(opts, :type)
@@ -310,7 +311,7 @@ defmodule Cldr.Number.PluralRule do
               Math.number_or_decimal(),
               Locale.locale_name() | LanguageTag.t(),
               atom() | pos_integer()
-            ) :: :zero | :one | :two | :few | :many | :other
+            ) :: Cldr.Number.PluralRule.plural_type()
 
       def plural_rule(number, locale, rounding \\ Math.default_rounding())
 
@@ -408,6 +409,56 @@ defmodule Cldr.Number.PluralRule do
         alias Cldr.LanguageTag
 
         unquote(Cldr.Number.PluralRule.define_plural_rules())
+      end
+    end
+  end
+
+  def define_plural_ranges(_config) do
+    quote location: :keep, unquote: false do
+      defmodule Number.PluralRule.Range do
+        @moduledoc """
+        Implements plural rules for ranges
+
+        """
+
+        alias Cldr.Number.PluralRule
+
+        @doc """
+        Returns a final plural type for a start-of-range plural
+        type, an end-of-range plural type and a locale.
+
+        ## Arguments
+
+        * `first` is a plural type for the start of a range
+
+        * `last` is a plural type for the end of a range
+
+        * `locale` is any `Cldr.LanguageTag.t` or a language name
+          (not locale name)
+
+        ## Example
+
+            iex> #{inspect __MODULE__}.plural_rule :other, :few, "ar"
+            :few
+
+        """
+        @spec plural_rule(first :: PluralRule.plural_type(), last :: PluralRule.plural_type(),
+                  locale :: Cldr.Locale.locale_name | Cldr.LanguageTag.t) :: PluralRule.plural_type()
+
+        def plural_rule(first, last, %Cldr.LanguageTag{language: language}) do
+          plural_rule(first, last, language)
+        end
+
+        for %{locales: locales, ranges: ranges} <- Cldr.Config.plural_ranges,
+            range <- ranges do
+          def plural_rule(unquote(range.start), unquote(range.end), locale) when locale in unquote(locales) do
+            unquote(range.result)
+          end
+        end
+
+        def plural_rule(_start, _end, _locale) do
+          :other
+        end
       end
     end
   end

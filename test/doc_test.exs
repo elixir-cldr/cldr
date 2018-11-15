@@ -16,4 +16,5 @@ defmodule Doc.Test do
   doctest TestBackend.Cldr.Number.Ordinal
   doctest TestBackend.Cldr.Number.Cardinal
   doctest TestBackend.Cldr.Gettext.Plural
+  doctest TestBackend.Cldr.Number.PluralRule.Range
 end
