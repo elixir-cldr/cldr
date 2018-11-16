@@ -134,6 +134,12 @@ defmodule Cldr.Number.PluralRule do
           iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
           nil
 
+          iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
+          "few"
+
+          iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
+          "other"
+
       """
       else
       @doc """
@@ -142,7 +148,7 @@ defmodule Cldr.Number.PluralRule do
 
       ## Arguments
 
-      * `number` is an integer, float or Decimal
+      * `number` is an integer, float or Decimal or a `Range.t{}`
 
       * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
@@ -176,11 +182,27 @@ defmodule Cldr.Number.PluralRule do
           iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
           "two"
 
+          iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
+          "other"
+
+          iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
+          "other"
+
       """
       end
 
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal(), LanguageTag.t() | Locale.locale_name(), %{}) :: any()
+      @spec pluralize(Math.number_or_decimal() | %Range{}, LanguageTag.t() | Locale.locale_name(), %{}) ::
+        any()
+
+      def pluralize(%Range{first: first, last: last}, locale_name, substitutions) do
+        with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
+          first_rule = plural_rule(first, language_tag)
+          last_rule = plural_rule(last, language_tag)
+          combined_rule = @backend.Number.PluralRule.Range.plural_rule(first_rule, last_rule, language_tag)
+          substitutions[combined_rule] || substitutions[@default_substitution]
+        end
+      end
 
       def pluralize(number, locale_name, substitutions) when is_binary(locale_name) do
         with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
