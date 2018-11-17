@@ -70,6 +70,7 @@ defmodule Cldr.Normalize.Number do
     currency_spacing
     |> Cldr.Map.deep_map(fn x -> x end, fn
          "[:^S:]" -> "[^\\p{S}]"
+         "[:digit:]" -> "[[:digit:]]"
          other -> other
        end)
     |> Map.new

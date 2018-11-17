@@ -148,7 +148,10 @@ defmodule Cldr.Number.PluralRule do
 
       ## Arguments
 
-      * `number` is an integer, float or Decimal or a `Range.t{}`
+      * `number` is an integer, float or Decimal or a `Range.t{}`.  When a range, The
+        is that in any usage, the start value is strictly less than the end value,
+        and that no values are negative. Results for any cases that do not meet
+        these criteria are undefined.
 
       * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
         `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
