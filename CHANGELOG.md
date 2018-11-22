@@ -15,7 +15,7 @@ See also [Breaking Changes](#breaking-changes) below.
 
 ### Purpose of the changes
 
-Version 2.0 of Cldr is focused on re-architecting the module structure to more closely follow the model set by Phoenix, Gettext and others that also rely on generating a public API at compile time. In Cldr version 1.x, the compile functions were all hosted within the `ex_cldr` package itself which has created several challenges:
+Version 2.0 of Cldr is focused on re-architecting the module structure to more closely follow the model set by Phoenix, Ecto, Gettext and others that also rely on generating a public API at compile time. In Cldr version 1.x, the compile functions were all hosted within the `ex_cldr` package itself which has created several challenges:
 
 * Only one configuration was possible per installation
 * Dependency compilation order couldn't be determined which meant that when Gettext was configured a second, forced, compilation phase was required whenever the configuration changed
