@@ -7,6 +7,7 @@ defmodule Cldr.Normalize.Number do
     |> normalize_symbols(locale)
   end
 
+  @doc false
   def normalize_formats(content, _locale) do
     numbers = get_in(content, ["numbers"])
     number_systems = number_system_names_from(numbers)
@@ -17,6 +18,7 @@ defmodule Cldr.Normalize.Number do
         currency_formats = numbers["currency_formats_number_system_#{number_system}"]
         scientific_formats = numbers["scientific_formats_number_system_#{number_system}"]
         percent_formats = numbers["percent_formats_number_system_#{number_system}"]
+        misc_formats = numbers["misc_patterns_number_system_#{number_system}"]
 
         decimal_long_format = get_in(decimal_formats, ["long", "decimal_format"])
         decimal_short_format = get_in(decimal_formats, ["short", "decimal_format"])
@@ -33,7 +35,8 @@ defmodule Cldr.Normalize.Number do
           accounting: currency_formats["accounting"],
           scientific: scientific_formats["standard"],
           percent: percent_formats["standard"],
-          currency_spacing: normalize_currency_spacing(currency_spacing)
+          currency_spacing: normalize_currency_spacing(currency_spacing),
+          other: normalize_misc_formats(misc_formats)
         }
 
         Map.put(formats, number_system, locale_formats)
@@ -49,6 +52,7 @@ defmodule Cldr.Normalize.Number do
     Map.put(content, "number_formats", Enum.into(number_formats, %{}))
   end
 
+  @doc false
   def normalize_symbols(content, _locale) do
     numbers = get_in(content, ["numbers"])
     number_systems = number_system_names_from(numbers)
@@ -62,6 +66,7 @@ defmodule Cldr.Normalize.Number do
     Map.put(content, "number_symbols", symbols)
   end
 
+  @doc false
   def normalize_currency_spacing(nil) do
     nil
   end
@@ -76,6 +81,7 @@ defmodule Cldr.Normalize.Number do
     |> Map.new
   end
 
+  @doc false
   def number_system_names_from(numbers) do
     default = numbers["default_numbering_system"]
     others = Map.values(numbers["other_numbering_systems"])
@@ -89,12 +95,24 @@ defmodule Cldr.Normalize.Number do
     nil
   end
 
+  @doc false
   def normalize_short_format(format) do
     format
     |> Enum.group_by(fn {range, _rules} -> List.first(String.split(range, "_")) end)
     |> Enum.map(fn {range, rules} -> {String.to_integer(range), rules} end)
     |> Enum.map(&flatten_short_formats/1)
     |> Enum.sort()
+  end
+
+  @doc false
+  def normalize_misc_formats(nil) do
+    nil
+  end
+
+  def normalize_misc_formats(format) do
+    format
+    |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
+    |> Map.new
   end
 
   @doc false

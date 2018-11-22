@@ -9,6 +9,7 @@ This is the changelog for Cldr v2.0.0-rc.3 released on November 17, 2018.  For o
 * Print deprecation message if the global config is used for more than :json_library and :default_locale
 * Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
 * Improve performance of `Cldr.Gettext.Plural` and align its result better with `Gettext`
+* `Cldr.Number.{Ordinal, Cardinal}.pluralize/3` now support ranges, not just numbers
 
 ### Bug Fixes
 
