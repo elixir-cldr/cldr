@@ -11,7 +11,7 @@ See also [Breaking Changes](#breaking-changes) below.
 * Print deprecation message if the global config is used for more than :json_library and :default_locale
 * Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
 * Improve performance of `Cldr.Gettext.Plural` and align its return better with `Gettext`
-* Add the 'miscellaneous' number formats to the locale definition files.  This allows formatting of "at least", "approximately", "at most" and "range". These formats are used in [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
+* Add the 'miscellaneous' number formats to the locale definition files.  This allows formatting of "at least", "approximately", "at most" and "range". These formats will be used in [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
 
 ### Purpose of the changes
 
