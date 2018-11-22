@@ -4,17 +4,16 @@ This is the changelog for Cldr v2.0.0 released on November 22, 2018.  For older 
 
 ### Enhancements
 
-See also [#breaking_changes] below.
+See also [Breaking Changes](#breaking-changes) below.
 
 * Transforms the regex's for currency spacing to be compatible with the elixir regex engine.  This supports improved conformance for currency formatting in [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
 * Print deprecation message if the global config is used for more than :json_library and :default_locale
 * Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
-* Improve performance of `Cldr.Gettext.Plural` and align its result better with `Gettext`
-* `Cldr.Number.{Ordinal, Cardinal}.pluralize/3` now support ranges, not just numbers
-* Add the 'miscellaneous' number formats to the locale definition files.  This allows formatting of "at least", "approximately", "at most" and "range". These formats are used in `[ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
+* Improve performance of `Cldr.Gettext.Plural` and align its return better with `Gettext`
+* Add the 'miscellaneous' number formats to the locale definition files.  This allows formatting of "at least", "approximately", "at most" and "range". These formats are used in [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
 
-### Purpose
+### Purpose of the changes
 
 Version 2.0 of Cldr is focused on re-architecting the module structure to more closely follow the model set by Phoenix, Gettext and others that also rely on generating a public API at compile time. In Cldr version 1.x, the compile functions were all hosted within the `ex_cldr` package itself which has created several challenges:
 
