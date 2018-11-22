@@ -1,21 +1,18 @@
-# Changelog for Cldr v2.0.0-rc.3
+# Changelog for Cldr v2.0.0
 
-This is the changelog for Cldr v2.0.0-rc.3 released on November 17, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.0.0 released on November 22, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Enhancements
 
-* Transforms the regex's for currency spacing to be compatible with the elixir regex engine.  This will support improved conformance for currency formatting in cldr_numbers
+See also [#breaking_changes] below.
+
+* Transforms the regex's for currency spacing to be compatible with the elixir regex engine.  This supports improved conformance for currency formatting in [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * Removes the need for Phoenix as a dependency in tests.  Thanks to @lostkobrakai.  Closes #84.
 * Print deprecation message if the global config is used for more than :json_library and :default_locale
 * Align `Cldr/get_locale/1/0` and `Cldr.put_locale/2/1` with Gettext.  See `Cldr.get_locale/1`, `Cldr.get_locale/0`, `Cldr.put_locale/2` and `Cldr.put_locale/1`
 * Improve performance of `Cldr.Gettext.Plural` and align its result better with `Gettext`
 * `Cldr.Number.{Ordinal, Cardinal}.pluralize/3` now support ranges, not just numbers
-
-### Bug Fixes
-
-* Ensures `:ex_cldr` is started before attempting to download locales
-* The subkey for an `:otp_app` is the backend name (ie `MyApp.Cldr`), not `:ex_cldr`.
-* Correct configuration merging from global, otp_app and backend module
+* Add the 'miscellaneous' number formats to the locale definition files.  This allows formatting of "at least", "approximately", "at most" and "range". These formats are used in `[ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
 
 ### Purpose
 
@@ -23,7 +20,7 @@ Version 2.0 of Cldr is focused on re-architecting the module structure to more c
 
 * Only one configuration was possible per installation
 * Dependency compilation order couldn't be determined which meant that when Gettext was configured a second, forced, compilation phase was required whenever the configuration changed
-* Code in the ex_cldr _build directory would be modified when the configuration changed which is not a good idea.
+* Code in the ex_cldr _build directory would be modified when the configuration changed
 
 ### New structure and configuration
 
@@ -45,7 +42,7 @@ Although the api structure is the same in both releases, the move to a backend m
 
 ```
 defmodule MyApp.SomeModule do
-# alias the backend module so that calls to Cldr functions still works
+# alias the backend module so that calls to Cldr functions still work
   alias MyApp.Cldr
 
   def some_function do

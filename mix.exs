@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.0.0-rc.3"
+  @version "2.0.0"
 
   def project do
     [
@@ -150,5 +150,6 @@ defmodule Cldr.Mixfile do
 
   defp elixirc_paths(:test), do: ["lib", "mix", "test"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "bench"]
+  defp elixirc_paths(:release), do: ["lib"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end
