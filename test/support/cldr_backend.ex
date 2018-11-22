@@ -4,12 +4,14 @@ defmodule TestBackend.Cldr do
     locales: :all,
     gettext: TestGettext.Gettext,
     precompile_transliterations: [{:latn, :arab}, {:arab, :thai}, {:arab, :latn}]
-
 end
 
 defmodule DefaultBackend.Cldr do
   use Cldr
+end
 
+defmodule AnotherBackend.Cldr do
+  use Cldr, locales: ["en", "fr"]
 end
 
 defmodule WithGettextBackend.Cldr do
@@ -19,5 +21,4 @@ end
 
 defmodule WithOtpAppBackend.Cldr do
   use Cldr, otp_app: :ex_cldr
-
 end

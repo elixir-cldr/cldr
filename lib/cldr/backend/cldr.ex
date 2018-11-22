@@ -41,7 +41,7 @@ defmodule Cldr.Backend do
           }
 
       """
-      @default_locale Cldr.Config.default_locale(config) |> Cldr.Config.language_tag()
+      @default_locale Cldr.Config.default_locale_name(config) |> Cldr.Config.language_tag()
       @spec default_locale :: Cldr.LanguageTag.t()
       def default_locale do
         @default_locale

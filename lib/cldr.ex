@@ -96,7 +96,7 @@ defmodule Cldr do
       "Generating #{inspect config.backend} for #{known_locale_count} " <>
         locale_string <>
         "#{inspect(Config.known_locale_names(config), limit: 5)} with " <>
-        "a default locale named #{inspect(Config.default_locale(config))}"
+        "a default locale named #{inspect(Config.default_locale_name(config))}"
     )
 
     if known_locale_count > @warn_if_greater_than do
@@ -355,7 +355,7 @@ defmodule Cldr do
 
   """
   @spec default_locale() :: LanguageTag.t()
-  @default_locale Cldr.Config.default_locale() |> Cldr.Config.language_tag()
+  @default_locale Cldr.Config.default_locale()
   def default_locale do
     @default_locale
   end

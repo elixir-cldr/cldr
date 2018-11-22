@@ -240,7 +240,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the default locale for a given backend
+  Return the default locale name for a given backend
   configuration.
 
   In order of priority return either:
@@ -253,17 +253,21 @@ defmodule Cldr.Config do
     #{inspect @default_locale}
 
   """
-  @spec default_locale(t()) :: Locale.locale_name()
-  def default_locale(%{} = config) do
+  @spec default_locale_name(t()) :: Locale.locale_name()
+  def default_locale_name(%{} = config) do
     Map.get(config, :default_locale) ||
     Application.get_env(app_name(), :default_locale) ||
     gettext_default_locale(config) ||
-    all_language_tags()[@default_locale]
+    @default_locale
   end
 
+  @doc """
+  Return the system-wide default locale name.
+
+  """
   def default_locale do
-    Application.get_env(app_name(), :default_locale) ||
-    language_tag(@default_locale)
+    default = Application.get_env(app_name(), :default_locale) || @default_locale
+    language_tag(default)
   end
 
   @doc """
@@ -295,9 +299,11 @@ defmodule Cldr.Config do
       gettext_backend = gettext(config)
 
       backend_default =
-        otp_app
-        |> Application.get_env(gettext_backend)
-        |> Keyword.get(:default_locale)
+        if backend_config = Application.get_env(otp_app, gettext_backend) do
+          Keyword.get(backend_config, :default_locale)
+        else
+          nil
+        end
 
       global_default =
         Application.get_env(:gettext, :default_locale)
@@ -412,7 +418,7 @@ defmodule Cldr.Config do
     locale_names =
       case app_locale_names = Map.get(config, :locales) do
         :all -> all_locale_names()
-        nil -> expand_locale_names([default_locale(config)])
+        nil -> expand_locale_names([default_locale_name(config)])
         _ -> expand_locale_names(app_locale_names)
       end
 
@@ -491,7 +497,11 @@ defmodule Cldr.Config do
   """
   @spec requested_locale_names(t()) :: [Locale.locale_name()]
   def requested_locale_names(config) do
-    (configured_locale_names(config) ++ known_gettext_locale_names(config) ++ [default_locale(config)])
+    locales = configured_locale_names(config) ++
+      known_gettext_locale_names(config) ++
+      [default_locale_name(config)]
+
+    locales
     |> Enum.uniq()
     |> Enum.sort()
   end
@@ -1695,12 +1705,12 @@ defmodule Cldr.Config do
       |> Keyword.merge(otp_config(module_config))
       |> Keyword.merge(module_config)
       |> Map.new
-      |> merge_locales_with_default
 
     config =
       config
-      |> Map.put(:default_locale, default_locale(config))
+      |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
+      |> merge_locales_with_default
 
     struct(__MODULE__, config)
   end
@@ -1769,10 +1779,11 @@ defmodule Cldr.Config do
         config[:locales]
       else
         gettext = Cldr.Config.known_gettext_locale_names(config)
-        default = config[:default_locale]
-        locales = config[:locales]
+        locales = config[:locales] || []
+        default = config[:default_locale] || nil
         (locales ++ gettext ++ [default, @root_locale])
-        |>  Enum.uniq
+        |> Enum.reject(&is_nil/1)
+        |> Enum.uniq
       end
 
     Map.put(config, :locales, locales)
