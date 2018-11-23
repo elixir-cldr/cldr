@@ -32,6 +32,10 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
              }
   end
 
+  test "that an exception is raised if no backend specified" do
+    assert_raise ArgumentError, fn -> Cldr.Plug.AcceptLanguage.init([]) end
+  end
+
   test "that the locale is not set if the accept-language header is an invalid locale name" do
     opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
 
