@@ -97,7 +97,7 @@ defmodule Cldr.Mixfile do
     %{
       "GitHub" => "https://github.com/kipcole9/cldr",
       "Readme" => "https://github.com/kipcole9/cldr/blob/v#{@version}/README.md",
-      "Changelog" => "https://github.com/kipcole9/cldr/blob/v#{@version}/CHANGELOG.md"
+      "Changelog" => "https://github.com/kipcole9/cldr/blob/v#{@version}/CHANGELOG.md",
       "Feature Requests" => "https://github.com/kipcole9/cldr/blob/master/FEATURE_REQUESTS.md"
     }
   end
@@ -110,7 +110,7 @@ defmodule Cldr.Mixfile do
       extras: [
         "README.md",
         "LICENSE.md",
-        "CHANGELOG.md"
+        "CHANGELOG.md",
         "FEATURE_REQUESTS.md"
       ],
       deps: [
