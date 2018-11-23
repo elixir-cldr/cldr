@@ -32,6 +32,24 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
              }
   end
 
+  test "that passing init arguments issues a warning" do
+    log =
+      capture_log(fn ->
+        Cldr.Plug.AcceptLanguage.init("thing")
+      end)
+
+    assert log =~ "Cldr.Plug.AcceptLanguage does not support configuration options"
+  end
+
+  test "that an endpoint plug call passes only a empty argument list" do
+    log =
+      capture_log(fn ->
+        Cldr.Plug.AcceptLanguage.init([])
+      end)
+
+    assert log == ""
+  end
+
   test "that the locale is not set if the accept-language header is an invalid locale name" do
     opts = Cldr.Plug.AcceptLanguage.init()
 

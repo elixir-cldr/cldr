@@ -1,3 +1,11 @@
+# Changelog for Cldr v1.8.2
+
+This is the changelog for Cldr v1.8.2 released on November 23rd, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* `Cldr.Plug.AcceptLanguage` does not log a warning on init if the params is an empty list `([])`.  Thanks to @maennchen.  Closes #92.
+
 # Changelog for Cldr v1.8.1
 
 This is the changelog for Cldr v1.8.1 released on November 11th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

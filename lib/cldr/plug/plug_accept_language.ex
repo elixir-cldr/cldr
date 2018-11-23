@@ -13,6 +13,10 @@ if Code.ensure_loaded?(Plug) do
 
     @language_header "accept-language"
 
+    def init([]) do
+      init()
+    end
+
     def init(any) do
       Logger.warn(
         "#{__MODULE__} does not support configuration options. " <>
