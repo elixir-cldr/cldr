@@ -65,45 +65,40 @@ defmodule Cldr.Substitution do
       ["a", " This is something ", "b"]
 
   """
-  @spec substitute([term, ...], [String.t() | integer, ...]) :: [String.t(), ...]
+  @spec substitute([term, ...], [String.t() | integer, ...]) :: [term, ...]
 
   # Takes care of a common case where there is one parameter
   def substitute([item], [0, string]) when is_binary(string) do
-    [Kernel.to_string(item), string]
+    [item, string]
   end
 
   def substitute(item, [0, string]) when is_binary(string) do
-    [Kernel.to_string(item), string]
+    [item, string]
   end
 
   def substitute(item, [string, 0]) when is_binary(string) do
-    [string, Kernel.to_string(item)]
+    [string, item]
   end
 
   def substitute(item, [string1, 0, string2]) when is_binary(string1) and is_binary(string2) do
-    [string1, Kernel.to_string(item), string2]
+    [string1, item, string2]
   end
 
   # Takes care of the common case where there are two parameters separated
   # by a string.
   def substitute([item_0, item_1], [0, string, 1]) when is_binary(string) do
-    [Kernel.to_string(item_0), string, Kernel.to_string(item_1)]
+    [item_0, string, item_1]
   end
 
   def substitute([item_0, item_1], [1, string, 0]) when is_binary(string) do
-    [Kernel.to_string(item_1), string, Kernel.to_string(item_0)]
+    [item_1, string, item_0]
   end
 
   # Takes care of the common case where there are three parameters separated
   # by strings.
-  def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2]) do
-    [
-      Kernel.to_string(item_0),
-      string_1,
-      Kernel.to_string(item_1),
-      string_2,
-      Kernel.to_string(item_2)
-    ]
+  def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2])
+        when is_binary(string_1) and is_binary(string_2) do
+    [item_0, string_1, item_1, string_2, item_2]
   end
 
   @digits [?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9]
