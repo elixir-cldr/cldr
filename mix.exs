@@ -44,7 +44,7 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:jason, "~> 1.0", optional: true},
-      {:decimal, "~> 1.4"},
+      {:decimal, "~> 1.5"},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
       {:nimble_parsec, "~> 0.4"},
       {:gettext, "~> 0.13", optional: true},
