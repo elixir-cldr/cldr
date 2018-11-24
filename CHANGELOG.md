@@ -1,8 +1,16 @@
+# Changelog for Cldr v2.0.3
+
+This is the changelog for Cldr v2.0.3 released on November 25th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug fixes
+
+* Check for a `json` library existence as early as possible in the compile cycle since it is required during compilation of `Cldr`.
+
 # Changelog for Cldr v2.0.2
 
 This is the changelog for Cldr v2.0.2 released on November 24th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
-### Changes
+### Enhancements
 
 * Move minimal Decimal version to 1.5
 
