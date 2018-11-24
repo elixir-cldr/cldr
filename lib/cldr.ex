@@ -41,10 +41,11 @@ defmodule Cldr do
   require Config
   require Cldr.Backend.Compiler
 
+  Cldr.Config.check_jason_lib_is_available!()
+
   @doc false
   defmacro __using__(opts \\ []) do
     quote bind_quoted: [opts: opts] do
-      Cldr.Config.check_jason_lib_is_available!()
       @cldr_opts opts
       @before_compile Cldr.Backend.Compiler
     end
