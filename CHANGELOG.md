@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.0.4
+
+This is the changelog for Cldr v2.0.4 released on November 26th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug fixes
+
+* Dependency plugin check was using `Mix.Project.in_project/3` which actuall does changes directory which during compilation is a bad thing (since compilation is in parallel and within a single Unix process).  The plugin dependency list is now static.  Thanks to @robotvert. Closes #93.
+
 # Changelog for Cldr v2.0.3
 
 This is the changelog for Cldr v2.0.3 released on November 25th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
