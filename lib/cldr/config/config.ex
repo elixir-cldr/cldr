@@ -1720,7 +1720,9 @@ defmodule Cldr.Config do
   @doc false
   def define_plugin_modules(config) do
     for {module, function, _args} <-  Cldr.Config.Dependents.cldr_provider_modules do
-      apply(module, function, [config])
+      if Code.ensure_loaded?(module) do
+        apply(module, function, [config])
+      end
     end
   end
 
