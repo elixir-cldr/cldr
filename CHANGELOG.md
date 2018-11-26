@@ -1,3 +1,15 @@
+# Changelog for Cldr v2.0.5
+
+This is the changelog for Cldr v2.0.5 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Don't issue a bogus global config deprecation warning.
+
+### Enhancements
+
+* Adds plugin support for `Cldr.Language`.  Thanks to @schultzer.
+
 # Changelog for Cldr v2.0.4
 
 This is the changelog for Cldr v2.0.4 released on November 26th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

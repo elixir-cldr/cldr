@@ -1762,7 +1762,7 @@ defmodule Cldr.Config do
   def maybe_deprecate_global_config! do
     remaining_config =
       global_config()
-      |> Enum.reject(&(&1 in @non_deprecated_keys))
+      |> Enum.reject(&(elem(&1, 0) in @non_deprecated_keys))
       |> Enum.map(&(elem(&1, 0)))
 
     if length(remaining_config) > 0 do
