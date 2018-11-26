@@ -11,7 +11,8 @@ defmodule Cldr.Config.Dependents do
     {Cldr.DateTime.Backend, :define_date_time_modules, []},
     {Cldr.List.Backend, :define_list_module, []},
     {Cldr.Unit.Backend, :define_unit_module, []},
-    {Cldr.Territory.Backend, :define_territory_module, []}
+    {Cldr.Territory.Backend, :define_territory_module, []},
+    {Cldr.Language.Backend, :define_language_module, []}
   ]
 
   def cldr_provider_modules do
