@@ -193,8 +193,8 @@ The currently known providers and their `hex` package names are:
   | ex_cldr_numbers      | Cldr.Number       | Formatting of numbers, currencies           |
   | ex_cldr_lists        | Cldr.List         | Formatting of lists                         |
   | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units         |
-  | ex_cldr_territory    | Cldr.Territory    | Formatting of territory (country) data      |
-  | ex_cldr_language     | Cldr.Language     | Formatting of language information          |
+  | ex_cldr_territories  | Cldr.Territory    | Formatting of territory (country) data      |
+  | ex_cldr_languages    | Cldr.Language     | Formatting of language information          |
 
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 
