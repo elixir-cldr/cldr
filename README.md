@@ -202,7 +202,7 @@ Providers are configured on each backend module under the `:providers` key. It m
 ```
 defmodule MyApp.Cldr do
   use Cldr,
-    locale: ["en", "zh"],
+    locales: ["en", "zh"],
     default_locale: "en",
     providers: [Cldr.Number, Cldr.List]
 end
