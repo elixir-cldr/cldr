@@ -10,7 +10,7 @@ defmodule Cldr.Config do
     backend: nil,
     gettext: nil,
     data_dir: "cldr",
-
+    providers: [],
     precompile_number_formats: [],
     precompile_transliterations: [],
     otp_app: nil
@@ -23,7 +23,8 @@ defmodule Cldr.Config do
     data_dir: binary(),
     precompile_number_formats: [binary(), ...],
     precompile_transliterations: [{atom(), atom()}, ...],
-    otp_app: atom() | nil
+    otp_app: atom() | nil,
+    providers: [atom(), ...]
   }
 
   @default_locale "en-001"
@@ -1718,10 +1719,10 @@ defmodule Cldr.Config do
 
   # Returns the AST of any configured plugins
   @doc false
-  def define_plugin_modules(config) do
-    for {module, function, _args} <-  Cldr.Config.Dependents.cldr_provider_modules do
-      if Code.ensure_loaded?(module) do
-        apply(module, function, [config])
+  def define_provider_modules(config) do
+    for {module, function, args} <-  Cldr.Config.Dependents.cldr_provider_modules(config) do
+      if Code.ensure_loaded?(module) && function_exported?(module, function, 1) do
+        apply(module, function, args)
       end
     end
   end

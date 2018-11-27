@@ -120,6 +120,7 @@ The preferred configuration method is to define the configuration in the backend
          otp_app: :my_app
          precompile_number_formats: ["¤¤#,##0.##"],
          precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+         providers: [Cldr.Number]
       end
 
 ### Otp App Configuration
@@ -177,7 +178,36 @@ use Cldr,
 
  * `precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
 
+ * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
+
  * `json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used. This key can only be specified in the global configuration in `mix.exs`.  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
+
+### Providers
+
+The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not all capabilities are required by all applications.  Hence `Cldr` has additional optional functionality that can be provided through additional `hex` packages. In order to support compile-time additions to a configured `backend`, any package can define a provider that will be called at compile time.
+
+The currently known providers and their `hex` package names are:
+
+  | Hex Package          | Provider Module   | Comment                                     |
+  | :------------------- | :---------------- | :------------------------------------------ |
+  | ex_cldr_numbers      | Cldr.Number       | Formatting of numbers, currencies           |
+  | ex_cldr_lists        | Cldr.List         | Formatting of lists                         |
+  | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units         |
+  | ex_cldr_territory    | Cldr.Territory    | Formatting of territory (country) data      |
+  | ex_cldr_language     | Cldr.Language     | Formatting of language information          |
+
+Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
+
+Providers are configured on each backend module under the `:providers` key. It must be a list of provider modules.  For example:
+```
+defmodule MyApp.Cldr do
+  use Cldr,
+    locale: ["en", "zh"],
+    default_locale: "en",
+    providers: [Cldr.Number, Cldr.List]
+end
+```
+**If no providers are configured, `Cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.**
 
 ## Downloading Configured Locales
 

@@ -1,6 +1,6 @@
-# Changelog for Cldr v2.0.5
+# Changelog for Cldr v2.1.0
 
-This is the changelog for Cldr v2.0.5 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.1.0 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 
@@ -8,7 +8,16 @@ This is the changelog for Cldr v2.0.5 released on ____, 2018.  For older changel
 
 ### Enhancements
 
-* Adds plugin support for `Cldr.Language`.  Thanks to @schultzer.
+* Revises the Cldr provider strategy - again. Rather than try to auto-discover available provider modules and configuring them automatically they are now configured under the `:provider` key.  The [readme](/readme#providers) contains further information on configuring providers. For example
+
+```
+defmodule MyApp.Cldr do
+  use Cldr,
+    locales: ["en", "zh"],
+    default_locale: "en",
+    providers: [Cldr.Number, Cldr.List]
+end
+```
 
 # Changelog for Cldr v2.0.4
 

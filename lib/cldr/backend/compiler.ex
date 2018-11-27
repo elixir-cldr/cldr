@@ -38,7 +38,7 @@ defmodule Cldr.Backend.Compiler do
       unquote(Cldr.Locale.define_locale_new(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
       unquote(Cldr.Number.PluralRule.define_plural_ranges(config))
-      unquote(Cldr.Config.define_plugin_modules(config))
+      unquote(Cldr.Config.define_provider_modules(config))
 
       if Code.ensure_loaded?(Gettext) do
         unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
