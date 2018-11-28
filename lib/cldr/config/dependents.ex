@@ -22,7 +22,7 @@ defmodule Cldr.Config.Dependents do
     "key in backend module #{inspect backend}\n" <>
     "Attempting to configure known Cldr providers." <> IO.ANSI.reset()
 
-    cldr_provider_modules(%{providers: known_provider_modules() |> Map.keys()}
+    cldr_provider_modules(%{config | providers: known_provider_modules() |> Map.keys()}
   end
 
   def cldr_provider_modules(%Cldr.Config{providers: providers} = config) when is_list(providers) do
