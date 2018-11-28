@@ -1,7 +1,7 @@
 defmodule Cldr.Config.Dependents do
   @moduledoc false
 
-  defp known_provider_modules do
+  defp known_providers do
     %{
       Cldr.Number    => {Cldr.Number.Backend, :define_number_modules},
       Cldr.Currency  => {Cldr.Currency.Backend, :define_currency_module},
@@ -13,6 +13,11 @@ defmodule Cldr.Config.Dependents do
     }
   end
 
+  defp known_provider_modules do
+    known_providers()
+    |> Map.keys
+  end
+
   @provider_fun_name :cldr_backend_provider
 
   # For compatibility with the releases that don't configure
@@ -22,12 +27,12 @@ defmodule Cldr.Config.Dependents do
     "key in backend module #{inspect backend}\n" <>
     "Attempting to configure known Cldr providers." <> IO.ANSI.reset()
 
-    cldr_provider_modules(%{config | providers: known_provider_modules() |> Map.keys()})
+    cldr_provider_modules(%{config | providers: known_provider_modules()})
   end
 
   def cldr_provider_modules(%Cldr.Config{providers: providers} = config) when is_list(providers) do
     for provider_module <- providers do
-      if mf = Map.get(known_provider_modules(), provider_module) do
+      if mf = Map.get(known_providers(), provider_module) do
         {m, f} = mf
         {m, f, [config]}
       else
