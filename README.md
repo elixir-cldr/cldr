@@ -207,7 +207,7 @@ defmodule MyApp.Cldr do
     providers: [Cldr.Number, Cldr.List]
 end
 ```
-**If no providers are configured, `Cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.**
+**If :providers is `nil` (the default), `Cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.  If you don't wish to invoke any providers, use the empty list `[]`.**
 
 ## Downloading Configured Locales
 
