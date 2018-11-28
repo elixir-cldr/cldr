@@ -10,7 +10,7 @@ defmodule Cldr.Config do
     backend: nil,
     gettext: nil,
     data_dir: "cldr",
-    providers: [],
+    providers: nil,
     precompile_number_formats: [],
     precompile_transliterations: [],
     otp_app: nil
