@@ -1,6 +1,6 @@
 # Changelog for Cldr v2.1.0
 
-This is the changelog for Cldr v2.1.0 released on ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.1.0 released on December 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 
@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.1.0 released on ____, 2018.  For older changel
 
 ### Enhancements
 
-* Revises the Cldr provider strategy - again. Rather than try to auto-discover available provider modules and configuring them automatically they are now configured under the `:provider` key.  The [readme](/readme#providers) contains further information on configuring providers. For example
+* Revises the Cldr provider strategy - again. Rather than try to auto-discover available provider modules and configuring them automatically they are now configured under the `:provider` key.  The [readme](/readme#providers) contains further information on configuring providers. For example:
 
 ```
 defmodule MyApp.Cldr do
@@ -18,6 +18,8 @@ defmodule MyApp.Cldr do
     providers: [Cldr.Number, Cldr.List]
 end
 ```
+
+The default behaviour is the same as `Cldr 2.0` in that all known cldr providers are configured.
 
 # Changelog for Cldr v2.0.4
 
