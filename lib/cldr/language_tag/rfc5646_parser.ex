@@ -30,7 +30,7 @@ defmodule Cldr.Rfc5646.Parser do
               private_use(),
               grandfathered()
             ])
-            |> lookahead(:error_on_remaining)
+            |> eos()
             |> label("a BCP47 language tag")
 
   def error_on_remaining("", context, _line, _offset) do

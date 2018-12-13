@@ -133,7 +133,7 @@ defmodule Cldr.AcceptLanguage do
       iex> Cldr.AcceptLanguage.parse("invalid_tag", TestBackend.Cldr)
       {:error,
        {Cldr.LanguageTag.ParseError,
-        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
+        "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
       iex> Cldr.AcceptLanguage.parse("da,zh-TW;q=0.3,invalid_tag", TestBackend.Cldr)
       {:ok,
@@ -174,7 +174,7 @@ defmodule Cldr.AcceptLanguage do
           }},
          {:error,
           {Cldr.LanguageTag.ParseError,
-           "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
+           "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
        ]}
 
   """
@@ -266,7 +266,7 @@ defmodule Cldr.AcceptLanguage do
       ]
 
       Cldr.AcceptLanguage.parse! "invalid_tag"
-      ** (Cldr.AcceptLanguageError) Invalid language tag. Could not parse the remaining "g" starting at position 11
+      ** (Cldr.AcceptLanguageError) "Expected a BCP47 language tag. Could not parse the remaining "g" starting at position 11
           (ex_cldr) lib/cldr/accept_language.ex:304: Cldr.AcceptLanguage.parse!/1
 
       iex> Cldr.AcceptLanguage.parse!("da,zh-TW;q=0.3,invalid_tag", TestBackend.Cldr)
@@ -307,7 +307,7 @@ defmodule Cldr.AcceptLanguage do
          }},
         {:error,
          {Cldr.LanguageTag.ParseError,
-          "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
+          "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
       ]
 
   """
@@ -376,9 +376,8 @@ defmodule Cldr.AcceptLanguage do
         "No configured locale could be matched to \\"xx,yy;q=0.3\\""}}
 
       iex> Cldr.AcceptLanguage.best_match("invalid_tag", TestBackend.Cldr)
-      {:error,
-       {Cldr.LanguageTag.ParseError,
-        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
+      {:error, {Cldr.LanguageTag.ParseError,
+        "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
   """
   @spec best_match(String.t(), Cldr.backend()) ::
@@ -424,7 +423,7 @@ defmodule Cldr.AcceptLanguage do
       ...> |> Cldr.AcceptLanguage.errors
       [
         error: {Cldr.LanguageTag.ParseError,
-        "Invalid language tag. Could not parse the remaining \\"g\\" starting at position 11"}
+        "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}
       ]
 
   """

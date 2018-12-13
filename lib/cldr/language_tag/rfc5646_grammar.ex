@@ -18,7 +18,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> repeat(ignore(dash()) |> concat(variant()))
     |> repeat(ignore(dash()) |> concat(extensions()) |> reduce(:collapse_extensions))
     |> optional(ignore(dash()) |> concat(private_use()))
-    |> traverse({:flatten, []})
+    |> post_traverse({:flatten, []})
     |> label("a valid BCP-47 language tag")
   end
 

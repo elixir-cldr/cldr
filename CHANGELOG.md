@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.2.0
+
+This is the changelog for Cldr v2.2.0 released on December ____, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Bump `nimble_parsec` to version 0.5 which has some breaking changes from 0.4 that affects the language tag parser.
+
 # Changelog for Cldr v2.1.0
 
 This is the changelog for Cldr v2.1.0 released on December 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
