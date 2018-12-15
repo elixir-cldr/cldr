@@ -1767,12 +1767,11 @@ defmodule Cldr.Config do
       |> Enum.map(&(elem(&1, 0)))
 
     if length(remaining_config) > 0 do
-      IO.puts IO.ANSI.yellow() <>
-      "Using the global configuration is deprecated.  Global configuration " <>
+      IO.warn("Using the global configuration is deprecated.  Global configuration " <>
       "only supports the #{inspect @non_deprecated_keys} keys. The keys " <>
       "#{inspect remaining_config} should be configured in a backend module or " <>
       "via the :otp_app configuration of a backend module.  See the readme for " <>
-      "further information." <> IO.ANSI.reset
+      "further information.")
     end
   end
 

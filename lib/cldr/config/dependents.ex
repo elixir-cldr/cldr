@@ -23,9 +23,9 @@ defmodule Cldr.Config.Dependents do
   # For compatibility with the releases that don't configure
   # Reconsider this.
   def cldr_provider_modules(%Cldr.Config{providers: nil, backend: backend} = config) do
-    IO.puts IO.ANSI.yellow() <> "No Cldr provider modules were configured under the :providers " <>
-    "key in backend module #{inspect backend}\n" <>
-    "Attempting to configure known Cldr providers." <> IO.ANSI.reset()
+    IO.warn("No Cldr provider modules were configured under the :providers " <>
+    "key in backend module #{inspect backend}. " <>
+    "Attempting to configure known Cldr providers.")
 
     cldr_provider_modules(%{config | providers: known_provider_modules()})
   end
