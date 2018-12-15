@@ -6,6 +6,8 @@ This is the changelog for Cldr v2.2.0 released on December ____, 2018.  For olde
 
 * Bump `nimble_parsec` to version 0.5 which has some breaking changes from 0.4 that affects the language tag parser.
 
+* Use `IO.warn/1` for compiler warnings related to global configuration and Cldr providers configuration for a backend.
+
 # Changelog for Cldr v2.1.0
 
 This is the changelog for Cldr v2.1.0 released on December 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
