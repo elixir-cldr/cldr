@@ -37,7 +37,7 @@ This is the changelog for Cldr v2.0.4 released on November 26th, 2018.  For olde
 
 ### Bug fixes
 
-* Dependency plugin check was using `Mix.Project.in_project/3` which actuall does changes directory which during compilation is a bad thing (since compilation is in parallel and within a single Unix process).  The plugin dependency list is now static.  Thanks to @robotvert. Closes #93.
+* Dependency plugin check was using `Mix.Project.in_project/3` which actually changes directory which during compilation is a bad thing (since compilation is in parallel and within a single Unix process).  The plugin dependency list is now static.  Thanks to @robotvert. Closes #93.
 
 # Changelog for Cldr v2.0.3
 
