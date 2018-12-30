@@ -387,7 +387,7 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
@@ -704,7 +704,7 @@ defmodule Cldr do
   The return value depends on whether the locale is
   defined in the CLDR repository.  It does not necessarily
   mean the locale is configured for Cldr.  See also
-  `Cldr.known_locale?/1`.
+  `Cldr.known_locale_name?/2`.
 
   ## Arguments
 
@@ -734,7 +734,7 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
@@ -1286,7 +1286,7 @@ defmodule Cldr do
   ## Options
 
   * `number_system_type` is any number system type name **not** returned
-    by `Cldr.known_number_system_types/0`
+    by `Cldr.known_number_system_types/1`
 
   ## Returns
 

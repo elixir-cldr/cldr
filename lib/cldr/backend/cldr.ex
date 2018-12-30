@@ -433,7 +433,7 @@ defmodule Cldr.Backend do
       ## Arguments
 
       * `number_system_type` is any number system type returned by
-        `Cldr.known_number_system_types/0`
+        `Cldr.known_number_system_types/1`
 
       ## Returns
 

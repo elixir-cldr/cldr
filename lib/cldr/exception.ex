@@ -1,7 +1,7 @@
 defmodule Cldr.UnknownLocaleError do
   @moduledoc """
   Exception raised when an attempt is made to use a locale not configured
-  in `Cldr`.  `Cldr.known_locales/0` returns the locale names known to `Cldr`.
+  in `Cldr`.  `Cldr.known_locale_names/1` returns the locale names known to `Cldr`.
   """
   defexception [:message]
 
@@ -48,7 +48,7 @@ end
 defmodule Cldr.UnknownFormatError do
   @moduledoc """
   Exception raised when an attempt is made to use a locale that is not configured
-  in `Cldr`.  `Cldr.known_locales/0` returns the locale names known to `Cldr`.
+  in `Cldr`.  `Cldr.known_locale_names/1` returns the locale names known to `Cldr`.
   """
   defexception [:message]
 

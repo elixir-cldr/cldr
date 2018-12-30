@@ -719,7 +719,7 @@ defmodule Cldr.Config do
 
   * `system_name` is any number system name returned by
     `Cldr.known_number_systems/0` or a number system type
-    returned by `Cldr.known_number_system_types/0`
+    returned by `Cldr.known_number_system_types/1`
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
@@ -966,7 +966,7 @@ defmodule Cldr.Config do
   Returns the location of the json data for a locale or `nil`
   if the locale can't be found.
 
-  * `locale` is any locale returned from `Cldr.known_locale_names/2`
+  * `locale` is any locale returned from `Cldr.known_locale_names/1`
 
   """
   @spec locale_path(String.t(), Cldr.backend() | t()) ::

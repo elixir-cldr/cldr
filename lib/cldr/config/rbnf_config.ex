@@ -58,7 +58,7 @@ defmodule Cldr.Rbnf.Config do
 
   @doc """
   Returns the list of locales that is the intersection of
-  `Cldr.known_locales/0` and `Cldr.Rbnf.rbnf_locales/0`
+  `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locales/0`
 
   This list is therefore the set of known locales for which
   there are rbnf rules defined.

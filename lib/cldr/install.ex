@@ -38,7 +38,7 @@ defmodule Cldr.Install do
   Download the requested locale from github into the
   client application's cldr data directory.
 
-  * `locale` is any locale returned by `Cldr.known_locales/0`
+  * `locale` is any locale returned by `Cldr.known_locale_names/1`
 
   * `options` is a keyword list.  Currently the only supported
   option is `:force` which defaults to `false`.  If `truthy` the
@@ -170,7 +170,7 @@ defmodule Cldr.Install do
   @doc """
   Returns the full pathname of the locale's json file.
 
-  * `locale` is any locale returned by `Cldr.known_locales/0`
+  * `locale` is any locale returned by `Cldr.known_locale_names/1`
 
   No checking of locale validity is performed.
   """
