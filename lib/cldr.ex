@@ -703,7 +703,7 @@ defmodule Cldr do
 
   The return value depends on whether the locale is
   defined in the CLDR repository.  It does not necessarily
-  mean the locale is configured for Cldr.  See also
+  mean the locale is configured for `Cldr`.  See also
   `Cldr.known_locale_name?/2`.
 
   ## Arguments
@@ -733,7 +733,7 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
@@ -748,6 +748,9 @@ defmodule Cldr do
   ## Examples
 
   """
+  @spec validate_gettext_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
+          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+
   def validate_gettext_locale(locale_name, backend) when is_binary(locale_name) do
     case Cldr.Locale.new(locale_name, backend) do
       {:ok, locale} -> validate_gettext_locale(locale, backend)
