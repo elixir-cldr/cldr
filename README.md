@@ -377,7 +377,7 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
 If this repo has just been cloned then first of all you will need to initialize and retrieve the submodules:
 
-    git submodule update --init data/*
+    git submodule update --init data/cldr-*
 
 When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CDLR data, `git pull` each of the submodules.  For example:
 
