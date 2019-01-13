@@ -28,9 +28,9 @@ potentially dependent, applications.
 The functions you are mostly likely to use are:
 
 * `MyApp.Cldr.default_locale/0`
-* `MyApp.Cldr.put_current_locale/1`
-* `MyApp.Cldr.get_current_locale/0`
-* `MyApp.Cldr.known_locale_names/0`
+* `MyApp.Cldr.put_locale/1`
+* `MyApp.Cldr.get_locale/0`
+* `MyApp.Cldr.known_locale_names/1`
 * `MyApp.Cldr.Locale.new/1`
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
@@ -363,7 +363,7 @@ Locale string are case insensitive but there are common conventions:
 * Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portugese as used in Portugal.
 * In `Cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `Cldr.LanguageTag` struct.
-* The locales known to `Cldr` can be retrieved by `Cldr.known_locale_names/0` to get the locales known to this configuration of `Cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
+* The locales known to `Cldr` can be retrieved by `Cldr.known_locale_names/1` to get the locales known to this configuration of `Cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
 
 ## Testing
 

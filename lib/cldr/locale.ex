@@ -185,7 +185,7 @@ defmodule Cldr.Locale do
   ## Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
-    or any `locale_name` returned by `Cldr.known_locale_names/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
@@ -401,7 +401,7 @@ defmodule Cldr.Locale do
   langauge tag specification.
 
   For proper parsing of local names and language tags, see
-  `Cldr.Locale.canonical_language_tag/1`
+  `Cldr.Locale.canonical_language_tag/2`
 
   ## Examples
 

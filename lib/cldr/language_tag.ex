@@ -190,7 +190,7 @@ defmodule Cldr.LanguageTag do
   @doc """
   Parse a locale name into a `Cldr.LangaugeTag` struct.
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   Returns:
 
@@ -206,7 +206,7 @@ defmodule Cldr.LanguageTag do
   @doc """
   Parse a locale name into a `Cldr.LangaugeTag` struct and raises on error
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/0`
+  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   Returns:
 
