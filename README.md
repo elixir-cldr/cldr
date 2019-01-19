@@ -209,6 +209,13 @@ end
 ```
 **If :providers is `nil` (the default), `Cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.  If you don't wish to invoke any providers, use the empty list `[]`.**
 
+## Migrating from Cldr 1.x
+
+1. Create a `backend` module by following the [configuration](#configuration) instructions
+2. Delete any duplicated [global configuration](#global-configuration) in any `config.exs` files. Only the keys `:default_locale` and `:json_library` are supported in the global configuration
+3. Update any [plugs](#plugs) to configure the desired backend
+4. Adjust any API calls from `Cldr.some_function` to `MyApp.Cldr.some_function`.  Or better still, alias your backend module where required.  ie. `alias MyApp.Cldr, as: Cldr`
+
 ## Downloading Configured Locales
 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
@@ -343,7 +350,17 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
   * `accept-language` header
   * the `session`
 
-* See `Cldr.Plug.SetLocale` for a description of how to configure the plug.
+See `Cldr.Plug.SetLocale` for a description of how to configure the plug.
+
+In addition, note that when migrating from `ex_cldr` 1.x versions, a backend needs to be configured for both plugs. In the simplest case an example would be:
+```
+plug Cldr.Plug.SetLocale,
+  apps:    [:cldr],
+  cldr:    MyApp.Cldr
+
+plug Cldr.Plug.AcceptLanguage,
+  cldr_backend: MyApp.Cldr
+```
 
 ## About Language Tags and Locale strings
 
