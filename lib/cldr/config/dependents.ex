@@ -8,8 +8,7 @@ defmodule Cldr.Config.Dependents do
       Cldr.DateTime  => {Cldr.DateTime.Backend, :define_date_time_modules},
       Cldr.List      => {Cldr.List.Backend, :define_list_module},
       Cldr.Unit      => {Cldr.Unit.Backend, :define_unit_module},
-      Cldr.Territory => {Cldr.Territory.Backend, :define_territory_module},
-      Cldr.Language  => {Cldr.Language.Backend, :define_language_module}
+      Cldr.Territory => {Cldr.Territory.Backend, :define_territory_module}
     }
   end
 
