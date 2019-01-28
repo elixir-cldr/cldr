@@ -28,7 +28,7 @@ defmodule Cldr.Backend do
             cldr_locale_name: "en-001",
             language_subtags: [],
             extensions: %{},
-            gettext_locale_name: nil,
+            gettext_locale_name: "en",
             language: "en",
             locale: %{},
             private_use: [],
@@ -45,6 +45,7 @@ defmodule Cldr.Backend do
       @spec default_locale :: Cldr.LanguageTag.t()
       def default_locale do
         @default_locale
+        |> Cldr.Locale.put_gettext_locale_name(__MODULE__)
       end
 
       @doc """
@@ -370,7 +371,7 @@ defmodule Cldr.Backend do
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
             extensions: %{},
-            gettext_locale_name: nil,
+            gettext_locale_name: "en",
             language: "en",
             locale: %{},
             private_use: [],

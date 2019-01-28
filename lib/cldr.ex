@@ -313,7 +313,7 @@ defmodule Cldr do
         cldr_locale_name: "en-001",
         language_subtags: [],
         extensions: %{},
-        gettext_locale_name: nil,
+        gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],

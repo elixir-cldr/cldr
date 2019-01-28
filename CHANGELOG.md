@@ -2,6 +2,10 @@
 
 This is the changelog for Cldr v2.2.1 released on _____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
+### Bug Fixes
+
+* Correctly add the `gettext` locale to the language tag returned by `<backend>.default_locale` and `Cldr.default_locale/2`.  Thanks to @erikreedstrom.  Closes #106.
+
 ### Enhancements
 
 * Added a section on migrating from `Cldr` 1.x to 2.x.
