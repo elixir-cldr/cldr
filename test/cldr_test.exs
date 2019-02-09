@@ -260,4 +260,9 @@ defmodule Cldr.Test do
     assert Map.get(currencies, :UYI).name == "Uruguayan Peso (Indexed Units)"
     assert Map.get(currencies, :USN).name == "US Dollar (Next day)"
   end
+
+  test "UTF8 names in currency annotations" do
+    {:ok, currencies} = Cldr.Config.currencies_for("de", WithOtpAppBackend.Cldr)
+    assert Map.get(currencies, :USN).name == "US Dollar (Nächster Tag)"
+  end
 end
