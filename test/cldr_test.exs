@@ -247,4 +247,9 @@ defmodule Cldr.Test do
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
+
+  test "return of currency map" do
+    {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
+    assert Map.get(currencies, :AUD)
+  end
 end

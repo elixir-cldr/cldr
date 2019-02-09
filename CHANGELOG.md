@@ -1,6 +1,14 @@
+# Changelog for Cldr v2.2.2
+
+This is the changelog for Cldr v2.2.2 released on February 9th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* add `Cldr.Config.currencies_for/2` to return a map of the currency definition for a locale
+
 # Changelog for Cldr v2.2.1
 
-This is the changelog for Cldr v2.2.1 released on _____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.2.1 released on January 30th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 

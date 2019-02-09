@@ -894,6 +894,62 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the currency metadata for a locale.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
+
+  """
+  @reg Regex.compile! "(?<currency>[^\\(0-9]+)(\\((?<from>[0-9]{4}))?([–-](?<to>[0-9]{4}))?"
+  def currencies_for(locale_name, config) do
+    currencies =
+      locale_name
+      |> get_locale(config)
+      |> Map.get(:currencies)
+      |> Enum.map(fn {k, v} ->
+        name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
+        name = Map.get(name_and_range, "currency") |> String.trim
+        from = convert_or_nilify(Map.get(name_and_range, "from"))
+        to = convert_or_nilify(Map.get(name_and_range, "to"))
+        count = Enum.map(Map.get(v, :count), fn {k, v} ->
+          {k, String.replace(v, ~r/ \(.*/, "")}
+        end)
+        |> Map.new
+
+        currency =
+          v
+          |> Map.put(:name, name)
+          |> Map.put(:from, from)
+          |> Map.put(:to, to)
+          |> Map.put(:count, count)
+
+        {k, currency}
+      end)
+      |> Enum.into(%{})
+
+    {:ok, currencies}
+  end
+
+  def currencies_for!(locale_name, config) do
+    case currencies_for(locale_name, config) do
+      {:ok, currencies} -> currencies
+      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
+  defp convert_or_nilify("") do
+    nil
+  end
+
+  defp convert_or_nilify(other) do
+    String.to_integer(other)
+  end
+
+  @doc """
   Returns true if a `Gettext` module is configured in Cldr and
   the `Gettext` module is available.
 
@@ -1552,6 +1608,11 @@ defmodule Cldr.Config do
   """
   def locale_name_to_posix(nil), do: nil
   def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
+
+  @doc false
+  def structify(map, module) do
+    struct(module, map)
+  end
 
   # ------ Helpers ------
 
