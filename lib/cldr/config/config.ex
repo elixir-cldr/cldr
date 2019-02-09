@@ -1784,7 +1784,24 @@ defmodule Cldr.Config do
     for {module, function, args} <-  Cldr.Config.Dependents.cldr_provider_modules(config) do
       if Code.ensure_loaded?(module) && function_exported?(module, function, 1) do
         apply(module, function, args)
+      else
+        log_provider_warning(module, function, args)
       end
+    end
+  end
+
+  defp log_provider_warning(module, function, args) do
+    require Logger
+
+    cond do
+      !Code.ensure_loaded?(module) ->
+        Logger.warn "The CLDR provider module #{inspect module} was not found"
+      !function_exported?(module, function, 1) ->
+        Logger.warn "The CLDR provider module #{inspect module} does not implement " <>
+        "the function #{function}/#{length(args)}"
+      true ->
+        Logger.warn "Could not execute the CLDR provider " <>
+        "#{inspect module}.#{function}/#{length(args)}"
     end
   end
 
@@ -1843,9 +1860,10 @@ defmodule Cldr.Config do
         config[:locales]
       else
         gettext = Cldr.Config.known_gettext_locale_names(config)
-        locales = config[:locales] || []
-        default = config[:default_locale] || nil
-        (locales ++ gettext ++ [default, @root_locale])
+        locales = config[:locales] || [config[:default_locale] || @default_locale]
+        default = config[:default_locale] || hd(locales)
+
+        (locales ++ gettext ++ [default, @default_locale, @root_locale])
         |> Enum.reject(&is_nil/1)
         |> Enum.uniq
       end

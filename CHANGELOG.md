@@ -1,3 +1,15 @@
+# Changelog for Cldr v2.2.4
+
+This is the changelog for Cldr v2.2.4 released on February 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Ensure the global default locale (currently "en-001") is always configured
+
+### Enhancements
+
+* Log a warning if a CLDR provider module could not be found
+
 # Changelog for Cldr v2.2.3
 
 This is the changelog for Cldr v2.2.3 released on February 9th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
