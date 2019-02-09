@@ -904,7 +904,7 @@ defmodule Cldr.Config do
   * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
 
   """
-  @reg Regex.compile! "(?<currency>[^\\(0-9]+)(\\((?<from>[0-9]{4}))?([–-](?<to>[0-9]{4}))?"
+  @reg Regex.compile! "(?<currency>[^\\(]+)(?<annotation>\\([a-zA-Z ]+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
   def currencies_for(locale_name, config) do
     currencies =
       locale_name
@@ -912,11 +912,11 @@ defmodule Cldr.Config do
       |> Map.get(:currencies)
       |> Enum.map(fn {k, v} ->
         name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
-        name = Map.get(name_and_range, "currency") |> String.trim
+        name = (Map.get(name_and_range, "currency") <>  Map.get(name_and_range, "annotation")) |> String.trim
         from = convert_or_nilify(Map.get(name_and_range, "from"))
         to = convert_or_nilify(Map.get(name_and_range, "to"))
         count = Enum.map(Map.get(v, :count), fn {k, v} ->
-          {k, String.replace(v, ~r/ \(.*/, "")}
+          {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
         end)
         |> Map.new
 

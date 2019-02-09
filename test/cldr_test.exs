@@ -252,4 +252,12 @@ defmodule Cldr.Test do
     {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
     assert Map.get(currencies, :AUD)
   end
+
+  test "correct date parsing of currencies" do
+    {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
+    assert Map.get(currencies, :YUM).from == 1994
+    assert Map.get(currencies, :YUM).to == 2002
+    assert Map.get(currencies, :UYI).name == "Uruguayan Peso (Indexed Units)"
+    assert Map.get(currencies, :USN).name == "US Dollar (Next day)"
+  end
 end
