@@ -656,7 +656,7 @@ defmodule Cldr.Config do
       {:ok, %{default: :latn, native: :latn}}
   """
   @spec number_systems_for(Locale.locale_name(), t()) ::
-    {:ok, map()}, {:error, {Exception.t(), String.t()}}
+    {:ok, map()} | {:error, {Exception.t(), String.t()}}
 
   def number_systems_for(locale_name, %__MODULE__{} = config) do
     if known_locale_name(locale_name, config) do
