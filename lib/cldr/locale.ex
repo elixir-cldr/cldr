@@ -337,8 +337,8 @@ defmodule Cldr.Locale do
     |> locale_name_to_posix
   end
 
-  @spec known_gettext_locale_name(Locale.locale_name(), Cldr.backend() | Cldr.Config.t()) ::
-          Locale.locale_name() | false
+  @spec known_gettext_locale_name(locale_name(), Cldr.backend() | Cldr.Config.t()) ::
+          locale_name() | false
 
   def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
     gettext_locales = backend.known_gettext_locale_names

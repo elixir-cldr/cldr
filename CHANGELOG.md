@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.2.5-dev
+
+This is the changelog for Cldr v2.2.5 released on ______, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Work on dialyzer errors
+
 # Changelog for Cldr v2.2.4
 
 This is the changelog for Cldr v2.2.4 released on February 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

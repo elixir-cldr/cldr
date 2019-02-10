@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.2.4"
+  @version "2.2.5-dev"
 
   def project do
     [
@@ -49,7 +49,7 @@ defmodule Cldr.Mixfile do
       {:nimble_parsec, "~> 0.5"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", optional: true},
       {:benchee, "~> 0.13", only: :dev, runtime: false},

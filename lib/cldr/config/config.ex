@@ -3,7 +3,6 @@ defmodule Cldr.Config do
 
   alias Cldr.Locale
   alias Cldr.LanguageTag
-  alias Cldr.Number.System
 
   defstruct default_locale: "en-001",
     locales: ["en-001"],
@@ -26,6 +25,8 @@ defmodule Cldr.Config do
     otp_app: atom() | nil,
     providers: [atom(), ...]
   }
+
+  @type number_system :: atom() | String.t()
 
   @default_locale "en-001"
 
@@ -57,7 +58,6 @@ defmodule Cldr.Config do
     end
   end
 
-
   Module.put_attribute(
     __MODULE__,
     :poison,
@@ -86,9 +86,9 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @jason_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
+  @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
   def json_library do
-    @jason_lib
+    @json_lib
   end
 
   @doc """
@@ -174,7 +174,7 @@ defmodule Cldr.Config do
   application.
 
   """
-  @spec client_data_dir(t()) :: String.t()
+  @spec client_data_dir(map()) :: String.t()
   def client_data_dir(%{data_dir: nil, otp_app: nil}) do
     cldr_data_dir()
   end
@@ -235,7 +235,7 @@ defmodule Cldr.Config do
   Return the configured `Gettext` module name or `nil`.
 
   """
-  @spec gettext(t() | Map.t()) :: module() | nil
+  @spec gettext(t() | map()) :: module() | nil
   def gettext(%{} = config) do
     Map.get(config, :gettext)
   end
@@ -600,8 +600,8 @@ defmodule Cldr.Config do
   used to help optimise the generation of transliteration functions.
 
   """
-  @spec known_number_systems_like(LanguageTag.t() | Locale.locale_name(), Cldr.Number.System.system_name, t()) ::
-          {:ok, List.t()} | {:error, tuple}
+  @spec known_number_systems_like(Locale.locale_name(), number_system(), t()) ::
+          {:ok, list()} | {:error, {Exception.t(), String.t()}}
 
   def known_number_systems_like(locale_name, number_system, config) do
     with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
@@ -616,7 +616,7 @@ defmodule Cldr.Config do
     Enum.map(known_locale_names(config), fn this_locale ->
       Enum.reduce(names, [], fn this_system, acc ->
         case number_system_for(this_locale, this_system, config) do
-          {:error, _} ->
+          {:error, {_, _}} ->
             acc
 
           {:ok, %{digits: these_digits}} ->
@@ -650,21 +650,38 @@ defmodule Cldr.Config do
   @doc """
   Returns the number systems for a locale
 
-  """
-  def number_systems_for(locale_name, %__MODULE__{} = config) do
-    number_systems =
-      locale_name
-      |> get_locale(config)
-      |> Map.get(:number_systems)
+  ## Example
 
-    {:ok, number_systems}
+      iex> Cldr.Config.number_systems_for("en", %Cldr.Config{locales: ["en", "de"]})
+      {:ok, %{default: :latn, native: :latn}}
+  """
+  @spec number_systems_for(Locale.locale_name(), t()) ::
+    {:ok, map()}, {:error, {Exception.t(), String.t()}}
+
+  def number_systems_for(locale_name, %__MODULE__{} = config) do
+    if known_locale_name(locale_name, config) do
+      number_systems =
+        locale_name
+        |> get_locale(config)
+        |> Map.get(:number_systems)
+
+      {:ok, number_systems}
+    else
+      {:error, Cldr.Locale.locale_error(locale_name)}
+    end
   end
 
   @doc """
   Returns the number systems for a locale
   or raises if there is an error
 
+  ## Example
+
+      iex> Cldr.Config.number_systems_for!("de", %Cldr.Config{locales: ["en", "de"]})
+      %{default: :latn, native: :latn}
+
   """
+  @spec number_systems_for!(Locale.locale_name(), t()) :: map() | no_return
   def number_systems_for!(locale_name, config) do
    case number_systems_for(locale_name, config) do
      {:ok, systems} -> systems
@@ -676,7 +693,15 @@ defmodule Cldr.Config do
   Returns the number system for a given
   locale and number system name.
 
+  ## Example
+
+      iex> Cldr.Config.number_system_for("th", :thai, %Cldr.Config{locales: ["th", "de"]})
+      {:ok, %{digits: "๐๑๒๓๔๕๖๗๘๙", type: :numeric}}
+
   """
+  @spec number_system_for(Locale.locale_name(), number_system(), t()) ::
+    {:ok, map()} | {:error, {Exception.t(), String.t()}}
+
   def number_system_for(locale_name, number_system, config) do
     with {:ok, system_name} <- system_name_from(number_system, locale_name, config) do
       {:ok, Map.get(number_systems(), system_name)}
@@ -686,7 +711,15 @@ defmodule Cldr.Config do
   @doc """
   Returns the number system names for a locale
 
+  ## Example
+
+      iex> Cldr.Config.number_system_names_for("th", %Cldr.Config{locales: ["en", "th"]})
+      {:ok, [:latn, :thai]}
+
   """
+  @spec number_system_names_for(Locale.locale_name(), t()) ::
+    {:ok, [atom(), ...]} | {:error, {Exception.t(), String.t()}}
+
   def number_system_names_for(locale_name, config) do
     with {:ok, number_systems} <- number_systems_for(locale_name, config) do
       names =
@@ -756,8 +789,8 @@ defmodule Cldr.Config do
       }
 
   """
-  @spec system_name_from(System.system_name, Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend())
-    :: atom
+  @spec system_name_from(String.t(), Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend())
+    :: {:ok, atom()} | {:error, {Exception.t, String.t}}
 
   def system_name_from(number_system, locale_name, backend) when is_atom(backend) do
     system_name_from(number_system, locale_name, backend.__cldr__(:config))
@@ -820,16 +853,20 @@ defmodule Cldr.Config do
 
   """
   def number_symbols_for(locale_name, config) do
-    symbols =
-      locale_name
-      |> get_locale(config)
-      |> Map.get(:number_symbols)
-      |> Enum.map(fn
-        {k, nil} -> {k, nil}
-        {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
-      end)
+    if known_locale_name(locale_name, config) do
+      symbols =
+        locale_name
+        |> get_locale(config)
+        |> Map.get(:number_symbols)
+        |> Enum.map(fn
+          {k, nil} -> {k, nil}
+          {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
+        end)
 
-    {:ok, symbols}
+      {:ok, symbols}
+    else
+      {:error, Locale.locale_error(locale_name)}
+    end
   end
 
   def number_symbols_for(locale, number_system, config) do
@@ -1060,8 +1097,8 @@ defmodule Cldr.Config do
   during production run there is no file access or decoding.
 
   """
-  @spec get_locale(Cldr.Locale.local_name(), config_or_backend :: t() | Cldr.backend()) ::
-    Map.t() | no_return()
+  @spec get_locale(Cldr.Locale.locale_name(), config_or_backend :: t() | Cldr.backend()) ::
+    map() | no_return()
 
   def get_locale(locale, %{data_dir: _} = config) do
     do_get_locale(locale, config)
