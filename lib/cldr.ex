@@ -245,7 +245,7 @@ defmodule Cldr do
 
   """
   @spec put_locale(backend(), Locale.locale_name() | LanguageTag.t()) ::
-          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def put_locale(backend, locale) do
     with {:ok, locale} <- backend.validate_locale(locale) do
@@ -289,7 +289,7 @@ defmodule Cldr do
 
   """
   @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
-          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def put_locale(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name} = locale)
       when not is_nil(cldr_locale_name) do
@@ -423,7 +423,7 @@ defmodule Cldr do
 
   """
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
-          {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+          {:ok, String.t()} | {:error, {module(), String.t()}}
   def validate_locale(locale, backend) do
     backend.validate_locale(locale)
   end
@@ -749,7 +749,7 @@ defmodule Cldr do
 
   """
   @spec validate_gettext_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
-          {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def validate_gettext_locale(locale_name, backend) when is_binary(locale_name) do
     case Cldr.Locale.new(locale_name, backend) do
@@ -810,7 +810,7 @@ defmodule Cldr do
 
   """
   @spec validate_calendar(atom() | String.t()) ::
-          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+          {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_calendar(calendar) when is_atom(calendar) and calendar in @known_calendars do
     {:ok, calendar}
@@ -927,7 +927,7 @@ defmodule Cldr do
 
   """
   @spec validate_territory(atom() | String.t()) ::
-          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+          {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_territory(territory) when is_atom(territory) and territory in @known_territories do
     {:ok, territory}
@@ -1177,7 +1177,7 @@ defmodule Cldr do
   """
 
   @spec validate_number_system(atom() | String.t()) ::
-          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+          {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_number_system(number_system) when is_atom(number_system) do
     if number_system in Config.known_number_systems do
@@ -1277,7 +1277,7 @@ defmodule Cldr do
 
   """
   @spec validate_number_system_type(String.t() | atom(), backend()) ::
-          {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+          {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_number_system_type(number_system_type, backend) do
     backend.validate_number_system_type(number_system_type)

@@ -1,2 +1,5 @@
 :0: Unknown function 'Elixir.Cldr.Mixfile':project/0
 src/plural_rules_parser.yrl:129: The pattern <{'mod', [_C], [{_L}]}, A, B> can never match the type <'equals',_,_>
+:0: Unknown function 'Elixir.SweetXml':sigil_x/2
+:0: Unknown function 'Elixir.SweetXml':xpath/3
+lib/cldr/config/config.ex:101: The test 'Elixir.Jason' == 'nil' can never evaluate to 'true'

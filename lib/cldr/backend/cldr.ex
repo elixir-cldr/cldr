@@ -322,7 +322,7 @@ defmodule Cldr.Backend do
 
       """
       @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
-              {:ok, LanguageTag.t()} | {:error, {Exception.t(), String.t()}}
+              {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
       def put_locale(locale_name) do
         with {:ok, locale} <- validate_locale(locale_name) do
@@ -388,7 +388,7 @@ defmodule Cldr.Backend do
 
       """
       @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
-              {:ok, String.t()} | {:error, {Exception.t(), String.t()}}
+              {:ok, String.t()} | {:error, {module(), String.t()}}
 
       language_tags = Cldr.Config.all_language_tags()
 
@@ -464,7 +464,7 @@ defmodule Cldr.Backend do
 
       """
       @spec validate_number_system_type(String.t() | atom()) ::
-              {:ok, atom()} | {:error, {Exception.t(), String.t()}}
+              {:ok, atom()} | {:error, {module(), String.t()}}
 
       def validate_number_system_type(number_system_type) when is_atom(number_system_type) do
         if number_system_type in known_number_system_types() do

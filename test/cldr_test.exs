@@ -262,7 +262,7 @@ defmodule Cldr.Test do
   end
 
   test "UTF8 names in currency annotations" do
-    {:ok, currencies} = Cldr.Config.currencies_for("de", WithOtpAppBackend.Cldr)
+    {:ok, currencies} = Cldr.Config.currencies_for("de", TestBackend.Cldr)
     assert Map.get(currencies, :USN).name == "US Dollar (Nächster Tag)"
   end
 end

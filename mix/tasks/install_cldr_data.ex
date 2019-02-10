@@ -15,7 +15,8 @@ if File.exists?(Cldr.Config.download_data_dir()) do
     end
 
     def run([backend]) do
-      config = backend.__cldr__(:config)
+      module = Module.concat([backend])
+      config = module.__cldr__(:config)
       Cldr.Install.install_known_locale_names(config)
     end
   end

@@ -21,7 +21,7 @@ defmodule Cldr.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(gettext inets jason mix poison plug)a
+        plt_add_apps: ~w(gettext inets jason mix plug)a
       ],
       compilers: Mix.compilers()
     ]
@@ -153,7 +153,7 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "mix", "test"]
-  defp elixirc_paths(:dev), do: ["lib", "mix", "bench"]
+  defp elixirc_paths(:test), do: ["lib", "mix", "src", "test"]
+  defp elixirc_paths(:dev), do: ["lib", "mix", "src", "bench"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end

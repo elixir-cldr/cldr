@@ -433,7 +433,12 @@ defmodule Cldr.Config do
   in the CLDR repository.
 
   """
-  @spec known_locale_names(t()) :: [Locale.locale_name()]
+  @spec known_locale_names(t() | Cldr.backend()) :: [Locale.locale_name()]
+  def known_locale_names(backend) when is_atom(backend) do
+    backend.__cldr__(:config)
+    |> known_locale_names
+  end
+
   def known_locale_names(config) do
     requested_locale_names(config)
     |> MapSet.new()
@@ -601,7 +606,7 @@ defmodule Cldr.Config do
 
   """
   @spec known_number_systems_like(Locale.locale_name(), number_system(), t()) ::
-          {:ok, list()} | {:error, {Exception.t(), String.t()}}
+          {:ok, list()} | {:error, {module(), String.t()}}
 
   def known_number_systems_like(locale_name, number_system, config) do
     with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
@@ -656,7 +661,7 @@ defmodule Cldr.Config do
       {:ok, %{default: :latn, native: :latn}}
   """
   @spec number_systems_for(Locale.locale_name(), t()) ::
-    {:ok, map()} | {:error, {Exception.t(), String.t()}}
+    {:ok, map()} | {:error, {module(), String.t()}}
 
   def number_systems_for(locale_name, %__MODULE__{} = config) do
     if known_locale_name(locale_name, config) do
@@ -700,7 +705,7 @@ defmodule Cldr.Config do
 
   """
   @spec number_system_for(Locale.locale_name(), number_system(), t()) ::
-    {:ok, map()} | {:error, {Exception.t(), String.t()}}
+    {:ok, map()} | {:error, {module(), String.t()}}
 
   def number_system_for(locale_name, number_system, config) do
     with {:ok, system_name} <- system_name_from(number_system, locale_name, config) do
@@ -718,7 +723,7 @@ defmodule Cldr.Config do
 
   """
   @spec number_system_names_for(Locale.locale_name(), t()) ::
-    {:ok, [atom(), ...]} | {:error, {Exception.t(), String.t()}}
+    {:ok, [atom(), ...]} | {:error, {module(), String.t()}}
 
   def number_system_names_for(locale_name, config) do
     with {:ok, number_systems} <- number_systems_for(locale_name, config) do
@@ -790,7 +795,7 @@ defmodule Cldr.Config do
 
   """
   @spec system_name_from(String.t(), Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend())
-    :: {:ok, atom()} | {:error, {Exception.t, String.t}}
+    :: {:ok, atom()} | {:error, {module(), String.t}}
 
   def system_name_from(number_system, locale_name, backend) when is_atom(backend) do
     system_name_from(number_system, locale_name, backend.__cldr__(:config))
@@ -943,32 +948,36 @@ defmodule Cldr.Config do
   """
   @reg Regex.compile! "(?<currency>[^\\(]+)(?<annotation>\\([^0-9]+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
   def currencies_for(locale_name, config) do
-    currencies =
-      locale_name
-      |> get_locale(config)
-      |> Map.get(:currencies)
-      |> Enum.map(fn {k, v} ->
-        name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
-        name = (Map.get(name_and_range, "currency") <>  Map.get(name_and_range, "annotation")) |> String.trim
-        from = convert_or_nilify(Map.get(name_and_range, "from"))
-        to = convert_or_nilify(Map.get(name_and_range, "to"))
-        count = Enum.map(Map.get(v, :count), fn {k, v} ->
-          {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
+    if known_locale_name(locale_name, config) do
+      currencies =
+        locale_name
+        |> get_locale(config)
+        |> Map.get(:currencies)
+        |> Enum.map(fn {k, v} ->
+          name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
+          name = (Map.get(name_and_range, "currency") <>  Map.get(name_and_range, "annotation")) |> String.trim
+          from = convert_or_nilify(Map.get(name_and_range, "from"))
+          to = convert_or_nilify(Map.get(name_and_range, "to"))
+          count = Enum.map(Map.get(v, :count), fn {k, v} ->
+            {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
+          end)
+          |> Map.new
+
+          currency =
+            v
+            |> Map.put(:name, name)
+            |> Map.put(:from, from)
+            |> Map.put(:to, to)
+            |> Map.put(:count, count)
+
+          {k, currency}
         end)
-        |> Map.new
+        |> Enum.into(%{})
 
-        currency =
-          v
-          |> Map.put(:name, name)
-          |> Map.put(:from, from)
-          |> Map.put(:to, to)
-          |> Map.put(:count, count)
-
-        {k, currency}
-      end)
-      |> Enum.into(%{})
-
-    {:ok, currencies}
+      {:ok, currencies}
+    else
+      {:error, Locale.locale_error(locale_name)}
+    end
   end
 
   def currencies_for!(locale_name, config) do
@@ -1267,7 +1276,7 @@ defmodule Cldr.Config do
 
   """
   @spec territory_info(String.t() | atom() | LanguageTag.t()) ::
-          %{} | {:error, {Exception.t(), String.t()}}
+          %{} | {:error, {module(), String.t()}}
   def territory_info(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territory_info()
