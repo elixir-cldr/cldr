@@ -46,7 +46,8 @@ defmodule Cldr.Mixfile do
       {:jason, "~> 1.0", optional: true},
       {:decimal, "~> 1.5"},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
-      {:nimble_parsec, "~> 0.5"},
+      {:nimble_parsec, git: "https://github.com/plataformatec/nimble_parsec", override: true},
+      # {:nimble_parsec, "~> 0.5"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
@@ -154,6 +155,5 @@ defmodule Cldr.Mixfile do
 
   defp elixirc_paths(:test), do: ["lib", "mix", "test"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "bench"]
-  defp elixirc_paths(:release), do: ["lib"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end

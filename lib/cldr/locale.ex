@@ -161,6 +161,11 @@ defmodule Cldr.Locale do
 
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
+  @type language :: String.t() | nil
+  @type script :: String.t() | nil
+  @type territory :: String.t() | nil
+  @type variant :: String.t() | nil
+  @type subtags :: [String.t(), ...] | []
 
   @doc false
   def define_locale_new(config) do
@@ -491,22 +496,14 @@ defmodule Cldr.Locale do
       "en-Latn-001"
 
   """
-  @spec locale_name_from(
-          String.t() | nil,
-          String.t() | nil,
-          String.t() | nil,
-          [String.t(), ...] | []
-        ) :: locale_name()
+  @spec locale_name_from(language(), script(), territory(), variant()) :: locale_name()
 
-  def locale_name_from(language, script, territory, variants) when is_list(variants) do
-    ([language, script, territory] ++ variants)
+  def locale_name_from(language, script, territory, variant) do
+    [language, script, territory, variant]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
 
-  def locale_name_from(language, script, territory, variants) do
-    locale_name_from(language, script, territory, [variants])
-  end
 
   @doc """
   Substitute deprectated subtags with a `Cldr.LanguageTag` with their
@@ -654,12 +651,12 @@ defmodule Cldr.Locale do
         %LanguageTag{language: language, script: script, territory: territory} = language_tag
       ) do
     subtags =
-      likely_subtags(locale_name_from(language, script, territory, [])) ||
-        likely_subtags(locale_name_from(language, nil, territory, [])) ||
-        likely_subtags(locale_name_from(language, script, nil, [])) ||
-        likely_subtags(locale_name_from(language, nil, nil, [])) ||
-        likely_subtags(locale_name_from("und", script, nil, [])) ||
-        likely_subtags(locale_name_from("und", nil, nil, []))
+      likely_subtags(locale_name_from(language, script, territory, nil)) ||
+        likely_subtags(locale_name_from(language, nil, territory, nil)) ||
+        likely_subtags(locale_name_from(language, script, nil, nil)) ||
+        likely_subtags(locale_name_from(language, nil, nil, nil)) ||
+        likely_subtags(locale_name_from("und", script, nil, nil)) ||
+        likely_subtags(locale_name_from("und", nil, nil, nil))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
