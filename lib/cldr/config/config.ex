@@ -58,17 +58,10 @@ defmodule Cldr.Config do
     end
   end
 
-  Module.put_attribute(
-    __MODULE__,
-    :poison,
-    if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
-  )
-
-  Module.put_attribute(
-    __MODULE__,
-    :jason,
-    if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
-  )
+  @poison if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
+  @jason if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
+  _ = @poison
+  _ = @jason
 
   @doc """
   Return the configured application name
