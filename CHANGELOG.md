@@ -1,12 +1,14 @@
-# Changelog for Cldr v2.2.5-dev
+# Changelog for Cldr v2.2.5
 
-This is the changelog for Cldr v2.2.5 released on ______, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.2.5 released on February 18th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Bug Fixes
 
-* Work on dialyzer errors
+* Remove most dialyzer errors
 
 * Fix documentation syntax errors
+
+* Fix regex for parsing currency names into currency strings
 
 # Changelog for Cldr v2.2.4
 

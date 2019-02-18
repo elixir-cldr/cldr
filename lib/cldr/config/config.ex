@@ -939,7 +939,7 @@ defmodule Cldr.Config do
   * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
 
   """
-  @reg Regex.compile! "(?<currency>[^\\(]+)(?<annotation>\\([^0-9]+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
+  @reg Regex.compile! "(?<currency>[^\\(]+)(?<annotation>\\([^0-9].+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
   def currencies_for(locale_name, config) do
     if known_locale_name(locale_name, config) do
       currencies =
