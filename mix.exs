@@ -52,7 +52,7 @@ defmodule Cldr.Mixfile do
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:plug, "~> 1.4", optional: true},
-      {:sweet_xml, "~> 0.6", optional: true},
+      {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 0.13", only: :dev, runtime: false},
       {:cldr_utils, "~> 2.0"}
     ]
@@ -120,7 +120,6 @@ defmodule Cldr.Mixfile do
         ex_cldr_units: "https://hexdocs.pm/ex_cldr_units",
         ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists"
       ],
-      filter_prefix: "Cldr",
       groups_for_modules: groups_for_modules(),
       skip_undefined_reference_warnings_on: ["changelog"]
     ]
@@ -149,7 +148,8 @@ defmodule Cldr.Mixfile do
         Cldr.Map,
         Cldr.Math,
         Cldr.String
-      ]
+        ],
+      "Example Backend": ~r/^MyApp.?/
     ]
   end
 

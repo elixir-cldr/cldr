@@ -17,7 +17,7 @@ defmodule Cldr.Gettext.Plural do
         @doc """
         Returns how many plural forms exist for a given locale.
 
-        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locales/0` or
+        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locale_names/0` or
           a `%LanguageTag{}` as returned by `Cldr.Locale.new/2`
 
         ## Examples
@@ -48,7 +48,7 @@ defmodule Cldr.Gettext.Plural do
         Returns to what plural form a given number belongs to in a given
         locale.
 
-        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locales/0` or
+        * `locale` is either a locale name in the list `#{unquote(inspect(config.backend))}.known_locale_names/0` or
           a `%LanguageTag{}` as returned by `Cldr.Locale.new/2`
 
         ## Examples

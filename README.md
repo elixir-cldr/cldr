@@ -30,7 +30,7 @@ The functions you are mostly likely to use are:
 * `MyApp.Cldr.default_locale/0`
 * `MyApp.Cldr.put_locale/1`
 * `MyApp.Cldr.get_locale/0`
-* `MyApp.Cldr.known_locale_names/1`
+* `MyApp.Cldr.known_locale_names/0`
 * `MyApp.Cldr.Locale.new/1`
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
