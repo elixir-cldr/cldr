@@ -1,4 +1,4 @@
-if Mix.env in [:dev, :release] do
+if Mix.env in [:dev, :release, :test] do
   require Cldr.Backend
 
   defmodule MyApp.Cldr do
