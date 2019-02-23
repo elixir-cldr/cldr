@@ -62,22 +62,23 @@ iex> TestBackend.Cldr.validate_locale "en_au"
    transform: %{}
  }}
 iex> TestBackend.Cldr.validate_locale "en-u-ca-buddhist"
-%Cldr.LanguageTag{
-  canonical_locale_name: "en-Latn-US",
-  cldr_locale_name: "en",
-  extensions: %{},
-  gettext_locale_name: "en",
-  language: "en",
-  language_subtags: [],
-  language_variant: nil,
-  locale: %{calendar: :buddhist},
-  private_use: [],
-  rbnf_locale_name: "en",
-  requested_locale_name: "en",
-  script: "Latn",
-  territory: "US",
-  transform: %{}
-}
+{:ok,
+  %Cldr.LanguageTag{
+    canonical_locale_name: "en-Latn-US",
+    cldr_locale_name: "en",
+    extensions: %{},
+    gettext_locale_name: "en",
+    language: "en",
+    language_subtags: [],
+    language_variant: nil,
+    locale: %{calendar: :buddhist},
+    private_use: [],
+    rbnf_locale_name: "en",
+    requested_locale_name: "en",
+    script: "Latn",
+    territory: "US",
+    transform: %{}
+}}
 ```
 
 # Changelog for Cldr v2.2.6

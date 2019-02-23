@@ -445,7 +445,7 @@ defmodule Cldr.Backend do
       defp do_validate_locale(locale) do
         with {:ok, locale} <- Cldr.Locale.new(locale, unquote(backend)),
              true <- !is_nil(locale.cldr_locale_name) do
-          locale
+          {:ok, locale}
         else
           false -> {:error, Cldr.Locale.locale_error(locale)}
           {:error, reason} -> {:error, reason}

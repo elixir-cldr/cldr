@@ -265,4 +265,10 @@ defmodule Cldr.Test do
     {:ok, currencies} = Cldr.Config.currencies_for("de", TestBackend.Cldr)
     assert Map.get(currencies, :USN).name == "US Dollar (Nächster Tag)"
   end
+
+  test "validating locales that are not precompiled" do
+    assert {:ok, locale} = Cldr.validate_locale "en-au", TestBackend.Cldr
+    assert {:ok, locale} = Cldr.validate_locale "en_au", TestBackend.Cldr
+    assert {:ok, locale} = Cldr.validate_locale "en-au-u-ca-buddhist", TestBackend.Cldr
+  end
 end
