@@ -1000,6 +1000,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(&convert_dates/1)
+    |> Cldr.Map.merge_map_list
   end
 
   defp convert_dates({territory, currency_dates}) do
