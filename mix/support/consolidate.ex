@@ -33,6 +33,7 @@ defmodule Cldr.Consolidate do
     save_plurals()
     save_number_systems()
     save_currencies()
+    save_territory_currencies()
     save_week_data()
     save_calendar_data()
     save_day_periods()
@@ -258,6 +259,23 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["main", "en", "numbers", "currencies"])
     |> Map.keys()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_territory_currencies do
+    path = Path.join(consolidated_output_dir(), "territory_currencies.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/currencyData.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "currencyData", "region"])
+    |> Cldr.Map.rename_key("_from", "from")
+    |> Cldr.Map.rename_key("_to", "to")
+    |> Cldr.Map.rename_key("_tender", "tender")
     |> save_file(path)
 
     assert_package_file_configured!(path)

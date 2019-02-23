@@ -989,6 +989,46 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the currency mapping data for
+  territories.
+
+  """
+  @territory_currencies_file "territory_currencies.json"
+  @spec territory_currency_data :: map()
+  def territory_currency_data do
+    Path.join(cldr_data_dir(), @territory_currencies_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Enum.map(&convert_dates/1)
+  end
+
+  defp convert_dates({territory, currency_dates}) do
+    currency_dates =
+      Enum.map(currency_dates, fn map ->
+        currency = Map.keys(map) |> hd
+        dates = Map.values(map) |> hd
+
+        parsed_dates =
+          Enum.flat_map(dates, fn
+            [{"from", from}, {"to", to}] ->
+              [{:from, Date.from_iso8601!(from)}, {:to, Date.from_iso8601!(to)}]
+            {"from", from} ->
+              [{:from, Date.from_iso8601!(from)}, {:to, nil}]
+            {"to", to} ->
+              [{:from, nil}, {:to, Date.from_iso8601!(to)}]
+            {"tender", "false"} ->
+              [{:tender, false}]
+            other -> raise inspect(other)
+          end)
+          |> Map.new
+
+          %{String.to_atom(currency) => parsed_dates}
+      end)
+
+    %{territory => Cldr.Map.merge_map_list(currency_dates)}
+  end
+
+  @doc """
   Returns true if a `Gettext` module is configured in Cldr and
   the `Gettext` module is available.
 

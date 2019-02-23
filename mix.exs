@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.2.5"
+  @version "2.2.6"
 
   def project do
     [
@@ -80,6 +80,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/plural_rules.json",
         "priv/cldr/version.json",
         "priv/cldr/currencies.json",
+        "priv/cldr/territory_currencies.json",
         "priv/cldr/week_data.json",
         "priv/cldr/calendar_data.json",
         "priv/cldr/day_periods.json",
