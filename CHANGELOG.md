@@ -1,3 +1,85 @@
+# Changelog for Cldr v2.2.7
+
+This is the changelog for Cldr v2.2.7 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+Correctly validates locales that are not pre-compiled into a backend. At compile time, all configured locales are generated from the CLDR data.  However not all valid locales can be predefined - especially those that have variants, subtags or extensions or use a different casing to the canonical form.
+
+For example, the following would fail in prior releases even though it is perfectly valid since language tags are defined to be case insensitive:
+```
+iex> MyApp.Cldr.validate_locale "en-au"
+{:error, {Cldr.UnknownLocaleError, "The locale \"en-au\" is not known."}}
+
+```
+Similarly, it is expected that both the POSIX and IEEE formats of a language tag are acceptable, meaning that a `-` or `_` should be acceptable. Again, in prior releases this would result in an error:
+```
+iex> MyApp.Cldr.validate_locale "en_AU"
+{:error, {Cldr.UnknownLocaleError, "The locale \"en_AU\" is not known."}}
+
+```
+Lastly, when using locale extensions, subtags or variants the validation would fail:
+```
+MyApp.Cldr.validate_locale "en-u-ca-buddhist"
+{:error, {Cldr.UnknownLocaleError, "The locale \"en_AU\" is not known."}}
+```
+Each of these examples now correctly validates:
+```
+iex> TestBackend.Cldr.validate_locale "en-au"
+{:ok,
+ %Cldr.LanguageTag{
+   canonical_locale_name: "en-Latn-AU",
+   cldr_locale_name: "en-AU",
+   extensions: %{},
+   gettext_locale_name: "en",
+   language: "en",
+   language_subtags: [],
+   language_variant: nil,
+   locale: %{},
+   private_use: [],
+   rbnf_locale_name: "en",
+   requested_locale_name: "en-AU",
+   script: "Latn",
+   territory: "AU",
+   transform: %{}
+ }}
+iex> TestBackend.Cldr.validate_locale "en_au"
+{:ok,
+ %Cldr.LanguageTag{
+   canonical_locale_name: "en-Latn-AU",
+   cldr_locale_name: "en-AU",
+   extensions: %{},
+   gettext_locale_name: "en",
+   language: "en",
+   language_subtags: [],
+   language_variant: nil,
+   locale: %{},
+   private_use: [],
+   rbnf_locale_name: "en",
+   requested_locale_name: "en-AU",
+   script: "Latn",
+   territory: "AU",
+   transform: %{}
+ }}
+iex> TestBackend.Cldr.validate_locale "en-u-ca-buddhist"
+%Cldr.LanguageTag{
+  canonical_locale_name: "en-Latn-US",
+  cldr_locale_name: "en",
+  extensions: %{},
+  gettext_locale_name: "en",
+  language: "en",
+  language_subtags: [],
+  language_variant: nil,
+  locale: %{calendar: :buddhist},
+  private_use: [],
+  rbnf_locale_name: "en",
+  requested_locale_name: "en",
+  script: "Latn",
+  territory: "US",
+  transform: %{}
+}
+```
+
 # Changelog for Cldr v2.2.6
 
 This is the changelog for Cldr v2.2.6 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

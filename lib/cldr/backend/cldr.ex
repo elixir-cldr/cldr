@@ -2,7 +2,9 @@ defmodule Cldr.Backend do
   @moduledoc false
 
   def define_backend_functions(config) do
-    quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
+    backend = config.backend
+
+    quote location: :keep, bind_quoted: [config: Macro.escape(config), backend: backend] do
       @doc """
       Returns a list of the known locale names.
 
@@ -292,7 +294,7 @@ defmodule Cldr.Backend do
         or a `Cldr.LanguageTag` struct returned by `#{inspect(__MODULE__)}.Locale.new!/1`
 
       See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
-      of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
+      of a language tag and consult `Cldr.Rfc5646.Parser` for the
       specification as implemented that includes the CLDR extensions for
       "u" (locales) and "t" (transforms).
 
@@ -317,8 +319,9 @@ defmodule Cldr.Backend do
              language_variant: nil
            }}
 
-          iex> #{inspect(__MODULE__)}.put_locale("invalid_locale")
-          {:error, {Cldr.UnknownLocaleError, "The locale \\"invalid_locale\\" is not known."}}
+          iex> #{inspect(__MODULE__)}.put_locale("invalid-locale")
+          {:error, {Cldr.LanguageTag.ParseError,
+            "Expected a BCP47 language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
 
       """
       @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
@@ -343,6 +346,13 @@ defmodule Cldr.Backend do
       * `{:ok, language_tag}`
 
       * `{:error, reason}`
+
+      ## Notes
+
+      See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
+      of a language tag and consult `Cldr.Rfc5646.Parser` for the
+      specification as implemented that includes the CLDR extensions for
+      "u" (locales) and "t" (transforms).
 
       ## Examples
 
@@ -390,18 +400,6 @@ defmodule Cldr.Backend do
       @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
               {:ok, String.t()} | {:error, {module(), String.t()}}
 
-      language_tags = Cldr.Config.all_language_tags()
-
-      for locale_name <- Cldr.Config.known_locale_names(config) do
-        language_tag =
-          Map.get(language_tags, locale_name)
-          |> Cldr.Locale.put_gettext_locale_name(config)
-
-        def validate_locale(unquote(locale_name)) do
-          {:ok, unquote(Macro.escape(language_tag))}
-        end
-      end
-
       def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
         {:error, Locale.locale_error(locale)}
       end
@@ -410,8 +408,48 @@ defmodule Cldr.Backend do
         {:ok, language_tag}
       end
 
+      def validate_locale(locale_name) when is_binary(locale_name) do
+        locale =
+          locale_name
+          |> String.downcase
+          |> Cldr.Locale.locale_name_from_posix
+          |> do_validate_locale
+
+        case locale do
+          {:error, {Cldr.UnknownLocaleError, _}} -> {:error, Locale.locale_error(locale_name)}
+          {:error, reason} -> {:error, reason}
+          locale -> locale
+        end
+      end
+
       def validate_locale(locale) do
         {:error, Locale.locale_error(locale)}
+      end
+
+      language_tags = Cldr.Config.all_language_tags()
+
+      for locale_name <- Cldr.Config.known_locale_names(config) do
+        language_tag =
+          Map.get(language_tags, locale_name)
+          |> Cldr.Locale.put_gettext_locale_name(config)
+
+        locale_name = String.downcase(locale_name)
+
+        defp do_validate_locale(unquote(locale_name)) do
+          {:ok, unquote(Macro.escape(language_tag))}
+        end
+      end
+
+      # It's not a well known locale so we need to
+      # parse and validate
+      defp do_validate_locale(locale) do
+        with {:ok, locale} <- Cldr.Locale.new(locale, unquote(backend)),
+             true <- !is_nil(locale.cldr_locale_name) do
+          locale
+        else
+          false -> {:error, Cldr.Locale.locale_error(locale)}
+          {:error, reason} -> {:error, reason}
+        end
       end
 
       @doc """

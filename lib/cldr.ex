@@ -240,8 +240,9 @@ defmodule Cldr do
          language_variant: nil
        }}
 
-      iex> Cldr.put_locale(TestBackend.Cldr, "invalid_locale")
-      {:error, {Cldr.UnknownLocaleError, "The locale \\"invalid_locale\\" is not known."}}
+      iex> Cldr.put_locale(TestBackend.Cldr, "invalid-locale")
+      {:error, {Cldr.LanguageTag.ParseError,
+        "Expected a BCP47 language tag. Could not parse the remaining \\"le\\" starting at position 13"}}
 
   """
   @spec put_locale(backend(), Locale.locale_name() | LanguageTag.t()) ::
