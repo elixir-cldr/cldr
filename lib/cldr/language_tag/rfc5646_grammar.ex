@@ -188,6 +188,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # Transform keywords to a map
+  # TODO Allow for key/type and just plan key
   def collapse_keywords(args) do
     args
     |> Enum.chunk_every(2)

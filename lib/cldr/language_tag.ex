@@ -206,17 +206,56 @@ defmodule Cldr.LanguageTag do
   @doc """
   Parse a locale name into a `Cldr.LangaugeTag` struct and raises on error
 
+  ## Arguments
+
   * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   Returns:
 
   * `language_tag` or
 
-  * raises and exception
+  * raises an exception
 
   """
   @spec parse!(Cldr.Locale.locale_name()) :: t() | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
+  end
+
+  @doc """
+  Reconstitute a textual language tag from a
+  LanguageTag that is suitable
+  to pass to a collator.
+
+  ## Example
+
+      iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-buddhist-nu-arab", MyApp.Cldr
+      iex> Cldr.LanguageTag.to_string(locale)
+      "en-Latn-US-u-co-standard-nu-arab"
+
+  """
+  @spec to_string(t) :: String.t
+  def to_string(%__MODULE__{} = locale) do
+    basic_tag =
+      [locale.language, locale.language_subtags, locale.script,
+      locale.territory, locale.language_variant]
+      |> List.flatten
+      |> Enum.reject(&is_nil/1)
+      |> Enum.join("-")
+
+    locale_extension =
+      locale.locale
+      |> Enum.map(fn
+        {k, v} when is_atom(k) -> "#{Parser.inverse_locale_key_map[k]}-#{v}"
+        _ -> nil
+      end)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.join("-")
+
+    if locale_extension do
+      basic_tag <> "-u-" <> locale_extension
+    else
+      basic_tag
+    end
   end
 end

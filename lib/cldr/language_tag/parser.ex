@@ -195,8 +195,21 @@ defmodule Cldr.LanguageTag.Parser do
     "rg" => :region_override
   }
 
-  defp locale_key_map do
+  @doc false
+  def locale_key_map do
     @locale_map
+  end
+
+  @inverse_locale_map @locale_map
+  |> Enum.map(fn
+    {attr, [key | _rest]} -> {key, attr}
+    {attr, key} -> {key, attr}
+  end)
+  |> Map.new
+
+  @doc false
+  def inverse_locale_key_map do
+    @inverse_locale_map
   end
 
   @transform_map %{
