@@ -187,18 +187,29 @@ defmodule Cldr.Rfc5646.Grammar do
     |> reduce(:collapse_keywords)
   end
 
-  # Transform keywords to a map
-  # TODO Allow for key/type and just plan key
-  def collapse_keywords(args) do
-    args
-    |> Enum.chunk_every(2)
-    |> Enum.into(%{}, fn
-      [key: key, type: type] ->
-        {key, type}
+  # Transform keywords to a map. Note that not
+  # all keywords have a parameter so we set the
+  # param to nil in those cases.
+  def collapse_keywords(list) do
+    list
+    |> do_collapse_keywords
+    |> Map.new
+  end
 
-      [key: key] ->
-        {key, nil}
-    end)
+  def do_collapse_keywords([{:key, key}, {:type, type} | rest]) do
+    [{key, type} | do_collapse_keywords(rest)]
+  end
+
+  def do_collapse_keywords([{:key, key}, {:key, _key2} = other | rest]) do
+    [{key, nil} | do_collapse_keywords([other | rest])]
+  end
+
+  def do_collapse_keywords([{:key, key}]) do
+    [{key, nil}]
+  end
+
+  def do_collapse_keywords([]) do
+    []
   end
 
   # keyword       = key ["-" type]

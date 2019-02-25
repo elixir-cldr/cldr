@@ -12,6 +12,30 @@ iex> Cldr.LanguageTag.to_string(locale)
 "en-Latn-US-u-ca-phonebk-nu-arab"
 ```
 
+### Bug Fixes
+
+* Fix a bug when parsing some locale strings which have extensions. An extension may have a list of "keyword-type" pairs or simply "keyword". Parsing was failing when only the "keyword" form was used.  For example the following used to fail, but is now parsed correctly:
+```
+iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-ca", MyApp.Cldr
+{:ok,
+ %Cldr.LanguageTag{
+   canonical_locale_name: "en-Latn-US",
+   cldr_locale_name: "en",
+   extensions: %{},
+   gettext_locale_name: nil,
+   language: "en",
+   language_subtags: [],
+   language_variant: nil,
+   locale: %{calendar: "gregory", collation: "standard"},
+   private_use: [],
+   rbnf_locale_name: "en",
+   requested_locale_name: "en-US",
+   script: "Latn",
+   territory: "US",
+   transform: %{}
+ }}
+```
+
 # Changelog for Cldr v2.2.7
 
 This is the changelog for Cldr v2.2.7 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
