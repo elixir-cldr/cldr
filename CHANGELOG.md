@@ -1,3 +1,17 @@
+# Changelog for Cldr v2.3.0
+
+This is the changelog for Cldr v2.3.0 released on ______, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Adds `Cldr.LanguageTag.to_string/1` which converts a `Cldr.LanguageTag{}` into a langauge tag string. This is useful when creating a collator that is based upon `libicu` since that collator will apply the configuration specified by the `u` extension in the language tag.  For example:
+
+```
+iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-phonebk-nu-arab", MyApp.Cldr
+iex> Cldr.LanguageTag.to_string(locale)
+"en-Latn-US-u-ca-phonebk-nu-arab"
+```
+
 # Changelog for Cldr v2.2.7
 
 This is the changelog for Cldr v2.2.7 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

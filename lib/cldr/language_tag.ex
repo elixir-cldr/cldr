@@ -229,9 +229,9 @@ defmodule Cldr.LanguageTag do
 
   ## Example
 
-      iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-buddhist-nu-arab", MyApp.Cldr
+      iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-phonebk-nu-arab", MyApp.Cldr
       iex> Cldr.LanguageTag.to_string(locale)
-      "en-Latn-US-u-co-standard-nu-arab"
+      "en-Latn-US-u-co-phonebk-nu-arab"
 
   """
   @spec to_string(t) :: String.t
