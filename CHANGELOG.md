@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.3.1
+
+This is the changelog for Cldr v2.3.1 released on March 6th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fix dialyzer errors.  In some cases, notably related to `nimble_parsec`, errors are generated that need to be fixed in a dependency.  These errors are added to the `.dialyzer_ignore_warnings` file for now.
+
 # Changelog for Cldr v2.3.0
 
 This is the changelog for Cldr v2.3.0 released on March 4th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

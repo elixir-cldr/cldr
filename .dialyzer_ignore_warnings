@@ -3,3 +3,17 @@ src/plural_rules_parser.yrl:129: The pattern <{'mod', [_C], [{_L}]}, A, B> can n
 :0: Unknown function 'Elixir.SweetXml':sigil_x/2
 :0: Unknown function 'Elixir.SweetXml':xpath/3
 lib/cldr/config/config.ex:101: The test 'Elixir.Jason' == 'nil' can never evaluate to 'true'
+lib/cldr/config/config.ex:92: Guard test __@1::'Elixir.Jason' =:= 'false' can never succeed
+lib/cldr/language_tag/rfc5646_grammar.ex:34: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'language') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:45: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'language') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:86: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'script') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:95: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'territory') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:110: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'language_variant') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:157: The call 'Elixir.NimbleParsec':unwrap_and_tag(nonempty_maybe_improper_list(),'type') does not have opaque terms as 1st and 2nd arguments
+lib/cldr/language_tag/rfc5646_grammar.ex:188: The call 'Elixir.NimbleParsec':label('Elixir.NimbleParsec':t(),<<_:472>>) contains an opaque term as 1st argument when terms of different types are expected in these positions
+lib/cldr/language_tag/rfc5646_grammar.ex:194: The call 'Elixir.NimbleParsec':tag('Elixir.NimbleParsec':t(),'attributes') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:240: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'key') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:248: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'type') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:265: The call 'Elixir.NimbleParsec':tag('Elixir.NimbleParsec':t(),'private_use') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:327: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'irregular') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument
+lib/cldr/language_tag/rfc5646_grammar.ex:344: The call 'Elixir.NimbleParsec':unwrap_and_tag('Elixir.NimbleParsec':t(),'regular') does not have an opaque term of type 'Elixir.NimbleParsec':t() as 2nd argument

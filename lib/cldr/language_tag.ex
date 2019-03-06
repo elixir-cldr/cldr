@@ -252,7 +252,7 @@ defmodule Cldr.LanguageTag do
       |> Enum.reject(&is_nil/1)
       |> Enum.join("-")
 
-    if locale_extension do
+    if locale_extension != "" do
       basic_tag <> "-u-" <> locale_extension
     else
       basic_tag

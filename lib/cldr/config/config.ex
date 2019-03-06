@@ -79,7 +79,7 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @json_lib Application.get_env(:ex_cldr, :json_library) || @jason || @poison
+  @json_lib Application.get_env(:ex_cldr, :json_library, @jason || @poison)
   def json_library do
     @json_lib
   end
@@ -89,27 +89,20 @@ defmodule Cldr.Config do
   configured and available for use
   """
   def check_jason_lib_is_available! do
-    unless Code.ensure_loaded?(json_library()) && function_exported?(json_library(), :decode!, 1) do
+    unless json_library() && Code.ensure_loaded?(json_library()) && function_exported?(json_library(), :decode!, 1) do
       message =
-        if is_nil(json_library()) do
-          """
-           A json library has not been configured.  Please configure one in
-           your `mix.exs` file.  The preferred library is `:jason`.
-           For example in your `mix.exs`:
+        """
+         A json library has not been configured.  Please configure one in
+         your `mix.exs` file.  The preferred library is `:jason`.
+         For example in your `mix.exs`:
 
-             def deps() do
-               [
-                 {:jason, "~> 1.0"},
-                 ...
-               ]
-             end
-          """
-        else
-          """
-          The json library #{inspect(json_library())} is either
-          not configured or does not define the function decode!/1
-          """
-        end
+           def deps() do
+             [
+               {:jason, "~> 1.0"},
+               ...
+             ]
+           end
+        """
 
       raise ArgumentError, message
     end

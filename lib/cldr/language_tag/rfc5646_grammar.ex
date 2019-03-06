@@ -10,6 +10,7 @@ defmodule Cldr.Rfc5646.Grammar do
   #                 *("-" variant)
   #                 *("-" extensions)
   #                 ["-" privateuse]
+  @dialyzer {:no_return, langtag: 0}
   def langtag do
     language()
     |> optional(ignore(dash()) |> concat(script()))
@@ -27,6 +28,7 @@ defmodule Cldr.Rfc5646.Grammar do
   #                                     ; extended language subtags
   #                 / 4ALPHA            ; or reserved for future use
   #                 / 5*8ALPHA
+  @dialyzer {:no_return, language: 0}
   def language do
     choice([
       alpha5_8() |> unwrap_and_tag(:language),
@@ -37,6 +39,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # Don't support extended language for now
+  @dialyzer {:no_return, iso639: 0}
   def iso639 do
     alpha2_3()
     |> unwrap_and_tag(:language)
@@ -46,6 +49,7 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # extlang       = 3ALPHA              ; selected ISO 639 codes
   #                 *2("-" 3ALPHA)      ; permanently reserved
+  @dialyzer {:no_return, extlangs: 0}
   def extlangs do
     choice([
       script(),
@@ -76,6 +80,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # script        = 4ALPHA
+  @dialyzer {:no_return, script: 0}
   def script do
     alpha4()
     |> unwrap_and_tag(:script)
@@ -84,6 +89,7 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # region        = 2ALPHA              ; ISO 3166-1 code
   #                 / 3DIGIT
+  @dialyzer {:no_return, region: 0}
   def region do
     choice([alpha2(), integer3()])
     |> unwrap_and_tag(:territory)
@@ -95,6 +101,7 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # variant       = 5*8alphanum         ; registered variants
   #                 / (DIGIT 3alphanum)
+  @dialyzer {:no_return, variant: 0}
   def variant do
     choice([
       alpha_numeric5_8(),
@@ -108,11 +115,13 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # extensions    = locale / transform / extension
+  @dialyzer {:no_return, extensions: 0}
   def extensions do
     choice([locale(), transform(), extension()])
   end
 
   # locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword))
+  @dialyzer {:no_return, locale: 0}
   def locale do
     ignore(ascii_string([?u, ?U], 1))
     |> choice([attributes() |> concat(keywords()), keywords()])
@@ -130,6 +139,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # transform     = "t" (1*("-" keyword))
+  @dialyzer {:no_return, transform: 0}
   def transform do
     ignore(ascii_string([?t, ?T], 1))
     |> ignore(dash())
@@ -141,6 +151,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # extension     = singleton 1*("-" (2*8alphanum))
+  @dialyzer {:no_return, extension: 0}
   def extension do
     singleton()
     |> unwrap_and_tag(:type)
@@ -177,11 +188,13 @@ defmodule Cldr.Rfc5646.Grammar do
     |> label("a single alphanumeric character that is not 'x', 'u' or 't'")
   end
 
+  @dialyzer {:no_return, attributes: 0}
   def attributes do
     times(ignore(dash()) |> concat(attribute()), min: 1)
     |> tag(:attributes)
   end
 
+  @dialyzer {:no_return, keywords: 0}
   def keywords do
     repeat(ignore(dash()) |> concat(keyword()))
     |> reduce(:collapse_keywords)
@@ -213,6 +226,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # keyword       = key ["-" type]
+  @dialyzer {:no_return, keyword: 0}
   def keyword do
     key()
     |> optional(ignore(dash()) |> concat(type()))
@@ -220,6 +234,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # key           = 2alphanum
+  @dialyzer {:no_return, key: 0}
   def key do
     alpha_numeric2()
     |> unwrap_and_tag(:key)
@@ -227,6 +242,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # type          = 3*8alphanum *("-" 3*8alphanum)
+  @dialyzer {:no_return, type: 0}
   def type do
     alpha_numeric3_8()
     |> unwrap_and_tag(:type)
@@ -242,6 +258,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # privateuse    = "x" 1*("-" (1*8alphanum))
+  @dialyzer {:no_return, private_use: 0}
   def private_use do
     ignore(ascii_string([?x, ?X], 1))
     |> times(ignore(dash()) |> concat(alpha_numeric1_8()), min: 1)
@@ -279,12 +296,14 @@ defmodule Cldr.Rfc5646.Grammar do
   #               / "zh-min"            ; in favor of a more modern
   #               / "zh-min-nan"        ; subtag or sequence of subtags
   #               / "zh-xiang"
+  @dialyzer {:no_return, grandfathered: 0}
   def grandfathered do
     choice([irregular(), regular()])
     |> tag(:grandfathered)
     |> label("a grandfathered language tag")
   end
 
+  @dialyzer {:no_return, irregular: 0}
   def irregular do
     choice([
       string("en-GB-oed"),
@@ -309,6 +328,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> label("one of the irregular language tags in BCP-47")
   end
 
+  @dialyzer {:no_return, regular: 0}
   def regular do
     choice([
       string("art-lojban"),
