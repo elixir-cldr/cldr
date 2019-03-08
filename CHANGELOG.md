@@ -10,7 +10,7 @@ This is the changelog for Cldr v2.3.2 released on March 8th, 2019.  For older ch
     * a configured Phoenix `json_library`
     * a configured Ecto `json_library`
     * `Jason` if configured
-    * `Poison` is configured
+    * `Poison` if configured
 
 # Changelog for Cldr v2.3.1
 
