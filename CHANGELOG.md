@@ -1,3 +1,17 @@
+# Changelog for Cldr v2.3.2
+
+This is the changelog for Cldr v2.3.2 released on March 8th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Does a better job of detecting a required JSON library and raising at compile time if no such library can be found.  In order of priority the search for a JSON library is:
+
+    * the key `:json_library` under the application key `:ex_cldr`
+    * a configured Phoenix `json_library`
+    * a configured Ecto `json_library`
+    * `Jason` if configured
+    * `Poison` is configured
+
 # Changelog for Cldr v2.3.1
 
 This is the changelog for Cldr v2.3.1 released on March 6th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
