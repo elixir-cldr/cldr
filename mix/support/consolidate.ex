@@ -321,9 +321,25 @@ defmodule Cldr.Consolidate do
     |> File.read!()
     |> Jason.decode!()
     |> get_in(["supplemental", "weekData"])
+    |> adjust_day_names
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  defp adjust_day_names(content) do
+    content
+    |> Cldr.Map.deep_map(&(&1), fn
+      "sun" -> 7
+      "mon" -> 1
+      "tue" -> 2
+      "wed" -> 3
+      "thu" -> 4
+      "fri" -> 5
+      "sat" -> 6
+      other -> other
+    end)
+    |> Map.new
   end
 
   @doc false

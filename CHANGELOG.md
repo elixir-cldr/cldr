@@ -6,6 +6,8 @@ This is the changelog for Cldr v2.4.0 released on March 10th, 2019.  For older c
 
 * Minor restructuring of the locale files.  Calendar map keys are harmonised to have the same names and meanings. This would not normally be user visible but a change in data format suggests a minor version bump to easy version management.
 
+* Restructure the data returned by `Cldr.Config.week_info/0` to also encode week days as numbers in the range 1..7 where 1 is Monday.
+
 # Changelog for Cldr v2.3.2
 
 This is the changelog for Cldr v2.3.2 released on March 8th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
