@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.4.0
+
+This is the changelog for Cldr v2.4.0 released on March 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Minor restructuring of the locale files.  Calendar map keys are harmonised to have the same names and meanings. This would not normally be user visible but a change in data format suggests a minor version bump to easy version management.
+
 # Changelog for Cldr v2.3.1
 
 This is the changelog for Cldr v2.3.1 released on March 6th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

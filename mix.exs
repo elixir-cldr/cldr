@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.3.1"
+  @version "2.4.0"
 
   def project do
     [
@@ -53,7 +53,7 @@ defmodule Cldr.Mixfile do
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 0.13", only: :dev, runtime: false},
-      {:cldr_utils, "~> 2.0"}
+      {:cldr_utils, "~> 2.1"}
     ]
   end
 

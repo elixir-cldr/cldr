@@ -69,7 +69,7 @@ defmodule Cldr.Consolidate do
 
   """
   def consolidate_locale(locale) do
-    IO.puts("Consolidating locale #{locale}")
+    IO.puts("Consolidating locale #{inspect locale}")
 
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
@@ -99,6 +99,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.DateTime.normalize(locale)
     |> Normalize.TerritoryNames.normalize(locale)
     |> Normalize.LanguageNames.normalize(locale)
+    |> Normalize.Calendar.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
