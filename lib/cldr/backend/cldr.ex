@@ -420,7 +420,7 @@ defmodule Cldr.Backend do
         case locale do
           {:error, {Cldr.UnknownLocaleError, _}} -> {:error, Locale.locale_error(locale_name)}
           {:error, reason} -> {:error, reason}
-          locale -> locale
+          {:ok, locale} -> {:ok, locale}
         end
       end
 
@@ -444,14 +444,19 @@ defmodule Cldr.Backend do
 
       # It's not a well known locale so we need to
       # parse and validate
-      defp do_validate_locale(locale) do
-        with {:ok, locale} <- Cldr.Locale.new(locale, unquote(backend)),
-             true <- !is_nil(locale.cldr_locale_name) do
+      defp do_validate_locale(locale_name) do
+        with {:ok, locale} <- Cldr.Locale.new(locale_name, unquote(backend)),
+             {:ok, locale} <- known_cldr_locale(locale, locale_name) do
           {:ok, locale}
-        else
-          false -> {:error, Cldr.Locale.locale_error(locale)}
-          {:error, reason} -> {:error, reason}
         end
+      end
+
+      defp known_cldr_locale(%LanguageTag{cldr_locale_name: nil}, locale_name) do
+        {:error, Cldr.Locale.locale_error(locale_name)}
+      end
+
+      defp known_cldr_locale(%LanguageTag{} = locale, _locale_name) do
+        {:ok, locale}
       end
 
       @doc """
