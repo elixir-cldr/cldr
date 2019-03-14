@@ -8,7 +8,7 @@ end
 
 # Tests when there is no config
 defmodule DefaultBackend.Cldr do
-  use Cldr
+  use Cldr, generate_docs: false
 end
 
 # Tests when there are locales but no default
