@@ -12,9 +12,14 @@ defmodule Cldr.Config.Dependents do
     }
   end
 
+  # Cldr.Currency is automatically generated from
+  # Cldr.Numbers so we shouldn't auto generate here
+  # Eventually we should remove the idea of known
+  # provider modules
   defp known_provider_modules do
     known_providers()
     |> Map.keys
+    |> List.delete(Cldr.Currency)
   end
 
   @provider_fun_name :cldr_backend_provider

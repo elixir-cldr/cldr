@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.4.2
+
+This is the changelog for Cldr v2.4.2 released on March 15th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Exclude `Cldr.Currency` from the list of known providers so that it won't be compiled twice when working with `ex_cldr_numbers`.
+
 # Changelog for Cldr v2.4.1
 
 This is the changelog for Cldr v2.4.1 released on March 14th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
