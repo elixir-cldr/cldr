@@ -4,6 +4,6 @@ if Mix.env in [:dev, :release, :test] do
   defmodule MyApp.Cldr do
     use Cldr,
       locales: ["en", "de", "ja", "en-AU", "th", "ar"],
-      generate_backend_docs: false
+      generate_docs: false
   end
 end
