@@ -7,7 +7,7 @@
 
 `Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 18th 2018 and Version 1.8.0, `Cldr` is based upon [CLDR version 34.0.0](https://github.com/unicode-cldr/cldr-json).
 
-The first step is to define a module that will host the desired `Cldr` configuration and the functions that servce the public API.  This module is referred to in this documentation as a `backend` module. For example:
+The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
     @doc """
     Define a backend module that will host our
@@ -55,7 +55,7 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 ## Installation
 
-Add `ex_cldr` as a dependency to your `mix` project:
+Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix` project:
 
     defp deps do
       [
@@ -68,7 +68,7 @@ Add `ex_cldr` as a dependency to your `mix` project:
       ]
     end
 
-then retrieve `ex_cldr` from [hex](https://hex.pm/packages/ex_cldr):
+then retrieve `ex_cldr` and the JSON library from [hex](https://hex.pm/packages/ex_cldr):
 
     mix deps.get
     mix deps.compile
@@ -120,7 +120,8 @@ The preferred configuration method is to define the configuration in the backend
          otp_app: :my_app
          precompile_number_formats: ["¤¤#,##0.##"],
          precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
-         providers: [Cldr.Number]
+         providers: [Cldr.Number],
+         generate_docs: true
       end
 
 ### Otp App Configuration
@@ -170,17 +171,19 @@ use Cldr,
 
  * There is one additional setting which is `:all` which will configure all 537 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
- * `gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
+ * `:gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
- * `data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(otp_app)` where `otp_app` is the app defined under the `:otp_app` configuration key.  If that key is not specified then the `:ex_cldr` app is used. It is recommended that an `:otp_app` key is specified in your backend module configuration.
+ * `:data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(otp_app)` where `otp_app` is the app defined under the `:otp_app` configuration key.  If that key is not specified then the `:ex_cldr` app is used. It is recommended that an `:otp_app` key is specified in your backend module configuration.
 
- * `precompile_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
+ * `:precompile_number_formats`: provides a means to have user-defined format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled.
 
- * `precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
+ * `:precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
 
  * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
 
- * `json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used. This key can only be specified in the global configuration in `mix.exs`.  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
+ * `:json_library`: Configures the json library to be used for decoding the locale definition files. The default is `Jason` if available then `Poison` if not.  Any library that provides the functions `encode!/1` and `decode!/1` can be used. This key can only be specified in the global configuration in `mix.exs`.  **Since the json library is configurable it will also need to be configured in the project's `mix.exs`**.
+
+ * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) which prevent the generation of docs for this backend.
 
 ### Providers
 
