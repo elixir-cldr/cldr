@@ -12,7 +12,8 @@ defmodule Cldr.Config do
     providers: nil,
     precompile_number_formats: [],
     precompile_transliterations: [],
-    otp_app: nil
+    otp_app: nil,
+    generate_docs: true
 
   @type t :: %__MODULE__{
     default_locale: binary(),
@@ -23,7 +24,8 @@ defmodule Cldr.Config do
     precompile_number_formats: [binary(), ...],
     precompile_transliterations: [{atom(), atom()}, ...],
     otp_app: atom() | nil,
-    providers: [atom(), ...]
+    providers: [atom(), ...],
+    generate_docs: boolean()
   }
 
   @type number_system :: atom() | String.t()
@@ -44,6 +46,14 @@ defmodule Cldr.Config do
     "territories",
     "languages"
   ]
+
+  def include_module_docs?(false) do
+    false
+  end
+
+  def include_module_docs?(_flag) do
+    true
+  end
 
   @doc false
   @non_language_locale_names []

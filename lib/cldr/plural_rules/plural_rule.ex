@@ -421,9 +421,12 @@ defmodule Cldr.Number.PluralRule do
   def define_ordinal_and_cardinal_modules(config) do
     quote location: :keep do
       defmodule Number.Ordinal do
-        @moduledoc """
-        Implements ordinal plural rules for numbers.
-        """
+        @moduledoc false
+        if Cldr.Config.include_module_docs?(unquote(config.generate_docs)) do
+          @moduledoc """
+          Implements ordinal plural rules for numbers.
+          """
+        end
 
         use Cldr.Number.PluralRule, type: :ordinal, config: unquote(Macro.escape(config))
         alias Cldr.LanguageTag
@@ -432,9 +435,12 @@ defmodule Cldr.Number.PluralRule do
       end
 
       defmodule Number.Cardinal do
-        @moduledoc """
-        Implements cardinal plural rules for numbers.
-        """
+        @moduledoc false
+        if Cldr.Config.include_module_docs?(unquote(config.generate_docs)) do
+          @moduledoc """
+          Implements cardinal plural rules for numbers.
+          """
+        end
 
         use Cldr.Number.PluralRule, type: :cardinal, config: unquote(Macro.escape(config))
         alias Cldr.LanguageTag
@@ -444,13 +450,16 @@ defmodule Cldr.Number.PluralRule do
     end
   end
 
-  def define_plural_ranges(_config) do
-    quote location: :keep, unquote: false do
+  def define_plural_ranges(config) do
+    quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
       defmodule Number.PluralRule.Range do
-        @moduledoc """
-        Implements plural rules for ranges
+        @moduledoc false
+        if Cldr.Config.include_module_docs?(config.generate_docs) do
+          @moduledoc """
+          Implements plural rules for ranges
 
-        """
+          """
+        end
 
         alias Cldr.Number.PluralRule
 

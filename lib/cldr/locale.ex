@@ -171,6 +171,14 @@ defmodule Cldr.Locale do
   def define_locale_new(config) do
     quote location: :keep do
       defmodule Locale do
+        @moduledoc false
+        if Cldr.Config.include_module_docs?(unquote(config.generate_docs)) do
+          @moduledoc """
+          Backend module that provides functions
+          to define new locales.
+          """
+        end
+
         def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
         def new!(locale_name), do: Cldr.Locale.new!(locale_name, unquote(config.backend))
       end

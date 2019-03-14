@@ -4,10 +4,14 @@ defmodule Cldr.Gettext.Plural do
   def define_gettext_plurals_module(config) do
     quote location: :keep do
       defmodule Gettext.Plural do
-        @moduledoc """
-        Defines a Plural module for Gettext that uses the `Cldr` plural rules.
+        @moduledoc false
+        if Cldr.Config.include_module_docs?(unquote(config.generate_docs)) do
+          @moduledoc """
+          Defines a Plural module for Gettext that uses the `Cldr` plural rules.
 
-        """
+          """
+        end
+
         @behaviour :"Elixir.Gettext.Plural"
 
         alias Cldr.LanguageTag

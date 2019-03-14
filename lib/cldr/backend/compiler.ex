@@ -14,16 +14,20 @@ defmodule Cldr.Backend.Compiler do
     Cldr.install_locales(config)
 
     quote location: :keep do
-      @moduledoc """
-      Provides the core functions to retrieve and manage
-      the CLDR data that supports formatting and localisation.
+      @moduledoc false
+      if Cldr.Config.include_module_docs?(unquote(config.generate_docs)) do
+        @moduledoc """
+        Provides the core functions to retrieve and manage
+        the CLDR data that supports formatting and localisation.
 
-      It provides the core functions to access formatted
-      CLDR data, set and retrieve a current locale and validate
-      certain core data types such as locales, currencies and
-      territories.
+        It provides the core functions to access formatted
+        CLDR data, set and retrieve a current locale and validate
+        certain core data types such as locales, currencies and
+        territories.
 
-      """
+        """
+      end
+
       alias Cldr.Config
       alias Cldr.LanguageTag
       alias Cldr.Locale
