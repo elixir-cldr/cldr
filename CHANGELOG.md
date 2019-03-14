@@ -4,7 +4,7 @@ This is the changelog for Cldr v2.4.1 released on March 14th, 2019.  For older c
 
 ### Enhancements
 
-* Makes generation of documentation for backend modules options.  The is implemented with the `:generate_backend_docs` option to the backend configuration.  The default is `true`. For example:
+* Makes generation of documentation for backend modules optional.  This is implemented by the `:generate_docs` option to the backend configuration.  The default is `true`. For example:
 
 ```
 defmodule MyApp.Cldr do
