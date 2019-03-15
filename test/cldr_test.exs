@@ -272,12 +272,13 @@ defmodule Cldr.Test do
     assert {:ok, locale} = Cldr.validate_locale "en-au-u-ca-buddhist", TestBackend.Cldr
   end
 
-  test "that no module docs are generated for a backend" do
-    assert {:docs_v1, _, :elixir, _, :hidden, %{}, _} = Code.fetch_docs(DefaultBackend.Cldr)
-  end
+  if Version.compare(System.version, "1.7.0") in [:gt, :eq] do
+    test "that no module docs are generated for a backend" do
+      assert {:docs_v1, _, :elixir, _, :hidden, %{}, _} = Code.fetch_docs(DefaultBackend.Cldr)
+    end
 
-  assert "that module docs are generated for a backend" do
-    {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} = Code.fetch_docs(TestBackend.Cldr)
+    assert "that module docs are generated for a backend" do
+      {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} = Code.fetch_docs(TestBackend.Cldr)
+    end
   end
-
 end
