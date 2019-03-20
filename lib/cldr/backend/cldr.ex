@@ -327,9 +327,7 @@ defmodule Cldr.Backend do
       @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
               {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-      @dialyzer {:nowarn_function, put_locale: 1}
-
-      def put_locale(locale_name) do
+     def put_locale(locale_name) do
         with {:ok, locale} <- validate_locale(locale_name) do
           Cldr.put_locale(__MODULE__, locale)
         end
@@ -400,7 +398,7 @@ defmodule Cldr.Backend do
 
       """
       @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
-              {:ok, String.t()} | {:error, {module(), String.t()}}
+              {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
       def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do
         {:error, Locale.locale_error(locale)}

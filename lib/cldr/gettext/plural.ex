@@ -33,8 +33,8 @@ defmodule Cldr.Gettext.Plural do
             2
 
         """
-        @dialyzer {:nowarn_function, nplurals: 1}
         @spec nplurals(Locale.locale_name() | LanguageTag.t()) :: pos_integer() | no_return()
+
         def nplurals(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
           Cardinal.gettext_nplurals()
           |> Map.get(cldr_locale_name)
@@ -81,7 +81,6 @@ defmodule Cldr.Gettext.Plural do
 
         """
         @spec plural(Locale.locale_name() | LanguageTag.t(), number()) :: pos_integer() | no_return()
-        @dialyzer {:nowarn_function, plural: 2}
 
         def plural(%LanguageTag{cldr_locale_name: cldr_locale_name} = locale, n) do
           rule = Cardinal.plural_rule(n, cldr_locale_name)

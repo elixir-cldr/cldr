@@ -24,8 +24,6 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
-      @dialyzer {:nowarn_function, pluralize: 3}
-
       @module Atom.to_string(unquote(module_name)) |> String.capitalize()
 
       @rules Cldr.Config.cldr_data_dir()
@@ -241,7 +239,6 @@ defmodule Cldr.Number.PluralRule do
 
       """
       @spec plural_rules_for(Locale.locale_name() | LanguageTag.t()) :: [{atom(), list()}, ...]
-      @dialyzer {:nowarn_function, plural_rules_for: 1}
 
       def plural_rules_for(%LanguageTag{cldr_locale_name: cldr_locale_name, language: language}) do
         plural_rules()[cldr_locale_name] || plural_rules()[language]
@@ -341,8 +338,6 @@ defmodule Cldr.Number.PluralRule do
               Locale.locale_name() | LanguageTag.t(),
               atom() | pos_integer()
             ) :: Cldr.Number.PluralRule.plural_type()
-
-      @dialyzer {:nowarn_function, plural_rule: 3}
 
       def plural_rule(number, locale, rounding \\ Math.default_rounding())
 

@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.4.3
+
+This is the changelog for Cldr v2.4.3 released on March 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.validate_locale/1` @spec error and remove spurious `@dialyzer` directives
+
 # Changelog for Cldr v2.4.2
 
 This is the changelog for Cldr v2.4.2 released on March 15th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

@@ -422,7 +422,7 @@ defmodule Cldr do
 
   """
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
-          {:ok, String.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
   def validate_locale(locale, backend) do
     backend.validate_locale(locale)
   end
