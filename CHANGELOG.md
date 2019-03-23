@@ -1,3 +1,15 @@
+# Changelog for Cldr v2.5.0
+
+This is the changelog for Cldr v2.5.0 released on March 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Adds the global `:ex_cldr` configuration key `:default_backend`.
+
+* Adds `Cldr.default_backend/0` which will return the configured default backend or will raise an exception if not is configured.
+
+* Where appropriate, `Cldr.*` will now use `Cldr.default_backend()` as a default parameter.
+
 # Changelog for Cldr v2.4.3
 
 This is the changelog for Cldr v2.4.3 released on March 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

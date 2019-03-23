@@ -376,8 +376,26 @@ defmodule Cldr do
 
   """
   @spec default_territory(backend()) :: atom()
-  def default_territory(backend) do
+  def default_territory(backend \\ default_backend()) do
     backend.default_territory
+  end
+
+  @doc """
+  Returns the default backend module.
+
+  The default backend is configured in `config.exs`
+  under the `ex_cldr` key as follows:
+
+      config :ex_cldr,
+        default_backend: <backend_module>
+
+  If not configured, the CLDR default
+  backend of `Cldr.Backend.Default` is
+  returned.
+
+  """
+  def default_backend do
+    Cldr.Config.default_backend()
   end
 
   @doc """
@@ -389,7 +407,10 @@ defmodule Cldr do
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Returns
 
@@ -423,7 +444,7 @@ defmodule Cldr do
   """
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
-  def validate_locale(locale, backend) do
+  def validate_locale(locale, backend \\ Cldr.default_backend()) do
     backend.validate_locale(locale)
   end
 
@@ -452,7 +473,10 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
@@ -461,7 +485,7 @@ defmodule Cldr do
 
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def requested_locale_names(backend) do
+  def requested_locale_names(backend \\ default_backend()) do
     backend.requested_locale_names
   end
 
@@ -471,7 +495,10 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   Known locales are those locales which
   are the subset of all CLDR locales that
@@ -481,7 +508,7 @@ defmodule Cldr do
 
   """
   @spec known_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_locale_names(backend) do
+  def known_locale_names(backend \\ default_backend()) do
     backend.known_locale_names
   end
 
@@ -492,7 +519,10 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   Since there is a compile-time exception raise if there are
   any unknown locales this function should always
@@ -500,7 +530,7 @@ defmodule Cldr do
 
   """
   @spec unknown_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def unknown_locale_names(backend) do
+  def unknown_locale_names(backend \\ default_backend()) do
     backend.unknown_locale_names
   end
 
@@ -515,7 +545,7 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_rbnf_locale_names(backend) do
+  def known_rbnf_locale_names(backend \\ default_backend()) do
     backend.known_rbnf_locale_names
   end
 
@@ -527,11 +557,14 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   """
   @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_gettext_locale_names(backend) do
+  def known_gettext_locale_names(backend \\ default_backend()) do
     backend.known_gettext_locale_names
   end
 
@@ -544,7 +577,10 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -556,7 +592,7 @@ defmodule Cldr do
 
   """
   @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_locale_name?(locale_name, backend) when is_binary(locale_name) do
+  def known_locale_name?(locale_name, backend \\ default_backend()) when is_binary(locale_name) do
     locale_name in backend.known_locale_names
   end
 
@@ -570,7 +606,10 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -582,7 +621,8 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_rbnf_locale_name?(locale_name, backend) when is_binary(locale_name) do
+  def known_rbnf_locale_name?(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
     locale_name in backend.known_rbnf_locale_names
   end
 
@@ -595,7 +635,10 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -607,7 +650,8 @@ defmodule Cldr do
 
   """
   @spec known_gettext_locale_name?(Locale.locale_name(), backend) :: boolean
-  def known_gettext_locale_name?(locale_name, backend) when is_binary(locale_name) do
+  def known_gettext_locale_name?(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
     locale_name in backend.known_gettext_locale_names
   end
 
@@ -623,7 +667,10 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -635,7 +682,8 @@ defmodule Cldr do
 
   """
   @spec known_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_locale_name(locale_name, backend) when is_binary(locale_name) do
+  def known_locale_name(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
     backend.known_locale_name(locale_name)
   end
 
@@ -649,7 +697,10 @@ defmodule Cldr do
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -661,7 +712,8 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_rbnf_locale_name(locale_name, backend) when is_binary(locale_name) do
+  def known_rbnf_locale_name(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
     if backend.known_rbnf_locale_name?(locale_name) do
       locale_name
     else
@@ -677,10 +729,12 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Examples
 
@@ -692,7 +746,8 @@ defmodule Cldr do
 
   """
   @spec known_gettext_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_gettext_locale_name(locale_name, backend) when is_binary(locale_name) do
+  def known_gettext_locale_name(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
     backend.known_gettext_locale_name(locale_name)
   end
 
@@ -736,7 +791,10 @@ defmodule Cldr do
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Returns
 
@@ -750,7 +808,10 @@ defmodule Cldr do
   @spec validate_gettext_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def validate_gettext_locale(locale_name, backend) when is_binary(locale_name) do
+  def validate_gettext_locale(locale_name, backend \\ default_backend())
+
+  def validate_gettext_locale(locale_name, backend)
+      when is_binary(locale_name) do
     case Cldr.Locale.new(locale_name, backend) do
       {:ok, locale} -> validate_gettext_locale(locale, backend)
       {:error, reason} -> {:error, reason}
@@ -1231,7 +1292,10 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Example
 
@@ -1239,7 +1303,7 @@ defmodule Cldr do
       [:default, :finance, :native, :traditional]
 
   """
-  def known_number_system_types(backend) do
+  def known_number_system_types(backend \\ default_backend()) do
     backend.known_number_system_types
   end
 
@@ -1252,7 +1316,10 @@ defmodule Cldr do
     `Cldr.known_number_system_types/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
 
   ## Returns
 
@@ -1278,7 +1345,7 @@ defmodule Cldr do
   @spec validate_number_system_type(String.t() | atom(), backend()) ::
           {:ok, atom()} | {:error, {module(), String.t()}}
 
-  def validate_number_system_type(number_system_type, backend) do
+  def validate_number_system_type(number_system_type, backend \\ default_backend()) do
     backend.validate_number_system_type(number_system_type)
   end
 

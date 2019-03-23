@@ -8,7 +8,8 @@ defmodule Cldr.Config.Dependents do
       Cldr.DateTime  => {Cldr.DateTime.Backend, :define_date_time_modules},
       Cldr.List      => {Cldr.List.Backend, :define_list_module},
       Cldr.Unit      => {Cldr.Unit.Backend, :define_unit_module},
-      Cldr.Territory => {Cldr.Territory.Backend, :define_territory_module}
+      Cldr.Territory => {Cldr.Territory.Backend, :define_territory_module},
+      Cldr.Calendar  => {Cldr.Calendar.Backend, :define_calendar_module}
     }
   end
 
@@ -27,9 +28,11 @@ defmodule Cldr.Config.Dependents do
   # For compatibility with the releases that don't configure
   # Reconsider this.
   def cldr_provider_modules(%Cldr.Config{providers: nil, backend: backend} = config) do
-    IO.warn("No Cldr provider modules were configured under the :providers " <>
-    "key in backend module #{inspect backend}. " <>
-    "Attempting to configure known Cldr providers.")
+    if !config.supress_warnings do
+      require Logger
+      Logger.warn("#{inspect backend}: No Cldr provider modules were configured. " <>
+      "Attempting to configure known Cldr providers.")
+    end
 
     cldr_provider_modules(%{config | providers: known_provider_modules()})
   end

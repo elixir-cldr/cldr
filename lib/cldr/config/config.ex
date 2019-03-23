@@ -13,7 +13,8 @@ defmodule Cldr.Config do
     precompile_number_formats: [],
     precompile_transliterations: [],
     otp_app: nil,
-    generate_docs: true
+    generate_docs: true,
+    supress_warnings: false
 
   @type t :: %__MODULE__{
     default_locale: binary(),
@@ -25,7 +26,8 @@ defmodule Cldr.Config do
     precompile_transliterations: [{atom(), atom()}, ...],
     otp_app: atom() | nil,
     providers: [atom(), ...],
-    generate_docs: boolean()
+    generate_docs: boolean(),
+    supress_warnings: boolean()
   }
 
   @type number_system :: atom() | String.t()
@@ -263,9 +265,8 @@ defmodule Cldr.Config do
   @spec default_locale_name(t()) :: Locale.locale_name()
   def default_locale_name(%{} = config) do
     Map.get(config, :default_locale) ||
-    Application.get_env(app_name(), :default_locale) ||
-    gettext_default_locale(config) ||
-    @default_locale
+    Application.get_env(app_name(), :default_locale,
+      gettext_default_locale(config) || @default_locale)
   end
 
   @doc """
@@ -273,8 +274,17 @@ defmodule Cldr.Config do
 
   """
   def default_locale do
-    default = Application.get_env(app_name(), :default_locale) || @default_locale
+    default = Application.get_env(app_name(), :default_locale, @default_locale)
     language_tag(default)
+  end
+
+  @doc """
+  Return the system-wide default backend
+
+  """
+  def default_backend do
+    Application.get_env(app_name(), :default_backend) ||
+    raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured"
   end
 
   @doc """
@@ -1878,24 +1888,29 @@ defmodule Cldr.Config do
       if Code.ensure_loaded?(module) && function_exported?(module, function, 1) do
         apply(module, function, args)
       else
-        log_provider_warning(module, function, args)
+        log_provider_warning(module, function, args, config)
       end
     end
   end
 
-  defp log_provider_warning(module, function, args) do
+  defp log_provider_warning(module, function, args, %{supress_warnings: false} = config) do
     require Logger
 
     cond do
       !Code.ensure_loaded?(module) ->
-        Logger.warn "The CLDR provider module #{inspect module} was not found"
+        Logger.warn "#{inspect config.backend}: The CLDR provider module #{inspect module} " <>
+          "was not found"
       !function_exported?(module, function, 1) ->
-        Logger.warn "The CLDR provider module #{inspect module} does not implement " <>
-        "the function #{function}/#{length(args)}"
+        Logger.warn "#{inspect config.backend}: The CLDR provider module #{inspect module} " <>
+          "does not implement the function #{function}/#{length(args)}"
       true ->
-        Logger.warn "Could not execute the CLDR provider " <>
-        "#{inspect module}.#{function}/#{length(args)}"
+        Logger.warn "#{inspect config.backend}: Could not execute the CLDR provider " <>
+          "#{inspect module}.#{function}/#{length(args)}"
     end
+  end
+
+  defp log_provider_warning(_module, _function, _args, %{supress_warnings: true}) do
+    :ok
   end
 
   @doc false
@@ -1929,7 +1944,7 @@ defmodule Cldr.Config do
     end
   end
 
-  @non_deprecated_keys [:json_library, :default_locale]
+  @non_deprecated_keys [:json_library, :default_locale, :default_backend]
   @doc false
   def maybe_deprecate_global_config! do
     remaining_config =

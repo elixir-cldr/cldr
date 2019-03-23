@@ -203,3 +203,15 @@ defmodule Cldr.LanguageTag.ParseError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.NoDefaultBackendError do
+  @moduledoc """
+  Exception raised when there is no
+  default backend configured
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

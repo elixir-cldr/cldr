@@ -281,4 +281,16 @@ defmodule Cldr.Test do
       {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} = Code.fetch_docs(TestBackend.Cldr)
     end
   end
+
+  test "that we get an exception when relying on Cldr.default_backend() and its not configured" do
+    assert_raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured", fn ->
+      Cldr.validate_locale("en")
+    end
+  end
+
+  test "that we don't get an exception if a default backend is configured" do
+    Application.put_env(:ex_cldr, :default_backend, MyApp.Cldr)
+    {:ok, _locale} = Cldr.validate_locale("en")
+    Application.put_env(:ex_cldr, :default_backend, nil)
+  end
 end
