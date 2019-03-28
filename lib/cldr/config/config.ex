@@ -593,12 +593,12 @@ defmodule Cldr.Config do
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
        :cakm, :cham, :cyrl, :deva, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
        :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
-       :hebr, :hmng, :java, :jpan, :jpanfin, :kali, :khmr, :knda, :lana, :lanatham,
+       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :khmr, :knda, :lana, :lanatham,
        :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
        :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :vaii, :wara]
+       :tirh, :vaii, :wara, :wcho]
 
   """
   def known_number_systems do
@@ -1083,7 +1083,7 @@ defmodule Cldr.Config do
   ## Examples
 
       iex> Cldr.Config.expand_locale_names(["en-A+"])
-      ["en", "en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
+      ["en", "en-AE", "en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
 
       iex> Cldr.Config.expand_locale_names(["fr-*"])
       ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",

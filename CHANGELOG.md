@@ -1,3 +1,20 @@
+# Changelog for Cldr v2.6.0
+
+This is the changelog for Cldr v2.6.0 released on March 28th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Updates to [CLDR version 35.0.0](http://cldr.unicode.org/index/downloads/cldr-35) released on March 27th 2019.
+
+There is one unresolved issue in this implementation related to plural rules for the locale "kw" (Cornish).
+
+The plural rule definition for `:other` in the repository is:
+```
+"pluralRule-count-other": " @integer 4~19, 100, 1000000, … @decimal 0.1~0.9, 1.1~1.7, 10.0, 100.0, 1000.0 100000.0 1000000.0, …",
+```
+
+However in rules testing, the values `1000.0`, `10000.0` and `100000.0` are resolving to category `:two` rather than `:other`. Until this is resolved, these data points are removed from the test data.
+
 # Changelog for Cldr v2.5.0
 
 This is the changelog for Cldr v2.5.0 released on March 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

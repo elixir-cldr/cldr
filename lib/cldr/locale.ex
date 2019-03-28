@@ -89,12 +89,20 @@ defmodule Cldr.Locale do
   code for "Moldovian".  The replacement code is "ro" (Romanian).
 
       iex> Cldr.Locale.new("mo", TestBackend.Cldr)
-      {:ok,
-        %Cldr.LanguageTag{canonical_locale_name: "ro-Latn-MD",
-         cldr_locale_name: "ro-MD", extensions: %{}, language: "ro",
-         locale: %{}, private_use: [], rbnf_locale_name: "ro",
-         requested_locale_name: "mo", script: "Latn", territory: "MD",
-         transform: %{}, language_variant: nil}}
+      {:ok, %Cldr.LanguageTag{extensions: %{},
+        gettext_locale_name: nil,
+        language: "ro",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{}, private_use: [],
+        rbnf_locale_name: "ro",
+        requested_locale_name: "mo",
+        script: "Latn",
+        transform: %{},
+        canonical_locale_name: "ro-Latn-RO",
+        cldr_locale_name: "ro",
+        territory: "RO"
+      }}
 
   ### Likely subtags
 
@@ -544,14 +552,13 @@ defmodule Cldr.Locale do
         extensions: %{},
         gettext_locale_name: nil,
         language: "ro",
-        locale: %{},
-        private_use: [],
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{}, private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "mo",
-        script: nil,
-        territory: "MD",
-        transform: %{},
-        language_variant: nil
+        script: nil, transform: %{},
+        territory: nil
       }
 
   """
