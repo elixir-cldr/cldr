@@ -259,6 +259,12 @@ defmodule Cldr.Test do
     assert Cldr.Config.client_data_dir(DefaultBackend.Cldr) =~ "cldr/_build/test/lib/ex_cldr/priv/cldr"
   end
 
+  test "that an unknown otp_app config raises" do
+    assert_raise Cldr.UnknownOTPAppError, "The configured OTP app :rubbish is not known", fn ->
+      Cldr.Config.client_data_dir(%{otp_app: :rubbish})
+    end
+  end
+
   test "return of currency map" do
     {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
     assert Map.get(currencies, :AUD)

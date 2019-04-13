@@ -210,7 +210,12 @@ defmodule Cldr.Config do
   end
 
   def client_data_dir(%{otp_app: otp_app}) do
-    [:code.priv_dir(otp_app), "/cldr"] |> :erlang.iolist_to_binary()
+    case :code.priv_dir(otp_app) do
+      {:error, :bad_name} ->
+        raise Cldr.UnknownOTPAppError, "The configured OTP app #{inspect otp_app} is not known"
+      priv_dir ->
+        [priv_dir, "/cldr"] |> :erlang.iolist_to_binary()
+    end
   end
 
   def client_data_dir(config) when is_map(config) do

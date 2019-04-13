@@ -125,6 +125,18 @@ defmodule Cldr.UnknownTerritoryError do
   end
 end
 
+defmodule Cldr.UnknownOTPAppError do
+  @moduledoc """
+  Exception raised when the configured OTP app
+  is not known
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
 defmodule Cldr.UnknownPluralRules do
   @moduledoc """
   Exception raised when there are no plural rules for a locale or language.
