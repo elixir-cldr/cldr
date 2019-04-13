@@ -181,26 +181,35 @@ defmodule Cldr.Config do
   Return the path name of the CLDR data directory for a client
   application.
 
+  The order of priority to determine where the client data
+  directory is located is:
+
+  * A specified `:data_dir` of a backend configuration
+  * The `priv_dir()` of a specified `:otp_app
+  * The speiecied `:data_dir` of the global configuration
+  * The `priv_dir()` of `ex_cldr`
+
+  Note that `config_from_opts/1` merges the global config,
+  the otp_app config and the module config together so
+  that `data_dir` already resolves this priority in most
+  cases.
+
+  The remaining cases are for when no `:data_dir` is
+  specified.
+
   """
   @spec client_data_dir(map()) :: String.t()
-  def client_data_dir(%{data_dir: nil, otp_app: nil}) do
-    cldr_data_dir()
+
+  def client_data_dir(%{data_dir: data_dir}) when not is_nil(data_dir) do
+    data_dir
   end
 
   def client_data_dir(%{otp_app: nil}) do
     cldr_data_dir()
   end
 
-  def client_data_dir(%{data_dir: nil, otp_app: otp_app}) do
-    client_data_dir(%{otp_app: otp_app})
-  end
-
   def client_data_dir(%{otp_app: otp_app}) do
     [:code.priv_dir(otp_app), "/cldr"] |> :erlang.iolist_to_binary()
-  end
-
-  def client_data_dir(%{data_dir: data_dir}) do
-    data_dir
   end
 
   def client_data_dir(config) when is_map(config) do
@@ -1944,7 +1953,7 @@ defmodule Cldr.Config do
     end
   end
 
-  @non_deprecated_keys [:json_library, :default_locale, :default_backend]
+  @non_deprecated_keys [:json_library, :default_locale, :default_backend, :data_dir]
   @doc false
   def maybe_deprecate_global_config! do
     remaining_config =

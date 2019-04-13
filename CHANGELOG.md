@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.6.1
+
+This is the changelog for Cldr v2.6.1 released on April 13th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Correctly resolves the `:data_dir` param for a backend module.  Thanks to @erikreedstrom for the report.  Closes #123.
+
 # Changelog for Cldr v2.6.0
 
 This is the changelog for Cldr v2.6.0 released on March 28th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

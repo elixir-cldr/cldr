@@ -13,7 +13,7 @@ end
 
 # Tests when there are locales but no default
 defmodule AnotherBackend.Cldr do
-  use Cldr, locales: ["en", "fr"]
+  use Cldr, locales: ["en"], data_dir: "./another_backend/cldr/data_dir"
 end
 
 # Test with Gettext
@@ -23,5 +23,5 @@ end
 
 # Tests with otp_app
 defmodule WithOtpAppBackend.Cldr do
-  use Cldr, otp_app: :ex_cldr
+  use Cldr, locales: ["fr"], otp_app: :logger
 end

@@ -12,6 +12,10 @@ config :ex_cldr, TestGettext.Gettext,
 config :ex_cldr, WithOtpAppBackend.Cldr,
   locales: ["fr"]
 
+# For testing data_dir config
+config :logger, WithOtpAppBackend.Cldr,
+  data_dir: "./with_opt_app_backend/cldr/some_dir"
+
 # Other configs
 config :plug,
   validate_header_keys_during_test: true

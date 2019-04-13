@@ -248,6 +248,17 @@ defmodule Cldr.Test do
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
 
+  test "that data_dir is correctly resolved" do
+    # data_dir configured in the otp_app
+    assert "./with_opt_app_backend/cldr/some_dir" == Cldr.Config.client_data_dir(WithOtpAppBackend.Cldr)
+
+    # data_dir configured on the module
+    assert "./another_backend/cldr/data_dir" == Cldr.Config.client_data_dir(AnotherBackend.Cldr)
+
+    # default data_dir
+    assert Cldr.Config.client_data_dir(DefaultBackend.Cldr) =~ "cldr/_build/test/lib/ex_cldr/priv/cldr"
+  end
+
   test "return of currency map" do
     {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
     assert Map.get(currencies, :AUD)
