@@ -185,13 +185,14 @@ defmodule Cldr.Config do
   directory is located is:
 
   * A specified `:data_dir` of a backend configuration
-  * The `priv_dir()` of a specified `:otp_app
-  * The speiecied `:data_dir` of the global configuration
+  * The specified `:data_dir` of the backend's `:otp_app` configuration
+  * The specified `:data_dir` of the global configuration
+  * The `priv_dir()` of a specified `:otp_app`
   * The `priv_dir()` of `ex_cldr`
 
   Note that `config_from_opts/1` merges the global config,
   the otp_app config and the module config together so
-  that `data_dir` already resolves this priority in most
+  that `:data_dir` already resolves this priority in most
   cases.
 
   The remaining cases are for when no `:data_dir` is
