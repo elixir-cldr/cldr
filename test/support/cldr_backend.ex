@@ -21,6 +21,11 @@ defmodule WithGettextBackend.Cldr do
   use Cldr, gettext: TestGettext.Gettext
 end
 
+# Test with not Gettext
+defmodule WithNoGettextBackend.Cldr do
+  use Cldr
+end
+
 # Tests with otp_app
 defmodule WithOtpAppBackend.Cldr do
   use Cldr, locales: ["fr"], otp_app: :logger

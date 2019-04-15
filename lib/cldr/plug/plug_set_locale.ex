@@ -42,6 +42,9 @@ if Code.ensure_loaded?(Plug) do
 
     ## App configuration
 
+    The `:apps` configuration key defines which applications will have
+    their locale *set* by this plug.
+
     `Cldr.Plug.SetLocale` can set the locale for `cldr`, `gettext` or both.
     The basic configuration of the `:app` key is an atom, or list of atoms,
     containing one or both of these app names.  For example:
@@ -50,17 +53,17 @@ if Code.ensure_loaded?(Plug) do
         apps: :gettext
         apps: [:cldr, :gettext]
 
-    In each of these cases, the locale is set for all backends
-    **for the current process**.  This is the preferred model.
+    In each of these cases, the locale is set globally
+    **for the current process**.
 
     Sometimes setting the locale for only a specific backend is required.
     In this case, configure the `:apps` key as a keyword list pairing an
-    application with the required backend module.  The value `:all` signifies
-    setting the local for all backends. For example:
+    application with the required backend module.  The value `:global` signifies
+    setting the local for the global context. For example:
 
         apps: [cldr: MyApp.Cldr]
         apps: [gettext: MyAppGettext]
-        apps: [gettext: :all]
+        apps: [gettext: :global]
         apps: [cldr: MyApp.Cldr, gettext: MyAppGettext]
 
     ## Examples
@@ -84,9 +87,9 @@ if Code.ensure_loaded?(Plug) do
           session_key: "cldr_locale"
 
         # Will set the backend only locale for the current process
-        # for `:cldr` and for all backends for `:gettext`
+        # for `:cldr` and globally for `:gettext`
         plug Cldr.Plug.SetLocale,
-          apps:    [cldr: MyApp.Cldr, gettext: :all],
+          apps:    [cldr: MyApp.Cldr, gettext: :global],
           from:    [:query, :path, :body, :cookie, :accept_language],
           param:   "locale",
           session_key: "cldr_locale"
@@ -97,7 +100,7 @@ if Code.ensure_loaded?(Plug) do
     require Logger
     alias Cldr.AcceptLanguage
 
-    @default_apps [cldr: :all]
+    @default_apps [cldr: :global]
     @default_from [:session, :accept_language]
     @default_param_name "locale"
     @default_session_key "cldr_locale"
@@ -209,6 +212,11 @@ if Code.ensure_loaded?(Plug) do
       {:halt, locale}
     end
 
+    defp put_locale({:cldr, :global}, locale, _options) do
+      Cldr.put_locale(locale)
+    end
+
+    # Deprecated option :all.  Use :global
     defp put_locale({:cldr, :all}, locale, _options) do
       Cldr.put_locale(locale)
     end
@@ -226,6 +234,11 @@ if Code.ensure_loaded?(Plug) do
       nil
     end
 
+    defp put_locale({:gettext, :global}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+      {:ok, apply(Gettext, :put_locale, [locale_name])}
+    end
+
+    # Deprecated option :all.  Use :global
     defp put_locale({:gettext, :all}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
       {:ok, apply(Gettext, :put_locale, [locale_name])}
     end
@@ -250,7 +263,7 @@ if Code.ensure_loaded?(Plug) do
             {app, scope}
           app ->
             validate_app_and_scope!(app, nil)
-            {app, :all}
+            {app, :global}
         end)
 
       Keyword.put(options, :apps, app_config)
@@ -267,6 +280,11 @@ if Code.ensure_loaded?(Plug) do
       :ok
     end
 
+    defp validate_app_and_scope!(app, :global) when app in @app_options do
+      :ok
+    end
+
+    # Deprecated option :all.  Use :global
     defp validate_app_and_scope!(app, :all) when app in @app_options do
       :ok
     end
@@ -342,11 +360,12 @@ if Code.ensure_loaded?(Plug) do
       end
     end
 
+    # No configured gettext.  See if there is one configured
+    # on the Cldr backend
     defp validate_gettext(options, nil) do
-      gettext_backend =  Keyword.get(options[:apps], :gettext)
-      if gettext_backend do
-        options = Keyword.put(options, :gettext, gettext_backend)
-        validate_gettext(options, gettext_backend)
+      gettext = options[:cldr].__cldr__(:config).gettext
+      if gettext && get_in(options, [:apps, :gettext]) do
+        Keyword.put(options, :gettext, gettext)
       else
         options
       end
@@ -377,7 +396,7 @@ if Code.ensure_loaded?(Plug) do
 
     defp validate_cldr(options, nil) do
       cldr_backend =  Keyword.get(options[:apps], :cldr)
-      if cldr_backend && cldr_backend != :all do
+      if cldr_backend && cldr_backend not in [:all, :global] do
         options = Keyword.put(options, :cldr, cldr_backend)
         validate_cldr(options, cldr_backend)
       else

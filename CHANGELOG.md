@@ -1,3 +1,18 @@
+
+# Changelog for Cldr v2.6.2
+
+This is the changelog for Cldr v2.6.2 released on ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Adds `Cldr.flag/1` that returns a binary unicode grapheme representing a flag for a given territory
+
+* The parameters provided to `Cldr.Plug.SetLocale.init/1` are now conformed more precisely based upon the provided options. This ensures that the keys `:cldr` and `:gettext` are set from other options if they are not provided directly.
+
+### Bug Fixes
+
+* `Cldr.Plug.SetLocale.init/1` would raise an exception if no `:gettext` key was specified.  This is now corrected.
+
 # Changelog for Cldr v2.6.1
 
 This is the changelog for Cldr v2.6.1 released on April 13th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

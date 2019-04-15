@@ -1386,6 +1386,63 @@ defmodule Cldr do
     }
   end
 
+  @doc """
+  Returns a unicode string representing a flag for a territory.
+
+  ## Options
+
+  * `territory` is any valid territory code returned
+    by `Cldr.known_territories/0` or a `Cldr.LanguageTag.t`
+
+  ## Returns
+
+  * A string representing a flag or
+
+  * An empty string if the territory is valid but no
+    unicode grapheme is defined. This is true for territories
+    that are aggregate areas such as "the world" which is
+    "001"
+
+  * `{:error, {Cldr.UnknownTerritoryError, message}}`
+
+  ## Examples
+
+      iex> Cldr.flag :AU
+      "🇦🇺"
+
+      iex> Cldr.flag :US
+      "🇺🇸"
+
+      iex> Cldr.flag "UN"
+      "🇺🇳"
+
+      iex> Cldr.flag :UK
+      {:error, {Cldr.UnknownTerritoryError, "The territory :UK is unknown"}}
+
+  """
+
+  def flag(%LanguageTag{territory: territory}) do
+    flag(territory)
+  end
+
+  def flag(territory) do
+    with {:ok, territory} <- validate_territory(territory) do
+      territory
+      |> Atom.to_charlist
+      |> generate_flag
+    end
+  end
+
+  defp generate_flag([_, _] = iso_code) do
+    iso_code
+    |> Enum.map(& &1 + 127397)
+    |> to_string
+  end
+
+  defp generate_flag(_) do
+    ""
+  end
+
   @doc false
   def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
   def locale_name(locale) when is_binary(locale), do: inspect(locale)

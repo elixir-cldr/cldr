@@ -15,28 +15,85 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(cldr: TestBackend.Cldr)
 
     assert opts == [
-             session_key: "cldr_locale",
-             default: %Cldr.LanguageTag{
-               canonical_locale_name: "en-Latn-001",
-               cldr_locale_name: "en-001",
-               language_subtags: [],
-               extensions: %{},
-               gettext_locale_name: "en",
-               language: "en",
-               locale: %{},
-               private_use: [],
-               rbnf_locale_name: "en",
-               requested_locale_name: "en-001",
-               script: "Latn",
-               territory: "001",
-               transform: %{},
-               language_variant: nil
-             },
-             cldr: TestBackend.Cldr,
-             param: "locale",
-             from: [:session, :accept_language],
-             apps: [cldr: :all]
-           ]
+      session_key: "cldr_locale",
+      default: %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{}
+      },
+      cldr: TestBackend.Cldr,
+      param: "locale",
+      from: [:session, :accept_language],
+      apps: [cldr: :global]
+    ]
+  end
+
+  test "init sets the gettext locale if not is defined, and its in :apps and cldr has one" do
+    opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: TestBackend.Cldr)
+
+    assert opts == [
+      session_key: "cldr_locale",
+      default: %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{}
+      },
+      gettext: TestGettext.Gettext,
+      cldr: TestBackend.Cldr,
+      param: "locale",
+      from: [:session, :accept_language],
+      apps: [cldr: :global, gettext: :global]
+    ]
+  end
+
+  test "init does not set the gettext locale if not is defined, and its in :apps and cldr does not have one" do
+    opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: WithNoGettextBackend.Cldr)
+
+    assert opts == [
+      session_key: "cldr_locale",
+      default: %Cldr.LanguageTag{
+        canonical_locale_name: "en-Latn-001",
+        cldr_locale_name: "en-001",
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "en",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: "en",
+        requested_locale_name: "en-001",
+        script: "Latn",
+        territory: "001",
+        transform: %{}
+      },
+      cldr: WithNoGettextBackend.Cldr,
+      param: "locale",
+      from: [:session, :accept_language],
+      apps: [cldr: :global, gettext: :global]
+    ]
   end
 
   test "bad parameters raise exceptions" do
@@ -62,10 +119,6 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert_raise ArgumentError, fn ->
       Cldr.Plug.SetLocale.init(param: [:nothing], cldr: TestBackend.Cldr)
-    end
-
-    assert_raise ArgumentError, fn ->
-      Cldr.Plug.SetLocale.init(apps: :gettext, cldr: TestBackend.Cldr)
     end
 
     assert_raise ArgumentError, fn ->
@@ -198,6 +251,43 @@ defmodule Cldr.Plug.SetLocale.Test do
     assert Cldr.get_locale() == conn.private[:cldr_locale]
   end
 
+  test "that a gettext locale is set as an ancestor if it exists" do
+    opts = Cldr.Plug.SetLocale.init(
+          apps: [cldr: MyApp.Cldr, gettext: MyApp.Gettext],
+          from: [:accept_language],
+          param: "locale",
+          default: "en-GB",
+          session_key: "cldr_locale"
+        )
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("accept-language", "en-AU")
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale].gettext_locale_name == "en"
+  end
+
+  test "that a gettext locale is set on the global gettext context" do
+    opts = Cldr.Plug.SetLocale.init(
+          apps: [cldr: MyApp.Cldr, gettext: :all],
+          from: [:accept_language],
+          param: "locale",
+          default: "en-GB",
+          session_key: "cldr_locale"
+        )
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("accept-language", "es")
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale].gettext_locale_name == "es"
+    assert Gettext.get_locale == "es"
+  end
+
   test "locale is set according to the configured priority" do
     opts = Cldr.Plug.SetLocale.init(from: [:accept_language, :query], cldr: TestBackend.Cldr)
 
@@ -268,6 +358,21 @@ defmodule Cldr.Plug.SetLocale.Test do
       cldr: TestBackend.Cldr,
       param: "locale",
       gettext: TestGettext.Gettext
+    )
+
+    :get
+    |> conn("/?locale=es")
+    |> Cldr.Plug.SetLocale.call(opts)
+
+    assert Gettext.get_locale(TestGettext.Gettext) == "es"
+  end
+
+  test "config with no gettext" do
+    opts = Cldr.Plug.SetLocale.init(
+      apps: [:cldr, :gettext],
+      from: [:query, :path, :cookie, :accept_language],
+      cldr: TestBackend.Cldr,
+      param: "locale"
     )
 
     :get

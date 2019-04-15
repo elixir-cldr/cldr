@@ -32,6 +32,30 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
              }
   end
 
+  test "that the gettext locale is a set when an ancestor is available" do
+    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("accept-language", "en-AU")
+      |> Cldr.Plug.AcceptLanguage.call(opts)
+
+    assert conn.private[:cldr_locale].gettext_locale_name == "en"
+  end
+
+  test "that the gettext locale is a set" do
+    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr)
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("accept-language", "en-GB")
+      |> Cldr.Plug.AcceptLanguage.call(opts)
+
+    assert conn.private[:cldr_locale].gettext_locale_name == "en_GB"
+  end
+
   test "that an exception is raised if no backend specified" do
     assert_raise ArgumentError, fn -> Cldr.Plug.AcceptLanguage.init([]) end
   end
