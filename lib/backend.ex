@@ -1,5 +1,6 @@
 if Mix.env() in [:release, :test] do
   require Cldr.Backend
+  Application.ensure_all_started(:gettext)
 
   defmodule MyApp.Gettext do
     use Gettext,
