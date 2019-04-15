@@ -29,9 +29,14 @@ if Code.ensure_loaded?(Plug) do
     @doc false
     def call(conn, backend) do
       case get_req_header(conn, @language_header) do
-        [accept_language] -> put_private(conn, :cldr_locale, best_match(accept_language, backend))
-        [accept_language | _] -> put_private(conn, :cldr_locale, best_match(accept_language, backend))
-        [] -> put_private(conn, :cldr_locale, nil)
+        [accept_language] ->
+          put_private(conn, :cldr_locale, best_match(accept_language, backend))
+
+        [accept_language | _] ->
+          put_private(conn, :cldr_locale, best_match(accept_language, backend))
+
+        [] ->
+          put_private(conn, :cldr_locale, nil)
       end
     end
 

@@ -234,16 +234,28 @@ if Code.ensure_loaded?(Plug) do
       nil
     end
 
-    defp put_locale({:gettext, :global}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+    defp put_locale(
+           {:gettext, :global},
+           %Cldr.LanguageTag{gettext_locale_name: locale_name},
+           _options
+         ) do
       {:ok, apply(Gettext, :put_locale, [locale_name])}
     end
 
     # Deprecated option :all.  Use :global
-    defp put_locale({:gettext, :all}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+    defp put_locale(
+           {:gettext, :all},
+           %Cldr.LanguageTag{gettext_locale_name: locale_name},
+           _options
+         ) do
       {:ok, apply(Gettext, :put_locale, [locale_name])}
     end
 
-    defp put_locale({:gettext, backend}, %Cldr.LanguageTag{gettext_locale_name: locale_name}, _options) do
+    defp put_locale(
+           {:gettext, backend},
+           %Cldr.LanguageTag{gettext_locale_name: locale_name},
+           _options
+         ) do
       {:ok, apply(Gettext, :put_locale, [backend, locale_name])}
     end
 
@@ -261,6 +273,7 @@ if Code.ensure_loaded?(Plug) do
           {app, scope} ->
             validate_app_and_scope!(app, scope)
             {app, scope}
+
           app ->
             validate_app_and_scope!(app, nil)
             {app, :global}
@@ -291,16 +304,21 @@ if Code.ensure_loaded?(Plug) do
 
     defp validate_app_and_scope!(app, module) when not is_nil(app) and is_atom(module) do
       cond do
-        app in @app_options && Code.ensure_loaded?(module) -> :ok
-        app in @app_options -> raise ArgumentError, "Backend module #{inspect module} is unavailable"
-        true -> raise ArgumentError, "App #{inspect app} is unknown"
+        app in @app_options && Code.ensure_loaded?(module) ->
+          :ok
+
+        app in @app_options ->
+          raise ArgumentError, "Backend module #{inspect(module)} is unavailable"
+
+        true ->
+          raise ArgumentError, "App #{inspect(app)} is unknown"
       end
     end
 
     defp validate_app_and_scope!(app, scope) do
       raise(
         ArgumentError,
-        "Invalid app #{inspect app} or scope #{inspect scope} detected."
+        "Invalid app #{inspect(app)} or scope #{inspect(scope)} detected."
       )
     end
 
@@ -364,6 +382,7 @@ if Code.ensure_loaded?(Plug) do
     # on the Cldr backend
     defp validate_gettext(options, nil) do
       gettext = options[:cldr].__cldr__(:config).gettext
+
       if gettext && get_in(options, [:apps, :gettext]) do
         Keyword.put(options, :gettext, gettext)
       else
@@ -395,7 +414,8 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_cldr(options, nil) do
-      cldr_backend =  Keyword.get(options[:apps], :cldr)
+      cldr_backend = Keyword.get(options[:apps], :cldr)
+
       if cldr_backend && cldr_backend not in [:all, :global] do
         options = Keyword.put(options, :cldr, cldr_backend)
         validate_cldr(options, cldr_backend)
@@ -407,7 +427,7 @@ if Code.ensure_loaded?(Plug) do
     defp validate_cldr(options, backend) when is_atom(backend) do
       unless Code.ensure_loaded?(backend) and function_exported?(backend, :__cldr__, 1) do
         raise ArgumentError,
-          "#{inspect backend} is either not known or does not appear to be a Cldr backend module"
+              "#{inspect(backend)} is either not known or does not appear to be a Cldr backend module"
       else
         Keyword.put(options, :cldr, backend)
       end

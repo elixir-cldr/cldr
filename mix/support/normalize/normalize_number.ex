@@ -74,11 +74,11 @@ defmodule Cldr.Normalize.Number do
   def normalize_currency_spacing(currency_spacing) do
     currency_spacing
     |> Cldr.Map.deep_map(fn x -> x end, fn
-         "[:^S:]" -> "[^\\p{S}]"
-         "[:digit:]" -> "[[:digit:]]"
-         other -> other
-       end)
-    |> Map.new
+      "[:^S:]" -> "[^\\p{S}]"
+      "[:digit:]" -> "[[:digit:]]"
+      other -> other
+    end)
+    |> Map.new()
   end
 
   @doc false
@@ -112,7 +112,7 @@ defmodule Cldr.Normalize.Number do
   def normalize_misc_formats(format) do
     format
     |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc false

@@ -44,7 +44,7 @@ defmodule Cldr.Plug.Router.Test do
              language_variant: nil
            }
 
-    assert Cldr.get_locale == %Cldr.LanguageTag{
+    assert Cldr.get_locale() == %Cldr.LanguageTag{
              canonical_locale_name: "fr-Latn-FR",
              cldr_locale_name: "fr",
              extensions: %{},

@@ -9,8 +9,8 @@ defmodule Cldr.Number.PluralRule do
 
     unless module_name in [:cardinal, :ordinal] do
       raise ArgumentError,
-        "Invalid option #{inspect(opts)}. `type: :cardinal` or " <>
-        "`type: :ordinal` are the only valid options"
+            "Invalid option #{inspect(opts)}. `type: :cardinal` or " <>
+              "`type: :ordinal` are the only valid options"
     end
 
     quote location: :keep do
@@ -32,27 +32,29 @@ defmodule Cldr.Number.PluralRule do
              |> Cldr.Config.json_library().decode!
              |> Map.get(Atom.to_string(unquote(module_name)))
              |> Cldr.Config.normalize_plural_rules()
-             |> Map.new
+             |> Map.new()
 
       @rules_locales @rules
                      |> Map.keys()
                      |> Enum.sort()
 
-      @nplurals_range [0,1,2,3,4,5]
+      @nplurals_range [0, 1, 2, 3, 4, 5]
       @gettext_nplurals @rules
-             |> Enum.map(fn {locale, rules} ->
-                 {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
-                end)
-             |> Map.new
+                        |> Enum.map(fn {locale, rules} ->
+                          {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
+                        end)
+                        |> Map.new()
 
       @config Keyword.get(unquote(opts), :config)
       @backend Map.get(@config, :backend)
 
       @known_locale_names @rules_locales
-        |> MapSet.new()
-        |> MapSet.intersection(MapSet.new(Cldr.Config.known_locale_names(@config)))
-        |> MapSet.to_list()
-        |> Enum.sort()
+                          |> MapSet.new()
+                          |> MapSet.intersection(
+                            MapSet.new(Cldr.Config.known_locale_names(@config))
+                          )
+                          |> MapSet.to_list()
+                          |> Enum.sort()
 
       @doc """
       The locale names for which plural rules are defined.
@@ -65,7 +67,7 @@ defmodule Cldr.Number.PluralRule do
       @doc """
       The configured locales for which plural rules are defined.
 
-      Returns the intersection of `#{inspect @backend}.known_locale_names/0` and
+      Returns the intersection of `#{inspect(@backend)}.known_locale_names/0` and
       the locales for which #{@module} plural rules are defined.
 
       There are many `Cldr` locales which don't have their own plural
@@ -94,115 +96,122 @@ defmodule Cldr.Number.PluralRule do
       end
 
       if unquote(module_name) == :cardinal do
-      @doc """
-      Pluralize a number using #{unquote(module_name)} plural rules
-      and a substition map.
+        @doc """
+        Pluralize a number using #{unquote(module_name)} plural rules
+        and a substition map.
 
-      ## Arguments
+        ## Arguments
 
-      * `number` is an integer, float or Decimal
+        * `number` is an integer, float or Decimal
 
-      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
-        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+        * `locale` is any locale returned by `#{inspect(@backend)}.Locale.new!/1` or any
+          `locale_name` returned by `#{inspect(@backend)}.known_locale_names/0`
 
-      * `substitutions` is a map that maps plural keys to a string.
-        The valid substitution keys are `:zero`, `:one`, `:two`,
-        `:few`, `:many` and `:other`.
+        * `substitutions` is a map that maps plural keys to a string.
+          The valid substitution keys are `:zero`, `:one`, `:two`,
+          `:few`, `:many` and `:other`.
 
-      See also `#{inspect(__MODULE__)}.#{@module}.plural_rule/3`.
+        See also `#{inspect(__MODULE__)}.#{@module}.plural_rule/3`.
 
-      ## Examples
+        ## Examples
 
-          iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
-          "one"
+            iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
+            "one"
 
-          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
-          nil
+            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
+            nil
 
-          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two", other: "other"}
-          "other"
+            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two", other: "other"}
+            "other"
 
-          iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
-          "other"
+            iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+            "other"
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
-          "one"
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
+            "one"
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
-          nil
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
+            nil
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
-          nil
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+            nil
 
-          iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
-          "few"
+            iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
+            "few"
 
-          iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
-          "other"
+            iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
+            "other"
 
-      """
+        """
       else
-      @doc """
-      Pluralize a number using #{unquote(module_name)} plural rules
-      and a substition map.
+        @doc """
+        Pluralize a number using #{unquote(module_name)} plural rules
+        and a substition map.
 
-      ## Arguments
+        ## Arguments
 
-      * `number` is an integer, float or Decimal or a `Range.t{}`.  When a range, The
-        is that in any usage, the start value is strictly less than the end value,
-        and that no values are negative. Results for any cases that do not meet
-        these criteria are undefined.
+        * `number` is an integer, float or Decimal or a `Range.t{}`.  When a range, The
+          is that in any usage, the start value is strictly less than the end value,
+          and that no values are negative. Results for any cases that do not meet
+          these criteria are undefined.
 
-      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
-        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+        * `locale` is any locale returned by `#{inspect(@backend)}.Locale.new!/1` or any
+          `locale_name` returned by `#{inspect(@backend)}.known_locale_names/0`
 
-      * `substitutions` is a map that maps plural keys to a string.
-        The valid substitution keys are `:zero`, `:one`, `:two`,
-        `:few`, `:many` and `:other`.
+        * `substitutions` is a map that maps plural keys to a string.
+          The valid substitution keys are `:zero`, `:one`, `:two`,
+          `:few`, `:many` and `:other`.
 
-      See also `#{inspect(__MODULE__)}.#{@module}.plural_rule/3`.
+        See also `#{inspect(__MODULE__)}.#{@module}.plural_rule/3`.
 
-      ## Examples
+        ## Examples
 
-          iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
-          "one"
+            iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
+            "one"
 
-          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
-          nil
+            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
+            nil
 
-          iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two"}
-          "two"
+            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two"}
+            "two"
 
-          iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
-          "two"
+            iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+            "two"
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
-          "one"
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
+            "one"
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
-          nil
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
+            nil
 
-          iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
-          "two"
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+            "two"
 
-          iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
-          "other"
+            iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
+            "other"
 
-          iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
-          "other"
+            iex> #{inspect(__MODULE__)}.pluralize 1..10, "en", %{one: "one", few: "few", other: "other"}
+            "other"
 
-      """
+        """
       end
 
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal() | %Range{}, LanguageTag.t() | Locale.locale_name(), %{}) ::
-        any()
+      @spec pluralize(
+              Math.number_or_decimal() | %Range{},
+              LanguageTag.t() | Locale.locale_name(),
+              %{}
+            ) ::
+              any()
 
       def pluralize(%Range{first: first, last: last}, locale_name, substitutions) do
         with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
           first_rule = plural_rule(first, language_tag)
           last_rule = plural_rule(last, language_tag)
-          combined_rule = @backend.Number.PluralRule.Range.plural_rule(first_rule, last_rule, language_tag)
+
+          combined_rule =
+            @backend.Number.PluralRule.Range.plural_rule(first_rule, last_rule, language_tag)
+
           substitutions[combined_rule] || substitutions[@default_substitution]
         end
       end
@@ -232,8 +241,8 @@ defmodule Cldr.Number.PluralRule do
 
       ## Arguments
 
-      * `locale` is any locale returned by `#{inspect @backend}.Locale.new!/1` or any
-        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+      * `locale` is any locale returned by `#{inspect(@backend)}.Locale.new!/1` or any
+        `locale_name` returned by `#{inspect(@backend)}.known_locale_names/0`
 
       The rules are returned in AST form after parsing.
 
@@ -262,75 +271,75 @@ defmodule Cldr.Number.PluralRule do
       # t       visible fractional digits in n, without trailing zeros.
 
       if unquote(module_name) == :cardinal do
-      @doc """
-      Return the plural key for a given number in a given locale
+        @doc """
+        Return the plural key for a given number in a given locale
 
-      Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
-      `:many` or `:other`) a given number fits into within the
-      context of a given locale.
+        Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
+        `:many` or `:other`) a given number fits into within the
+        context of a given locale.
 
-      Note that these key names should not be interpreted
-      literally.  For example, the key returned from
-      `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
-      `:other`, not `:zero`.
+        Note that these key names should not be interpreted
+        literally.  For example, the key returned from
+        `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
+        `:other`, not `:zero`.
 
-      This key can then be used to format a number, date, time, unit,
-      list or other content in a plural-sensitive way.
+        This key can then be used to format a number, date, time, unit,
+        list or other content in a plural-sensitive way.
 
-      ## Arguments
+        ## Arguments
 
-      * `number` is any `integer`, `float` or `Decimal`
+        * `number` is any `integer`, `float` or `Decimal`
 
-      * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
-        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+        * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
+          `locale_name` returned by `#{inspect(@backend)}.known_locale_names/0`
 
-      * `rounding` is one of `#{inspect Cldr.Math.rounding_modes}`.  The
-        default is `#{inspect Cldr.Math.default_rounding_mode}`.
+        * `rounding` is one of `#{inspect(Cldr.Math.rounding_modes())}`.  The
+          default is `#{inspect(Cldr.Math.default_rounding_mode())}`.
 
-      ## Examples
+        ## Examples
 
-          iex> #{inspect(__MODULE__)}.plural_rule 0, "fr"
-          :one
+            iex> #{inspect(__MODULE__)}.plural_rule 0, "fr"
+            :one
 
-          iex> #{inspect(__MODULE__)}.plural_rule 0, "en"
-          :other
+            iex> #{inspect(__MODULE__)}.plural_rule 0, "en"
+            :other
 
-      """
+        """
       else
-      @doc """
-      Return the plural key for a given number in a given locale
+        @doc """
+        Return the plural key for a given number in a given locale
 
-      Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
-      `:many` or `:other`) a given number fits into within the
-      context of a given locale.
+        Returns which plural key (`:zero`, `:one`, `:two`, `:few`,
+        `:many` or `:other`) a given number fits into within the
+        context of a given locale.
 
-      Note that these key names should not be interpreted
-      literally.  For example, the key returned from
-      `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
-      `:other`, not `:zero`.
+        Note that these key names should not be interpreted
+        literally.  For example, the key returned from
+        `Cldr.Number.Ordinal.plural_rule(0, "en")` is actually
+        `:other`, not `:zero`.
 
-      This key can then be used to format a number, date, time, unit,
-      list or other content in a plural-sensitive way.
+        This key can then be used to format a number, date, time, unit,
+        list or other content in a plural-sensitive way.
 
-      ## Arguments
+        ## Arguments
 
-      * `number` is any `integer`, `float` or `Decimal`
+        * `number` is any `integer`, `float` or `Decimal`
 
-      * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
-        `locale_name` returned by `#{inspect @backend}.known_locale_names/0`
+        * `locale` is any locale returned by `Cldr.Locale.new!/2` or any
+          `locale_name` returned by `#{inspect(@backend)}.known_locale_names/0`
 
-      * `rounding` is one of `#{inspect Cldr.Math.rounding_modes}`.  The
-        default is `#{inspect Cldr.Math.default_rounding_mode}`.
+        * `rounding` is one of `#{inspect(Cldr.Math.rounding_modes())}`.  The
+          default is `#{inspect(Cldr.Math.default_rounding_mode())}`.
 
-      ## Examples
+        ## Examples
 
-          iex> #{inspect(__MODULE__)}.plural_rule 0, "fr"
-          :other
+            iex> #{inspect(__MODULE__)}.plural_rule 0, "fr"
+            :other
 
-          iex> #{inspect(__MODULE__)}.plural_rule 1, "en"
-          :one
+            iex> #{inspect(__MODULE__)}.plural_rule 1, "en"
+            :one
 
-      """
+        """
       end
 
       @spec plural_rule(
@@ -473,20 +482,24 @@ defmodule Cldr.Number.PluralRule do
 
         ## Example
 
-            iex> #{inspect __MODULE__}.plural_rule :other, :few, "ar"
+            iex> #{inspect(__MODULE__)}.plural_rule :other, :few, "ar"
             :few
 
         """
-        @spec plural_rule(first :: PluralRule.plural_type(), last :: PluralRule.plural_type(),
-                  locale :: Cldr.Locale.locale_name | Cldr.LanguageTag.t) :: PluralRule.plural_type()
+        @spec plural_rule(
+                first :: PluralRule.plural_type(),
+                last :: PluralRule.plural_type(),
+                locale :: Cldr.Locale.locale_name() | Cldr.LanguageTag.t()
+              ) :: PluralRule.plural_type()
 
         def plural_rule(first, last, %Cldr.LanguageTag{language: language}) do
           plural_rule(first, last, language)
         end
 
-        for %{locales: locales, ranges: ranges} <- Cldr.Config.plural_ranges,
+        for %{locales: locales, ranges: ranges} <- Cldr.Config.plural_ranges(),
             range <- ranges do
-          def plural_rule(unquote(range.start), unquote(range.end), locale) when locale in unquote(locales) do
+          def plural_rule(unquote(range.start), unquote(range.end), locale)
+              when locale in unquote(locales) do
             unquote(range.result)
           end
         end
@@ -521,7 +534,15 @@ defmodule Cldr.Number.PluralRule do
           |> Map.get(locale_name)
           |> rules_to_condition_statement(__MODULE__)
 
-        defp do_plural_rule(%LanguageTag{cldr_locale_name: unquote(locale_name)}, n, i, v, w, f, t) do
+        defp do_plural_rule(
+               %LanguageTag{cldr_locale_name: unquote(locale_name)},
+               n,
+               i,
+               v,
+               w,
+               f,
+               t
+             ) do
           # silence unused variable warnings
           _ = {n, i, v, w, f, t}
           unquote(function_body)

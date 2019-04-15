@@ -327,7 +327,7 @@ defmodule Cldr.Backend do
       @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
               {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-     def put_locale(locale_name) do
+      def put_locale(locale_name) do
         with {:ok, locale} <- validate_locale(locale_name) do
           Cldr.put_locale(__MODULE__, locale)
         end
@@ -411,8 +411,8 @@ defmodule Cldr.Backend do
       def validate_locale(locale_name) when is_binary(locale_name) do
         locale =
           locale_name
-          |> String.downcase
-          |> Cldr.Locale.locale_name_from_posix
+          |> String.downcase()
+          |> Cldr.Locale.locale_name_from_posix()
           |> do_validate_locale
 
         case locale do

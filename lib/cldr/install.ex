@@ -60,7 +60,7 @@ defmodule Cldr.Install do
       ensure_client_dirs_exist!(client_locales_dir(config))
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
-      Application.ensure_started Cldr.Config.app_name()
+      Application.ensure_started(Cldr.Config.app_name())
       do_install_locale_name(locale_name, config, locale_name in Cldr.Config.all_locale_names())
     else
       :already_installed
@@ -111,7 +111,6 @@ defmodule Cldr.Install do
         {:error, sys_message}
     end
   end
-
 
   # Builds the base url to retrieve a locale file from github.
   #

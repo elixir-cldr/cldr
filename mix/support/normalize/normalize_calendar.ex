@@ -41,8 +41,8 @@ defmodule Cldr.Normalize.Calendar do
   end
 
   def rename_variants(content) do
-   content
-   |> Cldr.Map.rename_key("0_alt_variant", -1)
-   |> Cldr.Map.rename_key("1_alt_variant", -2)
+    content
+    |> Cldr.Map.rename_key("0_alt_variant", -1)
+    |> Cldr.Map.rename_key("1_alt_variant", -2)
   end
 end

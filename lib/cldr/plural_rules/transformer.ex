@@ -39,7 +39,7 @@ defmodule Cldr.Number.PluralRule.Transformer do
       new_expr =
         case expr do
           {var, [], Elixir} ->
-            {var, [],  Cldr.Number.PluralRule}
+            {var, [], Cldr.Number.PluralRule}
 
           # {var, [], module}
           {:mod, _context, [operand, value]} ->

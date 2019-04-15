@@ -71,7 +71,6 @@ defmodule Cldr.Locale.Cache do
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
-
         rescue
           ArgumentError ->
             nil
@@ -95,7 +94,8 @@ defmodule Cldr.Locale.Cache do
     case :ets.info(@table_name) do
       :undefined ->
         :ets.new(@table_name, [:named_table, :public, {:read_concurrency, true}])
-        # Logger.debug "#{inspect self()}:  Created :ets table"
+
+      # Logger.debug "#{inspect self()}:  Created :ets table"
       _ ->
         :ok
     end

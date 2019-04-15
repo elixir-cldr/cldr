@@ -148,7 +148,7 @@ defmodule Cldr.Mixfile do
         Cldr.Map,
         Cldr.Math,
         Cldr.String
-        ],
+      ],
       "Example Backend": ~r/^MyApp.?/
     ]
   end

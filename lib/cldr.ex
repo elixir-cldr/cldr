@@ -92,7 +92,7 @@ defmodule Cldr do
     end
 
     IO.puts(
-      "Generating #{inspect config.backend} for #{known_locale_count} " <>
+      "Generating #{inspect(config.backend)} for #{known_locale_count} " <>
         locale_string <>
         "#{inspect(Config.known_locale_names(config), limit: 5)} with " <>
         "a default locale named #{inspect(Config.default_locale_name(config))}"
@@ -119,7 +119,7 @@ defmodule Cldr do
     which is defined under the `:ex_cldr` key in `config.exs`
 
   * Or the system-wide default locale which is
-    #{inspect Cldr.Config.default_locale()}
+    #{inspect(Cldr.Config.default_locale())}
 
   Note that if there is no locale set for the current
   process then an error is not returned - a default locale
@@ -153,9 +153,9 @@ defmodule Cldr do
   @spec get_locale(backend()) :: LanguageTag.t()
   def get_locale(backend) do
     Process.get(backend) ||
-    Process.get(:cldr) ||
-    backend.default_locale() ||
-    default_locale()
+      Process.get(:cldr) ||
+      backend.default_locale() ||
+      default_locale()
   end
 
   @doc """
@@ -170,7 +170,7 @@ defmodule Cldr do
     `config.exs`
 
   * Or the system-wide default locale which is
-    #{inspect Cldr.Config.default_locale()}
+    #{inspect(Cldr.Config.default_locale())}
 
   Note that if there is no locale set for the current
   process then an error is not returned - a default locale
@@ -198,7 +198,7 @@ defmodule Cldr do
   """
   def get_locale do
     Process.get(:cldr) ||
-    default_locale()
+      default_locale()
   end
 
   @doc """
@@ -447,7 +447,6 @@ defmodule Cldr do
   def validate_locale(locale, backend \\ Cldr.default_backend()) do
     backend.validate_locale(locale)
   end
-
 
   @doc """
   Returns a list of all the locale names defined in
@@ -1200,7 +1199,7 @@ defmodule Cldr do
        :tirh, :vaii, :wara, :wcho]
 
   """
-  @known_number_systems Cldr.Config.known_number_systems
+  @known_number_systems Cldr.Config.known_number_systems()
   @spec known_number_systems :: [atom(), ...] | []
   def known_number_systems do
     @known_number_systems
@@ -1240,7 +1239,7 @@ defmodule Cldr do
           {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_number_system(number_system) when is_atom(number_system) do
-    if number_system in Config.known_number_systems do
+    if number_system in Config.known_number_systems() do
       {:ok, number_system}
     else
       {:error, unknown_number_system_error(number_system)}
@@ -1428,14 +1427,14 @@ defmodule Cldr do
   def flag(territory) do
     with {:ok, territory} <- validate_territory(territory) do
       territory
-      |> Atom.to_charlist
+      |> Atom.to_charlist()
       |> generate_flag
     end
   end
 
   defp generate_flag([_, _] = iso_code) do
     iso_code
-    |> Enum.map(& &1 + 127397)
+    |> Enum.map(&(&1 + 127_397))
     |> to_string
   end
 

@@ -76,7 +76,10 @@ defmodule Cldr.Rbnf.Config do
 
   """
   def known_locale_names(backend) do
-    MapSet.intersection(MapSet.new(Cldr.known_locale_names(backend)), MapSet.new(rbnf_locale_names()))
+    MapSet.intersection(
+      MapSet.new(Cldr.known_locale_names(backend)),
+      MapSet.new(rbnf_locale_names())
+    )
     |> MapSet.to_list()
   end
 

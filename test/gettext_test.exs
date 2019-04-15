@@ -12,6 +12,6 @@ defmodule Cldr.Gettext.Test do
   end
 
   test "that Cldr.Config gets the list of locales when there is no global default" do
-    assert TestBackend.Cldr.known_gettext_locale_names == ["en", "en-GB", "es"]
+    assert TestBackend.Cldr.known_gettext_locale_names() == ["en", "en-GB", "es"]
   end
 end

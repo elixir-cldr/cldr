@@ -206,7 +206,7 @@ defmodule Cldr.Rfc5646.Grammar do
   def collapse_keywords(list) do
     list
     |> do_collapse_keywords
-    |> Map.new
+    |> Map.new()
   end
 
   def do_collapse_keywords([{:key, key}, {:type, type} | rest]) do

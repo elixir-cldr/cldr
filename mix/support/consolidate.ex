@@ -44,7 +44,10 @@ defmodule Cldr.Consolidate do
     save_plural_ranges()
 
     all_locales()
-    |> Task.async_stream(__MODULE__, :consolidate_locale, [], max_concurrency: @max_concurrency, timeout: @timeout)
+    |> Task.async_stream(__MODULE__, :consolidate_locale, [],
+      max_concurrency: @max_concurrency,
+      timeout: @timeout
+    )
     |> Enum.to_list()
 
     :ok
@@ -69,7 +72,7 @@ defmodule Cldr.Consolidate do
 
   """
   def consolidate_locale(locale) do
-    IO.puts("Consolidating locale #{inspect locale}")
+    IO.puts("Consolidating locale #{inspect(locale)}")
 
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
@@ -329,7 +332,7 @@ defmodule Cldr.Consolidate do
 
   defp adjust_day_names(content) do
     content
-    |> Cldr.Map.deep_map(&(&1), fn
+    |> Cldr.Map.deep_map(& &1, fn
       "sun" -> 7
       "mon" -> 1
       "tue" -> 2
@@ -339,7 +342,7 @@ defmodule Cldr.Consolidate do
       "sat" -> 6
       other -> other
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc false
@@ -424,15 +427,12 @@ defmodule Cldr.Consolidate do
     |> Path.join(["pluralRanges.xml"])
     |> File.read!()
     |> xpath(~x"//pluralRanges"l,
-        locales: ~x"./@locales"s,
-        ranges: [~x"./pluralRange"l,
-          start: ~x"./@start"s,
-          end: ~x"./@end"s,
-          result: ~x"./@result"s
-       ])
+      locales: ~x"./@locales"s,
+      ranges: [~x"./pluralRange"l, start: ~x"./@start"s, end: ~x"./@end"s, result: ~x"./@result"s]
+    )
     |> Enum.map(fn %{locales: locales} = map ->
-         Map.put(map, :locales, String.split(locales, " "))
-       end)
+      Map.put(map, :locales, String.split(locales, " "))
+    end)
     |> save_file(path)
 
     assert_package_file_configured!(path)

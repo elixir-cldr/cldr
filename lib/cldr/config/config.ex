@@ -5,30 +5,30 @@ defmodule Cldr.Config do
   alias Cldr.LanguageTag
 
   defstruct default_locale: "en-001",
-    locales: ["en-001"],
-    backend: nil,
-    gettext: nil,
-    data_dir: "cldr",
-    providers: nil,
-    precompile_number_formats: [],
-    precompile_transliterations: [],
-    otp_app: nil,
-    generate_docs: true,
-    supress_warnings: false
+            locales: ["en-001"],
+            backend: nil,
+            gettext: nil,
+            data_dir: "cldr",
+            providers: nil,
+            precompile_number_formats: [],
+            precompile_transliterations: [],
+            otp_app: nil,
+            generate_docs: true,
+            supress_warnings: false
 
   @type t :: %__MODULE__{
-    default_locale: binary(),
-    locales: [binary(), ...],
-    backend: module(),
-    gettext: module() | nil,
-    data_dir: binary(),
-    precompile_number_formats: [binary(), ...],
-    precompile_transliterations: [{atom(), atom()}, ...],
-    otp_app: atom() | nil,
-    providers: [atom(), ...],
-    generate_docs: boolean(),
-    supress_warnings: boolean()
-  }
+          default_locale: binary(),
+          locales: [binary(), ...],
+          backend: module(),
+          gettext: module() | nil,
+          data_dir: binary(),
+          precompile_number_formats: [binary(), ...],
+          precompile_transliterations: [{atom(), atom()}, ...],
+          otp_app: atom() | nil,
+          providers: [atom(), ...],
+          generate_docs: boolean(),
+          supress_warnings: boolean()
+        }
 
   @type number_system :: atom() | String.t()
 
@@ -86,8 +86,7 @@ defmodule Cldr.Config do
   @doc """
   Return the configured json lib
   """
-  @json_lib_error \
-  """
+  @json_lib_error """
    A JSON library has not been configured.\n
    Please configure a JSON lib in your `mix.exs`
    file. The suggested library is `:jason`.
@@ -115,12 +114,16 @@ defmodule Cldr.Config do
   """
   @poison if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   @jason if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
-  @phoenix_json  Application.get_env(:phoenix, :json_library)
+  @phoenix_json Application.get_env(:phoenix, :json_library)
   @ecto_json Application.get_env(:ecto, :json_library)
   @default_json_lib @phoenix_json || @ecto_json || @jason || @poison
   @json_lib Application.get_env(:ex_cldr, :json_library, @default_json_lib)
 
-  _ = @poison; _ = @jason; _ = @phoenix_json; _ = @ecto_json; _ = @json_lib_error
+  _ = @poison
+  _ = @jason
+  _ = @phoenix_json
+  _ = @ecto_json
+  _ = @json_lib_error
 
   unless Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) do
     raise ArgumentError, @json_lib_error
@@ -212,7 +215,8 @@ defmodule Cldr.Config do
   def client_data_dir(%{otp_app: otp_app}) do
     case :code.priv_dir(otp_app) do
       {:error, :bad_name} ->
-        raise Cldr.UnknownOTPAppError, "The configured OTP app #{inspect otp_app} is not known"
+        raise Cldr.UnknownOTPAppError, "The configured OTP app #{inspect(otp_app)} is not known"
+
       priv_dir ->
         [priv_dir, "/cldr"] |> :erlang.iolist_to_binary()
     end
@@ -274,14 +278,17 @@ defmodule Cldr.Config do
     the `ex_cldr` key
   * The `Gettext.get_locale/1` for the current configuration
   * The system-wide default locale which is currently
-    #{inspect @default_locale}
+    #{inspect(@default_locale)}
 
   """
   @spec default_locale_name(t()) :: Locale.locale_name()
   def default_locale_name(%{} = config) do
     Map.get(config, :default_locale) ||
-    Application.get_env(app_name(), :default_locale,
-      gettext_default_locale(config) || @default_locale)
+      Application.get_env(
+        app_name(),
+        :default_locale,
+        gettext_default_locale(config) || @default_locale
+      )
   end
 
   @doc """
@@ -299,7 +306,7 @@ defmodule Cldr.Config do
   """
   def default_backend do
     Application.get_env(app_name(), :default_backend) ||
-    raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured"
+      raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured"
   end
 
   @doc """
@@ -337,12 +344,11 @@ defmodule Cldr.Config do
           nil
         end
 
-      global_default =
-        Application.get_env(:gettext, :default_locale)
+      global_default = Application.get_env(:gettext, :default_locale)
 
       locales =
         apply(Gettext, :known_locales, [gettext_backend]) ++
-        [backend_default, global_default]
+          [backend_default, global_default]
 
       locales
       |> Enum.reject(&is_nil/1)
@@ -393,16 +399,18 @@ defmodule Cldr.Config do
   @plural_range_file "plural_ranges.json"
   def plural_ranges do
     Path.join(cldr_data_dir(), @plural_range_file)
-    |> File.read!
+    |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn
-         %{"locales" => locales, "ranges" => ranges} ->
-           %{locales: locales, ranges:
-              Enum.map(ranges, fn
-                range -> Cldr.Map.atomize_keys(range) |> Cldr.Map.atomize_values()
-              end)
-            }
-       end)
+      %{"locales" => locales, "ranges" => ranges} ->
+        %{
+          locales: locales,
+          ranges:
+            Enum.map(ranges, fn
+              range -> Cldr.Map.atomize_keys(range) |> Cldr.Map.atomize_values()
+            end)
+        }
+    end)
   end
 
   @doc """
@@ -534,9 +542,10 @@ defmodule Cldr.Config do
   """
   @spec requested_locale_names(t()) :: [Locale.locale_name()]
   def requested_locale_names(config) do
-    locales = configured_locale_names(config) ++
-      known_gettext_locale_names(config) ++
-      [default_locale_name(config)]
+    locales =
+      configured_locale_names(config) ++
+        known_gettext_locale_names(config) ++
+        [default_locale_name(config)]
 
     locales
     |> Enum.uniq()
@@ -672,11 +681,13 @@ defmodule Cldr.Config do
   are known.
 
   """
-  @max_concurrency :'Elixir.System'.schedulers_online() * 2
+  @max_concurrency :"Elixir.System".schedulers_online() * 2
   def known_number_system_types(config) do
     config
     |> known_locale_names()
-    |> Task.async_stream(__MODULE__, :number_systems_for, [config], max_concurrency: @max_concurrency)
+    |> Task.async_stream(__MODULE__, :number_systems_for, [config],
+      max_concurrency: @max_concurrency
+    )
     |> Enum.to_list()
     |> Enum.flat_map(fn {:ok, {:ok, systems}} -> Map.keys(systems) end)
     |> Enum.uniq()
@@ -692,7 +703,7 @@ defmodule Cldr.Config do
       {:ok, %{default: :latn, native: :latn}}
   """
   @spec number_systems_for(Locale.locale_name(), t()) ::
-    {:ok, map()} | {:error, {module(), String.t()}}
+          {:ok, map()} | {:error, {module(), String.t()}}
 
   def number_systems_for(locale_name, %__MODULE__{} = config) do
     if known_locale_name(locale_name, config) do
@@ -719,9 +730,9 @@ defmodule Cldr.Config do
   """
   @spec number_systems_for!(Locale.locale_name(), t()) :: map() | no_return
   def number_systems_for!(locale_name, config) do
-   case number_systems_for(locale_name, config) do
-     {:ok, systems} -> systems
-     {:error, {exception, reason}} -> raise exception, reason
+    case number_systems_for(locale_name, config) do
+      {:ok, systems} -> systems
+      {:error, {exception, reason}} -> raise exception, reason
     end
   end
 
@@ -736,7 +747,7 @@ defmodule Cldr.Config do
 
   """
   @spec number_system_for(Locale.locale_name(), number_system(), t()) ::
-    {:ok, map()} | {:error, {module(), String.t()}}
+          {:ok, map()} | {:error, {module(), String.t()}}
 
   def number_system_for(locale_name, number_system, config) do
     with {:ok, system_name} <- system_name_from(number_system, locale_name, config) do
@@ -754,14 +765,14 @@ defmodule Cldr.Config do
 
   """
   @spec number_system_names_for(Locale.locale_name(), t()) ::
-    {:ok, [atom(), ...]} | {:error, {module(), String.t()}}
+          {:ok, [atom(), ...]} | {:error, {module(), String.t()}}
 
   def number_system_names_for(locale_name, config) do
     with {:ok, number_systems} <- number_systems_for(locale_name, config) do
       names =
         number_systems
         |> Enum.map(&elem(&1, 1))
-        |> Enum.uniq
+        |> Enum.uniq()
 
       {:ok, names}
     end
@@ -825,8 +836,8 @@ defmodule Cldr.Config do
       }
 
   """
-  @spec system_name_from(String.t(), Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend())
-    :: {:ok, atom()} | {:error, {module(), String.t}}
+  @spec system_name_from(String.t(), Locale.locale_name() | LanguageTag.t(), t() | Cldr.backend()) ::
+          {:ok, atom()} | {:error, {module(), String.t()}}
 
   def system_name_from(number_system, locale_name, backend) when is_atom(backend) do
     system_name_from(number_system, locale_name, backend.__cldr__(:config))
@@ -834,7 +845,8 @@ defmodule Cldr.Config do
 
   def system_name_from(number_system, locale_name, %__MODULE__{} = config) do
     with {:ok, number_systems} <- number_systems_for(locale_name, config),
-         {:ok, number_system} <- validate_number_system_or_type(number_system, locale_name, config) do
+         {:ok, number_system} <-
+           validate_number_system_or_type(number_system, locale_name, config) do
       cond do
         Map.has_key?(number_systems, number_system) ->
           {:ok, Map.get(number_systems, number_system)}
@@ -855,7 +867,8 @@ defmodule Cldr.Config do
       {:ok, number_system}
     else
       {:error, _} ->
-        with {:ok, number_system} <- validate_number_system_type(number_system, locale_name, config) do
+        with {:ok, number_system} <-
+               validate_number_system_type(number_system, locale_name, config) do
           {:ok, number_system}
         else
           {:error, _reason} -> {:error, Cldr.unknown_number_system_error(number_system)}
@@ -863,7 +876,8 @@ defmodule Cldr.Config do
     end
   end
 
-  defp validate_number_system_type(number_system_type, locale_name, config) when is_atom(number_system_type) do
+  defp validate_number_system_type(number_system_type, locale_name, config)
+       when is_atom(number_system_type) do
     {:ok, known_types} = number_system_types_for(locale_name, config)
 
     if number_system_type in known_types do
@@ -873,7 +887,8 @@ defmodule Cldr.Config do
     end
   end
 
-  defp validate_number_system_type(number_system_type, locale_name, config) when is_binary(number_system_type) do
+  defp validate_number_system_type(number_system_type, locale_name, config)
+       when is_binary(number_system_type) do
     number_system_type
     |> String.downcase()
     |> String.to_existing_atom()
@@ -977,7 +992,9 @@ defmodule Cldr.Config do
   * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
 
   """
-  @reg Regex.compile! "(?<currency>[^\\(]+)(?<annotation>\\([^0-9].+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
+  @reg Regex.compile!(
+         "(?<currency>[^\\(]+)(?<annotation>\\([^0-9].+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
+       )
   def currencies_for(locale_name, config) do
     if known_locale_name(locale_name, config) do
       currencies =
@@ -986,13 +1003,19 @@ defmodule Cldr.Config do
         |> Map.get(:currencies)
         |> Enum.map(fn {k, v} ->
           name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
-          name = (Map.get(name_and_range, "currency") <>  Map.get(name_and_range, "annotation")) |> String.trim
+
+          name =
+            (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))
+            |> String.trim()
+
           from = convert_or_nilify(Map.get(name_and_range, "from"))
           to = convert_or_nilify(Map.get(name_and_range, "to"))
-          count = Enum.map(Map.get(v, :count), fn {k, v} ->
-            {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
-          end)
-          |> Map.new
+
+          count =
+            Enum.map(Map.get(v, :count), fn {k, v} ->
+              {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
+            end)
+            |> Map.new()
 
           currency =
             v
@@ -1038,7 +1061,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(&convert_dates/1)
-    |> Cldr.Map.merge_map_list
+    |> Cldr.Map.merge_map_list()
   end
 
   defp convert_dates({territory, currency_dates}) do
@@ -1051,17 +1074,22 @@ defmodule Cldr.Config do
           Enum.flat_map(dates, fn
             [{"from", from}, {"to", to}] ->
               [{:from, Date.from_iso8601!(from)}, {:to, Date.from_iso8601!(to)}]
+
             {"from", from} ->
               [{:from, Date.from_iso8601!(from)}, {:to, nil}]
+
             {"to", to} ->
               [{:from, nil}, {:to, Date.from_iso8601!(to)}]
+
             {"tender", "false"} ->
               [{:tender, false}]
-            other -> raise inspect(other)
-          end)
-          |> Map.new
 
-          %{String.to_atom(currency) => parsed_dates}
+            other ->
+              raise inspect(other)
+          end)
+          |> Map.new()
+
+        %{String.to_atom(currency) => parsed_dates}
       end)
 
     %{territory => Cldr.Map.merge_map_list(currency_dates)}
@@ -1144,7 +1172,7 @@ defmodule Cldr.Config do
 
   """
   @spec locale_path(String.t(), Cldr.backend() | t()) ::
-    {:ok, String.t()} | {:error, :not_found}
+          {:ok, String.t()} | {:error, :not_found}
 
   def locale_path(locale, %{data_dir: _} = config) do
     do_locale_path(locale, config)
@@ -1179,7 +1207,7 @@ defmodule Cldr.Config do
 
   """
   @spec get_locale(Cldr.Locale.locale_name(), config_or_backend :: t() | Cldr.backend()) ::
-    map() | no_return()
+          map() | no_return()
 
   def get_locale(locale, %{data_dir: _} = config) do
     do_get_locale(locale, config)
@@ -1199,7 +1227,7 @@ defmodule Cldr.Config do
           raise RuntimeError, message: "Locale definition was not found for #{locale}"
       end
 
-    do_get_locale(locale, path, Cldr.Locale.Cache.compiling?)
+    do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
   @doc false
@@ -1738,7 +1766,7 @@ defmodule Cldr.Config do
   # by checking it has the keys we used when the locale was consolidated.
   defp assert_valid_keys!(content, locale) do
     for module <- required_modules() do
-      if !Map.has_key?(content, module) and !:'Elixir.System'.get_env("DEV") do
+      if !Map.has_key?(content, module) and !:"Elixir.System".get_env("DEV") do
         raise RuntimeError,
           message:
             "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
@@ -1885,7 +1913,7 @@ defmodule Cldr.Config do
       global_config()
       |> Keyword.merge(otp_config(module_config))
       |> Keyword.merge(module_config)
-      |> Map.new
+      |> Map.new()
 
     config =
       config
@@ -1899,7 +1927,7 @@ defmodule Cldr.Config do
   # Returns the AST of any configured plugins
   @doc false
   def define_provider_modules(config) do
-    for {module, function, args} <-  Cldr.Config.Dependents.cldr_provider_modules(config) do
+    for {module, function, args} <- Cldr.Config.Dependents.cldr_provider_modules(config) do
       if Code.ensure_loaded?(module) && function_exported?(module, function, 1) do
         apply(module, function, args)
       else
@@ -1913,14 +1941,22 @@ defmodule Cldr.Config do
 
     cond do
       !Code.ensure_loaded?(module) ->
-        Logger.warn "#{inspect config.backend}: The CLDR provider module #{inspect module} " <>
-          "was not found"
+        Logger.warn(
+          "#{inspect(config.backend)}: The CLDR provider module #{inspect(module)} " <>
+            "was not found"
+        )
+
       !function_exported?(module, function, 1) ->
-        Logger.warn "#{inspect config.backend}: The CLDR provider module #{inspect module} " <>
-          "does not implement the function #{function}/#{length(args)}"
+        Logger.warn(
+          "#{inspect(config.backend)}: The CLDR provider module #{inspect(module)} " <>
+            "does not implement the function #{function}/#{length(args)}"
+        )
+
       true ->
-        Logger.warn "#{inspect config.backend}: Could not execute the CLDR provider " <>
-          "#{inspect module}.#{function}/#{length(args)}"
+        Logger.warn(
+          "#{inspect(config.backend)}: Could not execute the CLDR provider " <>
+            "#{inspect(module)}.#{function}/#{length(args)}"
+        )
     end
   end
 
@@ -1930,14 +1966,14 @@ defmodule Cldr.Config do
 
   @doc false
   def loaded_apps do
-    Application.loaded_applications
-    |> Enum.map(&(elem(&1, 0)))
-    |> Kernel.++([Mix.Project.config[:app]])
+    Application.loaded_applications()
+    |> Enum.map(&elem(&1, 0))
+    |> Kernel.++([Mix.Project.config()[:app]])
   end
 
   def raise_if_otp_app_not_loaded!(config) do
     if config[:otp_app] && config[:otp_app] not in loaded_apps() do
-      raise ArgumentError, "The :otp_app #{inspect config[:otp_app]} is not known"
+      raise ArgumentError, "The :otp_app #{inspect(config[:otp_app])} is not known"
     end
   end
 
@@ -1965,14 +2001,16 @@ defmodule Cldr.Config do
     remaining_config =
       global_config()
       |> Enum.reject(&(elem(&1, 0) in @non_deprecated_keys))
-      |> Enum.map(&(elem(&1, 0)))
+      |> Enum.map(&elem(&1, 0))
 
     if length(remaining_config) > 0 do
-      IO.warn("Using the global configuration is deprecated.  Global configuration " <>
-      "only supports the #{inspect @non_deprecated_keys} keys. The keys " <>
-      "#{inspect remaining_config} should be configured in a backend module or " <>
-      "via the :otp_app configuration of a backend module.  See the readme for " <>
-      "further information.")
+      IO.warn(
+        "Using the global configuration is deprecated.  Global configuration " <>
+          "only supports the #{inspect(@non_deprecated_keys)} keys. The keys " <>
+          "#{inspect(remaining_config)} should be configured in a backend module or " <>
+          "via the :otp_app configuration of a backend module.  See the readme for " <>
+          "further information."
+      )
     end
   end
 
@@ -1988,7 +2026,7 @@ defmodule Cldr.Config do
 
         (locales ++ gettext ++ [default, @default_locale, @root_locale])
         |> Enum.reject(&is_nil/1)
-        |> Enum.uniq
+        |> Enum.uniq()
       end
 
     Map.put(config, :locales, locales)

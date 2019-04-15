@@ -201,11 +201,11 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   @inverse_locale_map @locale_map
-  |> Enum.map(fn
-    {attr, [key | _rest]} -> {key, attr}
-    {attr, key} -> {key, attr}
-  end)
-  |> Map.new
+                      |> Enum.map(fn
+                        {attr, [key | _rest]} -> {key, attr}
+                        {attr, key} -> {key, attr}
+                      end)
+                      |> Map.new()
 
   @doc false
   def inverse_locale_key_map do

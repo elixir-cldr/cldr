@@ -42,7 +42,6 @@ defmodule Cldr.Test do
   end
 
   test "default locale" do
-
     assert TestBackend.Cldr.default_locale() ==
              %Cldr.LanguageTag{
                canonical_locale_name: "en-Latn-001",
@@ -69,6 +68,7 @@ defmodule Cldr.Test do
 
   test "that we have the right number of rbnf locales" do
     alias TestBackend.Cldr
+
     assert Cldr.known_rbnf_locale_names() ==
              [
                "af",
@@ -240,23 +240,25 @@ defmodule Cldr.Test do
 
   test "that configs merge correctly" do
     assert WithOtpAppBackend.Cldr.__cldr__(:config).locales ==
-      ["fr", "en-001", "root"]
+             ["fr", "en-001", "root"]
 
     assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
-      ["en", "en-GB", "es", "en-001", "root"]
+             ["en", "en-GB", "es", "en-001", "root"]
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
 
   test "that data_dir is correctly resolved" do
     # data_dir configured in the otp_app
-    assert "./with_opt_app_backend/cldr/some_dir" == Cldr.Config.client_data_dir(WithOtpAppBackend.Cldr)
+    assert "./with_opt_app_backend/cldr/some_dir" ==
+             Cldr.Config.client_data_dir(WithOtpAppBackend.Cldr)
 
     # data_dir configured on the module
     assert "./another_backend/cldr/data_dir" == Cldr.Config.client_data_dir(AnotherBackend.Cldr)
 
     # default data_dir
-    assert Cldr.Config.client_data_dir(DefaultBackend.Cldr) =~ "cldr/_build/test/lib/ex_cldr/priv/cldr"
+    assert Cldr.Config.client_data_dir(DefaultBackend.Cldr) =~
+             "cldr/_build/test/lib/ex_cldr/priv/cldr"
   end
 
   test "that an unknown otp_app config raises" do
@@ -284,9 +286,9 @@ defmodule Cldr.Test do
   end
 
   test "validating locales that are not precompiled" do
-    assert {:ok, locale} = Cldr.validate_locale "en-au", TestBackend.Cldr
-    assert {:ok, locale} = Cldr.validate_locale "en_au", TestBackend.Cldr
-    assert {:ok, locale} = Cldr.validate_locale "en-au-u-ca-buddhist", TestBackend.Cldr
+    assert {:ok, locale} = Cldr.validate_locale("en-au", TestBackend.Cldr)
+    assert {:ok, locale} = Cldr.validate_locale("en_au", TestBackend.Cldr)
+    assert {:ok, locale} = Cldr.validate_locale("en-au-u-ca-buddhist", TestBackend.Cldr)
   end
 
   if function_exported?(Code, :fetch_docs, 1) do
@@ -295,7 +297,8 @@ defmodule Cldr.Test do
     end
 
     assert "that module docs are generated for a backend" do
-      {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} = Code.fetch_docs(TestBackend.Cldr)
+      {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} =
+        Code.fetch_docs(TestBackend.Cldr)
     end
   end
 

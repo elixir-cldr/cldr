@@ -97,7 +97,7 @@ defmodule Cldr.Substitution do
   # Takes care of the common case where there are three parameters separated
   # by strings.
   def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2])
-        when is_binary(string_1) and is_binary(string_2) do
+      when is_binary(string_1) and is_binary(string_2) do
     [item_0, string_1, item_1, string_2, item_2]
   end
 

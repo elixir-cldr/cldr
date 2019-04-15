@@ -255,7 +255,7 @@ defmodule Cldr.Locale do
   """
 
   def canonical_language_tag(locale_name, backend)
-      when is_binary(locale_name)  do
+      when is_binary(locale_name) do
     if locale_name in backend.known_locale_names do
       Cldr.validate_locale(locale_name, backend)
     else
@@ -519,7 +519,6 @@ defmodule Cldr.Locale do
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
-
 
   @doc """
   Substitute deprectated subtags with a `Cldr.LanguageTag` with their

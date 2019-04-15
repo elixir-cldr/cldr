@@ -234,19 +234,24 @@ defmodule Cldr.LanguageTag do
       "en-Latn-US-u-co-phonebk-nu-arab"
 
   """
-  @spec to_string(t) :: String.t
+  @spec to_string(t) :: String.t()
   def to_string(%__MODULE__{} = locale) do
     basic_tag =
-      [locale.language, locale.language_subtags, locale.script,
-      locale.territory, locale.language_variant]
-      |> List.flatten
+      [
+        locale.language,
+        locale.language_subtags,
+        locale.script,
+        locale.territory,
+        locale.language_variant
+      ]
+      |> List.flatten()
       |> Enum.reject(&is_nil/1)
       |> Enum.join("-")
 
     locale_extension =
       locale.locale
       |> Enum.map(fn
-        {k, v} when is_atom(k) -> "#{Parser.inverse_locale_key_map[k]}-#{v}"
+        {k, v} when is_atom(k) -> "#{Parser.inverse_locale_key_map()[k]}-#{v}"
         _ -> nil
       end)
       |> Enum.reject(&is_nil/1)

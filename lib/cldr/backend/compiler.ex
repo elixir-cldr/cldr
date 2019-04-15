@@ -8,7 +8,7 @@ defmodule Cldr.Backend.Compiler do
     config =
       Module.get_attribute(env.module, :cldr_opts)
       |> Keyword.put(:backend, env.module)
-      |> Cldr.Config.config_from_opts
+      |> Cldr.Config.config_from_opts()
 
     Module.put_attribute(env.module, :config, config)
     Cldr.install_locales(config)

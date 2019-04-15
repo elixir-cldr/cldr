@@ -7,6 +7,4 @@ defmodule TestGettext.Gettext do
     otp_app: Cldr.Config.app_name(),
     priv: "priv/gettext_test",
     plural_forms: TestBackend.Gettext.Plural
-
 end
-

@@ -7,5 +7,4 @@ defmodule Mix.Tasks.Compile.Cldr do
   def run(_args) do
     :noop
   end
-
 end
