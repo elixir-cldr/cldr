@@ -1,7 +1,7 @@
 
 # Changelog for Cldr v2.6.2
 
-This is the changelog for Cldr v2.6.2 released on ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+This is the changelog for Cldr v2.6.2 released on April 16th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
 
 ### Enhancements
 
