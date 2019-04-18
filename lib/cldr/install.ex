@@ -20,9 +20,12 @@ defmodule Cldr.Install do
 
   @doc """
   Install all the configured locales.
+
   """
   def install_known_locale_names(config) do
-    Enum.each(Cldr.Config.known_locale_names(config), &install_locale_name(&1, config))
+    config
+    |> Cldr.Config.known_locale_names
+    |> Enum.each(&install_locale_name(&1, config))
     :ok
   end
 
@@ -30,7 +33,8 @@ defmodule Cldr.Install do
   Install all available locales.
   """
   def install_all_locale_names(config) do
-    Enum.each(Cldr.Config.all_locale_names(), &install_locale_name(&1, config))
+    Cldr.Config.all_locale_names()
+    |> Enum.each(&install_locale_name(&1, config))
     :ok
   end
 
@@ -41,8 +45,8 @@ defmodule Cldr.Install do
   * `locale` is any locale returned by `Cldr.known_locale_names/1`
 
   * `options` is a keyword list.  Currently the only supported
-  option is `:force` which defaults to `false`.  If `truthy` the
-  locale will be installed or re-installed.
+    option is `:force` which defaults to `false`.  If `truthy` the
+    locale will be installed or re-installed.
 
   The data directory is typically `./priv/cldr/locales`.
 
