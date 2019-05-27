@@ -1,3 +1,10 @@
+# Changelog for Cldr v2.7.0
+
+This is the changelog for Cldr v2.7.0 released on April 22nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Enhancements
+
+* Updates to CLDR version 35.1.0 which is primarily related to the change of Japanese era with the ascension of a new emporer on April 1st.
 
 # Changelog for Cldr v2.6.2
 
