@@ -1239,7 +1239,7 @@ defmodule Cldr do
           {:ok, atom()} | {:error, {module(), String.t()}}
 
   def validate_number_system(number_system) when is_atom(number_system) do
-    if number_system in Config.known_number_systems() do
+    if number_system in known_number_systems() do
       {:ok, number_system}
     else
       {:error, unknown_number_system_error(number_system)}

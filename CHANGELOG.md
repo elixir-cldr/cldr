@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.7.1
+
+This is the changelog for Cldr v2.7.1 released on June 2nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.known_number_systems/0` by removing the call to `Config.known_number_systems/0` which decodes json on each call and use `Cldr.known_number_systems/0` which does not.
+
 # Changelog for Cldr v2.7.0
 
 This is the changelog for Cldr v2.7.0 released on April 22nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
