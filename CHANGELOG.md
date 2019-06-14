@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.7.2
+
+This is the changelog for Cldr v2.7.2 released on June 14th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)
+
+### Bug Fixes
+
+* Fixes a bug whereby a `Gettext` backend module may not be compiled at the time that the `Cldr` backend is being compiled. This can cause compilation errors and may cause the wrong assembly of configured locales. Closes #124.  Thanks very much to @erikreedstrom and @epilgrim.
+
 # Changelog for Cldr v2.7.1
 
 This is the changelog for Cldr v2.7.1 released on June 2nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/cldr/tags)

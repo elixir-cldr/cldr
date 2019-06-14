@@ -1108,7 +1108,7 @@ defmodule Cldr.Config do
   """
   @spec gettext_configured?(t()) :: boolean
   def gettext_configured?(config) do
-    gettext(config) && Code.ensure_loaded?(Gettext) && Code.ensure_loaded?(gettext(config))
+    gettext(config) && Code.ensure_compiled?(Gettext) && Code.ensure_compiled?(gettext(config))
   end
 
   @doc """
@@ -2020,7 +2020,7 @@ defmodule Cldr.Config do
       if config[:locales] == :all do
         config[:locales]
       else
-        gettext = Cldr.Config.known_gettext_locale_names(config)
+        gettext = known_gettext_locale_names(config)
         locales = config[:locales] || [config[:default_locale] || @default_locale]
         default = config[:default_locale] || hd(locales)
 
