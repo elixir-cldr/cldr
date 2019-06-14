@@ -391,7 +391,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_gettext(options, gettext) do
-      case Code.ensure_loaded(gettext) do
+      case Code.ensure_compiled(gettext) do
         {:error, _} ->
           raise ArgumentError, "Gettext module #{inspect(gettext)} is not known"
 
@@ -425,7 +425,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_cldr(options, backend) when is_atom(backend) do
-      unless Code.ensure_loaded?(backend) and function_exported?(backend, :__cldr__, 1) do
+      unless Code.ensure_compiled?(backend) and function_exported?(backend, :__cldr__, 1) do
         raise ArgumentError,
               "#{inspect(backend)} is either not known or does not appear to be a Cldr backend module"
       else
