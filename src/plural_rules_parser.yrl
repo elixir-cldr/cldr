@@ -125,9 +125,12 @@ conditional(equals, A, B = {'..', _C, [_From, _To]}) ->
 
 % -> for an expression
 % NOTE this will calculate the expression each time which is
-% inefficienct.  But parser isn't the right place to unwrap that.
-conditional({'mod', [_C], [{_L}]}, A, B) ->
-  {'==', kernel_context(), [A, B]};
+% inefficient.  But parser isn't the right place to unwrap that.
+
+% NOTE REMOVED DUE TO DIALYZER ERROR saying this can never match.
+% tests still pass without it.
+% conditional({'mod', [_C], [{_L}]}, A, B) ->
+%  {'==', kernel_context(), [A, B]};
 
 % -> for a value
 conditional(equals, A, B) ->

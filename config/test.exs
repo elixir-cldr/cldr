@@ -3,6 +3,7 @@ use Mix.Config
 # Global config
 config :ex_cldr,
   default_locale: "en-001",
+	default_backend: MyApp.Cldr,
   locales: ["en"]
 
 config :ex_cldr, TestGettext.Gettext, default_locale: "en"

@@ -1255,6 +1255,57 @@ defmodule Cldr do
     ArgumentError ->
       {:error, unknown_number_system_error(number_system)}
   end
+	
+  @doc """
+  Normalize and validate a plural type.
+
+  ## Arguments
+
+  * `plural_type` is any plural type returned by
+    `Cldr.Number.PluralRule.known_plural_types/0`
+
+  ## Returns
+
+  * `{:ok, normalized_plural_type}` or
+
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+      iex> Cldr.validate_plural_type :few
+      {:ok, :few}
+
+      iex> Cldr.validate_plural_type "one"
+      {:ok, :one}
+
+      iex> Cldr.validate_plural_type "invalid"
+      {
+        :error,
+        {Cldr.UnknownPluralTypeError, "The plural type :invalid is unknown"}
+      }
+
+  """
+
+  @spec validate_plural_type(atom() | String.t()) ::
+          {:ok, Cldr.Number.PluralRule.plural_type()} | {:error, {module(), String.t()}}
+					
+  def validate_plural_type(plural_type) when is_atom(plural_type) do
+    if plural_type in Cldr.Number.PluralRule.known_plural_types() do
+      {:ok, plural_type}
+    else
+      {:error, unknown_plural_type_error(plural_type)}
+    end
+  end
+	
+  def validate_plural_type(plural_type) when is_binary(plural_type) do
+    plural_type
+    |> String.downcase()
+    |> String.to_existing_atom()
+    |> validate_plural_type
+  rescue
+    ArgumentError ->
+      {:error, unknown_plural_type_error(plural_type)}
+  end
 
   @doc """
   Returns an error tuple for an unknown number system.
@@ -1382,6 +1433,43 @@ defmodule Cldr do
     {
       Cldr.UnknownNumberSystemTypeError,
       "The number system type #{inspect(number_system_type)} is invalid"
+    }
+  end
+	
+  @doc """
+  Returns an error tuple for an unknown plural type.
+
+  ## Options
+
+  * `plural_type` is any number system type name **not** returned
+    by `Cldr.Number.PluralRule.known_plural_types/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.UnknownPluralTypeError, message}}`
+
+  ## Examples
+
+      iex> Cldr.unknown_plural_type_error("invalid")
+      {Cldr.UnknownPluralTypeError, "The plural type \\"invalid\\" is invalid"}
+
+      iex> Cldr.unknown_plural_type_error(:invalid)
+      {Cldr.UnknownPluralTypeError, "The plural type :invalid is unknown"}
+
+  """
+  @spec unknown_plural_type_error(any()) :: {Cldr.UnknownPluralTypeError, String.t()}
+
+  def unknown_plural_type_error(plural_type) when is_atom(plural_type) do
+    {
+      Cldr.UnknownPluralTypeError,
+      "The plural type #{inspect(plural_type)} is unknown"
+    }
+  end
+
+  def unknown_plural_type_error(plural_type) do
+    {
+      Cldr.UnknownPluralTypeError,
+      "The plural type #{inspect(plural_type)} is invalid"
     }
   end
 

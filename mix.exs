@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.7.2"
+  @version "2.8.0-dev"
 
   def project do
     [
@@ -21,7 +21,7 @@ defmodule Cldr.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(gettext inets jason mix plug)a
+        plt_add_apps: ~w(gettext inets jason mix plug sweet_xml)a
       ],
       compilers: Mix.compilers()
     ]
@@ -46,7 +46,8 @@ defmodule Cldr.Mixfile do
       {:jason, "~> 1.0", optional: true},
       {:decimal, "~> 1.5"},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
-      {:nimble_parsec, "~> 0.5"},
+			{:nimble_parsec, github: "kipcole9/nimble_parsec", override: true},
+      # {:nimble_parsec, "~> 0.5"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},

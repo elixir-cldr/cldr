@@ -3,6 +3,7 @@ defmodule Doc.Test do
   doctest Cldr
   doctest Cldr.Config
   doctest Cldr.Locale
+	doctest Cldr.Number.PluralRule
 
   doctest Cldr.LanguageTag
   doctest Cldr.LanguageTag.Parser
