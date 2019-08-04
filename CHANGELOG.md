@@ -8,6 +8,10 @@ This is the changelog for Cldr v2.8.0 released on ____, 2019.  For older changel
 
 * Adds `Cldr.Number.PluralRule.plural_type/2` which returns the plural type for a number.
 
+### Bug Fixes
+
+* Add `@spec` to parser combinators to remove dialyzer warnings.  Ensure that you are using `nimble_parsec` version 0.5.1 or later if running dialyzer checks.
+
 # Changelog for Cldr v2.7.2
 
 This is the changelog for Cldr v2.7.2 released on June 14th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

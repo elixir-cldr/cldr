@@ -44,17 +44,16 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:jason, "~> 1.0", optional: true},
-      {:decimal, "~> 1.5"},
+      {:decimal, "~> 1.6"},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
-			{:nimble_parsec, github: "kipcole9/nimble_parsec", override: true},
-      # {:nimble_parsec, "~> 0.5"},
+      {:nimble_parsec, "~> 0.5"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
-      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false, optional: true},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
-      {:benchee, "~> 1.0", only: :dev, runtime: false},
-      {:cldr_utils, "~> 2.1"},
+      {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true},
+      {:cldr_utils, "~> 2.3"},
       {:telemetry, "~> 0.4.0", optional: true}
     ]
   end
