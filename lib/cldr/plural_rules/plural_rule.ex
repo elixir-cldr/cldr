@@ -37,16 +37,16 @@ defmodule Cldr.Number.PluralRule do
 	
 	## Examples
 	
-		iex> Cldr.Number.PluralRule.plural_type 123
+		iex> Cldr.Number.PluralRule.plural_type(123)
 		:other
 	
-		iex> Cldr.Number.PluralRule.plural_type 123, type: Ordinal
+		iex> Cldr.Number.PluralRule.plural_type(123, type: Ordinal)
 		:few
 	
-		iex> Cldr.Number.PluralRule.plural_type 123, type: Cardinal
+		iex> Cldr.Number.PluralRule.plural_type(123, type: Cardinal)
 		:other
 	
-		iex> Cldr.Number.PluralRule.plural_type 2, locale: "de"
+		iex> Cldr.Number.PluralRule.plural_type(2, locale: "de")
 		:other
 	
 	"""

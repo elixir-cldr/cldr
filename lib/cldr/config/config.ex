@@ -14,7 +14,8 @@ defmodule Cldr.Config do
             precompile_transliterations: [],
             otp_app: nil,
             generate_docs: true,
-            supress_warnings: false
+            supress_warnings: false,
+						message_formats: []
 
   @type t :: %__MODULE__{
           default_locale: binary(),
@@ -27,7 +28,8 @@ defmodule Cldr.Config do
           otp_app: atom() | nil,
           providers: [atom(), ...],
           generate_docs: boolean(),
-          supress_warnings: boolean()
+          supress_warnings: boolean(),
+					message_formats: map()
         }
 
   @type number_system :: atom() | String.t()
