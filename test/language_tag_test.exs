@@ -1,5 +1,5 @@
 defmodule CldrLanguageTagTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   use ExUnitProperties
 
   property "check that we can parse language tags" do
