@@ -1,10 +1,10 @@
 # Changelog for Cldr v2.8.0
 
-This is the changelog for Cldr v2.8.0 released on ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.8.0 released on August 21st, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
-* Adds `Cldr.validate_plural_type/1` which will validate if a plural type is one those returned by `Cldr.Number.PluralRule.known_plural_types/0` which is also added.  These functions are added to support message formatting in the forthcoming `ex_cldr_messages` package.`
+* Adds `Cldr.validate_plural_type/1` which will validate if a plural type is one those returned by `Cldr.Number.PluralRule.known_plural_types/0` which is also added.  These functions are added to support message formatting in the forthcoming `ex_cldr_messages` package.
 
 * Adds `Cldr.Number.PluralRule.plural_type/2` which returns the plural type for a number.
 
