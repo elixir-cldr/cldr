@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.8.1
+
+This is the changelog for Cldr v2.8.1 released on August 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix the `@spec` for `Cldr.Substitution.substitute/2`
+
 # Changelog for Cldr v2.8.0
 
 This is the changelog for Cldr v2.8.0 released on August 21st, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

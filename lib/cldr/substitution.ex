@@ -65,7 +65,7 @@ defmodule Cldr.Substitution do
       ["a", " This is something ", "b"]
 
   """
-  @spec substitute([term, ...], [String.t() | integer, ...]) :: [term, ...]
+  @spec substitute(term | [term, ...], [String.t() | integer, ...]) :: [term, ...]
 
   # Takes care of a common case where there is one parameter
   def substitute([item], [0, string]) when is_binary(string) do
@@ -74,6 +74,10 @@ defmodule Cldr.Substitution do
 
   def substitute(item, [0, string]) when is_binary(string) do
     [item, string]
+  end
+
+  def substitute([item], [string, 0]) when is_binary(string) do
+    [string, item]
   end
 
   def substitute(item, [string, 0]) when is_binary(string) do
