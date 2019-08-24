@@ -42,6 +42,7 @@ defmodule Cldr.Consolidate do
     save_locales()
     save_territory_containment()
     save_plural_ranges()
+    save_measurement_data()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -435,6 +436,29 @@ defmodule Cldr.Consolidate do
     |> Enum.map(fn %{locales: locales} = map ->
       Map.put(map, :locales, String.split(locales, " "))
     end)
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_measurement_data do
+    path = Path.join(consolidated_output_dir(), "measurement_system.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/measurementData.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "measurementData"])
+    |> Enum.map(fn
+        {"measurementSystem", v} ->
+          {"default", v}
+        {"measurementSystem-category-" <> category, v} ->
+          {category, v}
+        {other, v} ->
+          {Cldr.String.underscore(other), v}
+       end)
+    |> Map.new
     |> save_file(path)
 
     assert_package_file_configured!(path)

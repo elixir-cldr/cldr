@@ -418,6 +418,21 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return a map of measurement systems for
+  territories
+
+  """
+  @measurement_system_file "measurement_system.json"
+  def measurement_system do
+    Path.join(cldr_data_dir(), @measurement_system_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new
+  end
+
+  @doc """
   Returns a boolean indicating whether the language_tags.ebin
   file exists
 
