@@ -1,6 +1,6 @@
 # Changelog for Cldr v2.9.0
 
-This is the changelog for Cldr v2.9.0 released on August ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
