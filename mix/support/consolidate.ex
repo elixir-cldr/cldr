@@ -103,6 +103,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.TerritoryNames.normalize(locale)
     |> Normalize.LanguageNames.normalize(locale)
     |> Normalize.Calendar.normalize(locale)
+    |> Normalize.Delimiter.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing

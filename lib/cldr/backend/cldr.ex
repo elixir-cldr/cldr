@@ -334,6 +334,38 @@ defmodule Cldr.Backend do
       end
 
       @doc """
+      Add locale-specific quotation marks around a string.
+
+      ## Arguments
+
+      * `string` is any valid Elixir string
+
+      * `options` is a keyword list of options
+
+      ## Options
+
+      * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
+        The default is `Cldr.get_locale/0`
+
+      ## Examples
+
+          iex> #{inspect(__MODULE__)}.quote "Quoted String"
+          "“Quoted String”"
+
+          iex> #{inspect(__MODULE__)}.quote "Quoted String", locale: "ja"
+          "「Quoted String」"
+
+      """
+      def quote(string, options \\ []) when is_binary(string) and is_list(options) do
+        locale = options[:locale] || Cldr.get_locale()
+        with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
+          marks = quote_marks_for(locale_name)
+          marks[:quotation_start] <> string <> marks[:quotation_end]
+        end
+      end
+
+
+      @doc """
       Normalise and validate a locale name.
 
       ## Arguments
@@ -437,6 +469,17 @@ defmodule Cldr.Backend do
 
         defp do_validate_locale(unquote(locale_name)) do
           {:ok, unquote(Macro.escape(language_tag))}
+        end
+      end
+
+      for locale_name <- Cldr.Config.known_locale_names(config) do
+        delimiters =
+          locale_name
+          |> Cldr.Config.get_locale(config)
+          |> Map.get(:delimiters)
+
+        defp quote_marks_for(unquote(locale_name)) do
+          unquote(Macro.escape(delimiters))
         end
       end
 

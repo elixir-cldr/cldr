@@ -782,6 +782,49 @@ defmodule Cldr do
   end
 
   @doc """
+  Add locale-specific quotation marks around a string.
+
+  ## Arguments
+
+  * `string` is any valid Elixir string
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
+
+  * `options` is a keyword list of options
+
+  ## Options
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
+    The default is `Cldr.get_locale/0`
+
+  ## Examples
+
+      iex> Cldr.quote "Quoted String", MyApp.Cldr
+      "“Quoted String”"
+
+      iex> Cldr.quote "Quoted String", MyApp.Cldr, locale: "ja"
+      "「Quoted String」"
+
+  """
+  @spec quote(String.t(), backend(), Keyword.t()) :: String.t
+  def quote(string, backend, options \\ [])
+
+  def quote(string, options, []) when is_binary(string) and is_list(options) do
+    {backend, options} = Keyword.pop(options, :backend)
+    backend = backend || default_backend()
+    quote(string, backend, options)
+  end
+
+  def quote(string, backend, options) when is_binary(string) and is_list(options) do
+    options = Keyword.merge([locale: default_locale()], options)
+    backend.quote(string, options)
+  end
+
+  @doc """
   Normalise and validate a gettext locale name.
 
   ## Arguments
@@ -1255,7 +1298,7 @@ defmodule Cldr do
     ArgumentError ->
       {:error, unknown_number_system_error(number_system)}
   end
-	
+
   @doc """
   Normalize and validate a plural type.
 
@@ -1288,7 +1331,7 @@ defmodule Cldr do
 
   @spec validate_plural_type(atom() | String.t()) ::
           {:ok, Cldr.Number.PluralRule.plural_type()} | {:error, {module(), String.t()}}
-					
+
   def validate_plural_type(plural_type) when is_atom(plural_type) do
     if plural_type in Cldr.Number.PluralRule.known_plural_types() do
       {:ok, plural_type}
@@ -1296,7 +1339,7 @@ defmodule Cldr do
       {:error, unknown_plural_type_error(plural_type)}
     end
   end
-	
+
   def validate_plural_type(plural_type) when is_binary(plural_type) do
     plural_type
     |> String.downcase()
@@ -1435,7 +1478,7 @@ defmodule Cldr do
       "The number system type #{inspect(number_system_type)} is invalid"
     }
   end
-	
+
   @doc """
   Returns an error tuple for an unknown plural type.
 

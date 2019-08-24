@@ -48,7 +48,8 @@ defmodule Cldr.Config do
     "date_fields",
     "dates",
     "territories",
-    "languages"
+    "languages",
+    "delimiters"
   ]
 
   def include_module_docs?(false) do
