@@ -49,7 +49,8 @@ defmodule Cldr.Config do
     "dates",
     "territories",
     "languages",
-    "delimiters"
+    "delimiters",
+    "ellipsis"
   ]
 
   def include_module_docs?(false) do

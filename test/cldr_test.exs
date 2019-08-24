@@ -38,7 +38,8 @@ defmodule Cldr.Test do
                "dates",
                "territories",
                "languages",
-               "delimiters"
+               "delimiters",
+               "ellipsis"
              ]
   end
 

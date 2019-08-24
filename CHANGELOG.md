@@ -6,7 +6,9 @@ This is the changelog for Cldr v2.9.0 released on August ____, 2019.  For older 
 
 * Includes the compound unit fields from units in the generated locale data.  This enables formatting of compount units, like the "per" form which is used when there is no predefined unit style.
 
-* Add `Cldr.Quote/3` and `MyApp.Cldr.quote/2` that adds locale-specific quotation marks around a string.  The locale data files are updated to include this information.
+* Add `Cldr.quote/3` and `MyApp.Cldr.quote/2` that add locale-specific quotation marks around a string.  The locale data files are updated to include this information.
+
+* Add `Cldr.ellipsis/3` and `MyApp.Cldr.ellipsis/2` that add locale-specific ellipsis' to a string.  The locale data files are updated to include this information.
 
 # Changelog for Cldr v2.8.1
 

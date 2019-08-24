@@ -356,6 +356,8 @@ defmodule Cldr.Backend do
           "「Quoted String」"
 
       """
+      @spec quote(String.t(), Keyword.t()) :: String.t()
+
       def quote(string, options \\ []) when is_binary(string) and is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
@@ -364,6 +366,71 @@ defmodule Cldr.Backend do
         end
       end
 
+      @doc """
+      Add locale-specific ellipsis to a string.
+
+      ## Arguments
+
+      * `string` is any valid Elixir string
+
+      * `backend` is any module that includes `use Cldr` and therefore
+        is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+        Note that `Cldr.default_backend/0` will raise an exception if
+        no `:default_backend` is configured under the `:ex_cldr` key in
+        `config.exs`.
+
+      * `options` is a keyword list of options
+
+      ## Options
+
+      * `:locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
+        The default is `Cldr.get_locale/0`
+
+      * `:location` determines where to place the ellipsis. The options are
+        `:after` (the default for a single string argument), `:between` (the default
+        and only valid location for an argument that is a list of two strings) and `:before`
+
+      ## Examples
+
+          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore"
+          "And furthermore…"
+
+          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
+          "And furthermore…there is much to be done"
+
+      """
+      @spec ellipsis(String.t() | list(String.t), Keyword.t()) :: String.t
+
+      def ellipsis(string, options \\ []) when is_list(options) do
+        locale = options[:locale] || Cldr.get_locale()
+        with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
+          ellipsis(string, ellipsis_chars(locale_name), options[:location])
+        end
+      end
+
+      defp ellipsis([string_1, string_2], %{medial: medial}, _) when is_binary(string_1) and is_binary(string_2) do
+        [string_1, string_2]
+        |> Cldr.Substitution.substitute(medial)
+        |> :erlang.iolist_to_binary
+      end
+
+      defp ellipsis(string, %{final: final}, nil) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(final)
+        |> :erlang.iolist_to_binary
+      end
+
+      defp ellipsis(string, %{final: final}, :after) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(final)
+        |> :erlang.iolist_to_binary
+      end
+
+      defp ellipsis(string, %{initial: initial}, :before) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(initial)
+        |> :erlang.iolist_to_binary
+      end
 
       @doc """
       Normalise and validate a locale name.
@@ -480,6 +547,15 @@ defmodule Cldr.Backend do
 
         defp quote_marks_for(unquote(locale_name)) do
           unquote(Macro.escape(delimiters))
+        end
+
+        ellipsis =
+          locale_name
+          |> Cldr.Config.get_locale(config)
+          |> Map.get(:ellipsis)
+
+        defp ellipsis_chars(unquote(locale_name)) do
+          unquote(Macro.escape(ellipsis))
         end
       end
 
