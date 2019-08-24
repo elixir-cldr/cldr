@@ -1845,7 +1845,7 @@ defmodule Cldr.Config do
       [group | key] = String.split(k, "_", parts: 2)
 
       if key == [] do
-        nil
+        {"compound", group, v}
       else
         [key] = key
         {group, key, v}

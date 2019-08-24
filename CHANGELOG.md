@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.9.0
+
+This is the changelog for Cldr v2.9.0 released on August ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Includes the compound unit fields from units in the generated locale data.  This enables formatting of compount units, like the "per" form which is used when there is no predefined unit style.
+
 # Changelog for Cldr v2.8.1
 
 This is the changelog for Cldr v2.8.1 released on August 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
