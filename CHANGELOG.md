@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.10.1
+
+This is the changelog for Cldr v2.10.1 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix error in the generation of unit preference data
+
 # Changelog for Cldr v2.10.0
 
 This is the changelog for Cldr v2.10.0 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
