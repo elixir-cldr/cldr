@@ -465,6 +465,57 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
+  def save_unit_preference do
+    path = Path.join(consolidated_output_dir(), "unit_preference.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/unitPreferenceData.json"])
+    |> File.read!()
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
+    |> fix_small_category(false)
+    |> Enum.join("\n")
+    |> Jason.decode!
+    |> get_in(["supplemental", "unitPreferenceData", "unitPreferences"])
+    |> separate_informal_style
+    |> save_file(path)
+  end
+
+  defp separate_informal_style(data) do
+    Enum.map(data, fn
+      {k, v} when is_map(v) -> {k, group(v) |> separate_informal_style()}
+      {k, v} -> {k, v}
+    end)
+    |> Map.new
+  end
+
+  defp group(map) do
+    Enum.group_by(map, fn {k, _v} -> String.split(k, "-alt-") |> Enum.reverse |> hd end)
+    |> Enum.map(fn
+      {"informal" = k, [{a, b}]} -> {k, %{(String.split(a, "-alt-") |> hd) => b}}
+      {_, [{k, v}]} -> {k, v}
+      {k, v} -> {k, Enum.map(v, fn {a, b} -> {String.split(a, "-alt-") |> hd, b} end) |> Map.new}
+     end)
+    |> Map.new
+  end
+
+  defp fix_small_category([], _insert?) do
+    []
+  end
+
+  defp fix_small_category(["},", "\"small\": {" | rest], _insert?) do
+    fix_small_category([", \"small\": {" | rest], true)
+  end
+
+  defp fix_small_category(["}," | rest], true) do
+    fix_small_category(["}}," | rest], false)
+  end
+
+  defp fix_small_category([head | rest], insert?) do
+    [head | fix_small_category(rest, insert?)]
+  end
+
+  @doc false
   def assert_package_file_configured!(path) do
     [_, path] = String.split(path, "/priv/")
     path = "priv/" <> path

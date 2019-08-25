@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.10.0
+
+This is the changelog for Cldr v2.10.0 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds unit preference data. This data is used by [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6 and later to allow localization of units into the preferred units for a given locale or territory.
+
 # Changelog for Cldr v2.9.0
 
 This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

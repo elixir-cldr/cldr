@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.9.0"
+  @version "2.10.0"
 
   def project do
     [
@@ -91,6 +91,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territory_info.json",
         "priv/cldr/plural_ranges.json",
         "priv/cldr/measurement_system.json",
+        "priv/cldr/unit_preference.json",
         "priv/cldr/language_tags.ebin"
       ]
     ]
