@@ -433,6 +433,20 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return a map of unit preferences f
+
+  """
+  @unit_preference_file "unit_preference.json"
+  def unit_preferences do
+    Path.join(cldr_data_dir(), @unit_preference_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new
+  end
+
+  @doc """
   Returns a boolean indicating whether the language_tags.ebin
   file exists
 
