@@ -1,7 +1,8 @@
 # Getting Started with Cldr 2.0
 ![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)
-[![Hex pm](http://img.shields.io/hexpm/v/ex_cldr.svg?style=flat)](https://hex.pm/packages/ex_cldr)
-[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/kipcole9/cldr/blob/master/LICENSE)
+[![Hex.pm](https://img.shields.io/hexpm/v/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
+[![Hex.pm](https://img.shields.io/hexpm/dw/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
+[![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
 ## Getting Started
 
