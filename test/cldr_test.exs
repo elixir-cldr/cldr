@@ -37,7 +37,9 @@ defmodule Cldr.Test do
                "date_fields",
                "dates",
                "territories",
-               "languages"
+               "languages",
+               "delimiters",
+               "ellipsis"
              ]
   end
 

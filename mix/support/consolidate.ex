@@ -42,6 +42,7 @@ defmodule Cldr.Consolidate do
     save_locales()
     save_territory_containment()
     save_plural_ranges()
+    save_measurement_data()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -103,6 +104,8 @@ defmodule Cldr.Consolidate do
     |> Normalize.TerritoryNames.normalize(locale)
     |> Normalize.LanguageNames.normalize(locale)
     |> Normalize.Calendar.normalize(locale)
+    |> Normalize.Delimiter.normalize(locale)
+    |> Normalize.Ellipsis.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -436,6 +439,81 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_measurement_data do
+    path = Path.join(consolidated_output_dir(), "measurement_system.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/measurementData.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "measurementData"])
+    |> Enum.map(fn
+        {"measurementSystem", v} ->
+          {"default", v}
+        {"measurementSystem-category-" <> category, v} ->
+          {category, v}
+        {other, v} ->
+          {Cldr.String.underscore(other), v}
+       end)
+    |> Map.new
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_unit_preference do
+    path = Path.join(consolidated_output_dir(), "unit_preference.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/unitPreferenceData.json"])
+    |> File.read!()
+    |> String.split("\n")
+    |> Enum.map(&String.trim/1)
+    |> fix_small_category(false)
+    |> Enum.join("\n")
+    |> Jason.decode!
+    |> get_in(["supplemental", "unitPreferenceData", "unitPreferences"])
+    |> separate_informal_style
+    |> save_file(path)
+  end
+
+  defp separate_informal_style(data) do
+    Enum.map(data, fn
+      {k, v} when is_map(v) -> {k, group(v) |> separate_informal_style()}
+      {k, "year-person month-person"} -> {k, ["year", "month"]}
+      {k, v} -> {k, String.split(v, " ")}
+    end)
+    |> Map.new
+  end
+
+  defp group(map) do
+    Enum.group_by(map, fn {k, _v} -> String.split(k, "-alt-") |> Enum.reverse |> hd end)
+    |> Enum.map(fn
+      {"informal" = k, [{a, b}]} -> {k, %{(String.split(a, "-alt-") |> hd) => b}}
+      {_, [{k, v}]} -> {k, v}
+      {k, v} -> {k, Enum.map(v, fn {a, b} -> {String.split(a, "-alt-") |> hd, b} end) |> Map.new}
+     end)
+    |> Map.new
+  end
+
+  defp fix_small_category([], _insert?) do
+    []
+  end
+
+  defp fix_small_category(["},", "\"small\": {" | rest], _insert?) do
+    fix_small_category([", \"small\": {" | rest], true)
+  end
+
+  defp fix_small_category(["}," | rest], true) do
+    fix_small_category(["}}," | rest], false)
+  end
+
+  defp fix_small_category([head | rest], insert?) do
+    [head | fix_small_category(rest, insert?)]
   end
 
   @doc false

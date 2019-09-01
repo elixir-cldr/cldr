@@ -48,7 +48,9 @@ defmodule Cldr.Config do
     "date_fields",
     "dates",
     "territories",
-    "languages"
+    "languages",
+    "delimiters",
+    "ellipsis"
   ]
 
   def include_module_docs?(false) do
@@ -413,6 +415,35 @@ defmodule Cldr.Config do
             end)
         }
     end)
+  end
+
+  @doc """
+  Return a map of measurement systems for
+  territories
+
+  """
+  @measurement_system_file "measurement_system.json"
+  def measurement_system do
+    Path.join(cldr_data_dir(), @measurement_system_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new
+  end
+
+  @doc """
+  Return a map of unit preferences f
+
+  """
+  @unit_preference_file "unit_preference.json"
+  def unit_preferences do
+    Path.join(cldr_data_dir(), @unit_preference_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new
   end
 
   @doc """
@@ -1845,7 +1876,7 @@ defmodule Cldr.Config do
       [group | key] = String.split(k, "_", parts: 2)
 
       if key == [] do
-        nil
+        {"compound", group, v}
       else
         [key] = key
         {group, key, v}

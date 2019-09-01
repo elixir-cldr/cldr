@@ -1,3 +1,33 @@
+# Changelog for Cldr v2.10.1
+
+This is the changelog for Cldr v2.10.1 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix error in the generation of unit preference data
+
+# Changelog for Cldr v2.10.0
+
+This is the changelog for Cldr v2.10.0 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds unit preference data. This data is used by [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6 and later to allow localization of units into the preferred units for a given locale or territory.
+
+# Changelog for Cldr v2.9.0
+
+This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Includes the compound unit fields from units in the generated locale data.  This enables formatting of compount units, like the "per" form which is used when there is no predefined unit style. This functionality is enabled in [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6.
+
+* Add `Cldr.quote/3` and `MyApp.Cldr.quote/2` that add locale-specific quotation marks around a string.  The locale data files are updated to include this information.
+
+* Add `Cldr.ellipsis/3` and `MyApp.Cldr.ellipsis/2` that add locale-specific ellipsis' to a string. The locale data files are updated to include this information.
+
+* Add `Cldr.Config.measurement_system/0` that returns a mapping between a territory and a measurement system (ie does a territory/country use the metric, US or UK system)
+
 # Changelog for Cldr v2.8.1
 
 This is the changelog for Cldr v2.8.1 released on August 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
