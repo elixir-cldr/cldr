@@ -6,6 +6,8 @@ This is the changelog for Cldr v2.10.2 released on September 7th, 2019.  For old
 
 * Use `Keyword.get_lazy/3` when retrieving `Cldr.default_backend/0` to avoid exceptions when no default backend is configured.
 
+* `Cldr.Number.PluralRule.plural_type/2` has become `Cldr.Number.PluralRule.plural_type/3` to better align with other functions that typically use `argument, backend, options` as their parameters. No user code change is expected as the function heads remain compatible.
+
 # Changelog for Cldr v2.10.1
 
 This is the changelog for Cldr v2.10.1 released on August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
