@@ -7,51 +7,61 @@ defmodule Cldr.Number.PluralRule do
 	@doc """
 	Returns a list of the possible pluralization
 	types
-	
+
 	"""
 	@spec known_plural_types :: list(plural_type())
 	@plural_types [:zero, :one, :two, :few, :many, :other]
 	def known_plural_types do
 		@plural_types
 	end
-	
+
 	@doc """
 	Returns the plural type for a given number.
-	
+
 	## Arguments
-	
+
 	* `number` is an integer, float or Decimal number
-	
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+
 	* `options` is a keyword list of options
-	
+
 	## Options
-	
+
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`, The
 	  default is `Cldr.get_locale/0`.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
-	
+    This option allows the backend to be specified as an argument or an option.
+
 	* `type` is either `Cardinal` or `Ordinal`. The default is `Cardinal`.
-	
+
 	## Examples
-	
+
 		iex> Cldr.Number.PluralRule.plural_type(123)
 		:other
-	
+
 		iex> Cldr.Number.PluralRule.plural_type(123, type: Ordinal)
 		:few
-	
+
 		iex> Cldr.Number.PluralRule.plural_type(123, type: Cardinal)
 		:other
-	
+
 		iex> Cldr.Number.PluralRule.plural_type(2, locale: "de")
 		:other
-	
+
 	"""
-	def plural_type(number, options \\ []) do
-		backend = Keyword.get(options, :backend, Cldr.default_backend())
+  def plural_type(number, backend \\ Cldr.default_backend(), options \\ [])
+
+  def plural_type(number, options, []) when is_list(options) do
+    {backend, options} = Keyword.pop_lazy(options, :backend, &Cldr.default_backend/0)
+    plural_type(number, backend, options)
+  end
+
+	def plural_type(number, backend, options) do
 		locale = Keyword.get(options, :locale, Cldr.get_locale())
 		type = Keyword.get(options, :type, Cardinal)
 		module = Module.concat([backend, Number, type])

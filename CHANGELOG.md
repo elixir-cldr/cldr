@@ -1,6 +1,14 @@
+# Changelog for Cldr v2.10.2
+
+This is the changelog for Cldr v2.10.2 released on September 7th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Use `Keyword.get_lazy/3` when retrieving `Cldr.default_backend/0` to avoid exceptions when no default backend is configured.
+
 # Changelog for Cldr v2.10.1
 
-This is the changelog for Cldr v2.10.1 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.10.1 released on August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 

@@ -389,11 +389,11 @@ defmodule Cldr do
       config :ex_cldr,
         default_backend: <backend_module>
 
-  If not configured, the CLDR default
-  backend of `Cldr.Backend.Default` is
-  returned.
+  If this function is called and no default backend
+  is configured an exception will be raised.
 
   """
+  @spec default_backend :: backend() | no_return
   def default_backend do
     Cldr.Config.default_backend()
   end
