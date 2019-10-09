@@ -2,6 +2,8 @@
 
 This is the changelog for Cldr v2.11.0 released on October 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Enhancements
+
 * Update to CLDR data version 36.0.0.
 
 # Changelog for Cldr v2.10.2
