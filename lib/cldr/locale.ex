@@ -335,6 +335,10 @@ defmodule Cldr.Locale do
   end
 
   @spec put_gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(nil, _backend) do
+    nil
+  end
+
   def put_gettext_locale_name(%LanguageTag{} = language_tag, backend) do
     gettext_locale_name = gettext_locale_name(language_tag, backend)
     %{language_tag | gettext_locale_name: gettext_locale_name}

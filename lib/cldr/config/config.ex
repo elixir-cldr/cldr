@@ -481,7 +481,7 @@ defmodule Cldr.Config do
   The locale "root" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
-  The use of `:all` is not recommended since all 537 locales take
+  The use of `:all` is not recommended since all 541 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
 

@@ -6,7 +6,7 @@
 
 ## Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 22nd, 2019 and `ex_cldr` Version 2.7.0, `Cldr` is based upon [CLDR version 35.1.0](https://github.com/unicode-cldr/cldr-json).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 22nd, 2019 and `ex_cldr` Version 2.11.0, `Cldr` is based upon [CLDR version 36.0.0](https://github.com/unicode-cldr/cldr-json).
 
 The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
@@ -89,7 +89,7 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 
 ## Configuration
 
-`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 537 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use.
+`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 541 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use.
 
 The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.  However configuration can also be defined in other ways:
 
@@ -170,7 +170,7 @@ use Cldr,
   locales: ["en-*", "fr"]
 ```
 
- * There is one additional setting which is `:all` which will configure all 537 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
+ * There is one additional setting which is `:all` which will configure all 541 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
  * `:gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
@@ -225,7 +225,7 @@ end
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 537 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 541 locales are installed when the repo is cloned into your application deps.
 
 * If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.
 
@@ -408,7 +408,7 @@ From time-to-time ISO will update the repository of ISO3166 language codes.  Ens
 
     mix cldr.download.iso_currency
 
-The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This is manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation.
+The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This is manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation. After putting the file in place, edit it to remove the `<!DOCTYPE ...>` line since the DTD is not available and parsing the file will raise an exception.
 
 After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
 
