@@ -82,6 +82,11 @@ then retrieve `ex_cldr` and the JSON library from [hex](https://hex.pm/packages/
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
+* Calendars: [ex_cldr_calendars](https://hex.pm/packages/ex_cldr_calendars)
+* Calendar formatting: [ex_cldr_calendars_format](https://hex.pm/packages/ex_cldr_calendars_format)
+* Printf-like formatting: [ex_cldr_print](https://hex.pm/packages/ex_cldr_print)
+* Collation: [ex_cldr_collation](https://hex.pm/packages/ex_cldr_collation)
+* ICU Message formatting: [ex_cldr_messages](https://hex.pm/packages/ex_cldr_messages)
 * Territories localization and information: [ex_cldr_territories](https://hex.pm/packages/ex_cldr_territories) by @Schultzer
 * Languages localization: [ex_cldr_languages](https://hex.pm/packages/ex_cldr_languages) by @lostkobrakai
 
@@ -388,7 +393,7 @@ Locale string are case insensitive but there are common conventions:
 
 ## Testing
 
-Tests cover the full 537 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 541 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions before 1.5.
 
