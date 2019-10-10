@@ -429,6 +429,7 @@ defmodule Cldr.Consolidate do
     download_data_dir()
     |> Path.join(["pluralRanges.xml"])
     |> File.read!()
+    |> String.replace(~r/<!DOCTYPE.*>\n/,"")
     |> xpath(~x"//pluralRanges"l,
       locales: ~x"./@locales"s,
       ranges: [~x"./pluralRange"l, start: ~x"./@start"s, end: ~x"./@end"s, result: ~x"./@result"s]

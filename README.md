@@ -396,24 +396,24 @@ Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions b
 
 The CLDR data is maintained in [JSON format by the Unicode Consortium](https://github.com/unicode-cldr/cldr-json).  The appropriate content is maintained as submodules in the `data` directory of this `Cldr` repository.
 
-If this repo has just been cloned then first of all you will need to initialize and retrieve the submodules:
+1. If this repo has just been cloned then first of all you will need to initialize and retrieve the submodules:
 
     git submodule update --init data/cldr-*
 
-When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CDLR data, `git pull` each of the submodules.  For example:
+2. When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CDLR data, `git pull` each of the submodules.  For example:
 
     git submodule -q foreach git pull -q origin master
 
-From time-to-time ISO will update the repository of ISO3166 language codes.  Ensure you have the latest version downloaded:
+3. From time-to-time ISO will update the repository of ISO3166 language codes.  Ensure you have the latest version downloaded:
 
     mix cldr.download.iso_currency
 
-The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This is manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation. After putting the file in place, edit it to remove the `<!DOCTYPE ...>` line since the DTD is not available and parsing the file will raise an exception.
+4. The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This must be manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation.
 
-After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
+5. After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
 
     mix cldr.consolidate
 
-Then you will need to regenerate the `language_tags.ebin` file by executing the following.  Note that `MIX_ENV=test` is essential since thats how we guarantee all locales are configured.
+6. Then you will need to regenerate the `language_tags.ebin` file by executing the following.  Note that `MIX_ENV=test` is essential since thats how we guarantee all locales are configured.
 
     MIX_ENV=test mix cldr.generate_language_tags
