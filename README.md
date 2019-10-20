@@ -123,7 +123,7 @@ The preferred configuration method is to define the configuration in the backend
          locales: ["fr", "en", "bs", "si", "ak", "th"],
          gettext: MyApp.Gettext,
          data_dir: "./priv/cldr",
-         otp_app: :my_app
+         otp_app: :my_app,
          precompile_number_formats: ["¤¤#,##0.##"],
          precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
          providers: [Cldr.Number],
