@@ -191,6 +191,7 @@ if Code.ensure_loaded?(Plug) do
     defp fetch_param(conn, :session, _param, options) do
       conn
       |> get_session(options[:session_key])
+      |> Cldr.validate_locale(options[:cldr])
     end
 
     defp fetch_param(conn, :cookie, param, options) do

@@ -164,10 +164,42 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     conn =
       :get
-      |> conn("/?locale=fr")
+      |> conn("/")
       |> Plug.Session.call(session_opts)
       |> fetch_session("cldr_locale")
-      |> put_session("cldr_locale", Cldr.Locale.new("ru", opts[:cldr]))
+      |> put_session("cldr_locale", Cldr.Locale.new!("ru", opts[:cldr]))
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale] ==
+             %Cldr.LanguageTag{
+               extensions: %{},
+               gettext_locale_name: nil,
+               locale: %{},
+               private_use: [],
+               transform: %{},
+               language_variant: nil,
+               canonical_locale_name: "ru-Cyrl-RU",
+               cldr_locale_name: "ru",
+               language: "ru",
+               rbnf_locale_name: "ru",
+               requested_locale_name: "ru",
+               script: "Cyrl",
+               territory: "RU"
+             }
+
+    assert Cldr.get_locale() == conn.private[:cldr_locale]
+  end
+
+  test "set the locale from the session using a locale name" do
+    opts = Cldr.Plug.SetLocale.init(from: :session, cldr: TestBackend.Cldr)
+    session_opts = Plug.Session.init(store: :cookie, key: "_key", signing_salt: "X")
+
+    conn =
+      :get
+      |> conn("/")
+      |> Plug.Session.call(session_opts)
+      |> fetch_session("cldr_locale")
+      |> put_session("cldr_locale", "ru")
       |> Cldr.Plug.SetLocale.call(opts)
 
     assert conn.private[:cldr_locale] ==

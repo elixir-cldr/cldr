@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.11.1
+
+This is the changelog for Cldr v2.11.1 released on October 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Validate session-based locale in `Cldr.Plug.SetLocale`. Closes #131. Thanks for @Ray-Wang.
+
 # Changelog for Cldr v2.11.0
 
 This is the changelog for Cldr v2.11.0 released on October 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
