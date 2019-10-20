@@ -125,7 +125,7 @@ The preferred configuration method is to define the configuration in the backend
          data_dir: "./priv/cldr",
          otp_app: :my_app
          precompile_number_formats: ["¤¤#,##0.##"],
-         precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+         precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
          providers: [Cldr.Number],
          generate_docs: true
       end
