@@ -191,6 +191,8 @@ use Cldr,
 
  * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) which prevent the generation of docs for this backend.
 
+ * `:supress_warnings` defines whether warnings are logged when a provider module is configured but not available. It also controls whether warnings are logged when a number format is compiled at runtime. Its purpose is to help identify those formats which might best be added to the `:precompile_number_formats` configuration. The default is `false`. Warning are not logged when set to `true`.
+
 ### Providers
 
 The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not all capabilities are required by all applications.  Hence `Cldr` has additional optional functionality that can be provided through additional `hex` packages. In order to support compile-time additions to a configured `backend`, any package can define a provider that will be called at compile time.
@@ -204,6 +206,9 @@ The currently known providers and their `hex` package names are:
   | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units         |
   | ex_cldr_territories  | Cldr.Territory    | Formatting of territory (country) data      |
   | ex_cldr_languages    | Cldr.Language     | Formatting of language information          |
+  | ex_cldr_dates_times  | Cldr.DateTime     | Formatting of dates, times & datetimes      |
+  | ex_money             | Money             | Operations and formatting of a money type   |
+  | ex_messages          | Cldr.Message      | Formatting of ICU-formatted messages        |
 
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 
