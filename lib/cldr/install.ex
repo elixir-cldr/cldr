@@ -24,8 +24,9 @@ defmodule Cldr.Install do
   """
   def install_known_locale_names(config) do
     config
-    |> Cldr.Config.known_locale_names
+    |> Cldr.Config.known_locale_names()
     |> Enum.each(&install_locale_name(&1, config))
+
     :ok
   end
 
@@ -35,6 +36,7 @@ defmodule Cldr.Install do
   def install_all_locale_names(config) do
     Cldr.Config.all_locale_names()
     |> Enum.each(&install_locale_name(&1, config))
+
     :ok
   end
 

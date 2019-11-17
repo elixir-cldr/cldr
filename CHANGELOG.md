@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.12.0
+
+This is the changelog for Cldr v2.12.0 released on ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds `mix cldr.download.plural_ranges` to automate the downloading, extracting and saving of `pluralRanges.xml` from CLDR.
+
 # Changelog for Cldr v2.11.1
 
 This is the changelog for Cldr v2.11.1 released on October 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

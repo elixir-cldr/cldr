@@ -427,9 +427,9 @@ defmodule Cldr.Consolidate do
     path = Path.join(consolidated_output_dir(), "plural_ranges.json")
 
     download_data_dir()
-    |> Path.join(["pluralRanges.xml"])
+    |> Path.join(["plural_ranges.xml"])
     |> File.read!()
-    |> String.replace(~r/<!DOCTYPE.*>\n/,"")
+    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
     |> xpath(~x"//pluralRanges"l,
       locales: ~x"./@locales"s,
       ranges: [~x"./pluralRange"l, start: ~x"./@start"s, end: ~x"./@end"s, result: ~x"./@result"s]
@@ -452,14 +452,16 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "measurementData"])
     |> Enum.map(fn
-        {"measurementSystem", v} ->
-          {"default", v}
-        {"measurementSystem-category-" <> category, v} ->
-          {category, v}
-        {other, v} ->
-          {Cldr.String.underscore(other), v}
-       end)
-    |> Map.new
+      {"measurementSystem", v} ->
+        {"default", v}
+
+      {"measurementSystem-category-" <> category, v} ->
+        {category, v}
+
+      {other, v} ->
+        {Cldr.String.underscore(other), v}
+    end)
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -476,7 +478,7 @@ defmodule Cldr.Consolidate do
     |> Enum.map(&String.trim/1)
     |> fix_small_category(false)
     |> Enum.join("\n")
-    |> Jason.decode!
+    |> Jason.decode!()
     |> get_in(["supplemental", "unitPreferenceData", "unitPreferences"])
     |> separate_informal_style
     |> save_file(path)
@@ -488,17 +490,22 @@ defmodule Cldr.Consolidate do
       {k, "year-person month-person"} -> {k, ["year", "month"]}
       {k, v} -> {k, String.split(v, " ")}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   defp group(map) do
-    Enum.group_by(map, fn {k, _v} -> String.split(k, "-alt-") |> Enum.reverse |> hd end)
+    Enum.group_by(map, fn {k, _v} -> String.split(k, "-alt-") |> Enum.reverse() |> hd end)
     |> Enum.map(fn
-      {"informal" = k, [{a, b}]} -> {k, %{(String.split(a, "-alt-") |> hd) => b}}
-      {_, [{k, v}]} -> {k, v}
-      {k, v} -> {k, Enum.map(v, fn {a, b} -> {String.split(a, "-alt-") |> hd, b} end) |> Map.new}
-     end)
-    |> Map.new
+      {"informal" = k, [{a, b}]} ->
+        {k, %{(String.split(a, "-alt-") |> hd) => b}}
+
+      {_, [{k, v}]} ->
+        {k, v}
+
+      {k, v} ->
+        {k, Enum.map(v, fn {a, b} -> {String.split(a, "-alt-") |> hd, b} end) |> Map.new()}
+    end)
+    |> Map.new()
   end
 
   defp fix_small_category([], _insert?) do
