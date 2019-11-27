@@ -418,7 +418,7 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
     mix cldr.download.iso_currency
 
-4. The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This must be manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It will be transformed into a `json` version during the next phase, consolidation.
+4. The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This must be manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It is found in `common/supplemental/pluralRanges.xml`. It will be transformed into a `json` version during the next phase, consolidation.
 
 5. After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
 
