@@ -719,7 +719,7 @@ defmodule Cldr.Config do
     config
     |> known_locale_names()
     |> Task.async_stream(__MODULE__, :number_systems_for, [config],
-      max_concurrency: @max_concurrency
+      max_concurrency: @max_concurrency, timeout: :infinity
     )
     |> Enum.to_list()
     |> Enum.flat_map(fn {:ok, {:ok, systems}} -> Map.keys(systems) end)
