@@ -307,9 +307,11 @@ defmodule Cldr.Test do
   test "that we get an exception when relying on Cldr.default_backend() and its not configured" do
     backend = Application.get_env(:ex_cldr, :default_backend)
     Application.put_env(:ex_cldr, :default_backend, nil)
+
     assert_raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured", fn ->
       Cldr.validate_locale("en")
     end
+
     Application.put_env(:ex_cldr, :default_backend, backend)
   end
 

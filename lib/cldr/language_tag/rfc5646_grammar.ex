@@ -9,7 +9,7 @@ defmodule Cldr.Rfc5646.Grammar do
   #                 ["-" region]
   #                 *("-" variant)
   #                 *("-" extensions)
-	@spec langtag :: NimbleParsec.t
+  @spec langtag :: NimbleParsec.t()
   def langtag do
     language()
     |> optional(ignore(dash()) |> concat(script()))
@@ -27,7 +27,7 @@ defmodule Cldr.Rfc5646.Grammar do
   #                                     ; extended language subtags
   #                 / 4ALPHA            ; or reserved for future use
   #                 / 5*8ALPHA
-	@spec language :: NimbleParsec.t
+  @spec language :: NimbleParsec.t()
   def language do
     choice([
       alpha5_8() |> unwrap_and_tag(:language),
@@ -38,7 +38,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # Don't support extended language for now
-	@spec iso639 :: NimbleParsec.t
+  @spec iso639 :: NimbleParsec.t()
   def iso639 do
     alpha2_3()
     |> unwrap_and_tag(:language)
@@ -48,7 +48,7 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # extlang       = 3ALPHA              ; selected ISO 639 codes
   #                 *2("-" 3ALPHA)      ; permanently reserved
-	@spec extlangs :: NimbleParsec.t
+  @spec extlangs :: NimbleParsec.t()
   def extlangs do
     choice([
       script(),
@@ -74,13 +74,13 @@ defmodule Cldr.Rfc5646.Grammar do
     |> label("an ISO-639 language code of between one and three three alphabetic characters")
   end
 
-	@spec extlang :: NimbleParsec.t
+  @spec extlang :: NimbleParsec.t()
   def extlang do
     alpha3()
   end
 
   # script        = 4ALPHA
-	@spec script :: NimbleParsec.t
+  @spec script :: NimbleParsec.t()
   def script do
     alpha4()
     |> unwrap_and_tag(:script)
@@ -89,19 +89,19 @@ defmodule Cldr.Rfc5646.Grammar do
 
   # region        = 2ALPHA              ; ISO 3166-1 code
   #                 / 3DIGIT
-	@spec region :: NimbleParsec.t
+  @spec region :: NimbleParsec.t()
   def region do
     choice([alpha2(), integer3()])
     |> unwrap_and_tag(:territory)
     |> label(
-       "a territory code of two alphabetic character ISO-3166-1 code " <>
-       "or a three digit UN M.49 code"
+      "a territory code of two alphabetic character ISO-3166-1 code " <>
+        "or a three digit UN M.49 code"
     )
   end
 
   # variant       = 5*8alphanum         ; registered variants
   #                 / (DIGIT 3alphanum)
-	@spec variant :: NimbleParsec.t
+  @spec variant :: NimbleParsec.t()
   def variant do
     choice([
       alpha_numeric5_8(),
@@ -109,20 +109,20 @@ defmodule Cldr.Rfc5646.Grammar do
     ])
     |> unwrap_and_tag(:language_variant)
     |> label(
-       "a language variant code of five to eight alphabetic character or " <>
-       "a single digit plus three alphanumeric characters"
+      "a language variant code of five to eight alphabetic character or " <>
+        "a single digit plus three alphanumeric characters"
     )
   end
 
   # extensions    = locale / transform / extension
-	@spec extensions :: NimbleParsec.t
+  @spec extensions :: NimbleParsec.t()
   def extensions do
     choice([locale(), transform(), extension()])
   end
 
   # locale        = "u" (1*("-" keyword) / 1*("-" attribute) *("-" keyword))
-  @spec locale :: NimbleParsec.t
-	def locale do
+  @spec locale :: NimbleParsec.t()
+  def locale do
     ignore(ascii_string([?u, ?U], 1))
     |> choice([attributes() |> concat(keywords()), keywords()])
     |> reduce(:combine_attributes_and_keywords)
@@ -139,7 +139,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # transform     = "t" (1*("-" keyword))
-	@spec transform :: NimbleParsec.t	
+  @spec transform :: NimbleParsec.t()
   def transform do
     ignore(ascii_string([?t, ?T], 1))
     |> ignore(dash())
@@ -151,7 +151,7 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # extension     = singleton 1*("-" (2*8alphanum))
-	@spec extension :: NimbleParsec.t	
+  @spec extension :: NimbleParsec.t()
   def extension do
     singleton()
     |> unwrap_and_tag(:type)
@@ -183,19 +183,19 @@ defmodule Cldr.Rfc5646.Grammar do
   #                 / %x61-73             ; a - s
   #                 / %x76-77             ; v - w
   #                 / %x79-7A             ; y - z
-	@spec singleton :: NimbleParsec.t
+  @spec singleton :: NimbleParsec.t()
   def singleton do
     ascii_string([?0..?9, ?a..?s, ?A..?S, ?v..?w, ?V..?W, ?y..?z, ?Y..?Z], 1)
     # |> label("a single alphanumeric character that is not 'x', 'u' or 't'")
   end
 
-	@spec attributes :: NimbleParsec.t
+  @spec attributes :: NimbleParsec.t()
   def attributes do
     times(ignore(dash()) |> concat(attribute()), min: 1)
     |> tag(:attributes)
   end
 
-	@spec keywords :: NimbleParsec.t
+  @spec keywords :: NimbleParsec.t()
   def keywords do
     repeat(ignore(dash()) |> concat(keyword()))
     |> reduce(:collapse_keywords)
@@ -227,15 +227,16 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # keyword       = key ["-" type]
-	@spec keyword :: NimbleParsec.t	
+  @spec keyword :: NimbleParsec.t()
   def keyword do
     key()
     |> optional(ignore(dash()) |> concat(type()))
+
     # |> label("a valid keyword or keyword-type pair")
   end
 
   # key           = 2alphanum
-	@spec key :: NimbleParsec.t	
+  @spec key :: NimbleParsec.t()
   def key do
     alpha_numeric2()
     |> unwrap_and_tag(:key)
@@ -243,24 +244,24 @@ defmodule Cldr.Rfc5646.Grammar do
   end
 
   # type          = 3*8alphanum *("-" 3*8alphanum)
-	@spec type :: NimbleParsec.t	
+  @spec type :: NimbleParsec.t()
   def type do
     alpha_numeric3_8()
     |> unwrap_and_tag(:type)
     |> repeat(ignore(dash()) |> concat(alpha_numeric3_8()) |> unwrap_and_tag(:type))
     |> label(
-       "a type that is one or more three to eight alphanumeric characters separated by a dash"
+      "a type that is one or more three to eight alphanumeric characters separated by a dash"
     )
   end
 
   # attribute     = 3*8alphanum
-	@spec attribute :: NimbleParsec.t	
+  @spec attribute :: NimbleParsec.t()
   def attribute do
     alpha_numeric3_8()
   end
 
   # privateuse    = "x" 1*("-" (1*8alphanum))
-	@spec private_use :: NimbleParsec.t	
+  @spec private_use :: NimbleParsec.t()
   def private_use do
     ignore(ascii_string([?x, ?X], 1))
     |> times(ignore(dash()) |> concat(alpha_numeric1_8()), min: 1)
@@ -298,14 +299,14 @@ defmodule Cldr.Rfc5646.Grammar do
   #               / "zh-min"            ; in favor of a more modern
   #               / "zh-min-nan"        ; subtag or sequence of subtags
   #               / "zh-xiang"
-	@spec grandfathered :: NimbleParsec.t	
+  @spec grandfathered :: NimbleParsec.t()
   def grandfathered do
     choice([irregular(), regular()])
     |> tag(:grandfathered)
     |> label("a grandfathered language tag")
   end
 
-	@spec irregular :: NimbleParsec.t
+  @spec irregular :: NimbleParsec.t()
   def irregular do
     choice([
       string("en-GB-oed"),
@@ -330,7 +331,7 @@ defmodule Cldr.Rfc5646.Grammar do
     |> label("one of the irregular language tags in BCP-47")
   end
 
-  @spec regular :: NimbleParsec.t
+  @spec regular :: NimbleParsec.t()
   def regular do
     choice([
       string("art-lojban"),

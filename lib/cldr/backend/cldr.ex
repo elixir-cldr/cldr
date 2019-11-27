@@ -360,6 +360,7 @@ defmodule Cldr.Backend do
 
       def quote(string, options \\ []) when is_binary(string) and is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
+
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
           marks = quote_marks_for(locale_name)
           marks[:quotation_start] <> string <> marks[:quotation_end]
@@ -399,37 +400,39 @@ defmodule Cldr.Backend do
           "And furthermore…there is much to be done"
 
       """
-      @spec ellipsis(String.t() | list(String.t), Keyword.t()) :: String.t
+      @spec ellipsis(String.t() | list(String.t()), Keyword.t()) :: String.t()
 
       def ellipsis(string, options \\ []) when is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
+
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
           ellipsis(string, ellipsis_chars(locale_name), options[:location])
         end
       end
 
-      defp ellipsis([string_1, string_2], %{medial: medial}, _) when is_binary(string_1) and is_binary(string_2) do
+      defp ellipsis([string_1, string_2], %{medial: medial}, _)
+           when is_binary(string_1) and is_binary(string_2) do
         [string_1, string_2]
         |> Cldr.Substitution.substitute(medial)
-        |> :erlang.iolist_to_binary
+        |> :erlang.iolist_to_binary()
       end
 
       defp ellipsis(string, %{final: final}, nil) when is_binary(string) do
         string
         |> Cldr.Substitution.substitute(final)
-        |> :erlang.iolist_to_binary
+        |> :erlang.iolist_to_binary()
       end
 
       defp ellipsis(string, %{final: final}, :after) when is_binary(string) do
         string
         |> Cldr.Substitution.substitute(final)
-        |> :erlang.iolist_to_binary
+        |> :erlang.iolist_to_binary()
       end
 
       defp ellipsis(string, %{initial: initial}, :before) when is_binary(string) do
         string
         |> Cldr.Substitution.substitute(initial)
-        |> :erlang.iolist_to_binary
+        |> :erlang.iolist_to_binary()
       end
 
       @doc """

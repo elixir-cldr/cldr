@@ -6,7 +6,7 @@
 
 ## Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 22nd, 2019 and `ex_cldr` Version 2.11.0, `Cldr` is based upon [CLDR version 36.0.0](https://github.com/unicode-cldr/cldr-json).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 2019 and `ex_cldr` Version 2.11.0, `Cldr` is based upon [CLDR version 36.0.0](https://github.com/unicode-cldr/cldr-json).
 
 The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
@@ -418,7 +418,9 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
     mix cldr.download.iso_currency
 
-4. The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. This must be manually extracted from the `core.zip` file downloaded from the [CLDR repository](http://cldr.unicode.org/index/downloads).  It is found in `common/supplemental/pluralRanges.xml`. It will be transformed into a `json` version during the next phase, consolidation.
+4. The file `pluralRanges.xml` needs to be updated with each release and stored in the `./data` directory. Do this with:
+
+    mix cldr.download.plural_ranges
 
 5. After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
 

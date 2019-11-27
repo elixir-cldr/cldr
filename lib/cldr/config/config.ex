@@ -15,7 +15,7 @@ defmodule Cldr.Config do
             otp_app: nil,
             generate_docs: true,
             supress_warnings: false,
-						message_formats: []
+            message_formats: []
 
   @type t :: %__MODULE__{
           default_locale: binary(),
@@ -29,7 +29,7 @@ defmodule Cldr.Config do
           providers: [atom(), ...],
           generate_docs: boolean(),
           supress_warnings: boolean(),
-					message_formats: map()
+          message_formats: map()
         }
 
   @type number_system :: atom() | String.t()
@@ -427,9 +427,9 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @measurement_system_file)
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
@@ -441,9 +441,9 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @unit_preference_file)
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
