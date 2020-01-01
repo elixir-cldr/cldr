@@ -1,10 +1,14 @@
 # Changelog for Cldr v2.12.0
 
-This is the changelog for Cldr v2.12.0 released on ____, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.12.0 released on January 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
+* Remove use of `Code.ensure_compiled?/1` since its deprecated in Elixir 1.10. A new function `Cldr.Config.ensure_compiled?/1` is introduced but marked as `@doc false`.
+
 * Adds `mix cldr.download.plural_ranges` to automate the downloading, extracting and saving of `pluralRanges.xml` from CLDR.
+
+* Update copyright dates in LICENSE.md
 
 # Changelog for Cldr v2.11.1
 

@@ -1141,7 +1141,7 @@ defmodule Cldr.Config do
   """
   @spec gettext_configured?(t()) :: boolean
   def gettext_configured?(config) do
-    gettext(config) && Code.ensure_compiled?(Gettext) && Code.ensure_compiled?(gettext(config))
+    gettext(config) && ensure_compiled?(Gettext) && ensure_compiled?(gettext(config))
   end
 
   @doc """
@@ -2086,4 +2086,13 @@ defmodule Cldr.Config do
   defp plural_sorter({:few, _}, {other, _}) when other in [:many, :other], do: true
   defp plural_sorter({:many, _}, {other, _}) when other in [:other], do: true
   defp plural_sorter(_, _), do: false
+
+  @doc false
+  def ensure_compiled?(module) do
+    case Code.ensure_compiled(module) do
+      {:module, _} -> true
+      {:error, _} -> false
+    end
+  end
+
 end

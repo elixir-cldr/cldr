@@ -99,6 +99,7 @@ if Code.ensure_loaded?(Plug) do
     import Plug.Conn
     require Logger
     alias Cldr.AcceptLanguage
+    alias Cldr.Config
 
     @default_apps [cldr: :global]
     @default_from [:session, :accept_language]
@@ -426,7 +427,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_cldr(options, backend) when is_atom(backend) do
-      unless Code.ensure_compiled?(backend) and function_exported?(backend, :__cldr__, 1) do
+      unless Config.ensure_compiled?(backend) and function_exported?(backend, :__cldr__, 1) do
         raise ArgumentError,
               "#{inspect(backend)} is either not known or does not appear to be a Cldr backend module"
       else
