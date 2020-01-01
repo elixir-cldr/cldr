@@ -71,7 +71,6 @@ defmodule Cldr.Mixfile do
         "mix.exs",
         "README*",
         "CHANGELOG*",
-        "FEATURE*",
         "LICENSE*",
         "priv/cldr/locales/en.json",
         "priv/cldr/locales/en-001.json",
@@ -113,8 +112,7 @@ defmodule Cldr.Mixfile do
       extras: [
         "README.md",
         "LICENSE.md",
-        "CHANGELOG.md",
-        "FEATURE_REQUESTS.md"
+        "CHANGELOG.md"
       ],
       deps: [
         ex_cldr_numbers: "https://hexdocs.pm/ex_cldr_numbers",
