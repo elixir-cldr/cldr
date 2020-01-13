@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.13.0
+
+This is the changelog for Cldr v2.13.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Removes the runtime dependency on `Jason` since the RFC5646 parser is now inlined. Closes #99
+
 # Changelog for Cldr v2.12.1
 
 This is the changelog for Cldr v2.12.1 released on January 14th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
