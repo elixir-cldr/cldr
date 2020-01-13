@@ -56,6 +56,7 @@ if File.exists?(Cldr.Config.download_data_dir()) do
       @url ++ version() ++ '/' ++ @core
     end
 
+    @dialyzer {:nowarn_function, version: 0}
     defp version do
       case Cldr.version() do
         {major, 0, _} -> Integer.to_charlist(major)

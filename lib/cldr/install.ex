@@ -140,7 +140,8 @@ defmodule Cldr.Install do
         Keyword.get(spec, :vsn) |> :erlang.list_to_binary()
 
       Code.ensure_loaded?(Cldr.Mixfile) ->
-        Keyword.get(Cldr.Mixfile.project(), :version)
+        module = Module.concat(Cldr, Mixfile)
+        Keyword.get(module.project(), :version)
 
       true ->
         :error

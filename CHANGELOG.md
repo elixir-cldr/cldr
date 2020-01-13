@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.12.1
+
+This is the changelog for Cldr v2.12.1 released on January 14th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Remove two lingering dialyzer errors-that-aren't-really-errors so its passes cleanly.
+
 # Changelog for Cldr v2.12.0
 
 This is the changelog for Cldr v2.12.0 released on January 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
