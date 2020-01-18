@@ -150,11 +150,23 @@ defmodule Cldr.LanguageTag.Parser do
     |> Map.put(:language_variant, String.upcase(variant))
   end
 
+  defp canonicalize_key([key, valid, :error], param) when is_function(valid) do
+    case valid.(param) do
+      {:ok, value} -> {key, value}
+      {:error, _} -> {key, {:error, param}}
+    end
+  end
+
   defp canonicalize_key([key, valid, default], param) when is_function(valid) do
     case valid.(param) do
       {:ok, value} -> {key, value}
       {:error, _} -> {key, default}
     end
+  end
+
+  defp canonicalize_key([key, valid, :error], param) do
+    value = if param in valid, do: param, else: {:error, param}
+    {key, value}
   end
 
   defp canonicalize_key([key, valid, default], param) do
@@ -174,7 +186,7 @@ defmodule Cldr.LanguageTag.Parser do
     "kb" => [:backward_level2, Config.true_false(), "false"],
     "kc" => [:case_level, Config.true_false(), "false"],
     "kn" => [:numeric, Config.true_false(), "false"],
-    "kh" => [:hiaragana_quarternary, Config.true_false(), "true"],
+    "kh" => [:hiragana_quarternary, Config.true_false(), "true"],
     "kk" => [:normalization, Config.true_false(), "true"],
     "kf" => [:case_first, ["upper", "lower", "false"], "false"],
     "ks" => [:strength, ["level1", "level2", "level3", "level4", "identic"], "level3"],
@@ -188,9 +200,9 @@ defmodule Cldr.LanguageTag.Parser do
     "lw" => [:line_break_word, ["normal", "breakall", "keepall"], "normal"],
     "ms" => [:measurement_system, ["metric", "ussystem", "uksystem"], "metric"],
     "ss" => [:sentence_break_supression, ["standard", "none"], "standard"],
+    "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
     "sd" => :subdivision,
     "vt" => :variable_top,
-    "tz" => :timezone,
     "va" => :variant,
     "rg" => :region_override
   }

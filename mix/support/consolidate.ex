@@ -42,6 +42,7 @@ defmodule Cldr.Consolidate do
     save_locales()
     save_territory_containment()
     save_plural_ranges()
+    save_timezones()
     save_measurement_data()
 
     all_locales()
@@ -437,6 +438,28 @@ defmodule Cldr.Consolidate do
     |> Enum.map(fn %{locales: locales} = map ->
       Map.put(map, :locales, String.split(locales, " "))
     end)
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_timezones do
+    import SweetXml
+    path = Path.join(consolidated_output_dir(), "timezones.json")
+
+    [%{timezones: timezones}] =
+      download_data_dir()
+      |> Path.join(["timezones.xml"])
+      |> File.read!()
+      |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+      |> xpath(~x"//key"l,
+        timezones: [~x"./type"l, name: ~x"./@name"s, alias: ~x"./@alias"s]
+      )
+
+    Enum.map(timezones, fn %{alias: aliases, name: name} ->
+      {name, String.split(aliases, " ")}
+    end)
+    |> Map.new
     |> save_file(path)
 
     assert_package_file_configured!(path)

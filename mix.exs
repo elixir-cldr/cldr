@@ -49,7 +49,7 @@ defmodule Cldr.Mixfile do
       {:nimble_parsec, "~> 0.5", optional: true, only: [:release, :dev]},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
-      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false, optional: true},
+      {:dialyxir, "~> 1.0.0-rc", only: [:dev], runtime: false, optional: true},
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true},
@@ -89,6 +89,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territory_containment.json",
         "priv/cldr/territory_info.json",
         "priv/cldr/plural_ranges.json",
+        "priv/cldr/timezones.json",
         "priv/cldr/measurement_system.json",
         "priv/cldr/unit_preference.json",
         "priv/cldr/language_tags.ebin"
