@@ -8,6 +8,8 @@ This is the changelog for Cldr v2.13.0 released on ______, 2020.  For older chan
 
 * Adds `Cldr.Timezone` to support timezone mapping for language tags using the `tz` key of the `u` extension to the [Unicode locale identifier](https://unicode.org/reports/tr35/#u_Extension)
 
+* When parsing a locale with a `u` extension containing a `cf` (currency format) key, the key is transformed to the standard `:currency` or `:accounting` atoms rather than being left as strings.
+
 # Changelog for Cldr v2.12.1
 
 This is the changelog for Cldr v2.12.1 released on January 14th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
