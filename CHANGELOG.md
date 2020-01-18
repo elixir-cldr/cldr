@@ -1,6 +1,6 @@
 # Changelog for Cldr v2.13.0
 
-This is the changelog for Cldr v2.13.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.13.0 released on January 19th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
