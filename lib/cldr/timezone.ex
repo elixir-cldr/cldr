@@ -1,23 +1,26 @@
 defmodule Cldr.Timezone do
   @moduledoc """
-  Functions to map between the CLDR short timezone code and the
+  Functions to map between the CLDR short time zone code and the
   IANA timezone names.
 
-  The Unicode language identifier [extension U](https://unicode.org/reports/tr35/#u_Extension)
-  allows the specification of the timezone requested for the provided locale. This short timezone
-  codes never change even if the IANA names change over time. Therefore these short codes are
-  always consistent between CLDR releases.
+  The Unicode [locale](https://unicode.org/reports/tr35/#Locale)
+  [extension U](https://unicode.org/reports/tr35/#u_Extension)
+  allows the specification of the time zone requested for the provided locale.
+
+  This short timezone codes never change even if the IANA names change
+  over time. Therefore these short codes are always stable between CLDR
+  releases.
 
   """
 
   @timezones_file "cldr/timezones.json"
-  @timezones Path.join(:code.priv_dir(:ex_cldr), @timezones_file)
+  @timezones Path.join(:code.priv_dir(Cldr.Config.app_name()), @timezones_file)
              |> File.read!()
              |> Cldr.Config.json_library().decode!
 
   @doc """
   Returns a mapping of CLDR short zone codes to
-  IANA timezone codes.
+  IANA timezone names.
 
   """
   @spec timezones() :: map()
@@ -26,7 +29,7 @@ defmodule Cldr.Timezone do
   end
 
   @doc """
-  Returns a list of IANA timezone names for
+  Returns a list of IANA time zone names for
   a given CLDR short zone code, or `nil`
 
   ### Examples

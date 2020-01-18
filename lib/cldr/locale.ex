@@ -163,6 +163,44 @@ defmodule Cldr.Locale do
         language_variant: nil
       }}
 
+  ### Locale extensions
+
+  Unicode defines the [U extension](https://unicode.org/reports/tr35/#Locale_Extension_Key_and_Type_Data)
+  which support defining the requested treatment of CLDR data formats. For example, a locale name
+  can configure the requested:
+
+  * calendar to be used for dates
+  * collation
+  * currency
+  * currency format
+  * number system
+  * first day of the week
+  * 12-hour or 24-hour time
+  * time zone
+  * and many other items
+
+  For example, the following locale name will request the use of the timezone `Australia/Sydney`,
+  and request the use of `accounting` format when formatting currencies:
+
+      iex> MyApp.Cldr.validate_locale "en-AU-u-tz-ausyd-cf-account"
+      {:ok,
+       %Cldr.LanguageTag{
+         canonical_locale_name: "en-Latn-AU",
+         cldr_locale_name: "en-AU",
+         extensions: %{},
+         gettext_locale_name: "en",
+         language: "en",
+         language_subtags: [],
+         language_variant: nil,
+         locale: %{currency_format: :accounting, timezone: "Australia/Sydney"},
+         private_use: [],
+         rbnf_locale_name: "en",
+         requested_locale_name: "en-AU",
+         script: "Latn",
+         territory: "AU",
+         transform: %{}
+       }}
+
   """
   alias Cldr.LanguageTag
   import Cldr.Helpers

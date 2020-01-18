@@ -179,7 +179,7 @@ defmodule Cldr.LanguageTag.Parser do
     "kf" => [:case_first, ["upper", "lower", "false"], "false"],
     "ks" => [:strength, ["level1", "level2", "level3", "level4", "identic"], "level3"],
     "cu" => [:currency, &Cldr.validate_currency/1, nil],
-    "cf" => [:currency_format, ["standard", "account"], "standard"],
+    "cf" => [:currency_format, &__MODULE__.validate_currency_format/1, :currency],
     "nu" => [:number_system, &Cldr.validate_number_system/1, nil],
     "em" => [:emoji_style, ["emoji", "text", "default"], "default"],
     "fw" => [:first_day_of_week, Config.days_of_week(), "mon"],
@@ -194,6 +194,11 @@ defmodule Cldr.LanguageTag.Parser do
     "va" => :variant,
     "rg" => :region_override
   }
+
+  @doc false
+  def validate_currency_format("standard"), do: {:ok, :currency}
+  def validate_currency_format("account"), do: {:ok, :accounting}
+  def validate_currency_format(value), do: {:error, value}
 
   @doc false
   def locale_key_map do
