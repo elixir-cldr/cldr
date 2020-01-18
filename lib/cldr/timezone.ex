@@ -12,27 +12,67 @@ defmodule Cldr.Timezone do
 
   @timezones_file "cldr/timezones.json"
   @timezones Path.join(:code.priv_dir(:ex_cldr), @timezones_file)
-  |> File.read! |> Cldr.Config.json_library.decode!
+             |> File.read!()
+             |> Cldr.Config.json_library().decode!
 
+  @doc """
+  Returns a mapping of CLDR short zone codes to
+  IANA timezone codes.
+
+  """
+  @spec timezones() :: map()
   def timezones do
     @timezones
   end
 
+  @doc """
+  Returns a list of IANA timezone names for
+  a given CLDR short zone code, or `nil`
+
+  ### Examples
+
+      iex> Cldr.Timezone.fetch("ausyd")
+      ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"]}
+
+      iex> Cldr.Timezone.fetch("nope")
+      nil
+
+  """
+  @spec get(String.t(), String.t() | nil) :: [String.t()] | nil
   def get(short_zone, default \\ nil) do
     Map.get(timezones(), short_zone, default)
   end
 
+  @doc """
+  Returns a `:{:ok, list}` where list is a
+  list of IANA timezone names for
+  a given CLDR short zone code. If no such
+  short code exists then `:error` is returned.
+
+  ### Example
+
+      iex> Cldr.Timezone.fetch("ausyd")
+      {:ok,
+       ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"]}
+
+      iex> Cldr.Timezone.fetch("nope")
+      :error
+
+  """
+  @spec fetch(String.t()) :: {:ok, [String.t()]} | :error
   def fetch(short_zone) do
     Map.fetch(timezones(), short_zone)
   end
 
+  @doc false
+  @spec validate_timezone(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def validate_timezone(short_zone) do
     case fetch(short_zone) do
       {:ok, [first_zone | _others]} ->
         {:ok, first_zone}
+
       :error ->
-        {:ok, {:error, short_zone}}
+        {:error, short_zone}
     end
   end
-
 end

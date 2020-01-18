@@ -1,5 +1,6 @@
 defmodule Cldr.Number.PluralRule.Transformer do
   @moduledoc false
+
   # Tranformations on the parse tree returned from parsing plural rules.
   #
   # The transformations is primarily to convert the parse tree into an AST

@@ -1,5 +1,5 @@
 # Generated from lib/cldr/language_tag/rfc5646_parser.ex.exs, do not edit.
-# Generated at 2020-01-13 20:30:59Z.
+# Generated at 2020-01-18 12:46:51Z.
 
 defmodule Cldr.Rfc5646.Parser do
   @moduledoc false

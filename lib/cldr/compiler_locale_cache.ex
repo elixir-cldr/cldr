@@ -6,6 +6,7 @@ defmodule Cldr.Locale.Cache do
 
   @table_name :cldr_locales
   @gen_server_name :cldr_locale_cache
+
   # @timeout 5_000
 
   # Client

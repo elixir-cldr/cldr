@@ -459,7 +459,7 @@ defmodule Cldr.Consolidate do
     Enum.map(timezones, fn %{alias: aliases, name: name} ->
       {name, String.split(aliases, " ")}
     end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)

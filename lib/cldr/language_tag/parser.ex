@@ -150,23 +150,11 @@ defmodule Cldr.LanguageTag.Parser do
     |> Map.put(:language_variant, String.upcase(variant))
   end
 
-  defp canonicalize_key([key, valid, :error], param) when is_function(valid) do
-    case valid.(param) do
-      {:ok, value} -> {key, value}
-      {:error, _} -> {key, {:error, param}}
-    end
-  end
-
   defp canonicalize_key([key, valid, default], param) when is_function(valid) do
     case valid.(param) do
       {:ok, value} -> {key, value}
       {:error, _} -> {key, default}
     end
-  end
-
-  defp canonicalize_key([key, valid, :error], param) do
-    value = if param in valid, do: param, else: {:error, param}
-    {key, value}
   end
 
   defp canonicalize_key([key, valid, default], param) do

@@ -22,7 +22,6 @@ if File.exists?(Cldr.Config.download_data_dir()) do
            :ok <- File.write(to_string(@core), content),
            {:ok, [{@timezones, timezones}, {@plural_range, plural_ranges}]} <-
              :zip.unzip(@core, [:memory, {:file_list, [@plural_range, @timezones]}]) do
-
         File.write!(@plural_ranges_output_file, plural_ranges)
         Logger.info("Saved #{@plural_range} to #{@plural_ranges_output_file}")
 

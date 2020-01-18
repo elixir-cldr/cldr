@@ -44,8 +44,13 @@ defmodule Cldr.Rfc5646.Helpers do
     []
   end
 
-  def flatten(_rest, args, context, _line, _offset) do
+  def flatten(_rest, args, context, _line, _offset) when is_list(args) do
     {List.flatten(args), context}
+  end
+
+  # This is just to keep dialyzer quiet
+  def flatten(_rest, _args, _context, _line, _offset) do
+    {:error, "Can't flatten a non-list"}
   end
 
   def collapse_extensions(args) do
