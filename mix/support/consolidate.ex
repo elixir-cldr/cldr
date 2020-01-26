@@ -468,6 +468,7 @@ defmodule Cldr.Consolidate do
 
   def save_units do
     import SweetXml
+    import Cldr.Config, only: [underscore: 1]
     alias Cldr.Unit.{Parser, Expression}
 
     path = Path.join(consolidated_output_dir(), "unit_conversion.json")
@@ -525,10 +526,6 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
-  end
-
-  defp underscore(string) do
-    String.replace(string, "-", "_")
   end
 
   @doc false

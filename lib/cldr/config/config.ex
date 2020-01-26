@@ -1618,6 +1618,35 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns unit conversion data,
+
+  ## Example
+
+      iex> Cldr.Config.unit_conversion_info |> get_in([:conversions, :quart])
+      %{factor: 9.463529460000001e-4, offset: 0, target: :cubic_meter}
+
+  """
+  def unit_conversion_info do
+    data =
+      cldr_data_dir()
+      |> Path.join("unit_conversion.json")
+      |> File.read!()
+      |> json_library().decode!(keys: :atoms)
+
+    conversions =
+      data.conversions
+      |> Enum.map(fn {k, v} ->
+          {_, new_unit} = Map.get_and_update(v, :target, fn current_value ->
+            {current_value, String.to_atom(current_value)}
+          end)
+          {k, new_unit}
+         end)
+      |> Map.new
+
+    Map.put(data, :conversions, conversions)
+  end
+
+  @doc """
   Returns the calendars available for a given locale name
 
   ## Example
@@ -1899,12 +1928,13 @@ defmodule Cldr.Config do
     |> Enum.into(%{})
   end
 
-  defp underscore(string) when is_binary(string) do
+  @doc false
+  def underscore(string) when is_binary(string) do
     string
     |> String.replace("-", "_")
   end
 
-  defp underscore(other), do: other
+  def underscore(other), do: other
 
   # Convert to an atom but only if
   # its a binary.
