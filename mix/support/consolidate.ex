@@ -43,6 +43,7 @@ defmodule Cldr.Consolidate do
     save_territory_containment()
     save_plural_ranges()
     save_timezones()
+    save_units()
     save_measurement_data()
 
     all_locales()
@@ -460,6 +461,67 @@ defmodule Cldr.Consolidate do
       {name, String.split(aliases, " ")}
     end)
     |> Map.new()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_units do
+    import SweetXml
+    alias Cldr.Unit.{Parser, Expression}
+
+    path = Path.join(consolidated_output_dir(), "units.json")
+
+    units =
+      download_data_dir()
+      |> Path.join(["units.xml"])
+      |> File.read!()
+      |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+
+    constants =
+      units
+      |> xpath(
+        ~x"//unitConstant"l,
+        constant: ~x"./@constant"s,
+        value: ~x"./@value"s
+      )
+      |> Enum.map(fn %{constant: constant, value: value} ->
+        {constant, Parser.parse(value)}
+      end)
+      |> Map.new()
+
+    constants = Enum.map(constants, fn {constant, expression} ->
+      {constant, Expression.run(expression, constants)}
+    end) |> Map.new
+
+    base_units =
+      units
+      |> xpath(
+        ~x"//unitQuantity"l,
+        quantity: ~x"./@quantity"s,
+        base_unit: ~x"./@baseUnit"s
+      )
+      |> Enum.map(fn %{quantity: quantity, base_unit: base_unit} ->
+        {quantity, base_unit}
+      end)
+      |> Map.new()
+
+    conversions =
+      units
+      |> xpath(
+        ~x"//convertUnit"l,
+        source: ~x"./@source"s,
+        target: ~x"./@target"s,
+        factor: ~x"./@factor"s,
+        offset: ~x"./@offset"s
+      )
+      |> Enum.map(fn %{source: source, target: target, offset: offset, factor: factor} ->
+        {source, %{target: target, factor: Parser.parse(factor) |> Expression.run(constants),
+        offset: Parser.parse(offset) |> Expression.run(constants)}}
+      end)
+      |> Map.new()
+
+    %{base_units: base_units, conversions: conversions}
     |> save_file(path)
 
     assert_package_file_configured!(path)
