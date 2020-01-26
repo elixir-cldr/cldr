@@ -1633,6 +1633,11 @@ defmodule Cldr.Config do
       |> File.read!()
       |> json_library().decode!(keys: :atoms)
 
+   base_units =
+      data.base_units
+      |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
+      |> Map.new
+
     conversions =
       data.conversions
       |> Enum.map(fn {k, v} ->
@@ -1643,7 +1648,9 @@ defmodule Cldr.Config do
          end)
       |> Map.new
 
-    Map.put(data, :conversions, conversions)
+    data
+    |> Map.put(:conversions, conversions)
+    |> Map.put(:base_units, base_units)
   end
 
   @doc """
