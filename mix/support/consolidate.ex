@@ -470,11 +470,11 @@ defmodule Cldr.Consolidate do
     import SweetXml
     alias Cldr.Unit.{Parser, Expression}
 
-    path = Path.join(consolidated_output_dir(), "units.json")
+    path = Path.join(consolidated_output_dir(), "unit_conversion.json")
 
     units =
       download_data_dir()
-      |> Path.join(["units.xml"])
+      |> Path.join(["unit_conversion.xml"])
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
 
@@ -502,7 +502,7 @@ defmodule Cldr.Consolidate do
         base_unit: ~x"./@baseUnit"s
       )
       |> Enum.map(fn %{quantity: quantity, base_unit: base_unit} ->
-        {quantity, base_unit}
+        {underscore(quantity), underscore(base_unit)}
       end)
       |> Map.new()
 
@@ -516,7 +516,7 @@ defmodule Cldr.Consolidate do
         offset: ~x"./@offset"s
       )
       |> Enum.map(fn %{source: source, target: target, offset: offset, factor: factor} ->
-        {source, %{target: target, factor: Parser.parse(factor) |> Expression.run(constants),
+        {underscore(source), %{target: underscore(target), factor: Parser.parse(factor) |> Expression.run(constants),
         offset: Parser.parse(offset) |> Expression.run(constants)}}
       end)
       |> Map.new()
@@ -525,6 +525,10 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  defp underscore(string) do
+    String.replace(string, "-", "_")
   end
 
   @doc false
