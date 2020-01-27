@@ -43,8 +43,9 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:jason, "~> 1.0", optional: true},
+      {:cldr_utils, "~> 2.6"},
       {:decimal, "~> 1.6"},
+      {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
       {:nimble_parsec, "~> 0.5", optional: true, only: [:release, :dev]},
       {:gettext, "~> 0.13", optional: true},
@@ -53,8 +54,8 @@ defmodule Cldr.Mixfile do
       {:plug, "~> 1.4", optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true},
-      {:cldr_utils, "~> 2.3"},
-      {:telemetry, "~> 0.4.0", optional: true}
+      {:telemetry, "~> 0.4.0", optional: true},
+      {:ratio, "~> 2.0", only: [:dev, :test], optional: true}
     ]
   end
 

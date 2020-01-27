@@ -522,7 +522,19 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
-    %{base_units: base_units, conversions: conversions}
+    aliases =
+      units
+      |> xpath(
+        ~x"//unitAlias"l,
+        unit: ~x"./@type"s,
+        replacement: ~x"./@replacement"s
+      )
+      |> Enum.map(fn %{unit: unit, replacement: replacement} ->
+        {underscore(unit), underscore(replacement)}
+      end)
+      |> Map.new()
+
+    %{base_units: base_units, conversions: conversions, aliases: aliases}
     |> save_file(path)
 
     assert_package_file_configured!(path)

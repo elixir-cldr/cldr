@@ -1623,7 +1623,7 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.unit_conversion_info |> get_in([:conversions, :quart])
-      %{factor: 9.463529460000001e-4, offset: 0, target: :cubic_meter}
+      %{factor: %{denominator: 500000000000, numerator: 473176473}, offset: 0, target: :cubic_meter}
 
   """
   def unit_conversion_info do
@@ -1648,9 +1648,15 @@ defmodule Cldr.Config do
          end)
       |> Map.new
 
+    aliases =
+       data.aliases
+       |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
+       |> Map.new
+
     data
     |> Map.put(:conversions, conversions)
     |> Map.put(:base_units, base_units)
+    |> Map.put(:aliases, aliases)
   end
 
   @doc """
