@@ -15,7 +15,7 @@ defmodule Cldr.Unit.Expression do
   end
 
   def run(v, _constants) when is_number(v) do
-    v
+    Ratio.new(v)
   end
 
   def run(v, constants) when is_binary(v) do
@@ -31,6 +31,6 @@ defmodule Cldr.Unit.Expression do
   end
 
   def run(["^", v1, v2], constants) do
-    :math.pow(run(v1, constants), run(v2, constants))
+    Ratio.pow(run(v1, constants), run(v2, constants))
   end
 end
