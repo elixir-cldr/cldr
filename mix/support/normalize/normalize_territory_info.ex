@@ -120,7 +120,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> File.read!()
     |> Jason.decode!()
     |> get_in(["supplemental", "measurementData"])
-    |> Enum.map(fn {k, v} -> {String.replace(Cldr.String.underscore(k), "-", "_"), v} end)
+    |> Enum.map(fn {k, v} -> {Cldr.String.to_underscore(Cldr.String.underscore(k)), v} end)
     |> Enum.into(%{})
     |> Cldr.Map.atomize_keys()
   end

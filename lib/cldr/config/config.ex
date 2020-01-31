@@ -1829,7 +1829,7 @@ defmodule Cldr.Config do
 
   """
   def locale_name_to_posix(nil), do: nil
-  def locale_name_to_posix(name) when is_binary(name), do: String.replace(name, "-", "_")
+  def locale_name_to_posix(name) when is_binary(name), do: Cldr.String.to_underscore(name)
 
   @doc false
   def structify(map, module) do
@@ -1944,7 +1944,7 @@ defmodule Cldr.Config do
   @doc false
   def underscore(string) when is_binary(string) do
     string
-    |> String.replace("-", "_")
+    |> Cldr.String.to_underscore()
   end
 
   def underscore(other), do: other

@@ -260,7 +260,7 @@ defmodule Cldr.Rbnf.Config do
   defp function_name_from(set) do
     set
     |> String.trim_leading("%")
-    |> String.replace("-", "_")
+    |> Cldr.String.to_underscore
     |> String.to_atom()
   end
 end

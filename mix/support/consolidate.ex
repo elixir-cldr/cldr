@@ -584,9 +584,8 @@ defmodule Cldr.Consolidate do
 
   defp separate_informal_style(data) do
     Enum.map(data, fn
-      {k, v} when is_map(v) -> {k, group(v) |> separate_informal_style()}
-      {k, "year-person month-person"} -> {k, ["year", "month"]}
-      {k, v} -> {k, String.split(v, " ")}
+      {k, v} when is_map(v) -> {Cldr.String.to_underscore(k), group(v) |> separate_informal_style()}
+      {k, v} -> {Cldr.String.to_underscore(k), Cldr.String.to_underscore(v) |> String.split(" ")}
     end)
     |> Map.new()
   end
