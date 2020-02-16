@@ -1623,7 +1623,8 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.unit_conversion_info |> get_in([:conversions, :quart])
-      %{factor: %{denominator: 500000000000, numerator: 473176473}, offset: 0, target: :cubic_meter}
+      %{factor: %{denominator: 500000000000, numerator: 473176473}, offset: 0,
+        base_unit: :cubic_meter, systems: [:ussystem]}
 
   """
   def unit_conversion_info do

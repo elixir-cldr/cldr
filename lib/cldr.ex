@@ -1562,6 +1562,75 @@ defmodule Cldr do
   end
 
   @doc """
+  Normalise and validate a measurement system type.
+
+  ## Arguments
+
+  * `measurement_system` is a known
+    measurement system.
+
+  ## Returns
+
+  * `{:ok, normalized_measurement_system}` or
+
+  * `{:error, {exception, message}}`
+
+  ## Examples
+
+      iex> Cldr.validate_measurement_system "metric"
+      {:ok, :metric}
+
+      iex> Cldr.validate_measurement_system "ussystem"
+      {:ok, :US}
+
+      iex> Cldr.validate_measurement_system "uksystem"
+      {:ok, :UK}
+
+      iex> Cldr.validate_measurement_system "uk_system"
+      {:ok, :UK}
+
+      iex> Cldr.validate_measurement_system "something"
+      {:error, {Cldr.UnknownMeasurementSystemError,
+       "The measurement system \\"something\\" is invalid"}}
+
+  """
+  def validate_measurement_system(system) when is_binary(system) do
+    system
+    |> String.downcase
+    |> do_validate_measurement_system
+  end
+
+  def validate_measurement_system(:ussystem), do: {:ok, :US}
+  def validate_measurement_system(:uksystem), do: {:ok, :UK}
+
+  def validate_measurement_system(:us_system), do: {:ok, :US}
+  def validate_measurement_system(:uk_system), do: {:ok, :UK}
+
+  def validate_measurement_system(:us), do: {:ok, :US}
+  def validate_measurement_system(:uk), do: {:ok, :UK}
+
+  def validate_measurement_system(:metric), do: {:ok, :metric}
+
+  def validate_measurement_system(measurement_system) do
+    {:error, unknown_measurement_system_error(measurement_system)}
+  end
+
+  defp do_validate_measurement_system("ussystem"), do: {:ok, :US}
+  defp do_validate_measurement_system("uksystem"), do: {:ok, :UK}
+  defp do_validate_measurement_system("metric"), do: {:ok, :metric}
+
+  defp do_validate_measurement_system(measurement_system) do
+    {:error, unknown_measurement_system_error(measurement_system)}
+  end
+
+  def unknown_measurement_system_error(measurement_system) do
+    {
+      Cldr.UnknownMeasurementSystemError,
+      "The measurement system #{inspect(measurement_system)} is invalid"
+    }
+  end
+
+  @doc """
   Returns a unicode string representing a flag for a territory.
 
   ## Options

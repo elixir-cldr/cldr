@@ -168,7 +168,7 @@ defmodule Cldr.LanguageTag.Parser do
 
   # from => [to, valid_list, default]
   @locale_map %{
-    "ca" => [:calendar, &Cldr.validate_calendar/1, "gregory"],
+    "ca" => [:calendar, &Cldr.validate_calendar/1, :gregorian],
     "co" => [:collation, Config.collations(), "standard"],
     "ka" => [:alternative_collation, ["noignore", "shifted"], "shifted"],
     "kb" => [:backward_level2, Config.true_false(), "false"],
@@ -186,7 +186,7 @@ defmodule Cldr.LanguageTag.Parser do
     "hc" => [:hour_cycle, ["h12", "h23", "h11", "h24"], "h23"],
     "lb" => [:line_break_style, ["strict", "normal", "loose"], "normal"],
     "lw" => [:line_break_word, ["normal", "breakall", "keepall"], "normal"],
-    "ms" => [:measurement_system, ["metric", "ussystem", "uksystem"], "metric"],
+    "ms" => [:measurement_system, &Cldr.validate_measurement_system/1, :metric],
     "ss" => [:sentence_break_supression, ["standard", "none"], "standard"],
     "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
     "sd" => :subdivision,

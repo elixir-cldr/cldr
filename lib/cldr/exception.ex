@@ -227,3 +227,15 @@ defmodule Cldr.NoDefaultBackendError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.UnknownMeasurementSystemError do
+  @moduledoc """
+  Exception raised when the measurement
+  system is invalid.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

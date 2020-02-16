@@ -88,4 +88,82 @@ defmodule CldrLanguageTagTest do
     # ones
     # assert {:error, _} = Cldr.LanguageTag.parse("ar-a-aaa-b-bbb-a-ccc")
   end
+
+  test "with u extension and measurement system" do
+    assert Cldr.LanguageTag.parse("en-AU-u-ms-ussystem") ==
+    {:ok,
+     %Cldr.LanguageTag{
+       canonical_locale_name: nil,
+       cldr_locale_name: nil,
+       extensions: [],
+       gettext_locale_name: nil,
+       language: "en",
+       language_subtags: [],
+       language_variant: nil,
+       locale: %{measurement_system: :US},
+       private_use: [],
+       rbnf_locale_name: nil,
+       requested_locale_name: "en-AU-u-ms-ussystem",
+       script: nil,
+       territory: "AU",
+       transform: %{}
+     }}
+
+    assert Cldr.LanguageTag.parse("en-AU-u-ms-uksystem") ==
+    {:ok,
+     %Cldr.LanguageTag{
+       canonical_locale_name: nil,
+       cldr_locale_name: nil,
+       extensions: [],
+       gettext_locale_name: nil,
+       language: "en",
+       language_subtags: [],
+       language_variant: nil,
+       locale: %{measurement_system: :UK},
+       private_use: [],
+       rbnf_locale_name: nil,
+       requested_locale_name: "en-AU-u-ms-uksystem",
+       script: nil,
+       territory: "AU",
+       transform: %{}
+     }}
+
+     assert Cldr.LanguageTag.parse("en-AU-u-ms-uk_system") ==
+     {:ok,
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: [],
+        gettext_locale_name: nil,
+        language: "en",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{:measurement_system => :metric, "uk" => "system"},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "en-AU-u-ms-uk_system",
+        script: nil,
+        territory: "AU",
+        transform: %{}
+      }}
+
+     assert Cldr.LanguageTag.parse("en-AU-u-ms-metric") ==
+     {:ok,
+      %Cldr.LanguageTag{
+        canonical_locale_name: nil,
+        cldr_locale_name: nil,
+        extensions: [],
+        gettext_locale_name: nil,
+        language: "en",
+        language_subtags: [],
+        language_variant: nil,
+        locale: %{measurement_system: :metric},
+        private_use: [],
+        rbnf_locale_name: nil,
+        requested_locale_name: "en-AU-u-ms-metric",
+        script: nil,
+        territory: "AU",
+        transform: %{}
+      }}
+  end
 end

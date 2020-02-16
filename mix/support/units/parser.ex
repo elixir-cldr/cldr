@@ -1,7 +1,5 @@
 defmodule Cldr.Unit.Parser do
-  @moduledoc """
-  Parses constant and conversion expressions
-  """
+  @moduledoc false
 
   @operators ~r/[*\/^]/
 
