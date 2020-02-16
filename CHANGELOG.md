@@ -2,13 +2,29 @@
 
 This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Breaking changes
+
+* Change `Cldr.Config.unit_conversion_info/0` to `Cldr.Config.unit_conversions/0`
+
+* Change `Cldr.Config.measurement_system/0` to `Cldr.Config.measurement_system_preferences/0`
+
+* Rename `priv/cldr/unit_preference.json` to `priv/cldr/unit_preferences.json`
+
+* Rename `priv/cldr/unit_conversion.json` to `priv/cldr/unit_conversions.json`
+
 ### Enhancements
 
 * CLDR is introducing unit conversion data. This release of `ex_cldr` includes a development version of that data that will be supported in an upcoming release of [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 
 * Unit Preferences now consistently use underscore in names and values instead of dashes.
 
-* Adds `Cldr.validate_measurement_system/1` to validate a measurement system name
+* Add `Cldr.validate_measurement_system/1` to validate a measurement system name
+
+* Add `Cldr.Config.measurement_systems/0` to return a map of known measurement systems
+
+* Add `priv/cldr/unit_conversions.json`
+
+* Add `priv/cldr/measurement_systems.json`
 
 # Changelog for Cldr v2.13.0
 

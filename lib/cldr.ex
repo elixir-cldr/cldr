@@ -1581,13 +1581,10 @@ defmodule Cldr do
       {:ok, :metric}
 
       iex> Cldr.validate_measurement_system "ussystem"
-      {:ok, :US}
+      {:ok, :ussystem}
 
       iex> Cldr.validate_measurement_system "uksystem"
-      {:ok, :UK}
-
-      iex> Cldr.validate_measurement_system "uk_system"
-      {:ok, :UK}
+      {:ok, :uksystem}
 
       iex> Cldr.validate_measurement_system "something"
       {:error, {Cldr.UnknownMeasurementSystemError,
@@ -1600,24 +1597,24 @@ defmodule Cldr do
     |> do_validate_measurement_system
   end
 
-  def validate_measurement_system(:ussystem), do: {:ok, :US}
-  def validate_measurement_system(:uksystem), do: {:ok, :UK}
-
-  def validate_measurement_system(:us_system), do: {:ok, :US}
-  def validate_measurement_system(:uk_system), do: {:ok, :UK}
-
-  def validate_measurement_system(:us), do: {:ok, :US}
-  def validate_measurement_system(:uk), do: {:ok, :UK}
-
-  def validate_measurement_system(:metric), do: {:ok, :metric}
-
-  def validate_measurement_system(measurement_system) do
-    {:error, unknown_measurement_system_error(measurement_system)}
+  def validate_measurement_system(system) when is_atom(system) do
+    do_validate_measurement_system(system)
   end
 
-  defp do_validate_measurement_system("ussystem"), do: {:ok, :US}
-  defp do_validate_measurement_system("uksystem"), do: {:ok, :UK}
-  defp do_validate_measurement_system("metric"), do: {:ok, :metric}
+  @measurement_systems Cldr.Config.measurement_systems()
+  |> Enum.flat_map(fn
+    {k, %{alias: :""}} -> [{k, k}]
+    {k, %{alias: a}} -> [{k, k}, {a, k}]
+  end)
+  |> Map.new
+
+  for {system, canonical_system} <- @measurement_systems do
+    defp do_validate_measuremeent_system(unquote(system)),
+      do: {:ok, unquote(canonical_system)}
+
+    defp do_validate_measurement_system(unquote(to_string(system))),
+      do: {:ok, unquote(canonical_system)}
+  end
 
   defp do_validate_measurement_system(measurement_system) do
     {:error, unknown_measurement_system_error(measurement_system)}

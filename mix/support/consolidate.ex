@@ -44,7 +44,8 @@ defmodule Cldr.Consolidate do
     save_plural_ranges()
     save_timezones()
     save_units()
-    save_measurement_data()
+    save_measurement_systems()
+    save_measurement_system_preferences()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -466,16 +467,41 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  def save_measurement_systems do
+    import SweetXml
+    import Cldr.Config, only: [underscore: 1]
+    alias Cldr.Unit.{Parser, Expression}
+
+    path = Path.join(consolidated_output_dir(), "measurement_systems.json")
+
+    download_data_dir()
+    |> Path.join(["measurement_systems.xml"])
+    |> File.read!()
+    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+    |> xpath(
+        ~x"//type"l,
+        name: ~x"./@name"s,
+        description: ~x"./@description"s,
+        alias: ~x"./@alias"s
+      )
+    |> Enum.group_by(&(&1.name), &(%{alias: &1.alias, description: &1.description}))
+    |> Enum.map(fn {k, v} -> {k, hd(v)} end)
+    |> Map.new
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
   def save_units do
     import SweetXml
     import Cldr.Config, only: [underscore: 1]
     alias Cldr.Unit.{Parser, Expression}
 
-    path = Path.join(consolidated_output_dir(), "unit_conversion.json")
+    path = Path.join(consolidated_output_dir(), "unit_conversions.json")
 
     units =
       download_data_dir()
-      |> Path.join(["unit_conversion.xml"])
+      |> Path.join(["unit_conversions.xml"])
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
 
@@ -547,8 +573,8 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
-  def save_measurement_data do
-    path = Path.join(consolidated_output_dir(), "measurement_system.json")
+  def save_measurement_system_preferences do
+    path = Path.join(consolidated_output_dir(), "measurement_system_preferences.json")
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/measurementData.json"])
@@ -573,7 +599,7 @@ defmodule Cldr.Consolidate do
 
   @doc false
   def save_unit_preference do
-    path = Path.join(consolidated_output_dir(), "unit_preference.json")
+    path = Path.join(consolidated_output_dir(), "unit_preferences.json")
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/unitPreferenceData.json"])

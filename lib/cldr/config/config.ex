@@ -418,13 +418,27 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a map of measurement systems for
-  territories
+  Return a map of measurement system preferences
+  for territories
 
   """
-  @measurement_system_file "measurement_system.json"
-  def measurement_system do
-    Path.join(cldr_data_dir(), @measurement_system_file)
+  @measurement_system_preferences_file "measurement_system_preferences.json"
+  def measurement_system_preferences do
+    Path.join(cldr_data_dir(), @measurement_system_preferences_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new()
+  end
+
+  @doc """
+  Return a map of measurement systems
+
+  """
+  @measurement_systems_file "measurement_systems.json"
+  def measurement_systems do
+    Path.join(cldr_data_dir(), @measurement_systems_file)
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
@@ -1607,9 +1621,9 @@ defmodule Cldr.Config do
   Return a map of unit preferences
 
   """
-  @unit_preference_file "unit_preference.json"
+  @unit_preferences_file "unit_preferences.json"
   def unit_preferences do
-    Path.join(cldr_data_dir(), @unit_preference_file)
+    Path.join(cldr_data_dir(), @unit_preferences_file)
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
@@ -1622,15 +1636,16 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.unit_conversion_info |> get_in([:conversions, :quart])
+      iex> Cldr.Config.unit_conversions |> get_in([:conversions, :quart])
       %{factor: %{denominator: 500000000000, numerator: 473176473}, offset: 0,
         base_unit: :cubic_meter, systems: [:ussystem]}
 
   """
-  def unit_conversion_info do
+  @unit_conversions_file "unit_conversions.json"
+  def unit_conversions do
     data =
       cldr_data_dir()
-      |> Path.join("unit_conversion.json")
+      |> Path.join(@unit_conversions_file)
       |> File.read!()
       |> json_library().decode!(keys: :atoms)
 

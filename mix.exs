@@ -91,7 +91,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territory_info.json",
         "priv/cldr/plural_ranges.json",
         "priv/cldr/timezones.json",
-        "priv/cldr/measurement_system.json",
+        "priv/cldr/measurement_system_preferences.json",
+        "priv/cldr/measurement_systems.json",
         "priv/cldr/unit_preference.json",
         "priv/cldr/unit_conversion.json",
         "priv/cldr/language_tags.ebin"
