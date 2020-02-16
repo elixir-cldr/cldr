@@ -1641,9 +1641,14 @@ defmodule Cldr.Config do
     conversions =
       data.conversions
       |> Enum.map(fn {k, v} ->
-          {_, new_unit} = Map.get_and_update(v, :target, fn current_value ->
+          {_, new_unit} = Map.get_and_update(v, :base_unit, fn current_value ->
             {current_value, String.to_atom(current_value)}
           end)
+
+          {_, new_unit} = Map.get_and_update(new_unit, :systems, fn current_value ->
+            {current_value, Enum.map(current_value, &String.to_atom/1)}
+          end)
+
           {k, new_unit}
          end)
 

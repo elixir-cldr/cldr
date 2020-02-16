@@ -512,13 +512,19 @@ defmodule Cldr.Consolidate do
       |> xpath(
         ~x"//convertUnit"l,
         source: ~x"./@source"s,
-        target: ~x"./@target"s,
+        base_unit: ~x"./@baseUnit"s,
         factor: ~x"./@factor"s,
-        offset: ~x"./@offset"s
+        offset: ~x"./@offset"s,
+        systems: ~x"./@systems"s
       )
-      |> Enum.map(fn %{source: source, target: target, offset: offset, factor: factor} ->
-        {underscore(source), %{target: underscore(target), factor: Parser.parse(factor) |> Expression.run(constants),
-        offset: Parser.parse(offset) |> Expression.run(constants)}}
+      |> Enum.map(fn %{source: source, base_unit: target, offset: offset, factor: factor, systems: systems} ->
+        {underscore(source),
+          %{base_unit: underscore(target),
+            factor: Parser.parse(factor, 1) |> Expression.run(constants),
+            offset: Parser.parse(offset, 0) |> Expression.run(constants),
+            systems: Parser.systems(systems)
+          }
+        }
       end)
       |> Map.new()
 

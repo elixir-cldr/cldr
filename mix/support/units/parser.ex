@@ -5,7 +5,13 @@ defmodule Cldr.Unit.Parser do
 
   @operators ~r/[*\/^]/
 
-  def parse(expression) do
+  def parse(expression, default \\ "")
+
+  def parse("", default) do
+    default
+  end
+
+  def parse(expression, _default) do
     expression
     |> String.split(@operators, include_captures: true)
     |> Enum.map(&String.trim/1)
@@ -34,6 +40,16 @@ defmodule Cldr.Unit.Parser do
 
   def parse_constant(constant) do
     constant
+  end
+
+  def systems("") do
+    [:metric]
+  end
+
+  def systems(systems) do
+    systems
+    |> String.split
+    |> Enum.map(&String.trim/1)
   end
 
 end

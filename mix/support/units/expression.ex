@@ -18,8 +18,14 @@ defmodule Cldr.Unit.Expression do
     Ratio.new(v)
   end
 
+  def run(%Ratio{} = rational, _constants) do
+    rational
+  end
+
   def run(v, constants) when is_binary(v) do
-    Map.fetch!(constants, v)
+    constants
+    |> Map.fetch!(v)
+    |> run(constants)
   end
 
   def run(["*", v1, v2], constants) do
