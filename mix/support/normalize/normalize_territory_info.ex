@@ -52,10 +52,10 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.map(fn {territory, map} ->
       territory = String.to_atom(territory)
 
-      map =
-        map
+      measurement_system =
+        %{}
         |> Map.put(
-          :measurement_system,
+          :default,
           (get_in(systems, [:measurement_system, territory]) ||
             get_in(systems, [:measurement_system, :"001"]))
           |> Cldr.Consolidate.canonicalize_measurement_system()
@@ -66,15 +66,15 @@ defmodule Cldr.Normalize.TerritoryInfo do
           |> Cldr.Consolidate.canonicalize_measurement_system()
         )
         |> Map.put(
-          :temperature_measurement,
+          :temperature,
           (get_in(systems, [:measurement_system_category_temperature, territory]) ||
           get_in(systems, [:measurement_system, territory]) || get_in(systems, [:measurement_system, :"001"]))
           |> Cldr.Consolidate.canonicalize_measurement_system()
         )
 
-      {territory, map}
+      {territory, Map.put(map, :measurement_system, measurement_system)}
     end)
-    |> Enum.into(%{})
+    |> Map.new
   end
 
   @measurement_path Path.join(Cldr.Config.download_data_dir(), [

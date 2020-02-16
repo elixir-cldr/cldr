@@ -1345,10 +1345,12 @@ defmodule Cldr.Config do
           "zh-Hant" => %{population_percent: 0.54}
         },
         literacy_percent: 99,
-        measurement_system: :uksystem,
-        paper_size: :a4,
-        population: 65105200,
-        temperature_measurement: :uksystem
+        measurement_system: %{
+          default: :uksystem,
+          paper_size: :a4,
+          temperature: :uksystem
+        },
+        population: 65105200
       }
 
   """
@@ -1389,10 +1391,8 @@ defmodule Cldr.Config do
           "zh-Hant" => %{population_percent: 2.1}
         },
         literacy_percent: 99,
-        measurement_system: :metric,
-        paper_size: :a4,
-        population: 23470100,
-        temperature_measurement: :metric
+        measurement_system: %{default: :metric, paper_size: :a4, temperature: :metric},
+        population: 23470100
       }
 
       iex> Cldr.Config.territory_info "abc"
@@ -1432,9 +1432,8 @@ defmodule Cldr.Config do
     Enum.map(content, fn {territory, data} ->
       new_data =
         Enum.map(data, fn
-          {:measurement_system, v} -> {:measurement_system, String.to_atom(v)}
-          {:paper_size, v} -> {:paper_size, String.to_atom(v)}
-          {:temperature_measurement, v} -> {:temperature_measurement, String.to_atom(v)}
+          {:measurement_system, v} ->
+            {:measurement_system, Cldr.Map.atomize_keys(v) |> Cldr.Map.atomize_values()}
           other -> other
         end)
         |> Map.new
