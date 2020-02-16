@@ -8,6 +8,8 @@ This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older chan
 
 * Change `Cldr.Config.measurement_system/0` to `Cldr.Config.measurement_system_preferences/0`
 
+* Rename `priv/cldr/measurement_system.json` to `priv/cldr/measurement_system_preferences.json`
+
 * Rename `priv/cldr/unit_preference.json` to `priv/cldr/unit_preferences.json`
 
 * Rename `priv/cldr/unit_conversion.json` to `priv/cldr/unit_conversions.json`
