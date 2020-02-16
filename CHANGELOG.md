@@ -14,6 +14,12 @@ This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older chan
 
 * Rename `priv/cldr/unit_conversion.json` to `priv/cldr/unit_conversions.json`
 
+* Use canonical measurement system names throughout. This changes some data returned by `Cldr.Config.territory_info/0` and `Cldr.Config.measurement_system_preferences/0`
+
+### Bug Fixes
+
+* Correct the preferred measurement system for temperature in some territories (including the US)
+
 ### Enhancements
 
 * CLDR is introducing unit conversion data. This release of `ex_cldr` includes a development version of that data that will be supported in an upcoming release of [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)

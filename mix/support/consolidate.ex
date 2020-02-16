@@ -572,7 +572,6 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
-  @doc false
   def save_measurement_system_preferences do
     path = Path.join(consolidated_output_dir(), "measurement_system_preferences.json")
 
@@ -583,18 +582,42 @@ defmodule Cldr.Consolidate do
     |> get_in(["supplemental", "measurementData"])
     |> Enum.map(fn
       {"measurementSystem", v} ->
-        {"default", v}
+        {"default", canonicalize_measurement_system(v)}
 
       {"measurementSystem-category-" <> category, v} ->
-        {category, v}
+        {category, canonicalize_measurement_system(v)}
 
       {other, v} ->
-        {Cldr.String.underscore(other), v}
+        {Cldr.String.underscore(other), canonicalize_measurement_system(v)}
     end)
     |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  # BCP47 uses ussystem, uksystem and netric
+  # so we use these as canonical forms
+  @doc false
+  def canonicalize_measurement_system(data) when is_map(data) do
+    Enum.map(data, fn
+      {k, "US"} -> {k, "ussystem"}
+      {k, "UK"} -> {k, "uksystem"}
+      {k, "A4"} -> {k, "a4"}
+      {k, "US-Letter"} -> {k, "us_letter"}
+      other -> other
+    end)
+    |> Map.new
+  end
+
+  def canonicalize_measurement_system(data) when is_binary(data) do
+    case data do
+      "US" -> "ussystem"
+      "UK" -> "uksystem"
+      "A4" -> "a4"
+      "US-Letter" -> "us_letter"
+      other -> other
+    end
   end
 
   @doc false

@@ -18,7 +18,6 @@ defmodule Cldr.Normalize.TerritoryInfo do
     |> Enum.map(&normalize_language_codes/1)
     |> Enum.into(%{})
     |> add_currency_for_territories
-    |> add_country_phone_codes
     |> add_measurement_system
   end
 
@@ -57,54 +56,23 @@ defmodule Cldr.Normalize.TerritoryInfo do
         map
         |> Map.put(
           :measurement_system,
-          get_in(systems, [:measurement_system, territory]) ||
-            get_in(systems, [:measurement_system, :"001"])
+          (get_in(systems, [:measurement_system, territory]) ||
+            get_in(systems, [:measurement_system, :"001"]))
+          |> Cldr.Consolidate.canonicalize_measurement_system()
         )
         |> Map.put(
           :paper_size,
-          get_in(systems, [:paper_size, territory]) || get_in(systems, [:paper_size, :"001"])
+          (get_in(systems, [:paper_size, territory]) || get_in(systems, [:paper_size, :"001"]))
+          |> Cldr.Consolidate.canonicalize_measurement_system()
         )
         |> Map.put(
           :temperature_measurement,
-          get_in(systems, [:measurement_system_category_temperature, territory]) || "metric"
+          (get_in(systems, [:measurement_system_category_temperature, territory]) ||
+          get_in(systems, [:measurement_system, territory]) || get_in(systems, [:measurement_system, :"001"]))
+          |> Cldr.Consolidate.canonicalize_measurement_system()
         )
 
       {territory, map}
-    end)
-    |> Enum.into(%{})
-  end
-
-  def add_country_phone_codes(territories) do
-    phone_codes = get_phone_data()
-
-    territories
-    |> Enum.map(fn {territory, map} ->
-      {territory, Map.put(map, "telephone_country_code", Map.get(phone_codes, territory))}
-    end)
-    |> Enum.into(%{})
-  end
-
-  @currency_path Path.join(Cldr.Config.download_data_dir(), [
-                   "cldr-core",
-                   "/supplemental",
-                   "/telephoneCodeData.json"
-                 ])
-
-  def get_phone_data do
-    @currency_path
-    |> File.read!()
-    |> Jason.decode!()
-    |> get_in(["supplemental", "telephoneCodeData"])
-    |> Cldr.Map.underscore_keys()
-    |> Enum.map(fn {k, v} -> {String.upcase(k), v} end)
-    |> Enum.map(fn {k, v} ->
-      codes = List.flatten(Enum.map(v, fn x -> Map.values(x) end))
-
-      if length(codes) == 1 do
-        {k, String.to_integer(hd(codes))}
-      else
-        {k, Enum.map(codes, &String.to_integer/1)}
-      end
     end)
     |> Enum.into(%{})
   end

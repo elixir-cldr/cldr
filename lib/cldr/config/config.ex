@@ -1320,21 +1320,15 @@ defmodule Cldr.Config do
       iex> Cldr.Config.territory_info[:GB]
       %{
         currency: [GBP: %{from: ~D[1694-07-27]}],
-        gdp: 2788000000000,
+        gdp: 2925000000000,
         language_population: %{
           "bn" => %{population_percent: 0.67},
-          "cy" => %{
-            official_status: "official_regional",
-            population_percent: 0.77
-          },
+          "cy" => %{official_status: "official_regional", population_percent: 0.77},
           "de" => %{population_percent: 6},
           "el" => %{population_percent: 0.34},
           "en" => %{official_status: "official", population_percent: 99},
           "fr" => %{population_percent: 19},
-          "ga" => %{
-            official_status: "official_regional",
-            population_percent: 0.026
-          },
+          "ga" => %{official_status: "official_regional", population_percent: 0.026},
           "gd" => %{
             official_status: "official_regional",
             population_percent: 0.099,
@@ -1346,16 +1340,15 @@ defmodule Cldr.Config do
           "ml" => %{population_percent: 0.035},
           "pa" => %{population_percent: 0.79},
           "sco" => %{population_percent: 2.7, writing_percent: 5},
-          "syl" => %{population_percent: 0.51},
+          "syl" => %{population_percent: 0.5},
           "yi" => %{population_percent: 0.049},
           "zh-Hant" => %{population_percent: 0.54}
         },
         literacy_percent: 99,
-        measurement_system: "UK",
-        paper_size: "A4",
-        population: 64769500,
-        telephone_country_code: 44,
-        temperature_measurement: "metric"
+        measurement_system: :uksystem,
+        paper_size: :a4,
+        population: 65105200,
+        temperature_measurement: :uksystem
       }
 
   """
@@ -1368,6 +1361,7 @@ defmodule Cldr.Config do
     |> atomize_territory_keys
     |> adjust_currency_codes
     |> atomize_language_population
+    |> atomize_measurement_systems
     |> Enum.into(%{})
   end
 
@@ -1387,22 +1381,18 @@ defmodule Cldr.Config do
       iex> Cldr.Config.territory_info "au"
       %{
         currency: [AUD: %{from: ~D[1966-02-14]}],
-        gdp: 1189000000000,
+        gdp: 1248000000000,
         language_population: %{
-          "en" => %{
-            official_status: "de_facto_official",
-            population_percent: 96
-          },
+          "en" => %{official_status: "de_facto_official", population_percent: 96},
           "it" => %{population_percent: 1.9},
           "wbp" => %{population_percent: 0.011},
           "zh-Hant" => %{population_percent: 2.1}
         },
         literacy_percent: 99,
-        measurement_system: "metric",
-        paper_size: "A4",
-        population: 23232400,
-        telephone_country_code: 61,
-        temperature_measurement: "metric"
+        measurement_system: :metric,
+        paper_size: :a4,
+        population: 23470100,
+        temperature_measurement: :metric
       }
 
       iex> Cldr.Config.territory_info "abc"
@@ -1436,6 +1426,22 @@ defmodule Cldr.Config do
       |> Enum.into(%{})
 
     Map.put(content, :languages, languages)
+  end
+
+  defp atomize_measurement_systems(content) do
+    Enum.map(content, fn {territory, data} ->
+      new_data =
+        Enum.map(data, fn
+          {:measurement_system, v} -> {:measurement_system, String.to_atom(v)}
+          {:paper_size, v} -> {:paper_size, String.to_atom(v)}
+          {:temperature_measurement, v} -> {:temperature_measurement, String.to_atom(v)}
+          other -> other
+        end)
+        |> Map.new
+
+      {territory, new_data}
+    end)
+    |> Map.new
   end
 
   defp adjust_currency_codes(territories) do
