@@ -1434,13 +1434,15 @@ defmodule Cldr.Config do
         Enum.map(data, fn
           {:measurement_system, v} ->
             {:measurement_system, Cldr.Map.atomize_keys(v) |> Cldr.Map.atomize_values()}
-          other -> other
+
+          other ->
+            other
         end)
-        |> Map.new
+        |> Map.new()
 
       {territory, new_data}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   defp adjust_currency_codes(territories) do
@@ -1654,29 +1656,31 @@ defmodule Cldr.Config do
       |> File.read!()
       |> json_library().decode!(keys: :atoms)
 
-   base_units =
+    base_units =
       data.base_units
       |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
-      |> Map.new
+      |> Map.new()
 
     conversions =
       data.conversions
       |> Enum.map(fn {k, v} ->
-          {_, new_unit} = Map.get_and_update(v, :base_unit, fn current_value ->
+        {_, new_unit} =
+          Map.get_and_update(v, :base_unit, fn current_value ->
             {current_value, String.to_atom(current_value)}
           end)
 
-          {_, new_unit} = Map.get_and_update(new_unit, :systems, fn current_value ->
+        {_, new_unit} =
+          Map.get_and_update(new_unit, :systems, fn current_value ->
             {current_value, Enum.map(current_value, &String.to_atom/1)}
           end)
 
-          {k, new_unit}
-         end)
+        {k, new_unit}
+      end)
 
     aliases =
-       data.aliases
-       |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
-       |> Map.new
+      data.aliases
+      |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
+      |> Map.new()
 
     data
     |> Map.put(:conversions, conversions)

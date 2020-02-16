@@ -7,7 +7,6 @@ defmodule CldrUnitsTest do
 
   test "parse unit expression" do
     assert Cldr.Unit.Parser.parse("ft2m^3 * 43560 / 3676 * 467") ==
-      ["*", ["^", "ft2m", 3], ["/", 43560, ["*", 3676, 467]]]
+             ["*", ["^", "ft2m", 3], ["/", 43560, ["*", 3676, 467]]]
   end
-
 end

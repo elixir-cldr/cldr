@@ -34,16 +34,17 @@ defmodule Cldr.Consolidate do
     save_number_systems()
     save_currencies()
     save_territory_currencies()
+    save_territory_info()
+    save_territory_containment()
     save_week_data()
     save_calendar_data()
     save_day_periods()
     save_aliases()
     save_likely_subtags()
     save_locales()
-    save_territory_containment()
     save_plural_ranges()
     save_timezones()
-    save_units()
+    save_unit_conversions()
     save_measurement_systems()
     save_measurement_system_preferences()
 
@@ -479,20 +480,20 @@ defmodule Cldr.Consolidate do
     |> File.read!()
     |> String.replace(~r/<!DOCTYPE.*>\n/, "")
     |> xpath(
-        ~x"//type"l,
-        name: ~x"./@name"s,
-        description: ~x"./@description"s,
-        alias: ~x"./@alias"s
-      )
-    |> Enum.group_by(&(&1.name), &(%{alias: &1.alias, description: &1.description}))
+      ~x"//type"l,
+      name: ~x"./@name"s,
+      description: ~x"./@description"s,
+      alias: ~x"./@alias"s
+    )
+    |> Enum.group_by(& &1.name, &%{alias: &1.alias, description: &1.description})
     |> Enum.map(fn {k, v} -> {k, hd(v)} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
   end
 
-  def save_units do
+  def save_unit_conversions do
     import SweetXml
     import Cldr.Config, only: [underscore: 1]
     alias Cldr.Unit.{Parser, Expression}
@@ -517,9 +518,11 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
-    constants = Enum.map(constants, fn {constant, expression} ->
-      {constant, Expression.run(expression, constants)}
-    end) |> Map.new
+    constants =
+      Enum.map(constants, fn {constant, expression} ->
+        {constant, Expression.run(expression, constants)}
+      end)
+      |> Map.new()
 
     base_units =
       units
@@ -543,14 +546,20 @@ defmodule Cldr.Consolidate do
         offset: ~x"./@offset"s,
         systems: ~x"./@systems"s
       )
-      |> Enum.map(fn %{source: source, base_unit: target, offset: offset, factor: factor, systems: systems} ->
+      |> Enum.map(fn %{
+                       source: source,
+                       base_unit: target,
+                       offset: offset,
+                       factor: factor,
+                       systems: systems
+                     } ->
         {underscore(source),
-          %{base_unit: underscore(target),
-            factor: Parser.parse(factor, 1) |> Expression.run(constants),
-            offset: Parser.parse(offset, 0) |> Expression.run(constants),
-            systems: Parser.systems(systems)
-          }
-        }
+         %{
+           base_unit: underscore(target),
+           factor: Parser.parse(factor, 1) |> Expression.run(constants),
+           offset: Parser.parse(offset, 0) |> Expression.run(constants),
+           systems: Parser.systems(systems)
+         }}
       end)
       |> Map.new()
 
@@ -607,7 +616,7 @@ defmodule Cldr.Consolidate do
       {k, "US-Letter"} -> {k, "us_letter"}
       other -> other
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   def canonicalize_measurement_system(data) when is_binary(data) do
@@ -639,8 +648,11 @@ defmodule Cldr.Consolidate do
 
   defp separate_informal_style(data) do
     Enum.map(data, fn
-      {k, v} when is_map(v) -> {Cldr.String.to_underscore(k), group(v) |> separate_informal_style()}
-      {k, v} -> {Cldr.String.to_underscore(k), Cldr.String.to_underscore(v) |> String.split(" ")}
+      {k, v} when is_map(v) ->
+        {Cldr.String.to_underscore(k), group(v) |> separate_informal_style()}
+
+      {k, v} ->
+        {Cldr.String.to_underscore(k), Cldr.String.to_underscore(v) |> String.split(" ")}
     end)
     |> Map.new()
   end

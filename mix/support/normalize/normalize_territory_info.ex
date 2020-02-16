@@ -57,7 +57,7 @@ defmodule Cldr.Normalize.TerritoryInfo do
         |> Map.put(
           :default,
           (get_in(systems, [:measurement_system, territory]) ||
-            get_in(systems, [:measurement_system, :"001"]))
+             get_in(systems, [:measurement_system, :"001"]))
           |> Cldr.Consolidate.canonicalize_measurement_system()
         )
         |> Map.put(
@@ -68,13 +68,14 @@ defmodule Cldr.Normalize.TerritoryInfo do
         |> Map.put(
           :temperature,
           (get_in(systems, [:measurement_system_category_temperature, territory]) ||
-          get_in(systems, [:measurement_system, territory]) || get_in(systems, [:measurement_system, :"001"]))
+             get_in(systems, [:measurement_system, territory]) ||
+             get_in(systems, [:measurement_system, :"001"]))
           |> Cldr.Consolidate.canonicalize_measurement_system()
         )
 
       {territory, Map.put(map, :measurement_system, measurement_system)}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @measurement_path Path.join(Cldr.Config.download_data_dir(), [

@@ -18,13 +18,24 @@ if File.exists?(Cldr.Config.download_data_dir()) do
 
     @plural_ranges_output_file Path.join(Cldr.Config.download_data_dir(), "plural_ranges.xml")
     @timezones_output_file Path.join(Cldr.Config.download_data_dir(), "timezones.xml")
-    @measurement_systems_output_file Path.join(Cldr.Config.download_data_dir(), "measurement_systems.xml")
+    @measurement_systems_output_file Path.join(
+                                       Cldr.Config.download_data_dir(),
+                                       "measurement_systems.xml"
+                                     )
 
     def run(_) do
       with {:ok, content} <- download(url()),
            :ok <- File.write(to_string(@core), content),
-           {:ok, [{@measurement_systems, measurement_systems}, {@timezones, timezones}, {@plural_range, plural_ranges}]} <-
-             :zip.unzip(@core, [:memory, {:file_list, [@measurement_systems, @plural_range, @timezones]}]) do
+           {:ok,
+            [
+              {@measurement_systems, measurement_systems},
+              {@timezones, timezones},
+              {@plural_range, plural_ranges}
+            ]} <-
+             :zip.unzip(@core, [
+               :memory,
+               {:file_list, [@measurement_systems, @plural_range, @timezones]}
+             ]) do
         File.write!(@plural_ranges_output_file, plural_ranges)
         Logger.info("Saved #{@plural_range} to #{@plural_ranges_output_file}")
 

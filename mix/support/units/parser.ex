@@ -25,7 +25,7 @@ defmodule Cldr.Unit.Parser do
   end
 
   def infix_to_postfix([constant, op, pow | other]) when op in ["^"] do
-   infix_to_postfix([[op, parse_constant(constant), parse_constant(pow)] | other])
+    infix_to_postfix([[op, parse_constant(constant), parse_constant(pow)] | other])
   end
 
   def parse_constant(constant) when is_binary(constant) do
@@ -46,8 +46,7 @@ defmodule Cldr.Unit.Parser do
 
   def systems(systems) do
     systems
-    |> String.split
+    |> String.split()
     |> Enum.map(&String.trim/1)
   end
-
 end

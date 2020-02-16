@@ -1593,7 +1593,7 @@ defmodule Cldr do
   """
   def validate_measurement_system(system) when is_binary(system) do
     system
-    |> String.downcase
+    |> String.downcase()
     |> do_validate_measurement_system
   end
 
@@ -1602,11 +1602,11 @@ defmodule Cldr do
   end
 
   @measurement_systems Cldr.Config.measurement_systems()
-  |> Enum.flat_map(fn
-    {k, %{alias: :""}} -> [{k, k}]
-    {k, %{alias: a}} -> [{k, k}, {a, k}]
-  end)
-  |> Map.new
+                       |> Enum.flat_map(fn
+                         {k, %{alias: :""}} -> [{k, k}]
+                         {k, %{alias: a}} -> [{k, k}, {a, k}]
+                       end)
+                       |> Map.new()
 
   for {system, canonical_system} <- @measurement_systems do
     defp do_validate_measuremeent_system(unquote(system)),
