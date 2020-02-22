@@ -44,9 +44,8 @@ defmodule Cldr.Consolidate do
     save_locales()
     save_plural_ranges()
     save_timezones()
-    save_unit_conversions()
+    save_units()
     save_measurement_systems()
-    save_measurement_system_preferences()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -493,16 +492,16 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
-  def save_unit_conversions do
+  def save_units do
     import SweetXml
     import Cldr.Config, only: [underscore: 1]
     alias Cldr.Unit.{Parser, Expression}
 
-    path = Path.join(consolidated_output_dir(), "unit_conversions.json")
+    path = Path.join(consolidated_output_dir(), "units.json")
 
     units =
       download_data_dir()
-      |> Path.join(["unit_conversions.xml"])
+      |> Path.join(["units.xml"])
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
 
@@ -563,6 +562,33 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
+
+    preferences =
+      units
+      |> xpath(
+        ~x"//unitPreferences"l,
+        category: ~x"./@category"s,
+        usage: ~x"./@usage"s,
+        preferences: [
+          ~x"//unitPreference"l,
+          regions: ~x"//unitPreference/@regions"s,
+          geq: ~x"//unitPreference/@geq"of,
+          units: ~x"//unitPreference/text()"s
+        ]
+      )
+      |> Enum.map(fn item ->
+        preferences =
+          Enum.map(item.preferences, fn pref ->
+            pref
+            |> Map.update!(:regions, &String.split/1)
+            |> Map.update!(:units, fn units -> underscore(units) |> String.split("_and_") end)
+          end)
+
+        Map.put(item, :preferences, preferences)
+        |> Map.update!(:category, &underscore/1)
+        |> Map.update!(:usage, &underscore/1)
+      end)
+
     aliases =
       units
       |> xpath(
@@ -575,31 +601,7 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
-    %{base_units: base_units, conversions: conversions, aliases: aliases}
-    |> save_file(path)
-
-    assert_package_file_configured!(path)
-  end
-
-  def save_measurement_system_preferences do
-    path = Path.join(consolidated_output_dir(), "measurement_system_preferences.json")
-
-    download_data_dir()
-    |> Path.join(["cldr-core", "/supplemental", "/measurementData.json"])
-    |> File.read!()
-    |> Jason.decode!()
-    |> get_in(["supplemental", "measurementData"])
-    |> Enum.map(fn
-      {"measurementSystem", v} ->
-        {"default", canonicalize_measurement_system(v)}
-
-      {"measurementSystem-category-" <> category, v} ->
-        {category, canonicalize_measurement_system(v)}
-
-      {other, v} ->
-        {Cldr.String.underscore(other), canonicalize_measurement_system(v)}
-    end)
-    |> Map.new()
+    %{base_units: base_units, conversions: conversions, aliases: aliases, preferences: preferences}
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -627,65 +629,6 @@ defmodule Cldr.Consolidate do
       "US-Letter" -> "us_letter"
       other -> other
     end
-  end
-
-  @doc false
-  def save_unit_preference do
-    path = Path.join(consolidated_output_dir(), "unit_preferences.json")
-
-    download_data_dir()
-    |> Path.join(["cldr-core", "/supplemental", "/unitPreferenceData.json"])
-    |> File.read!()
-    |> String.split("\n")
-    |> Enum.map(&String.trim/1)
-    |> fix_small_category(false)
-    |> Enum.join("\n")
-    |> Jason.decode!()
-    |> get_in(["supplemental", "unitPreferenceData", "unitPreferences"])
-    |> separate_informal_style
-    |> save_file(path)
-  end
-
-  defp separate_informal_style(data) do
-    Enum.map(data, fn
-      {k, v} when is_map(v) ->
-        {Cldr.String.to_underscore(k), group(v) |> separate_informal_style()}
-
-      {k, v} ->
-        {Cldr.String.to_underscore(k), Cldr.String.to_underscore(v) |> String.split(" ")}
-    end)
-    |> Map.new()
-  end
-
-  defp group(map) do
-    Enum.group_by(map, fn {k, _v} -> String.split(k, "-alt-") |> Enum.reverse() |> hd end)
-    |> Enum.map(fn
-      {"informal" = k, [{a, b}]} ->
-        {k, %{(String.split(a, "-alt-") |> hd) => b}}
-
-      {_, [{k, v}]} ->
-        {k, v}
-
-      {k, v} ->
-        {k, Enum.map(v, fn {a, b} -> {String.split(a, "-alt-") |> hd, b} end) |> Map.new()}
-    end)
-    |> Map.new()
-  end
-
-  defp fix_small_category([], _insert?) do
-    []
-  end
-
-  defp fix_small_category(["},", "\"small\": {" | rest], _insert?) do
-    fix_small_category([", \"small\": {" | rest], true)
-  end
-
-  defp fix_small_category(["}," | rest], true) do
-    fix_small_category(["}}," | rest], false)
-  end
-
-  defp fix_small_category([head | rest], insert?) do
-    [head | fix_small_category(rest, insert?)]
   end
 
   @doc false

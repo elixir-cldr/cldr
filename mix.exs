@@ -93,8 +93,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/timezones.json",
         "priv/cldr/measurement_system_preferences.json",
         "priv/cldr/measurement_systems.json",
-        "priv/cldr/unit_preference.json",
-        "priv/cldr/unit_conversion.json",
+        "priv/cldr/units.json",
         "priv/cldr/language_tags.ebin"
       ]
     ]
