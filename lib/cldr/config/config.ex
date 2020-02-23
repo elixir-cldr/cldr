@@ -1299,16 +1299,42 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns a map of territory containments
+  Returns a map of territory containers
 
   """
-  def territory_containment do
+  def territory_containers do
     cldr_data_dir()
     |> Path.join("territory_containment.json")
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Cldr.Map.atomize_values()
+  end
+
+  @doc """
+  Returns a map of territory containment
+
+  """
+  def territory_containment do
+    territory_parents =
+      territory_containers()
+      |> Enum.flat_map(fn {k, v} ->
+        Enum.map(v, fn t -> {t, k} end)
+      end)
+
+    territory_parents
+    |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
+    |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
+    |> Enum.map(fn {k, v} -> {k, Enum.sort(v, fn x, y -> length(x) > length(y) end)} end)
+    |> Map.new
+  end
+
+  defp parents(_territory_parents, nil) do
+    []
+  end
+
+  defp parents(territory_parents, territory) do
+    [territory | parents(territory_parents, Keyword.get(territory_parents, territory))]
   end
 
   @doc """

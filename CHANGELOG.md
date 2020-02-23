@@ -19,6 +19,10 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Rename `Cldr.Config.week_data/0` to `Cldr.Config.weeks/0`
 
+* Rename `Cldr.Config.territory_containment/0` to `Cldr.Config.territory_containers/0`
+
+* Add `Cldr.Config.territory_containment/0` that returns a map of territories to a list of lists of the territories in which it is contained. A territory may be contained by more than one list of containers. For example, `:GB` is contained like this: `[[:"154", :"150", :"001"], [:UN], [:EU]]`.
+
 * Remove `priv/cldr/measurement_system_preferences.json`. This data is returned in `Cldr.Config.territories/0`
 
 * Use canonical measurement system names throughout. This changes some data returned by `Cldr.Config.territory_info/0` and `Cldr.Config.measurement_system_preferences/0`
