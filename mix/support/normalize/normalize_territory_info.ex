@@ -1,4 +1,4 @@
-defmodule Cldr.Normalize.TerritoryInfo do
+defmodule Cldr.Normalize.Territories do
   @moduledoc false
 
   alias Cldr.Locale

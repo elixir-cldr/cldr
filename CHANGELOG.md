@@ -2,19 +2,28 @@
 
 This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+The primary purpose of this release is to support the new data for units that standardize
+a means for conversion.  In addition, some data file names are changed to be more consistent in naming.
+
 ### Breaking changes
 
-* Change `Cldr.Config.unit_conversion_info/0` to `Cldr.Config.unit_conversions/0`
+* Minimal supported version of Elixir is 1.6 (it was 1.5)
 
-* Change `Cldr.Config.measurement_system/0` to `Cldr.Config.measurement_system_preferences/0`
+* Rename `Cldr.Config.calendar_data/0` to `Cldr.Config.calendars/0`
 
-* Rename `priv/cldr/measurement_system.json` to `priv/cldr/measurement_system_preferences.json`
+* Rename `Cldr.Config.territory_info/0` to `Cldr.Config.territories/0`
 
-* Rename `priv/cldr/unit_preference.json` to `priv/cldr/unit_preferences.json`
+* Rename `Cldr.Config.week_data/0` to `Cldr.Config.weeks/0`
 
-* Rename `priv/cldr/unit_conversion.json` to `priv/cldr/unit_conversions.json`
+* Remove `priv/cldr/measurement_system_preferences.json`. This data is returned in `Cldr.Config.territories/0`
 
 * Use canonical measurement system names throughout. This changes some data returned by `Cldr.Config.territory_info/0` and `Cldr.Config.measurement_system_preferences/0`
+
+* Rename `priv/cldr/week_data.json` to `priv/cldr/weeks.json`
+
+* Rename `priv/cldr/calendar_data.json` to `priv/cldr/calendars.json`
+
+* Rename `priv/cldr/territory_info.json` to `priv/cldr/territories.json`
 
 ### Bug Fixes
 
@@ -30,7 +39,7 @@ This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older chan
 
 * Add `Cldr.Config.measurement_systems/0` to return a map of known measurement systems
 
-* Add `priv/cldr/unit_conversions.json`
+* Add `priv/cldr/units.json` which contains the new unit data and conversion information from CLDR 37
 
 * Add `priv/cldr/measurement_systems.json`
 

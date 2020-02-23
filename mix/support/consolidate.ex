@@ -34,10 +34,10 @@ defmodule Cldr.Consolidate do
     save_number_systems()
     save_currencies()
     save_territory_currencies()
-    save_territory_info()
+    save_territories()
     save_territory_containment()
-    save_week_data()
-    save_calendar_data()
+    save_weeks()
+    save_calendars()
     save_day_periods()
     save_aliases()
     save_likely_subtags()
@@ -307,23 +307,23 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
-  def save_territory_info do
-    path = Path.join(consolidated_output_dir(), "territory_info.json")
+  def save_territories do
+    path = Path.join(consolidated_output_dir(), "territories.json")
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/territoryInfo.json"])
     |> File.read!()
     |> Jason.decode!()
     |> get_in(["supplemental", "territoryInfo"])
-    |> Normalize.TerritoryInfo.normalize()
+    |> Normalize.Territories.normalize()
     |> save_file(path)
 
     assert_package_file_configured!(path)
   end
 
   @doc false
-  def save_week_data do
-    path = Path.join(consolidated_output_dir(), "week_data.json")
+  def save_weeks do
+    path = Path.join(consolidated_output_dir(), "weeks.json")
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/weekData.json"])
@@ -352,8 +352,8 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
-  def save_calendar_data do
-    path = Path.join(consolidated_output_dir(), "calendar_data.json")
+  def save_calendars do
+    path = Path.join(consolidated_output_dir(), "calendars.json")
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/calendarData.json"])

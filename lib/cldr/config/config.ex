@@ -597,7 +597,7 @@ defmodule Cldr.Config do
 
   """
   def known_calendars do
-    calendar_info() |> Map.keys() |> Enum.sort()
+    calendars() |> Map.keys() |> Enum.sort()
   end
 
   @doc """
@@ -1317,7 +1317,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.territory_info[:GB]
+      iex> Cldr.Config.territories[:GB]
       %{
         currency: [GBP: %{from: ~D[1694-07-27]}],
         gdp: 2925000000000,
@@ -1354,9 +1354,9 @@ defmodule Cldr.Config do
       }
 
   """
-  def territory_info do
+  def territories do
     cldr_data_dir()
-    |> Path.join("territory_info.json")
+    |> Path.join("territories.json")
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
@@ -1366,6 +1366,9 @@ defmodule Cldr.Config do
     |> atomize_measurement_systems
     |> Enum.into(%{})
   end
+
+  @deprecated "Use Cldr.Config.territories/0"
+  defdelegate territory_info, to: __MODULE__, as: :territories
 
   @doc """
   Get territory info for a specific territory.
@@ -1401,9 +1404,10 @@ defmodule Cldr.Config do
   """
   @spec territory_info(String.t() | atom() | LanguageTag.t()) ::
           %{} | {:error, {module(), String.t()}}
+
   def territory_info(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
-      territory_info()
+      territories()
       |> Map.get(territory_code)
     else
       {:error, reason} -> {:error, reason}
@@ -1558,7 +1562,7 @@ defmodule Cldr.Config do
   """
   def week_info do
     cldr_data_dir()
-    |> Path.join("week_data.json")
+    |> Path.join("weeks.json")
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.underscore_keys()
@@ -1614,9 +1618,9 @@ defmodule Cldr.Config do
       %{calendar_system: "solar", eras: %{0 => %{end: 0}, 1 => %{start: 1}}}
 
   """
-  def calendar_info do
+  def calendars do
     cldr_data_dir()
-    |> Path.join("calendar_data.json")
+    |> Path.join("calendars.json")
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
@@ -1624,19 +1628,8 @@ defmodule Cldr.Config do
     |> add_era_end_dates
   end
 
-  @doc """
-  Return a map of unit preferences
-
-  """
-  @unit_preferences_file "unit_preferences.json"
-  def unit_preferences do
-    Path.join(cldr_data_dir(), @unit_preferences_file)
-    |> File.read!()
-    |> json_library().decode!
-    |> Cldr.Map.atomize_keys()
-    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
-    |> Map.new()
-  end
+  @deprecated "Use Cldr.Config.calendars/0"
+  defdelegate calendar_info, to: __MODULE__, as: :calendars
 
   @doc """
   Returns unit conversion data,
@@ -1648,11 +1641,11 @@ defmodule Cldr.Config do
         base_unit: :cubic_meter, systems: [:ussystem]}
 
   """
-  @unit_conversions_file "unit_conversions.json"
-  def unit_conversions do
+  @units_file "units.json"
+  def units do
     data =
       cldr_data_dir()
-      |> Path.join(@unit_conversions_file)
+      |> Path.join(@units_file)
       |> File.read!()
       |> json_library().decode!(keys: :atoms)
 
