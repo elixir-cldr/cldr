@@ -1,6 +1,9 @@
 defmodule Cldr.Config do
   @moduledoc false
 
+  # The functions in this module are considered
+  # private use.
+
   alias Cldr.Locale
   alias Cldr.LanguageTag
 
@@ -1383,7 +1386,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.territory_info "au"
+      iex> Cldr.Config.territory "au"
       %{
         currency: [AUD: %{from: ~D[1966-02-14]}],
         gdp: 1248000000000,
@@ -1398,14 +1401,14 @@ defmodule Cldr.Config do
         population: 23470100
       }
 
-      iex> Cldr.Config.territory_info "abc"
+      iex> Cldr.Config.territory "abc"
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory_info(String.t() | atom() | LanguageTag.t()) ::
+  @spec territory(String.t() | atom() | LanguageTag.t()) ::
           %{} | {:error, {module(), String.t()}}
 
-  def territory_info(territory) do
+  def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territories()
       |> Map.get(territory_code)
@@ -1614,7 +1617,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.calendar_info |> Map.get(:gregorian)
+      iex> Cldr.Config.calendars |> Map.get(:gregorian)
       %{calendar_system: "solar", eras: %{0 => %{end: 0}, 1 => %{start: 1}}}
 
   """
@@ -1636,7 +1639,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.unit_conversions |> get_in([:conversions, :quart])
+      iex> Cldr.Config.units |> get_in([:conversions, :quart])
       %{factor: %{denominator: 500000000000, numerator: 473176473}, offset: 0,
         base_unit: :cubic_meter, systems: [:ussystem]}
 

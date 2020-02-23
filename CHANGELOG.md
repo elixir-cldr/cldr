@@ -7,11 +7,15 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 ### Breaking changes
 
+Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.
+
 * Minimal supported version of Elixir is 1.6 (it was 1.5)
 
 * Rename `Cldr.Config.calendar_data/0` to `Cldr.Config.calendars/0`
 
 * Rename `Cldr.Config.territory_info/0` to `Cldr.Config.territories/0`
+
+* Rename `Cldr.Config.territory_info/1` to `Cldr.Config.territory/1`
 
 * Rename `Cldr.Config.week_data/0` to `Cldr.Config.weeks/0`
 
