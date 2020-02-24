@@ -15,6 +15,7 @@ if File.exists?(Cldr.Config.download_data_dir()) do
     @plural_range 'common/supplemental/pluralRanges.xml'
     @timezones 'common/bcp47/timezone.xml'
     @measurement_systems 'common/bcp47/measure.xml'
+    @subdivisions 'common/supplemental/subdivisions.xml'
 
     @plural_ranges_output_file Path.join(Cldr.Config.download_data_dir(), "plural_ranges.xml")
     @timezones_output_file Path.join(Cldr.Config.download_data_dir(), "timezones.xml")
@@ -22,6 +23,7 @@ if File.exists?(Cldr.Config.download_data_dir()) do
                                        Cldr.Config.download_data_dir(),
                                        "measurement_systems.xml"
                                      )
+    @subdivisions_output_file Path.join(Cldr.Config.download_data_dir(), "subdivisions.xml")
 
     def run(_) do
       with {:ok, content} <- download(url()),
@@ -30,11 +32,12 @@ if File.exists?(Cldr.Config.download_data_dir()) do
             [
               {@measurement_systems, measurement_systems},
               {@timezones, timezones},
-              {@plural_range, plural_ranges}
+              {@plural_range, plural_ranges},
+              {@subdivisions, subdivisions}
             ]} <-
              :zip.unzip(@core, [
                :memory,
-               {:file_list, [@measurement_systems, @plural_range, @timezones]}
+               {:file_list, [@measurement_systems, @plural_range, @subdivisions, @timezones]}
              ]) do
         File.write!(@plural_ranges_output_file, plural_ranges)
         Logger.info("Saved #{@plural_range} to #{@plural_ranges_output_file}")
@@ -44,6 +47,9 @@ if File.exists?(Cldr.Config.download_data_dir()) do
 
         File.write!(@measurement_systems_output_file, measurement_systems)
         Logger.info("Saved #{@measurement_systems} to #{@measurement_systems_output_file}")
+
+        File.write!(@subdivisions_output_file, subdivisions)
+        Logger.info("Saved #{@subdivisions} to #{@subdivisions_output_file}")
 
         File.rm!(to_string(@core))
       else
