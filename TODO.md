@@ -1,5 +1,5 @@
-units.json is the new container for units and unit preferences
+1. Add save_subdivisions to Cldr.Consolidate
+2. Use subdivisions when doing territory containment
+3. Subdivisions in the locale parser as lookups for `-u-sd`
+4. Add checks for `-u-rd` in locale parser
 
-Update consolidate
-Update Cldr.Config to return the consolidated data
-Update territory_info accordingly (myabe doesn't need updating?)

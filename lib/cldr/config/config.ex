@@ -1304,7 +1304,7 @@ defmodule Cldr.Config do
   """
   def territory_containers do
     cldr_data_dir()
-    |> Path.join("territory_containment.json")
+    |> Path.join("territory_containers.json")
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
@@ -1316,26 +1316,37 @@ defmodule Cldr.Config do
 
   """
   def territory_containment do
-    territory_parents =
-      territory_containers()
-      |> Enum.flat_map(fn {k, v} ->
-        Enum.map(v, fn t -> {t, k} end)
-      end)
-
-    territory_parents
-    |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
-    |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
-    |> Enum.map(fn {k, v} -> {k, Enum.sort(v, fn x, y -> length(x) > length(y) end)} end)
-    |> Map.new
+    cldr_data_dir()
+    |> Path.join("territory_containment.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values()
   end
 
-  defp parents(_territory_parents, nil) do
-    []
+  @doc """
+  Return the territory subdivisions
+
+  """
+  def territory_subdivisions do
+    cldr_data_dir()
+    |> Path.join("territory_subdivisions.json")
+    |> File.read!()
+    |> json_library().decode!
   end
 
-  defp parents(territory_parents, territory) do
-    [territory | parents(territory_parents, Keyword.get(territory_parents, territory))]
+  @doc """
+  Return a mapping between a subdivision and its
+  containing parents
+
+  """
+  def territory_subdivision_containment do
+    cldr_data_dir()
+    |> Path.join("territory_subdivision_containment.json")
+    |> File.read!()
+    |> json_library().decode!
   end
+
 
   @doc """
   Returns a map of territory info for all territories
@@ -1708,6 +1719,8 @@ defmodule Cldr.Config do
     |> Map.put(:conversions, conversions)
     |> Map.put(:base_units, base_units)
     |> Map.put(:aliases, aliases)
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values()
   end
 
   @doc """

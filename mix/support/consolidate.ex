@@ -35,7 +35,10 @@ defmodule Cldr.Consolidate do
     save_currencies()
     save_territory_currencies()
     save_territories()
+    save_territory_containers()
     save_territory_containment()
+    save_territory_subdivisions()
+    save_territory_subdivision_containment()
     save_weeks()
     save_calendars()
     save_day_periods()
@@ -292,20 +295,42 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
-  def save_territory_containment do
-    path = Path.join(consolidated_output_dir(), "territory_containment.json")
+  @territory_containers_file "territory_containers.json"
+  def save_territory_containers do
+    path = Path.join(consolidated_output_dir(), @territory_containers_file)
 
     download_data_dir()
     |> Path.join(["cldr-core", "/supplemental", "/territoryContainment.json"])
     |> File.read!()
     |> Jason.decode!()
     |> get_in(["supplemental", "territoryContainment"])
-    |> Normalize.TerritoryContainment.normalize()
+    |> Normalize.TerritoryContainers.normalize()
     |> save_file(path)
 
     assert_package_file_configured!(path)
   end
 
+  def save_territory_containment do
+    path = Path.join(consolidated_output_dir(), "territory_containment.json")
+
+    territory_parents =
+      consolidated_output_dir()
+      |> Path.join(@territory_containers_file)
+      |> File.read!()
+      |> Jason.decode!
+      |> Enum.flat_map(fn {k, v} ->
+        Enum.map(v, fn t -> {t, k} end)
+      end)
+
+    territory_parents
+    |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
+    |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
+    |> Enum.map(fn {k, v} -> {k, Enum.sort(v, fn x, y -> length(x) > length(y) end)} end)
+    |> Map.new
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
   @doc false
   def save_territories do
     path = Path.join(consolidated_output_dir(), "territories.json")
@@ -319,6 +344,59 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_territory_subdivisions do
+    import SweetXml
+
+    path = Path.join(consolidated_output_dir(), "territory_subdivisions.json")
+
+    download_data_dir()
+    |> Path.join(["/subdivisions.xml"])
+    |> File.read!()
+    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+    |> xpath(~x"//subgroup"l,
+      type: ~x"./@type"s,
+      contains: ~x"./@contains"s
+      )
+    |> Enum.map(fn map -> {map.type, String.split(map.contains)} end)
+    |> Map.new
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_territory_subdivision_containment do
+    path = Path.join(consolidated_output_dir(), "territory_subdivision_containment.json")
+
+    territory_parents =
+      consolidated_output_dir()
+      |> Path.join("territory_subdivisions.json")
+      |> File.read!()
+      |> Jason.decode!
+      |> Enum.flat_map(fn {k, v} ->
+        Enum.map(v, fn t -> {t, k} end)
+      end)
+
+    territory_parents
+    |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
+    |> Map.new
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  defp parents(_territory_parents, nil) do
+    []
+  end
+
+  defp parents(territory_parents, territory) when is_atom(territory) do
+    [territory | parents(territory_parents, Keyword.get(territory_parents, territory))]
+  end
+
+  defp parents(territory_parents, territory) when is_binary(territory) do
+    [territory | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))]
   end
 
   @doc false
@@ -588,6 +666,9 @@ defmodule Cldr.Consolidate do
         |> Map.update!(:category, &underscore/1)
         |> Map.update!(:usage, &underscore/1)
       end)
+      |> Enum.group_by(&(&1.category), &(%{&1.usage => &1.preferences}))
+      |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
+      |> Map.new
 
     aliases =
       units

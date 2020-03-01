@@ -1,12 +1,12 @@
-defmodule Cldr.Normalize.TerritoryContainment do
+defmodule Cldr.Normalize.TerritoryContainers do
   @moduledoc false
 
   def normalize(content) do
     content
-    |> normalize_territory_containment
+    |> normalize_territory_containers
   end
 
-  def normalize_territory_containment(content) do
+  def normalize_territory_containers(content) do
     content
     |> Enum.map(fn {k, v} ->
       if String.contains?(k, "-status-") do
@@ -18,4 +18,5 @@ defmodule Cldr.Normalize.TerritoryContainment do
     |> Enum.reject(&is_nil/1)
     |> Enum.into(%{})
   end
+
 end
