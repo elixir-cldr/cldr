@@ -1697,18 +1697,37 @@ defmodule Cldr.Config do
     conversions =
       data.conversions
       |> Enum.map(fn {k, v} ->
-        {_, new_unit} =
-          Map.get_and_update(v, :base_unit, fn current_value ->
-            {current_value, String.to_atom(current_value)}
+        new_unit =
+          v
+          |> Map.update!(:base_unit, fn current_value ->
+            String.to_atom(current_value)
           end)
-
-        {_, new_unit} =
-          Map.get_and_update(new_unit, :systems, fn current_value ->
-            {current_value, Enum.map(current_value, &String.to_atom/1)}
+          |> Map.update!(:systems, fn current_value ->
+            Enum.map(current_value, &String.to_atom/1)
           end)
 
         {k, new_unit}
       end)
+
+    preferences =
+      data.preferences
+      |> Enum.map(fn {category, cat_prefs} ->
+        new_cat_prefs =
+          Enum.map(cat_prefs, fn {type, list} ->
+            new_list =
+              Enum.map(list, fn pref ->
+                regions = Map.get(pref, :regions) |> Enum.map(&String.to_atom/1)
+                geq = Map.get(pref, :geq) |> set_default(1.0)
+                skeleton = Map.get(pref, :skeleton) |> set_skeleton()
+                units = Map.get(pref, :units) |> Cldr.Map.atomize_values()
+                %{regions: regions, geq: geq, skeleton: skeleton, units: units}
+              end)
+            {type, new_list}
+          end)
+          |> Map.new
+        {category, new_cat_prefs}
+      end)
+      |> Map.new
 
     aliases =
       data.aliases
@@ -1719,9 +1738,15 @@ defmodule Cldr.Config do
     |> Map.put(:conversions, conversions)
     |> Map.put(:base_units, base_units)
     |> Map.put(:aliases, aliases)
+    |> Map.put(:preferences, preferences)
     |> Cldr.Map.atomize_keys()
-    |> Cldr.Map.atomize_values()
   end
+
+  defp set_default(nil, default), do: default
+  defp set_default(value, _default), do: value
+
+  defp set_skeleton([""]), do: nil
+  defp set_skeleton([key, value]), do: [{String.to_atom(key), String.to_integer(value)}]
 
   @doc """
   Returns the calendars available for a given locale name

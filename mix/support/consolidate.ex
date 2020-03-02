@@ -651,7 +651,8 @@ defmodule Cldr.Consolidate do
           ~x"//unitPreference"l,
           regions: ~x"//unitPreference/@regions"s,
           geq: ~x"//unitPreference/@geq"of,
-          units: ~x"//unitPreference/text()"s
+          units: ~x"//unitPreference/text()"s,
+          skeleton: ~x"//unitPreference/@skeleton"os
         ]
       )
       |> Enum.map(fn item ->
@@ -660,6 +661,7 @@ defmodule Cldr.Consolidate do
             pref
             |> Map.update!(:regions, &String.split/1)
             |> Map.update!(:units, fn units -> underscore(units) |> String.split("_and_") end)
+            |> Map.update!(:skeleton, &(Cldr.String.to_underscore(&1) |> String.split("/")))
           end)
 
         Map.put(item, :preferences, preferences)
