@@ -10,6 +10,7 @@
 
 The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
+```elixir
     @doc """
     Define a backend module that will host our
     Cldr configuration and public API.
@@ -21,6 +22,7 @@ The first step is to define a module that will host the desired `Cldr` configura
       use Cldr, locales: ["en", "fr", "zh", "th"], default_locale: "en"
 
     end
+```
 
 This strategy means that different configurations can be defined and it also
 means that one `Cldr` implementation won't interfer with implementations in other,
@@ -58,6 +60,7 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix` project:
 
+```elixir
     defp deps do
       [
         {:ex_cldr, "~> 2.0"},
@@ -68,6 +71,7 @@ Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix
         # {:poison, "~> 2.1 or ~> 3.0"}
       ]
     end
+```
 
 then retrieve `ex_cldr` and the JSON library from [hex](https://hex.pm/packages/ex_cldr):
 
@@ -102,9 +106,11 @@ The preferred way to configure `Cldr` is to define the configuration in your bac
 
 In `mix.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library` and `default_locale` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
 
+```elixir
      config :ex_cldr,
        default_locale: "en",
        json_library: Jason,
+```
 
 Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
@@ -117,6 +123,7 @@ Global configuration most closely approximates the configuration methods in `Cld
 
 The preferred configuration method is to define the configuration in the backend module.  The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
 
+```elixir
      defmodule MyApp.Cldr do
        use Cldr,
          default_locale: "en",
@@ -129,15 +136,19 @@ The preferred configuration method is to define the configuration in the backend
          providers: [Cldr.Number],
          generate_docs: true
       end
+```
 
 ### Otp App Configuration
 
 In the backend configuration example above the `:otp_app` key has been defined.  This means that conifguration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
 
+```elixir
      defmodule MyApp.Cldr do
        use Cldr, otp_app: :my_app
      end
+```
 
+```elixir
      # In mix.exs
      config :my_app, MyApp.Cldr,
        default_locale: "en",
@@ -146,6 +157,7 @@ In the backend configuration example above the `:otp_app` key has been defined. 
        data_dir: "./priv/cldr",
        precompile_number_formats: ["¤¤#,##0.##"],
        precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
+```
 
 Multiple backends can be configured under a single `:otp_app` if required.
 
@@ -169,7 +181,7 @@ The configuration keys available for `Cldr` are:
 
  * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenince it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
-```
+```elixir
 use Cldr,
   default_locale: "en",
   locales: ["en-*", "fr"]
@@ -213,7 +225,7 @@ The currently known providers and their `hex` package names are:
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 
 Providers are configured on each backend module under the `:providers` key. It must be a list of provider modules.  For example:
-```
+```elixir
 defmodule MyApp.Cldr do
   use Cldr,
     locales: ["en", "zh"],
@@ -340,10 +352,11 @@ Formatting of relative dates and date times is supported in the `Cldr.DateTime.R
 ## Gettext Backend Pluralization Support
 
 There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  It is configured in `Gettext` by:
-
+```elixir
     defmodule MyApp.Gettext do
       use Gettext, plural_forms: Cldr.Gettext.Plural
     end
+```
 
 `Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
 
@@ -367,7 +380,7 @@ Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural in
 See `Cldr.Plug.SetLocale` for a description of how to configure the plug.
 
 In addition, note that when migrating from `ex_cldr` 1.x versions, a backend needs to be configured for both plugs. In the simplest case an example would be:
-```
+```elixir
 plug Cldr.Plug.SetLocale,
   apps:    [:cldr],
   cldr:    MyApp.Cldr
