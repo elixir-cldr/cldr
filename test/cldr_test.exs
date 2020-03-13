@@ -223,7 +223,7 @@ defmodule Cldr.Test do
   end
 
   test "that we can have repeated currencies in a territory" do
-    assert Cldr.Config.territory_info(:PS)[:currency] ==
+    assert Cldr.Config.territory(:PS)[:currency] ==
              [
                JOD: %{from: ~D[1996-02-12]},
                ILS: %{from: ~D[1985-09-04]},

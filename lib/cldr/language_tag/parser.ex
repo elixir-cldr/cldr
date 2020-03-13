@@ -157,6 +157,11 @@ defmodule Cldr.LanguageTag.Parser do
     end
   end
 
+  defp canonicalize_key([key, :any, default], param) do
+    value = param || default
+    {key, value}
+  end
+
   defp canonicalize_key([key, valid, default], param) do
     value = if param in valid, do: param, else: default
     {key, value}
@@ -176,6 +181,7 @@ defmodule Cldr.LanguageTag.Parser do
     "kn" => [:numeric, Config.true_false(), "false"],
     "kh" => [:hiragana_quarternary, Config.true_false(), "true"],
     "kk" => [:normalization, Config.true_false(), "true"],
+    "kr" => [:reorder, :any, nil],
     "kf" => [:case_first, ["upper", "lower", "false"], "false"],
     "ks" => [:strength, ["level1", "level2", "level3", "level4", "identic"], "level3"],
     "cu" => [:currency, &Cldr.validate_currency/1, nil],

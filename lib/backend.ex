@@ -1,4 +1,4 @@
-if Mix.env() in [:release, :test] do
+if Mix.env() in [:release, :test, :dev] do
   require Cldr.Backend
   Application.ensure_all_started(:gettext)
 

@@ -1,5 +1,7 @@
 defmodule Cldr.Rfc5646.Helpers do
   @moduledoc false
+
+  @doc false
   def combine_attributes_and_keywords([{:attributes, attributes}, %{} = keywords]) do
     Map.put(keywords, :attributes, attributes)
   end
@@ -8,6 +10,7 @@ defmodule Cldr.Rfc5646.Helpers do
     other
   end
 
+  @doc false
   def collapse_extension(args) do
     type = args[:type]
 
@@ -22,12 +25,32 @@ defmodule Cldr.Rfc5646.Helpers do
   # Transform keywords to a map. Note that not
   # all keywords have a parameter so we set the
   # param to nil in those cases.
+  @doc false
   def collapse_keywords(list) do
     list
+    |> combine_multiple_types
     |> do_collapse_keywords
     |> Map.new()
   end
 
+  @doc false
+  def combine_multiple_types([{:type, type_1}, {:type, type_2} | rest]) when is_list(type_1) do
+    combine_multiple_types([{:type, type_1 ++ [type_2]} | rest])
+  end
+
+  def combine_multiple_types([{:type, type_1}, {:type, type_2} | rest]) do
+    combine_multiple_types([{:type, [type_1, type_2]} | rest])
+  end
+
+  def combine_multiple_types([other | rest]) do
+    [other | combine_multiple_types(rest)]
+  end
+
+  def combine_multiple_types([]) do
+    []
+  end
+
+  @doc false
   def do_collapse_keywords([{:key, key}, {:type, type} | rest]) do
     [{key, type} | do_collapse_keywords(rest)]
   end
