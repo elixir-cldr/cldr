@@ -140,7 +140,7 @@ The preferred configuration method is to define the configuration in the backend
 
 ### Otp App Configuration
 
-In the backend configuration example above the `:otp_app` key has been defined.  This means that conifguration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
+In the backend configuration example above the `:otp_app` key has been defined.  This means that configuration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
 
 ```elixir
      defmodule MyApp.Cldr do
@@ -460,7 +460,7 @@ Tests cover the full 541 locales defined in CLDR. Since `Cldr` attempts to maxim
 
 Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions before 1.5.
 
-### Updating the CDLR data repository if installing from Github
+### Updating the CLDR data repository if installing from Github
 
 The CLDR data is maintained in [JSON format by the Unicode Consortium](https://github.com/unicode-cldr/cldr-json).  The appropriate content is maintained as submodules in the `data` directory of this `Cldr` repository.
 
@@ -468,7 +468,7 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
     git submodule update --init data/cldr-*
 
-2. When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CDLR data, `git pull` each of the submodules.  For example:
+2. When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CLDR data, `git pull` each of the submodules.  For example:
 
     git submodule -q foreach git pull -q origin master
 
