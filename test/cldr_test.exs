@@ -53,7 +53,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
                script: "Latn",
-               territory: "001",
+               territory: :"001",
                transform: %{},
                language_variant: nil
              }
@@ -180,7 +180,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "en-US",
                script: nil,
-               territory: "US",
+               territory: :US,
                transform: %{},
                language_variant: nil
              }
@@ -198,7 +198,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "sh_Arab_AQ",
                script: "Arab",
-               territory: "AQ",
+               territory: :AQ,
                transform: %{},
                language_variant: nil
              }
@@ -216,7 +216,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "sh_AQ",
                script: "Latn",
-               territory: "AQ",
+               territory: :AQ,
                transform: %{},
                language_variant: nil
              }

@@ -1289,13 +1289,13 @@ defmodule Cldr.Config do
 
   defp atomize_keys(content, modules) do
     Enum.map(content, fn {module, values} ->
-      if module in modules do
+      if module in modules && is_map(values) do
         {String.to_atom(module), Cldr.Map.atomize_keys(values)}
       else
         {String.to_atom(module), values}
       end
     end)
-    |> Enum.into(%{})
+    |> Map.new
   end
 
   @doc """
@@ -1399,12 +1399,57 @@ defmodule Cldr.Config do
     |> Path.join("territories.json")
     |> File.read!()
     |> json_library().decode!
-    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> atomize_territory_keys
+    |> Cldr.Map.atomize_keys(except: fn
+      {_k, %{population_percent: _}} -> true
+      _other -> false
+    end)
+    |> Cldr.Map.atomize_values(only: [:default, :paper_size, :temperature])
     |> adjust_currency_codes
-    |> atomize_language_population
-    |> atomize_measurement_systems
-    |> Enum.into(%{})
+    |> Map.new
+  end
+
+  defp adjust_currency_codes(territories) do
+    territories
+    |> Enum.map(fn {territory, data} ->
+      currencies =
+        data
+        |> Map.get(:currency)
+        |> into_keyword_list
+        |> Enum.map(fn {currency, data} ->
+          data =
+            if data[:tender] == "false" do
+              Map.put(data, :tender, false)
+            else
+              data
+            end
+
+          data =
+            if data[:from] do
+              Map.put(data, :from, Date.from_iso8601!(data[:from]))
+            else
+              data
+            end
+
+          data =
+            if data[:to] do
+              Map.put(data, :to, Date.from_iso8601!(data[:to]))
+            else
+              data
+            end
+
+          {currency, data}
+        end)
+
+      {territory, Map.put(data, :currency, currencies)}
+    end)
+    |> Map.new
+  end
+
+  defp into_keyword_list(list) do
+    Enum.reduce(list, Keyword.new(), fn map, acc ->
+      currency = Map.to_list(map) |> hd
+      [currency | acc]
+    end)
   end
 
   @deprecated "Use Cldr.Config.territories/0"
@@ -1454,14 +1499,6 @@ defmodule Cldr.Config do
     end
   end
 
-  defp atomize_territory_keys(territories) do
-    territories
-    |> Enum.map(fn {k, v} ->
-      {k, Enum.map(v, fn {k1, v1} -> {String.to_atom(k1), v1} end) |> Enum.into(%{})}
-    end)
-    |> Enum.into(%{})
-  end
-
   defp atomize_languages(content) do
     languages =
       content
@@ -1470,88 +1507,6 @@ defmodule Cldr.Config do
       |> Enum.into(%{})
 
     Map.put(content, :languages, languages)
-  end
-
-  defp atomize_measurement_systems(content) do
-    Enum.map(content, fn {territory, data} ->
-      new_data =
-        Enum.map(data, fn
-          {:measurement_system, v} ->
-            {:measurement_system, Cldr.Map.atomize_keys(v) |> Cldr.Map.atomize_values()}
-
-          other ->
-            other
-        end)
-        |> Map.new()
-
-      {territory, new_data}
-    end)
-    |> Map.new()
-  end
-
-  defp adjust_currency_codes(territories) do
-    territories
-    |> Enum.map(fn {territory, data} ->
-      currencies =
-        data
-        |> Map.get(:currency)
-        |> Cldr.Map.atomize_keys()
-        |> into_keyword_list
-        |> Enum.map(fn {currency, data} ->
-          data =
-            if data[:tender] == "false" do
-              Map.put(data, :tender, false)
-            else
-              data
-            end
-
-          data =
-            if data[:from] do
-              Map.put(data, :from, Date.from_iso8601!(data[:from]))
-            else
-              data
-            end
-
-          data =
-            if data[:to] do
-              Map.put(data, :to, Date.from_iso8601!(data[:to]))
-            else
-              data
-            end
-
-          {currency, data}
-        end)
-
-      {territory, Map.put(data, :currency, currencies)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  defp into_keyword_list(list) do
-    Enum.reduce(list, Keyword.new(), fn map, acc ->
-      currency = Map.to_list(map) |> hd
-      [currency | acc]
-    end)
-  end
-
-  defp atomize_language_population(territories) do
-    territories
-    |> Enum.map(fn {territory, data} ->
-      languages =
-        data
-        |> Map.get(:language_population)
-        |> atomize_language_keys
-        |> Enum.into(%{})
-
-      {territory, Map.put(data, :language_population, languages)}
-    end)
-    |> Enum.into(%{})
-  end
-
-  defp atomize_language_keys(nil), do: []
-
-  defp atomize_language_keys(lang) do
-    Enum.map(lang, fn {language, values} -> {language, Cldr.Map.atomize_keys(values)} end)
   end
 
   @doc """
@@ -1565,17 +1520,16 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> Enum.into(%{})
+    |> Map.new
     |> structify_languages
   end
 
   defp structify_languages(map) do
     languages =
       Enum.map(map.language, fn {k, v} ->
-        values = Cldr.Map.atomize_keys(v)
-        {k, struct(Cldr.LanguageTag, values)}
+        {k, struct(Cldr.LanguageTag, normalize_territory(v))}
       end)
-      |> Enum.into(%{})
+      |> Map.new
 
     Map.put(map, :language, languages)
   end
@@ -1591,8 +1545,20 @@ defmodule Cldr.Config do
     |> Path.join("likely_subtags.json")
     |> File.read!()
     |> json_library().decode!
-    |> Enum.map(fn {k, v} -> {k, struct(Cldr.LanguageTag, Cldr.Map.atomize_keys(v))} end)
-    |> Enum.into(%{})
+    |> Enum.map(fn {k, v} ->
+      {k, struct(Cldr.LanguageTag, normalize_territory(v))}
+    end)
+    |> Map.new
+  end
+
+  defp normalize_territory(map) do
+    {_old, new} =
+      Map.get_and_update(map, "territory", fn
+        nil -> {nil, nil}
+        other -> {other, String.to_atom(other)}
+      end)
+
+    Cldr.Map.atomize_keys(new)
   end
 
   @doc """
@@ -1663,7 +1629,7 @@ defmodule Cldr.Config do
     |> Path.join("calendars.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_keys(except: &Regex.match?(~r/[0-9]+/, elem(&1, 0)))
     |> Cldr.Map.integerize_keys()
     |> add_era_end_dates
   end

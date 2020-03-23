@@ -55,7 +55,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: "en",
         requested_locale_name: "en-ES",
         script: "Latn",
-        territory: "ES",
+        territory: :ES,
         transform: %{},
         language_variant: nil
       }}
@@ -101,7 +101,7 @@ defmodule Cldr.Locale do
         transform: %{},
         canonical_locale_name: "ro-Latn-RO",
         cldr_locale_name: "ro",
-        territory: "RO"
+        territory: :RO
       }}
 
   ### Likely subtags
@@ -124,7 +124,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: "en",
         requested_locale_name: "en",
         script: "Latn",
-        territory: "US",
+        territory: :US,
         transform: %{},
         language_variant: nil
       }}
@@ -158,7 +158,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: "en",
         requested_locale_name: "en",
         script: "Latn",
-        territory: "US",
+        territory: :US,
         transform: %{},
         language_variant: nil
       }}
@@ -197,7 +197,7 @@ defmodule Cldr.Locale do
          rbnf_locale_name: "en",
          requested_locale_name: "en-AU",
          script: "Latn",
-         territory: "AU",
+         territory: :AU,
          transform: %{}
        }}
 
@@ -284,7 +284,7 @@ defmodule Cldr.Locale do
           rbnf_locale_name: "en",
           requested_locale_name: "en",
           script: "Latn",
-          territory: "US",
+          territory: :US,
           transform: %{},
           language_variant: nil
         }
@@ -312,7 +312,6 @@ defmodule Cldr.Locale do
 
     canonical_tag =
       language_tag
-      |> check_valid_territory
       |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases
       |> add_likely_subtags
@@ -697,7 +696,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: nil,
         requested_locale_name: "zh-SG",
         script: "Hans",
-        territory: "SG",
+        territory: :SG,
         transform: %{},
         language_variant: nil
       }
@@ -790,7 +789,7 @@ defmodule Cldr.Locale do
           rbnf_locale_name: nil,
           requested_locale_name: nil,
           script: "Latn",
-          territory: "TZ",
+          territory: :TZ,
           transform: %{},
           language_variant: nil
         },
@@ -804,7 +803,7 @@ defmodule Cldr.Locale do
           rbnf_locale_name: nil,
           requested_locale_name: nil,
           script: "Latn",
-          territory: "GN",
+          territory: :GN,
           transform: %{},
           language_variant: nil
         },
@@ -839,7 +838,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: nil,
         requested_locale_name: "en-Latn-US",
         script: "Latn",
-        territory: "US",
+        territory: :US,
         transform: %{},
         language_variant: nil
       }
@@ -904,18 +903,4 @@ defmodule Cldr.Locale do
     alias_error(requested_locale_name, alias_name)
   end
 
-  defp check_valid_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
-
-  defp check_valid_territory(%LanguageTag{territory: territory} = language_tag) do
-    territory =
-      try do
-        code = String.to_existing_atom(territory)
-        if code in Cldr.known_territories(), do: territory, else: nil
-      rescue
-        ArgumentError ->
-          nil
-      end
-
-    %{language_tag | territory: territory}
-  end
 end

@@ -39,7 +39,7 @@ defmodule Cldr.Plug.Router.Test do
              rbnf_locale_name: "fr",
              requested_locale_name: "fr",
              script: "Latn",
-             territory: "FR",
+             territory: :FR,
              transform: %{},
              language_variant: nil
            }
@@ -55,7 +55,7 @@ defmodule Cldr.Plug.Router.Test do
              rbnf_locale_name: "fr",
              requested_locale_name: "fr",
              script: "Latn",
-             territory: "FR",
+             territory: :FR,
              transform: %{},
              language_variant: nil
            }

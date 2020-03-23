@@ -107,7 +107,7 @@ defmodule Cldr.AcceptLanguage do
             rbnf_locale_name: "da",
             requested_locale_name: "da",
             script: "Latn",
-            territory: "DK",
+            territory: :DK,
             transform: %{},
             language_variant: nil
           }},
@@ -124,7 +124,7 @@ defmodule Cldr.AcceptLanguage do
             rbnf_locale_name: "zh-Hant",
             requested_locale_name: "zh-TW",
             script: "Hant",
-            territory: "TW",
+            territory: :TW,
             transform: %{},
             language_variant: nil
           }}
@@ -151,7 +151,7 @@ defmodule Cldr.AcceptLanguage do
             rbnf_locale_name: "da",
             requested_locale_name: "da",
             script: "Latn",
-            territory: "DK",
+            territory: :DK,
             transform: %{},
             language_variant: nil
           }},
@@ -168,7 +168,7 @@ defmodule Cldr.AcceptLanguage do
             rbnf_locale_name: "zh-Hant",
             requested_locale_name: "zh-TW",
             script: "Hant",
-            territory: "TW",
+            territory: :TW,
             transform: %{},
             language_variant: nil
           }},
@@ -242,7 +242,7 @@ defmodule Cldr.AcceptLanguage do
            rbnf_locale_name: "da",
            requested_locale_name: "da",
            script: "Latn",
-           territory: "DK",
+           territory: :DK,
            transform: %{},
            language_variant: nil
          }},
@@ -259,7 +259,7 @@ defmodule Cldr.AcceptLanguage do
            rbnf_locale_name: "zh-Hant",
            requested_locale_name: "zh-TW",
            script: "Hant",
-           territory: "TW",
+           territory: :TW,
            transform: %{},
            language_variant: nil
          }}
@@ -284,7 +284,7 @@ defmodule Cldr.AcceptLanguage do
            rbnf_locale_name: "da",
            requested_locale_name: "da",
            script: "Latn",
-           territory: "DK",
+           territory: :DK,
            transform: %{},
            language_variant: nil
          }},
@@ -301,7 +301,7 @@ defmodule Cldr.AcceptLanguage do
            rbnf_locale_name: "zh-Hant",
            requested_locale_name: "zh-TW",
            script: "Hant",
-           territory: "TW",
+           territory: :TW,
            transform: %{},
            language_variant: nil
          }},
@@ -346,7 +346,7 @@ defmodule Cldr.AcceptLanguage do
          rbnf_locale_name: "zh-Hant",
          requested_locale_name: "zh-TW",
          script: "Hant",
-         territory: "TW",
+         territory: :TW,
          transform: %{},
          language_variant: nil
        }}
@@ -365,7 +365,7 @@ defmodule Cldr.AcceptLanguage do
          rbnf_locale_name: "zh-Hant",
          requested_locale_name: "zh-TW",
          script: "Hant",
-         territory: "TW",
+         territory: :TW,
          transform: %{},
          language_variant: nil
        }}

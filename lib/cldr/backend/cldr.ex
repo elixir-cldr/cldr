@@ -37,7 +37,7 @@ defmodule Cldr.Backend do
             rbnf_locale_name: "en",
             requested_locale_name: "en-001",
             script: "Latn",
-            territory: "001",
+            territory: :"001",
             transform: %{},
             language_variant: nil
           }
@@ -60,7 +60,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @default_territory @default_locale |> Map.get(:territory) |> String.to_atom()
+      @default_territory @default_locale |> Map.get(:territory)
       @spec default_territory() :: atom()
       def default_territory do
         @default_territory
@@ -271,7 +271,7 @@ defmodule Cldr.Backend do
              locale: %{},
              private_use: [],
              rbnf_locale_name: "pl",
-             territory: "PL",
+             territory: :PL,
              requested_locale_name: "pl",
              script: "Latn",
              transform: %{},
@@ -314,7 +314,7 @@ defmodule Cldr.Backend do
              rbnf_locale_name: "en",
              requested_locale_name: "en",
              script: "Latn",
-             territory: "US",
+             territory: :US,
              transform: %{},
              language_variant: nil
            }}
@@ -471,7 +471,7 @@ defmodule Cldr.Backend do
             rbnf_locale_name: "en",
             requested_locale_name: "en",
             script: "Latn",
-            territory: "US",
+            territory: :US,
             transform: %{},
             language_variant: nil
           }}
@@ -490,7 +490,7 @@ defmodule Cldr.Backend do
             rbnf_locale_name: "en",
             requested_locale_name: "en-001",
             script: "Latn",
-            territory: "001",
+            territory: :"001",
             transform: %{},
             language_variant: nil
           }}

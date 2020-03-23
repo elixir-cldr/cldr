@@ -132,15 +132,26 @@ defmodule Cldr.LanguageTag.Parser do
       case territory do
         territory when territory < 10 -> "00#{territory}"
         territory when territory < 100 -> "0#{territory}"
-        _ -> Integer.to_string(territory)
+        _ -> "#{territory}"
+      end
+
+    territory =
+      case Cldr.validate_territory(territory) do
+        {:ok, territory} -> territory
+        {:error, _} -> territory
       end
 
     Map.put(language_tag, :territory, territory)
   end
 
   defp normalize_territory(%LanguageTag{territory: territory} = language_tag) do
-    language_tag
-    |> Map.put(:territory, String.upcase(territory))
+    territory =
+      case Cldr.validate_territory(territory) do
+        {:ok, territory} -> territory
+        {:error, _} -> nil
+      end
+
+    Map.put( language_tag, :territory, territory)
   end
 
   defp normalize_variants(%LanguageTag{language_variant: nil} = language_tag), do: language_tag
@@ -195,10 +206,11 @@ defmodule Cldr.LanguageTag.Parser do
     "ms" => [:measurement_system, &Cldr.validate_measurement_system/1, :metric],
     "ss" => [:sentence_break_supression, ["standard", "none"], "standard"],
     "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
-    "sd" => :subdivision,
+    "rg" => [:region_override, &Cldr.validate_territory_subdivision/1, nil],
+    "sd" => [:subdivision, &Cldr.validate_territory_subdivision/1, nil],
     "vt" => :variable_top,
-    "va" => :variant,
-    "rg" => :region_override
+    "va" => :variant
+
   }
 
   @doc false

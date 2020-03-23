@@ -29,7 +29,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
                script: "Latn",
-               territory: "001",
+               territory: :"001",
                transform: %{}
              },
              cldr: TestBackend.Cldr,
@@ -57,7 +57,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
                script: "Latn",
-               territory: "001",
+               territory: :"001",
                transform: %{}
              },
              gettext: TestGettext.Gettext,
@@ -86,7 +86,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
                script: "Latn",
-               territory: "001",
+               territory: :"001",
                transform: %{}
              },
              cldr: WithNoGettextBackend.Cldr,
@@ -150,7 +150,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "fr",
                requested_locale_name: "fr",
                script: "Latn",
-               territory: "FR",
+               territory: :FR,
                transform: %{},
                language_variant: nil
              }
@@ -184,7 +184,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "ru",
                requested_locale_name: "ru",
                script: "Cyrl",
-               territory: "RU"
+               territory: :RU
              }
 
     assert Cldr.get_locale() == conn.private[:cldr_locale]
@@ -216,7 +216,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "ru",
                requested_locale_name: "ru",
                script: "Cyrl",
-               territory: "RU"
+               territory: :RU
              }
 
     assert Cldr.get_locale() == conn.private[:cldr_locale]
@@ -247,7 +247,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "zh-Hant",
                requested_locale_name: "zh-Hant",
                script: "Hant",
-               territory: "TW"
+               territory: :TW
              }
 
     assert Cldr.get_locale() == conn.private[:cldr_locale]
@@ -277,7 +277,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "zh-Hant",
                requested_locale_name: "zh-Hant",
                script: "Hant",
-               territory: "TW"
+               territory: :TW
              }
 
     assert Cldr.get_locale() == conn.private[:cldr_locale]
@@ -343,7 +343,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                rbnf_locale_name: "pl",
                requested_locale_name: "pl",
                script: "Latn",
-               territory: "PL",
+               territory: :PL,
                transform: %{},
                language_variant: nil
              }
@@ -380,7 +380,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language: "es",
                rbnf_locale_name: "es",
                requested_locale_name: "es",
-               territory: "ES"
+               territory: :ES
              }
 
     assert Gettext.get_locale(TestGettext.Gettext) == "es"

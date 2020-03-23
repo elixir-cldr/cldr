@@ -142,7 +142,7 @@ defmodule Cldr do
          locale: %{},
          private_use: [],
          rbnf_locale_name: "pl",
-         territory: "PL",
+         territory: :PL,
          requested_locale_name: "pl",
          script: "Latn",
          transform: %{},
@@ -188,7 +188,7 @@ defmodule Cldr do
          locale: %{},
          private_use: [],
          rbnf_locale_name: "pl",
-         territory: "PL",
+         territory: :PL,
          requested_locale_name: "pl",
          script: "Latn",
          transform: %{},
@@ -233,7 +233,7 @@ defmodule Cldr do
          rbnf_locale_name: "en",
          requested_locale_name: "en",
          script: "Latn",
-         territory: "US",
+         territory: :US,
          transform: %{},
          language_variant: nil
        }}
@@ -281,7 +281,7 @@ defmodule Cldr do
          rbnf_locale_name: "en",
          requested_locale_name: "en",
          script: "Latn",
-         territory: "US",
+         territory: :US,
          transform: %{},
          language_variant: nil
        }}
@@ -319,7 +319,7 @@ defmodule Cldr do
         rbnf_locale_name: "en",
         requested_locale_name: "en-001",
         script: "Latn",
-        territory: "001",
+        territory: :"001",
         transform: %{},
         language_variant: nil
       }
@@ -348,7 +348,7 @@ defmodule Cldr do
         rbnf_locale_name: "en",
         requested_locale_name: "en-001",
         script: "Latn",
-        territory: "001",
+        territory: :"001",
         transform: %{},
         language_variant: nil
       }
@@ -433,7 +433,7 @@ defmodule Cldr do
         rbnf_locale_name: "en",
         requested_locale_name: "en",
         script: "Latn",
-        territory: "US",
+        territory: :US,
         transform: %{},
         language_variant: nil
       }}
@@ -1043,6 +1043,69 @@ defmodule Cldr do
   end
 
   @doc """
+  Returns the map of territories and subdivisions and their
+  child subdivsions.
+
+  The subdivision codes designate a subdivision of a country
+  or region. They are called various names, such as a
+  state in the United States, or a province in Canada.
+
+  The codes in CLDR are based on ISO 3166-2 subdivision codes.
+  The ISO codes have a region code followed by a hyphen, then a
+  suffix consisting of 1..3 ASCII letters or digits.
+
+  The CLDR codes are designed to work in a unicode_locale_id
+  (BCP47), and are thus all lowercase, with no hyphen. For
+  example, the following are valid, and mean “English as
+  used in California, USA”.
+
+      en-u-sd-usca
+      en-US-u-sd-usca
+
+  CLDR has additional subdivision codes. These may start with
+  a 3-digit region code or use a suffix of 4 ASCII letters or
+  digits, so they will not collide with the ISO codes. Subdivision
+  codes for unknown values are the region code plus "zzzz", such as
+  "uszzzz" for an unknown subdivision of the US. Other codes may be
+  added for stability.
+
+  """
+  @territory_subdivisions Cldr.Config.territory_subdivisions()
+  |> Enum.map(fn
+    {<< territory :: binary-size(2) >>, children} -> {String.to_existing_atom(territory), children}
+    other -> other
+  end)
+  |> Map.new
+
+  @spec known_territory_subdivisions :: [atom(), ...]
+  def known_territory_subdivisions do
+    @territory_subdivisions
+  end
+
+  @doc """
+  Returns a map of territory subdivisions sith a list of
+  their parent subdivisions and region.
+
+  For a description of territory subdivisions see
+  `Cldr.known_territory_subdivisions/0`
+
+  """
+  @territory_subdivision_containment Cldr.Config.territory_subdivision_containment()
+  |> Enum.map(fn {subdivision, parents} ->
+    parents = Enum.map(parents, fn
+      << territory :: binary-size(2) >> -> String.to_existing_atom(territory)
+      other -> other
+    end)
+    {subdivision, parents}
+  end)
+  |> Map.new
+
+  @spec known_territory_subdivision_containment :: [atom(), ...]
+  def known_territory_subdivision_containment do
+    @territory_subdivision_containment
+  end
+
+  @doc """
   Normalise and validate a territory code.
 
   ## Arguments
@@ -1104,6 +1167,43 @@ defmodule Cldr do
 
   def validate_territory(territory) do
     {:error, unknown_territory_error(territory)}
+  end
+
+  @doc """
+  Normalise and validate a territory subdivision code.
+
+  ## Arguments
+
+  * `subdivision` is any territory code returned by `Cldr.known_territory_subdivisions/0`
+
+  ## Returns:
+
+  * `{:ok, normalized_subdivision_code}` or
+
+  * `{:error, {Cldr.UnknownTerritoryError, message}}`
+
+  ## Examples
+
+  """
+  def validate_territory_subdivision(subdivision) when is_binary(subdivision) do
+    subdivision
+    |> String.downcase
+    |> validate_subdivision
+  end
+
+  defp validate_subdivision(<< territory :: binary-size(2), "zzzz" >>) do
+    validate_territory(territory)
+  end
+
+  defp validate_subdivision(subdivision) when is_binary(subdivision) do
+    case Map.fetch(known_territory_subdivision_containment(), subdivision) do
+      {:ok, _} -> {:ok, subdivision}
+      _ -> {:error, unknown_territory_error(subdivision)}
+    end
+  end
+
+  defp validate_subdivision(subdivision) do
+    {:error, unknown_territory_error(subdivision)}
   end
 
   @doc """

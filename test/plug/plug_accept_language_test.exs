@@ -26,7 +26,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
                rbnf_locale_name: "en",
                requested_locale_name: "en",
                script: "Latn",
-               territory: "US",
+               territory: :US,
                transform: %{},
                language_variant: nil
              }
