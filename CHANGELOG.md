@@ -21,11 +21,9 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Rename `Cldr.Config.territory_containment/0` to `Cldr.Config.territory_containers/0`
 
-* Add `Cldr.Config.territory_containment/0` that returns a map of territories to a list of lists of the territories in which it is contained. A territory may be contained by more than one list of containers. For example, `:GB` is contained like this: `[[:"154", :"150", :"001"], [:UN], [:EU]]`.
-
 * Remove `priv/cldr/measurement_system_preferences.json`. This data is returned in `Cldr.Config.territories/0`
 
-* Use canonical measurement system names throughout. This changes some data returned by `Cldr.Config.territory_info/0` and `Cldr.Config.measurement_system_preferences/0`
+* Use canonical measurement system names throughout. This changes some data returned by `Cldr.Config.territory/0` and `Cldr.Config.measurement_system_preferences/0`
 
 * Rename `priv/cldr/week_data.json` to `priv/cldr/weeks.json`
 
@@ -46,6 +44,12 @@ Although these are breaking changes, they are changes that affect functions in `
 * Add `Cldr.validate_measurement_system/1` to validate a measurement system name
 
 * Add `Cldr.Config.measurement_systems/0` to return a map of known measurement systems
+
+* Add `Cldr.Config.territory_containment/0` that returns a map of territories to a list of lists of the territories in which it is contained. A territory may be contained by more than one list of containers. For example, `:GB` is contained like this: `[[:"154", :"150", :"001"], [:UN], [:EU]]`.
+
+* Add `Cldr.known_territory_subdivisons/0` to return a map of regions and subdivisions and their children
+
+* Add `Cldr.known_territory_subdivision_containment/0` to return a map of subdivisions and their parents
 
 * Add `priv/cldr/units.json` which contains the new unit data and conversion information from CLDR 37
 
