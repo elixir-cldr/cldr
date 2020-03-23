@@ -421,21 +421,6 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a map of measurement system preferences
-  for territories
-
-  """
-  @measurement_system_preferences_file "measurement_system_preferences.json"
-  def measurement_system_preferences do
-    Path.join(cldr_data_dir(), @measurement_system_preferences_file)
-    |> File.read!()
-    |> json_library().decode!
-    |> Cldr.Map.atomize_keys()
-    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
-    |> Map.new()
-  end
-
-  @doc """
   Return a map of measurement systems
 
   """
@@ -894,8 +879,6 @@ defmodule Cldr.Config do
         true ->
           {:error, Cldr.unknown_number_system_error(number_system)}
       end
-    else
-      {:error, reason} -> {:error, reason}
     end
   end
 
@@ -1268,17 +1251,19 @@ defmodule Cldr.Config do
   end
 
   @doc false
+  @keys_to_integerize ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
   def do_get_locale(locale, path, false) do
     path
     |> File.read!()
     |> json_library().decode!
     |> assert_valid_keys!(locale)
     |> structure_units
-    |> atomize_keys(required_modules() -- ["languages"])
+    |> atomize_keys(required_modules() -- ["languages"], except: @keys_to_integerize)
     |> structure_rbnf
     |> atomize_number_systems
     |> atomize_languages
     |> structure_date_formats
+    |> structure_list_formats
     |> Map.put(:name, locale)
   end
 
@@ -1287,10 +1272,10 @@ defmodule Cldr.Config do
     Cldr.Locale.Cache.get_locale(locale, path)
   end
 
-  defp atomize_keys(content, modules) do
+  defp atomize_keys(content, modules, options) do
     Enum.map(content, fn {module, values} ->
       if module in modules && is_map(values) do
-        {String.to_atom(module), Cldr.Map.atomize_keys(values)}
+        {String.to_atom(module), Cldr.Map.atomize_keys(values, options)}
       else
         {String.to_atom(module), values}
       end
@@ -1571,21 +1556,8 @@ defmodule Cldr.Config do
     |> Path.join("weeks.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.underscore_keys()
-    |> Enum.map(&upcase_territory_codes/1)
-    |> Enum.into(%{})
+    |> Map.take(["weekend_start", "min_days", "first_day", "weekend_end"])
     |> Cldr.Map.atomize_keys()
-    |> Cldr.Map.integerize_values()
-    |> Map.take([:weekend_start, :weekend_end, :min_days, :first_day])
-  end
-
-  defp upcase_territory_codes({k, content}) do
-    content =
-      content
-      |> Enum.map(fn {territory, rest} -> {String.upcase(territory), rest} end)
-      |> Enum.into(%{})
-
-    {k, content}
   end
 
   @doc """
@@ -1918,8 +1890,6 @@ defmodule Cldr.Config do
   2. To provide a rudimentary way to validate that some json represents a
   valid locale file
 
-  3. To allow conditional inclusion of CLDR content at compile time to help
-  manage memory footprint.  This capability is not yet built into `Cldr`.
   """
   @spec required_modules :: [String.t()]
   def required_modules do
@@ -1942,9 +1912,17 @@ defmodule Cldr.Config do
   defp structure_date_formats(content) do
     dates =
       content.dates
-      |> Cldr.Map.integerize_keys()
+      |> Cldr.Map.integerize_keys(only: @keys_to_integerize)
 
     Map.put(content, :dates, dates)
+  end
+
+  defp structure_list_formats(content) do
+    dates =
+      content.list_formats
+      |> Cldr.Map.atomize_keys
+
+    Map.put(content, :list_formats, dates)
   end
 
   # Put the rbnf rules into a %Rule{} struct

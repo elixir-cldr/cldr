@@ -409,6 +409,9 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "weekData"])
     |> adjust_day_names
+    |> Cldr.Map.integerize_values
+    |> Cldr.Map.underscore_keys(only: ["weekendStart", "weekendEnd", "minDays", "firstDay"])
+    |> IO.inspect
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -416,17 +419,16 @@ defmodule Cldr.Consolidate do
 
   defp adjust_day_names(content) do
     content
-    |> Cldr.Map.deep_map(& &1, fn
-      "sun" -> 7
-      "mon" -> 1
-      "tue" -> 2
-      "wed" -> 3
-      "thu" -> 4
-      "fri" -> 5
-      "sat" -> 6
+    |> Cldr.Map.deep_map(fn
+      {key, "sun"} -> {key, 7}
+      {key, "mon"} -> {key, 1}
+      {key, "tue"} -> {key, 2}
+      {key, "wed"} -> {key, 3}
+      {key, "thu"} -> {key, 4}
+      {key, "fri"} -> {key, 5}
+      {key, "sat"} -> {key, 6}
       other -> other
     end)
-    |> Map.new()
   end
 
   @doc false
