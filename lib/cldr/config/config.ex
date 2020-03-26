@@ -430,7 +430,12 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
-    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Cldr.Map.deep_map(fn
+      {:description, description} -> {:description, description}
+      {:alias, ""} -> {:alias, nil}
+      {k, v} when is_binary(v) -> {k, String.to_atom(v)}
+      other -> other
+    end)
     |> Map.new()
   end
 
