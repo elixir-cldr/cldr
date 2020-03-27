@@ -1042,6 +1042,12 @@ defmodule Cldr do
     @known_territories
   end
 
+  @territory_containment Cldr.Config.territory_containment()
+  @spec territory_containment() :: map()
+  def territory_containment do
+    @territory_containment
+  end
+
   @doc """
   Returns the map of territories and subdivisions and their
   child subdivsions.
@@ -1191,6 +1197,10 @@ defmodule Cldr do
     |> validate_subdivision
   end
 
+  def validate_territory_subdivision(subdivision) do
+    {:error, unknown_territory_error(subdivision)}
+  end
+
   defp validate_subdivision(<< territory :: binary-size(2), "zzzz" >>) do
     validate_territory(territory)
   end
@@ -1202,8 +1212,106 @@ defmodule Cldr do
     end
   end
 
-  defp validate_subdivision(subdivision) do
-    {:error, unknown_territory_error(subdivision)}
+  @doc """
+  Return the territory fallback chain based upon
+  a locales territory (including `u` extension) and
+  territory containment definitions.
+
+  While CLDR also includes subdivisions in the
+  territory chain, this implementation does not
+  consider them.
+
+  ## Arguments
+
+  * `territory` is either a binary or atom territory code
+    or a `t:Cldr.LanguageTag`
+
+  ## Returns
+
+  * `{:ok, list}` where `list` is a list of territories
+    in decreasing order of containment (ie larger enclosing
+    areas) or
+
+  * `{:error, {exception, reason}}` indicating an error
+
+  ## Examples
+
+      iex> Cldr.territory_chain "US"
+      {:ok, [:US, :"021", :"019", :"001"]}
+
+      iex> Cldr.territory_chain :AU
+      [:AU, :"053", :"009", :"001"]
+
+      iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-CAzzzz", MyApp.Cldr)
+      iex> Cldr.territory_chain locale
+      {:ok, [:CA, :US, :"021", :"019", :"001"]}
+
+  """
+  def territory_chain(territory) when is_binary(territory) do
+    with {:ok, territory} <- validate_territory(territory) do
+      territory_chain(territory)
+    end
+  end
+
+  def territory_chain(%LanguageTag{territory: territory, locale: %{region_override: nil}}) do
+    territory_chain(territory)
+  end
+
+  def territory_chain(%LanguageTag{territory: territory, locale: %{region_override: region}}) do
+    with {:ok, chain} <- territory_chain(territory) do
+      {:ok, [region | chain]}
+    end
+  end
+
+  def territory_chain(%LanguageTag{territory: territory}) do
+    territory_chain(territory)
+  end
+
+  def territory_chain(territory) when is_atom(territory) do
+    with {:ok, territory} <- Cldr.validate_territory(territory) do
+      chain =
+        territory_containment()
+        |> Map.fetch!(territory)
+        |> hd()
+
+      {:ok, [territory | chain]}
+    end
+  end
+
+  @doc """
+  Return the territory fallback chain based upon
+  a locales territory (including `u` extension) and
+  territory containment definitions.
+
+  While CLDR also includes subdivisions in the
+  territory chain, this implementation does not
+  consider them.
+
+  ## Arguments
+
+  * `locale` is a binary locale name
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  ## Returns
+
+  * `{:ok, list}` where `list` is a list of territories
+    in decreasing order of containment (ie larger enclosing
+    areas) or
+
+  * `{:error, {exception, reason}}` indicating an error
+
+  ## Examples
+
+    iex> Cldr.territory_chain "en-US-u-rg-CAzzzz", MyApp.Cldr
+    [:CA, :US, :"021", :"019", :"001"]
+
+  """
+  def territory_chain(locale_name, backend) when is_binary(locale_name) and is_atom(backend) do
+    with {:ok, locale} <- validate_locale(locale_name, backend) do
+      territory_chain(locale)
+    end
   end
 
   @doc """
