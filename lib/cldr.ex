@@ -1785,7 +1785,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_measurement_system "metric"
+      iex> Cldr.validate_measurement_system :metric
       {:ok, :metric}
 
       iex> Cldr.validate_measurement_system "ussystem"
@@ -1811,13 +1811,13 @@ defmodule Cldr do
 
   @measurement_systems Cldr.Config.measurement_systems()
                        |> Enum.flat_map(fn
-                         {k, %{alias: :""}} -> [{k, k}]
+                         {k, %{alias: nil}} -> [{k, k}]
                          {k, %{alias: a}} -> [{k, k}, {a, k}]
                        end)
                        |> Map.new()
 
   for {system, canonical_system} <- @measurement_systems do
-    defp do_validate_measuremeent_system(unquote(system)),
+    defp do_validate_measurement_system(unquote(system)),
       do: {:ok, unquote(canonical_system)}
 
     defp do_validate_measurement_system(unquote(to_string(system))),
