@@ -7,8 +7,8 @@ defmodule Cldr.LanguageTag.Parser do
 
   """
   alias Cldr.LanguageTag
-  alias Cldr.Config
   alias Cldr.Locale
+  alias Cldr.LanguageTag.{U, T}
 
   @doc """
   Parse a locale name into a `t:Cldr.LanguageTag.t/0`
@@ -34,8 +34,8 @@ defmodule Cldr.LanguageTag.Parser do
           |> normalize_script
           |> normalize_variants
           |> normalize_territory
-          |> canonicalize_locale_keys
-          |> canonicalize_transform_keys
+          |> U.canonicalize_locale_keys
+          |> T.canonicalize_transform_keys
 
         {:ok, normalized_tag}
 
@@ -66,42 +66,6 @@ defmodule Cldr.LanguageTag.Parser do
       {:ok, language_tag} -> language_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
-  end
-
-  defp canonicalize_locale_keys(%Cldr.LanguageTag{locale: nil} = language_tag) do
-    language_tag
-  end
-
-  defp canonicalize_locale_keys(%Cldr.LanguageTag{locale: locale} = language_tag) do
-    canon_locale =
-      Enum.map(locale, fn {k, v} ->
-        if Map.has_key?(locale_key_map(), k) do
-          canonicalize_key(locale_key_map()[k], v)
-        else
-          {k, v}
-        end
-      end)
-      |> Enum.into(%{})
-
-    Map.put(language_tag, :locale, canon_locale)
-  end
-
-  defp canonicalize_transform_keys(%Cldr.LanguageTag{transform: nil} = language_tag) do
-    language_tag
-  end
-
-  defp canonicalize_transform_keys(%Cldr.LanguageTag{transform: locale} = language_tag) do
-    canon_transform =
-      Enum.map(locale, fn {k, v} ->
-        if Map.has_key?(transform_key_map(), k) do
-          canonicalize_key(transform_key_map()[k], v)
-        else
-          {k, v}
-        end
-      end)
-      |> Enum.into(%{})
-
-    Map.put(language_tag, :transform, canon_transform)
   end
 
   defp normalize_locale_name(name) do
@@ -161,92 +125,26 @@ defmodule Cldr.LanguageTag.Parser do
     |> Map.put(:language_variant, String.upcase(variant))
   end
 
-  defp canonicalize_key([key, valid, default], param) when is_function(valid) do
+  @doc false
+  def canonicalize_key([key, valid, default], param) when is_function(valid) do
     case valid.(param) do
       {:ok, value} -> {key, value}
       {:error, _} -> {key, default}
     end
   end
 
-  defp canonicalize_key([key, :any, default], param) do
+  def canonicalize_key([key, :any, default], param) do
     value = param || default
     {key, value}
   end
 
-  defp canonicalize_key([key, valid, default], param) do
+  def canonicalize_key([key, valid, default], param) do
     value = if param in valid, do: param, else: default
     {key, value}
   end
 
-  defp canonicalize_key(key, value) when is_atom(key) do
+  def canonicalize_key(key, value) when is_atom(key) do
     {key, value}
   end
 
-  # from => [to, valid_list, default]
-  @locale_map %{
-    "ca" => [:calendar, &Cldr.validate_calendar/1, :gregorian],
-    "co" => [:collation, Config.collations(), "standard"],
-    "ka" => [:alternative_collation, ["noignore", "shifted"], "shifted"],
-    "kb" => [:backward_level2, Config.true_false(), "false"],
-    "kc" => [:case_level, Config.true_false(), "false"],
-    "kn" => [:numeric, Config.true_false(), "false"],
-    "kh" => [:hiragana_quarternary, Config.true_false(), "true"],
-    "kk" => [:normalization, Config.true_false(), "true"],
-    "kr" => [:reorder, :any, nil],
-    "kf" => [:case_first, ["upper", "lower", "false"], "false"],
-    "ks" => [:strength, ["level1", "level2", "level3", "level4", "identic"], "level3"],
-    "cu" => [:currency, &Cldr.validate_currency/1, nil],
-    "cf" => [:currency_format, &__MODULE__.validate_currency_format/1, :currency],
-    "nu" => [:number_system, &Cldr.validate_number_system/1, nil],
-    "em" => [:emoji_style, ["emoji", "text", "default"], "default"],
-    "fw" => [:first_day_of_week, Config.days_of_week(), "mon"],
-    "hc" => [:hour_cycle, ["h12", "h23", "h11", "h24"], "h23"],
-    "lb" => [:line_break_style, ["strict", "normal", "loose"], "normal"],
-    "lw" => [:line_break_word, ["normal", "breakall", "keepall"], "normal"],
-    "ms" => [:measurement_system, &Cldr.validate_measurement_system/1, :metric],
-    "ss" => [:sentence_break_supression, ["standard", "none"], "standard"],
-    "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
-    "rg" => [:region_override, &Cldr.validate_territory_subdivision/1, nil],
-    "sd" => [:subdivision, &Cldr.validate_territory_subdivision/1, nil],
-    "vt" => :variable_top,
-    "va" => :variant
-
-  }
-
-  @doc false
-  def validate_currency_format("standard"), do: {:ok, :currency}
-  def validate_currency_format("account"), do: {:ok, :accounting}
-  def validate_currency_format(value), do: {:error, value}
-
-  @doc false
-  def locale_key_map do
-    @locale_map
-  end
-
-  @inverse_locale_map @locale_map
-                      |> Enum.map(fn
-                        {attr, [key | _rest]} -> {key, attr}
-                        {attr, key} -> {key, attr}
-                      end)
-                      |> Map.new()
-
-  @doc false
-  def inverse_locale_key_map do
-    @inverse_locale_map
-  end
-
-  @transform_map %{
-    "m0" => :mechanism,
-    "s0" => :source,
-    "d0" => :destination,
-    "i0" => :input_method,
-    "k0" => :keyboard,
-    "t0" => :machine,
-    "h0" => :hybrid,
-    "x0" => :private
-  }
-
-  defp transform_key_map do
-    @transform_map
-  end
 end

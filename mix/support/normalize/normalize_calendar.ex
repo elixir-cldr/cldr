@@ -24,25 +24,25 @@ defmodule Cldr.Normalize.Calendar do
 
   def rename_day_name_keys(content) do
     content
-    |> Cldr.Map.rename_key("mon", 1)
-    |> Cldr.Map.rename_key("tue", 2)
-    |> Cldr.Map.rename_key("wed", 3)
-    |> Cldr.Map.rename_key("thu", 4)
-    |> Cldr.Map.rename_key("fri", 5)
-    |> Cldr.Map.rename_key("sat", 6)
-    |> Cldr.Map.rename_key("sun", 7)
+    |> Cldr.Map.rename_keys("mon", 1)
+    |> Cldr.Map.rename_keys("tue", 2)
+    |> Cldr.Map.rename_keys("wed", 3)
+    |> Cldr.Map.rename_keys("thu", 4)
+    |> Cldr.Map.rename_keys("fri", 5)
+    |> Cldr.Map.rename_keys("sat", 6)
+    |> Cldr.Map.rename_keys("sun", 7)
   end
 
   def rename_era_keys(content) do
     content
-    |> Cldr.Map.rename_key("era_abbr", "abbreviated")
-    |> Cldr.Map.rename_key("era_narrow", "narrow")
-    |> Cldr.Map.rename_key("era_names", "wide")
+    |> Cldr.Map.rename_keys("era_abbr", "abbreviated")
+    |> Cldr.Map.rename_keys("era_narrow", "narrow")
+    |> Cldr.Map.rename_keys("era_names", "wide")
   end
 
   def rename_variants(content) do
     content
-    |> Cldr.Map.rename_key("0_alt_variant", -1)
-    |> Cldr.Map.rename_key("1_alt_variant", -2)
+    |> Cldr.Map.rename_keys("0_alt_variant", -1)
+    |> Cldr.Map.rename_keys("1_alt_variant", -2)
   end
 end

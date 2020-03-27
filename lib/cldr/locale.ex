@@ -183,23 +183,52 @@ defmodule Cldr.Locale do
   and request the use of `accounting` format when formatting currencies:
 
       iex> MyApp.Cldr.validate_locale "en-AU-u-tz-ausyd-cf-account"
-      {:ok,
-       %Cldr.LanguageTag{
-         canonical_locale_name: "en-Latn-AU",
-         cldr_locale_name: "en-AU",
-         extensions: %{},
-         gettext_locale_name: "en",
-         language: "en",
-         language_subtags: [],
-         language_variant: nil,
-         locale: %{currency_format: :accounting, timezone: "Australia/Sydney"},
-         private_use: [],
-         rbnf_locale_name: "en",
-         requested_locale_name: "en-AU",
-         script: "Latn",
-         territory: :AU,
-         transform: %{}
-       }}
+      {
+        :ok,
+        %Cldr.LanguageTag{
+          canonical_locale_name: "en-Latn-AU",
+          cldr_locale_name: "en-AU",
+          extensions: %{},
+          gettext_locale_name: "en",
+          language: "en",
+          language_subtags: '',
+          language_variant: nil,
+          locale: %Cldr.LanguageTag.U{
+            alternative_collation: nil,
+            backward_level2: nil,
+            calendar: nil,
+            case_first: nil,
+            case_level: nil,
+            collation: nil,
+            currency: nil,
+            currency_format: :accounting,
+            emoji_style: nil,
+            first_day_of_week: nil,
+            hiragana_quarternary: nil,
+            hour_cycle: nil,
+            line_break_style: nil,
+            line_break_word: nil,
+            measurement_system: nil,
+            normalization: nil,
+            number_system: nil,
+            numeric: nil,
+            region_override: nil,
+            reorder: nil,
+            sentence_break_supression: nil,
+            strength: nil,
+            subdivision: nil,
+            timezone: "Australia/Sydney",
+            variable_top: nil,
+            variant: nil
+          },
+          private_use: '',
+          rbnf_locale_name: "en",
+          requested_locale_name: "en-AU",
+          script: "Latn",
+          territory: :AU,
+          transform: %{}
+        }
+      }
 
   """
   alias Cldr.LanguageTag

@@ -12,8 +12,8 @@ defmodule Cldr.Normalize.DateTime do
       content
       |> get_in(["dates"])
       |> Map.delete("fields")
-      |> Cldr.Map.rename_key("_numbers", "number_system")
-      |> Cldr.Map.rename_key("_value", "format")
+      |> Cldr.Map.rename_keys("_numbers", "number_system")
+      |> Cldr.Map.rename_keys("_value", "format")
       |> compile_substitution_formats
 
     Map.put(content, "dates", dates)
