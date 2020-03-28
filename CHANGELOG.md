@@ -5,11 +5,21 @@ This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older chan
 The primary purpose of this release is to support the new data for units that standardize
 a means for conversion.  In addition, some data file names are changed to be more consistent in naming.
 
+### Summary
+
+* Add the new data Units introduced in CLDR version 38. This data is used in an updated `ex_cldr_units` package.
+
+* Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
+
 ### Breaking changes
 
 Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.
 
 * Minimal supported version of Elixir is 1.6 (it was 1.5)
+
+* Adds `Cldr.LanguageTag.U` to formalise the structure of the BCP47 `U` extension. This changes the data format of a `LanguageTag` that has a `U` extension. Additionally, most fields of this struct are now atoms, not binaries.
+
+* Adds `Cldr.LanguageTag.T` to formalise the structure of the BCP47 `T` extension. This changes the data format of a `LanguageTag` that has a `T` extension.
 
 * Rename `Cldr.Config.calendar_data/0` to `Cldr.Config.calendars/0`
 
@@ -41,6 +51,8 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Unit Preferences now consistently use underscore in names and values instead of dashes.
 
+* Add `Cldr.validate_backend/1` to validate if a module is a CLDR backend module
+
 * Add `Cldr.validate_measurement_system/1` to validate a measurement system name
 
 * Add `Cldr.Config.measurement_systems/0` to return a map of known measurement systems
@@ -54,6 +66,8 @@ Although these are breaking changes, they are changes that affect functions in `
 * Add `priv/cldr/units.json` which contains the new unit data and conversion information from CLDR 37
 
 * Add `priv/cldr/measurement_systems.json`
+
+* Add `Cldr.validate_backend/1` to confirm a backend modules existence and that includes `use Cldr`
 
 # Changelog for Cldr v2.13.0
 

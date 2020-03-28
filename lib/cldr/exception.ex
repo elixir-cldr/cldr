@@ -239,3 +239,15 @@ defmodule Cldr.UnknownMeasurementSystemError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.UnknownBackendError do
+  @moduledoc """
+  Exception raised when the backend
+  module is unknown or not a backend module
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
