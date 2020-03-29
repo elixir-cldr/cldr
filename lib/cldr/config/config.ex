@@ -1634,8 +1634,9 @@ defmodule Cldr.Config do
 
     base_units =
       data.base_units
-      |> Enum.map(fn {k, v} -> {k, String.to_atom(v)} end)
-      |> Map.new()
+      |> Cldr.Map.atomize_keys
+      |> Cldr.Map.atomize_values
+      |> Enum.map(&List.to_tuple/1)
 
     conversions =
       data.conversions

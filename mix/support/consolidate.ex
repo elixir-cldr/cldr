@@ -611,9 +611,8 @@ defmodule Cldr.Consolidate do
         base_unit: ~x"./@baseUnit"s
       )
       |> Enum.map(fn %{quantity: quantity, base_unit: base_unit} ->
-        {underscore(quantity), underscore(base_unit)}
+        [underscore(quantity), underscore(base_unit)]
       end)
-      |> Map.new()
 
     conversions =
       units
