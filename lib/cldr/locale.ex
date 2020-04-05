@@ -232,7 +232,7 @@ defmodule Cldr.Locale do
 
   """
   alias Cldr.LanguageTag
-  import Cldr.Helpers
+  import Cldr.Helpers, only: [empty?: 1]
 
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
