@@ -1287,27 +1287,14 @@ defmodule Cldr do
 
       iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-CAzzzz", MyApp.Cldr)
       iex> Cldr.territory_chain locale
-      {:ok, [:CA, :US, :"021", :"019", :"001"]}
+      {:ok, [:CA, :"021", :"019", :"001"]}
 
   """
-  def territory_chain(territory) when is_binary(territory) do
-    with {:ok, territory} <- validate_territory(territory) do
-      territory_chain(territory)
-    end
-  end
 
-  def territory_chain(%LanguageTag{territory: territory, locale: %{region_override: nil}}) do
-    territory_chain(territory)
-  end
-
-  def territory_chain(%LanguageTag{territory: territory, locale: %{region_override: region}}) do
-    with {:ok, chain} <- territory_chain(territory) do
-      {:ok, [region | chain]}
-    end
-  end
-
-  def territory_chain(%LanguageTag{territory: territory}) do
-    territory_chain(territory)
+  def territory_chain(%LanguageTag{} = locale) do
+    locale
+    |> Cldr.Locale.territory_from_locale
+    |> territory_chain()
   end
 
   def territory_chain(territory) when is_atom(territory) do
@@ -1320,6 +1307,13 @@ defmodule Cldr do
       {:ok, [territory | chain]}
     end
   end
+
+  def territory_chain(territory) when is_binary(territory) do
+    with {:ok, territory} <- validate_territory(territory) do
+      territory_chain(territory)
+    end
+  end
+
 
   @doc """
   Return the territory fallback chain based upon
@@ -1348,7 +1342,7 @@ defmodule Cldr do
   ## Examples
 
     iex> Cldr.territory_chain "en-US-u-rg-CAzzzz", MyApp.Cldr
-    {:ok, [:CA, :US, :"021", :"019", :"001"]}
+    {:ok, [:CA, :"021", :"019", :"001"]}
 
   """
   def territory_chain(locale_name, backend) when is_binary(locale_name) and is_atom(backend) do

@@ -11,7 +11,7 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
 
-### Breaking changes
+### Breaking changes (that you shouldnt notice)
 
 Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.
 
@@ -47,7 +47,7 @@ Although these are breaking changes, they are changes that affect functions in `
 
 ### Enhancements
 
-* CLDR is introducing unit conversion data. This release of `ex_cldr` includes a development version of that data that will be supported in an upcoming release of [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
+* CLDR is has introduced unit conversion data. This data is now packaged as `Cldr.Config.units/0` which is used for [ex_cldr_units version 3.0](https://hex.pm/packages/ex_cldr_units/3.0.0)
 
 * Unit Preferences now consistently use underscore in names and values instead of dashes.
 
@@ -67,7 +67,9 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Add `priv/cldr/measurement_systems.json`
 
-* Add `Cldr.validate_backend/1` to confirm a backend modules existence and that includes `use Cldr`
+* Add `Cldr.validate_backend/1` to confirm a backend modules existence and that it includes `use Cldr`
+
+* Add `Cldr.Locale.territory_from_locale/1` to determine the territory to be used for localization.
 
 # Changelog for Cldr v2.13.0
 

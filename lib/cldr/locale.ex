@@ -267,6 +267,78 @@ defmodule Cldr.Locale do
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
 
   @doc """
+  Returns the effective territory for a locale.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`
+
+  ## Returns
+
+  * The territory to be used for localization purposes
+
+  ## Examples
+
+      iex> {:ok, locale} = Cldr.validate_locale("en-US", MyApp.Cldr)
+      iex> Cldr.Locale.territory_from_locale locale
+      :US
+
+      iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-cazzzz", MyApp.Cldr)
+      iex> Cldr.Locale.territory_from_locale locale
+      :CA
+
+      iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-xxxxx", MyApp.Cldr)
+      iex> Cldr.Locale.territory_from_locale locale
+      :US
+
+  ## Notes
+
+  A locale can reflect the desired territory to be used
+  when determining region-specific defaults for items such
+  as:
+
+  * default currency,
+  * default calendar and week data,
+  * default time cycle, and
+  * default measurement system and unit preferences
+
+  Territory information is stored in the locale in up to three
+  different places:
+
+  1. The `:territory` extracted from the locale name or
+     defined by default for a given language. This is the typical
+     use case when locale names such as `en-US` or `es-AR` are
+     used.
+
+  2. In some cases it might be desired to override the territory
+     derived from the locale name. For example, the default
+     territory for the language "en" is "US" but it may be desired
+     to apply the defaults for the territory "AU" instead, without
+     otherwise changing the localization intent. In this case
+     the [U extension](https://unicode.org/reports/tr35/#u_Extension) is
+     used to define a
+     [regional override](https://unicode.org/reports/tr35/#RegionOverride)
+
+  3. Similarly, the [regional subdivision identifier]
+     (https://unicode.org/reports/tr35/#UnicodeSubdivisionIdentifier)
+     can be used to influence localization decisions. This identifier
+     is not currently used in `ex_cldr` and dependent libraries
+     however it is correctly parsed to support future use.
+
+  """
+  def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
+    language_tag.locale.region_override ||
+    language_tag.territory ||
+    Cldr.default_territory()
+  end
+
+  def territory_from_locale(%LanguageTag{} = language_tag) do
+    language_tag.territory ||
+    Cldr.default_territory()
+  end
+
+  @doc """
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale.
 
