@@ -41,6 +41,7 @@ defmodule Cldr.Consolidate do
     save_territory_subdivision_containment()
     save_weeks()
     save_calendars()
+    save_calendar_preferences()
     save_day_periods()
     save_aliases()
     save_likely_subtags()
@@ -444,6 +445,23 @@ defmodule Cldr.Consolidate do
     |> Cldr.Map.remove_leading_underscores()
     |> Cldr.Map.underscore_keys()
     |> Cldr.Calendar.Conversion.convert_eras_to_iso_days()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_calendar_preferences do
+    path = Path.join(consolidated_output_dir(), "calendar_preferences.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/calendarPreferenceData.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "calendarPreferenceData"])
+    |> Cldr.Map.remove_leading_underscores()
+    |> Enum.map(fn {k, v} -> {k, Cldr.String.to_underscore(v) |> String.split(" ")} end)
+    |> Map.new
     |> save_file(path)
 
     assert_package_file_configured!(path)

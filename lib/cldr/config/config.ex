@@ -1693,6 +1693,19 @@ defmodule Cldr.Config do
   defp set_skeleton([key, value]), do: [{String.to_atom(key), String.to_integer(value)}]
 
   @doc """
+  Return the map of calendar preferences by territory
+
+  """
+  @calendar_preferences_file "calendar_preferences.json"
+  def calendar_preferences do
+    cldr_data_dir()
+    |> Path.join(@calendar_preferences_file)
+    |> File.read!()
+    |> json_library().decode!(keys: :atoms)
+    |> Cldr.Map.atomize_values
+  end
+
+  @doc """
   Returns the calendars available for a given locale name
 
   ## Example

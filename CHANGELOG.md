@@ -11,6 +11,8 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
 
+* Add calendar preferences.  `Cldr.Config.calendar_preferences/0` returns the map of territory to the desired calendar list in descending order or preference.
+
 ### Breaking changes (that you shouldnt notice)
 
 Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.
