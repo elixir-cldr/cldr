@@ -73,6 +73,10 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Add `Cldr.Locale.territory_from_locale/1` to determine the territory to be used for localization.
 
+* Add `Cldr.Config.calendar_preferences/0`
+
+* Add `Cldr.the_world/0` that returns the territory code for the world which is `:001`
+
 # Changelog for Cldr v2.13.0
 
 This is the changelog for Cldr v2.13.0 released on January 19th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

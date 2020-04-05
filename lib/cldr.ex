@@ -354,6 +354,8 @@ defmodule Cldr do
       }
 
   """
+  @compile {:inline, default_locale: 0}
+
   @spec default_locale() :: LanguageTag.t()
   @default_locale Cldr.Config.default_locale()
   def default_locale do
@@ -396,6 +398,23 @@ defmodule Cldr do
   @spec default_backend :: backend() | no_return
   def default_backend do
     Cldr.Config.default_backend()
+  end
+
+  @doc """
+  Returns the territory for the world
+
+  This is the outermost containment of
+  territories in CLDR.
+
+  CLDR does not yet consider non-terrestrial
+  territories.
+
+  """
+  @compile {:inline, the_world: 0}
+
+  @the_world :"001"
+  def the_world do
+    @the_world
   end
 
   @doc """
