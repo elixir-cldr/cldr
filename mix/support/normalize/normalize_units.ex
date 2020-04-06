@@ -17,15 +17,11 @@ defmodule Cldr.Normalize.Units do
       |> Cldr.Map.underscore_keys()
 
     normalized_units =
-      if units do
-        units
-        |> Enum.filter(fn {k, _v} -> k in @unit_types end)
-        |> Cldr.Map.delete_in("display_name")
-        |> Enum.into(%{})
-        |> process_unit_types(@unit_types)
-      else
-        %{}
-      end
+      units
+      |> Enum.filter(fn {k, _v} -> k in @unit_types end)
+      |> Cldr.Map.delete_in("display_name")
+      |> Enum.into(%{})
+      |> process_unit_types(@unit_types)
 
     Map.put(content, "units", normalized_units)
   end

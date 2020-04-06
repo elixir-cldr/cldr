@@ -58,7 +58,7 @@ defmodule Cldr.LanguageTag.U do
       subdivision: atom(),
       variable_top: atom(),
       variant: atom()
-    }
+      } | map()
 
   alias Cldr.Config
   alias Cldr.LanguageTag.Parser

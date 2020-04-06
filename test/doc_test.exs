@@ -1,5 +1,6 @@
 defmodule Doc.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
   doctest Cldr
   doctest Cldr.Config
   doctest Cldr.Locale
@@ -15,4 +16,6 @@ defmodule Doc.Test do
   doctest TestBackend.Cldr.Number.Cardinal
   doctest TestBackend.Cldr.Gettext.Plural
   doctest TestBackend.Cldr.Number.PluralRule.Range
+
+  doctest MyApp.Cldr
 end

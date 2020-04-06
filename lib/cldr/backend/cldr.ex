@@ -43,8 +43,10 @@ defmodule Cldr.Backend do
           }
 
       """
-      @default_locale Cldr.Config.default_locale_name(config) |> Cldr.Config.language_tag()
-      @spec default_locale :: Cldr.LanguageTag.t()
+      @default_locale config
+      |> Cldr.Config.default_locale_name()
+      |> Cldr.Config.language_tag()
+
       def default_locale do
         @default_locale
         |> Cldr.Locale.put_gettext_locale_name(__MODULE__)
@@ -61,7 +63,7 @@ defmodule Cldr.Backend do
 
       """
       @default_territory @default_locale |> Map.get(:territory)
-      @spec default_territory() :: atom()
+      @spec default_territory() :: Cldr.territory()
       def default_territory do
         @default_territory
       end
@@ -76,7 +78,7 @@ defmodule Cldr.Backend do
 
       """
       @unknown_locale_names Cldr.Config.unknown_locale_names(config)
-      @spec unknown_locale_names() :: [Locale.locale_name(), ...] | []
+      @spec unknown_locale_names() :: [Locale.locale_name()]
       def unknown_locale_names do
         @unknown_locale_names
       end
@@ -87,7 +89,7 @@ defmodule Cldr.Backend do
 
       """
       @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names(config)
-      @spec known_rbnf_locale_names() :: [Locale.locale_name(), ...] | []
+      @spec known_rbnf_locale_names() :: [Locale.locale_name()]
       def known_rbnf_locale_names do
         @known_rbnf_locale_names
       end
@@ -99,7 +101,7 @@ defmodule Cldr.Backend do
 
       """
       @known_gettext_locale_names Config.known_gettext_locale_names(config)
-      @spec known_gettext_locale_names() :: [Locale.locale_name(), ...] | []
+      @spec known_gettext_locale_names() :: [Locale.locale_name()]
       def known_gettext_locale_names do
         @known_gettext_locale_names
       end

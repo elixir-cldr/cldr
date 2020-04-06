@@ -32,7 +32,9 @@ defmodule Cldr do
   """
 
   @external_resource "priv/cldr/language_tags.ebin"
+
   @type backend :: module()
+  @type territory :: atom()
 
   alias Cldr.Config
   alias Cldr.Locale
@@ -356,7 +358,6 @@ defmodule Cldr do
   """
   @compile {:inline, default_locale: 0}
 
-  @spec default_locale() :: LanguageTag.t()
   @default_locale Cldr.Config.default_locale()
   def default_locale do
     @default_locale
@@ -630,6 +631,42 @@ defmodule Cldr do
   end
 
   @doc """
+  Returns either the `locale_name` or `false` based upon
+  whether the locale name is configured in `Cldr`.
+
+  This is helpful when building a list of `or` expressions
+  to return the first known locale name from a list.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    Note that `Cldr.default_backend/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
+
+  ## Examples
+
+      iex> Cldr.known_locale_name("en-AU", TestBackend.Cldr)
+      "en-AU"
+
+      iex> Cldr.known_locale_name("en-SA", TestBackend.Cldr)
+      nil
+
+  """
+  @spec known_locale_name(Locale.locale_name(), backend()) :: String.t() | nil
+  def known_locale_name(locale_name, backend \\ default_backend())
+      when is_binary(locale_name) do
+    if name = backend.known_locale_name(locale_name) do
+      name
+    else
+      nil
+    end
+  end
+
+  @doc """
   Returns a boolean indicating if the specified locale
   name is configured and available in Cldr.
 
@@ -714,38 +751,6 @@ defmodule Cldr do
   def known_gettext_locale_name?(locale_name, backend \\ default_backend())
       when is_binary(locale_name) do
     locale_name in backend.known_gettext_locale_names
-  end
-
-  @doc """
-  Returns either the `locale_name` or `false` based upon
-  whether the locale name is configured in `Cldr`.
-
-  This is helpful when building a list of `or` expressions
-  to return the first known locale name from a list.
-
-  ## Arguments
-
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-
-  * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
-    Note that `Cldr.default_backend/0` will raise an exception if
-    no `:default_backend` is configured under the `:ex_cldr` key in
-    `config.exs`.
-
-  ## Examples
-
-      iex> Cldr.known_locale_name("en-AU", TestBackend.Cldr)
-      "en-AU"
-
-      iex> Cldr.known_locale_name("en-SA", TestBackend.Cldr)
-      false
-
-  """
-  @spec known_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_locale_name(locale_name, backend \\ default_backend())
-      when is_binary(locale_name) do
-    backend.known_locale_name(locale_name)
   end
 
   @doc """
@@ -1145,7 +1150,7 @@ defmodule Cldr do
   end)
   |> Map.new
 
-  @spec known_territory_subdivisions :: [atom(), ...]
+  @spec known_territory_subdivisions :: %{atom() => list()}
   def known_territory_subdivisions do
     @territory_subdivisions
   end
@@ -1168,7 +1173,7 @@ defmodule Cldr do
   end)
   |> Map.new
 
-  @spec known_territory_subdivision_containment :: [atom(), ...]
+  @spec known_territory_subdivision_containment :: map()
   def known_territory_subdivision_containment do
     @territory_subdivision_containment
   end

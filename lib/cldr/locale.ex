@@ -473,10 +473,6 @@ defmodule Cldr.Locale do
   end
 
   @spec put_gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
-  def put_gettext_locale_name(nil, _backend) do
-    nil
-  end
-
   def put_gettext_locale_name(%LanguageTag{} = language_tag, backend) do
     gettext_locale_name = gettext_locale_name(language_tag, backend)
     %{language_tag | gettext_locale_name: gettext_locale_name}
@@ -485,7 +481,7 @@ defmodule Cldr.Locale do
   @spec cldr_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name() | nil
   defp cldr_locale_name(%LanguageTag{} = language_tag, backend) do
     first_match(language_tag, &Cldr.known_locale_name(&1, backend)) ||
-      Cldr.known_locale_name(language_tag.requested_locale_name, backend) || nil
+      Cldr.known_locale_name(language_tag.requested_locale_name, backend)
   end
 
   @spec rbnf_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name | nil
@@ -505,7 +501,7 @@ defmodule Cldr.Locale do
 
   def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
     gettext_locales = backend.known_gettext_locale_names
-    Enum.find(gettext_locales, &Kernel.==(&1, locale_name)) || false
+    Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
   # This clause is only called at compile time when we're
@@ -513,7 +509,7 @@ defmodule Cldr.Locale do
   @doc false
   def known_gettext_locale_name(locale_name, config) when is_map(config) do
     gettext_locales = Cldr.Config.known_gettext_locale_names(config)
-    Enum.find(gettext_locales, &Kernel.==(&1, locale_name)) || false
+    Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
   defp first_match(

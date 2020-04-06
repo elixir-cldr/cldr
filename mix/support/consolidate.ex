@@ -412,7 +412,6 @@ defmodule Cldr.Consolidate do
     |> adjust_day_names
     |> Cldr.Map.integerize_values
     |> Cldr.Map.underscore_keys(only: ["weekendStart", "weekendEnd", "minDays", "firstDay"])
-    |> IO.inspect
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -760,12 +759,16 @@ defmodule Cldr.Consolidate do
     Map.put(map, "language", language_aliases)
   end
 
-  defp split_alternates({k, v}) do
+  defp split_alternates({k, v}) when is_binary(v) do
     if String.contains?(v, " ") do
       {k, String.split(v, " ")}
     else
       {k, v}
     end
+  end
+
+  defp split_alternates(other) do
+    other
   end
 
   @replacement "replacement"

@@ -455,7 +455,7 @@ defmodule Cldr.Config do
   given locale name
   """
   def language_tag(locale_name) do
-    Map.get(all_language_tags(), locale_name)
+    Map.fetch!(all_language_tags(), locale_name)
   end
 
   @doc """
@@ -1355,31 +1355,23 @@ defmodule Cldr.Config do
           "bn" => %{population_percent: 0.67},
           "cy" => %{official_status: "official_regional", population_percent: 0.77},
           "de" => %{population_percent: 6},
-          "el" => %{population_percent: 0.34},
+          "el" => %{population_percent: 0.33},
           "en" => %{official_status: "official", population_percent: 99},
           "fr" => %{population_percent: 19},
           "ga" => %{official_status: "official_regional", population_percent: 0.026},
-          "gd" => %{
-            official_status: "official_regional",
-            population_percent: 0.099,
-            writing_percent: 5
-          },
-          "it" => %{population_percent: 0.34},
+          "gd" => %{official_status: "official_regional", population_percent: 0.099, writing_percent: 5},
+          "it" => %{population_percent: 0.33},
           "ks" => %{population_percent: 0.19},
           "kw" => %{population_percent: 0.0031},
           "ml" => %{population_percent: 0.035},
           "pa" => %{population_percent: 0.79},
           "sco" => %{population_percent: 2.7, writing_percent: 5},
-          "syl" => %{population_percent: 0.5},
+          "syl" => %{population_percent: 0.51},
           "yi" => %{population_percent: 0.049},
           "zh-Hant" => %{population_percent: 0.54}
         },
         literacy_percent: 99,
-        measurement_system: %{
-          default: :uksystem,
-          paper_size: :a4,
-          temperature: :uksystem
-        },
+        measurement_system: %{default: :uksystem, paper_size: :a4, temperature: :uksystem},
         population: 65105200
       }
 

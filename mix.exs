@@ -21,7 +21,7 @@ defmodule Cldr.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(gettext inets jason mix plug sweet_xml)a
+        plt_add_apps: ~w(gettext inets jason mix plug sweet_xml ratio)a
       ],
       compilers: Mix.compilers()
     ]
