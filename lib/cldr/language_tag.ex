@@ -191,9 +191,11 @@ defmodule Cldr.LanguageTag do
   @doc """
   Parse a locale name into a `Cldr.LangaugeTag` struct.
 
+  ## Arguments
+
   * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
 
-  Returns:
+  ## Returns
 
   * `{:ok, language_tag}` or
 
@@ -211,7 +213,7 @@ defmodule Cldr.LanguageTag do
 
   * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
 
-  Returns:
+  ## Returns
 
   * `language_tag` or
 
@@ -227,6 +229,15 @@ defmodule Cldr.LanguageTag do
   Reconstitute a textual language tag from a
   LanguageTag that is suitable
   to pass to a collator.
+
+  ## Arguments
+
+  * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  ## Returns
+
+  * A formatted string representation of the language tag that is also
+    parseable back into a `Cldr.LanguageTag.t()`
 
   ## Example
 
