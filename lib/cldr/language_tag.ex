@@ -173,14 +173,14 @@ defmodule Cldr.LanguageTag do
 
   @type t :: %__MODULE__{
           language: String.t(),
-          language_subtags: [String.t()] | [],
+          language_subtags: [String.t()],
           script: String.t() | nil,
           territory: Cldr.territory(),
           language_variant: String.t() | nil,
           locale: Cldr.LanguageTag.U.t(),
           transform: map(),
           extensions: map(),
-          private_use: [String.t()] | [],
+          private_use: [String.t()],
           requested_locale_name: String.t(),
           canonical_locale_name: String.t(),
           cldr_locale_name: String.t() | nil,
