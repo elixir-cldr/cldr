@@ -47,8 +47,15 @@ defmodule Cldr.Backend do
       |> Cldr.Config.default_locale_name()
       |> Cldr.Config.language_tag()
 
+      # We should just be able to use the module
+      # attribute @default_locale but doing so
+      # causes dialyzer to be unhappy
+      @compile {:inline, default_locale: 0}
+      @spec default_locale :: Cldr.LanguageTag.t() | no_return()
       def default_locale do
-        @default_locale
+        unquote(Macro.escape(config))
+        |> Cldr.Config.default_locale_name()
+        |> Cldr.Config.language_tag()
         |> Cldr.Locale.put_gettext_locale_name(__MODULE__)
       end
 
@@ -62,7 +69,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @default_territory @default_locale |> Map.get(:territory)
+      @default_territory @default_locale |> Map.fetch!(:territory)
       @spec default_territory() :: Cldr.territory()
       def default_territory do
         @default_territory

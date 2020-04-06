@@ -37,7 +37,7 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
-  @default_locale "en-001"
+  @default_locale_name "en-001"
 
   @cldr_modules [
     "number_formats",
@@ -285,25 +285,25 @@ defmodule Cldr.Config do
     the `ex_cldr` key
   * The `Gettext.get_locale/1` for the current configuration
   * The system-wide default locale which is currently
-    #{inspect(@default_locale)}
+    #{inspect(@default_locale_name)}
 
   """
-  @spec default_locale_name(t()) :: Locale.locale_name()
+  @spec default_locale_name(t() | map()) :: Locale.locale_name()
   def default_locale_name(%{} = config) do
     Map.get(config, :default_locale) ||
       Application.get_env(
         app_name(),
         :default_locale,
-        gettext_default_locale(config) || @default_locale
+        gettext_default_locale(config) || @default_locale_name
       )
   end
 
   @doc """
-  Return the system-wide default locale name.
+  Return the system-wide default locale.
 
   """
   def default_locale do
-    default = Application.get_env(app_name(), :default_locale, @default_locale)
+    default = Application.get_env(app_name(), :default_locale, @default_locale_name)
     language_tag(default)
   end
 
@@ -454,6 +454,7 @@ defmodule Cldr.Config do
   Return the saved language tag for the
   given locale name
   """
+  @spec language_tag(Locale.locale_name()) :: Cldr.LanguageTag.t() | no_return()
   def language_tag(locale_name) do
     Map.fetch!(all_language_tags(), locale_name)
   end
@@ -2142,10 +2143,10 @@ defmodule Cldr.Config do
         config[:locales]
       else
         gettext = known_gettext_locale_names(config)
-        locales = config[:locales] || [config[:default_locale] || @default_locale]
+        locales = config[:locales] || [config[:default_locale] || @default_locale_name]
         default = config[:default_locale] || hd(locales)
 
-        (locales ++ gettext ++ [default, @default_locale, @root_locale])
+        (locales ++ gettext ++ [default, @default_locale_name, @root_locale])
         |> Enum.reject(&is_nil/1)
         |> Enum.uniq()
       end
