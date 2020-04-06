@@ -327,6 +327,7 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
+  @spec territory_from_locale(LanguageTag.t()) :: Cldr.territory()
   def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
     language_tag.locale.region_override ||
     language_tag.territory ||
@@ -649,8 +650,12 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.locale_name_from("en", "Latn", "001", nil)
       "en-Latn-001"
 
+      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", nil)
+      "en-Latn-001"
+
   """
-  @spec locale_name_from(language(), script(), territory(), variant()) :: locale_name()
+  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variant()) ::
+    locale_name()
 
   def locale_name_from(language, script, territory, variant) do
     [language, script, territory, variant]

@@ -47,15 +47,10 @@ defmodule Cldr.Backend do
       |> Cldr.Config.default_locale_name()
       |> Cldr.Config.language_tag()
 
-      # We should just be able to use the module
-      # attribute @default_locale but doing so
-      # causes dialyzer to be unhappy
       @compile {:inline, default_locale: 0}
       @spec default_locale :: Cldr.LanguageTag.t() | no_return()
       def default_locale do
-        unquote(Macro.escape(config))
-        |> Cldr.Config.default_locale_name()
-        |> Cldr.Config.language_tag()
+        @default_locale
         |> Cldr.Locale.put_gettext_locale_name(__MODULE__)
       end
 

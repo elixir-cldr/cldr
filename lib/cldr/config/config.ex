@@ -1001,7 +1001,7 @@ defmodule Cldr.Config do
   """
   def known_territories do
     territory_containment()
-    |> Enum.map(fn {k, v} -> [k, v] end)
+    |> Enum.map(&Tuple.to_list/1)
     |> List.flatten()
     |> Enum.uniq()
     |> Enum.sort()
@@ -1470,15 +1470,11 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory(String.t() | atom() | LanguageTag.t()) ::
-          %{} | {:error, {module(), String.t()}}
-
+  @spec territory(Cldr.territory() | String.t()) :: %{} | {:error, {module(), String.t()}}
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territories()
-      |> Map.get(territory_code)
-    else
-      {:error, reason} -> {:error, reason}
+      |> Map.fetch!(territory_code)
     end
   end
 
@@ -1487,7 +1483,7 @@ defmodule Cldr.Config do
       content
       |> Map.get(:languages)
       |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_keys(v)} end)
-      |> Enum.into(%{})
+      |> Map.new()
 
     Map.put(content, :languages, languages)
   end
@@ -1503,6 +1499,10 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+    |> Map.new
+    |> Cldr.Map.atomize_keys(level: 1..1)
+    |> Cldr.Map.deep_map(&Cldr.Map.atomize_keys/1, only: :region)
+    |> Cldr.Map.deep_map(&Cldr.Map.atomize_values/1, only: :region)
     |> Map.new
     |> structify_languages
   end
@@ -1535,13 +1535,9 @@ defmodule Cldr.Config do
   end
 
   defp normalize_territory(map) do
-    {_old, new} =
-      Map.get_and_update(map, "territory", fn
-        nil -> {nil, nil}
-        other -> {other, String.to_atom(other)}
-      end)
-
-    Cldr.Map.atomize_keys(new)
+    map
+    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_values(only: :territory)
   end
 
   @doc """
