@@ -1088,6 +1088,7 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Enum.map(&convert_dates/1)
     |> Cldr.Map.merge_map_list()
+    |> Cldr.Map.atomize_keys(level: 1)
   end
 
   defp convert_dates({territory, currency_dates}) do
