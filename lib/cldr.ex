@@ -1365,8 +1365,8 @@ defmodule Cldr do
 
   ## Examples
 
-    iex> Cldr.territory_chain "en-US-u-rg-CAzzzz", MyApp.Cldr
-    {:ok, [:CA, :"021", :"019", :"001"]}
+      iex> Cldr.territory_chain "en-US-u-rg-CAzzzz", MyApp.Cldr
+      {:ok, [:CA, :"021", :"019", :"001"]}
 
   """
   def territory_chain(locale_name, backend) when is_binary(locale_name) and is_atom(backend) do
