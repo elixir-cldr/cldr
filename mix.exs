@@ -43,7 +43,8 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      # {:cldr_utils, "~> 2.7"},
+      # {:cldr_utils, "~> 2.9"},
+
       {:cldr_utils, path: "../cldr_utils"},
       {:decimal, "~> 1.6"},
       {:jason, "~> 1.0", optional: true},
