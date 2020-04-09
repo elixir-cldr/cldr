@@ -1,5 +1,5 @@
 defmodule Integer.PluralRule.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   @moduletag :slow
   @sample_types [:integer]

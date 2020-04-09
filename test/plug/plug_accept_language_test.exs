@@ -1,5 +1,5 @@
 defmodule Cldr.Plug.AcceptLanguage.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   use Plug.Test
 
   import ExUnit.CaptureLog
@@ -57,8 +57,8 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
     assert conn.private[:cldr_locale].gettext_locale_name == "en_GB"
   end
 
-  test "that an exception is raised if no backend specified" do
-    assert_raise ArgumentError, fn -> Cldr.Plug.AcceptLanguage.init([]) end
+  test "that the default locale is used if no backend is configured" do
+    assert Cldr.Plug.AcceptLanguage.init([]) == Cldr.default_backend()
   end
 
   test "that the locale is not set if the accept-language header is an invalid locale name" do

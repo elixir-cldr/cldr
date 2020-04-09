@@ -1,5 +1,5 @@
 defmodule Cldr.Gettext.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "get the gettext module and find its configured locales" do
     gettext_module = TestBackend.Cldr.__cldr__(:gettext)

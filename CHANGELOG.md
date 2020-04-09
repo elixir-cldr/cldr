@@ -11,6 +11,8 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Add the new data Units introduced in CLDR version 38. This data is used in an updated `ex_cldr_units` package.
 
+* The plugs `Cldr.Plug.AcceptLangauge` and `Cldr.Plug.SetLocale` no longer require a backend be configured. The `Cldr.default_backend/0` will be used if no specific backend is configured.
+
 * Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
 
 * Add calendar preferences.  `Cldr.Config.calendar_preferences/0` returns the map of territory to the desired calendar list in descending order or preference.
@@ -52,6 +54,10 @@ Although these are breaking changes, they are changes that affect functions in `
 ### Enhancements
 
 * Add the `Cldr.Chars` protocol which defines `to_string/1` and it invoked from `Cldr.to_string/1`. It is intended as a drop-in replacement for `Kernel.to_string/1` excepting that it produces localised output. Then intent is to continue making it easier for developers to build localised applications.
+
+* The plug `Cldr.Plug.AcceptLanguage` no longer requires that a backend be configured. The backend returned by `Cldr.default_backend/0` will be used by default.
+
+* The plug `Cldr.Plug.SetLocale` no longer requires that a backend be configured. The backend returned by `Cldr.default_backend/0` will be used by default.
 
 * `t:Cldr.LanguageTag.t` now includes a `:backend` field which is populated during parsing. This allows the implementation of the `Cldr.Chars` protocol.
 

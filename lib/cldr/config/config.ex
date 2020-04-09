@@ -313,7 +313,7 @@ defmodule Cldr.Config do
   """
   def default_backend do
     Application.get_env(app_name(), :default_backend) ||
-      raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured"
+      raise(Cldr.NoDefaultBackendError, "No default #{inspect app_name()} backend is configured")
   end
 
   @doc """

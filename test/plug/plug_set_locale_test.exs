@@ -1,5 +1,5 @@
 defmodule Cldr.Plug.SetLocale.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   use Plug.Test
 
   import Plug.Conn,

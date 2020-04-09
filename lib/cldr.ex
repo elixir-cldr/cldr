@@ -43,6 +43,8 @@ defmodule Cldr do
   require Config
   require Cldr.Backend.Compiler
 
+  import Kernel, except: [to_string: 1]
+
   @doc false
   defmacro __using__(opts \\ []) do
     quote bind_quoted: [opts: opts] do
@@ -216,10 +218,14 @@ defmodule Cldr do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
 
+  ## Returns
+
+  * `{:ok, locale}`
+
+  ## Notes
+
   See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
-  of a language tag and consult `./priv/cldr/rfc5646.abnf` for the
-  specification as implemented that includes the CLDR extensions for
-  "u" (locales) and "t" (transforms).
+  of a language tag
 
   ## Examples
 
@@ -251,11 +257,16 @@ defmodule Cldr do
   @spec put_locale(backend(), Locale.locale_name() | LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def put_locale(backend, locale) do
+  def put_locale(backend, locale) when is_binary(locale) do
     with {:ok, locale} <- backend.validate_locale(locale) do
       Process.put(backend, locale)
       {:ok, locale}
     end
+  end
+
+  def put_locale(backend, %LanguageTag{} = locale) do
+    Process.put(backend, locale)
+    {:ok, locale}
   end
 
   @doc """
@@ -266,9 +277,11 @@ defmodule Cldr do
   ## Arguments
 
   * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+    with a non-nil `:cldr_locale_name`
 
-  Note that the argument must be a `Cldr.LanguageTag` struct with a non-nil
-  `:cldr_locale_name`.
+  ## Returns
+
+  * `{:ok, locale}`
 
   ## Examples
 
@@ -294,7 +307,7 @@ defmodule Cldr do
 
   """
   @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
-          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()}
 
   def put_locale(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name} = locale)
       when not is_nil(cldr_locale_name) do
@@ -303,12 +316,17 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default `locale` for a given backend.
+  Returns the global default `locale` for a
+  given backend.
 
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
+
+  ## Returns
+
+  * The default locale for the backend
 
   ## Example
 
@@ -338,7 +356,19 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default `locale`.
+  Returns the configured global default `locale`.
+
+  ## Returns
+
+  * The default locale or
+
+  * Raises an exception if not default
+    backend is configured
+
+  ## Notes
+
+  `Cldr.default_locale/0` returns the system-wide
+  default locale.
 
   ## Example
 
@@ -367,6 +397,7 @@ defmodule Cldr do
   @default_locale Cldr.Config.default_locale()
   def default_locale do
     @default_locale
+    |> Map.put(:backend, default_backend())
   end
 
   @doc """
@@ -376,7 +407,14 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module. The default is `Cldr.default_backend/0`
+
+  ## Returns
+
+  * The default territory or
+
+  * Raises if no argument is supplied and there is no
+    default backend configured
 
   ## Example
 
@@ -390,7 +428,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns the default backend module.
+  Returns the configured default backend module.
 
   The default backend is configured in `config.exs`
   under the `ex_cldr` key as follows:
@@ -403,6 +441,8 @@ defmodule Cldr do
 
   """
   @spec default_backend :: backend() | no_return
+  @compile {:inline, default_backend: 0}
+
   def default_backend do
     Cldr.Config.default_backend()
   end
@@ -427,15 +467,22 @@ defmodule Cldr do
   @doc """
   Return a localsed string for types
   that implement the `Cldr.Chars` protocol.
+
+  The `Cldr.Chars` protocol is implemented in this
+  library for `t:Cldr.LanguageTag.t()`.
+
+  Other CLDR-related libraries implement
+  the protocol for the types they support
+  such as `Float`, `Integer`, `Decimal`,
+  `Money`, `Unit` and `List`.
+
   """
-  import Kernel, except: [to_string: 1]
+  @spec to_string(term()) :: String.t()
+  @compile {:inline, to_string: 1}
+
   def to_string(term) do
     Cldr.Chars.to_string(term)
   end
-
-  # defmacro to_string(term) do
-  #   quote(do: :"Elixir.Cldr.Chars".to_string(unquote(term)))
-  # end
 
   @doc """
   Validates that a module is a CLDR backend module.

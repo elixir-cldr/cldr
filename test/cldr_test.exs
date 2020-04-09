@@ -1,5 +1,5 @@
 defmodule Cldr.Test do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "that the cldr source data directory is correct" do
     assert String.ends_with?(Cldr.Config.source_data_dir(), "/priv/cldr") == true
@@ -308,7 +308,7 @@ defmodule Cldr.Test do
     backend = Application.get_env(:ex_cldr, :default_backend)
     Application.put_env(:ex_cldr, :default_backend, nil)
 
-    assert_raise Cldr.NoDefaultBackendError, "No default CLDR backend is configured", fn ->
+    assert_raise Cldr.NoDefaultBackendError, "No default :ex_cldr backend is configured", fn ->
       Cldr.validate_locale("en")
     end
 
@@ -316,9 +316,10 @@ defmodule Cldr.Test do
   end
 
   test "that we don't get an exception if a default backend is configured" do
+    default = Application.get_env(:ex_cldr, :default_backend)
     Application.put_env(:ex_cldr, :default_backend, MyApp.Cldr)
     {:ok, _locale} = Cldr.validate_locale("en")
-    Application.put_env(:ex_cldr, :default_backend, nil)
+    Application.put_env(:ex_cldr, :default_backend, default)
   end
 
   test "Cldr.Chars.to_string for a language_tag" do

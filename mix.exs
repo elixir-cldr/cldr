@@ -19,6 +19,7 @@ defmodule Cldr.Mixfile do
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
+      preferred_cli_env: preferred_cli_env(),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
         plt_add_apps: ~w(gettext inets jason mix plug sweet_xml ratio)a
@@ -130,6 +131,15 @@ defmodule Cldr.Mixfile do
       ],
       groups_for_modules: groups_for_modules(),
       skip_undefined_reference_warnings_on: ["changelog"]
+    ]
+  end
+
+  # Preferred CLI Environment details
+  #
+  # Defines the preferred environment for Mix tasks
+  defp preferred_cli_env() do
+    [
+      "cldr.generate_language_tags": :test
     ]
   end
 

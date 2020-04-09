@@ -1,5 +1,5 @@
 defmodule Cldr.TestApp.Router do
-  use Plug.Router
+  use Plug.Router, async: true
 
   plug(:match)
   plug(Cldr.Plug.SetLocale, from: :path, cldr: TestBackend.Cldr)

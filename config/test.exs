@@ -3,16 +3,19 @@ use Mix.Config
 # Global config
 config :ex_cldr,
   default_locale: "en-001",
-  default_backend: MyApp.Cldr,
+  default_backend: TestBackend.Cldr,
   locales: ["en"]
 
-config :ex_cldr, TestGettext.Gettext, default_locale: "en"
+config :ex_cldr, TestGettext.Gettext,
+  default_locale: "en"
 
 # otp app config
-config :ex_cldr, WithOtpAppBackend.Cldr, locales: ["fr"]
+config :ex_cldr, WithOtpAppBackend.Cldr,
+  locales: ["fr"]
 
 # For testing data_dir config
-config :logger, WithOtpAppBackend.Cldr, data_dir: "./with_opt_app_backend/cldr/some_dir"
+config :logger, WithOtpAppBackend.Cldr,
+  data_dir: "./with_opt_app_backend/cldr/some_dir"
 
 # Other configs
 config :plug,

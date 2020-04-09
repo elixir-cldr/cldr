@@ -66,7 +66,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @default_territory @default_locale |> Map.fetch!(:territory)
+      @default_territory @default_locale |> Cldr.Locale.territory_from_locale
       @spec default_territory() :: Cldr.territory()
       def default_territory do
         @default_territory

@@ -78,7 +78,7 @@ if Code.ensure_loaded?(Plug) do
           cldr:    MyApp.Cldr
           session_key: "cldr_locale"
 
-        # Will set the backend only locale for the current process
+        # Will set the backend-only locale for the current process
         # for both `:cldr` and `:gettext`
         plug Cldr.Plug.SetLocale,
           apps:    [cldr: MyApp.Cldr, gettext: GetTextModule],
@@ -86,7 +86,7 @@ if Code.ensure_loaded?(Plug) do
           param:   "locale",
           session_key: "cldr_locale"
 
-        # Will set the backend only locale for the current process
+        # Will set the backend-only locale for the current process
         # for `:cldr` and globally for `:gettext`
         plug Cldr.Plug.SetLocale,
           apps:    [cldr: MyApp.Cldr, gettext: :global],
@@ -99,7 +99,6 @@ if Code.ensure_loaded?(Plug) do
     import Plug.Conn
     require Logger
     alias Cldr.AcceptLanguage
-    alias Cldr.Config
 
     @default_apps [cldr: :global]
     @default_from [:session, :accept_language]
@@ -416,22 +415,15 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_cldr(options, nil) do
-      cldr_backend = Keyword.get(options[:apps], :cldr)
-
-      if cldr_backend && cldr_backend not in [:all, :global] do
-        options = Keyword.put(options, :cldr, cldr_backend)
-        validate_cldr(options, cldr_backend)
-      else
-        raise ArgumentError, "A Cldr backend module must be configured"
-      end
+      backend = Keyword.get_lazy(options[:apps], :cldr, &Cldr.default_locale/0)
+      validate_cldr(options, backend)
     end
 
     defp validate_cldr(options, backend) when is_atom(backend) do
-      unless Config.ensure_compiled?(backend) and function_exported?(backend, :__cldr__, 1) do
-        raise ArgumentError,
-              "#{inspect(backend)} is either not known or does not appear to be a Cldr backend module"
-      else
+      with {:ok, backend} <- Cldr.validate_backend(backend) do
         Keyword.put(options, :cldr, backend)
+      else
+        {:error, {exception, reason}} -> raise exception, reason
       end
     end
   end

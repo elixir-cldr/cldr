@@ -1,5 +1,6 @@
 defmodule CldrLocaleParserTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
   alias Cldr.LanguageTag.Parser
 
   doctest Cldr.LanguageTag.Parser
