@@ -45,7 +45,7 @@ defmodule Cldr.Mixfile do
     [
       # {:cldr_utils, "~> 2.9"},
 
-      {:cldr_utils, path: "../cldr_utils"},
+      {:cldr_utils, github: "elixir-cldr/cldr_utils"},
       {:decimal, "~> 1.6"},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
