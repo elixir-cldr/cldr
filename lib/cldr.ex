@@ -137,6 +137,7 @@ defmodule Cldr do
       iex> Cldr.put_locale(TestBackend.Cldr, "pl")
       iex> Cldr.get_locale(TestBackend.Cldr)
       %Cldr.LanguageTag{
+         backend: TestBackend.Cldr,
          canonical_locale_name: "pl-Latn-PL",
          cldr_locale_name: "pl",
          extensions: %{},
@@ -183,6 +184,7 @@ defmodule Cldr do
       iex> Cldr.put_locale(TestBackend.Cldr.Locale.new!("pl"))
       iex> Cldr.get_locale()
       %Cldr.LanguageTag{
+         backend: TestBackend.Cldr,
          canonical_locale_name: "pl-Latn-PL",
          cldr_locale_name: "pl",
          extensions: %{},
@@ -224,6 +226,7 @@ defmodule Cldr do
       iex> Cldr.put_locale(TestBackend.Cldr, "en")
       {:ok,
        %Cldr.LanguageTag{
+         backend: TestBackend.Cldr,
          canonical_locale_name: "en-Latn-US",
          cldr_locale_name: "en",
          language_subtags: [],
@@ -272,6 +275,7 @@ defmodule Cldr do
       iex> Cldr.put_locale(TestBackend.Cldr.Locale.new!("en"))
       {:ok,
        %Cldr.LanguageTag{
+         backend: TestBackend.Cldr,
          canonical_locale_name: "en-Latn-US",
          cldr_locale_name: "en",
          language_subtags: [],
@@ -310,6 +314,7 @@ defmodule Cldr do
 
       iex> Cldr.default_locale(TestBackend.Cldr)
       %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
         language_subtags: [],
@@ -339,6 +344,7 @@ defmodule Cldr do
 
       iex> Cldr.default_locale
       %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-001",
         cldr_locale_name: "en-001",
         language_subtags: [],
@@ -486,6 +492,7 @@ defmodule Cldr do
       iex> Cldr.validate_locale("en", TestBackend.Cldr)
       {:ok,
       %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},

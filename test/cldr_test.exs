@@ -42,6 +42,7 @@ defmodule Cldr.Test do
   test "default locale" do
     assert TestBackend.Cldr.default_locale() ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "en-Latn-001",
                cldr_locale_name: "en-001",
                language_subtags: [],
@@ -169,6 +170,7 @@ defmodule Cldr.Test do
   test "that locale substitutions are applied" do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
              %Cldr.LanguageTag{
+               backend: nil,
                canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],
@@ -187,6 +189,7 @@ defmodule Cldr.Test do
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
              %Cldr.LanguageTag{
+               backend: nil,
                canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],
@@ -205,6 +208,7 @@ defmodule Cldr.Test do
 
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
              %Cldr.LanguageTag{
+               backend: nil,
                canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],

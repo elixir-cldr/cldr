@@ -17,6 +17,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     assert opts == [
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "en-Latn-001",
                cldr_locale_name: "en-001",
                extensions: %{},
@@ -45,6 +46,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     assert opts == [
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "en-Latn-001",
                cldr_locale_name: "en-001",
                extensions: %{},
@@ -74,6 +76,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     assert opts == [
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
+               backend: WithNoGettextBackend.Cldr,
                canonical_locale_name: "en-Latn-001",
                cldr_locale_name: "en-001",
                extensions: %{},
@@ -140,6 +143,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "fr-Latn-FR",
                cldr_locale_name: "fr",
                extensions: %{},
@@ -172,6 +176,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                extensions: %{},
                gettext_locale_name: nil,
                locale: %{},
@@ -204,6 +209,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                extensions: %{},
                gettext_locale_name: nil,
                locale: %{},
@@ -235,6 +241,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                extensions: %{},
                gettext_locale_name: nil,
                locale: %{},
@@ -265,6 +272,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                extensions: %{},
                gettext_locale_name: nil,
                locale: %{},
@@ -333,6 +341,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "pl-Latn-PL",
                cldr_locale_name: "pl",
                extensions: %{},
@@ -367,6 +376,7 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                extensions: %{},
                gettext_locale_name: "es",
                language_subtags: [],

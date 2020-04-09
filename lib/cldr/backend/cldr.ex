@@ -26,6 +26,7 @@ defmodule Cldr.Backend do
 
           iex> #{inspect(__MODULE__)}.default_locale()
           %Cldr.LanguageTag{
+            backend: #{inspect __MODULE__},
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
             language_subtags: [],
@@ -46,6 +47,7 @@ defmodule Cldr.Backend do
       @default_locale config
       |> Cldr.Config.default_locale_name()
       |> Cldr.Config.language_tag()
+      |> Map.put(:backend, __MODULE__)
 
       @compile {:inline, default_locale: 0}
       @spec default_locale :: Cldr.LanguageTag.t() | no_return()
@@ -268,6 +270,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.put_locale("pl")
           iex> #{inspect(__MODULE__)}.get_locale
           %Cldr.LanguageTag{
+             backend: #{__MODULE__},
              canonical_locale_name: "pl-Latn-PL",
              cldr_locale_name: "pl",
              extensions: %{},
@@ -307,6 +310,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.put_locale("en")
           {:ok,
            %Cldr.LanguageTag{
+             backend: #{inspect __MODULE__},
              canonical_locale_name: "en-Latn-US",
              cldr_locale_name: "en",
              language_subtags: [],
@@ -465,6 +469,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.validate_locale("en")
           {:ok,
           %Cldr.LanguageTag{
+            backend: #{inspect __MODULE__},
             canonical_locale_name: "en-Latn-US",
             cldr_locale_name: "en",
             extensions: %{},
@@ -484,6 +489,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.validate_locale #{inspect(__MODULE__)}.default_locale()
           {:ok,
           %Cldr.LanguageTag{
+            backend: #{inspect __MODULE__},
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
             extensions: %{},
@@ -538,6 +544,7 @@ defmodule Cldr.Backend do
         language_tag =
           Map.get(language_tags, locale_name)
           |> Cldr.Locale.put_gettext_locale_name(config)
+          |> Map.put(:backend, __MODULE__)
 
         locale_name = String.downcase(locale_name)
 

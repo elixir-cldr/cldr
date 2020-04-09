@@ -29,6 +29,7 @@ defmodule Cldr.Plug.Router.Test do
     assert conn.path_params["locale"] == "fr"
 
     assert conn.private[:cldr_locale] == %Cldr.LanguageTag{
+             backend: TestBackend.Cldr,
              canonical_locale_name: "fr-Latn-FR",
              cldr_locale_name: "fr",
              extensions: %{},
@@ -45,6 +46,7 @@ defmodule Cldr.Plug.Router.Test do
            }
 
     assert Cldr.get_locale() == %Cldr.LanguageTag{
+             backend: TestBackend.Cldr,
              canonical_locale_name: "fr-Latn-FR",
              cldr_locale_name: "fr",
              extensions: %{},

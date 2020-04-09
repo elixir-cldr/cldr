@@ -16,6 +16,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
 
     assert conn.private[:cldr_locale] ==
              %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
                canonical_locale_name: "en-Latn-US",
                cldr_locale_name: "en",
                extensions: %{},

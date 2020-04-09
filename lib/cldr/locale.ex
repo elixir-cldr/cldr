@@ -45,6 +45,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.new("en-ES", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-ES",
         cldr_locale_name: "en",
         extensions: %{},
@@ -89,7 +90,9 @@ defmodule Cldr.Locale do
   code for "Moldovian".  The replacement code is "ro" (Romanian).
 
       iex> Cldr.Locale.new("mo", TestBackend.Cldr)
-      {:ok, %Cldr.LanguageTag{extensions: %{},
+      {:ok, %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        extensions: %{},
         gettext_locale_name: nil,
         language: "ro",
         language_subtags: [],
@@ -114,6 +117,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.new("en", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
@@ -148,6 +152,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.new("en-XX", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
         canonical_locale_name: "en-Latn-US",
         cldr_locale_name: "en",
         extensions: %{},
@@ -186,6 +191,7 @@ defmodule Cldr.Locale do
       {
         :ok,
         %Cldr.LanguageTag{
+          backend: MyApp.Cldr,
           canonical_locale_name: "en-Latn-AU",
           cldr_locale_name: "en-AU",
           extensions: %{},
@@ -376,6 +382,7 @@ defmodule Cldr.Locale do
       {
         :ok,
         %Cldr.LanguageTag{
+          backend: TestBackend.Cldr,
           canonical_locale_name: "en-Latn-US",
           cldr_locale_name: "en",
           extensions: %{},
@@ -421,6 +428,7 @@ defmodule Cldr.Locale do
     canonical_tag =
       canonical_tag
       |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
+      |> Map.put(:backend, backend)
       |> put_cldr_locale_name(backend)
       |> put_rbnf_locale_name(backend)
       |> put_gettext_locale_name(backend)
@@ -689,6 +697,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{
+        backend: nil,
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},
@@ -787,6 +796,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
       %Cldr.LanguageTag{
+        backend: nil,
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         language_subtags: [],
@@ -882,6 +892,7 @@ defmodule Cldr.Locale do
       Cldr.Locale.likely_subtags
       %{
         "bez" => %Cldr.LanguageTag{
+          backend: TestBackend.Cldr,
           canonical_locale_name: nil,
           cldr_locale_name: nil,
           extensions: %{},
@@ -930,6 +941,7 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.likely_subtags "en"
       %Cldr.LanguageTag{
+        backend: nil,
         canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},

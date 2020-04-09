@@ -169,7 +169,8 @@ defmodule Cldr.LanguageTag do
             canonical_locale_name: nil,
             cldr_locale_name: nil,
             rbnf_locale_name: nil,
-            gettext_locale_name: nil
+            gettext_locale_name: nil,
+            backend: nil
 
   @type t :: %__MODULE__{
           language: String.t(),
@@ -185,7 +186,8 @@ defmodule Cldr.LanguageTag do
           canonical_locale_name: String.t(),
           cldr_locale_name: String.t() | nil,
           rbnf_locale_name: String.t() | nil,
-          gettext_locale_name: String.t() | nil
+          gettext_locale_name: String.t() | nil,
+          backend: Cldr.backend()
         }
 
   @doc """
