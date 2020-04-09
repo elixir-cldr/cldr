@@ -43,8 +43,6 @@ defmodule Cldr do
   require Config
   require Cldr.Backend.Compiler
 
-  import Kernel, except: [to_string: 1]
-
   @doc false
   defmacro __using__(opts \\ []) do
     quote bind_quoted: [opts: opts] do
@@ -430,6 +428,7 @@ defmodule Cldr do
   Return a localsed string for types
   that implement the `Cldr.Chars` protocol.
   """
+  import Kernel, except: [to_string: 1]
   def to_string(term) do
     Cldr.Chars.to_string(term)
   end
@@ -1963,7 +1962,7 @@ defmodule Cldr do
   defp generate_flag([_, _] = iso_code) do
     iso_code
     |> Enum.map(&(&1 + 127_397))
-    |> to_string
+    |> Kernel.to_string
   end
 
   defp generate_flag(_) do
