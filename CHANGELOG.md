@@ -7,6 +7,8 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 ### Summary
 
+* Adss the `Cldr.Chars` protocol and the `Cldr.to_string/1` function intended to be a drop-in replacement for `Kernel.to_string/1` to make it easier to develop localised applications.
+
 * Add the new data Units introduced in CLDR version 38. This data is used in an updated `ex_cldr_units` package.
 
 * Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
@@ -48,6 +50,10 @@ Although these are breaking changes, they are changes that affect functions in `
 * Correct the preferred measurement system for temperature in some territories (including the US)
 
 ### Enhancements
+
+* Add the `Cldr.Chars` protocol which defines `to_string/1` and it invoked from `Cldr.to_string/1`. It is intended as a drop-in replacement for `Kernel.to_string/1` excepting that it produces localised output. Then intent is to continue making it easier for developers to build localised applications.
+
+* `t:Cldr.LanguageTag.t` now includes a `:backend` field which is populated during parsing. This allows the implementation of the `Cldr.Chars` protocol.
 
 * CLDR is has introduced unit conversion data. This data is now packaged as `Cldr.Config.units/0` which is used for [ex_cldr_units version 3.0](https://hex.pm/packages/ex_cldr_units/3.0.0)
 

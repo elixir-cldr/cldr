@@ -320,4 +320,9 @@ defmodule Cldr.Test do
     {:ok, _locale} = Cldr.validate_locale("en")
     Application.put_env(:ex_cldr, :default_backend, nil)
   end
+
+  test "Cldr.Chars.to_string for a language_tag" do
+    {:ok, locale} = Cldr.validate_locale "en-US-u-cu-AUD-nu-thai", MyApp.Cldr
+    assert Cldr.to_string(locale) == "en-Latn-US-u-cu-AUD-nu-thai"
+  end
 end

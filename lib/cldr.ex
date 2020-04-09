@@ -43,6 +43,8 @@ defmodule Cldr do
   require Config
   require Cldr.Backend.Compiler
 
+  import Kernel, except: [to_string: 1]
+
   @doc false
   defmacro __using__(opts \\ []) do
     quote bind_quoted: [opts: opts] do
@@ -422,6 +424,14 @@ defmodule Cldr do
   @the_world :"001"
   def the_world do
     @the_world
+  end
+
+  @doc """
+  Return a localsed string for types
+  that implement the `Cldr.Chars` protocol.
+  """
+  def to_string(term) do
+    Cldr.Chars.to_string(term)
   end
 
   @doc """
@@ -1888,7 +1898,7 @@ defmodule Cldr do
     defp do_validate_measurement_system(unquote(system)),
       do: {:ok, unquote(canonical_system)}
 
-    defp do_validate_measurement_system(unquote(to_string(system))),
+    defp do_validate_measurement_system(unquote(Kernel.to_string(system))),
       do: {:ok, unquote(canonical_system)}
   end
 
