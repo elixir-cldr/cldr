@@ -433,6 +433,10 @@ defmodule Cldr do
     Cldr.Chars.to_string(term)
   end
 
+  # defmacro to_string(term) do
+  #   quote(do: :"Elixir.Cldr.Chars".to_string(unquote(term)))
+  # end
+
   @doc """
   Validates that a module is a CLDR backend module.
 
