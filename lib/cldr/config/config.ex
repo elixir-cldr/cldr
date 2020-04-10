@@ -1682,6 +1682,35 @@ defmodule Cldr.Config do
   defp set_skeleton([""]), do: nil
   defp set_skeleton([key, value]), do: [{String.to_atom(key), String.to_integer(value)}]
 
+  #######################################################################
+
+  # TODO Remove for ex_cldr version 3.0
+  # TODO Remove the supporting files too
+
+  @doc false
+  @unit_preference_file "deprecated/unit_preference.json"
+  def unit_preferences do
+    Path.join(cldr_data_dir(), @unit_preference_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new()
+  end
+
+  @doc false
+  @measurement_system_file "deprecated/measurement_system.json"
+  def measurement_system do
+    Path.join(cldr_data_dir(), @measurement_system_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_values(v)} end)
+    |> Map.new()
+  end
+
+  #######################################################################
+
   @doc """
   Return the map of calendar preferences by territory
 
