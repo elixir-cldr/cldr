@@ -1380,12 +1380,19 @@ defmodule Cldr do
       iex> Cldr.territory_chain locale
       {:ok, [:CA, :"021", :"019", :"001"]}
 
+      iex> Cldr.territory_chain :"001"
+      {:ok, [:"001"]}
+
   """
 
   def territory_chain(%LanguageTag{} = locale) do
     locale
     |> Cldr.Locale.territory_from_locale
     |> territory_chain()
+  end
+
+  def territory_chain(:"001" = the_world) do
+    {:ok, [the_world]}
   end
 
   def territory_chain(territory) when is_atom(territory) do
