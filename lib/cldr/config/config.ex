@@ -1686,8 +1686,12 @@ defmodule Cldr.Config do
   defp set_default(nil, default), do: default
   defp set_default(value, _default), do: value
 
-  defp set_skeleton([""]), do: []
-  defp set_skeleton([key, value]), do: [{String.to_atom(key), String.to_integer(value)}]
+  defp set_skeleton([""]),
+    do: []
+  defp set_skeleton(["precision_increment", value]), do:
+    [round_nearest: String.to_integer(value)]
+  defp set_skeleton([key, value]),
+    do: [{String.to_atom(key), String.to_integer(value)}]
 
   #######################################################################
 
