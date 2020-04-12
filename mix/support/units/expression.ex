@@ -14,7 +14,12 @@ defmodule Cldr.Unit.Expression do
     0
   end
 
-  def run(v, _constants) when is_number(v) do
+  def run(v, _constants) when is_float(v) do
+    {numerator, denominator} = Float.ratio(v)
+    Ratio.new(numerator, denominator)
+  end
+
+  def run(v, _constants) when is_integer(v) do
     Ratio.new(v)
   end
 
@@ -29,7 +34,7 @@ defmodule Cldr.Unit.Expression do
   end
 
   def run(["*", v1, v2], constants) do
-    Ratio.new(run(v1, constants)) * Ratio.new(run(v2, constants))
+    run(v1, constants) * run(v2, constants)
   end
 
   def run(["/", v1, v2], constants) do
