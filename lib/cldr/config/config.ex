@@ -1686,6 +1686,10 @@ defmodule Cldr.Config do
   defp set_default(nil, default), do: default
   defp set_default(value, _default), do: value
 
+  # TODO Review with each CLDR release
+  # Note that this assume there is only one option provided
+  # which in the initial realease is true but may not be
+  # later
   defp set_skeleton([""]),
     do: []
   defp set_skeleton(["precision_increment", value]), do:
