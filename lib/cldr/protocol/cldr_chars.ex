@@ -12,6 +12,7 @@ defprotocol Cldr.Chars do
   @doc """
   Converts `term` to a localised string.
   """
+  @fallback_to_any true
   @spec to_string(t) :: String.t()
   def to_string(term)
 end
@@ -32,5 +33,11 @@ defimpl Cldr.Chars, for: BitString do
       protocol: @protocol,
       value: term,
       description: "cannot convert a bitstring to a string"
+  end
+end
+
+defimpl Cldr.Chars, for: Any do
+  def to_string(language_tag) do
+    Kernel.to_string(language_tag)
   end
 end
