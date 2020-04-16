@@ -334,6 +334,7 @@ defmodule Cldr.Locale do
 
   """
   @spec territory_from_locale(LanguageTag.t()) :: Cldr.territory()
+
   def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
     language_tag.locale.region_override ||
     language_tag.territory ||
@@ -343,6 +344,15 @@ defmodule Cldr.Locale do
   def territory_from_locale(%LanguageTag{} = language_tag) do
     language_tag.territory ||
     Cldr.default_territory()
+  end
+
+  @spec territory_from_locale(locale_name(), Cldr.backend()) ::
+    Cldr.territory() | {:error, {module(), String.t()}}
+
+  def territory_from_locale(locale, backend) when is_binary(locale) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
+      territory_from_locale(locale)
+    end
   end
 
   @doc """
