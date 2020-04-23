@@ -188,9 +188,35 @@ defmodule Cldr.Consolidate do
     end
   end
 
-  # As of CLDR 32 there is an available locale "yue" that has no content and
+  # As of CLDR 37 there are available locales that have no content and
   # therefore should not be included
-  @invalid_locales ["yue"]
+  @invalid_locales [
+      "ff-Adlm",
+      "ff-Adlm-BF",
+      "ff-Adlm-CM",
+      "ff-Adlm-GH",
+      "ff-Adlm-GM",
+      "ff-Adlm-GW",
+      "ff-Adlm-LR",
+      "ff-Adlm-MR",
+      "ff-Adlm-NE",
+      "ff-Adlm-NG",
+      "ff-Adlm-SL",
+      "ff-Adlm-SN",
+      "ks-Arab",
+      "mai",
+      "ms-ID",
+      "mni-Beng",
+      "mni",
+      "pcm",
+      "sat",
+      "sd-Arab",
+      "sat-Olck",
+      "sd-Deva",
+      "su",
+      "su-Latn",
+      "yue"
+  ]
 
   def all_locales() do
     download_data_dir()

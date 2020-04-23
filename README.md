@@ -1,4 +1,4 @@
-# Getting Started with Cldr 2.0
+# Getting Started with Cldr 2.x
 ![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)
 [![Hex.pm](https://img.shields.io/hexpm/v/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/dw/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
@@ -6,7 +6,7 @@
 
 ## Getting Started
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 2019 and `ex_cldr` Version 2.11.0, `Cldr` is based upon [CLDR version 36.0.0](https://github.com/unicode-cldr/cldr-json).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 2020 and `ex_cldr` Version 2.14.0, `Cldr` is based upon [CLDR version 37.0.0](https://github.com/unicode-cldr/cldr-json).
 
 The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
