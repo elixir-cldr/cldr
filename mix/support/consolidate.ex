@@ -592,8 +592,6 @@ defmodule Cldr.Consolidate do
 
   def save_measurement_systems do
     import SweetXml
-    import Cldr.Config, only: [underscore: 1]
-    alias Cldr.Unit.{Parser, Expression}
 
     path = Path.join(consolidated_output_dir(), "measurement_systems.json")
 
