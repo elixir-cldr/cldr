@@ -150,13 +150,14 @@ defmodule Cldr.Test do
                "tr",
                "uk",
                "vi",
+               "yue",
                "yue-Hans",
                "zh",
                "zh-Hant"
              ]
   end
 
-  test "that requesting rbnf for a locale that doesn't define it returns and error" do
+  test "that requesting rbnf for a locale that doesn't define it returns an error" do
     assert Cldr.Rbnf.Config.for_locale("zzz") ==
              {
                :error,

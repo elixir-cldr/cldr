@@ -214,8 +214,7 @@ defmodule Cldr.Consolidate do
     "sat-Olck",
     "sd-Deva",
     "su",
-    "su-Latn",
-    "yue"
+    "su-Latn"
   ]
 
   def all_locales() do

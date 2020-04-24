@@ -17,6 +17,8 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Add calendar preferences.  `Cldr.Config.calendar_preferences/0` returns the map of territory to the desired calendar list in descending order or preference.
 
+* Add "yue" locale now that the data is complete in CLDR 37
+
 ### Breaking changes (that you shouldnt notice)
 
 Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.

@@ -540,7 +540,8 @@ defmodule Cldr.Backend do
 
       language_tags = Cldr.Config.all_language_tags()
 
-      for locale_name <- Cldr.Config.known_locale_names(config) do
+      for locale_name <- Cldr.Config.known_locale_names(config),
+          not is_nil(Map.get(language_tags, locale_name)) do
         language_tag =
           Map.get(language_tags, locale_name)
           |> Cldr.Locale.put_gettext_locale_name(config)
