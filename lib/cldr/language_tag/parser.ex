@@ -34,8 +34,8 @@ defmodule Cldr.LanguageTag.Parser do
           |> normalize_script
           |> normalize_variants
           |> normalize_territory
-          |> U.canonicalize_locale_keys
-          |> T.canonicalize_transform_keys
+          |> U.canonicalize_locale_keys()
+          |> T.canonicalize_transform_keys()
 
         {:ok, normalized_tag}
 
@@ -115,7 +115,7 @@ defmodule Cldr.LanguageTag.Parser do
         {:error, _} -> nil
       end
 
-    Map.put( language_tag, :territory, territory)
+    Map.put(language_tag, :territory, territory)
   end
 
   defp normalize_variants(%LanguageTag{language_variant: nil} = language_tag), do: language_tag
@@ -146,5 +146,4 @@ defmodule Cldr.LanguageTag.Parser do
   def canonicalize_key(key, value) when is_atom(key) do
     {key, value}
   end
-
 end

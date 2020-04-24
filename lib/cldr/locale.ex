@@ -337,17 +337,17 @@ defmodule Cldr.Locale do
 
   def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
     language_tag.locale.region_override ||
-    language_tag.territory ||
-    Cldr.default_territory()
+      language_tag.territory ||
+      Cldr.default_territory()
   end
 
   def territory_from_locale(%LanguageTag{} = language_tag) do
     language_tag.territory ||
-    Cldr.default_territory()
+      Cldr.default_territory()
   end
 
   @spec territory_from_locale(locale_name(), Cldr.backend()) ::
-    Cldr.territory() | {:error, {module(), String.t()}}
+          Cldr.territory() | {:error, {module(), String.t()}}
 
   def territory_from_locale(locale, backend) when is_binary(locale) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
@@ -673,7 +673,7 @@ defmodule Cldr.Locale do
 
   """
   @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variant()) ::
-    locale_name()
+          locale_name()
 
   def locale_name_from(language, script, territory, variant) do
     [language, script, territory, variant]
@@ -1026,5 +1026,4 @@ defmodule Cldr.Locale do
   def alias_error(%LanguageTag{requested_locale_name: requested_locale_name}, alias_name) do
     alias_error(requested_locale_name, alias_name)
   end
-
 end

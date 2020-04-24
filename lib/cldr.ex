@@ -524,7 +524,7 @@ defmodule Cldr do
 
   defp unknown_backend_error(backend) do
     {Cldr.UnknownBackendError,
-      "The backend #{inspect backend} is not known or not a backend module."}
+     "The backend #{inspect(backend)} is not known or not a backend module."}
   end
 
   @doc """
@@ -1211,11 +1211,14 @@ defmodule Cldr do
 
   """
   @territory_subdivisions Cldr.Config.territory_subdivisions()
-  |> Enum.map(fn
-    {<< territory :: binary-size(2) >>, children} -> {String.to_existing_atom(territory), children}
-    other -> other
-  end)
-  |> Map.new
+                          |> Enum.map(fn
+                            {<<territory::binary-size(2)>>, children} ->
+                              {String.to_existing_atom(territory), children}
+
+                            other ->
+                              other
+                          end)
+                          |> Map.new()
 
   @spec known_territory_subdivisions :: %{atom() => list()}
   def known_territory_subdivisions do
@@ -1231,14 +1234,19 @@ defmodule Cldr do
 
   """
   @territory_subdivision_containment Cldr.Config.territory_subdivision_containment()
-  |> Enum.map(fn {subdivision, parents} ->
-    parents = Enum.map(parents, fn
-      << territory :: binary-size(2) >> -> String.to_existing_atom(territory)
-      other -> other
-    end)
-    {subdivision, parents}
-  end)
-  |> Map.new
+                                     |> Enum.map(fn {subdivision, parents} ->
+                                       parents =
+                                         Enum.map(parents, fn
+                                           <<territory::binary-size(2)>> ->
+                                             String.to_existing_atom(territory)
+
+                                           other ->
+                                             other
+                                         end)
+
+                                       {subdivision, parents}
+                                     end)
+                                     |> Map.new()
 
   @spec known_territory_subdivision_containment :: map()
   def known_territory_subdivision_containment do
@@ -1327,7 +1335,7 @@ defmodule Cldr do
   """
   def validate_territory_subdivision(subdivision) when is_binary(subdivision) do
     subdivision
-    |> String.downcase
+    |> String.downcase()
     |> validate_subdivision
   end
 
@@ -1335,7 +1343,7 @@ defmodule Cldr do
     {:error, unknown_territory_error(subdivision)}
   end
 
-  defp validate_subdivision(<< territory :: binary-size(2), "zzzz" >>) do
+  defp validate_subdivision(<<territory::binary-size(2), "zzzz">>) do
     validate_territory(territory)
   end
 
@@ -1387,7 +1395,7 @@ defmodule Cldr do
 
   def territory_chain(%LanguageTag{} = locale) do
     locale
-    |> Cldr.Locale.territory_from_locale
+    |> Cldr.Locale.territory_from_locale()
     |> territory_chain()
   end
 
@@ -1411,7 +1419,6 @@ defmodule Cldr do
       territory_chain(territory)
     end
   end
-
 
   @doc """
   Return the territory fallback chain based upon
@@ -2020,7 +2027,7 @@ defmodule Cldr do
   defp generate_flag([_, _] = iso_code) do
     iso_code
     |> Enum.map(&(&1 + 127_397))
-    |> Kernel.to_string
+    |> Kernel.to_string()
   end
 
   defp generate_flag(_) do

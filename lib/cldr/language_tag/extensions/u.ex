@@ -30,35 +30,36 @@ defmodule Cldr.LanguageTag.U do
     :variant
   ]
 
-
-  @type t :: %__MODULE__{
-      calendar: atom(),
-      collation: atom(),
-      alternative_collation: atom(),
-      backward_level2: atom(),
-      case_level: atom(),
-      numeric: atom(),
-      hiragana_quarternary: atom(),
-      normalization: atom(),
-      reorder: atom(),
-      case_first: atom(),
-      strength: atom(),
-      currency: atom(),
-      currency_format: atom(),
-      number_system: atom(),
-      emoji_style: atom(),
-      first_day_of_week: atom(),
-      hour_cycle: atom(),
-      line_break_style: atom(),
-      line_break_word: atom(),
-      measurement_system: atom(),
-      sentence_break_supression: atom(),
-      timezone: atom(),
-      region_override: atom(),
-      subdivision: atom(),
-      variable_top: atom(),
-      variant: atom()
-      } | map()
+  @type t ::
+          %__MODULE__{
+            calendar: atom(),
+            collation: atom(),
+            alternative_collation: atom(),
+            backward_level2: atom(),
+            case_level: atom(),
+            numeric: atom(),
+            hiragana_quarternary: atom(),
+            normalization: atom(),
+            reorder: atom(),
+            case_first: atom(),
+            strength: atom(),
+            currency: atom(),
+            currency_format: atom(),
+            number_system: atom(),
+            emoji_style: atom(),
+            first_day_of_week: atom(),
+            hour_cycle: atom(),
+            line_break_style: atom(),
+            line_break_word: atom(),
+            measurement_system: atom(),
+            sentence_break_supression: atom(),
+            timezone: atom(),
+            region_override: atom(),
+            subdivision: atom(),
+            variable_top: atom(),
+            variant: atom()
+          }
+          | map()
 
   alias Cldr.Config
   alias Cldr.LanguageTag.Parser
@@ -85,7 +86,11 @@ defmodule Cldr.LanguageTag.U do
     "lb" => [:line_break_style, &__MODULE__.validate_line_break_style/1, :normal],
     "lw" => [:line_break_word, &__MODULE__.validate_line_break_word/1, :normal],
     "ms" => [:measurement_system, &Cldr.validate_measurement_system/1, :metric],
-    "ss" => [:sentence_break_supression, &__MODULE__.validate_sentence_break_supression/1, :standard],
+    "ss" => [
+      :sentence_break_supression,
+      &__MODULE__.validate_sentence_break_supression/1,
+      :standard
+    ],
     "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
     "rg" => [:region_override, &Cldr.validate_territory_subdivision/1, nil],
     "sd" => [:subdivision, &Cldr.validate_territory_subdivision/1, nil],
@@ -108,7 +113,7 @@ defmodule Cldr.LanguageTag.U do
           {k, v}
         end
       end)
-      |> Map.new
+      |> Map.new()
 
     Map.put(language_tag, :locale, struct(__MODULE__, canon_locale))
   end
@@ -131,6 +136,7 @@ defmodule Cldr.LanguageTag.U do
   def validate_collation(collation) when collation in @collations do
     {:ok, String.to_atom(collation)}
   end
+
   def validate_collation(value), do: {:error, value}
 
   @doc false
@@ -221,7 +227,7 @@ defmodule Cldr.LanguageTag.U do
   @doc false
   def to_string(locale) do
     locale
-    |> Map.to_list
+    |> Map.to_list()
     |> tl()
     |> Enum.reject(fn {_k, v} -> is_nil(v) end)
     |> Enum.map(fn {k, v} -> "#{inverse_locale_key_map()[k]}-#{inverse(k, v)}" end)
@@ -233,5 +239,4 @@ defmodule Cldr.LanguageTag.U do
   defp inverse(:calendar, calendar), do: String.replace("#{calendar}", "_", "-")
   defp inverse(:first_day, day), do: Enum.at(Config.days_of_week(), day - 1)
   defp inverse(_key, value), do: value
-
 end

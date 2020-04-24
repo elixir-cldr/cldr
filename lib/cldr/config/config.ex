@@ -313,7 +313,7 @@ defmodule Cldr.Config do
   """
   def default_backend do
     Application.get_env(app_name(), :default_backend) ||
-      raise(Cldr.NoDefaultBackendError, "No default #{inspect app_name()} backend is configured")
+      raise(Cldr.NoDefaultBackendError, "No default #{inspect(app_name())} backend is configured")
   end
 
   @doc """
@@ -1287,7 +1287,7 @@ defmodule Cldr.Config do
         {String.to_atom(module), values}
       end
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
@@ -1339,7 +1339,6 @@ defmodule Cldr.Config do
     |> json_library().decode!
   end
 
-
   @doc """
   Returns a map of territory info for all territories
   known to CLDR.
@@ -1383,13 +1382,15 @@ defmodule Cldr.Config do
     |> Path.join("territories.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys(except: fn
-      {_k, %{population_percent: _}} -> true
-      _other -> false
-    end)
+    |> Cldr.Map.atomize_keys(
+      except: fn
+        {_k, %{population_percent: _}} -> true
+        _other -> false
+      end
+    )
     |> Cldr.Map.atomize_values(only: [:default, :paper_size, :temperature])
     |> adjust_currency_codes
-    |> Map.new
+    |> Map.new()
   end
 
   defp adjust_currency_codes(territories) do
@@ -1426,7 +1427,7 @@ defmodule Cldr.Config do
 
       {territory, Map.put(data, :currency, currencies)}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   defp into_keyword_list(list) do
@@ -1500,11 +1501,11 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> Map.new
+    |> Map.new()
     |> Cldr.Map.atomize_keys(level: 1..1)
     |> Cldr.Map.deep_map(&Cldr.Map.atomize_keys/1, only: :region)
     |> Cldr.Map.deep_map(&Cldr.Map.atomize_values/1, only: :region)
-    |> Map.new
+    |> Map.new()
     |> structify_languages
   end
 
@@ -1513,7 +1514,7 @@ defmodule Cldr.Config do
       Enum.map(map.language, fn {k, v} ->
         {k, struct(Cldr.LanguageTag, normalize_territory(v))}
       end)
-      |> Map.new
+      |> Map.new()
 
     Map.put(map, :language, languages)
   end
@@ -1532,12 +1533,12 @@ defmodule Cldr.Config do
     |> Enum.map(fn {k, v} ->
       {k, struct(Cldr.LanguageTag, normalize_territory(v))}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   defp normalize_territory(map) do
     map
-    |> Cldr.Map.atomize_keys
+    |> Cldr.Map.atomize_keys()
     |> Cldr.Map.atomize_values(only: :territory)
   end
 
@@ -1631,8 +1632,8 @@ defmodule Cldr.Config do
 
     base_units =
       data.base_units
-      |> Cldr.Map.atomize_keys
-      |> Cldr.Map.atomize_values
+      |> Cldr.Map.atomize_keys()
+      |> Cldr.Map.atomize_values()
       |> Enum.map(&List.to_tuple/1)
 
     conversions =
@@ -1663,12 +1664,14 @@ defmodule Cldr.Config do
                 units = Map.get(pref, :units) |> Cldr.Map.atomize_values()
                 %{regions: regions, geq: geq, skeleton: skeleton, units: units}
               end)
+
             {type, new_list}
           end)
-          |> Map.new
+          |> Map.new()
+
         {category, new_cat_prefs}
       end)
-      |> Map.new
+      |> Map.new()
 
     aliases =
       data.aliases
@@ -1692,8 +1695,9 @@ defmodule Cldr.Config do
   # later
   defp set_skeleton([""]),
     do: []
-  defp set_skeleton(["precision_increment", value]), do:
-    [round_nearest: String.to_integer(value)]
+
+  defp set_skeleton(["precision_increment", value]), do: [round_nearest: String.to_integer(value)]
+
   defp set_skeleton([key, value]),
     do: [{String.to_atom(key), String.to_integer(value)}]
 
@@ -1736,7 +1740,7 @@ defmodule Cldr.Config do
     |> Path.join(@calendar_preferences_file)
     |> File.read!()
     |> json_library().decode!(keys: :atoms)
-    |> Cldr.Map.atomize_values
+    |> Cldr.Map.atomize_values()
   end
 
   @doc """
@@ -1973,7 +1977,7 @@ defmodule Cldr.Config do
   defp structure_list_formats(content) do
     dates =
       content.list_formats
-      |> Cldr.Map.atomize_keys
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, :list_formats, dates)
   end

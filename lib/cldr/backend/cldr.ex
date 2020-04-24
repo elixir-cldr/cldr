@@ -26,7 +26,7 @@ defmodule Cldr.Backend do
 
           iex> #{inspect(__MODULE__)}.default_locale()
           %Cldr.LanguageTag{
-            backend: #{inspect __MODULE__},
+            backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
             language_subtags: [],
@@ -45,9 +45,9 @@ defmodule Cldr.Backend do
 
       """
       @default_locale config
-      |> Cldr.Config.default_locale_name()
-      |> Cldr.Config.language_tag()
-      |> Map.put(:backend, __MODULE__)
+                      |> Cldr.Config.default_locale_name()
+                      |> Cldr.Config.language_tag()
+                      |> Map.put(:backend, __MODULE__)
 
       @compile {:inline, default_locale: 0}
       @spec default_locale :: Cldr.LanguageTag.t() | no_return()
@@ -66,7 +66,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @default_territory @default_locale |> Cldr.Locale.territory_from_locale
+      @default_territory @default_locale |> Cldr.Locale.territory_from_locale()
       @spec default_territory() :: Cldr.territory()
       def default_territory do
         @default_territory
@@ -310,7 +310,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.put_locale("en")
           {:ok,
            %Cldr.LanguageTag{
-             backend: #{inspect __MODULE__},
+             backend: #{inspect(__MODULE__)},
              canonical_locale_name: "en-Latn-US",
              cldr_locale_name: "en",
              language_subtags: [],
@@ -469,7 +469,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.validate_locale("en")
           {:ok,
           %Cldr.LanguageTag{
-            backend: #{inspect __MODULE__},
+            backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en-Latn-US",
             cldr_locale_name: "en",
             extensions: %{},
@@ -489,7 +489,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.validate_locale #{inspect(__MODULE__)}.default_locale()
           {:ok,
           %Cldr.LanguageTag{
-            backend: #{inspect __MODULE__},
+            backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en-Latn-001",
             cldr_locale_name: "en-001",
             extensions: %{},

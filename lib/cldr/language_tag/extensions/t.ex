@@ -1,5 +1,4 @@
 defmodule Cldr.LanguageTag.T do
-
   alias Cldr.LanguageTag.Parser
 
   @transform_map %{
@@ -34,5 +33,4 @@ defmodule Cldr.LanguageTag.T do
 
     Map.put(language_tag, :transform, canon_transform)
   end
-
 end

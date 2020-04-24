@@ -18,5 +18,4 @@ defmodule Cldr.Normalize.TerritoryContainers do
     |> Enum.reject(&is_nil/1)
     |> Enum.into(%{})
   end
-
 end

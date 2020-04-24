@@ -16,6 +16,7 @@ if File.exists?(Cldr.Config.download_data_dir()) do
     @timezones 'common/bcp47/timezone.xml'
     @measurement_systems 'common/bcp47/measure.xml'
     @subdivisions 'common/supplemental/subdivisions.xml'
+    @units 'common/supplemental/units.xml'
 
     @plural_ranges_output_file Path.join(Cldr.Config.download_data_dir(), "plural_ranges.xml")
     @timezones_output_file Path.join(Cldr.Config.download_data_dir(), "timezones.xml")
@@ -24,6 +25,7 @@ if File.exists?(Cldr.Config.download_data_dir()) do
                                        "measurement_systems.xml"
                                      )
     @subdivisions_output_file Path.join(Cldr.Config.download_data_dir(), "subdivisions.xml")
+    @units_output_file Path.join(Cldr.Config.download_data_dir(), "units.xml")
 
     def run(_) do
       with {:ok, content} <- download(url()),
@@ -33,11 +35,13 @@ if File.exists?(Cldr.Config.download_data_dir()) do
               {@measurement_systems, measurement_systems},
               {@timezones, timezones},
               {@plural_range, plural_ranges},
-              {@subdivisions, subdivisions}
+              {@subdivisions, subdivisions},
+              {@units, units}
             ]} <-
              :zip.unzip(@core, [
                :memory,
-               {:file_list, [@measurement_systems, @plural_range, @subdivisions, @timezones]}
+               {:file_list,
+                [@measurement_systems, @plural_range, @subdivisions, @timezones, @units]}
              ]) do
         File.write!(@plural_ranges_output_file, plural_ranges)
         Logger.info("Saved #{@plural_range} to #{@plural_ranges_output_file}")
@@ -50,6 +54,9 @@ if File.exists?(Cldr.Config.download_data_dir()) do
 
         File.write!(@subdivisions_output_file, subdivisions)
         Logger.info("Saved #{@subdivisions} to #{@subdivisions_output_file}")
+
+        File.write!(@units_output_file, units)
+        Logger.info("Saved #{@units} to #{@units_output_file}")
 
         File.rm!(to_string(@core))
       else

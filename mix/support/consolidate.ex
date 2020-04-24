@@ -191,31 +191,31 @@ defmodule Cldr.Consolidate do
   # As of CLDR 37 there are available locales that have no content and
   # therefore should not be included
   @invalid_locales [
-      "ff-Adlm",
-      "ff-Adlm-BF",
-      "ff-Adlm-CM",
-      "ff-Adlm-GH",
-      "ff-Adlm-GM",
-      "ff-Adlm-GW",
-      "ff-Adlm-LR",
-      "ff-Adlm-MR",
-      "ff-Adlm-NE",
-      "ff-Adlm-NG",
-      "ff-Adlm-SL",
-      "ff-Adlm-SN",
-      "ks-Arab",
-      "mai",
-      "ms-ID",
-      "mni-Beng",
-      "mni",
-      "pcm",
-      "sat",
-      "sd-Arab",
-      "sat-Olck",
-      "sd-Deva",
-      "su",
-      "su-Latn",
-      "yue"
+    "ff-Adlm",
+    "ff-Adlm-BF",
+    "ff-Adlm-CM",
+    "ff-Adlm-GH",
+    "ff-Adlm-GM",
+    "ff-Adlm-GW",
+    "ff-Adlm-LR",
+    "ff-Adlm-MR",
+    "ff-Adlm-NE",
+    "ff-Adlm-NG",
+    "ff-Adlm-SL",
+    "ff-Adlm-SN",
+    "ks-Arab",
+    "mai",
+    "ms-ID",
+    "mni-Beng",
+    "mni",
+    "pcm",
+    "sat",
+    "sd-Arab",
+    "sat-Olck",
+    "sd-Deva",
+    "su",
+    "su-Latn",
+    "yue"
   ]
 
   def all_locales() do
@@ -344,7 +344,7 @@ defmodule Cldr.Consolidate do
       consolidated_output_dir()
       |> Path.join(@territory_containers_file)
       |> File.read!()
-      |> Jason.decode!
+      |> Jason.decode!()
       |> Enum.flat_map(fn {k, v} ->
         Enum.map(v, fn t -> {t, k} end)
       end)
@@ -353,11 +353,12 @@ defmodule Cldr.Consolidate do
     |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
     |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
     |> Enum.map(fn {k, v} -> {k, Enum.sort(v, fn x, y -> length(x) > length(y) end)} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
   end
+
   @doc false
   def save_territories do
     path = Path.join(consolidated_output_dir(), "territories.json")
@@ -386,9 +387,9 @@ defmodule Cldr.Consolidate do
     |> xpath(~x"//subgroup"l,
       type: ~x"./@type"s,
       contains: ~x"./@contains"s
-      )
+    )
     |> Enum.map(fn map -> {map.type, String.split(map.contains)} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -401,14 +402,14 @@ defmodule Cldr.Consolidate do
       consolidated_output_dir()
       |> Path.join("territory_subdivisions.json")
       |> File.read!()
-      |> Jason.decode!
+      |> Jason.decode!()
       |> Enum.flat_map(fn {k, v} ->
         Enum.map(v, fn t -> {t, k} end)
       end)
 
     territory_parents
     |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -423,7 +424,10 @@ defmodule Cldr.Consolidate do
   end
 
   defp parents(territory_parents, territory) when is_binary(territory) do
-    [territory | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))]
+    [
+      territory
+      | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))
+    ]
   end
 
   @doc false
@@ -436,7 +440,7 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "weekData"])
     |> adjust_day_names
-    |> Cldr.Map.integerize_values
+    |> Cldr.Map.integerize_values()
     |> Cldr.Map.underscore_keys(only: ["weekendStart", "weekendEnd", "minDays", "firstDay"])
     |> save_file(path)
 
@@ -486,7 +490,7 @@ defmodule Cldr.Consolidate do
     |> get_in(["supplemental", "calendarPreferenceData"])
     |> Cldr.Map.remove_leading_underscores()
     |> Enum.map(fn {k, v} -> {k, Cldr.String.to_underscore(v) |> String.split(" ")} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -682,7 +686,6 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
-
     preferences =
       units
       |> xpath(
@@ -710,9 +713,9 @@ defmodule Cldr.Consolidate do
         |> Map.update!(:category, &underscore/1)
         |> Map.update!(:usage, &underscore/1)
       end)
-      |> Enum.group_by(&(&1.category), &(%{&1.usage => &1.preferences}))
+      |> Enum.group_by(& &1.category, &%{&1.usage => &1.preferences})
       |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
-      |> Map.new
+      |> Map.new()
 
     aliases =
       units
@@ -726,7 +729,12 @@ defmodule Cldr.Consolidate do
       end)
       |> Map.new()
 
-    %{base_units: base_units, conversions: conversions, aliases: aliases, preferences: preferences}
+    %{
+      base_units: base_units,
+      conversions: conversions,
+      aliases: aliases,
+      preferences: preferences
+    }
     |> save_file(path)
 
     assert_package_file_configured!(path)
