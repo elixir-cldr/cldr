@@ -54,7 +54,7 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 ## Elixir Version Requirements
 
-* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.5 or later.
+* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.6 or later.
 
 ## Installation
 
@@ -458,7 +458,7 @@ Other libraries in the family will progressively implement other extension keys.
 
 Tests cover the full 541 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.5 and later.  `Cldr` will not run on Elixir versions before 1.5.
+Tests are run on Elixir 1.6 and later.  `Cldr` will not run on Elixir versions before 1.6.
 
 ### Updating the CLDR data repository if installing from Github
 
@@ -484,6 +484,6 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
     mix cldr.consolidate
 
-6. Then you will need to regenerate the `language_tags.ebin` file by executing the following.  Note that `MIX_ENV=test` is essential since thats how we guarantee all locales are configured.
+6. Then you will need to regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
 
-    MIX_ENV=test mix cldr.generate_language_tags
+    mix cldr.generate_language_tags
