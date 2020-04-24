@@ -476,7 +476,7 @@ The CLDR data is maintained in [JSON format by the Unicode Consortium](https://g
 
     mix cldr.download.iso_currency
 
-4. The files `pluralRanges.xml` and `timezones.xml` need to be updated with each release and stored in the `./data` directory. Do this with:
+4. The files `pluralRanges.xml`, `timezones.xml`, `measurementSystems.xml` and `units.xml` need to be updated with each release and stored in the `./data` directory. Do this with:
 
     mix cldr.download.core_data
 
