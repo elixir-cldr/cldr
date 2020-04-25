@@ -2007,7 +2007,12 @@ defmodule Cldr.Config do
   defp group_units(units) do
     units
     |> Enum.map(fn {k, v} ->
-      [group | key] = String.split(k, "_", parts: 2)
+      [group | key] =
+        if String.starts_with?(k, "10p") do
+          [k | []]
+        else
+          String.split(k, "_", parts: 2)
+        end
 
       if key == [] do
         {"compound", group, v}
