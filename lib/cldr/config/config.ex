@@ -1999,6 +1999,7 @@ defmodule Cldr.Config do
       content["units"]
       |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
       |> Enum.into(%{})
+      |> Cldr.Map.atomize_keys
 
     Map.put(content, "units", units)
   end
