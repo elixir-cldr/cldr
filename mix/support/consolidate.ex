@@ -48,6 +48,7 @@ defmodule Cldr.Consolidate do
     save_locales()
     save_plural_ranges()
     save_timezones()
+    save_time_preferences()
     save_units()
     save_measurement_systems()
 
@@ -283,6 +284,22 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "numberingSystems"])
     |> Cldr.Map.remove_leading_underscores()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_time_preferences do
+    path = Path.join(consolidated_output_dir(), "time_preferences.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/timeData.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "timeData"])
+    |> Cldr.Map.remove_leading_underscores()
+    |> Cldr.Map.deep_map(fn {k, v} -> {k, String.split(v)} end, only: "allowed")
     |> save_file(path)
 
     assert_package_file_configured!(path)

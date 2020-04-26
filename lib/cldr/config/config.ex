@@ -1868,7 +1868,23 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
-    |> Enum.into(%{})
+    |> Map.new
+  end
+
+  @doc false
+  def time_preferences do
+    cldr_data_dir()
+    |> Path.join("time_preferences.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys(only: fn
+        {k, _v} -> not String.contains?(k, "_")
+        _ -> false
+    end)
+    |> Cldr.Map.deep_map(fn
+      {k, v} when is_binary(k) -> {String.replace(k, "_", "-"), v}
+      other -> other
+    end)
   end
 
   @doc false
