@@ -179,10 +179,10 @@ defmodule Cldr.LanguageTag.U do
   def validate_first_day(value), do: {:error, value}
 
   @doc false
-  def validate_hour_cycle("h12"), do: {:ok, :h12}
-  def validate_hour_cycle("h23"), do: {:ok, :h23}
-  def validate_hour_cycle("h11"), do: {:ok, :h11}
-  def validate_hour_cycle("h24"), do: {:ok, :h24}
+  def validate_hour_cycle("h12"), do: {:ok, :hour_1_12}
+  def validate_hour_cycle("h23"), do: {:ok, :hour_0_23}
+  def validate_hour_cycle("h11"), do: {:ok, :hour_0_11}
+  def validate_hour_cycle("h24"), do: {:ok, :hour_1_24}
   def validate_hour_cycle(value), do: {:error, value}
 
   @doc false
