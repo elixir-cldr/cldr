@@ -73,6 +73,8 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Add `Cldr.Config.measurement_systems/0` to return a map of known measurement systems
 
+* Add `Cldr.Config.time_preferences/0` to return a map of time preferences for a given locale or territory. This data is used in [ex_cldr_dates_times](https://github/com/elixir-cldr/cldr_dates_times) from version `2.4`
+
 * Add `Cldr.Config.territory_containment/0` that returns a map of territories to a list of lists of the territories in which it is contained. A territory may be contained by more than one list of containers. For example, `:GB` is contained like this: `[[:"154", :"150", :"001"], [:UN], [:EU]]`.
 
 * Add `Cldr.known_territory_subdivisons/0` to return a map of regions and subdivisions and their children
