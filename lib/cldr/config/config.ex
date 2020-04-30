@@ -1393,6 +1393,9 @@ defmodule Cldr.Config do
     |> Map.new()
   end
 
+  @deprecated "Use Cldr.Config.territories/0"
+  defdelegate territory_info, to: __MODULE__, as: :territories
+
   defp adjust_currency_codes(territories) do
     territories
     |> Enum.map(fn {territory, data} ->
@@ -1437,9 +1440,6 @@ defmodule Cldr.Config do
     end)
   end
 
-  @deprecated "Use Cldr.Config.territories/0"
-  defdelegate territory_info, to: __MODULE__, as: :territories
-
   @doc """
   Get territory info for a specific territory.
 
@@ -1479,6 +1479,9 @@ defmodule Cldr.Config do
       |> Map.fetch!(territory_code)
     end
   end
+
+  @deprecated "Use Cldr.Config.territories/1"
+  defdelegate territory_info(territory), to: __MODULE__, as: :territory
 
   defp atomize_languages(content) do
     languages =
@@ -1547,7 +1550,7 @@ defmodule Cldr.Config do
   calendar weeks, weekends and years
 
   """
-  def week_info do
+  def weeks do
     cldr_data_dir()
     |> Path.join("weeks.json")
     |> File.read!()
@@ -1555,6 +1558,9 @@ defmodule Cldr.Config do
     |> Map.take(["weekend_start", "min_days", "first_day", "weekend_end"])
     |> Cldr.Map.atomize_keys()
   end
+
+  @deprecated "Use Cldr.Config.weeks/0"
+  defdelegate week_info(), to: __MODULE__, as: :weeks
 
   @doc """
   Returns the data that defines time periods of
