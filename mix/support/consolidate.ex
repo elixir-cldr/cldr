@@ -192,30 +192,30 @@ defmodule Cldr.Consolidate do
   # As of CLDR 37 there are available locales that have no content and
   # therefore should not be included
   @invalid_locales [
-    "ff-Adlm",
-    "ff-Adlm-BF",
-    "ff-Adlm-CM",
-    "ff-Adlm-GH",
-    "ff-Adlm-GM",
-    "ff-Adlm-GW",
-    "ff-Adlm-LR",
-    "ff-Adlm-MR",
-    "ff-Adlm-NE",
-    "ff-Adlm-NG",
-    "ff-Adlm-SL",
-    "ff-Adlm-SN",
-    "ks-Arab",
-    "mai",
-    "ms-ID",
-    "mni-Beng",
-    "mni",
-    "pcm",
-    "sat",
-    "sd-Arab",
-    "sat-Olck",
-    "sd-Deva",
-    "su",
-    "su-Latn"
+    # "ff-Adlm",
+    # "ff-Adlm-BF",
+    # "ff-Adlm-CM",
+    # "ff-Adlm-GH",
+    # "ff-Adlm-GM",
+    # "ff-Adlm-GW",
+    # "ff-Adlm-LR",
+    # "ff-Adlm-MR",
+    # "ff-Adlm-NE",
+    # "ff-Adlm-NG",
+    # "ff-Adlm-SL",
+    # "ff-Adlm-SN",
+    # "ks-Arab",
+    # "mai",
+    # "ms-ID",
+    # "mni-Beng",
+    # "mni",
+    # "pcm",
+    # "sat",
+    # "sd-Arab",
+    # "sat-Olck",
+    # "sd-Deva",
+    # "su",
+    # "su-Latn"
   ]
 
   def all_locales() do
@@ -223,11 +223,12 @@ defmodule Cldr.Consolidate do
     |> Path.join(["cldr-core", "/availableLocales.json"])
     |> File.read!()
     |> Jason.decode!()
+    |> IO.inspect
     |> get_in(["availableLocales", "full"])
     |> Kernel.--(@invalid_locales)
   end
 
-  defp cldr_version() do
+  def cldr_version() do
     download_data_dir()
     |> Path.join(["cldr-core", "/package.json"])
     |> File.read!()

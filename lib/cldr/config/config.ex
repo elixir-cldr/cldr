@@ -157,7 +157,7 @@ defmodule Cldr.Config do
 
   """
   def download_data_dir do
-    Path.join(cldr_home(), "data")
+    System.get_env("CLDR_PRODUCTION", Path.join(cldr_home(), "data"))
   end
 
   @doc """

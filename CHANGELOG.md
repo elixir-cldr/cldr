@@ -17,7 +17,7 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Add calendar preferences.  `Cldr.Config.calendar_preferences/0` returns the map of territory to the desired calendar list in descending order or preference.
 
-* Add "yue" locale now that the data is complete in CLDR 37
+* Add "yue" locale now that the data is complete in CLDR 37. There are now 566 locales up from 541 in CLDR 36.
 
 ### Breaking changes (that you shouldnt notice)
 
@@ -63,7 +63,7 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * `t:Cldr.LanguageTag.t` now includes a `:backend` field which is populated during parsing. This allows the implementation of the `Cldr.Chars` protocol.
 
-* CLDR is has introduced unit conversion data. This data is now packaged as `Cldr.Config.units/0` which is used for [ex_cldr_units version 3.0](https://hex.pm/packages/ex_cldr_units/3.0.0)
+* CLDR has introduced unit conversion data. This data is now packaged as `Cldr.Config.units/0` which is used for [ex_cldr_units version 3.0](https://hex.pm/packages/ex_cldr_units/3.0.0)
 
 * Unit Preferences now consistently use underscore in names and values instead of dashes.
 

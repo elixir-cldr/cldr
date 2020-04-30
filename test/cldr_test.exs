@@ -15,10 +15,6 @@ defmodule Cldr.Test do
              true
   end
 
-  test "that the download data directory is correct" do
-    assert String.ends_with?(Cldr.Config.download_data_dir(), "/data") == true
-  end
-
   test "that we have the correct modules (keys) for the json consolidation" do
     assert Cldr.Config.required_modules() ==
              [
@@ -143,6 +139,7 @@ defmodule Cldr.Test do
                "sq",
                "sr",
                "sr-Latn",
+               "su",
                "sv",
                "sw",
                "ta",
