@@ -316,6 +316,55 @@ defmodule Cldr do
   end
 
   @doc """
+  Set's the system default locale.
+
+  The locale set here is the based level
+  system default equivalent to setting the
+  `:default_locale` key in `config.exs`.
+
+  ## Arguments
+
+  * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+    with a non-nil `:cldr_locale_name`
+
+  ## Returns
+
+  * `{:ok, locale}`
+
+  """
+  def put_default_locale(%Cldr.LanguageTag{} = locale) do
+    :ok = Application.put_env(Cldr.Config.app_name(), :default_locale, locale)
+    {:ok, locale}
+  end
+
+  @doc """
+  Sets the system default locale.
+
+  The locale set here is the based level
+  system default equivalent to setting the
+  `:default_locale` key in `config.exs`.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
+  ## Returns
+
+  * `{:ok, locale}` or
+
+  * `{:error, {exception, reason}}`
+
+  """
+  def put_default_locale(locale_name, backend \\ default_backend()) do
+    with {:ok, locale} <- validate_locale(locale_name, backend) do
+      put_default_locale(locale)
+    end
+  end
+
+  @doc """
   Returns the global default `locale` for a
   given backend.
 
@@ -358,11 +407,22 @@ defmodule Cldr do
   @doc """
   Returns the configured global default `locale`.
 
+  The default locale can be set with `Cldr.put_default_locale/1`.
+  This would most commonly be set in the `Application.init/1`
+  function in keeping with modern Elixir configuration
+  principles.
+
+  Alternatively the default locale may be configured in
+  `config.exs` under the `ex_cldr` key as follows:
+
+      config :ex_cldr,
+        default_locale: <locale_name>
+
   ## Returns
 
   * The default locale or
 
-  * Raises an exception if not default
+  * Raises an exception if no default
     backend is configured
 
   ## Notes
@@ -392,12 +452,13 @@ defmodule Cldr do
       }
 
   """
-  @compile {:inline, default_locale: 0}
-
-  @default_locale Cldr.Config.default_locale()
   def default_locale do
-    @default_locale
-    |> Map.put(:backend, default_backend())
+    case Cldr.Config.default_locale() do
+      %{backend: nil} = locale ->
+        Map.put(locale, :backend, default_backend())
+      locale ->
+        locale
+    end
   end
 
   @doc """
@@ -430,11 +491,18 @@ defmodule Cldr do
   @doc """
   Returns the configured default backend module.
 
-  The default backend is configured in `config.exs`
-  under the `ex_cldr` key as follows:
+  The default backend can be set with `Cldr.put_default_backend/1`.
+  This would most commonly be set in the `Application.init/1`
+  function in keeping with modern Elixir configuration
+  principles.
+
+  Alternatively the default backend may be configured in
+  `config.exs` under the `ex_cldr` key as follows:
 
       config :ex_cldr,
         default_backend: <backend_module>
+
+  ## Important Note
 
   If this function is called and no default backend
   is configured an exception will be raised.
@@ -445,6 +513,27 @@ defmodule Cldr do
 
   def default_backend do
     Cldr.Config.default_backend()
+  end
+
+  @doc """
+  Set the default system-wide backend module.
+
+  ## Arguments
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module. The default is `Cldr.default_backend/0`
+
+  ## Returns
+
+  * `{:ok, backend}` or
+
+  * `{:error, {exception, reason}}`
+
+  """
+  def put_default_backend(backend) do
+    with {:ok, backend} <- validate_backend(backend) do
+      {:ok, backend}
+    end
   end
 
   @doc """

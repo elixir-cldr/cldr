@@ -7,19 +7,23 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 ### Summary
 
-* Adss the `Cldr.Chars` protocol and the `Cldr.to_string/1` function intended to be a drop-in replacement for `Kernel.to_string/1` to make it easier to develop localised applications.
+* Require that a certificate trust store be configured in order to download locales. A system trust store will be automatically detected in many situations. In other cases configuring [castore](https://hex.pm/packages/castore) or [certifi](https://hex.pm/pacakges/certifi) will be automatically detected. A specific trust store can be configured under the `:cacertfile` key of the `:ex_cldr` configuration in `config.exs`. Note that on Windows either `castore`, `certifi` or a configured trust store will be requried.
+
+* Add `Cldr.put_default_locale/{1, 2}` to set the system-wide default locale. The removes the need to configure a default locale in `config.exs` in keeping with modern Elixir app configuration strategies.
+
+* Adds the `Cldr.Chars` protocol and the `Cldr.to_string/1` function intended to be a drop-in replacement for `Kernel.to_string/1` to make it easier to develop localised applications.
 
 * Add the new data Units introduced in CLDR version 38. This data is used in an updated `ex_cldr_units` package.
 
-* The plugs `Cldr.Plug.AcceptLangauge` and `Cldr.Plug.SetLocale` no longer require a backend be configured. The `Cldr.default_backend/0` will be used if no specific backend is configured.
+* The plugs `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.SetLocale` no longer require a backend be configured. The `Cldr.default_backend/0` will be used if no specific backend is configured.
 
 * Add territory subdivisions. The are a geographic level below territory and typically represent states/provinces of a country. In some cases large cities or counties are also known.
 
 * Add calendar preferences.  `Cldr.Config.calendar_preferences/0` returns the map of territory to the desired calendar list in descending order or preference.
 
-* Add "yue" locale now that the data is complete in CLDR 37. There are now 566 locales up from 541 in CLDR 36.
+* Add "yue" locale now that the data is complete in CLDR 37. There are now 566 locales up from 541 in CLDR 36.  See the [release notes](http://cldr.unicode.org/index/downloads/cldr-37) for further information.
 
-### Breaking changes (that you shouldnt notice)
+### Breaking changes (that you should not notice)
 
 Although these are breaking changes, they are changes that affect functions in `Cldr.Config` which is considered a private module and therefore client applications are not expected to be impacted.
 
@@ -54,6 +58,8 @@ Although these are breaking changes, they are changes that affect functions in `
 * Correct the preferred measurement system for temperature in some territories (including the US)
 
 ### Enhancements
+
+* Require that a certificate trust store be configured in order to download locales
 
 * Add the `Cldr.Chars` protocol which defines `to_string/1` and it invoked from `Cldr.to_string/1`. It is intended as a drop-in replacement for `Kernel.to_string/1` excepting that it produces localised output. Then intent is to continue making it easier for developers to build localised applications.
 

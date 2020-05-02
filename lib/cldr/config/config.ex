@@ -303,8 +303,12 @@ defmodule Cldr.Config do
 
   """
   def default_locale do
-    default = Application.get_env(app_name(), :default_locale, @default_locale_name)
-    language_tag(default)
+    case  Application.get_env(app_name(), :default_locale, @default_locale_name) do
+      %Cldr.LanguageTag{} = locale ->
+        locale
+      locale_name ->
+        language_tag(locale_name)
+    end
   end
 
   @doc """
@@ -1609,7 +1613,7 @@ defmodule Cldr.Config do
   end
 
   @deprecated "Use Cldr.Config.calendars/0"
-  defdelegate calendar_info, to: __MODULE__, as: :calendars
+  defdelegate calendar_data, to: __MODULE__, as: :calendars
 
   @doc """
   Returns unit conversion data,
@@ -2190,7 +2194,7 @@ defmodule Cldr.Config do
     end
   end
 
-  @non_deprecated_keys [:json_library, :default_locale, :default_backend, :data_dir]
+  @non_deprecated_keys [:json_library, :default_locale, :default_backend, :cacertfile, :data_dir]
   @doc false
   def maybe_deprecate_global_config! do
     remaining_config =
