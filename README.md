@@ -44,7 +44,7 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 * Support multiple languages and locales in your application
 
-* Need to support formatting numbers, dates, times, date-times, SI units and lists in one language or many
+* Need to support formatting numbers, dates, times, date-times, units and lists in one language or many
 
 * Access the data maintained in the CLDR repository in a functional manner
 
