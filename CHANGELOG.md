@@ -7,13 +7,15 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 ### Summary
 
+* Updates the data source to [CLDR release 37](http://cldr.unicode.org/index/downloads/cldr-37).
+
 * Require that a certificate trust store be configured in order to download locales. A system trust store will be automatically detected in many situations. In other cases configuring [castore](https://hex.pm/packages/castore) or [certifi](https://hex.pm/pacakges/certifi) will be automatically detected. A specific trust store can be configured under the `:cacertfile` key of the `:ex_cldr` configuration in `config.exs`. Note that on Windows either `castore`, `certifi` or a configured trust store will be requried.
 
 * Add `Cldr.put_default_locale/{1, 2}` to set the system-wide default locale. The removes the need to configure a default locale in `config.exs` in keeping with modern Elixir app configuration strategies.
 
 * Adds the `Cldr.Chars` protocol and the `Cldr.to_string/1` function intended to be a drop-in replacement for `Kernel.to_string/1` to make it easier to develop localised applications.
 
-* Add the new data Units introduced in CLDR version 38. This data is used in an updated `ex_cldr_units` package.
+* Add the new data Units introduced in [CLDR version 37](http://cldr.unicode.org/index/downloads/cldr-37). This data is used in an updated `ex_cldr_units` package.
 
 * The plugs `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.SetLocale` no longer require a backend be configured. The `Cldr.default_backend/0` will be used if no specific backend is configured.
 

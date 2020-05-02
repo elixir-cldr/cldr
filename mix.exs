@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.14.0-dev"
+  @version "2.14.0-rc.0"
 
   def project do
     [
@@ -44,9 +44,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      # {:cldr_utils, "~> 2.9"},
-
-      {:cldr_utils, github: "elixir-cldr/cldr_utils"},
+      {:cldr_utils, "~> 2.9"},
       {:decimal, "~> 1.6"},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
@@ -102,8 +100,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/units.json",
         "priv/cldr/time_preferences.json",
         "priv/cldr/language_tags.ebin",
-        "priv/deprecated/measurement_system.json",
-        "priv/deprecated/unit_preference.json"
+        "priv/cldr/deprecated/measurement_system.json",
+        "priv/cldr/deprecated/unit_preference.json"
       ]
     ]
   end
