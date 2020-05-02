@@ -1,6 +1,6 @@
 # Changelog for Cldr v2.14.0
 
-This is the changelog for Cldr v2.14.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.14.0 released on May 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 The primary purpose of this release is to support the new data for units that standardize
 a means for conversion.  In addition, some data file names are changed to be more consistent in naming.
