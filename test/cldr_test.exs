@@ -286,9 +286,9 @@ defmodule Cldr.Test do
   end
 
   test "validating locales that are not precompiled" do
-    assert {:ok, locale} = Cldr.validate_locale("en-au", TestBackend.Cldr)
-    assert {:ok, locale} = Cldr.validate_locale("en_au", TestBackend.Cldr)
-    assert {:ok, locale} = Cldr.validate_locale("en-au-u-ca-buddhist", TestBackend.Cldr)
+    assert {:ok, _locale} = Cldr.validate_locale("en-au", TestBackend.Cldr)
+    assert {:ok, _locale} = Cldr.validate_locale("en_au", TestBackend.Cldr)
+    assert {:ok, _locale} = Cldr.validate_locale("en-au-u-ca-buddhist", TestBackend.Cldr)
   end
 
   if function_exported?(Code, :fetch_docs, 1) do
