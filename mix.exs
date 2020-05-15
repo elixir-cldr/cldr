@@ -133,7 +133,7 @@ defmodule Cldr.Mixfile do
         ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists"
       ],
       groups_for_modules: groups_for_modules(),
-      skip_undefined_reference_warnings_on: ["changelog"]
+      skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
     ]
   end
 

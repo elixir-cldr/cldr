@@ -407,10 +407,8 @@ defmodule Cldr do
   @doc """
   Returns the configured global default `locale`.
 
-  The default locale can be set with `Cldr.put_default_locale/1`.
-  This would most commonly be set in the `Application.init/1`
-  function in keeping with modern Elixir configuration
-  principles.
+  The default locale can be set with
+  `Cldr.put_default_locale/1`.
 
   Alternatively the default locale may be configured in
   `config.exs` under the `ex_cldr` key as follows:
@@ -491,10 +489,8 @@ defmodule Cldr do
   @doc """
   Returns the configured default backend module.
 
-  The default backend can be set with `Cldr.put_default_backend/1`.
-  This would most commonly be set in the `Application.init/1`
-  function in keeping with modern Elixir configuration
-  principles.
+  The default backend can be set with
+  `Cldr.put_default_backend/1`.
 
   Alternatively the default backend may be configured in
   `config.exs` under the `ex_cldr` key as follows:
