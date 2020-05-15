@@ -600,7 +600,7 @@ defmodule Cldr do
   """
   @spec validate_backend(backend :: atom()) :: {:ok, atom()} | {:error, {atom(), binary()}}
   def validate_backend(backend) when is_atom(backend) do
-    if Code.ensure_loaded?(backend) && function_exported?(backend, :__cldr__, 1) do
+    if Cldr.Code.ensure_compiled?(backend) && function_exported?(backend, :__cldr__, 1) do
       {:ok, backend}
     else
       {:error, unknown_backend_error(backend)}
@@ -614,6 +614,14 @@ defmodule Cldr do
   defp unknown_backend_error(backend) do
     {Cldr.UnknownBackendError,
      "The backend #{inspect(backend)} is not known or not a backend module."}
+  end
+
+  @doc false
+  def validate_backend!(backend) do
+    case validate_backend(backend) do
+      {:ok, backend} -> backend
+      {:error, {exception, reason}} -> raise exception, reason
+    end
   end
 
   @doc """

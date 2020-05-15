@@ -303,17 +303,15 @@ if Code.ensure_loaded?(Plug) do
       :ok
     end
 
-    defp validate_app_and_scope!(app, module) when not is_nil(app) and is_atom(module) do
-      cond do
-        app in @app_options && Code.ensure_loaded?(module) ->
-          :ok
+    defp validate_app_and_scope!(:cldr, module) when is_atom(module) do
+      Cldr.validate_backend!(module)
+      :ok
+    end
 
-        app in @app_options ->
-          raise ArgumentError, "Backend module #{inspect(module)} is unavailable"
-
-        true ->
-          raise ArgumentError, "App #{inspect(app)} is unknown"
-      end
+    defp validate_app_and_scope!(:gettext, module) when is_atom(module) do
+      Cldr.Code.ensure_compiled?(module) ||
+        raise(ArgumentError, "Gettext backend #{inspect module} is unknown")
+      :ok
     end
 
     defp validate_app_and_scope!(app, scope) do

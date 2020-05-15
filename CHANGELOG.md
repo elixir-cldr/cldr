@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.14.1
+
+This is the changelog for Cldr v2.14.1 released on May 15th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix compilation order for backends configured in `Cldr.Plug.SetLocale`. Thanks to @syfgkjasdkn. Closes #135.
+
 # Changelog for Cldr v2.14.0
 
 This is the changelog for Cldr v2.14.0 released on May 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
