@@ -10,11 +10,10 @@ defmodule Cldr.Rbnf.Config do
   alias Cldr.Locale
 
   @default_radix 10
-  @data_dir Path.join(Cldr.Config.download_data_dir(), "/cldr-rbnf")
-  @rbnf_dir Path.join(@data_dir, "rbnf")
 
   @doc """
-  Returns the directory where the RBNF data is stored
+  Returns the directory where the production
+  RBNF data is stored.
 
   ## Example
 
@@ -24,13 +23,8 @@ defmodule Cldr.Rbnf.Config do
   """
   @spec rbnf_dir :: String.t()
   def rbnf_dir do
-    @rbnf_dir
-  end
-
-  if File.exists?(@rbnf_dir) do
-    @rbnf_locale_names Enum.map(File.ls!(@rbnf_dir), &Path.basename(&1, ".json"))
-  else
-    @rbnf_locale_names []
+    data_dir = Path.join(Cldr.Config.download_data_dir(), "/cldr-rbnf")
+    Path.join(data_dir, "rbnf")
   end
 
   @doc """
@@ -53,7 +47,7 @@ defmodule Cldr.Rbnf.Config do
   """
   @spec rbnf_locale_names :: [String.t()] | []
   def rbnf_locale_names do
-    @rbnf_locale_names
+    Enum.map(File.ls!(rbnf_dir()), &Path.basename(&1, ".json"))
   end
 
   @doc """

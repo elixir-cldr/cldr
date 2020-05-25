@@ -13,9 +13,6 @@ erl_crash.dump
 # The xml downloaded from Unicode
 /downloads
 
-# Ignore the generated json files
-/data
-
 # Generated erlang source
 /src/*.erl
 

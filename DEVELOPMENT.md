@@ -94,13 +94,18 @@ chmod u+x $EX_CLDR/ldml2json
 cp $EX_CLDR/ldml2json /some/directory/in/path
 ```
 
-5. Execute ldml2json
+5. Download the up-to-date ISO currency database
+```bash
+mix cldr.download.iso_currency
+```
+
+6. Execute ldml2json
 
 ```bash
 ldml2json
 ```
 
-Execution will take several minutes.
+Execution will take quite a few minutes.
 
 ### Update ex_cldr content
 
@@ -112,17 +117,12 @@ cd $EX_CLDR
 git pull
 ```
 
-2. Download the up-to-date ISO currency database
-```bash
-mix cldr.download.iso_currency
-```
-
-3. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`.  This is done by:
+2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`.  This is done by:
 ```bash
 mix cldr.consolidate
 ```
 
-4. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
+3. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
 ```bash
 mix cldr.generate_language_tags
 ```
