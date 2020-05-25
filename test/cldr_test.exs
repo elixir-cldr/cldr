@@ -31,7 +31,8 @@ defmodule Cldr.Test do
                "territories",
                "languages",
                "delimiters",
-               "ellipsis"
+               "ellipsis",
+               "lenient_parse"
              ]
   end
 

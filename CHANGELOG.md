@@ -1,3 +1,15 @@
+# Changelog for Cldr v2.15.0
+
+This is the changelog for Cldr v2.15.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+Starting with `ex_cldr` the development process now requires the CLDR repository be cloned to the development machine; that the CLDR json data is generated on that machine and the shell variable `CLDR_PRODUCTION_DATA` must be set to the director where the generated json data is stored.  For more information on the development process for `ex_cldr` consult `DEVELOPMENT.md`
+
+This change is relevant only to the developers of `ex_cldr`. It is not applicable to users of the library.
+
+### Enhancements
+
+* Adds data to support lenient parsing of dates and numbers
+
 # Changelog for Cldr v2.14.1
 
 This is the changelog for Cldr v2.14.1 released on May 15th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

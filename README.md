@@ -456,34 +456,11 @@ Other libraries in the family will progressively implement other extension keys.
 
 ## Testing
 
-Tests cover the full 541 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 566 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.6 and later.  `Cldr` will not run on Elixir versions before 1.6.
 
-### Updating the CLDR data repository if installing from Github
+## Developing ex_cldr
 
-The CLDR data is maintained in [JSON format by the Unicode Consortium](https://github.com/unicode-cldr/cldr-json).  The appropriate content is maintained as submodules in the `data` directory of this `Cldr` repository.
+See the file `DEVELOPMENT.md`
 
-1. If this repo has just been cloned then first of all you will need to initialize and retrieve the submodules:
-
-    git submodule update --init data/cldr-*
-
-2. When CLDR releases new data then the submodules in this repo also need to be updated.  To update the CLDR data, `git pull` each of the submodules.  For example:
-
-    git submodule -q foreach git pull -q origin master
-
-3. From time-to-time ISO will update the repository of ISO3166 language codes.  Ensure you have the latest version downloaded:
-
-    mix cldr.download.iso_currency
-
-4. The files `pluralRanges.xml`, `timezones.xml`, `measurementSystems.xml` and `units.xml` need to be updated with each release and stored in the `./data` directory. Do this with:
-
-    mix cldr.download.core_data
-
-5. After updating the respository, the locales need to be consolidated into the format used by Cldr.  This is done by:
-
-    mix cldr.consolidate
-
-6. Then you will need to regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
-
-    mix cldr.generate_language_tags

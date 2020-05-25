@@ -2092,9 +2092,14 @@ defmodule Cldr do
   * An empty string if the territory is valid but no
     unicode grapheme is defined. This is true for territories
     that are aggregate areas such as "the world" which is
-    "001"
+    `:001`
 
   * `{:error, {Cldr.UnknownTerritoryError, message}}`
+
+  ## Notes
+
+  * If a `Cldr.LanguageTag.t` is provided, the territory is determined
+    by `Cldr.Locale.territory_from_locale/1`
 
   ## Examples
 
@@ -2112,8 +2117,11 @@ defmodule Cldr do
 
   """
 
-  def flag(%LanguageTag{territory: territory}) do
-    flag(territory)
+  def flag(%LanguageTag{} = locale) do
+    locale
+    |> Cldr.Locale.territory_from_locale
+    |> Atom.to_charlist()
+    |> generate_flag
   end
 
   def flag(territory) do

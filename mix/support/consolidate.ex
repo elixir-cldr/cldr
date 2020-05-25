@@ -114,6 +114,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.Calendar.normalize(locale)
     |> Normalize.Delimiter.normalize(locale)
     |> Normalize.Ellipsis.normalize(locale)
+    |> Normalize.LenientParse.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -223,7 +224,6 @@ defmodule Cldr.Consolidate do
     |> Path.join(["cldr-core", "/availableLocales.json"])
     |> File.read!()
     |> Jason.decode!()
-    |> IO.inspect
     |> get_in(["availableLocales", "full"])
     |> Kernel.--(@invalid_locales)
   end

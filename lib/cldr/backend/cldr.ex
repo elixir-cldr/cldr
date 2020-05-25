@@ -538,6 +538,34 @@ defmodule Cldr.Backend do
         {:error, Locale.locale_error(locale)}
       end
 
+      @doc false
+      def normalize_lenient_parse(string, scope, locale \\ get_locale())
+
+      def normalize_lenient_parse(string, scope,  %LanguageTag{} = locale) do
+        normalize_lenient_parse(string, scope, locale.cldr_locale_name)
+      end
+
+      for locale_name <- Cldr.Config.known_locale_names(config) do
+        lenient_parse =
+          locale_name
+          |> Cldr.Config.get_locale(config)
+          |> Map.get(:lenient_parse)
+          |> Cldr.Map.deep_map(fn {k, v} ->
+            regex = String.replace(v, "\x5c\x5c-", "\x5c\x5c\x5c-")
+            {k, Regex.compile!(regex)}
+          end, level: 2)
+          |> Cldr.Map.atomize_keys(level: 1)
+          |> Map.new
+
+        for {scope, map} <- lenient_parse do
+          def normalize_lenient_parse(string, unquote(scope), unquote(locale_name)) do
+            Enum.reduce unquote(Macro.escape(map)), string, fn {replacement, regex}, acc ->
+              String.replace(acc, regex, replacement)
+            end
+          end
+        end
+      end
+
       language_tags = Cldr.Config.all_language_tags()
 
       for locale_name <- Cldr.Config.known_locale_names(config),

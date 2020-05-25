@@ -53,7 +53,8 @@ defmodule Cldr.Config do
     "territories",
     "languages",
     "delimiters",
-    "ellipsis"
+    "ellipsis",
+    "lenient_parse"
   ]
 
   def include_module_docs?(false) do
@@ -157,7 +158,13 @@ defmodule Cldr.Config do
 
   """
   def download_data_dir do
-    System.get_env("CLDR_PRODUCTION") || Path.join(cldr_home(), "data")
+    System.get_env("CLDR_PRODUCTION") || raise(ArgumentError, """
+    The environment variable $CLDR_PRODUCTION must be set to the
+    directory where the CLDR json data is stored.
+
+    See DEVELOPMENT.md for more information about CLDR data
+    and generating the json files.
+    """)
   end
 
   @doc """
@@ -1263,13 +1270,14 @@ defmodule Cldr.Config do
 
   @doc false
   @keys_to_integerize ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+  @dont_atomize_keys ["languages", "lenient_parse"]
   def do_get_locale(locale, path, false) do
     path
     |> File.read!()
     |> json_library().decode!
     |> assert_valid_keys!(locale)
     |> structure_units
-    |> atomize_keys(required_modules() -- ["languages"], except: @keys_to_integerize)
+    |> atomize_keys(required_modules() -- @dont_atomize_keys, except: @keys_to_integerize)
     |> structure_rbnf
     |> atomize_number_systems
     |> atomize_languages

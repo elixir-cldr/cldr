@@ -10,7 +10,7 @@ defmodule Cldr.Rbnf.Config do
   alias Cldr.Locale
 
   @default_radix 10
-  @data_dir Path.join(Cldr.Config.cldr_home(), "data") <> "/cldr-rbnf"
+  @data_dir Path.join(Cldr.Config.download_data_dir(), "/cldr-rbnf")
   @rbnf_dir Path.join(@data_dir, "rbnf")
 
   @doc """
