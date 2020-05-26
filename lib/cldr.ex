@@ -2143,6 +2143,34 @@ defmodule Cldr do
   end
 
   @doc false
+  def locale_and_backend_from(options) when is_list(options) do
+    locale = Keyword.get(options, :locale)
+    backend = Keyword.get(options, :backend)
+    locale_and_backend_from(locale, backend)
+  end
+
+  def locale_and_backend_from(nil, nil) do
+    locale = Cldr.get_locale()
+    {locale, locale.backend}
+  end
+
+  def locale_and_backend_from(%Cldr.LanguageTag{} = locale, _backend) do
+    {locale, locale.backend}
+  end
+
+  def locale_and_backend_from(locale, nil) when is_binary(locale) do
+    {locale, Cldr.default_backend()}
+  end
+
+  def locale_and_backend_from(nil, backend) do
+    {backend.get_locale(), backend}
+  end
+
+  def locale_and_backend_from(locale, backend) when is_binary(locale) do
+    {locale, backend}
+  end
+
+  @doc false
   def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
   def locale_name(locale) when is_binary(locale), do: inspect(locale)
 end
