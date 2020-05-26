@@ -554,13 +554,25 @@ defmodule Cldr.Backend do
       end
 
       @doc false
+      # We make two adjustments to the character classes
+      # in CLDR
+      #
+      # 1. Adjust the escaping of "\" to suit
+      # 2. Remove compound patterns like `{Rs}` which
+      #    are not supported in Erlang's re
+
+      @remove_compounds Regex.compile!("{.*}",[:ungreedy])
+
       for locale_name <- Cldr.Config.known_locale_names(config) do
         lenient_parse =
           locale_name
           |> Cldr.Config.get_locale(config)
           |> Map.get(:lenient_parse)
           |> Cldr.Map.deep_map(fn {k, v} ->
-            regex = String.replace(v, "\x5c\x5c-", "\x5c\x5c\x5c-")
+            regex =
+              v
+              |> String.replace("\x5c\x5c-", "\x5c\x5c\x5c-")
+              |> String.replace(@remove_compounds, "")
             {k, Regex.compile!(regex)}
           end, level: 2)
           |> Cldr.Map.atomize_keys(level: 1)
