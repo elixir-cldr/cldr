@@ -571,9 +571,9 @@ defmodule Cldr.Backend do
           |> Cldr.Map.deep_map(fn {k, v} ->
             regex =
               v
-              |> String.replace("\x5c\x5c-", "\x5c\x5c\x5c-")
+              |> String.replace("\x5c\x5c", "\x5c")
               |> String.replace(@remove_compounds, "")
-            {k, Regex.compile!(regex)}
+            {k, Regex.compile!(regex, "u")}
           end, level: 2)
           |> Cldr.Map.atomize_keys(level: 1)
           |> Map.new
