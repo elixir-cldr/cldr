@@ -1972,6 +1972,11 @@ defmodule Cldr.Config do
 
   # Simple check that the locale content contains what we expect
   # by checking it has the keys we used when the locale was consolidated.
+
+  # Set the environment variable DEV to bypass this check. That is
+  # only required if adding new content modules to a locale - which is
+  # an uncommon activity.
+
   defp assert_valid_keys!(content, locale) do
     for module <- required_modules() do
       if !Map.has_key?(content, module) and !:"Elixir.System".get_env("DEV") do
