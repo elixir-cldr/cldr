@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.15.1
+
+This is the changelog for Cldr v2.15.1 released on May 28th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Validate configured locales in a backend case insensitively and with either BCP or Poxix ("-" or "_" separators)
+
 # Changelog for Cldr v2.15.0
 
 This is the changelog for Cldr v2.15.0 released on May 27th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

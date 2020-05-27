@@ -471,8 +471,8 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns a list of all locales configured in the `config.exs`
-  file.
+  Returns a list of all locales configured in a
+  `Cldr.Config.t` struct.
 
   In order of priority return either:
 
@@ -518,9 +518,8 @@ defmodule Cldr.Config do
 
   def known_locale_names(config) do
     requested_locale_names(config)
-    |> MapSet.new()
-    |> MapSet.intersection(MapSet.new(all_locale_names()))
-    |> MapSet.to_list()
+    |> Enum.map(&canonical_name/1)
+    |> Enum.reject(&is_nil/1)
     |> Enum.sort()
   end
 
@@ -1188,7 +1187,7 @@ defmodule Cldr.Config do
                   "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
         end
       else
-        locale_name
+        canonical_name(locale_name)
       end
     end)
     |> List.flatten()
@@ -1200,6 +1199,21 @@ defmodule Cldr.Config do
     end)
     |> List.flatten()
     |> Enum.uniq()
+  end
+
+  def canonical_name(locale_name) do
+    name =
+      locale_name
+      |> locale_name_from_posix
+      |> String.downcase
+
+    Map.get(known_locales_map(), name)
+  end
+
+  defp known_locales_map do
+    all_locale_names()
+    |> Enum.map(fn x -> {String.downcase(x), x} end)
+    |> Map.new
   end
 
   @doc """
@@ -2234,6 +2248,7 @@ defmodule Cldr.Config do
         (locales ++ gettext ++ [default, @default_locale_name, @root_locale])
         |> Enum.reject(&is_nil/1)
         |> Enum.uniq()
+        |> Enum.map(&canonical_name/1)
       end
 
     Map.put(config, :locales, locales)
