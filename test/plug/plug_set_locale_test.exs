@@ -428,4 +428,30 @@ defmodule Cldr.Plug.SetLocale.Test do
 
     assert Gettext.get_locale(TestGettext.Gettext) == "es"
   end
+
+  test "locale detection from path params with parser plug" do
+    conn = conn(:get, "/hello/es", %{this: "thing"})
+    conn = MyRouter.call(conn, MyRouter.init([]))
+
+    assert conn.private[:cldr_locale] ==
+             %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
+               extensions: %{},
+               gettext_locale_name: "es",
+               language_subtags: [],
+               language_variant: nil,
+               locale: %{},
+               private_use: [],
+               script: "Latn",
+               transform: %{},
+               canonical_locale_name: "es-Latn-ES",
+               cldr_locale_name: "es",
+               language: "es",
+               rbnf_locale_name: "es",
+               requested_locale_name: "es",
+               territory: :ES
+             }
+
+    assert Gettext.get_locale(TestGettext.Gettext) == "es"
+  end
 end

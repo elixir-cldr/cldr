@@ -54,7 +54,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
-      {:plug, "~> 1.4", optional: true},
+      {:plug, "1.10.0", optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true},
       {:telemetry, "~> 0.4.0", optional: true},
