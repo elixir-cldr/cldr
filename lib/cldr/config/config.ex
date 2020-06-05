@@ -1287,7 +1287,7 @@ defmodule Cldr.Config do
   @dont_atomize_keys ["languages", "lenient_parse"]
   def do_get_locale(locale, path, false) do
     path
-    |> File.read!()
+    |> read_locale_file
     |> json_library().decode!
     |> assert_valid_keys!(locale)
     |> structure_units
@@ -1303,6 +1303,14 @@ defmodule Cldr.Config do
   @doc false
   def do_get_locale(locale, path, true) do
     Cldr.Locale.Cache.get_locale(locale, path)
+  end
+
+  # Read the file.
+  defp read_locale_file(path) do
+    {:ok, file} = File.open(path, [:read, :binary, :utf8])
+    contents = IO.read(file, :all)
+    File.close(file)
+    contents
   end
 
   defp atomize_keys(content, modules, options) do

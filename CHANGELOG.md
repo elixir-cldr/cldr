@@ -4,13 +4,13 @@ This is the changelog for Cldr v2.15.1 released on May 28th, 2020.  For older ch
 
 ### Bug Fixes
 
-* Validate configured locales in a backend case insensitively and with either BCP or Poxix ("-" or "_" separators)
+* Validate configured locales in a backend case insensitively and with either BCP 47 or Poxix ("-" or "_") separators.
 
 # Changelog for Cldr v2.15.0
 
 This is the changelog for Cldr v2.15.0 released on May 27th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-Starting with `ex_cldr` the development process now requires the CLDR repository be cloned to the development machine; that the CLDR json data is generated on that machine and the shell variable `CLDR_PRODUCTION_DATA` must be set to the director where the generated json data is stored.  For more information on the development process for `ex_cldr` consult `DEVELOPMENT.md`
+Starting with `ex_cldr` the development process now requires the CLDR repository be cloned to the development machine; that the CLDR json data is generated on that machine and the shell variable `CLDR_PRODUCTION_DATA` must be set to the directory where the generated json data is stored.  For more information on the development process for `ex_cldr` consult `DEVELOPMENT.md`
 
 This change is relevant only to the developers of `ex_cldr`. It is not applicable to users of the library.
 

@@ -1,5 +1,5 @@
 env:
-  CIRRUS_CLONE_DEPTH: 1
+  CIRRUS_CLONE_DEPTH: 99
   ELIXIR_ASSERT_TIMEOUT: 2000
   ELIXIRC_OPTS: "--warnings-as-errors"
   ERLC_OPTS: "+warning_as_errors"
@@ -24,3 +24,7 @@ test_task:
     mix local.rebar --force;
     mix compile
   test_script: mix test
+
+
+
+
