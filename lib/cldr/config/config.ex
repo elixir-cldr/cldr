@@ -15,10 +15,13 @@ defmodule Cldr.Config do
             providers: nil,
             precompile_number_formats: [],
             precompile_transliterations: [],
+            precompile_date_time_formats: [],
+            precompile_interval_formats: [],
             otp_app: nil,
             generate_docs: true,
             supress_warnings: false,
-            message_formats: []
+            message_formats: [],
+            force_locale_download: false
 
   @type t :: %__MODULE__{
           default_locale: binary(),
@@ -28,11 +31,14 @@ defmodule Cldr.Config do
           data_dir: binary(),
           precompile_number_formats: [binary(), ...],
           precompile_transliterations: [{atom(), atom()}, ...],
+          precompile_date_time_formats: [binary(), ...],
+          precompile_interval_formats: [binary(), ...],
           otp_app: atom() | nil,
           providers: [atom(), ...],
           generate_docs: boolean(),
           supress_warnings: boolean(),
-          message_formats: map()
+          message_formats: map(),
+          force_locale_download: boolean
         }
 
   @type number_system :: atom() | String.t()
@@ -1307,6 +1313,7 @@ defmodule Cldr.Config do
 
   # Read the file.
   defp read_locale_file(path) do
+    Cldr.maybe_log("Cldr.Config reading locale file #{inspect path}")
     {:ok, file} = File.open(path, [:read, :binary, :utf8])
     contents = IO.read(file, :all)
     File.close(file)
@@ -2229,7 +2236,15 @@ defmodule Cldr.Config do
     end
   end
 
-  @non_deprecated_keys [:json_library, :default_locale, :default_backend, :cacertfile, :data_dir]
+  @non_deprecated_keys [
+    :json_library,
+    :default_locale,
+    :default_backend,
+    :cacertfile,
+    :data_dir,
+    :force_locale_download
+  ]
+
   @doc false
   def maybe_deprecate_global_config! do
     remaining_config =

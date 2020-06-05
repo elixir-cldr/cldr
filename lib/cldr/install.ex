@@ -50,7 +50,7 @@ defmodule Cldr.Install do
     option is `:force` which defaults to `false`.  If `truthy` the
     locale will be installed or re-installed.
 
-  The data directory is typically `./priv/cldr/locales`.
+  The data directory is typically `priv/cldr/locales`.
 
   This function is intended to be invoked during application
   compilation when a valid locale is configured but is not yet
@@ -62,13 +62,16 @@ defmodule Cldr.Install do
 
   """
   def install_locale_name(locale_name, config, options \\ []) do
-    if !locale_installed?(locale_name, config) or options[:force] do
+    force_download? = config.force_locale_download || options[:force]
+    if !locale_installed?(locale_name, config) || force_download? do
       ensure_client_dirs_exist!(client_locales_dir(config))
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
       Application.ensure_started(Cldr.Config.app_name())
       do_install_locale_name(locale_name, config, locale_name in Cldr.Config.all_locale_names())
     else
+      output_file_name = locale_output_file_name(locale_name, config)
+      Cldr.maybe_log("Locale already installed and found at #{inspect output_file_name}")
       :already_installed
     end
   end
@@ -84,10 +87,7 @@ defmodule Cldr.Install do
   defp do_install_locale_name(locale_name, config, true) do
     require Logger
 
-    output_file_name =
-      [client_locales_dir(config), "/", locale_filename(locale_name)]
-      |> :erlang.iolist_to_binary()
-
+    output_file_name = locale_output_file_name(locale_name, config)
     url = String.to_charlist("#{base_url()}#{locale_filename(locale_name)}")
 
     case :httpc.request(:get, {url, headers()}, https_opts(), []) do
@@ -116,6 +116,11 @@ defmodule Cldr.Install do
 
         {:error, sys_message}
     end
+  end
+
+  defp locale_output_file_name(locale_name, config) do
+    [client_locales_dir(config), "/", locale_filename(locale_name)]
+    |> :erlang.iolist_to_binary()
   end
 
   defp headers do

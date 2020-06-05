@@ -136,7 +136,8 @@ The preferred configuration method is to define the configuration in the backend
          precompile_number_formats: ["¤¤#,##0.##"],
          precompile_transliterations: [{:latn, :arab}, {:thai, :latn}],
          providers: [Cldr.Number],
-         generate_docs: true
+         generate_docs: true,
+				 force_locale_download: false
       end
 ```
 
@@ -199,11 +200,25 @@ use Cldr,
 
  * `:precompile_transliterations`: defines those transliterations between the digits of two different number systems that will be precompiled.  The is a list of 2-tuples where each tuple is of the form `{from_number_system, to_number_system}` where each number system is expressed as an atom.  The available  number systems is returned by `Cldr.Number.System.systems_with_digits/0`.  The default is the empty list `[]`.
 
+ * `:precompile_date_time_formats`: provides a means to have user-defined date, time and date time format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled. These formats are used by [ex_cldr_date_times](https://hex.pm/packages/ex_cldr_dates_times).
+
+ * `:precompile_interval_formats`: provides a means to have user-defined interval format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled. These formats are used by [ex_cldr_date_times](https://hex.pm/packages/ex_cldr_dates_times).
+
  * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
 
  * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) which prevent the generation of docs for this backend.
 
  * `:supress_warnings` defines whether warnings are logged when a provider module is configured but not available. It also controls whether warnings are logged when a number format is compiled at runtime. Its purpose is to help identify those formats which might best be added to the `:precompile_number_formats` configuration. The default is `false`. Warning are not logged when set to `true`.
+
+ * `:force_locale_download` determines whether to always download locale files during compilation. Locale data is `ex_cldr` version dependent. When a new version of `ex_cldr` is installed, no locales are installed and therefore locales are downloaded at compilation time as required. This ensures that the right version of the locale data is always associated with the right version of `ex_cldr`. However if locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducable builds are important, setting the `force_locale_download: true` in a backend or in global configuration adds additional certainty. The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
+
+```elixir
+ defmodule MyApp.Cldr do
+   use Cldr,
+ 	  locales: ["en", "fr"],
+ 		default_locale: "en",
+ 		force_locale_download: Mix.env() == :prod
+```
 
 ### Providers
 

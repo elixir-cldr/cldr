@@ -63,11 +63,13 @@ defmodule Cldr.Locale.Cache do
   defp do_get_locale(locale, path) do
     case :ets.lookup(@table_name, locale) do
       [{^locale, locale_data}] ->
-        # Logger.debug "Found cached locale for #{inspect locale}"
+        Cldr.maybe_log("Compiler locale cache: Hit for locale #{inspect locale}.")
         locale_data
 
       [] ->
-        # Logger.debug "#{inspect locale} not found in cache so retrieving"
+        Cldr.maybe_log("Compiler locale cache: Miss for #{inspect locale}. " <>
+          "Reading and decoding the locale file.")
+
         locale_data = Cldr.Config.do_get_locale(locale, path, false)
 
         try do
@@ -78,7 +80,8 @@ defmodule Cldr.Locale.Cache do
             # This may actually happen because of timing conditions: someone else may
             # have inserted behind our back.  But since we've now already generated
             # the locale again just use it.
-            # Logger.debug "#{inspect self()}:  Could not insert locale #{inspect locale} into :ets."
+            Cldr.maybe_log("Compiler locale cache: Error: Could not insert " <>
+              "locale #{inspect locale} into cache. Assuming locale is already cached.")
         end
 
         locale_data
@@ -96,9 +99,10 @@ defmodule Cldr.Locale.Cache do
       :undefined ->
         :ets.new(@table_name, [:named_table, :public, {:read_concurrency, true}])
 
-      # Logger.debug "#{inspect self()}:  Created :ets table"
+        Cldr.maybe_log("Compiler locale cache: Created cache #{inspect @table_name} in :ets")
       _ ->
         :ok
     end
   end
+
 end

@@ -2173,4 +2173,13 @@ defmodule Cldr do
   @doc false
   def locale_name(%LanguageTag{cldr_locale_name: locale_name}), do: inspect(locale_name)
   def locale_name(locale) when is_binary(locale), do: inspect(locale)
+
+  @doc false
+  def maybe_log(message) do
+    require Logger
+
+    if System.get_env("CLDR_DEBUG") do
+      Logger.debug message
+    end
+  end
 end

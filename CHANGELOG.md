@@ -1,6 +1,23 @@
-# Changelog for Cldr v2.15.1
+# Changelog for Cldr v2.16.0
 
-This is the changelog for Cldr v2.15.1 released on May 28th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.16.0 released on June 6th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Add configuration key `:force_locale_download` for backend and the global configuration. Locale data is `ex_cldr` version dependent. When a new version of `ex_cldr` is installed, no locales are installed and therefore locales are downloaded at compilation time as required. This ensures that the right version of the locale data is always associated with the right version of `ex_cldr`.
+
+However:
+
+* If locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducable builds are important, using the `force_locale_download: true` in a backend or in global configuration adds additional certainty.  The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
+
+```elixir
+defmodule MyApp.Cldr do
+  use Cldr,
+	  locales: ["en", "fr"],
+		default_locale: "en",
+		force_locale_download: Mix.env() == :prod
+
+```
 
 ### Bug Fixes
 
