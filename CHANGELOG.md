@@ -1,3 +1,13 @@
+# Changelog for Cldr v2.16.1-rc.0
+
+This is the changelog for Cldr v2.16.1 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Do not send `Connection: close` when downloading locales.
+
+* Do not convert `charlist` data from `:httpc` before saving it as a locale file
+
 # Changelog for Cldr v2.16.0
 
 This is the changelog for Cldr v2.16.0 released on June 6th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

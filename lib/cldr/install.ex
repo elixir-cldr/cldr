@@ -93,7 +93,7 @@ defmodule Cldr.Install do
     case :httpc.request(:get, {url, headers()}, https_opts(), []) do
       {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
         output_file_name
-        |> File.write!(:erlang.list_to_binary(body))
+        |> File.write!(body)
 
         Logger.bare_log(:info, "Downloaded locale #{inspect(locale_name)}")
         {:ok, output_file_name}
@@ -124,7 +124,8 @@ defmodule Cldr.Install do
   end
 
   defp headers do
-    [{'Connection', 'close'}]
+    # [{'Connection', 'close'}]
+    []
   end
 
   @certificate_locations [
