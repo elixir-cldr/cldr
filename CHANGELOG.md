@@ -1,12 +1,22 @@
-# Changelog for Cldr v2.16.1-rc.0
+# Changelog for Cldr v2.16.1
 
 This is the changelog for Cldr v2.16.1 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+## Bug Fixes
+
+* Do not send `Connection: close` header when downloading locales.
+
+* Do not convert `charlist` data from `:httpc` before saving it as a locale file. Fixes an issue whereby the saved locale file is shorter than expected due to an extraneous use of `:erlang.list_to_binary/1` which is not `UTF8` friendly. Thanks to @halostatue for the patience and persistence working this issue through on a weekend. Fixes #137.
+
+# Changelog for Cldr v2.16.1-rc.0
+
+This is the changelog for Cldr v2.16.1-rc.0 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
 ### Bug Fixes
 
-* Do not send `Connection: close` when downloading locales.
+* Do not send `Connection: close` header when downloading locales.
 
-* Do not convert `charlist` data from `:httpc` before saving it as a locale file
+* Do not convert `charlist` data from `:httpc` before saving it as a locale file. Probably fixes an issue whereby the saved locale file is shorter than expected.
 
 # Changelog for Cldr v2.16.0
 
