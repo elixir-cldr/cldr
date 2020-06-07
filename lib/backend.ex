@@ -12,7 +12,7 @@ if Mix.env() in [:release, :test, :dev] do
     use Cldr,
       gettext: MyApp.Gettext,
       locales: ["en", "de", "ja", "en-AU", "th", "ar", "pl"],
-      generate_docs: false,
+      generate_docs: true,
       providers: []
   end
 end

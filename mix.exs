@@ -152,10 +152,6 @@ defmodule Cldr.Mixfile do
 
   defp groups_for_modules do
     [
-      Config: [
-        Cldr.Config,
-        Cldr.Rbnf.Config
-      ],
       "Language Tag": ~r/^Cldr.LanguageTag.?/,
       "Plural Rules": ~r/^Cldr.Number.?/,
       Plugs: ~r/^Cldr.Plug.?/,

@@ -1,12 +1,6 @@
 defmodule Cldr.Rbnf.Config do
-  @moduledoc """
-  Rules Base Number Formatting Configuration management.
+  @moduledoc false
 
-  During the process of consolidating the various CLDR files into
-  a standard format that is easily digestible for Cldr, these functions
-  are used to do the parsing and normalising of RBNF data.
-
-  """
   alias Cldr.Locale
 
   @default_radix 10
