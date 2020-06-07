@@ -11,7 +11,9 @@ test_task:
   container:
     matrix:
       image: elixir:latest
-      image: elixir:1.8.2
+      image: elixir:1.10.3-otp-22
+      image: elixir:1.10.3-otp-23
+      image: elixir:1.9.4-otp-22
       image: elixir:1.8.2-otp-22
   mix_cache:
     folder: deps
@@ -25,7 +27,3 @@ test_task:
     mix local.rebar --force;
     mix compile
   test_script: mix test
-
-
-
-
