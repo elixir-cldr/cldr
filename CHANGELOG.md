@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.16.2
+
+This is the changelog for Cldr v2.16.2 released on August 29th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Bug Fixes
+
+* Fix compiler warning for Elixir 1.11 when calling a remote function that is based upon a module name that is a variable.
+
 # Changelog for Cldr v2.16.1
 
 This is the changelog for Cldr v2.16.1 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

@@ -519,7 +519,7 @@ defmodule Cldr.Locale do
           locale_name() | false
 
   def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
-    gettext_locales = backend.known_gettext_locale_names
+    gettext_locales = backend.known_gettext_locale_names()
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
