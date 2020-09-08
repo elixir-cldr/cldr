@@ -234,7 +234,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     json = %{locale: "zh-Hant"}
 
     conn =
-      :get
+      :put
       |> conn("/?locale=fr", json)
       |> Plug.Parsers.call(parser_opts)
       |> Cldr.Plug.SetLocale.call(opts)

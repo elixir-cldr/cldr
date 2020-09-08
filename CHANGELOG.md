@@ -1,3 +1,15 @@
+# Changelog for Cldr v2.17.0
+
+This is the changelog for Cldr v2.17.0 released on September 8th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Support `Decimal` version `~> 1.6` and `~> 2.0`
+
+## Bug Fixes
+
+* Corrects `Cldr.Plug.SetLocale` testing for body parameters. Previous version of `Plug` would parse body parameters for an HTTP `get` verb which is not standard behaviour. The test now uses the HTTP `put` verb where body paramters are expected to be parsed.
+
 # Changelog for Cldr v2.16.2
 
 This is the changelog for Cldr v2.16.2 released on August 29th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
