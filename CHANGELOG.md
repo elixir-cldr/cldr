@@ -10,6 +10,8 @@ This is the changelog for Cldr v2.17.0 released on September 8th, 2020.  For old
 
 * Corrects `Cldr.Plug.SetLocale` testing for body parameters. Previous version of `Plug` would parse body parameters for an HTTP `get` verb which is not standard behaviour. The test now uses the HTTP `put` verb where body paramters are expected to be parsed.
 
+* Corrects internal links to the readme.
+
 # Changelog for Cldr v2.16.2
 
 This is the changelog for Cldr v2.16.2 released on August 29th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
@@ -645,7 +647,7 @@ This is the changelog for Cldr v2.1.0 released on December 1st, 2018.  For older
 
 ### Enhancements
 
-* Revises the Cldr provider strategy - again. Rather than try to auto-discover available provider modules and configuring them automatically they are now configured under the `:provider` key.  The [readme](/readme#providers) contains further information on configuring providers. For example:
+* Revises the Cldr provider strategy - again. Rather than try to auto-discover available provider modules and configuring them automatically they are now configured under the `:provider` key.  The [readme](/readme.html#providers) contains further information on configuring providers. For example:
 
 ```
 defmodule MyApp.Cldr do
@@ -725,7 +727,7 @@ In line with the recommended strategy for configurable library applications, `Cl
       use Cldr, locales: ["en", "zh"]
     end
 
-For further information on configuration, consult the [readme](/ex_cldr/readme).
+For further information on configuration, consult the [readme](/readme.html).
 
 ### Migrating from Cldr 1.x to Cldr version 2.x
 
