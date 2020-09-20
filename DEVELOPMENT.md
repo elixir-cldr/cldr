@@ -50,62 +50,54 @@ export EX_CLDR="$HOME/Development/ex_cldr"
 git clone https://github.com/elixir-cldr/cldr $EX_CLDR
 ```
 
-### Updating CLDR content
+### Updating Unicode CLDR repository
 
 When a new version of CLDR is released, notification is typically given on the [Unicode blog](http://blog.unicode.org). For example, [this](http://blog.unicode.org/2020/04/unicode-locale-data-v37-released_23.html) is the introduction of CLDR 37.
 
 Whenever a new release is created, the local repo needs to be updated. A simple `git pull` is all that is required.
 
 ```bash
-cd cldr_repo
+cd $CLDR_REPO
 git pull
 ```
 
-### Generating the CLDR utilities
+### Generating the Unicode CLDR json data
 
 CLDR data is primarily stored in a series of XML files. However `ex_cldr` operates on json data generated from these files.  This section describes how to generate that json data.
 
-1. Create the staging and production directories
+1. Export required environment variables
 
-Data generation is done via the file `ldml2json` which makes some assumptions about shell variable and directory locations. The staging directory is used used to store data after the first phase on expansion of CLDR and the production directory is the final location of the generated data.
+Data generation is done via the file `ldml2json` which makes some assumptions about shell variable names and directory locations. The staging directory is used used to store data after the first phase on expansion of CLDR and the production directory is the final location of the generated data.
 
 ```bash
-mkdir $HOME/development/cldr_staging_data
-mkdir $HOME/development/cldr_production_data
+export EX_CLDR=directory_where_you_cloned_ex_cldr
+export CLDR_REPO=directory_where_you_cloned_unicode_cldr
+export CLDR_STAGING=directory_where_staging_data_will_be_saved
+export CLDR_PRODUCTION=directory_where_production_data_will_be_saved
 ```
 
-2. Export required environment variables
+2. Create the staging and production directories
 
-The `ldml2json` script requires four environment variables to be set.
+Ensure the staging and production directories exist. `ldml2json` will exit if they do not exist.
 
 ```bash
-export EX_CLDR directory_where_you_cloned_ex_cldr
-export CLDR_REPO directory_where_you_cloned_unicode_cldr
-export CLDR_STAGING directory_you_created_for_staging
-export CLDR_PRODUCTION directory_you_created_for_production
+mkdir $CLDR_STAGING
+mkdir $CLDR_PRODUCTION
 ```
 
 3. Review and update the contents of ldml2json
 
 Review the settings of the first 20 lines of `ldml2json` to ensure the environment variables are set to match your development environment. The file is also defined to use `/bin/zsh`. Change this to the appropriate shell for your environment.
 
-4. Copy ldml2json into a directory in your path
-
-To make it easy to execute, copy the `ldml2json` file into any directory that is in your `$PATH`. Make sure the execution flag is set.
-```bash
-chmod u+x $EX_CLDR/ldml2json
-cp $EX_CLDR/ldml2json /some/directory/in/path
-```
-
-5. Download the up-to-date ISO currency database
+4. Download the up-to-date ISO currency database
 ```bash
 mix cldr.download.iso_currency
 ```
 
-6. Execute ldml2json
+5. Execute ldml2json
 
 ```bash
-ldml2json
+$CLDR_REPO/ldml2json
 ```
 
 Execution will take quite a few minutes but there is output generated so you can be assured that data is being processed.
