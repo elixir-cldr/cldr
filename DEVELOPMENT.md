@@ -65,21 +65,24 @@ git pull
 
 CLDR data is primarily stored in a series of XML files. However `ex_cldr` operates on json data generated from these files.  This section describes how to generate that json data.
 
-1. Generate the updated toolchain
-
-```bash
-cd $CLDR_REPO/tools/java
-ant clean all jar
-cd $OLDPWD
-```
-
-2. Create the staging and production directories
+1. Create the staging and production directories
 
 Data generation is done via the file `ldml2json` which makes some assumptions about shell variable and directory locations. The staging directory is used used to store data after the first phase on expansion of CLDR and the production directory is the final location of the generated data.
 
 ```bash
 mkdir $HOME/development/cldr_staging_data
 mkdir $HOME/development/cldr_production_data
+```
+
+2. Export required environment variables
+
+The `ldml2json` script requires four environment variables to be set.
+
+```bash
+export EX_CLDR directory_where_you_cloned_ex_cldr
+export CLDR_REPO directory_where_you_cloned_unicode_cldr
+export CLDR_STAGING directory_you_created_for_staging
+export CLDR_PRODUCTION directory_you_created_for_production
 ```
 
 3. Review and update the contents of ldml2json
@@ -105,7 +108,7 @@ mix cldr.download.iso_currency
 ldml2json
 ```
 
-Execution will take quite a few minutes.
+Execution will take quite a few minutes but there is output generated so you can be assured that data is being processed.
 
 ### Update ex_cldr content
 

@@ -1,3 +1,13 @@
+# Changelog for Cldr v2.18.0
+
+This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Update to CLDR 38
+
+* The script `ldml2json` now rebuilds to tools on each run and instead of hardcoded environment variables it uses existing ones if set and only applies defaults if required.
+
 # Changelog for Cldr v2.17.0
 
 This is the changelog for Cldr v2.17.0 released on September 8th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
