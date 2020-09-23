@@ -6,7 +6,11 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Update to CLDR 38
 
-* The script `ldml2json` now rebuilds to tools on each run and instead of hardcoded environment variables it uses existing ones if set and only applies defaults if required.
+* The script `ldml2json` now rebuilds to tools on each run and instead of hardcoded environment variables it uses existing ones if set and only applies defaults if required. This is applicable only to `ex_cldr` developers and maintainers.
+
+* Warn on duplicate providers being configured for a backend and then ignore the duplicates.
+
+* Omit stacktrace when warning about use of the global configuration
 
 # Changelog for Cldr v2.17.0
 

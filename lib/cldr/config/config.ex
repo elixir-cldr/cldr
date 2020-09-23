@@ -2161,8 +2161,32 @@ defmodule Cldr.Config do
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
       |> merge_locales_with_default
+      |> dedup_provider_modules
 
     struct(__MODULE__, config)
+  end
+
+  @doc false
+  def dedup_provider_modules(%{providers: []} = config) do
+    config
+  end
+
+  def dedup_provider_modules(%{providers: providers, backend: backend} = config) do
+    groups = Enum.group_by(providers, &(&1))
+    config = Map.put(config, :providers, Map.keys(groups))
+    duplicates =
+      groups
+      |> Enum.filter(fn {_k, v} -> length(v) > 1 end)
+      |> Enum.map(&elem(&1, 0))
+
+    if length(duplicates) > 0 do
+      IO.warn(
+        "Duplicate Cldr backend providers #{inspect providers} for " <>
+        "backend #{inspect backend} have been ignored", []
+      )
+    end
+
+    config
   end
 
   # Returns the AST of any configured plugins
@@ -2258,7 +2282,7 @@ defmodule Cldr.Config do
           "only supports the #{inspect(@non_deprecated_keys)} keys. The keys " <>
           "#{inspect(remaining_config)} should be configured in a backend module or " <>
           "via the :otp_app configuration of a backend module.  See the readme for " <>
-          "further information."
+          "further information.", []
       )
     end
   end

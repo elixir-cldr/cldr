@@ -95,7 +95,6 @@ mix cldr.download.iso_currency
 ```
 
 5. Execute ldml2json
-
 ```bash
 $CLDR_REPO/ldml2json
 ```
@@ -112,7 +111,7 @@ cd $EX_CLDR
 git pull
 ```
 
-2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`.  This is done by:
+2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`
 ```bash
 mix cldr.consolidate
 ```
