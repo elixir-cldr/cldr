@@ -58,7 +58,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
   end
 
   test "that the default locale is used if no backend is configured" do
-    assert Cldr.Plug.AcceptLanguage.init([]) == Cldr.default_backend()
+    assert Cldr.Plug.AcceptLanguage.init([]) == Cldr.default_backend!()
   end
 
   test "that the locale is not set if the accept-language header is an invalid locale name" do

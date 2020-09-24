@@ -54,10 +54,10 @@ defmodule Cldr.Number.PluralRule do
   	:other
 
   """
-  def plural_type(number, backend \\ Cldr.default_backend(), options \\ [])
+  def plural_type(number, backend \\ Cldr.default_backend!(), options \\ [])
 
   def plural_type(number, options, []) when is_list(options) do
-    {backend, options} = Keyword.pop_lazy(options, :backend, &Cldr.default_backend/0)
+    {backend, options} = Keyword.pop_lazy(options, :backend, &Cldr.default_backend!/0)
     plural_type(number, backend, options)
   end
 

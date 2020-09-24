@@ -108,62 +108,6 @@ defmodule Cldr do
   end
 
   @doc """
-  Return the backend's locale for the
-  current process.
-
-  Note that the locale is set per-process. If the locale
-  is not set for the given process then:
-
-  * return the current processes default locale
-
-  * or if not set, return the default locale of the
-    specified backend
-
-  * or if that is not set, return the global default locale
-    which is defined under the `:ex_cldr` key in `config.exs`
-
-  * Or the system-wide default locale which is
-    #{inspect(Cldr.Config.default_locale())}
-
-  Note that if there is no locale set for the current
-  process then an error is not returned - a default locale
-  will be returned per the rules above.
-
-  ## Arguments
-
-  * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
-
-  ## Example
-
-      iex> Cldr.put_locale(TestBackend.Cldr, "pl")
-      iex> Cldr.get_locale(TestBackend.Cldr)
-      %Cldr.LanguageTag{
-         backend: TestBackend.Cldr,
-         canonical_locale_name: "pl-Latn-PL",
-         cldr_locale_name: "pl",
-         extensions: %{},
-         language: "pl",
-         locale: %{},
-         private_use: [],
-         rbnf_locale_name: "pl",
-         territory: :PL,
-         requested_locale_name: "pl",
-         script: "Latn",
-         transform: %{},
-         language_variant: nil
-       }
-
-  """
-  @spec get_locale(backend()) :: LanguageTag.t()
-  def get_locale(backend) do
-    Process.get(backend) ||
-      Process.get(:cldr) ||
-      backend.default_locale() ||
-      default_locale()
-  end
-
-  @doc """
   Return the `Cldr` locale for the
   current process.
 
@@ -202,9 +146,10 @@ defmodule Cldr do
        }
 
   """
-  def get_locale do
-    Process.get(:cldr) ||
-      default_locale()
+  @process_dictionary_key :cldr_locale
+
+  def get_locale(_backend \\ nil) do
+    Process.get(@process_dictionary_key) || default_locale()
   end
 
   @doc """
@@ -212,15 +157,20 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
-
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`.
 
   ## Returns
 
   * `{:ok, locale}`
+
+  ## Behaviour
+
+  1. If no backend is provided and the locale is a `Cldr.LanguageTag.t`
+  then the the locale is set for the
 
   ## Notes
 
@@ -257,61 +207,26 @@ defmodule Cldr do
   @spec put_locale(backend(), Locale.locale_name() | LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def put_locale(backend, locale) when is_binary(locale) do
+  def put_locale(backend \\ nil, locale)
+
+  def put_locale(nil, locale) when is_binary(locale) do
+    backend = default_backend!()
+
     with {:ok, locale} <- backend.validate_locale(locale) do
-      Process.put(backend, locale)
-      {:ok, locale}
+      put_locale(locale)
     end
   end
 
-  def put_locale(backend, %LanguageTag{} = locale) do
-    Process.put(backend, locale)
-    {:ok, locale}
+  def put_locale(backend, locale) when is_atom(backend) and is_binary(locale) do
+    with {:ok, backend} <- validate_backend(backend),
+         {:ok, locale} <- backend.validate_locale(locale) do
+      put_locale(locale)
+    end
   end
 
-  @doc """
-  Set the current process's locale for all backends.
 
-  This is the preferred approach.
-
-  ## Arguments
-
-  * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
-    with a non-nil `:cldr_locale_name`
-
-  ## Returns
-
-  * `{:ok, locale}`
-
-  ## Examples
-
-      iex> Cldr.put_locale(TestBackend.Cldr.Locale.new!("en"))
-      {:ok,
-       %Cldr.LanguageTag{
-         backend: TestBackend.Cldr,
-         canonical_locale_name: "en-Latn-US",
-         cldr_locale_name: "en",
-         language_subtags: [],
-         extensions: %{},
-         gettext_locale_name: "en",
-         language: "en",
-         locale: %{},
-         private_use: [],
-         rbnf_locale_name: "en",
-         requested_locale_name: "en",
-         script: "Latn",
-         territory: :US,
-         transform: %{},
-         language_variant: nil
-       }}
-
-  """
-  @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
-          {:ok, LanguageTag.t()}
-
-  def put_locale(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name} = locale)
-      when not is_nil(cldr_locale_name) do
-    Process.put(:cldr, locale)
+  def put_locale(_backend, %LanguageTag{} = locale) do
+    Process.put(@process_dictionary_key, locale)
     {:ok, locale}
   end
 
@@ -358,7 +273,7 @@ defmodule Cldr do
   * `{:error, {exception, reason}}`
 
   """
-  def put_default_locale(locale_name, backend \\ default_backend()) do
+  def put_default_locale(locale_name, backend \\ default_backend!()) do
     with {:ok, locale} <- validate_locale(locale_name, backend) do
       put_default_locale(locale)
     end
@@ -453,7 +368,7 @@ defmodule Cldr do
   def default_locale do
     case Cldr.Config.default_locale() do
       %{backend: nil} = locale ->
-        Map.put(locale, :backend, default_backend())
+        Map.put(locale, :backend, default_backend!())
       locale ->
         locale
     end
@@ -482,7 +397,7 @@ defmodule Cldr do
 
   """
   @spec default_territory(backend()) :: atom()
-  def default_territory(backend \\ default_backend()) do
+  def default_territory(backend \\ default_backend!()) do
     backend.default_territory
   end
 
@@ -505,10 +420,15 @@ defmodule Cldr do
 
   """
   @spec default_backend :: backend() | no_return
-  @compile {:inline, default_backend: 0}
+  @compile {:inline, default_backend!: 0}
 
-  def default_backend do
+  def default_backend! do
     Cldr.Config.default_backend()
+  end
+
+  @deprecated "Use default_backend!/0"
+  def default_backend do
+    default_backend!()
   end
 
   @doc """
@@ -668,10 +588,10 @@ defmodule Cldr do
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def validate_locale(locale, backend \\ Cldr.default_backend())
+  def validate_locale(locale, backend \\ Cldr.default_backend!())
 
   def validate_locale(locale, nil) do
-    validate_locale(locale, Cldr.default_backend())
+    validate_locale(locale, Cldr.default_backend!())
   end
 
   def validate_locale(locale, backend) do
@@ -714,7 +634,7 @@ defmodule Cldr do
 
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def requested_locale_names(backend \\ default_backend()) do
+  def requested_locale_names(backend \\ default_backend!()) do
     backend.requested_locale_names
   end
 
@@ -737,7 +657,7 @@ defmodule Cldr do
 
   """
   @spec known_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_locale_names(backend \\ default_backend()) do
+  def known_locale_names(backend \\ default_backend!()) do
     backend.known_locale_names
   end
 
@@ -759,7 +679,7 @@ defmodule Cldr do
 
   """
   @spec unknown_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def unknown_locale_names(backend \\ default_backend()) do
+  def unknown_locale_names(backend \\ default_backend!()) do
     backend.unknown_locale_names
   end
 
@@ -774,7 +694,7 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_rbnf_locale_names(backend \\ default_backend()) do
+  def known_rbnf_locale_names(backend \\ default_backend!()) do
     backend.known_rbnf_locale_names
   end
 
@@ -793,7 +713,7 @@ defmodule Cldr do
 
   """
   @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
-  def known_gettext_locale_names(backend \\ default_backend()) do
+  def known_gettext_locale_names(backend \\ default_backend!()) do
     backend.known_gettext_locale_names
   end
 
@@ -824,7 +744,7 @@ defmodule Cldr do
 
   """
   @spec known_locale_name(Locale.locale_name(), backend()) :: String.t() | nil
-  def known_locale_name(locale_name, backend \\ default_backend())
+  def known_locale_name(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     if name = backend.known_locale_name(locale_name) do
       name
@@ -857,7 +777,7 @@ defmodule Cldr do
 
   """
   @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_locale_name?(locale_name, backend \\ default_backend()) when is_binary(locale_name) do
+  def known_locale_name?(locale_name, backend \\ default_backend!()) when is_binary(locale_name) do
     locale_name in backend.known_locale_names
   end
 
@@ -886,7 +806,7 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_rbnf_locale_name?(locale_name, backend \\ default_backend())
+  def known_rbnf_locale_name?(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     locale_name in backend.known_rbnf_locale_names
   end
@@ -915,7 +835,7 @@ defmodule Cldr do
 
   """
   @spec known_gettext_locale_name?(Locale.locale_name(), backend) :: boolean
-  def known_gettext_locale_name?(locale_name, backend \\ default_backend())
+  def known_gettext_locale_name?(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     locale_name in backend.known_gettext_locale_names
   end
@@ -945,7 +865,7 @@ defmodule Cldr do
 
   """
   @spec known_rbnf_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_rbnf_locale_name(locale_name, backend \\ default_backend())
+  def known_rbnf_locale_name(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     if backend.known_rbnf_locale_name?(locale_name) do
       locale_name
@@ -979,7 +899,7 @@ defmodule Cldr do
 
   """
   @spec known_gettext_locale_name(Locale.locale_name(), backend()) :: String.t() | false
-  def known_gettext_locale_name(locale_name, backend \\ default_backend())
+  def known_gettext_locale_name(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     backend.known_gettext_locale_name(locale_name)
   end
@@ -1045,11 +965,11 @@ defmodule Cldr do
 
   """
   @spec quote(String.t(), backend(), Keyword.t()) :: String.t()
-  def quote(string, backend \\ default_backend(), options \\ [])
+  def quote(string, backend \\ default_backend!(), options \\ [])
 
   def quote(string, options, []) when is_binary(string) and is_list(options) do
     {backend, options} = Keyword.pop(options, :backend)
-    backend = backend || default_backend()
+    backend = backend || default_backend!()
     quote(string, backend, options)
   end
 
@@ -1091,11 +1011,11 @@ defmodule Cldr do
 
   """
   @spec ellipsis(String.t() | list(String.t()), backend(), Keyword.t()) :: String.t()
-  def ellipsis(string, backend \\ default_backend(), options \\ [])
+  def ellipsis(string, backend \\ default_backend!(), options \\ [])
 
   def ellipsis(string, options, []) when is_list(options) do
     {backend, options} = Keyword.pop(options, :backend)
-    backend = backend || default_backend()
+    backend = backend || default_backend!()
     ellipsis(string, backend, options)
   end
 
@@ -1129,7 +1049,7 @@ defmodule Cldr do
   @spec validate_gettext_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def validate_gettext_locale(locale_name, backend \\ default_backend())
+  def validate_gettext_locale(locale_name, backend \\ default_backend!())
 
   def validate_gettext_locale(locale_name, backend)
       when is_binary(locale_name) do
@@ -1891,7 +1811,7 @@ defmodule Cldr do
       [:default, :finance, :native, :traditional]
 
   """
-  def known_number_system_types(backend \\ default_backend()) do
+  def known_number_system_types(backend \\ default_backend!()) do
     backend.known_number_system_types
   end
 
@@ -1933,7 +1853,7 @@ defmodule Cldr do
   @spec validate_number_system_type(String.t() | atom(), backend()) ::
           {:ok, atom()} | {:error, {module(), String.t()}}
 
-  def validate_number_system_type(number_system_type, backend \\ default_backend()) do
+  def validate_number_system_type(number_system_type, backend \\ default_backend!()) do
     backend.validate_number_system_type(number_system_type)
   end
 
@@ -2149,6 +2069,7 @@ defmodule Cldr do
     locale_and_backend_from(locale, backend)
   end
 
+  @doc false
   def locale_and_backend_from(nil, nil) do
     locale = Cldr.get_locale()
     {locale, locale.backend}
@@ -2159,7 +2080,7 @@ defmodule Cldr do
   end
 
   def locale_and_backend_from(locale, nil) when is_binary(locale) do
-    {locale, Cldr.default_backend()}
+    {locale, Cldr.default_backend!()}
   end
 
   def locale_and_backend_from(nil, backend) do

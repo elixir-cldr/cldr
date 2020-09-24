@@ -32,7 +32,7 @@ if Code.ensure_loaded?(Plug) do
 
     @doc false
     def init(options \\ []) do
-      Keyword.get_lazy(options, :cldr_backend, &Cldr.default_backend/0)
+      Keyword.get_lazy(options, :cldr_backend, &Cldr.default_backend!/0)
     end
 
     @doc false
