@@ -14,7 +14,7 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Deprecate `Cldr.default_backend/0` in favour of `Cldr.default_backend!/0` which more clearly expresses that the function will raise if no default backend is configured.
 
-* Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store the default locale for a given backend. Logically however, it is more appropropriate to store the default locale on a per-process basis irrespective of the backend.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
+* Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
 
 # Changelog for Cldr v2.17.0
 

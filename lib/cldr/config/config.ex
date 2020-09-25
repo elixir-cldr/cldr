@@ -2189,6 +2189,10 @@ defmodule Cldr.Config do
     config
   end
 
+  def dedup_provider_modules(config) do
+    config
+  end
+
   # Returns the AST of any configured plugins
   @doc false
   def define_provider_modules(config) do
