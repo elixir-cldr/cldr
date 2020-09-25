@@ -148,8 +148,16 @@ defmodule Cldr do
   """
   @process_dictionary_key :cldr_locale
 
-  def get_locale(_backend \\ nil) do
+  def get_locale(_backend \\ nil)
+
+  def get_locale(nil) do
     Process.get(@process_dictionary_key) || default_locale()
+  end
+
+  def get_locale(backend) do
+    Process.get(@process_dictionary_key) ||
+    backend.default_locale() ||
+    default_locale()
   end
 
   @doc """
@@ -223,7 +231,6 @@ defmodule Cldr do
       put_locale(locale)
     end
   end
-
 
   def put_locale(_backend, %LanguageTag{} = locale) do
     Process.put(@process_dictionary_key, locale)
@@ -316,7 +323,7 @@ defmodule Cldr do
   """
   @spec default_locale(backend()) :: LanguageTag.t()
   def default_locale(backend) do
-    backend.default_locale
+    backend.default_locale()
   end
 
   @doc """
