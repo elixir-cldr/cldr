@@ -32,6 +32,7 @@ defmodule Cldr do
   """
 
   @external_resource "priv/cldr/language_tags.ebin"
+  @app_name Cldr.Config.app_name()
 
   @type backend :: module()
   @type territory :: atom()
@@ -333,7 +334,7 @@ defmodule Cldr do
 
   """
   def put_default_locale(%Cldr.LanguageTag{} = locale) do
-    :ok = Application.put_env(Cldr.Config.app_name(), :default_locale, locale)
+    :ok = Application.put_env(@app_name, :_default_locale, locale)
     {:ok, locale}
   end
 
@@ -401,7 +402,7 @@ defmodule Cldr do
   """
   @spec default_locale(backend()) :: LanguageTag.t()
   def default_locale(backend) do
-    backend.default_locale
+    backend.default_locale()
   end
 
   @doc """
@@ -437,7 +438,7 @@ defmodule Cldr do
         cldr_locale_name: "en-001",
         language_subtags: [],
         extensions: %{},
-        gettext_locale_name: nil,
+        gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
@@ -451,11 +452,11 @@ defmodule Cldr do
 
   """
   def default_locale do
-    case Cldr.Config.default_locale() do
-      %{backend: nil} = locale ->
-        Map.put(locale, :backend, default_backend())
-      locale ->
-        locale
+    if locale = Application.get_env(@app_name, :_default_locale) do
+      locale
+    else
+      {:ok, locale} = put_default_locale(Cldr.Config.default_locale())
+      locale
     end
   end
 
