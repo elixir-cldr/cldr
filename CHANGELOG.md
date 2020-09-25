@@ -4,7 +4,7 @@ This is the changelog for Cldr v2.17.1 released on September 26th, 2020.  For ol
 
 ## Bug Fixes
 
-* Significantly improve the performance of `Cldr.default_locale/0`. In previously releases, the default locale was being parsed on each access. In this release it is parsed once and cached in the application environment. This improves performance by up to three orders of magnitude.  Thanks to @Phillipp who brought this to attention in [Elixir Forum](https://elixirforum.com/t/cldr-number-parser-parse-quite-slow/34572)
+* Significantly improve the performance of `Cldr.default_locale/0`. In previously releases, the default locale was being parsed on each access. In this release it is parsed once and cached in the application environment. This improves performance by about 40x.  Thanks to @Phillipp who brought this to attention in [Elixir Forum](https://elixirforum.com/t/cldr-number-parser-parse-quite-slow/34572)
 
 # Changelog for Cldr v2.17.0
 
