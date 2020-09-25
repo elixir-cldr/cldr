@@ -316,12 +316,7 @@ defmodule Cldr.Config do
 
   """
   def default_locale do
-    case  Application.get_env(app_name(), :default_locale, @default_locale_name) do
-      %Cldr.LanguageTag{} = locale ->
-        locale
-      locale_name ->
-        language_tag(locale_name)
-    end
+    Application.get_env(app_name(), :default_locale, @default_locale_name)
   end
 
   @doc """
