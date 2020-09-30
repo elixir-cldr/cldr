@@ -432,7 +432,8 @@ defmodule Cldr.Number.PluralRule do
         w = 0
         f = 0
         t = 0
-        do_plural_rule(locale, n, i, v, w, f, t)
+        e = Cldr.Digits.number_of_trailing_zeros(number)
+        do_plural_rule(locale, n, i, v, w, f, t, e)
       end
 
       # Plural rule for a float
@@ -448,7 +449,8 @@ defmodule Cldr.Number.PluralRule do
         t = fraction_as_integer(n - i, rounding)
         w = number_of_integer_digits(t)
         f = trunc(t * Math.power_of_10(v - w))
-        do_plural_rule(locale, n, i, v, w, f, t)
+        {_coef, e} = Cldr.Math.coef_exponent(number)
+        do_plural_rule(locale, n, i, v, w, f, t, e)
       end
 
       # Plural rule for a %Decimal{}
@@ -479,8 +481,9 @@ defmodule Cldr.Number.PluralRule do
 
         i = Decimal.to_integer(i)
         n = Math.to_float(n)
+        {_coef, e} = Cldr.Math.coef_exponent(number)
 
-        do_plural_rule(locale, n, i, v, w, f, t)
+        do_plural_rule(locale, n, i, v, w, f, t, e)
       end
     end
   end
@@ -587,7 +590,8 @@ defmodule Cldr.Number.PluralRule do
               PluralRule.operand(),
               PluralRule.operand(),
               PluralRule.operand(),
-              [integer(), ...] | integer()
+              [integer(), ...] | integer(),
+              number()
             ) :: :zero | :one | :two | :few | :many | :other
 
       # Function body is the AST of the function which needs to be injected
@@ -605,17 +609,18 @@ defmodule Cldr.Number.PluralRule do
                v,
                w,
                f,
-               t
+               t,
+               e
              ) do
           # silence unused variable warnings
-          _ = {n, i, v, w, f, t}
+          _ = {n, i, v, w, f, t, e}
           unquote(function_body)
         end
       end
 
       # If we get here then it means that the locale doesn't have a plural rule,
       # but the language might
-      defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t) do
+      defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t, e) do
         if language_tag.language == language_tag.cldr_locale_name do
           {
             :error,
@@ -627,7 +632,7 @@ defmodule Cldr.Number.PluralRule do
         else
           language_tag
           |> Map.put(:cldr_locale_name, language_tag.language)
-          |> do_plural_rule(n, i, v, w, f, t)
+          |> do_plural_rule(n, i, v, w, f, t, e)
         end
       end
     end

@@ -1,4 +1,4 @@
-if File.exists?(Cldr.Config.download_data_dir()) do
+if File.exists?(Cldr.Config.download_data_dir()) && Code.ensure_loaded?(Cldr.Consolidate) do
   defmodule Mix.Tasks.Cldr.Consolidate do
     @moduledoc """
     Mix task to consolidate the cldr data into a set of files, one file per

@@ -16,6 +16,10 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
 
+* Do not include the locale `en-001` in a backend if the backend has a default locale defined. This prevents `en-001` being configured unexpectantly.
+
+* Issue a warning if a `Gettext` backend is configured into a `Cldr` backend and the gettext backend includes a locale that is not known to `Cldr`. The offending gettext locale will be ommitted from the `Cldr` backend configuration.
+
 # Changelog for Cldr v2.17.1
 
 This is the changelog for Cldr v2.17.1 released on September 26th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

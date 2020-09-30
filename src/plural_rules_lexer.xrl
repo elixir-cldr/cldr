@@ -22,13 +22,13 @@ Within                  = within
 In                      = in
 Decimal_sample          = @decimal
 Integer_sample          = @integer
-Operand                 = n|i|f|t|v|w
+Operand                 = n|i|f|t|v|w|e
 Tilde                   = ~
 Comma                   = ,
 Range                   = \.\.
 Ellipsis                = …|\.\.\.
-Decimal                 = [0-9]+(\.[0-9]+)
-Integer                 = [0-9]+
+Decimal                 = [0-9]+(\.[0-9]+([e][0-9])?)
+Integer                 = [0-9]+([e][0-9])?
 Whitespace              = [\s\n\t]
 
 Rules.
@@ -48,11 +48,22 @@ Rules.
 {Tilde}                 : {token,{tilde,TokenLine,TokenChars}}.
 {Comma}                 : {token,{comma,TokenLine,TokenChars}}.
 {Range}                 : {token,{range_op,TokenLine,TokenChars}}.
-{Decimal}               : {token,{decimal,TokenLine,'Elixir.Decimal':new(list_to_binary(TokenChars))}}.
-{Integer}               : {token,{integer,TokenLine,list_to_integer(TokenChars)}}.
+{Decimal}               : {token,{decimal,TokenLine,decimal_exponent(TokenChars)}}.
+{Integer}               : {token,{integer,TokenLine,integer_exponent(TokenChars)}}.
 {Ellipsis}              : {token,{ellipsis,TokenLine,TokenChars}}.
 {Whitespace}+           : skip_token.
 
 Erlang code.
 
 -import('Elixir.Decimal', [new/1]).
+
+integer_exponent(Chars) ->
+  case string:split(Chars, "e") of
+    [Int, Exp] ->
+      list_to_integer(Int) * trunc(math:pow(10, list_to_integer(Exp)));
+    [Int] ->
+      list_to_integer(Int)
+  end.
+
+decimal_exponent(Chars) ->
+  'Elixir.Decimal':new(list_to_binary(Chars)).

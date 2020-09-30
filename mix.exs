@@ -44,13 +44,13 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:cldr_utils, "~> 2.9"},
+      {:cldr_utils, "~> 2.12"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:castore, "~> 0.1", optional: true},
       {:certifi, "~> 2.5", optional: true},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
-      {:nimble_parsec, "~> 0.5", optional: true, only: [:release, :dev]},
+      {:nimble_parsec, "~> 0.5 or ~> 1.0"},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
@@ -170,7 +170,7 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "src", "mix/support/units", "test"]
+  defp elixirc_paths(:test), do: ["lib", "src", "mix/support/units", "mix/tasks", "test"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "src", "bench"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end

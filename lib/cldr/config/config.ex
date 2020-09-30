@@ -517,11 +517,13 @@ defmodule Cldr.Config do
     |> known_locale_names
   end
 
-  def known_locale_names(config) do
-    requested_locale_names(config)
-    |> Enum.map(&canonical_name/1)
-    |> Enum.reject(&is_nil/1)
-    |> Enum.sort()
+  def known_locale_names(%__MODULE__{locales: :all}) do
+    all_locale_names()
+    |> Enum.sort
+  end
+
+  def known_locale_names(%__MODULE__{locales: locales}) do
+    Enum.sort(locales)
   end
 
   def known_rbnf_locale_names(config) do
@@ -562,8 +564,12 @@ defmodule Cldr.Config do
 
   """
   @spec unknown_locale_names(t()) :: [Locale.locale_name()]
-  def unknown_locale_names(config) do
-    requested_locale_names(config)
+  def unknown_locale_names(%__MODULE__{locales: :all}) do
+    []
+  end
+
+  def unknown_locale_names(%__MODULE__{locales: locales}) do
+    locales
     |> MapSet.new()
     |> MapSet.difference(MapSet.new(all_locale_names()))
     |> MapSet.to_list()
@@ -1208,7 +1214,7 @@ defmodule Cldr.Config do
       |> locale_name_from_posix
       |> String.downcase
 
-    Map.get(known_locales_map(), name)
+    Map.get(known_locales_map(), name, locale_name)
   end
 
   defp known_locales_map do
@@ -1399,7 +1405,7 @@ defmodule Cldr.Config do
           "gd" => %{official_status: "official_regional", population_percent: 0.099, writing_percent: 5},
           "it" => %{population_percent: 0.33},
           "ks" => %{population_percent: 0.19},
-          "kw" => %{population_percent: 0.0031},
+          "kw" => %{population_percent: 0.003},
           "ml" => %{population_percent: 0.035},
           "pa" => %{population_percent: 0.79},
           "sco" => %{population_percent: 2.7, writing_percent: 5},
@@ -1409,7 +1415,7 @@ defmodule Cldr.Config do
         },
         literacy_percent: 99,
         measurement_system: %{default: :uksystem, paper_size: :a4, temperature: :uksystem},
-        population: 65105200
+        population: 65761100
       }
 
   """
@@ -1496,12 +1502,12 @@ defmodule Cldr.Config do
         language_population: %{
           "en" => %{official_status: "de_facto_official", population_percent: 96},
           "it" => %{population_percent: 1.9},
-          "wbp" => %{population_percent: 0.011},
+          "wbp" => %{population_percent: 0.0098},
           "zh-Hant" => %{population_percent: 2.1}
         },
         literacy_percent: 99,
         measurement_system: %{default: :metric, paper_size: :a4, temperature: :metric},
-        population: 23470100
+        population: 25466500
       }
 
       iex> Cldr.Config.territory "abc"
@@ -2156,9 +2162,53 @@ defmodule Cldr.Config do
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
       |> merge_locales_with_default
+      |> remove_gettext_only_locales()
+      |> sort_locales
       |> dedup_provider_modules
 
     struct(__MODULE__, config)
+  end
+
+  defp sort_locales(%{locales: :all} = config) do
+    config
+  end
+
+  defp sort_locales(%{locales: locales} = config) do
+    %{config | locales: Enum.sort(locales)}
+  end
+
+  # If a locale comes from Gettext but has no CLDR counterpart
+  # then omit it with a warning (but don't raise)
+  defp remove_gettext_only_locales(%{gettext: nil} = config) do
+    config
+  end
+
+  defp remove_gettext_only_locales(%{locales: locales, gettext: gettext} = config) do
+    gettext_locales = known_gettext_locale_names(config)
+    unknown_locales = Enum.filter(gettext_locales, &(&1 not in all_locale_names()))
+
+    case unknown_locales do
+      [] ->
+        config
+
+      [unknown_locale] ->
+        IO.warn(
+          "The locale #{inspect unknown_locale} is configured in the #{gettext} " <>
+          "gettext backend but is unknown to CLDR. It will be ignored by CLDR.", []
+        )
+        Map.put(config, :locales, locales -- [unknown_locale])
+
+      unknown_locales ->
+        IO.warn(
+          "The locales #{inspect unknown_locales} are configured in the #{gettext} " <>
+          "gettext backend but are unknown to CLDR. They will be ignored by CLDR.", []
+        )
+        Map.put(config, :locales, locales -- unknown_locales)
+    end
+  end
+
+  defp remove_gettext_only_locales(config) do
+    config
   end
 
   @doc false
@@ -2287,20 +2337,20 @@ defmodule Cldr.Config do
   end
 
   @root_locale "root"
-  def merge_locales_with_default(config) do
-    locales =
-      if config[:locales] == :all do
-        config[:locales]
-      else
-        gettext = known_gettext_locale_names(config)
-        locales = config[:locales] || [config[:default_locale] || @default_locale_name]
-        default = config[:default_locale] || hd(locales)
+  def merge_locales_with_default(%{locales: :all} = config) do
+    config
+  end
 
-        (locales ++ gettext ++ [default, @default_locale_name, @root_locale])
-        |> Enum.reject(&is_nil/1)
-        |> Enum.uniq()
-        |> Enum.map(&canonical_name/1)
-      end
+  def merge_locales_with_default(config) do
+    gettext = known_gettext_locale_names(config)
+    locales = config[:locales] || [config[:default_locale] || @default_locale_name]
+    default = config[:default_locale] || hd(locales)
+
+    locales =
+      (locales ++ gettext ++ [default, @root_locale])
+      |> Enum.reject(&is_nil/1)
+      |> Enum.uniq()
+      |> Enum.map(&canonical_name/1)
 
     Map.put(config, :locales, locales)
   end

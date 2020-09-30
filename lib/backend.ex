@@ -11,7 +11,7 @@ if Mix.env() in [:release, :test, :dev] do
   defmodule MyApp.Cldr do
     use Cldr,
       gettext: MyApp.Gettext,
-      locales: ["en", "de", "ja", "en-AU", "th", "ar", "pl"],
+      locales: ["en", "de", "ja", "en-AU", "th", "ar", "pl", "doi"],
       generate_docs: true,
       providers: []
   end

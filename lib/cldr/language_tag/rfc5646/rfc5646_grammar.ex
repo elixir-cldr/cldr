@@ -14,7 +14,6 @@ if Code.ensure_loaded?(NimbleParsec) do
     def langtag do
       language()
       |> optional(ignore(dash()) |> concat(script()))
-      |> repeat(ignore(dash()) |> concat(variant()))
       |> optional(ignore(dash()) |> concat(region()))
       |> repeat(ignore(dash()) |> concat(variant()))
       |> repeat(ignore(dash()) |> concat(extensions()) |> reduce(:collapse_extensions))
@@ -51,7 +50,8 @@ if Code.ensure_loaded?(NimbleParsec) do
     #                 *2("-" 3ALPHA)      ; permanently reserved
     @spec extlangs :: NimbleParsec.t()
     def extlangs do
-      choice([
+      lookahead_not(script())
+      |> choice([
         script(),
         extlang()
         |> ignore(dash())

@@ -1,3 +1,5 @@
+require TestBackend.Cldr
+
 defmodule MyRouter do
   use Plug.Router
 
