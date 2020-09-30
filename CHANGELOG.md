@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.17.2
+
+This is the changelog for Cldr v2.17.2 released on September 30th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Bug Fixes
+
+* When configuring a Cldr backend, warn then omit any Gettext locales configured that aren't actually available in CLDR. Thanks to @mikl. Closes #138.
+
 # Changelog for Cldr v2.17.1
 
 This is the changelog for Cldr v2.17.1 released on September 26th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
