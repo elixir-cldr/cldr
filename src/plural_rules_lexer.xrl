@@ -59,11 +59,20 @@ Erlang code.
 
 integer_exponent(Chars) ->
   case string:split(Chars, "e") of
-    [Int, Exp] ->
-      list_to_integer(Int) * trunc(math:pow(10, list_to_integer(Exp)));
-    [Int] ->
-      list_to_integer(Int)
+    [I, E] ->
+      Exp = list_to_integer(E),
+      Int = list_to_integer(I),
+      {Int * trunc(math:pow(10, Exp)), Exp};
+    [I] ->
+      list_to_integer(I)
   end.
 
 decimal_exponent(Chars) ->
-  'Elixir.Decimal':new(list_to_binary(Chars)).
+  case string:split(Chars, "e") of
+    [_F, E] ->
+      Exp = list_to_integer(E),
+      Decimal = 'Elixir.Decimal':new(list_to_binary(Chars)),
+      {Decimal, Exp};
+    [F] ->
+      'Elixir.Decimal':new(list_to_binary(F))
+  end.

@@ -432,7 +432,18 @@ defmodule Cldr.Number.PluralRule do
         w = 0
         f = 0
         t = 0
-        e = Cldr.Digits.number_of_trailing_zeros(number)
+        e = 0
+        do_plural_rule(locale, n, i, v, w, f, t, e)
+      end
+
+      # For a compact integer
+      def plural_rule({number, e}, locale, _rounding) when is_integer(number) do
+        n = abs(number)
+        i = n
+        v = 0
+        w = 0
+        f = 0
+        t = 0
         do_plural_rule(locale, n, i, v, w, f, t, e)
       end
 
@@ -449,7 +460,23 @@ defmodule Cldr.Number.PluralRule do
         t = fraction_as_integer(n - i, rounding)
         w = number_of_integer_digits(t)
         f = trunc(t * Math.power_of_10(v - w))
-        {_coef, e} = Cldr.Math.coef_exponent(number)
+        e = 0
+        do_plural_rule(locale, n, i, v, w, f, t, e)
+      end
+
+      # Plural rule for a compact float
+      def plural_rule({number, e}, locale, rounding)
+          when is_float(number) and is_integer(rounding) and rounding > 0 do
+        # Testing shows that this is working but just in case we
+        # can go back to casting the number to a decimal and
+        # using that path
+        # plural_rule(Decimal.new(number), locale, rounding)
+        n = Float.round(abs(number), rounding)
+        i = trunc(n)
+        v = rounding
+        t = fraction_as_integer(n - i, rounding)
+        w = number_of_integer_digits(t)
+        f = trunc(t * Math.power_of_10(v - w))
         do_plural_rule(locale, n, i, v, w, f, t, e)
       end
 
@@ -481,7 +508,39 @@ defmodule Cldr.Number.PluralRule do
 
         i = Decimal.to_integer(i)
         n = Math.to_float(n)
-        {_coef, e} = Cldr.Math.coef_exponent(number)
+        e = 0
+
+        do_plural_rule(locale, n, i, v, w, f, t, e)
+      end
+
+      # Plural rule for a compact %Decimal{}
+      def plural_rule({%Decimal{} = number, e}, locale, rounding)
+          when is_integer(rounding) and rounding > 0 do
+        # n absolute value of the source number (integer and decimals).
+        n = Decimal.abs(number)
+
+        # i integer digits of n.
+        i = Decimal.round(n, 0, :floor)
+
+        # v number of visible fraction digits in n, with trailing zeros.
+        v = abs(n.exp)
+
+        # f visible fractional digits in n, with trailing zeros.
+        f =
+          n
+          |> Decimal.sub(i)
+          |> Decimal.mult(Decimal.new(Math.power_of_10(v)))
+          |> Decimal.round(0, :floor)
+          |> Decimal.to_integer()
+
+        #   t visible fractional digits in n, without trailing zeros.
+        t = remove_trailing_zeros(f)
+
+        # w number of visible fraction digits in n, without trailing zeros.
+        w = number_of_integer_digits(t)
+
+        i = Decimal.to_integer(i)
+        n = Math.to_float(n)
 
         do_plural_rule(locale, n, i, v, w, f, t, e)
       end

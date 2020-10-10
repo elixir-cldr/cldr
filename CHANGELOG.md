@@ -16,6 +16,8 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
 
+* Support plural categories of "compact decimals". These are represented as `{number, formatting_exponent}`. See [TR35](https://unicode-org.github.io/cldr/ldml/tr35-numbers.html#Plural_rules_syntax) for more information.
+
 # Changelog for Cldr v2.17.2
 
 This is the changelog for Cldr v2.17.2 released on September 30th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

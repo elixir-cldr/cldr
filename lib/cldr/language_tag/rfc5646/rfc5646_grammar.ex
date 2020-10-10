@@ -50,7 +50,7 @@ if Code.ensure_loaded?(NimbleParsec) do
     #                 *2("-" 3ALPHA)      ; permanently reserved
     @spec extlangs :: NimbleParsec.t()
     def extlangs do
-      lookahead_not(script())
+      lookahead_not(variant())
       |> choice([
         script(),
         extlang()
@@ -83,7 +83,8 @@ if Code.ensure_loaded?(NimbleParsec) do
     # script        = 4ALPHA
     @spec script :: NimbleParsec.t()
     def script do
-      alpha4()
+      lookahead_not(variant())
+      |> concat(alpha4())
       |> unwrap_and_tag(:script)
       |> label("a script id of four alphabetic character")
     end
@@ -92,7 +93,8 @@ if Code.ensure_loaded?(NimbleParsec) do
     #                 / 3DIGIT
     @spec region :: NimbleParsec.t()
     def region do
-      choice([alpha2(), integer3()])
+      lookahead_not(variant())
+      |> choice([alpha2(), integer3()])
       |> unwrap_and_tag(:territory)
       |> label(
         "a territory code of two alphabetic character ISO-3166-1 code " <>
