@@ -155,17 +155,6 @@ defmodule Cldr.Test do
              ]
   end
 
-  test "that requesting rbnf for a locale that doesn't define it returns an error" do
-    assert Cldr.Rbnf.Config.for_locale("zzz") ==
-             {
-               :error,
-               {
-                 Cldr.Rbnf.NotAvailable,
-                 "The locale name \"zzz\" does not have an RBNF configuration file available"
-               }
-             }
-  end
-
   test "that locale substitutions are applied" do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
              %Cldr.LanguageTag{
