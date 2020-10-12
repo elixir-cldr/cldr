@@ -22,18 +22,18 @@ defmodule Cldr.Number.PluralRule do
 
   * `number` is an integer, float or Decimal number
 
-   * `backend` is any module that includes `use Cldr` and therefore
-     is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
 
   * `options` is a keyword list of options
 
   ## Options
 
-   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-     or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`, The
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`, The
     default is `Cldr.get_locale/0`.
 
-   * `backend` is any module that includes `use Cldr` and therefore
+  * `backend` is any module that includes `use Cldr` and therefore
      is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
      This option allows the backend to be specified as an argument or an option.
 
@@ -41,23 +41,23 @@ defmodule Cldr.Number.PluralRule do
 
   ## Examples
 
-  	iex> Cldr.Number.PluralRule.plural_type(123)
-  	:other
+    	iex> Cldr.Number.PluralRule.plural_type(123)
+    	:other
 
-  	iex> Cldr.Number.PluralRule.plural_type(123, type: Ordinal)
-  	:few
+    	iex> Cldr.Number.PluralRule.plural_type(123, type: Ordinal)
+    	:few
 
-  	iex> Cldr.Number.PluralRule.plural_type(123, type: Cardinal)
-  	:other
+    	iex> Cldr.Number.PluralRule.plural_type(123, type: Cardinal)
+    	:other
 
-  	iex> Cldr.Number.PluralRule.plural_type(2, locale: "de")
-  	:other
+    	iex> Cldr.Number.PluralRule.plural_type(2, locale: "de")
+    	:other
 
   """
   def plural_type(number, backend \\ Cldr.default_backend!(), options \\ [])
 
   def plural_type(number, options, []) when is_list(options) do
-    {backend, options} = Keyword.pop_lazy(options, :backend, &Cldr.default_backend!/0)
+    {_locale, backend} = Cldr.locale_and_backend_from(options)
     plural_type(number, backend, options)
   end
 
