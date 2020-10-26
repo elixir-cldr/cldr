@@ -6,6 +6,10 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Update to CLDR 38
 
+* Removed the `mix cldr.compile` mix task (it was deprecated several releases ago)
+
+* Removed the `mix cldr.download.core_data` mix task since the current development process does not require it.
+
 * The script `ldml2json` now rebuilds to tools on each run and instead of hardcoded environment variables it uses existing ones if set and only applies defaults if required. This is applicable only to `ex_cldr` developers and maintainers.
 
 * Warn on duplicate providers being configured for a backend and then ignore the duplicates.
@@ -16,7 +20,21 @@ This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older chan
 
 * Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
 
-* Support plural categories of "compact decimals". These are represented as `{number, formatting_exponent}`. See [TR35](https://unicode-org.github.io/cldr/ldml/tr35-numbers.html#Plural_rules_syntax) for more information.
+* Support plural categories of "compact decimals". These are represented as `{number, formatting_exponent}`. See [TR35](https://unicode-org.github.io/cldr/ldml/tr35-numbers.html#Plural_rules_syntax) for more information. This notation is only supported for `Cldr.Number.PluralRule.plural_type/2`. In CLDR version 38 only the locale "fr" includes rules that differ for some compact formats. For example:
+```
+# For all locales except "fr" the plural type is the same
+# for all exponents
+iex> Cldr.Number.PluralRule.plural_type {1234567, 3}, locale: "en"
+:other
+iex> Cldr.Number.PluralRule.plural_type {1234567, 6}, locale: "en"
+:other
+
+# For "fr", compact formats pluralize differently in some cases
+iex> Cldr.Number.PluralRule.plural_type {1234567, 3}, locale: "fr"
+:other
+iex> Cldr.Number.PluralRule.plural_type {1234567, 6}, locale: "fr"
+:many
+```
 
 # Changelog for Cldr v2.17.2
 

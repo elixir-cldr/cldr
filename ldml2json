@@ -41,12 +41,12 @@ java -DCLDR_DIR=$CLDR_REPO \
 # verison does not). Therefore the working aproach is to
 # do the following first
 
-for FULLPATH in $CLDR_REPO/common/main/*.xml; do
-  LOCALE=$FULLPATH:t:r
-  java -DCLDR_DIR=$CLDR_STAGING \
-    -jar $CLDR_TOOLS ldml2json \
-    -d $CLDR_PRODUCTION -p true -r true -t main -m $LOCALE
-done
+# for FULLPATH in $CLDR_REPO/common/main/*.xml; do
+#   LOCALE=$FULLPATH:t:r
+#   java -DCLDR_DIR=$CLDR_STAGING \
+#     -jar $CLDR_TOOLS ldml2json \
+#     -d $CLDR_PRODUCTION -p true -r true -t main -m $LOCALE
+# done
 
 # Data will be generated into $CLDR_PRODUCTION
 # -Xmx16g may be too much but the default is definitely too small
