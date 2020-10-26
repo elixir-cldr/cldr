@@ -1,10 +1,10 @@
-# Changelog for Cldr v2.18.0
+# Changelog for Cldr v2.18.0-rc.0
 
-This is the changelog for Cldr v2.18.0 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.18.0-rc.0 released on October 27th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Enhancements
 
-* Update to CLDR 38
+* Update to [CLDR 38](http://cldr.unicode.org/index/downloads/cldr-38)
 
 * Removed the `mix cldr.compile` mix task (it was deprecated several releases ago)
 

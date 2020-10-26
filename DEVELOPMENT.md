@@ -91,7 +91,7 @@ Review the settings of the first 20 lines of `ldml2json` to ensure the environme
 
 4. Download the up-to-date ISO currency database
 ```bash
-mix cldr.download.iso_currency
+MIX_ENV=gen mix cldr.download.iso_currency
 ```
 
 5. Execute ldml2json
@@ -113,12 +113,12 @@ git pull
 
 2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`
 ```bash
-mix cldr.consolidate
+MIX_ENV=gen mix cldr.consolidate
 ```
 
 3. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
 ```bash
-mix cldr.generate_language_tags
+MIX_ENV=gen mix cldr.generate_language_tags
 ```
 
 
