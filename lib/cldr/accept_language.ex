@@ -397,8 +397,13 @@ defmodule Cldr.AcceptLanguage do
     with {:ok, languages} <- parse(accept_language, backend) do
       candidates =
         Enum.filter(languages, fn
-          {priority, %LanguageTag{cldr_locale_name: locale_name}}
-          when is_float(priority) and not is_nil(locale_name) ->
+          {priority,
+           %LanguageTag{
+             cldr_locale_name: cldr_locale_name,
+             gettext_locale_name: gettext_locale_name
+           }}
+          when is_float(priority) and
+                 (not is_nil(cldr_locale_name) or not is_nil(gettext_locale_name)) ->
             true
 
           _ ->

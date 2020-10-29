@@ -2183,6 +2183,10 @@ defmodule Cldr.Config do
     config
   end
 
+  defp remove_gettext_only_locales(%{locales: :all} = config) do
+    config
+  end
+
   defp remove_gettext_only_locales(%{locales: locales, gettext: gettext} = config) do
     gettext_locales = known_gettext_locale_names(config)
     unknown_locales = Enum.filter(gettext_locales, &(&1 not in all_locale_names()))
