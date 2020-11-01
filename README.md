@@ -7,7 +7,7 @@
 
 ## Introduction
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 2020 and `ex_cldr` Version 2.14.0, `Cldr` is based upon [CLDR version 37.0.0](https://github.com/unicode-cldr/cldr).
+`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of November 2020 and `ex_cldr` Version 2.18.0, `Cldr` is based upon [CLDR version 38.0.0](http://cldr.unicode.org/index/downloads/cldr-38).
 
 The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
