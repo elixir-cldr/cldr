@@ -225,6 +225,9 @@ defmodule Cldr.LanguageTag.U do
   end
 
   @doc false
+  def to_string(locale) when locale == %{}, do: ""
+
+  @doc false
   def to_string(locale) do
     locale
     |> Map.to_list()
