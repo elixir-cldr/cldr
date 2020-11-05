@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.18.1
+
+This is the changelog for Cldr v2.18.1 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Bug Fixes
+
+* Fixes `Cldr.LanguageTag.to_string/1` when the `u` extenion is empty. Closes #140. Thanks to @Zurga.
+
 # Changelog for Cldr v2.18.0
 
 This is the changelog for Cldr v2.18.0 released on November 1st, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
