@@ -241,7 +241,8 @@ defmodule Cldr.LanguageTag do
   * A formatted string representation of the language tag that is also
     parseable back into a `Cldr.LanguageTag.t()`
 
-  ## Example
+  ## Examples
+
       iex> {:ok, locale} = Cldr.validate_locale "en-US", MyApp.Cldr
       iex> Cldr.LanguageTag.to_string(locale)
       "en-Latn-US"
