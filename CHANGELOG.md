@@ -1,6 +1,10 @@
 # Changelog for Cldr v2.18.1
 
-This is the changelog for Cldr v2.18.1 released on ______, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.18.1 released on November 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Add `<backend>.Locale.territory_from_locale/1`
 
 ## Bug Fixes
 

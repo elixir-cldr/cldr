@@ -719,6 +719,7 @@ defmodule Cldr.Backend do
       defdelegate validate_territory(territory), to: Cldr
       defdelegate validate_currency(currency), to: Cldr
       defdelegate validate_number_system(number_system), to: Cldr
+
     end
   end
 end

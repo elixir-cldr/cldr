@@ -262,6 +262,40 @@ defmodule Cldr.Locale do
 
         def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
         def new!(locale_name), do: Cldr.Locale.new!(locale_name, unquote(config.backend))
+
+        @doc """
+        Returns the territory from a language tag or
+        locale name.
+
+        ## Arguments
+
+        * `locale` is any language tag returned be `Cldr.Locale.new/2`
+          or a locale name in the list returned by `Cldr.known_locale_names/1`
+
+        ## Returns
+
+        * A territory code as an atom
+
+        ## Examples
+
+            iex> #{inspect __MODULE__}.territory_from_locale "en-US"
+            :US
+
+            iex> #{inspect __MODULE__}.territory_from_locale "en-US-u-rg-GBzzzz"
+            :GB
+
+        """
+        @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
+          Cldr.territory
+
+        def territory_from_locale(locale) when is_binary(locale) do
+          Cldr.Locale.territory_from_locale(locale, unquote(config.backend))
+        end
+
+        def territory_from_locale(%LanguageTag{} = locale) do
+          Cldr.Locale.territory_from_locale(locale)
+        end
+
       end
     end
   end
@@ -317,7 +351,7 @@ defmodule Cldr.Locale do
      use case when locale names such as `en-US` or `es-AR` are
      used.
 
-  2. In some cases it might be desired to override the territory
+  2. In some cases it might be desirable to override the territory
      derived from the locale name. For example, the default
      territory for the language "en" is "US" but it may be desired
      to apply the defaults for the territory "AU" instead, without

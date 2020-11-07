@@ -12,6 +12,7 @@ defmodule Doc.Test do
   doctest Cldr.Substitution
 
   doctest TestBackend.Cldr
+  doctest TestBackend.Cldr.Locale
   doctest TestBackend.Cldr.Number.Ordinal
   doctest TestBackend.Cldr.Number.Cardinal
   doctest TestBackend.Cldr.Gettext.Plural
