@@ -320,16 +320,13 @@ defmodule Cldr.Locale do
 
   ## Examples
 
-      iex> {:ok, locale} = Cldr.validate_locale("en-US", MyApp.Cldr)
-      iex> Cldr.Locale.territory_from_locale locale
+      iex> Cldr.Locale.territory_from_locale "en-US"
       :US
 
-      iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-cazzzz", MyApp.Cldr)
-      iex> Cldr.Locale.territory_from_locale locale
+      iex> Cldr.Locale.territory_from_locale "en-US-u-rg-cazzzz"
       :CA
 
-      iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-xxxxx", MyApp.Cldr)
-      iex> Cldr.Locale.territory_from_locale locale
+      iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx"
       :US
 
   ## Notes
@@ -367,7 +364,7 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
-  @spec territory_from_locale(LanguageTag.t()) :: Cldr.territory()
+  @spec territory_from_locale(LanguageTag.t() | locale_name()) :: Cldr.territory()
 
   def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
     language_tag.locale.region_override ||
@@ -378,6 +375,10 @@ defmodule Cldr.Locale do
   def territory_from_locale(%LanguageTag{} = language_tag) do
     language_tag.territory ||
       Cldr.default_territory()
+  end
+
+  def territory_from_locale(locale_name) when is_binary(locale_name) do
+    territory_from_locale(locale_name, Cldr.default_backend!())
   end
 
   @spec territory_from_locale(locale_name(), Cldr.backend()) ::
