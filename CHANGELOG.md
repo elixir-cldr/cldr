@@ -4,7 +4,7 @@ This is the changelog for Cldr v2.18.2 released on November 9th, 2020.  For olde
 
 ## Enhancements
 
-* Add `Cldr.Locale.territory_from_locale/1` for string language tages
+* Add `Cldr.Locale.territory_from_locale/1` for string language tags
 
 # Changelog for Cldr v2.18.1
 
