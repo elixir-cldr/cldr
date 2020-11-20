@@ -41,6 +41,8 @@ Java is pre-installed on MacOS so installation should not be required. At least 
 brew install maven
 ```
 
+The [Maven configuration for CLDR](http://cldr.unicode.org/development/maven) illustrates the configuration requirements a summary of which is contained below.
+
 #### Generate a GiHub token for Maven
 
 We are going to create a token. A token is used like a password, and should be kept secret as one. You can revoke a token independently from all other tokens, so we will create a token specifically for this use.
