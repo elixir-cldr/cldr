@@ -31,14 +31,38 @@ git clone https://github.com/unicode-org/cldr $CLDR_REPO
 
 Of course the locale name of the CLDR repo can be any valid repo name however for the remainder of this document it is assumed it is referenced by the shell variable `$CLDR_REPO`.
 
-#### Java compiler and ANT
+#### Java compiler and Maven
 
-A java compiler and the ANT tool are requirements for generating the CLDR toolchain.
+A java compiler and the `maven` tool are requirements for generating the CLDR toolchain.
 
-Java is pre-installed on MacOS so installation should not be required. `ant` is not installed by default so the following is required:
+Java is pre-installed on MacOS so installation should not be required. At least java release 9.0 is required. `maven` is not installed by default so the following is required:
 
 ```bash
-brew install ant
+brew install maven
+```
+
+#### Generate a GiHub token for Maven
+
+We are going to create a token. A token is used like a password, and should be kept secret as one. You can revoke a token independently from all other tokens, so we will create a token specifically for this use.
+
+1. Go to https://github.com/settings/tokens - you may need to login with a 2nd factor.
+
+2. click "generate new token" and make a note of the token which is required in the next step.
+
+3. Modify or create `$HOME/.m2/settings.xmlns` file to add the `<server>` stanza into the `<servers>` section. Keep the id `githubicu` as it is.
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+ <servers>
+  <server>
+   <id>githubicu</id>
+   <username>your github user id</username>
+   <password>your access token</password>
+  </server>
+
+ </servers>
+</settings>
 ```
 
 #### Clone the ex_cldr repository
