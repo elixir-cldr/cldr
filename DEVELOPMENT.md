@@ -49,7 +49,7 @@ We are going to create a token. A token is used like a password, and should be k
 
 1. Go to https://github.com/settings/tokens - you may need to login with a 2nd factor.
 
-2. click "generate new token" and make a note of the token which is required in the next step.
+2. Generate a new token with the scope `read:packages` checked and make a note of the token which is required in the next step.
 
 3. Modify or create `$HOME/.m2/settings.xmlns` file to add the `<server>` stanza into the `<servers>` section. Keep the id `githubicu` as it is.
 
