@@ -42,8 +42,8 @@ defmodule Cldr.Timezone do
   end
 
   @doc """
-  Returns a mapping of territoryies to
-  their known timezones
+  Returns a mapping of territories to
+  their known IANA timezone names.
 
   """
   @spec timezones_for_territory() :: map()
@@ -102,6 +102,7 @@ defmodule Cldr.Timezone do
     end
   end
 
+  @doc false
   def timezones_for_territory(territory) do
     timezones_for_territory()
     |> Map.fetch(territory)
