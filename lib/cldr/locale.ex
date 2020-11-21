@@ -317,8 +317,8 @@ defmodule Cldr.Locale do
             "Australia/Sydney"
 
         """
-        @spec timezone_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-          Cldr.territory
+        @spec timezone_from_locale(LanguageTag.t() | Cldr.Locale.locale_name()) ::
+                String.t() | {:error, {module(), String.t}}
 
         def timezone_from_locale(locale) when is_binary(locale) do
           Cldr.Locale.timezone_from_locale(locale, unquote(config.backend))
@@ -446,7 +446,7 @@ defmodule Cldr.Locale do
 
   """
   @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
-          Cldr.timezone() | {:error, {module, String.t}}
+          String.t() | {:error, {module(), String.t}}
 
   def timezone_from_locale(%LanguageTag{locale: %{timezone: timezone}})
       when not is_nil(timezone) do
@@ -471,21 +471,12 @@ defmodule Cldr.Locale do
   end
 
   @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
-          Cldr.timezone() | {:error, {module(), String.t()}}
+          String.t() | {:error, {module(), String.t()}}
 
   def timezone_from_locale(locale, backend) when is_binary(locale) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       timezone_from_locale(locale)
     end
-  end
-
-  defp ambiguous_timezone_error(territory) do
-    {:error,
-      {Cldr.AmbiguousTimezone,
-        "Cannot determine the timezone since the territory #{inspect territory} " <>
-        "has no known timezones"
-      }
-    }
   end
 
   defp ambiguous_timezone_error(territory, zones) do
