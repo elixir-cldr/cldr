@@ -251,3 +251,15 @@ defmodule Cldr.UnknownBackendError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.AmbiguousTimezoneError do
+  @moduledoc """
+  Exception raised when the there are more
+  than one timezones for a locale
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

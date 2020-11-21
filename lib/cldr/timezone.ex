@@ -17,6 +17,19 @@ defmodule Cldr.Timezone do
   @timezones Path.join(:code.priv_dir(Cldr.Config.app_name()), @timezones_file)
              |> File.read!()
              |> Cldr.Config.json_library().decode!
+             |> Enum.reject(fn {_k, v} -> v == [""] end)
+             |> Map.new
+
+  @timezones_for_territory @timezones
+  |> Enum.group_by(fn {k, _v} -> String.slice(k, 0, 2) end, fn {_k, v} -> v end)
+  |> Enum.map(fn {k, v} ->
+    case Cldr.validate_territory(k) do
+      {:ok, territory} -> {territory, List.flatten(v)}
+      {:error, _} -> nil
+    end
+  end)
+  |> Enum.reject(&is_nil/1)
+  |> Map.new
 
   @doc """
   Returns a mapping of CLDR short zone codes to
@@ -26,6 +39,16 @@ defmodule Cldr.Timezone do
   @spec timezones() :: map()
   def timezones do
     @timezones
+  end
+
+  @doc """
+  Returns a mapping of territoryies to
+  their known timezones
+
+  """
+  @spec timezones_for_territory() :: map()
+  def timezones_for_territory do
+    @timezones_for_territory
   end
 
   @doc """
@@ -78,4 +101,10 @@ defmodule Cldr.Timezone do
         {:error, short_zone}
     end
   end
+
+  def timezones_for_territory(territory) do
+    timezones_for_territory()
+    |> Map.fetch(territory)
+  end
+
 end

@@ -223,7 +223,7 @@ defmodule Cldr.Locale do
             sentence_break_supression: nil,
             strength: nil,
             subdivision: nil,
-            timezone: "Australia/Sydney",
+            timezone: "ausyd",
             variable_top: nil,
             variant: nil
           },
@@ -294,6 +294,38 @@ defmodule Cldr.Locale do
 
         def territory_from_locale(%LanguageTag{} = locale) do
           Cldr.Locale.territory_from_locale(locale)
+        end
+
+        @doc """
+        Returns the time zone from a language tag or
+        locale name.
+
+        ## Arguments
+
+        * `locale` is any language tag returned be `Cldr.Locale.new/2`
+          or a locale name in the list returned by `Cldr.known_locale_names/1`
+
+        ## Returns
+
+        * A time zone ID as a string or
+
+        * `:error` if no time zone can be determined
+
+        ## Examples
+
+            iex> #{inspect __MODULE__}.timezone_from_locale "en-US-u-tz-ausyd"
+            "Australia/Sydney"
+
+        """
+        @spec timezone_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
+          Cldr.territory
+
+        def timezone_from_locale(locale) when is_binary(locale) do
+          Cldr.Locale.timezone_from_locale(locale, unquote(config.backend))
+        end
+
+        def timezone_from_locale(%LanguageTag{} = locale) do
+          Cldr.Locale.timezone_from_locale(locale)
         end
 
       end
@@ -388,6 +420,83 @@ defmodule Cldr.Locale do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       territory_from_locale(locale)
     end
+  end
+
+  @doc """
+  Returns the effective time_zone for a locale.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`
+
+  ## Returns
+
+  * The time zone ID to be used for localization purposes
+
+  ## Examples
+
+      iex> Cldr.Locale.timezone_from_locale "en-US-u-tz-ausyd"
+      "Australia/Sydney"
+
+      iex> Cldr.Locale.timezone_from_locale "en-AU"
+      {:error,
+       {Cldr.AmbiguousTimezone,
+        "Cannot determine the timezone since the territory :AU has 24 timezone names"}}
+
+  """
+  @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
+          Cldr.timezone() | {:error, {module, String.t}}
+
+  def timezone_from_locale(%LanguageTag{locale: %{timezone: timezone}})
+      when not is_nil(timezone) do
+    case Cldr.Timezone.validate_timezone(timezone) do
+      {:ok, zone} -> zone
+    end
+  end
+
+  def timezone_from_locale(%LanguageTag{} = language_tag) do
+    territory = territory_from_locale(language_tag)
+
+    with {:ok, [zone]} <- Cldr.Timezone.timezones_for_territory(territory) do
+      zone
+    else
+      {:ok, zones} -> ambiguous_timezone_error(territory, zones)
+      _ -> Cldr.unknown_territory_error(territory)
+    end
+  end
+
+  def timezone_from_locale(locale_name) when is_binary(locale_name) do
+    timezone_from_locale(locale_name, Cldr.default_backend!())
+  end
+
+  @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
+          Cldr.timezone() | {:error, {module(), String.t()}}
+
+  def timezone_from_locale(locale, backend) when is_binary(locale) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
+      timezone_from_locale(locale)
+    end
+  end
+
+  defp ambiguous_timezone_error(territory) do
+    {:error,
+      {Cldr.AmbiguousTimezone,
+        "Cannot determine the timezone since the territory #{inspect territory} " <>
+        "has no known timezones"
+      }
+    }
+  end
+
+  defp ambiguous_timezone_error(territory, zones) do
+    zone_count = length(zones)
+
+    {:error,
+      {Cldr.AmbiguousTimezone,
+        "Cannot determine the timezone since the territory #{inspect territory} " <>
+        "has #{zone_count} timezone names"
+      }
+    }
   end
 
   @doc """

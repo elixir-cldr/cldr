@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.19.0
+
+This is the changelog for Cldr v2.19.0 released on November 22nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Add `Cldr.Locale.timezone_from_locale/{1,2}` to extract a timezone ID from a language tag
+
 # Changelog for Cldr v2.18.2
 
 This is the changelog for Cldr v2.18.2 released on November 9th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

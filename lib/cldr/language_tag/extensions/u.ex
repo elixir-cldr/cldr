@@ -91,7 +91,7 @@ defmodule Cldr.LanguageTag.U do
       &__MODULE__.validate_sentence_break_supression/1,
       :standard
     ],
-    "tz" => [:timezone, &Cldr.Timezone.validate_timezone/1, nil],
+    "tz" => [:timezone, &__MODULE__.validate_timezone/1, nil],
     "rg" => [:region_override, &Cldr.validate_territory_subdivision/1, nil],
     "sd" => [:subdivision, &Cldr.validate_territory_subdivision/1, nil],
     "vt" => :variable_top,
@@ -129,6 +129,14 @@ defmodule Cldr.LanguageTag.U do
 
   def validate_calendar(calendar) do
     Cldr.validate_calendar(calendar)
+  end
+
+  def validate_timezone(short_zone) do
+    if Map.has_key?(Cldr.Timezone.timezones(), short_zone) do
+      {:ok, short_zone}
+    else
+      {:error, nil}
+    end
   end
 
   @doc false
