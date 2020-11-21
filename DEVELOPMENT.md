@@ -51,7 +51,7 @@ We are going to create a token. A token is used like a password, and should be k
 
 2. Generate a new token with the scope `read:packages` checked and make a note of the token which is required in the next step.
 
-3. Modify or create `$HOME/.m2/settings.xmlns` file to add the `<server>` stanza into the `<servers>` section. Keep the id `githubicu` as it is.
+3. Modify or create `$HOME/.m2/settings.xml` file to add the `<server>` stanza into the `<servers>` section. Keep the id `githubicu` as it is.
 
 ```xml
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
