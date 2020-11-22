@@ -1009,13 +1009,23 @@ defmodule Cldr do
     `:after` (the default for a single string argument), `:between` (the default
     and only valid location for an argument that is a list of two strings) and `:before`
 
+  * `:style` determines for the formatting based upon whether the ellipsis
+    is inserted between words or sentences. The valid options are
+    `:word` or `:sentence`. The default is `:sentence`.
+
   ## Examples
 
-      iex> Cldr.ellipsis "And furthermore", MyApp.Cldr
+      iex> Cldr.ellipsis "And furthermore"
       "And furthermore…"
 
-      iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], MyApp.Cldr, locale: "ja"
+      iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
       "And furthermore…there is much to be done"
+
+      iex> Cldr.ellipsis "And furthermore", style: :word
+      "And furthermore …"
+
+      iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", style: :word
+      "And furthermore … there is much to be done"
 
   """
   @spec ellipsis(String.t() | list(String.t()), backend(), Keyword.t()) :: String.t()

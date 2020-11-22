@@ -380,11 +380,12 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `string` is any valid Elixir string
+      * `string` is any `String.t` or a 2-element list
+        of `String.t` between which the ellipsis is inserted.
 
       * `backend` is any module that includes `use Cldr` and therefore
-        is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
-        Note that `Cldr.default_backend/0` will raise an exception if
+        is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
+        Note that `Cldr.default_backend!/0` will raise an exception if
         no `:default_backend` is configured under the `:ex_cldr` key in
         `config.exs`.
 
@@ -393,11 +394,16 @@ defmodule Cldr.Backend do
       ## Options
 
       * `:locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
-        The default is `Cldr.get_locale/0`
+        The default is `Cldr.get_locale/0`.
 
       * `:location` determines where to place the ellipsis. The options are
-        `:after` (the default for a single string argument), `:between` (the default
-        and only valid location for an argument that is a list of two strings) and `:before`
+        `:after` (the default for a single string argument), `:between`
+        (the default and only valid location for an argument that is a list
+        of two strings) and `:before`.
+
+      * `:style` determines for the formatting based upon whether the ellipsis
+        is inserted between words or sentences. The valid options are
+        `:word` or `:sentence`. The default is `:sentence`.
 
       ## Examples
 
@@ -407,39 +413,76 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
           "And furthermore…there is much to be done"
 
+          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore", style: :word
+          "And furthermore …"
+
+          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", style: :word
+          "And furthermore … there is much to be done"
+
       """
       @spec ellipsis(String.t() | list(String.t()), Keyword.t()) :: String.t()
 
       def ellipsis(string, options \\ []) when is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
+        style = options[:style] || :sentence
+        location = options[:location] || :between
 
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
-          ellipsis(string, ellipsis_chars(locale_name), options[:location])
+          ellipsis(string, ellipsis_chars(locale_name), location, style)
         end
       end
 
-      defp ellipsis([string_1, string_2], %{medial: medial}, _)
+      # For the :word style
+
+      defp ellipsis([string_1, string_2], %{word_medial: medial}, _, :word)
            when is_binary(string_1) and is_binary(string_2) do
         [string_1, string_2]
         |> Cldr.Substitution.substitute(medial)
         |> :erlang.iolist_to_binary()
       end
 
-      defp ellipsis(string, %{final: final}, nil) when is_binary(string) do
+      defp ellipsis(string, %{word_final: final}, :after, :word) when is_binary(string) do
         string
         |> Cldr.Substitution.substitute(final)
         |> :erlang.iolist_to_binary()
       end
 
-      defp ellipsis(string, %{final: final}, :after) when is_binary(string) do
-        string
-        |> Cldr.Substitution.substitute(final)
-        |> :erlang.iolist_to_binary()
-      end
-
-      defp ellipsis(string, %{initial: initial}, :before) when is_binary(string) do
+      defp ellipsis(string, %{word_initial: initial}, :before, :word) when is_binary(string) do
         string
         |> Cldr.Substitution.substitute(initial)
+        |> :erlang.iolist_to_binary()
+      end
+
+      defp ellipsis(string, %{word_final: final}, _, :word) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(final)
+        |> :erlang.iolist_to_binary()
+      end
+
+      # For the :sentence style
+
+      defp ellipsis([string_1, string_2], %{medial: medial}, _, _)
+           when is_binary(string_1) and is_binary(string_2) do
+        [string_1, string_2]
+        |> Cldr.Substitution.substitute(medial)
+        |> :erlang.iolist_to_binary()
+      end
+
+      defp ellipsis(string, %{final: final}, :after, _) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(final)
+        |> :erlang.iolist_to_binary()
+      end
+
+      defp ellipsis(string, %{initial: initial}, :before, _) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(initial)
+        |> :erlang.iolist_to_binary()
+      end
+
+      defp ellipsis(string, %{final: final}, _, _) when is_binary(string) do
+        string
+        |> Cldr.Substitution.substitute(final)
         |> :erlang.iolist_to_binary()
       end
 
@@ -587,6 +630,11 @@ defmodule Cldr.Backend do
 
       language_tags = Cldr.Config.all_language_tags()
 
+      # When validating known locale names we memoize the
+      # parsed language tag for performance reasons and only
+      # add the gettext locale name (if there is one) and the
+      # backend module.
+
       for locale_name <- Cldr.Config.known_locale_names(config),
           not is_nil(Map.get(language_tags, locale_name)) do
         language_tag =
@@ -616,13 +664,15 @@ defmodule Cldr.Backend do
           |> Cldr.Config.get_locale(config)
           |> Map.get(:ellipsis)
 
-        defp ellipsis_chars(unquote(locale_name)) do
+        @doc false
+        def ellipsis_chars(unquote(locale_name)) do
           unquote(Macro.escape(ellipsis))
         end
       end
 
       # It's not a well known locale so we need to
       # parse and validate
+
       defp do_validate_locale(locale_name) do
         with {:ok, locale} <- Cldr.Locale.new(locale_name, unquote(backend)),
              {:ok, locale} <- known_cldr_locale(locale, locale_name) do

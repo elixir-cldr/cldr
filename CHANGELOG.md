@@ -6,6 +6,24 @@ This is the changelog for Cldr v2.19.0 released on November 22nd, 2020.  For old
 
 * Add `Cldr.Locale.timezone_from_locale/{1,2}` to extract a timezone ID from a language tag
 
+* Add option `:style` to `Cldr.quote/2`. This option is either `:word` or `:sentence`.  `:sentence` is the default. Using the locale `en` as an example, the differences in formatting are:
+
+```elixir
+# Default style: :sentence
+iex> Cldr.ellipsis "And furthermore"
+"And furthermore…"
+
+iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
+"And furthermore…there is much to be done"
+
+# With style: :word
+iex> Cldr.ellipsis "And furthermore", style: :word
+"And furthermore …"
+
+iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", style: :word
+"And furthermore … there is much to be done"
+```
+
 # Changelog for Cldr v2.18.2
 
 This is the changelog for Cldr v2.18.2 released on November 9th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

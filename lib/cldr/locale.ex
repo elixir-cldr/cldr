@@ -344,11 +344,13 @@ defmodule Cldr.Locale do
   ## Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
-    or any `locale_name` returned by `Cldr.known_locale_names/1`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`. If
+    the parameter is a `locale_name` then a default backend must be
+    configured in `config.exs` or an exception will be raised.
 
   ## Returns
 
-  * The territory to be used for localization purposes
+  * The territory to be used for localization purposes.
 
   ## Examples
 
@@ -387,7 +389,7 @@ defmodule Cldr.Locale do
      otherwise changing the localization intent. In this case
      the [U extension](https://unicode.org/reports/tr35/#u_Extension) is
      used to define a
-     [regional override](https://unicode.org/reports/tr35/#RegionOverride)
+     [regional override](https://unicode.org/reports/tr35/#RegionOverride).
 
   3. Similarly, the [regional subdivision identifier]
      (https://unicode.org/reports/tr35/#UnicodeSubdivisionIdentifier)
@@ -413,6 +415,69 @@ defmodule Cldr.Locale do
     territory_from_locale(locale_name, Cldr.default_backend!())
   end
 
+  @doc """
+  Returns the effective territory for a locale.
+
+  ## Arguments
+
+  * `locale_name` is any locale name returned by
+    `Cldr.known_locale_names/1`.
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  ## Returns
+
+  * The territory to be used for localization purposes or
+    `{:error, {exception, reason}}`.
+
+  ## Examples
+
+      iex> Cldr.Locale.territory_from_locale "en-US", TestBackend.Cldr
+      :US
+
+      iex> Cldr.Locale.territory_from_locale "en-US-u-rg-cazzzz", TestBackend.Cldr
+      :CA
+
+      iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx", TestBackend.Cldr
+      :US
+
+  ## Notes
+
+  A locale can reflect the desired territory to be used
+  when determining region-specific defaults for items such
+  as:
+
+  * default currency,
+  * default calendar and week data,
+  * default time cycle, and
+  * default measurement system and unit preferences
+
+  Territory information is stored in the locale in up to three
+  different places:
+
+  1. The `:territory` extracted from the locale name or
+     defined by default for a given language. This is the typical
+     use case when locale names such as `en-US` or `es-AR` are
+     used.
+
+  2. In some cases it might be desirable to override the territory
+     derived from the locale name. For example, the default
+     territory for the language "en" is "US" but it may be desired
+     to apply the defaults for the territory "AU" instead, without
+     otherwise changing the localization intent. In this case
+     the [U extension](https://unicode.org/reports/tr35/#u_Extension) is
+     used to define a
+     [regional override](https://unicode.org/reports/tr35/#RegionOverride).
+
+  3. Similarly, the [regional subdivision identifier]
+     (https://unicode.org/reports/tr35/#UnicodeSubdivisionIdentifier)
+     can be used to influence localization decisions. This identifier
+     is not currently used in `ex_cldr` and dependent libraries
+     however it is correctly parsed to support future use.
+
+  """
+
   @spec territory_from_locale(locale_name(), Cldr.backend()) ::
           Cldr.territory() | {:error, {module(), String.t()}}
 
@@ -423,16 +488,18 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Returns the effective time_zone for a locale.
+  Returns the effective time zone for a locale.
 
   ## Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
-    or any `locale_name` returned by `Cldr.known_locale_names/1`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`. If
+    the parameter is a `locale_name` then a default backend must be
+    configured in `config.exs` or an exception will be raised.
 
   ## Returns
 
-  * The time zone ID to be used for localization purposes
+  * The time zone ID as a `String.t` or `{:error, {exception, reason}}`
 
   ## Examples
 
@@ -441,10 +508,11 @@ defmodule Cldr.Locale do
 
       iex> Cldr.Locale.timezone_from_locale "en-AU"
       {:error,
-       {Cldr.AmbiguousTimezone,
-        "Cannot determine the timezone since the territory :AU has 24 timezone names"}}
+       {Cldr.AmbiguousTimezoneError,
+        "Cannot determine the timezone since the territory :AU has 24 timezone IDs"}}
 
   """
+
   @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
           String.t() | {:error, {module(), String.t}}
 
@@ -473,6 +541,32 @@ defmodule Cldr.Locale do
   @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
           String.t() | {:error, {module(), String.t()}}
 
+  @doc """
+  Returns the effective time zone for a locale.
+
+  ## Arguments
+
+  * `locale_name` is any name returned by `Cldr.known_locale_names/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module
+
+  ## Returns
+
+  * The time zone ID as a `String.t` or `{:error, {exception, reason}}`
+
+  ## Examples
+
+      iex> Cldr.Locale.timezone_from_locale "en-US-u-tz-ausyd", TestBackend.Cldr
+      "Australia/Sydney"
+
+      iex> Cldr.Locale.timezone_from_locale "en-AU", TestBackend.Cldr
+      {:error,
+       {Cldr.AmbiguousTimezoneError,
+        "Cannot determine the timezone since the territory :AU has 24 timezone IDs"}}
+
+  """
+
   def timezone_from_locale(locale, backend) when is_binary(locale) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       timezone_from_locale(locale)
@@ -483,9 +577,9 @@ defmodule Cldr.Locale do
     zone_count = length(zones)
 
     {:error,
-      {Cldr.AmbiguousTimezone,
+      {Cldr.AmbiguousTimezoneError,
         "Cannot determine the timezone since the territory #{inspect territory} " <>
-        "has #{zone_count} timezone names"
+        "has #{zone_count} timezone IDs"
       }
     }
   end
