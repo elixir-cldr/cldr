@@ -990,7 +990,8 @@ defmodule Cldr do
 
   ## Arguments
 
-  * `string` is any valid Elixir string
+  * `string` is any `String.t` or a 2-element list
+    of `String.t` between which the ellipsis is inserted.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
@@ -998,7 +999,7 @@ defmodule Cldr do
     no `:default_backend` is configured under the `:ex_cldr` key in
     `config.exs`.
 
-  * `options` is a keyword list of options
+  * `options` is a keyword list of options.
 
   ## Options
 
@@ -1009,7 +1010,7 @@ defmodule Cldr do
     `:after` (the default for a single string argument), `:between` (the default
     and only valid location for an argument that is a list of two strings) and `:before`
 
-  * `:style` determines for the formatting based upon whether the ellipsis
+  * `:format` formats based upon whether the ellipsis
     is inserted between words or sentences. The valid options are
     `:word` or `:sentence`. The default is `:sentence`.
 
@@ -1021,10 +1022,10 @@ defmodule Cldr do
       iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
       "And furthermore…there is much to be done"
 
-      iex> Cldr.ellipsis "And furthermore", style: :word
+      iex> Cldr.ellipsis "And furthermore", format: :word
       "And furthermore …"
 
-      iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", style: :word
+      iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", format: :word
       "And furthermore … there is much to be done"
 
   """

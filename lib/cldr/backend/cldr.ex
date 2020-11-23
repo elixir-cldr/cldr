@@ -401,7 +401,7 @@ defmodule Cldr.Backend do
         (the default and only valid location for an argument that is a list
         of two strings) and `:before`.
 
-      * `:style` determines for the formatting based upon whether the ellipsis
+      * `:format` formats based upon whether the ellipsis
         is inserted between words or sentences. The valid options are
         `:word` or `:sentence`. The default is `:sentence`.
 
@@ -413,10 +413,10 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
           "And furthermore…there is much to be done"
 
-          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore", style: :word
+          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore", format: :word
           "And furthermore …"
 
-          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", style: :word
+          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", format: :word
           "And furthermore … there is much to be done"
 
       """
@@ -424,15 +424,15 @@ defmodule Cldr.Backend do
 
       def ellipsis(string, options \\ []) when is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
-        style = options[:style] || :sentence
+        format = options[:format] || :sentence
         location = options[:location] || :between
 
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
-          ellipsis(string, ellipsis_chars(locale_name), location, style)
+          ellipsis(string, ellipsis_chars(locale_name), location, format)
         end
       end
 
-      # For the :word style
+      # For the :word format
 
       defp ellipsis([string_1, string_2], %{word_medial: medial}, _, :word)
            when is_binary(string_1) and is_binary(string_2) do
@@ -459,7 +459,7 @@ defmodule Cldr.Backend do
         |> :erlang.iolist_to_binary()
       end
 
-      # For the :sentence style
+      # For the :sentence format
 
       defp ellipsis([string_1, string_2], %{medial: medial}, _, _)
            when is_binary(string_1) and is_binary(string_2) do
