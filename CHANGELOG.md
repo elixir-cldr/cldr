@@ -1,20 +1,14 @@
-# Changelog for Cldr v2.20.0
-
-This is the changelog for Cldr v2.20.0 released on January 16th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
-
-## Enhancements
-
-* Add the configuration key `:unit_providers` that is a list of modules that define amnew unit of measure. This configuration is only used by [ex_cldr_units from version 3.4](https://hex.pm/packages/ex_units).
-
 # Changelog for Cldr v2.19.0
 
-This is the changelog for Cldr v2.19.0 released on November 22nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.19.0 released on January 16th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Breaking change
 
 * A parsed langauge tag would previously turn the `tz` parameter of the `u` extension into a timezone ID. For example, the language tag `en-AU-u-tz-ausyd` would decode `ausyd` into `Australia/Sydney`. From this release, parsing no longer decodes the `tz` parameter since doing so means that `to_string/1` does not work correctly.  Use `Cldr.Locale.timezone_from_locale/1` instead.
 
 ## Enhancements
+
+* Add the configuration key `:unit_providers` that is a list of modules that define amnew unit of measure. This configuration is only used by [ex_cldr_units from version 3.4](https://hex.pm/packages/ex_units).
 
 * Add `Cldr.Locale.timezone_from_locale/{1,2}` to extract a timezone ID from a language tag
 
