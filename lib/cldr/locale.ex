@@ -288,6 +288,8 @@ defmodule Cldr.Locale do
         @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
           Cldr.territory
 
+        @doc since: "2.18.2"
+
         def territory_from_locale(locale) when is_binary(locale) do
           Cldr.Locale.territory_from_locale(locale, unquote(config.backend))
         end
@@ -317,6 +319,8 @@ defmodule Cldr.Locale do
             "Australia/Sydney"
 
         """
+        @doc since: "2.19.0"
+
         @spec timezone_from_locale(LanguageTag.t() | Cldr.Locale.locale_name()) ::
                 String.t() | {:error, {module(), String.t}}
 
@@ -400,6 +404,8 @@ defmodule Cldr.Locale do
   """
   @spec territory_from_locale(LanguageTag.t() | locale_name()) :: Cldr.territory()
 
+  @doc since: "2.18.2"
+
   def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
     language_tag.locale.region_override ||
       language_tag.territory ||
@@ -481,6 +487,8 @@ defmodule Cldr.Locale do
   @spec territory_from_locale(locale_name(), Cldr.backend()) ::
           Cldr.territory() | {:error, {module(), String.t()}}
 
+  @doc since: "2.18.2"
+
   def territory_from_locale(locale, backend) when is_binary(locale) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       territory_from_locale(locale)
@@ -516,6 +524,8 @@ defmodule Cldr.Locale do
   @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
           String.t() | {:error, {module(), String.t}}
 
+  @doc since: "2.19.0"
+
   def timezone_from_locale(%LanguageTag{locale: %{timezone: timezone}})
       when not is_nil(timezone) do
     case Cldr.Timezone.validate_timezone(timezone) do
@@ -537,9 +547,6 @@ defmodule Cldr.Locale do
   def timezone_from_locale(locale_name) when is_binary(locale_name) do
     timezone_from_locale(locale_name, Cldr.default_backend!())
   end
-
-  @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
-          String.t() | {:error, {module(), String.t()}}
 
   @doc """
   Returns the effective time zone for a locale.
@@ -566,6 +573,11 @@ defmodule Cldr.Locale do
         "Cannot determine the timezone since the territory :AU has 24 timezone IDs"}}
 
   """
+
+  @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
+          String.t() | {:error, {module(), String.t()}}
+
+  @doc since: "2.19.0"
 
   def timezone_from_locale(locale, backend) when is_binary(locale) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
