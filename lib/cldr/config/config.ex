@@ -13,7 +13,6 @@ defmodule Cldr.Config do
             gettext: nil,
             data_dir: "cldr",
             providers: nil,
-            unit_providers: nil,
             precompile_number_formats: [],
             precompile_transliterations: [],
             precompile_date_time_formats: [],
@@ -36,7 +35,6 @@ defmodule Cldr.Config do
           precompile_interval_formats: [binary(), ...],
           otp_app: atom() | nil,
           providers: [atom(), ...],
-          unit_providers: [atom(), ...],
           generate_docs: boolean(),
           supress_warnings: boolean(),
           message_formats: map(),
@@ -2069,8 +2067,8 @@ defmodule Cldr.Config do
     units =
       content["units"]
       |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
-      |> Enum.into(%{})
-      |> Cldr.Map.atomize_keys
+      |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, "units", units)
   end
@@ -2093,12 +2091,22 @@ defmodule Cldr.Config do
       end
     end)
     |> Enum.reject(&is_nil/1)
-    |> Enum.group_by(fn {group, _key, _value} -> group end, fn {_group, key, value} ->
-      {key, value}
-    end)
-    |> Enum.map(fn {k, v} -> {k, Enum.into(v, %{})} end)
-    |> Enum.into(%{})
+    |> Enum.group_by(
+      fn {group, _key, _value} -> group end,
+      fn {_group, key, value} -> {key, atomize_gender(value)} end
+    )
+    |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
+    |> Map.new()
   end
+
+  defp atomize_gender(map) when is_map(map) do
+    map
+    |> Enum.map(&atomize_gender/1)
+    |> Map.new()
+  end
+
+  defp atomize_gender({"gender" = key, gender}), do: {key, String.to_atom(gender)}
+  defp atomize_gender(other), do: other
 
   defp structure_sets(sets) do
     Enum.map(sets, fn {name, set} ->

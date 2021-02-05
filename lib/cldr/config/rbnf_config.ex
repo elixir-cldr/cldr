@@ -137,7 +137,7 @@ defmodule Cldr.Rbnf.Config do
   defp access_from_set(_), do: :public
 
   defp rules_from(rules) do
-    Enum.map(rules, fn {name, rule} ->
+    Enum.map(rules, fn [name, rule] ->
       {base_value, radix} = radix_from_name(name)
       %{base_value: base_value, radix: radix, definition: remove_trailing_semicolon(rule)}
     end)

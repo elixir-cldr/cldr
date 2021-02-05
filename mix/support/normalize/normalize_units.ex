@@ -19,7 +19,6 @@ defmodule Cldr.Normalize.Units do
     normalized_units =
       units
       |> Enum.filter(fn {k, _v} -> k in @unit_types end)
-      |> Cldr.Map.delete_in("display_name")
       |> Enum.into(%{})
       |> process_unit_types(@unit_types)
 
@@ -44,6 +43,12 @@ defmodule Cldr.Normalize.Units do
       Enum.map(formats, fn
         {"unit_pattern_count_" <> type, template} ->
           {type, Substitution.parse(template)}
+
+        {"display_name", display_name} ->
+          {"display_name", display_name}
+
+        {"gender", gender} ->
+          {"gender", gender}
 
         {type, template} ->
           {type, Substitution.parse(template)}

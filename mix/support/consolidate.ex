@@ -506,7 +506,7 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "calendarPreferenceData"])
     |> Cldr.Map.remove_leading_underscores()
-    |> Enum.map(fn {k, v} -> {k, Cldr.String.to_underscore(v) |> String.split(" ")} end)
+    |> Enum.map(fn {k, v} -> {k, Enum.map(v, &Cldr.String.to_underscore/1)} end)
     |> Map.new()
     |> save_file(path)
 

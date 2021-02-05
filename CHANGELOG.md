@@ -1,6 +1,6 @@
 # Changelog for Cldr v2.19.0
 
-This is the changelog for Cldr v2.19.0 released on January 16th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.19.0 released on February 6th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Breaking change
 
@@ -8,7 +8,9 @@ This is the changelog for Cldr v2.19.0 released on January 16th.  For older chan
 
 ## Enhancements
 
-* Add the configuration key `:unit_providers` that is a list of modules that define amnew unit of measure. This configuration is only used by [ex_cldr_units from version 3.4](https://hex.pm/packages/ex_units).
+* Updates to [CLDR 38.1](https://unicode-org.github.io/cldr-staging/charts/38.1/delta/index.html)
+
+* Includes the display name and where available the gender for units in the locale data to support generating UI elements in the upcoming version 3.4.0 of [ex_cldr_units](https://github.com/elixir-cldr/cldr_units)
 
 * Add `Cldr.Locale.timezone_from_locale/{1,2}` to extract a timezone ID from a language tag
 
