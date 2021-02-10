@@ -2105,6 +2105,7 @@ defmodule Cldr.Config do
     |> Map.new()
   end
 
+  defp atomize_gender({"gender" = key, [gender]}), do: {key, String.to_atom(gender)}
   defp atomize_gender({"gender" = key, gender}), do: {key, String.to_atom(gender)}
   defp atomize_gender(other), do: other
 
