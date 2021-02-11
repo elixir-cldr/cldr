@@ -2334,6 +2334,7 @@ defmodule Cldr.Config do
     remaining_config =
       global_config()
       |> Enum.reject(&(elem(&1, 0) in @non_deprecated_keys))
+      |> Keyword.delete(:_default_locale)
       |> Enum.map(&elem(&1, 0))
 
     if length(remaining_config) > 0 do
