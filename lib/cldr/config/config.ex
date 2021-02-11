@@ -2077,10 +2077,10 @@ defmodule Cldr.Config do
     units
     |> Enum.map(fn {k, v} ->
       [group | key] =
-        if String.starts_with?(k, "10p") do
-          [k | []]
-        else
-          String.split(k, "_", parts: 2)
+        cond do
+          String.starts_with?(k, "10p") -> [k | []]
+          String.starts_with?(k, "1024p") -> [k | []]
+          true -> String.split(k, "_", parts: 2)
         end
 
       if key == [] do
