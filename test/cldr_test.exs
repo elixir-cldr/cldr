@@ -124,6 +124,7 @@ defmodule Cldr.Test do
                "ms",
                "mt",
                "my",
+               "nb",
                "ne",
                "nl",
                "nn",
