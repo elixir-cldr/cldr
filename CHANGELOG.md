@@ -2,7 +2,7 @@
 
 ## Enhancements
 
-* Update to CLDR data version 39.
+* Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
 # Changelog for Cldr v2.19.0
 
