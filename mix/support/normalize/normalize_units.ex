@@ -41,8 +41,26 @@ defmodule Cldr.Normalize.Units do
   def process_formats({unit, formats}) do
     parsed_formats =
       Enum.map(formats, fn
-        {"unit_pattern_count_" <> type, template} ->
-          {type, Substitution.parse(template)}
+        {"unit_pattern_count_" <> count, template} ->
+          {:nominative, {count, Substitution.parse(template)}}
+
+        {"genitive_count_" <> count, template} ->
+          {:genitive, {count, Substitution.parse(template)}}
+
+        {"accusative_count_" <> count, template} ->
+          {:accusative, {count, Substitution.parse(template)}}
+
+        {"dative_count_" <> count, template} ->
+          {:dative, {count, Substitution.parse(template)}}
+
+        {"locative_count_" <> count, template} ->
+          {:locative, {count, Substitution.parse(template)}}
+
+        {"instrumental_count_" <> count, template} ->
+          {:instrumental, {count, Substitution.parse(template)}}
+
+        {"vocative_count_" <> count, template} ->
+          {:vocative, {count, Substitution.parse(template)}}
 
         {"display_name", display_name} ->
           {"display_name", display_name}
@@ -53,7 +71,12 @@ defmodule Cldr.Normalize.Units do
         {type, template} ->
           {type, Substitution.parse(template)}
       end)
-      |> Enum.into(%{})
+      |> Enum.group_by(&(elem(&1, 0)), &(elem(&1, 1)))
+      |> Enum.map(fn
+        {k, v} when is_atom(k) -> {k, Map.new(v)}
+        {k, [v]} -> {k, v}
+      end)
+      |> Map.new
 
     %{unit => parsed_formats}
   end
