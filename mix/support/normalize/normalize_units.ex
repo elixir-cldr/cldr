@@ -140,9 +140,13 @@ defmodule Cldr.Normalize.Units do
   end
 
   def map_nested_compounds([{key, value} | rest], acc) do
-    acc = Map.update(acc, key, map_nested_compounds(value), fn
+    mapped_value = map_nested_compounds(value)
+    acc = Map.update(acc, key, mapped_value, fn
+      current when is_map(current) and is_map(mapped_value) ->
+        Map.merge(current, mapped_value)
+
       current when is_map(current) ->
-        Map.merge(current, map_nested_compounds(value))
+        Map.put(current, :nominative, mapped_value)
 
       current when is_list(current) ->
         value
