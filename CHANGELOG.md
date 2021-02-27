@@ -6,6 +6,8 @@
 
 * Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
 
+* Add grammatical features to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_features/0`.
+
 # Changelog for Cldr v2.19.0
 
 This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

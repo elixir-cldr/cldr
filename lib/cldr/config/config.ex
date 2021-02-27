@@ -1753,6 +1753,27 @@ defmodule Cldr.Config do
   defp set_skeleton([key, value]),
     do: [{String.to_atom(key), String.to_integer(value)}]
 
+  @doc """
+  Returns the CLDR grammatical features data
+  which is used with formatting units.
+
+  """
+  @grammatical_features_file "grammatical_features.json"
+  def grammatical_features do
+    data =
+      cldr_data_dir()
+      |> Path.join(@grammatical_features_file)
+      |> File.read!()
+      |> json_library().decode!
+      |> IO.inspect
+
+    data
+    |> Enum.map(fn {k, v} ->
+      {k, v |> Cldr.Map.integerize_keys(only: ["0", "1"]) |> Cldr.Map.atomize_keys(except: [0, 1]) |> Cldr.Map.atomize_values()}
+    end)
+    |> Map.new
+  end
+
   #######################################################################
 
   # TODO Remove for ex_cldr version 3.0

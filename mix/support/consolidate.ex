@@ -51,6 +51,7 @@ defmodule Cldr.Consolidate do
     save_time_preferences()
     save_units()
     save_measurement_systems()
+    save_grammatical_features()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -544,6 +545,20 @@ defmodule Cldr.Consolidate do
     |> get_in(["supplemental", "likelySubtags"])
     |> Enum.map(fn {k, v} -> {k, LanguageTag.parse!(v)} end)
     |> Enum.into(%{})
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_grammatical_features do
+    path = Path.join(consolidated_output_dir(), "grammatical_features.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/grammaticalFeatures.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "grammaticalData"])
+    |> Cldr.Normalize.GrammaticalFeatures.normalize
     |> save_file(path)
 
     assert_package_file_configured!(path)
