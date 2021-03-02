@@ -1526,6 +1526,22 @@ defmodule Cldr.Config do
     end
   end
 
+  @doc """
+  Returns a map of locale names to
+  its parent locale name.
+
+  Note that these mappings only exist
+  where the normal inheritance doesn't
+  apply.
+
+  """
+  def parent_locales do
+    cldr_data_dir()
+    |> Path.join("parent_locales.json")
+    |> File.read!()
+    |> json_library().decode!
+  end
+
   @deprecated "Use Cldr.Config.territories/1"
   defdelegate territory_info(territory), to: __MODULE__, as: :territory
 

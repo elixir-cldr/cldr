@@ -52,6 +52,7 @@ defmodule Cldr.Consolidate do
     save_units()
     save_measurement_systems()
     save_grammatical_features()
+    save_parent_locales()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -559,6 +560,19 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "grammaticalData"])
     |> Cldr.Normalize.GrammaticalFeatures.normalize
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_parent_locales do
+    path = Path.join(consolidated_output_dir(), "parent_locales.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/parentLocales.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "parentLocales", "parentLocale"])
     |> save_file(path)
 
     assert_package_file_configured!(path)
