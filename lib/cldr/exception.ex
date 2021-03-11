@@ -263,3 +263,16 @@ defmodule Cldr.AmbiguousTimezoneError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.NoParentError do
+  @moduledoc """
+  Exception raised when the there are more
+  no parent locale
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+

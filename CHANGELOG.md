@@ -4,6 +4,10 @@
 
 * Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
+* Add `Cldr.Locale.parent/1` to return the parent locale according to the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
+
+* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale.
+
 * Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
 
 * Add grammatical features to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_features/0`.
