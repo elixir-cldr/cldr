@@ -86,10 +86,9 @@ defmodule Cldr.Consolidate do
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
-    |> put_localized_subdivisions(locale)
     |> Cldr.Map.underscore_keys()
     |> normalize_content(locale)
-    |> Map.take(Cldr.Config.required_modules() ++ ["subdivisions"])
+    |> Map.take(Cldr.Config.required_modules())
     |> Cldr.Map.atomize_keys()
     |> save_locale(locale)
   end
@@ -833,30 +832,5 @@ defmodule Cldr.Consolidate do
 
   defp simplify_replacements({k, v}) do
     {k, Enum.map(v, &simplify_replacements/1)}
-  end
-
-  defp put_localized_subdivisions(result, locale) do
-    Map.put(result, "subdivisions", localized_subdivisions(locale))
-  end
-
-  defp localized_subdivisions(locale) do
-    subdivisions_src_path =
-      Path.join(download_data_dir(), ["subdivisions/", "#{locale}.xml"])
-
-    if File.exists?(subdivisions_src_path),
-      do: parse_xml_subdivisions(subdivisions_src_path),
-      else: %{}
-  end
-
-  defp parse_xml_subdivisions(xml_path) do
-    import SweetXml
-
-    xml_path
-    |> File.read!()
-    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
-    |> xpath(~x"//subdivision"l, code: ~x"./@type"s, translation: ~x"./text()")
-    |> Map.new(fn subdivision ->
-      {subdivision.code, to_string(subdivision.translation)}
-    end)
   end
 end
