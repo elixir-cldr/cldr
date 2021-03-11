@@ -60,7 +60,9 @@ defmodule Cldr.Config do
     "languages",
     "delimiters",
     "ellipsis",
-    "lenient_parse"
+    "lenient_parse",
+    "locale_display_names",
+    "subdivisions"
   ]
 
   def include_module_docs?(false) do
@@ -1291,19 +1293,20 @@ defmodule Cldr.Config do
 
   @doc false
   @keys_to_integerize ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-  @dont_atomize_keys ["languages", "lenient_parse"]
+  @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
   def do_get_locale(locale, path, false) do
     path
     |> read_locale_file
     |> json_library().decode!
     |> assert_valid_keys!(locale)
-    |> structure_units
+    |> structure_units()
     |> atomize_keys(required_modules() -- @dont_atomize_keys, except: @keys_to_integerize)
-    |> structure_rbnf
-    |> atomize_number_systems
-    |> atomize_languages
-    |> structure_date_formats
-    |> structure_list_formats
+    |> structure_rbnf()
+    |> atomize_number_systems()
+    |> atomize_languages()
+    |> structure_date_formats()
+    |> structure_list_formats()
+    |> structure_locale_display_names()
     |> Map.put(:name, locale)
   end
 
@@ -1427,6 +1430,7 @@ defmodule Cldr.Config do
     |> Cldr.Map.atomize_keys(
       except: fn
         {_k, %{population_percent: _}} -> true
+        {_k, %{"population_percent" => _}} -> true
         _other -> false
       end
     )
@@ -2051,6 +2055,17 @@ defmodule Cldr.Config do
     Map.put(content, :list_formats, dates)
   end
 
+  @language_variant_keys ["default", "menu", "short", "long", "variant"]
+  defp structure_locale_display_names(content) do
+    locale_display_names =
+      content
+      |> Map.get(:locale_display_names)
+      |> Cldr.Map.atomize_keys(skip: "languages")
+      |> Cldr.Map.atomize_keys(only: @language_variant_keys)
+
+    Map.put(content, :locale_display_names, locale_display_names)
+  end
+
   # Put the rbnf rules into a %Rule{} struct
   defp structure_rbnf(content) do
     rbnf =
@@ -2172,10 +2187,10 @@ defmodule Cldr.Config do
       config
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
-      |> merge_locales_with_default
+      |> merge_locales_with_default()
       |> remove_gettext_only_locales()
-      |> sort_locales
-      |> dedup_provider_modules
+      |> sort_locales()
+      |> dedup_provider_modules()
 
     struct(__MODULE__, config)
   end

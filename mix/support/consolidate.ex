@@ -87,10 +87,10 @@ defmodule Cldr.Consolidate do
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
     |> put_localized_subdivisions(locale)
-    |> Cldr.Map.underscore_keys()
+    |> Cldr.Map.underscore_keys(except: "locale_display_names")
     |> normalize_content(locale)
-    |> Map.take(Cldr.Config.required_modules() ++ ["subdivisions"])
-    |> Cldr.Map.atomize_keys()
+    |> Map.take(Cldr.Config.required_modules())
+    |> Cldr.Map.atomize_keys(except: :locale_display_names)
     |> save_locale(locale)
   end
 
@@ -116,6 +116,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.Delimiter.normalize(locale)
     |> Normalize.Ellipsis.normalize(locale)
     |> Normalize.LenientParse.normalize(locale)
+    |> Normalize.LocaleDisplayNames.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -191,33 +192,11 @@ defmodule Cldr.Consolidate do
     end
   end
 
-  # As of CLDR 37 there are available locales that have no content and
-  # therefore should not be included
+  # From time-to-time the locale data is out of sync
+  # with the json data and hence locales may need to be
+  # omitted.
   @invalid_locales [
-    # "ff-Adlm",
-    # "ff-Adlm-BF",
-    # "ff-Adlm-CM",
-    # "ff-Adlm-GH",
-    # "ff-Adlm-GM",
-    # "ff-Adlm-GW",
-    # "ff-Adlm-LR",
-    # "ff-Adlm-MR",
-    # "ff-Adlm-NE",
-    # "ff-Adlm-NG",
-    # "ff-Adlm-SL",
-    # "ff-Adlm-SN",
-    # "ks-Arab",
-    # "mai",
-    # "ms-ID",
-    # "mni-Beng",
-    # "mni",
-    # "pcm",
-    # "sat",
-    # "sd-Arab",
-    # "sat-Olck",
-    # "sd-Deva",
-    # "su",
-    # "su-Latn"
+
   ]
 
   def all_locales() do
@@ -843,9 +822,11 @@ defmodule Cldr.Consolidate do
     subdivisions_src_path =
       Path.join(download_data_dir(), ["subdivisions/", "#{locale}.xml"])
 
-    if File.exists?(subdivisions_src_path),
-      do: parse_xml_subdivisions(subdivisions_src_path),
-      else: %{}
+    if File.exists?(subdivisions_src_path) do
+      parse_xml_subdivisions(subdivisions_src_path)
+    else
+      %{}
+    end
   end
 
   defp parse_xml_subdivisions(xml_path) do
