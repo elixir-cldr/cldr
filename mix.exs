@@ -101,6 +101,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/measurement_systems.json",
         "priv/cldr/units.json",
         "priv/cldr/grammatical_features.json",
+        "priv/cldr/grammatical_gender.json",
         "priv/cldr/parent_locales.json",
         "priv/cldr/time_preferences.json",
         "priv/cldr/language_tags.ebin",

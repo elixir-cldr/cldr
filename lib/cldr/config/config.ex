@@ -1789,6 +1789,20 @@ defmodule Cldr.Config do
     |> Map.new
   end
 
+  @doc """
+  Returns the CLDR grammatical gender data
+  which is used with formatting units.
+
+  """
+  @grammatical_gender_file "grammatical_gender.json"
+  def grammatical_gender do
+    cldr_data_dir()
+    |> Path.join(@grammatical_gender_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_values()
+  end
+
   #######################################################################
 
   # TODO Remove for ex_cldr version 3.0

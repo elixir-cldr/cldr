@@ -52,6 +52,7 @@ defmodule Cldr.Consolidate do
     save_units()
     save_measurement_systems()
     save_grammatical_features()
+    save_grammatical_gender()
     save_parent_locales()
 
     all_locales()
@@ -560,6 +561,20 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "grammaticalData"])
     |> Cldr.Normalize.GrammaticalFeatures.normalize
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_grammatical_gender do
+    path = Path.join(consolidated_output_dir(), "grammatical_gender.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/grammaticalGenderFeatures.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "grammaticalGenderData"])
+    |> Cldr.Normalize.GrammaticalFeatures.normalize_gender()
     |> save_file(path)
 
     assert_package_file_configured!(path)

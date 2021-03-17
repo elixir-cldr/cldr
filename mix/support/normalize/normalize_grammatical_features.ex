@@ -57,4 +57,22 @@ defmodule Cldr.Normalize.GrammaticalFeatures do
     |> Map.new
   end
 
+  def normalize_gender(content) do
+    content
+    |> Enum.map(fn
+      {<< language :: binary-size(2), "-targets-nominal" >>, gender_data} ->
+        {language, format_gender_data(gender_data)}
+
+      {<< language :: binary-size(3), "-targets-nominal" >>, gender_data} ->
+        {language, format_gender_data(gender_data)}
+    end)
+    |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
+    |> Map.new
+  end
+
+  def format_gender_data(data) do
+    Map.get(data, "grammaticalGender")
+  end
+
 end
