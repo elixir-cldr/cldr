@@ -4,9 +4,9 @@
 
 * Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
-* Add `Cldr.Locale.parent/1` to return the parent locale according to the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
+* Add `Cldr.Locale.parent/1` to return the parent locale according. This is not exactly the same as the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
 
-* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale.
+* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale. It is a recursive us of `Cldr.Locale.parent/1`.
 
 * Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
 
