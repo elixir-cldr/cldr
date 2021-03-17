@@ -69,7 +69,7 @@ cp $CLDR_REPO/common/supplemental/units.xml $CLDR_PRODUCTION
 cp $CLDR_REPO/common/supplemental/pluralRanges.xml $CLDR_PRODUCTION/plural_ranges.xml
 cp $CLDR_REPO/common/supplemental/subdivisions.xml $CLDR_PRODUCTION
 cp $CLDR_REPO/common/bcp47/timezone.xml $CLDR_PRODUCTION/timezones.xml
-mkdir $CLDR_PRODUCTION/subdivisions
+mkdir -p $CLDR_PRODUCTION/subdivisions
 cp $CLDR_STAGING/common/subdivisions/* $CLDR_PRODUCTION/subdivisions
 
 # ex_cldr additional data required for data generation
