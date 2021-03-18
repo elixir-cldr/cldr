@@ -363,7 +363,7 @@ defmodule Cldr.Locale do
   for a given locale.
 
   """
-  @spec parents(LangaugeTag.t()) :: list(LanguageTag.t())
+  @spec parents(LanguageTag.t()) :: list(LanguageTag.t())
   def parents(%LanguageTag{} = locale, acc \\ []) do
     case parent(locale) do
       {:error, _} -> Enum.reverse(acc)

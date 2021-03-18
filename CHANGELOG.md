@@ -1,18 +1,22 @@
 # Changelog for Cldr v2.20.0
 
+This is the changelog for Cldr v2.20.0-rc.0 released on March 18th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
 ## Enhancements
 
 * Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
 * Add `Cldr.Locale.parent/1` to return the parent locale according. This is not exactly the same as the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
 
-* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale. It is a recursive us of `Cldr.Locale.parent/1`.
+* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale. It is a recursive use of `Cldr.Locale.parent/1`.
 
 * Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
 
 * Add subdivision translations to the locale files. This data can be used to format subdivision names for UI usage. Thanks to @mskv. Closes #144.
 
 * Add grammatical features to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_features/0`.
+
+* Add grammatical gender to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_gender/0`.
 
 # Changelog for Cldr v2.19.0
 
