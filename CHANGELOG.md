@@ -1,3 +1,13 @@
+# Changelog for Cldr v2.20.0-rc.2
+
+This is the changelog for Cldr v2.20.0-rc.2 released on ____, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Use local fallback chain to find RBNF data for locales that don't have their own but do have in a parent locale.
+
+* Rename alias key `subdivisionAlias` to `subdivision`
+
 # Changelog for Cldr v2.20.0-rc.1
 
 This is the changelog for Cldr v2.20.0-rc.1 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

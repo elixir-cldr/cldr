@@ -90,6 +90,11 @@ defmodule Cldr.Rbnf.Config do
   """
   @spec for_locale(Locale.locale_name()) ::
           {:ok, map()} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
+
+  # TODO Use fallback paths to find RBNF data
+  # Use Cldr.Locale.first_match/2 with a fun that returns
+  # a valid RBNF locale
+
   def for_locale(locale_name) when is_binary(locale_name) do
     with true <- File.exists?(locale_path(locale_name)) do
       rules =

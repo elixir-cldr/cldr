@@ -527,6 +527,7 @@ defmodule Cldr.Consolidate do
     |> Cldr.Map.rename_keys("zoneAlias", "zone")
     |> Cldr.Map.rename_keys("territoryAlias", "region")
     |> Cldr.Map.rename_keys("languageAlias", "language")
+    |> Cldr.Map.rename_keys("subdivisionAlias", "subdivision")
     |> Cldr.Map.deep_map(&split_alternates/1)
     |> Enum.map(&simplify_replacements/1)
     |> Enum.into(%{})
