@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.20.0-rc.1
+
+This is the changelog for Cldr v2.20.0-rc.1 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Make `Cldr.Locale.first_match/2` a public function. This function is useful for other CLDR-based libraries to help resolve the files of localised content in CLDR.
+
 # Changelog for Cldr v2.20.0-rc.0
 
 This is the changelog for Cldr v2.20.0-rc.0 released on March 19th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

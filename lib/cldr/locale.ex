@@ -902,7 +902,30 @@ defmodule Cldr.Locale do
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
-  defp first_match(
+  @doc """
+  Execute a function for a locale returning
+  the first match on language, script, territory,
+  and variant combination.
+
+  A match is determined when the `fun/1` returns
+  a `truthy` value.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`
+
+  * `fun/1` is single-arity function that takes a string
+    locale name. The locale name is a built from the language,
+    script, territory and variant combinations of `language_tag`.
+
+  ## Returns
+
+  * The first `truthy` value returned by `fun/1` or `nil` if no match
+    if made
+
+  """
+  def first_match(
          %LanguageTag{
            language: language,
            script: script,
@@ -911,7 +934,7 @@ defmodule Cldr.Locale do
          },
          fun
        )
-       when is_function(fun) do
+       when is_function(fun, 1) do
     first_match(language, script, territory, variant, fun)
   end
 
