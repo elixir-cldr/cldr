@@ -912,8 +912,8 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
-    or any `locale_name` returned by `Cldr.known_locale_names/1`
+  * `language_tag` is any language tag returned by
+    `Cldr.Locale.new/2`.
 
   * `fun/1` is single-arity function that takes a string
     locale name. The locale name is a built from the language,
@@ -921,8 +921,8 @@ defmodule Cldr.Locale do
 
   ## Returns
 
-  * The first `truthy` value returned by `fun/1` or `nil` if no match
-    if made
+  * The first `truthy` value returned by `fun/1` or `nil` if no
+    match is made.
 
   """
   def first_match(
