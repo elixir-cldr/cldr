@@ -975,7 +975,7 @@ defmodule Cldr.Locale do
 
   **Note** this function is intended to support only the CLDR
   locale names which have a format that is a subset of the full
-  langauge tag specification.
+  language tag specification.
 
   For proper parsing of local names and language tags, see
   `Cldr.Locale.canonical_language_tag/2`

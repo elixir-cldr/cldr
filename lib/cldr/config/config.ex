@@ -9,6 +9,7 @@ defmodule Cldr.Config do
 
   defstruct default_locale: "en-001",
             locales: ["en-001"],
+            add_fallback_locales: false,
             backend: nil,
             gettext: nil,
             data_dir: "cldr",
@@ -26,6 +27,7 @@ defmodule Cldr.Config do
   @type t :: %__MODULE__{
           default_locale: binary(),
           locales: [binary(), ...],
+          add_fallback_locales: boolean(),
           backend: module(),
           gettext: module() | nil,
           data_dir: binary(),
@@ -398,6 +400,141 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.sort()
+  end
+
+  @doc """
+  Add the fallback locales to a list of
+  configured locales
+
+  """
+  def maybe_add_fallback_locales(%__MODULE__{add_fallback_locales: false} = config) do
+    config
+  end
+
+  def maybe_add_fallback_locales(%__MODULE__{} = config) do
+    expanded_locales =
+      config.locales
+      |> Enum.flat_map(&fallback_chain/1)
+      |> Kernel.++(config.locales)
+      |> Enum.uniq
+      |> Enum.sort
+
+    %{config | locales: expanded_locales}
+  end
+
+  @doc """
+  Returns the fallback chain for a
+  locale name. Follows the CLDR [TR35](https://unicode.org/reports/tr35/tr35.html#Bundle_vs_Item_Lookup)
+  resource bundle lookup algorithm.
+
+  This function is only intended to
+  return fallback chains for the locales
+  defined by CLDR. It does not perform
+  any alias lookup or likely subtag
+  processing.
+
+  The primary purpose for this function is
+  to support including fallback locales
+  in a backend configuration since both
+  RBNF and Subdivision data follows the
+  fallback chain.
+
+  ## Algorithm Summary
+
+  1. Decompose the locale name into language,
+     script, territory and variant. CLDR locale
+     names have no more than these four parts but
+     usually have less.
+
+  2. Look for a locale in the following order:
+     * language-script-territory
+     * language-script
+     * language-territory
+     * language
+
+  3. At each stage in (2) resolve
+     an alias in `parent_locales/1`
+
+  """
+  def fallback_chain(locale_name) do
+    locale_name
+    |> fallback_chain([])
+    |> Enum.reverse
+  end
+
+  @doc false
+  def fallback_chain(locale_name, acc) do
+    case fallback(locale_name) do
+      nil -> acc
+      fallback-> fallback_chain(fallback, [fallback | acc])
+    end
+  end
+
+  @doc """
+  Returns the immediate fallback locale for a
+  locale name. Follows the CLDR [TR35](https://unicode.org/reports/tr35/tr35.html#Bundle_vs_Item_Lookup)
+  resource bundle lookup algorithm.
+
+  This function is only intended to
+  return the fallback for the locales
+  defined by CLDR. It does not perform
+  any alias lookup or likely subtag
+  processing.
+
+  ## Algorithm Summary
+
+  1. Decompose the locale name into language,
+     script, territory and variant. CLDR locale
+     names have no more than these four parts but
+     usually have less.
+
+  2. Look for a locale in the following order:
+     * language-script-territory
+     * language-script
+     * language-territory
+     * language
+
+  3. At each stage in (2) resolve
+     an alias in `parent_locales/1`
+
+  """
+  def fallback(locale_name) do
+    all_locale_names = all_locale_names()
+
+    fun = fn locale_name ->
+      (locale_name in all_locale_names) && locale_name
+    end
+
+    if inherited = Map.get(parent_locales(), locale_name) do
+      inherited
+    else
+      {:ok, locale} = Cldr.LanguageTag.Parser.parse(locale_name)
+      first_match(locale.language, locale.script, locale.territory, fun)
+    end
+  end
+
+  defp first_match(_language, nil, nil, _fun) do
+    nil
+  end
+
+  defp first_match(language, _script, nil, fun) do
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp first_match(language, nil, _territory, fun) do
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp first_match(language, script, territory, fun) do
+    fun.(locale_name_from(language, script, nil, nil)) ||
+    fun.(locale_name_from(language, nil, territory, nil)) ||
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp locale_name_from(language, script, territory, variant) do
+    [language, script, territory, variant]
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("-")
   end
 
   @doc """

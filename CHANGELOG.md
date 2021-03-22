@@ -4,7 +4,11 @@ This is the changelog for Cldr v2.20.0-rc.2 released on ____, 2021.  For older c
 
 ## Enhancements
 
-* Use local fallback chain to find RBNF data for locales that don't have their own but do have in a parent locale.
+* Add `:add_fallback_locales` to the backend configuration. When `true`, the fallback locales of the configured backend locales is also added to the configuration. The default is `false` and therefore by default there is no change to behaviour from previous releases. Setting this option to `true` enables means that data that is stored in parent locales rather than child locales can be processed. This applies particularly to rules-based number formats and subdivision data. These data aren't stored in all locales - generally they are stored in the base language locale.
+
+* Add `Cldr.Config.fallback_chain/1` which takes a locale name and returns a list of locales from which this locale inherits up to but not including the `root` locale.
+
+* Add `Cldr.Config.fallback/1` which takes a locale name and returns the direct parent of the locale name.
 
 * Rename alias key `subdivisionAlias` to `subdivision`
 

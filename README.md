@@ -127,13 +127,14 @@ On most platforms other than Windows the `:cacertfile` will be automatically det
 
 ### Backend Module Configuration
 
-The preferred configuration method is to define the configuration in the backend module.  The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
+The preferred configuration method is to define the configuration in the backend module.  Using the backend configuration in `config.exs` is discouraged and will result in a warning at compile time. The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
 
 ```elixir
 defmodule MyApp.Cldr do
   use Cldr,
     default_locale: "en",
     locales: ["fr", "en", "bs", "si", "ak", "th"],
+    add_fallback_locales: false,
     gettext: MyApp.Gettext,
     data_dir: "./priv/cldr",
     otp_app: :my_app,
@@ -196,6 +197,8 @@ use Cldr,
 
  * There is one additional setting which is `:all` which will configure all 541 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
+ * `:add_fallback_locales` is a boolean key which when `true` results in the fallback locales being added for each of the configured locales.  The default is `false`. The reason to set this option to `true` is that some data such as rules based number formats and subdivision data are inherited from their language roots. For example, the locale `en-001` is inherited from the locale `en`. Locale `en-001` does not have any rules based number formats or subdivision data defined for it. However locale `en` does. Including the fallback locales maximises the opportunity to resolve localised data.
+
  * `:gettext`: configures `Cldr` to use a `Gettext` module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form.
 
  * `:data_dir`: indicates where downloaded locale files will be stored.  The default is `:code.priv_dir(otp_app)` where `otp_app` is the app defined under the `:otp_app` configuration key.  If that key is not specified then the `:ex_cldr` app is used. It is recommended that an `:otp_app` key is specified in your backend module configuration.
@@ -231,16 +234,16 @@ The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not a
 
 The currently known providers and their `hex` package names are:
 
-  | Hex Package          | Provider Module   | Comment                                     |
-  | :------------------- | :---------------- | :------------------------------------------ |
-  | ex_cldr_numbers      | Cldr.Number       | Formatting of numbers, currencies           |
-  | ex_cldr_lists        | Cldr.List         | Formatting of lists                         |
-  | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units         |
-  | ex_cldr_territories  | Cldr.Territory    | Formatting of territory (country) data      |
-  | ex_cldr_languages    | Cldr.Language     | Formatting of language information          |
-  | ex_cldr_dates_times  | Cldr.DateTime     | Formatting of dates, times & datetimes      |
-  | ex_money             | Money             | Operations and formatting of a money type   |
-  | ex_messages          | Cldr.Message      | Formatting of ICU-formatted messages        |
+  | Hex Package          | Provider Module   | Comment                                        |
+  | :------------------- | :---------------- | :--------------------------------------------- |
+  | ex_cldr_numbers      | Cldr.Number       | Formatting of numbers, currencies              |
+  | ex_cldr_lists        | Cldr.List         | Formatting of lists                            |
+  | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units            |
+  | ex_cldr_territories  | Cldr.Territory    | Formatting of territory (country) data         |
+  | ex_cldr_languages    | Cldr.Language     | Formatting of language information             |
+  | ex_cldr_dates_times  | Cldr.DateTime     | Formatting of dates, times & datetimes         |
+  | ex_money             | Money             | Operations on and formatting of a money type   |
+  | ex_messages          | Cldr.Message      | Formatting of ICU-formatted messages           |
 
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 

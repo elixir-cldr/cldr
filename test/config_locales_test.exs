@@ -37,12 +37,29 @@ defmodule Cldr.Config.Test do
 
   test "that a backend config with unknown Gettext locale warns" do
     match = ~r/The locale.*/
-    capture_io(fn ->
-      assert capture_io(:stderr, fn ->
+    capture_io(:stderr, fn ->
+      capture_io(fn ->
         defmodule UnknownGettext do
           use Cldr, locales: ["en"], gettext: TestGettext.GettextUnknown
         end
       end) =~ match
     end)
+  end
+
+  test "that a backend config includes fallback locales" do
+    from_locales = ["en-AU", "ca-ES-VALENCIA", "pt-PT", "nb"]
+    to_locales = ["ca", "ca-ES-VALENCIA", "en", "en-001", "en-AU", "nb", "no", "pt", "pt-PT", "root"]
+
+    capture_io(:stderr, fn ->
+      capture_io(fn ->
+        defmodule AddFallback do
+          use Cldr,
+            locales: from_locales,
+            add_fallback_locales: true
+        end
+      end)
+    end)
+
+    assert Cldr.Config.known_locale_names(Cldr.Config.Test.AddFallback) == to_locales
   end
 end
