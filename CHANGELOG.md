@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.19.1
+
+This is the changelog for Cldr v2.19.1 released on April 7th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Bug Fixes
+
+* Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
+
 # Changelog for Cldr v2.19.0
 
 This is the changelog for Cldr v2.19.0 released on February 6th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
