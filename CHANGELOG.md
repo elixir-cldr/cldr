@@ -1,14 +1,96 @@
-# Changelog for Cldr v2.19.1
+# Changelog for Cldr v2.20.0
 
-This is the changelog for Cldr v2.19.1 released on April 7th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.20.0 released on April 8th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
+
+* Add `Cldr.Locale.parent/1` to return the parent locale according. This is not exactly the same as the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
+
+* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale. It is a recursive use of `Cldr.Locale.parent/1`.
+
+* Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
+
+* Add subdivision translations to the locale files. This data can be used to format subdivision names for UI usage. Thanks to @mskv. Closes #144.
+
+* Add grammatical features to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_features/0`.
+
+* Add grammatical gender to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_gender/0`.
+
+* Make `Cldr.Locale.first_match/2` a public function. This function is useful for other CLDR-based libraries to help resolve the files of localised content in CLDR.
+
+* Add `:add_fallback_locales` to the backend configuration. When `true`, the fallback locales of the configured backend locales is also added to the configuration. The default is `false` and therefore by default there is no change to behaviour from previous releases. Setting this option to `true` enables means that data that is stored in parent locales rather than child locales can be processed. This applies particularly to rules-based number formats and subdivision data. These data aren't stored in all locales - generally they are stored in the base language locale.
+
+* Add `Cldr.Config.fallback_chain/1` which takes a locale name and returns a list of locales from which this locale inherits up to but not including the `root` locale.
+
+* Add `Cldr.Config.fallback/1` which takes a locale name and returns the direct parent of the locale name.
+
+* Rename alias key `subdivisionAlias` to `subdivision`
+
+* Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
+
+# Changelog for Cldr v2.20.0-rc.3
+
+This is the changelog for Cldr v2.20.0-rc.3 released on April 7th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Bug Fixes
 
 * Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
 
+# Changelog for Cldr v2.20.0-rc.2
+
+This is the changelog for Cldr v2.20.0-rc.2 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Add `:add_fallback_locales` to the backend configuration. When `true`, the fallback locales of the configured backend locales is also added to the configuration. The default is `false` and therefore by default there is no change to behaviour from previous releases. Setting this option to `true` enables means that data that is stored in parent locales rather than child locales can be processed. This applies particularly to rules-based number formats and subdivision data. These data aren't stored in all locales - generally they are stored in the base language locale.
+
+* Add `Cldr.Config.fallback_chain/1` which takes a locale name and returns a list of locales from which this locale inherits up to but not including the `root` locale.
+
+* Add `Cldr.Config.fallback/1` which takes a locale name and returns the direct parent of the locale name.
+
+* Rename alias key `subdivisionAlias` to `subdivision`
+
+# Changelog for Cldr v2.20.0-rc.1
+
+This is the changelog for Cldr v2.20.0-rc.1 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Make `Cldr.Locale.first_match/2` a public function. This function is useful for other CLDR-based libraries to help resolve the files of localised content in CLDR.
+
+# Changelog for Cldr v2.20.0-rc.0
+
+This is the changelog for Cldr v2.20.0-rc.0 released on March 19th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
+
+* Add `Cldr.Locale.parent/1` to return the parent locale according. This is not exactly the same as the CLDR [locale inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance)
+
+* Add `Cldr.Locale.parents/2` to return a list of parents up to and including the `root` locale. It is a recursive use of `Cldr.Locale.parent/1`.
+
+* Add locale display name data to the locale files. This data can be used to format a locale for UI usage.
+
+* Add subdivision translations to the locale files. This data can be used to format subdivision names for UI usage. Thanks to @mskv. Closes #144.
+
+* Add grammatical features to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_features/0`.
+
+* Add grammatical gender to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_gender/0`.
+
+# Changelog for Cldr v2.19.1
+
+This is the changelog for Cldr v2.19.1 released on April 7th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
+
 # Changelog for Cldr v2.19.0
 
-This is the changelog for Cldr v2.19.0 released on February 6th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Breaking change
 

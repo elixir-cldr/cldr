@@ -27,8 +27,8 @@ Tilde                   = ~
 Comma                   = ,
 Range                   = \.\.
 Ellipsis                = …|\.\.\.
-Decimal                 = [0-9]+(\.[0-9]+([e][0-9])?)
-Integer                 = [0-9]+([e][0-9])?
+Decimal                 = [0-9]+(\.[0-9]+([c][0-9])?)
+Integer                 = [0-9]+([c][0-9])?
 Whitespace              = [\s\n\t]
 
 Rules.
@@ -58,7 +58,7 @@ Erlang code.
 -import('Elixir.Decimal', [new/1]).
 
 integer_exponent(Chars) ->
-  case string:split(Chars, "e") of
+  case string:split(Chars, "c") of
     [I, E] ->
       Exp = list_to_integer(E),
       Int = list_to_integer(I),
@@ -68,10 +68,11 @@ integer_exponent(Chars) ->
   end.
 
 decimal_exponent(Chars) ->
-  case string:split(Chars, "e") of
-    [_F, E] ->
+  case string:split(Chars, "c") of
+    [F, E] ->
       Exp = list_to_integer(E),
-      Decimal = 'Elixir.Decimal':new(list_to_binary(Chars)),
+      Decimal_chars = lists:flatten([F, "e", E]),
+      Decimal = 'Elixir.Decimal':new(list_to_binary(Decimal_chars)),
       {Decimal, Exp};
     [F] ->
       'Elixir.Decimal':new(list_to_binary(F))

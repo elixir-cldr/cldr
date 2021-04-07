@@ -51,6 +51,9 @@ defmodule Cldr.Consolidate do
     save_time_preferences()
     save_units()
     save_measurement_systems()
+    save_grammatical_features()
+    save_grammatical_gender()
+    save_parent_locales()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -86,10 +89,11 @@ defmodule Cldr.Consolidate do
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
-    |> Cldr.Map.underscore_keys()
+    |> put_localized_subdivisions(locale)
+    |> Cldr.Map.underscore_keys(except: "locale_display_names")
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
-    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_keys(except: :locale_display_names)
     |> save_locale(locale)
   end
 
@@ -115,6 +119,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.Delimiter.normalize(locale)
     |> Normalize.Ellipsis.normalize(locale)
     |> Normalize.LenientParse.normalize(locale)
+    |> Normalize.LocaleDisplayNames.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -190,33 +195,11 @@ defmodule Cldr.Consolidate do
     end
   end
 
-  # As of CLDR 37 there are available locales that have no content and
-  # therefore should not be included
+  # From time-to-time the locale data is out of sync
+  # with the json data and hence locales may need to be
+  # omitted.
   @invalid_locales [
-    # "ff-Adlm",
-    # "ff-Adlm-BF",
-    # "ff-Adlm-CM",
-    # "ff-Adlm-GH",
-    # "ff-Adlm-GM",
-    # "ff-Adlm-GW",
-    # "ff-Adlm-LR",
-    # "ff-Adlm-MR",
-    # "ff-Adlm-NE",
-    # "ff-Adlm-NG",
-    # "ff-Adlm-SL",
-    # "ff-Adlm-SN",
-    # "ks-Arab",
-    # "mai",
-    # "ms-ID",
-    # "mni-Beng",
-    # "mni",
-    # "pcm",
-    # "sat",
-    # "sd-Arab",
-    # "sat-Olck",
-    # "sd-Deva",
-    # "su",
-    # "su-Latn"
+
   ]
 
   def all_locales() do
@@ -544,6 +527,7 @@ defmodule Cldr.Consolidate do
     |> Cldr.Map.rename_keys("zoneAlias", "zone")
     |> Cldr.Map.rename_keys("territoryAlias", "region")
     |> Cldr.Map.rename_keys("languageAlias", "language")
+    |> Cldr.Map.rename_keys("subdivisionAlias", "subdivision")
     |> Cldr.Map.deep_map(&split_alternates/1)
     |> Enum.map(&simplify_replacements/1)
     |> Enum.into(%{})
@@ -564,6 +548,47 @@ defmodule Cldr.Consolidate do
     |> get_in(["supplemental", "likelySubtags"])
     |> Enum.map(fn {k, v} -> {k, LanguageTag.parse!(v)} end)
     |> Enum.into(%{})
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_grammatical_features do
+    path = Path.join(consolidated_output_dir(), "grammatical_features.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/grammaticalFeatures.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "grammaticalData"])
+    |> Cldr.Normalize.GrammaticalFeatures.normalize
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_grammatical_gender do
+    path = Path.join(consolidated_output_dir(), "grammatical_gender.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/grammaticalGenderFeatures.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "grammaticalGenderData"])
+    |> Cldr.Normalize.GrammaticalFeatures.normalize_gender()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_parent_locales do
+    path = Path.join(consolidated_output_dir(), "parent_locales.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/parentLocales.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "parentLocales", "parentLocale"])
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -833,4 +858,34 @@ defmodule Cldr.Consolidate do
   defp simplify_replacements({k, v}) do
     {k, Enum.map(v, &simplify_replacements/1)}
   end
+<<<<<<< HEAD
+=======
+
+  defp put_localized_subdivisions(result, locale) do
+    Map.put(result, "subdivisions", localized_subdivisions(locale))
+  end
+
+  defp localized_subdivisions(locale) do
+    subdivisions_src_path =
+      Path.join(download_data_dir(), ["subdivisions/", "#{locale}.xml"])
+
+    if File.exists?(subdivisions_src_path) do
+      parse_xml_subdivisions(subdivisions_src_path)
+    else
+      %{}
+    end
+  end
+
+  defp parse_xml_subdivisions(xml_path) do
+    import SweetXml
+
+    xml_path
+    |> File.read!()
+    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+    |> xpath(~x"//subdivision"l, code: ~x"./@type"s, translation: ~x"./text()")
+    |> Map.new(fn subdivision ->
+      {subdivision.code, to_string(subdivision.translation)}
+    end)
+  end
+>>>>>>> cldr39
 end

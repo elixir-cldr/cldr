@@ -248,6 +248,8 @@ defmodule Cldr.Locale do
   @type variant :: String.t() | nil
   @type subtags :: [String.t(), ...] | []
 
+  @root_locale "root"
+
   @doc false
   def define_locale_new(config) do
     quote location: :keep do
@@ -341,6 +343,134 @@ defmodule Cldr.Locale do
 
   defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
+
+  @doc """
+  Returns mappings between a locale
+  and its parent.
+
+  The mappings exist only where normal
+  inheritance rules are not applied.
+
+  """
+  @parent_locales Cldr.Config.parent_locales()
+
+  def parent_locale_map do
+    @parent_locales
+  end
+
+  @doc """
+  Returns a list of all the parent locales
+  for a given locale.
+
+  """
+  @spec parents(LanguageTag.t()) :: list(LanguageTag.t())
+  def parents(%LanguageTag{} = locale, acc \\ []) do
+    case parent(locale) do
+      {:error, _} -> Enum.reverse(acc)
+      {:ok, locale} -> parents(locale, [locale | acc])
+    end
+  end
+
+  @doc """
+  Returns the parent for a given locale.
+
+  The function implements locale inheritance
+  in accordance with [CLDR's inheritance rules](https://unicode.org/reports/tr35/#Locale_Inheritance).
+
+  Only locales that are configured are returned.
+  That is, there may be a different parent locale in CLDR
+  but unless those locales are configured they are not
+  candidates to be parents in this context. The contract
+  is to return either a known locale or an error.
+
+  ### Inheritance
+
+  * Inheritance starts by looking for a parent locale via
+   `Cldr.Config.parent_locales/0`.
+
+  * If not found, strip in turn the variant, script and territory
+    while checking to see if a base locale for the given language
+    exists.
+
+  * If no parent language exists then move to the default
+    locale and its inheritance chain.
+
+  * As a last resort, use the `root` locale.
+
+  """
+  @spec parent(LanguageTag.t()) ::
+    {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
+
+  def parent(%LanguageTag{language: "root"}) do
+    {:error, no_parent_error("root")}
+  end
+
+  def parent(%LanguageTag{backend: backend} = child) do
+    if parent = Map.get(parent_locale_map(), child.cldr_locale_name) do
+      Cldr.validate_locale(parent, backend)
+    else
+      {:ok, locale} = Cldr.LanguageTag.parse(child.cldr_locale_name)
+
+      locale
+      |> find_parent(backend)
+      |> return_parent_or_default(child, backend)
+      |> transfer_extensions(child)
+    end
+  end
+
+ @spec parent(locale_name(), Cldr.backend()) ::
+   {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
+
+  def parent(locale_name, backend \\ Cldr.default_backend!()) when is_binary(locale_name) do
+    with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
+      parent(locale)
+    end
+  end
+
+  defp find_parent(%LanguageTag{language_variant: variant} = locale, backend)
+      when not is_nil(variant) do
+    %LanguageTag{language: language, script: script, territory: territory} = locale
+    first_match(language, script, territory, nil, &known_locale(&1, backend))
+  end
+
+  defp find_parent(%LanguageTag{territory: territory} = locale, backend)
+      when not is_nil(territory) do
+    %LanguageTag{language: language, script: script} = locale
+    first_match(language, script, nil, nil, &known_locale(&1, backend))
+  end
+
+  defp find_parent(%LanguageTag{language: language}, backend) do
+    parent_locale_map()
+    |> Map.get(language)
+    |> known_locale(backend)
+  end
+
+  defp known_locale(locale_name, backend) do
+    Enum.find(backend.known_locale_names(), &(locale_name == &1))
+  end
+
+  # If the language of the parent and default are the same
+  # then return "root" to avoid loops
+  defp return_parent_or_default(parent, child, backend) when is_nil(parent) do
+    default_locale = Cldr.default_locale(backend)
+    if child.language == default_locale.language do
+      Cldr.validate_locale(@root_locale, backend)
+    else
+      {:ok, default_locale}
+    end
+  end
+
+  defp return_parent_or_default(parent, _child, backend) do
+    Cldr.validate_locale(parent, backend)
+  end
+
+  defp transfer_extensions({:ok, parent}, child) do
+    {:ok, %{parent | locale: child.locale, transform: child.transform}}
+  end
+
+  defp no_parent_error(locale_name) do
+    {Cldr.NoParentError, "The locale #{inspect locale_name} has no parent locale"}
+  end
 
   @doc """
   Returns the effective territory for a locale.
@@ -772,7 +902,30 @@ defmodule Cldr.Locale do
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
-  defp first_match(
+  @doc """
+  Execute a function for a locale returning
+  the first match on language, script, territory,
+  and variant combination.
+
+  A match is determined when the `fun/1` returns
+  a `truthy` value.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by
+    `Cldr.Locale.new/2`.
+
+  * `fun/1` is single-arity function that takes a string
+    locale name. The locale name is a built from the language,
+    script, territory and variant combinations of `language_tag`.
+
+  ## Returns
+
+  * The first `truthy` value returned by `fun/1` or `nil` if no
+    match is made.
+
+  """
+  def first_match(
          %LanguageTag{
            language: language,
            script: script,
@@ -781,13 +934,18 @@ defmodule Cldr.Locale do
          },
          fun
        )
-       when is_function(fun) do
+       when is_function(fun, 1) do
+    first_match(language, script, territory, variant, fun)
+  end
+
+  defp first_match(language, script, territory, variant, fun) do
     # Including variant
-    # Not including variant
     fun.(locale_name_from(language, script, territory, variant)) ||
       fun.(locale_name_from(language, nil, territory, variant)) ||
       fun.(locale_name_from(language, script, nil, variant)) ||
       fun.(locale_name_from(language, nil, nil, variant)) ||
+
+      # Not including variant
       fun.(locale_name_from(language, script, territory, nil)) ||
       fun.(locale_name_from(language, nil, territory, nil)) ||
       fun.(locale_name_from(language, script, nil, nil)) ||
@@ -817,7 +975,7 @@ defmodule Cldr.Locale do
 
   **Note** this function is intended to support only the CLDR
   locale names which have a format that is a subset of the full
-  langauge tag specification.
+  language tag specification.
 
   For proper parsing of local names and language tags, see
   `Cldr.Locale.canonical_language_tag/2`

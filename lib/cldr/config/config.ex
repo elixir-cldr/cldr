@@ -9,6 +9,7 @@ defmodule Cldr.Config do
 
   defstruct default_locale: "en-001",
             locales: ["en-001"],
+            add_fallback_locales: false,
             backend: nil,
             gettext: nil,
             data_dir: "cldr",
@@ -26,6 +27,7 @@ defmodule Cldr.Config do
   @type t :: %__MODULE__{
           default_locale: binary(),
           locales: [binary(), ...],
+          add_fallback_locales: boolean(),
           backend: module(),
           gettext: module() | nil,
           data_dir: binary(),
@@ -60,7 +62,9 @@ defmodule Cldr.Config do
     "languages",
     "delimiters",
     "ellipsis",
-    "lenient_parse"
+    "lenient_parse",
+    "locale_display_names",
+    "subdivisions"
   ]
 
   def include_module_docs?(false) do
@@ -396,6 +400,141 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.sort()
+  end
+
+  @doc """
+  Add the fallback locales to a list of
+  configured locales
+
+  """
+  def maybe_add_fallback_locales(%__MODULE__{add_fallback_locales: false} = config) do
+    config
+  end
+
+  def maybe_add_fallback_locales(%__MODULE__{} = config) do
+    expanded_locales =
+      config.locales
+      |> Enum.flat_map(&fallback_chain/1)
+      |> Kernel.++(config.locales)
+      |> Enum.uniq
+      |> Enum.sort
+
+    %{config | locales: expanded_locales}
+  end
+
+  @doc """
+  Returns the fallback chain for a
+  locale name. Follows the CLDR [TR35](https://unicode.org/reports/tr35/tr35.html#Bundle_vs_Item_Lookup)
+  resource bundle lookup algorithm.
+
+  This function is only intended to
+  return fallback chains for the locales
+  defined by CLDR. It does not perform
+  any alias lookup or likely subtag
+  processing.
+
+  The primary purpose for this function is
+  to support including fallback locales
+  in a backend configuration since both
+  RBNF and Subdivision data follows the
+  fallback chain.
+
+  ## Algorithm Summary
+
+  1. Decompose the locale name into language,
+     script, territory and variant. CLDR locale
+     names have no more than these four parts but
+     usually have less.
+
+  2. Look for a locale in the following order:
+     * language-script-territory
+     * language-script
+     * language-territory
+     * language
+
+  3. At each stage in (2) resolve
+     an alias in `parent_locales/1`
+
+  """
+  def fallback_chain(locale_name) do
+    locale_name
+    |> fallback_chain([])
+    |> Enum.reverse
+  end
+
+  @doc false
+  def fallback_chain(locale_name, acc) do
+    case fallback(locale_name) do
+      nil -> acc
+      fallback-> fallback_chain(fallback, [fallback | acc])
+    end
+  end
+
+  @doc """
+  Returns the immediate fallback locale for a
+  locale name. Follows the CLDR [TR35](https://unicode.org/reports/tr35/tr35.html#Bundle_vs_Item_Lookup)
+  resource bundle lookup algorithm.
+
+  This function is only intended to
+  return the fallback for the locales
+  defined by CLDR. It does not perform
+  any alias lookup or likely subtag
+  processing.
+
+  ## Algorithm Summary
+
+  1. Decompose the locale name into language,
+     script, territory and variant. CLDR locale
+     names have no more than these four parts but
+     usually have less.
+
+  2. Look for a locale in the following order:
+     * language-script-territory
+     * language-script
+     * language-territory
+     * language
+
+  3. At each stage in (2) resolve
+     an alias in `parent_locales/1`
+
+  """
+  def fallback(locale_name) do
+    all_locale_names = all_locale_names()
+
+    fun = fn locale_name ->
+      (locale_name in all_locale_names) && locale_name
+    end
+
+    if inherited = Map.get(parent_locales(), locale_name) do
+      inherited
+    else
+      {:ok, locale} = Cldr.LanguageTag.Parser.parse(locale_name)
+      first_match(locale.language, locale.script, locale.territory, fun)
+    end
+  end
+
+  defp first_match(_language, nil, nil, _fun) do
+    nil
+  end
+
+  defp first_match(language, _script, nil, fun) do
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp first_match(language, nil, _territory, fun) do
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp first_match(language, script, territory, fun) do
+    fun.(locale_name_from(language, script, nil, nil)) ||
+    fun.(locale_name_from(language, nil, territory, nil)) ||
+    fun.(locale_name_from(language, nil, nil, nil)) || nil
+  end
+
+  defp locale_name_from(language, script, territory, variant) do
+    [language, script, territory, variant]
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("-")
   end
 
   @doc """
@@ -1291,19 +1430,20 @@ defmodule Cldr.Config do
 
   @doc false
   @keys_to_integerize ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-  @dont_atomize_keys ["languages", "lenient_parse"]
+  @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
   def do_get_locale(locale, path, false) do
     path
     |> read_locale_file
     |> json_library().decode!
     |> assert_valid_keys!(locale)
-    |> structure_units
+    |> structure_units()
     |> atomize_keys(required_modules() -- @dont_atomize_keys, except: @keys_to_integerize)
-    |> structure_rbnf
-    |> atomize_number_systems
-    |> atomize_languages
-    |> structure_date_formats
-    |> structure_list_formats
+    |> structure_rbnf()
+    |> atomize_number_systems()
+    |> atomize_languages()
+    |> structure_date_formats()
+    |> structure_list_formats()
+    |> structure_locale_display_names()
     |> Map.put(:name, locale)
   end
 
@@ -1427,6 +1567,7 @@ defmodule Cldr.Config do
     |> Cldr.Map.atomize_keys(
       except: fn
         {_k, %{population_percent: _}} -> true
+        {_k, %{"population_percent" => _}} -> true
         _other -> false
       end
     )
@@ -1520,6 +1661,22 @@ defmodule Cldr.Config do
       territories()
       |> Map.fetch!(territory_code)
     end
+  end
+
+  @doc """
+  Returns a map of locale names to
+  its parent locale name.
+
+  Note that these mappings only exist
+  where the normal inheritance doesn't
+  apply.
+
+  """
+  def parent_locales do
+    cldr_data_dir()
+    |> Path.join("parent_locales.json")
+    |> File.read!()
+    |> json_library().decode!
   end
 
   @deprecated "Use Cldr.Config.territories/1"
@@ -1748,6 +1905,40 @@ defmodule Cldr.Config do
 
   defp set_skeleton([key, value]),
     do: [{String.to_atom(key), String.to_integer(value)}]
+
+  @doc """
+  Returns the CLDR grammatical features data
+  which is used with formatting units.
+
+  """
+  @grammatical_features_file "grammatical_features.json"
+  def grammatical_features do
+    data =
+      cldr_data_dir()
+      |> Path.join(@grammatical_features_file)
+      |> File.read!()
+      |> json_library().decode!
+
+    data
+    |> Enum.map(fn {k, v} ->
+      {k, v |> Cldr.Map.integerize_keys(only: ["0", "1"]) |> Cldr.Map.atomize_keys(except: [0, 1]) |> Cldr.Map.atomize_values()}
+    end)
+    |> Map.new
+  end
+
+  @doc """
+  Returns the CLDR grammatical gender data
+  which is used with formatting units.
+
+  """
+  @grammatical_gender_file "grammatical_gender.json"
+  def grammatical_gender do
+    cldr_data_dir()
+    |> Path.join(@grammatical_gender_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_values()
+  end
 
   #######################################################################
 
@@ -2051,6 +2242,17 @@ defmodule Cldr.Config do
     Map.put(content, :list_formats, dates)
   end
 
+  @language_variant_keys ["default", "menu", "short", "long", "variant"]
+  defp structure_locale_display_names(content) do
+    locale_display_names =
+      content
+      |> Map.get(:locale_display_names)
+      |> Cldr.Map.atomize_keys(skip: "languages")
+      |> Cldr.Map.atomize_keys(only: @language_variant_keys)
+
+    Map.put(content, :locale_display_names, locale_display_names)
+  end
+
   # Put the rbnf rules into a %Rule{} struct
   defp structure_rbnf(content) do
     rbnf =
@@ -2077,10 +2279,10 @@ defmodule Cldr.Config do
     units
     |> Enum.map(fn {k, v} ->
       [group | key] =
-        if String.starts_with?(k, "10p") do
-          [k | []]
-        else
-          String.split(k, "_", parts: 2)
+        cond do
+          String.starts_with?(k, "10p") -> [k | []]
+          String.starts_with?(k, "1024p") -> [k | []]
+          true -> String.split(k, "_", parts: 2)
         end
 
       if key == [] do
@@ -2172,10 +2374,10 @@ defmodule Cldr.Config do
       config
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
-      |> merge_locales_with_default
+      |> merge_locales_with_default()
       |> remove_gettext_only_locales()
-      |> sort_locales
-      |> dedup_provider_modules
+      |> sort_locales()
+      |> dedup_provider_modules()
 
     struct(__MODULE__, config)
   end

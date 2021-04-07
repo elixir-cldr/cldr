@@ -11,10 +11,10 @@ defmodule Cldr.LanguageTag.Parser do
   alias Cldr.LanguageTag.{U, T}
 
   @doc """
-  Parse a locale name into a `t:Cldr.LanguageTag.t/0`
+  Parse a locale name into a `t:Cldr.LanguageTag`
 
   * `locale_name` is a string representation of a language tag
-    as defined by RFC5646
+    as defined by [RFC5646](https://tools.ietf.org/html/rfc5646).
 
   Returns
 
@@ -49,10 +49,10 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   @doc """
-  Parse a locale name into a `t:Cldr.LanguageTag.t/0`
+  Parse a locale name into a `t:Cldr.LanguageTag`
 
   * `locale_name` is a string representation of a language tag
-    as defined by RFC5646
+    as defined by [RFC5646](https://tools.ietf.org/html/rfc5646).
 
   Returns
 

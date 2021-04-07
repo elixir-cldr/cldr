@@ -32,7 +32,9 @@ defmodule Cldr.Test do
                "languages",
                "delimiters",
                "ellipsis",
-               "lenient_parse"
+               "lenient_parse",
+               "locale_display_names",
+               "subdivisions"
              ]
   end
 
@@ -128,6 +130,7 @@ defmodule Cldr.Test do
                "ne",
                "nl",
                "nn",
+               "no",
                "pl",
                "pt",
                "pt-PT",

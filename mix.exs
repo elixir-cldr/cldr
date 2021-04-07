@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.19.1"
+  @version "2.20.0"
 
   def project do
     [
@@ -44,7 +44,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:cldr_utils, "~> 2.12"},
+      {:cldr_utils, "~> 2.15"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:castore, "~> 0.1", optional: true},
       {:certifi, "~> 2.5", optional: true},
@@ -100,6 +100,9 @@ defmodule Cldr.Mixfile do
         "priv/cldr/timezones.json",
         "priv/cldr/measurement_systems.json",
         "priv/cldr/units.json",
+        "priv/cldr/grammatical_features.json",
+        "priv/cldr/grammatical_gender.json",
+        "priv/cldr/parent_locales.json",
         "priv/cldr/time_preferences.json",
         "priv/cldr/language_tags.ebin",
         "priv/cldr/deprecated/measurement_system.json",
