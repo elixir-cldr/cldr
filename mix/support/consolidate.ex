@@ -858,8 +858,6 @@ defmodule Cldr.Consolidate do
   defp simplify_replacements({k, v}) do
     {k, Enum.map(v, &simplify_replacements/1)}
   end
-<<<<<<< HEAD
-=======
 
   defp put_localized_subdivisions(result, locale) do
     Map.put(result, "subdivisions", localized_subdivisions(locale))
@@ -887,5 +885,4 @@ defmodule Cldr.Consolidate do
       {subdivision.code, to_string(subdivision.translation)}
     end)
   end
->>>>>>> cldr39
 end
