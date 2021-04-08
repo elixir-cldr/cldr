@@ -1,3 +1,11 @@
+# Changelog for Cldr v2.21.0
+
+This is the changelog for Cldr v2.21.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Enhancements
+
+* Add `--force-locale-download` option to `mix cldr.install.locales`
+
 # Changelog for Cldr v2.20.0
 
 This is the changelog for Cldr v2.20.0 released on April 8th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
