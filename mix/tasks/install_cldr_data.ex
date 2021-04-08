@@ -3,6 +3,17 @@ if File.exists?(Cldr.Config.download_data_dir()) do
     @moduledoc """
     Installs the cldr core data and configured locales into the application.  By
     default it installs into the ./priv/cldr directory.
+
+    ## Arguments
+
+    * `backend` is the name of any backend module for which
+      the locales will be installed. This is a required parameter
+      and there is no default.
+
+    ## Example
+
+        % mix cldr.install.locales MyApp.Cldr
+
     """
 
     use Mix.Task
