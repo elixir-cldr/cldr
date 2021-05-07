@@ -124,7 +124,6 @@ On most platforms other than Windows the `:cacertfile` will be automatically det
 
 **If configuration beyond the keys `:default_locale`, `:cacertfile` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
-
 ### Backend Module Configuration
 
 The preferred configuration method is to define the configuration in the backend module.  Using the backend configuration in `config.exs` is discouraged and will result in a warning at compile time. The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:

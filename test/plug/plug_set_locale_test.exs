@@ -15,6 +15,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(cldr: TestBackend.Cldr)
 
     assert opts == [
+             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -44,6 +45,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: TestBackend.Cldr)
 
     assert opts == [
+             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -74,6 +76,7 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: WithNoGettextBackend.Cldr)
 
     assert opts == [
+             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: WithNoGettextBackend.Cldr,

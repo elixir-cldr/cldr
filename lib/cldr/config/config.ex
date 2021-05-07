@@ -1436,6 +1436,7 @@ defmodule Cldr.Config do
     |> read_locale_file
     |> json_library().decode!
     |> assert_valid_keys!(locale)
+    |> structure_number_formats()
     |> structure_units()
     |> atomize_keys(required_modules() -- @dont_atomize_keys, except: @keys_to_integerize)
     |> structure_rbnf()
@@ -2263,6 +2264,14 @@ defmodule Cldr.Config do
       |> Enum.into(%{})
 
     Map.put(content, :rbnf, rbnf)
+  end
+
+  defp structure_number_formats(content) do
+    number_formats =
+      content["number_formats"]
+      |> Cldr.Map.integerize_keys()
+
+    Map.put(content, "number_formats", number_formats)
   end
 
   defp structure_units(content) do

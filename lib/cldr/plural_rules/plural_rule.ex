@@ -297,7 +297,7 @@ defmodule Cldr.Number.PluralRule do
 
       defp do_pluralize(number, %LanguageTag{} = locale, %{} = substitutions) do
         plural = plural_rule(number, locale)
-        substitutions[plural] || substitutions[@default_substitution]
+        substitutions[number] || substitutions[plural] || substitutions[@default_substitution]
       end
 
       @doc """

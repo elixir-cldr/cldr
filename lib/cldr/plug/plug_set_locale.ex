@@ -37,6 +37,13 @@ if Code.ensure_loaded?(Plug) do
       * `:session_key` - defines the key used to look for the locale
         in the session.  The default is `locale`.
 
+      * `:put_session?` - defines whether the resolved locale is
+        put in the session. The default is `false`. If set to
+        `true` then two items are stored in the session:
+        `locale.requested_locale_name` is stored under the configured
+        `:session_key` and the configured backend module is stored
+        in the session under the "cldr_backend" key.
+
     If a locale is found then `conn.private[:cldr_locale]` is also set.
     It can be retrieved with `Cldr.Plug.SetLocale.get_cldr_locale/1`.
 
@@ -160,6 +167,7 @@ if Code.ensure_loaded?(Plug) do
     @default_from [:session, :accept_language]
     @default_param_name "locale"
     @default_session_key "cldr_locale"
+    @backend_session_key "cldr_backend"
 
     @from_options [:accept_language, :path, :body, :query, :session, :cookie]
     @app_options [:cldr, :gettext]
@@ -176,6 +184,7 @@ if Code.ensure_loaded?(Plug) do
       |> validate_gettext(options[:gettext])
       |> validate_default(options[:default])
       |> validate_session_key(options[:session_key])
+      |> validate_put_session(options[:put_session?])
     end
 
     @doc false
@@ -184,9 +193,13 @@ if Code.ensure_loaded?(Plug) do
         Enum.each(options[:apps], fn app ->
           put_locale(app, locale, options)
         end)
-      end
 
-      put_private(conn, :cldr_locale, locale)
+        conn
+        |> maybe_put_session(options[:session_key], locale, options[:put_session?])
+        |> put_private(:cldr_locale, locale)
+      else
+        conn
+      end
     end
 
     @doc """
@@ -314,6 +327,16 @@ if Code.ensure_loaded?(Plug) do
            _options
          ) do
       {:ok, apply(Gettext, :put_locale, [backend, locale_name])}
+    end
+
+    defp maybe_put_session(conn, session_key, locale, true) do
+      conn
+      |> put_session(session_key, locale.requested_locale_name)
+      |> put_session(@backend_session_key, locale.backend)
+    end
+
+    defp maybe_put_session(conn, _session_key, _locale, _other) do
+      conn
     end
 
     defp validate_apps(options, nil), do: Keyword.put(options, :apps, @default_apps)
@@ -458,7 +481,11 @@ if Code.ensure_loaded?(Plug) do
     defp validate_session_key(options, nil),
       do: Keyword.put(options, :session_key, @default_session_key)
 
-    defp validate_session_key(options, session_key) when is_binary(session_key), do: options
+    defp validate_session_key(options, session_key) when is_binary(session_key) do
+      IO.warn "The :session_key option is deprecated and will be removed in " <>
+              "a future release", []
+      options
+    end
 
     defp validate_session_key(_options, session_key) do
       raise(
@@ -467,6 +494,17 @@ if Code.ensure_loaded?(Plug) do
           ":session_key must be a string"
       )
     end
+
+    defp validate_put_session(options, nil), do: Keyword.put(options, :put_session?, false)
+    defp validate_put_session(options, true), do: options
+    defp validate_put_session(options, other) do
+      if other do
+        Keyword.put(options, :put_session?, true)
+      else
+        Keyword.put(options, :put_session?, false)
+      end
+    end
+
 
     defp validate_cldr(options, nil) do
       backend = Keyword.get_lazy(options[:apps], :cldr, &Cldr.default_locale/0)

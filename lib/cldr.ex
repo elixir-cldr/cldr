@@ -162,15 +162,20 @@ defmodule Cldr do
   end
 
   @doc """
-  Set the current process's locale for a specified backend.
+  Set the current process's locale for a specified backend or
+  for all backends.
 
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
+    is a `Cldr` backend module. The default is to set the locale
+    for all backends.
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`.
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`. It may
+    also be a map that contains the keys `"cldr_locale"` and `"cldr_backend"`
+    which is the shape of a `Phoenix` and `Plug` session making it easy to
+    set the locale from a session.
 
   ## Returns
 
@@ -179,7 +184,7 @@ defmodule Cldr do
   ## Behaviour
 
   1. If no backend is provided and the locale is a `Cldr.LanguageTag.t`
-  then the the locale is set for the
+  then the the locale is set as the default for the current process
 
   ## Notes
 
@@ -236,6 +241,16 @@ defmodule Cldr do
   def put_locale(_backend, %LanguageTag{} = locale) do
     Process.put(@process_dictionary_key, locale)
     {:ok, locale}
+  end
+
+  # For when the parameter is a session (used by Plug and Phoenix)
+  def put_locale(_backend, %{"cldr_locale" => locale, "cldr_backend" => backend}) do
+    backend = Module.concat([backend])
+    put_locale(backend, locale)
+  end
+
+  def put_locale(_backend, %{"cldr_locale" => locale}) do
+    put_locale(locale)
   end
 
   @doc """

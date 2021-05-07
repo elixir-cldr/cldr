@@ -2,9 +2,17 @@
 
 This is the changelog for Cldr v2.21.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+## Bug Fixes
+
+* Correctly pluralize numbers where the plural rule has an explicit case for the given number. When pluralizing numbers, plural rules will return a value such as `:one`, `:two`, `:few`, `:many` which is used as a key into a map of substitutions. However it is also possible to have substitutions based upon the explicit value of a number, rather than its plural type. Previously this last rule was not being applied but now is.
+
 ## Enhancements
 
 * Add `--force-locale-download` option to `mix cldr.install.locales`
+
+* Add option `:put_session?` to `Cldr.Plug.SetLocale` which is a boolean determining whether the locale is stored in the session. The default is `false`.
+
+* The `:session_key` option to `Cldr.Plug.SetLocale` is deprecated. A well-known session key is required in order to support setting the locale from the session passed to `mount/3` for liveview applications.
 
 # Changelog for Cldr v2.20.0
 
