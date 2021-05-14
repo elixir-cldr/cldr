@@ -7,4 +7,9 @@ defmodule Cldr.IdentityPluralRule.Test do
     assert TestBackend.Cldr.Number.Ordinal.pluralize(42, "en", substitutions) == "This is 42"
   end
 
+  test "float identity pluralization" do
+    substitutions = %{42 => "This is 42", :other => "This is not"}
+    assert TestBackend.Cldr.Number.Cardinal.pluralize(42.0, "en", substitutions) == "This is 42"
+  end
+
 end

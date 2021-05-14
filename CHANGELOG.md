@@ -4,7 +4,9 @@ This is the changelog for Cldr v2.21.0 released on ______, 2021.  For older chan
 
 ## Bug Fixes
 
-* Correctly pluralize numbers where the plural rule has an explicit case for the given number. When pluralizing numbers, plural rules will return a value such as `:one`, `:two`, `:few`, `:many` which is used as a key into a map of substitutions. However it is also possible to have substitutions based upon the explicit value of a number, rather than its plural type. Previously this last rule was not being applied but now is.
+* Correctly pluralize numbers where the plural rule has an explicit case for the given number. When pluralizing numbers, plural rules will return a value such as `:one`, `:two`, `:few`, `:many` which is used as a key into a map of substitutions. However it is also possible to have substitutions based upon the explicit value of a number, rather than its plural type. Previously this last rule was not being applied but now is.  For the purposes of pluralization, `1.0` and `1` are considered the same - plural rules use the integer representation so a float is cast to an integer when they are both equal according to `==`.
+
+* Correctly pluralize Decimal numbers
 
 ## Enhancements
 

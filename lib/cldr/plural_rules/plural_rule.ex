@@ -291,12 +291,36 @@ defmodule Cldr.Number.PluralRule do
         do_pluralize(number, locale, substitutions)
       end
 
+      def pluralize(%Decimal{sign: sign, coef: coef, exp: 0} = number, locale, substitutions)
+          when is_integer(coef) do
+        number
+        |> Decimal.to_integer
+        |> do_pluralize(locale, substitutions)
+      end
+
+      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
+          when is_integer(coef) and exp > 0 do
+        number
+        |> Decimal.to_integer
+        |> do_pluralize(locale, substitutions)
+      end
+
+      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
+          when is_integer(coef) and exp < 0 and rem(coef, 10) == 0 do
+        number
+        |> Decimal.to_integer
+        |> do_pluralize(locale, substitutions)
+      end
+
       def pluralize(%Decimal{} = number, %LanguageTag{} = locale, %{} = substitutions) do
-        do_pluralize(number, locale, substitutions)
+        number
+        |> Decimal.to_float
+        |> do_pluralize(locale, substitutions)
       end
 
       defp do_pluralize(number, %LanguageTag{} = locale, %{} = substitutions) do
         plural = plural_rule(number, locale)
+        number = if (truncated = trunc(number)) == number, do: truncated, else: number
         substitutions[number] || substitutions[plural] || substitutions[@default_substitution]
       end
 
