@@ -26,30 +26,35 @@ defmodule Mix.Tasks.Cldr.Install.Locales do
 
   @shortdoc "Install all configured `Cldr` locales for a given backend."
 
+  @backend_error_message "A Cldr backend module name must be provided"
   @doc false
   def run([]) do
-    raise ArgumentError, "A Cldr backend module name must be provided"
+    raise ArgumentError, @backend_error_message
   end
 
   @options [strict: [force_locale_download: :boolean]]
 
   def run(args) do
     case OptionParser.parse!(args, @options) do
-      {_options, [] = backend} ->
-        run(backend)
+      {_options, []} ->
+        raise ArgumentError, @backend_error_message
 
       {options, backend} ->
-        module = Module.concat(backend)
-        config = module.__cldr__(:config)
-
-        config =
-          if Keyword.get(options, :force_locale_download) do
-            Map.put(config, :force_locale_download, true)
-          else
-            config
-          end
-
-        Cldr.Install.install_known_locale_names(config)
+        do_install(backend, options)
     end
+  end
+
+  defp do_install(backend, options) do
+    module = Module.concat(backend)
+    config = module.__cldr__(:config)
+
+    config =
+      if Keyword.get(options, :force_locale_download) do
+        Map.put(config, :force_locale_download, true)
+      else
+        config
+      end
+
+    Cldr.Install.install_known_locale_names(config)
   end
 end
