@@ -139,23 +139,20 @@ if Code.ensure_loaded?(Plug) do
           param:   "locale",
           gettext: GetTextModule,
           cldr:    MyApp.Cldr
-          session_key: "cldr_locale"
 
         # Will set the backend-only locale for the current process
         # for both `:cldr` and `:gettext`
         plug Cldr.Plug.SetLocale,
           apps:    [cldr: MyApp.Cldr, gettext: GetTextModule],
           from:    [:query, :path, :body, :cookie, :accept_language],
-          param:   "locale",
-          session_key: "cldr_locale"
+          param:   "locale"
 
         # Will set the backend-only locale for the current process
         # for `:cldr` and globally for `:gettext`
         plug Cldr.Plug.SetLocale,
           apps:    [cldr: MyApp.Cldr, gettext: :global],
           from:    [:query, :path, :body, :cookie, :accept_language],
-          param:   "locale",
-          session_key: "cldr_locale"
+          param:   "locale"
 
     """
 
@@ -164,10 +161,11 @@ if Code.ensure_loaded?(Plug) do
     alias Cldr.AcceptLanguage
 
     @default_apps [cldr: :global]
-    @default_from [:session, :accept_language]
+    @default_from [:session, :accept_language, :query, :path]
     @default_param_name "locale"
-    @default_session_key "cldr_locale"
-    @backend_session_key "cldr_backend"
+
+    @private_key :cldr_locale
+    @session_key "cldr_locale"
 
     @from_options [:accept_language, :path, :body, :query, :session, :cookie]
     @app_options [:cldr, :gettext]
@@ -184,7 +182,6 @@ if Code.ensure_loaded?(Plug) do
       |> validate_gettext(options[:gettext])
       |> validate_default(options[:default])
       |> validate_session_key(options[:session_key])
-      |> validate_put_session(options[:put_session?])
     end
 
     @doc false
@@ -194,12 +191,29 @@ if Code.ensure_loaded?(Plug) do
           put_locale(app, locale, options)
         end)
 
-        conn
-        |> maybe_put_session(options[:session_key], locale, options[:put_session?])
-        |> put_private(:cldr_locale, locale)
+        put_private(conn, @private_key, locale)
       else
         conn
       end
+    end
+
+    @doc """
+    Returns the name of the session key used
+    to store the CLDR locale name.
+
+    ## Example
+
+      iex> Cldr.Plug.SetLocale.session_key()
+      "cldr_locale"
+
+    """
+    def session_key do
+      @session_key
+    end
+
+    @doc false
+    def private_key do
+      @private_key
     end
 
     @doc """
@@ -327,16 +341,6 @@ if Code.ensure_loaded?(Plug) do
            _options
          ) do
       {:ok, apply(Gettext, :put_locale, [backend, locale_name])}
-    end
-
-    defp maybe_put_session(conn, session_key, locale, true) do
-      conn
-      |> put_session(session_key, locale.requested_locale_name)
-      |> put_session(@backend_session_key, locale.backend)
-    end
-
-    defp maybe_put_session(conn, _session_key, _locale, _other) do
-      conn
     end
 
     defp validate_apps(options, nil), do: Keyword.put(options, :apps, @default_apps)
@@ -479,7 +483,7 @@ if Code.ensure_loaded?(Plug) do
     end
 
     defp validate_session_key(options, nil),
-      do: Keyword.put(options, :session_key, @default_session_key)
+      do: Keyword.put(options, :session_key, @session_key)
 
     defp validate_session_key(options, session_key) when is_binary(session_key) do
       IO.warn "The :session_key option is deprecated and will be removed in " <>
@@ -494,17 +498,6 @@ if Code.ensure_loaded?(Plug) do
           ":session_key must be a string"
       )
     end
-
-    defp validate_put_session(options, nil), do: Keyword.put(options, :put_session?, false)
-    defp validate_put_session(options, true), do: options
-    defp validate_put_session(options, other) do
-      if other do
-        Keyword.put(options, :put_session?, true)
-      else
-        Keyword.put(options, :put_session?, false)
-      end
-    end
-
 
     defp validate_cldr(options, nil) do
       backend = Keyword.get_lazy(options[:apps], :cldr, &Cldr.default_locale/0)

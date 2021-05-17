@@ -1,20 +1,22 @@
 # Changelog for Cldr v2.21.0
 
-This is the changelog for Cldr v2.21.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.21.0 released on May 17th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ## Bug Fixes
 
 * Correctly pluralize numbers where the plural rule has an explicit case for the given number. When pluralizing numbers, plural rules will return a value such as `:one`, `:two`, `:few`, `:many` which is used as a key into a map of substitutions. However it is also possible to have substitutions based upon the explicit value of a number, rather than its plural type. Previously this last rule was not being applied but now is.  For the purposes of pluralization, `1.0` and `1` are considered the same - plural rules use the integer representation so a float is cast to an integer when they are both equal according to `==`.
 
-* Correctly pluralize Decimal numbers
+* Correctly pluralize Decimal numbers (in addition to integer and float)
 
 ## Enhancements
 
-* Add `--force-locale-download` option to `mix cldr.install.locales`
+* Add `--force-locale-download` option to `mix cldr.install.locales`.
 
-* Add option `:put_session?` to `Cldr.Plug.SetLocale` which is a boolean determining whether the locale is stored in the session. The default is `false`.
+* `Plug.SetLocale` default keys for locale discovery from an HTTP request are now expanded to be `[:session, :accept_language, :query, :path]`.
 
-* The `:session_key` option to `Cldr.Plug.SetLocale` is deprecated. A well-known session key is required in order to support setting the locale from the session passed to `mount/3` for liveview applications.
+* The `:session_key` option to `Cldr.Plug.SetLocale` is deprecated. A well-known session key is required in order to support setting the locale from the session passed to `mount/3` for liveview applications. The session key is available as `Cldr.Plug.SetLocale.session_key/0`
+
+* Adds `Cldr.Plug.SetSession` that will copy the cldr locale name from the `conn` and put it in the session. This simplifies the lifecycle of a typical HTTP request and ensures that the locale is readily available in liveviews as well.
 
 # Changelog for Cldr v2.20.0
 

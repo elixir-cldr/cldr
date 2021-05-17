@@ -2,6 +2,8 @@ defmodule Cldr.Plug.SetLocale.Test do
   use ExUnit.Case, async: true
   use Plug.Test
 
+  import ExUnit.CaptureIO
+
   import Plug.Conn,
     only: [
       put_req_header: 3,
@@ -15,7 +17,6 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(cldr: TestBackend.Cldr)
 
     assert opts == [
-             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -36,7 +37,7 @@ defmodule Cldr.Plug.SetLocale.Test do
              },
              cldr: TestBackend.Cldr,
              param: "locale",
-             from: [:session, :accept_language],
+             from: [:session, :accept_language, :query, :path],
              apps: [cldr: :global]
            ]
   end
@@ -45,7 +46,6 @@ defmodule Cldr.Plug.SetLocale.Test do
     opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: TestBackend.Cldr)
 
     assert opts == [
-             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -67,16 +67,21 @@ defmodule Cldr.Plug.SetLocale.Test do
              gettext: TestGettext.Gettext,
              cldr: TestBackend.Cldr,
              param: "locale",
-             from: [:session, :accept_language],
+             from: [:session, :accept_language, :query, :path],
              apps: [cldr: :global, gettext: :global]
            ]
   end
 
-  test "init does not set the gettext locale if not is defined, and its in :apps and cldr does not have one" do
+  test "session key deprecation is emitted" do
+    assert capture_io(:stderr, fn ->
+      Cldr.Plug.SetLocale.init(session_key: "key", cldr: WithNoGettextBackend.Cldr)
+    end) =~ "The :session_key option is deprecated and will be removed in a future release"
+  end
+
+  test "init does not set the gettext locale if not defined, and its in :apps and cldr does not have one" do
     opts = Cldr.Plug.SetLocale.init(apps: [:cldr, :gettext], cldr: WithNoGettextBackend.Cldr)
 
     assert opts == [
-             put_session?: false,
              session_key: "cldr_locale",
              default: %Cldr.LanguageTag{
                backend: WithNoGettextBackend.Cldr,
@@ -97,7 +102,7 @@ defmodule Cldr.Plug.SetLocale.Test do
              },
              cldr: WithNoGettextBackend.Cldr,
              param: "locale",
-             from: [:session, :accept_language],
+             from: [:session, :accept_language, :query, :path],
              apps: [cldr: :global, gettext: :global]
            ]
   end
@@ -300,8 +305,7 @@ defmodule Cldr.Plug.SetLocale.Test do
         apps: [cldr: MyApp.Cldr, gettext: MyApp.Gettext],
         from: [:accept_language],
         param: "locale",
-        default: "en-GB",
-        session_key: "cldr_locale"
+        default: "en-GB"
       )
 
     conn =
@@ -319,8 +323,7 @@ defmodule Cldr.Plug.SetLocale.Test do
         apps: [cldr: MyApp.Cldr, gettext: :all],
         from: [:accept_language],
         param: "locale",
-        default: "en-GB",
-        session_key: "cldr_locale"
+        default: "en-GB"
       )
 
     conn =
