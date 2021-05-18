@@ -63,6 +63,9 @@ if Code.ensure_loaded?(Plug) do
         {:ok, locale} ->
           locale
 
+        {:error, {Cldr.NoMatchingLocale, _reason}} ->
+          nil
+
         {:error, {exception, reason}} ->
           Logger.warn("#{exception}: #{reason}")
           nil
