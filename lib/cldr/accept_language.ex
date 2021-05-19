@@ -391,7 +391,8 @@ defmodule Cldr.AcceptLanguage do
 
   """
   @spec best_match(String.t(), Cldr.backend()) ::
-          {:ok, LanguageTag.t()} | {:error, {Cldr.AcceptLanguageError, String.t()}}
+          {:ok, LanguageTag.t()}
+          | {:error, {Cldr.AcceptLanguageError | Cldr.NoMatchingLocale, String.t()}}
 
   def best_match(accept_language, backend) when is_binary(accept_language) do
     with {:ok, languages} <- parse(accept_language, backend) do

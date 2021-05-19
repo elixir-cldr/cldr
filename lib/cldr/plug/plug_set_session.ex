@@ -24,7 +24,7 @@ if Code.ensure_loaded?(Plug) do
         	    from: [:path, :query],
         	    gettext: MyApp.Gettext,
         	    cldr: MyApp.Cldr
-            plug :Cldr.Plug.SetSession
+            plug Cldr.Plug.SetSession
             plug :fetch_flash
             plug :protect_from_forgery
             plug :put_secure_browser_headers
@@ -44,10 +44,11 @@ if Code.ensure_loaded?(Plug) do
     @doc false
     def call(conn, _options) do
       case SetLocale.get_cldr_locale(conn) do
-        %{cldr_locale_name: cldr_locale} ->
+        %Cldr.LanguageTag{cldr_locale_name: cldr_locale} ->
           conn
           |> fetch_session()
           |> put_session(SetLocale.session_key(), cldr_locale)
+
         _other ->
           conn
       end
