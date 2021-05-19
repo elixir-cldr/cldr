@@ -1,7 +1,16 @@
 if Code.ensure_loaded?(Plug) do
   defmodule Cldr.Plug.SetSession do
+    @moduledoc false
+
+    @deprecated "Please use Cldr.Plug.PutSession"
+    defdelegate init(options), to: Cldr.Plug.PutSession
+
+    defdelegate call(conn, options), to: Cldr.Plug.PutSession
+  end
+
+  defmodule Cldr.Plug.PutSession do
     @moduledoc """
-    Sets a session key for the CLDR locale.
+    Puts the CLDR locale name in the session.
 
     The session
     key is fixed to be `cldr_locale` in order that downstream
@@ -24,7 +33,7 @@ if Code.ensure_loaded?(Plug) do
         	    from: [:path, :query],
         	    gettext: MyApp.Gettext,
         	    cldr: MyApp.Cldr
-            plug Cldr.Plug.SetSession
+            plug Cldr.Plug.PutSession
             plug :fetch_flash
             plug :protect_from_forgery
             plug :put_secure_browser_headers

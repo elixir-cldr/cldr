@@ -1,3 +1,19 @@
+# Changelog for Cldr v2.22.0
+
+This is the changelog for Cldr v2.22.0 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+## Soft deprecation
+
+* The plug `Cldr.Plug.SetSession` was introduced in `ex_cldr` version 2.21.0. However the convention in Phoenix and Plug is `put`, not `set`. The plug is renamed to `Cldr.Plug.PutSession`. `Cldr.Plug.SetSession` is still available but will emit a deprecation notice and will delegatge to `Cldr.Plug.PutSession.` Apologies to all for the sloppy release review process.
+
+## Bug Fixes
+
+* Fix typespec of Cldr.AcceptLanguage.best_match/2. Thanks to @adriankumpf.
+
+## Enhancements
+
+* Make log level for "no match" errors in `Cldr.Plug.AcceptLanguage` configurable.
+
 # Changelog for Cldr v2.21.0
 
 This is the changelog for Cldr v2.21.0 released on May 17th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

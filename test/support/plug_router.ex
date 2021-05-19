@@ -15,7 +15,7 @@ defmodule MyRouter do
     gettext: TestGettext.Gettext,
     cldr: TestBackend.Cldr
 
-  plug Cldr.Plug.SetSession
+  plug Cldr.Plug.PutSession
 
   plug :dispatch
 
