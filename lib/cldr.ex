@@ -611,7 +611,11 @@ defmodule Cldr do
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def validate_locale(locale, backend \\ Cldr.default_backend!())
+  def validate_locale(locale, backend \\ nil)
+
+  def validate_locale(%LanguageTag{} = locale, nil) do
+    {:ok, locale}
+  end
 
   def validate_locale(locale, nil) do
     validate_locale(locale, Cldr.default_backend!())

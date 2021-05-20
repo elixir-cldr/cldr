@@ -1,30 +1,42 @@
-# Changelog for Cldr v2.22.0
+# Changelog
+
+## Cldr v2.22.1
+
+This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* `Cldr.Number.PluralRule.plural_type/2` correcly returns a plural type when no backend is provided, no default backend is configured and the locale is a `t:Cldr.LanguageTag`
+
+* `Cldr.validate_locale/1` doesn't raise if there is no default backend configured and the locale is a `t:Cldr.LanguageTag`
+
+## Cldr v2.22.0
 
 This is the changelog for Cldr v2.22.0 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Soft deprecation
+### Soft deprecation
 
 * The plug `Cldr.Plug.SetSession` was introduced in `ex_cldr` version 2.21.0. However the convention in Phoenix and Plug is `put`, not `set`. The plug is renamed to `Cldr.Plug.PutSession`. `Cldr.Plug.SetSession` is still available but will emit a deprecation notice and will delegatge to `Cldr.Plug.PutSession.` Apologies to all for the sloppy release review process.
 
-## Bug Fixes
+### Bug Fixes
 
 * Fix typespec of Cldr.AcceptLanguage.best_match/2. Thanks to @adriankumpf.
 
-## Enhancements
+### Enhancements
 
 * Make log level for "no match" errors in `Cldr.Plug.AcceptLanguage` configurable.
 
-# Changelog for Cldr v2.21.0
+## Cldr v2.21.0
 
 This is the changelog for Cldr v2.21.0 released on May 17th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * Correctly pluralize numbers where the plural rule has an explicit case for the given number. When pluralizing numbers, plural rules will return a value such as `:one`, `:two`, `:few`, `:many` which is used as a key into a map of substitutions. However it is also possible to have substitutions based upon the explicit value of a number, rather than its plural type. Previously this last rule was not being applied but now is.  For the purposes of pluralization, `1.0` and `1` are considered the same - plural rules use the integer representation so a float is cast to an integer when they are both equal according to `==`.
 
 * Correctly pluralize Decimal numbers (in addition to integer and float)
 
-## Enhancements
+### Enhancements
 
 * Add `--force-locale-download` option to `mix cldr.install.locales`.
 
@@ -34,11 +46,11 @@ This is the changelog for Cldr v2.21.0 released on May 17th, 2021.  For older ch
 
 * Adds `Cldr.Plug.SetSession` that will copy the cldr locale name from the `conn` and put it in the session. This simplifies the lifecycle of a typical HTTP request and ensures that the locale is readily available in liveviews as well.
 
-# Changelog for Cldr v2.20.0
+## Cldr v2.20.0
 
 This is the changelog for Cldr v2.20.0 released on April 8th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
@@ -66,19 +78,19 @@ This is the changelog for Cldr v2.20.0 released on April 8th, 2021.  For older c
 
 * Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
 
-# Changelog for Cldr v2.20.0-rc.3
+## Cldr v2.20.0-rc.3
 
 This is the changelog for Cldr v2.20.0-rc.3 released on April 7th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
 
-# Changelog for Cldr v2.20.0-rc.2
+## Cldr v2.20.0-rc.2
 
 This is the changelog for Cldr v2.20.0-rc.2 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Add `:add_fallback_locales` to the backend configuration. When `true`, the fallback locales of the configured backend locales is also added to the configuration. The default is `false` and therefore by default there is no change to behaviour from previous releases. Setting this option to `true` enables means that data that is stored in parent locales rather than child locales can be processed. This applies particularly to rules-based number formats and subdivision data. These data aren't stored in all locales - generally they are stored in the base language locale.
 
@@ -88,19 +100,19 @@ This is the changelog for Cldr v2.20.0-rc.2 released on March 22nd, 2021.  For o
 
 * Rename alias key `subdivisionAlias` to `subdivision`
 
-# Changelog for Cldr v2.20.0-rc.1
+## Cldr v2.20.0-rc.1
 
 This is the changelog for Cldr v2.20.0-rc.1 released on March 22nd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Make `Cldr.Locale.first_match/2` a public function. This function is useful for other CLDR-based libraries to help resolve the files of localised content in CLDR.
 
-# Changelog for Cldr v2.20.0-rc.0
+## Cldr v2.20.0-rc.0
 
 This is the changelog for Cldr v2.20.0-rc.0 released on March 19th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Updates to [CLDR version 39](http://cldr.unicode.org/index/downloads/cldr-39) data.
 
@@ -116,15 +128,15 @@ This is the changelog for Cldr v2.20.0-rc.0 released on March 19th, 2021.  For o
 
 * Add grammatical gender to the repository. This data is used in [ex_cldr_units](https://github.com/elixir-cldr/cldr_units). See also `Cldr.Config.grammatical_gender/0`.
 
-# Changelog for Cldr v2.19.1
+## Cldr v2.19.1
 
 This is the changelog for Cldr v2.19.1 released on April 7th.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Fix `Cldr.Substitution.substitute/2` when the template has no substitutions. Thanks to @jarrodmoldrich. Closes [ex_cldr_units #20](https://github.com/elixir-cldr/cldr_units/issues/20).
 
-# Changelog for Cldr v2.19.0
+## Cldr v2.19.0
 
 This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -132,7 +144,7 @@ This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For olde
 
 * A parsed langauge tag would previously turn the `tz` parameter of the `u` extension into a timezone ID. For example, the language tag `en-AU-u-tz-ausyd` would decode `ausyd` into `Australia/Sydney`. From this release, parsing no longer decodes the `tz` parameter since doing so means that `to_string/1` does not work correctly.  Use `Cldr.Locale.timezone_from_locale/1` instead.
 
-## Enhancements
+### Enhancements
 
 * Updates to [CLDR 38.1](https://unicode-org.github.io/cldr-staging/charts/38.1/delta/index.html)
 
@@ -158,31 +170,31 @@ iex> Cldr.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
 "And furthermore … there is much to be done"
 ```
 
-# Changelog for Cldr v2.18.2
+## Cldr v2.18.2
 
 This is the changelog for Cldr v2.18.2 released on November 9th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Add `Cldr.Locale.territory_from_locale/1` for string language tags
 
-# Changelog for Cldr v2.18.1
+## Cldr v2.18.1
 
 This is the changelog for Cldr v2.18.1 released on November 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Add `<backend>.Locale.territory_from_locale/1`
 
-## Bug Fixes
+### Bug Fixes
 
 * Fixes `Cldr.LanguageTag.to_string/1` when the `u` extenion is empty. Closes #140. Thanks to @Zurga.
 
-# Changelog for Cldr v2.18.0
+## Cldr v2.18.0
 
 This is the changelog for Cldr v2.18.0 released on November 1st, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Update to [CLDR 38](http://cldr.unicode.org/index/downloads/cldr-38)
 
@@ -216,55 +228,55 @@ iex> Cldr.Number.PluralRule.plural_type {1234567, 6}, locale: "fr"
 :many
 ```
 
-# Changelog for Cldr v2.17.2
+## Cldr v2.17.2
 
 This is the changelog for Cldr v2.17.2 released on September 30th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * When configuring a Cldr backend, warn then omit any Gettext locales configured that aren't actually available in CLDR. Thanks to @mikl. Closes #138.
 
-# Changelog for Cldr v2.17.1
+## Cldr v2.17.1
 
 This is the changelog for Cldr v2.17.1 released on September 26th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * Significantly improve the performance of `Cldr.default_locale/0`. In previously releases, the default locale was being parsed on each access. In this release it is parsed once and cached in the application environment. This improves performance by about 40x.  Thanks to @Phillipp who brought this to attention in [Elixir Forum](https://elixirforum.com/t/cldr-number-parser-parse-quite-slow/34572)
 
-# Changelog for Cldr v2.17.0
+## Cldr v2.17.0
 
 This is the changelog for Cldr v2.17.0 released on September 8th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Enhancements
+### Enhancements
 
 * Support `Decimal` version `~> 1.6` and `~> 2.0`
 
-## Bug Fixes
+### Bug Fixes
 
 * Corrects `Cldr.Plug.SetLocale` testing for body parameters. Previous version of `Plug` would parse body parameters for an HTTP `get` verb which is not standard behaviour. The test now uses the HTTP `put` verb where body paramters are expected to be parsed.
 
 * Corrects internal links to the readme.
 
-# Changelog for Cldr v2.16.2
+## Cldr v2.16.2
 
 This is the changelog for Cldr v2.16.2 released on August 29th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * Fix compiler warning for Elixir 1.11 when calling a remote function that is based upon a module name that is a variable.
 
-# Changelog for Cldr v2.16.1
+## Cldr v2.16.1
 
 This is the changelog for Cldr v2.16.1 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Bug Fixes
+### Bug Fixes
 
 * Do not send `Connection: close` header when downloading locales.
 
 * Do not convert `charlist` data from `:httpc` before saving it as a locale file. Fixes an issue whereby the saved locale file is shorter than expected due to an extraneous use of `:erlang.list_to_binary/1` which is not `UTF8` friendly. Thanks to @halostatue for the patience and persistence working this issue through on a weekend. Fixes #137.
 
-# Changelog for Cldr v2.16.1-rc.0
+## Cldr v2.16.1-rc.0
 
 This is the changelog for Cldr v2.16.1-rc.0 released on June 7th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -274,7 +286,7 @@ This is the changelog for Cldr v2.16.1-rc.0 released on June 7th, 2020.  For old
 
 * Do not convert `charlist` data from `:httpc` before saving it as a locale file. Probably fixes an issue whereby the saved locale file is shorter than expected.
 
-# Changelog for Cldr v2.16.0
+## Cldr v2.16.0
 
 This is the changelog for Cldr v2.16.0 released on June 6th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -299,7 +311,7 @@ defmodule MyApp.Cldr do
 
 * Validate configured locales in a backend case insensitively and with either BCP 47 or Poxix ("-" or "_") separators.
 
-# Changelog for Cldr v2.15.0
+## Cldr v2.15.0
 
 This is the changelog for Cldr v2.15.0 released on May 27th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -311,7 +323,7 @@ This change is relevant only to the developers of `ex_cldr`. It is not applicabl
 
 * Adds data to support lenient parsing of dates and numbers
 
-# Changelog for Cldr v2.14.1
+## Cldr v2.14.1
 
 This is the changelog for Cldr v2.14.1 released on May 15th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -319,7 +331,7 @@ This is the changelog for Cldr v2.14.1 released on May 15th, 2020.  For older ch
 
 * Fix compilation order for backends configured in `Cldr.Plug.SetLocale`. Thanks to @syfgkjasdkn. Closes #135.
 
-# Changelog for Cldr v2.14.0
+## Cldr v2.14.0
 
 This is the changelog for Cldr v2.14.0 released on May 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -422,7 +434,7 @@ Although these are breaking changes, they are changes that affect functions in `
 
 * Add `Cldr.the_world/0` that returns the territory code for the world which is `:001`
 
-# Changelog for Cldr v2.13.0
+## Cldr v2.13.0
 
 This is the changelog for Cldr v2.13.0 released on January 19th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -434,7 +446,7 @@ This is the changelog for Cldr v2.13.0 released on January 19th, 2020.  For olde
 
 * When parsing a locale with a `u` extension containing a `cf` (currency format) key, the key is transformed to the standard `:currency` or `:accounting` atoms rather than being left as strings.
 
-# Changelog for Cldr v2.12.1
+## Cldr v2.12.1
 
 This is the changelog for Cldr v2.12.1 released on January 14th, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -442,7 +454,7 @@ This is the changelog for Cldr v2.12.1 released on January 14th, 2020.  For olde
 
 * Remove two lingering dialyzer errors-that-aren't-really-errors so its passes cleanly.
 
-# Changelog for Cldr v2.12.0
+## Cldr v2.12.0
 
 This is the changelog for Cldr v2.12.0 released on January 2nd, 2020.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -454,7 +466,7 @@ This is the changelog for Cldr v2.12.0 released on January 2nd, 2020.  For older
 
 * Update copyright dates in LICENSE.md
 
-# Changelog for Cldr v2.11.1
+## Cldr v2.11.1
 
 This is the changelog for Cldr v2.11.1 released on October 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -462,7 +474,7 @@ This is the changelog for Cldr v2.11.1 released on October 20th, 2019.  For olde
 
 * Validate session-based locale in `Cldr.Plug.SetLocale`. Closes #131. Thanks for @Ray-Wang.
 
-# Changelog for Cldr v2.11.0
+## Cldr v2.11.0
 
 This is the changelog for Cldr v2.11.0 released on October 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -470,7 +482,7 @@ This is the changelog for Cldr v2.11.0 released on October 10th, 2019.  For olde
 
 * Update to CLDR data version 36.0.0.
 
-# Changelog for Cldr v2.10.2
+## Cldr v2.10.2
 
 This is the changelog for Cldr v2.10.2 released on September 7th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -480,7 +492,7 @@ This is the changelog for Cldr v2.10.2 released on September 7th, 2019.  For old
 
 * `Cldr.Number.PluralRule.plural_type/2` has become `Cldr.Number.PluralRule.plural_type/3` to better align with other functions that typically use `argument, backend, options` as their parameters. No user code change is expected as the function heads remain compatible.
 
-# Changelog for Cldr v2.10.1
+## Cldr v2.10.1
 
 This is the changelog for Cldr v2.10.1 released on August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -488,7 +500,7 @@ This is the changelog for Cldr v2.10.1 released on August 25th, 2019.  For older
 
 * Fix error in the generation of unit preference data
 
-# Changelog for Cldr v2.10.0
+## Cldr v2.10.0
 
 This is the changelog for Cldr v2.10.0 released on August August 25th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -496,7 +508,7 @@ This is the changelog for Cldr v2.10.0 released on August August 25th, 2019.  Fo
 
 * Adds unit preference data. This data is used by [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6 and later to allow localization of units into the preferred units for a given locale or territory.
 
-# Changelog for Cldr v2.9.0
+## Cldr v2.9.0
 
 This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -510,7 +522,7 @@ This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For
 
 * Add `Cldr.Config.measurement_system/0` that returns a mapping between a territory and a measurement system (ie does a territory/country use the metric, US or UK system)
 
-# Changelog for Cldr v2.8.1
+## Cldr v2.8.1
 
 This is the changelog for Cldr v2.8.1 released on August 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -518,7 +530,7 @@ This is the changelog for Cldr v2.8.1 released on August 23rd, 2019.  For older 
 
 * Fix the `@spec` for `Cldr.Substitution.substitute/2`
 
-# Changelog for Cldr v2.8.0
+## Cldr v2.8.0
 
 This is the changelog for Cldr v2.8.0 released on August 21st, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -534,7 +546,7 @@ This is the changelog for Cldr v2.8.0 released on August 21st, 2019.  For older 
 
 * Add `@spec` to parser combinators to remove dialyzer warnings.  Ensure that you are using `nimble_parsec` version 0.5.1 or later if running dialyzer checks.
 
-# Changelog for Cldr v2.7.2
+## Cldr v2.7.2
 
 This is the changelog for Cldr v2.7.2 released on June 14th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -544,7 +556,7 @@ This is the changelog for Cldr v2.7.2 released on June 14th, 2019.  For older ch
 
 * Fixes a bug whereby a `Cldr` backend may not be recognised during compilation of `Cldr.Plug.SetLocale`. Similar issue to #124. Thanks for @AdrianRibao for the report.
 
-# Changelog for Cldr v2.7.1
+## Cldr v2.7.1
 
 This is the changelog for Cldr v2.7.1 released on June 2nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -552,7 +564,7 @@ This is the changelog for Cldr v2.7.1 released on June 2nd, 2019.  For older cha
 
 * Fix `Cldr.known_number_systems/0` by removing the call to `Config.known_number_systems/0` which decodes json on each call and use `Cldr.known_number_systems/0` which does not.
 
-# Changelog for Cldr v2.7.0
+## Cldr v2.7.0
 
 This is the changelog for Cldr v2.7.0 released on April 22nd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -560,7 +572,7 @@ This is the changelog for Cldr v2.7.0 released on April 22nd, 2019.  For older c
 
 * Updates to CLDR version 35.1.0 which is primarily related to the change of Japanese era with the ascension of a new emporer on April 1st.
 
-# Changelog for Cldr v2.6.2
+## Cldr v2.6.2
 
 This is the changelog for Cldr v2.6.2 released on April 16th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -574,7 +586,7 @@ This is the changelog for Cldr v2.6.2 released on April 16th, 2019.  For older c
 
 * `Cldr.Plug.SetLocale.init/1` would raise an exception if no `:gettext` key was specified.  This is now corrected.
 
-# Changelog for Cldr v2.6.1
+## Cldr v2.6.1
 
 This is the changelog for Cldr v2.6.1 released on April 13th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -584,7 +596,7 @@ This is the changelog for Cldr v2.6.1 released on April 13th, 2019.  For older c
 
 * Raises if a backend module configures an `:otp_app` that is not known
 
-# Changelog for Cldr v2.6.0
+## Cldr v2.6.0
 
 This is the changelog for Cldr v2.6.0 released on March 28th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -601,7 +613,7 @@ The plural rule definition for `:other` in the repository is:
 
 However in rules testing, the values `1000.0`, `10000.0` and `100000.0` are resolving to category `:two` rather than `:other`. Until this is resolved, these data points are removed from the test data.
 
-# Changelog for Cldr v2.5.0
+## Cldr v2.5.0
 
 This is the changelog for Cldr v2.5.0 released on March 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -613,7 +625,7 @@ This is the changelog for Cldr v2.5.0 released on March 23rd, 2019.  For older c
 
 * Where appropriate, `Cldr.*` will now use `Cldr.default_backend()` as a default parameter.
 
-# Changelog for Cldr v2.4.3
+## Cldr v2.4.3
 
 This is the changelog for Cldr v2.4.3 released on March 20th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -621,7 +633,7 @@ This is the changelog for Cldr v2.4.3 released on March 20th, 2019.  For older c
 
 * Fix `Cldr.validate_locale/1` @spec error and remove spurious `@dialyzer` directives
 
-# Changelog for Cldr v2.4.2
+## Cldr v2.4.2
 
 This is the changelog for Cldr v2.4.2 released on March 15th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -629,7 +641,7 @@ This is the changelog for Cldr v2.4.2 released on March 15th, 2019.  For older c
 
 * Exclude `Cldr.Currency` from the list of known providers so that it won't be compiled twice when working with `ex_cldr_numbers`.
 
-# Changelog for Cldr v2.4.1
+## Cldr v2.4.1
 
 This is the changelog for Cldr v2.4.1 released on March 14th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -646,7 +658,7 @@ defmodule MyApp.Cldr do
     generate_docs: false
 end
 ```
-# Changelog for Cldr v2.4.0
+## Cldr v2.4.0
 
 This is the changelog for Cldr v2.4.0 released on March 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -656,7 +668,7 @@ This is the changelog for Cldr v2.4.0 released on March 10th, 2019.  For older c
 
 * Restructure the data returned by `Cldr.Config.week_info/0` to also encode week days as numbers in the range 1..7 where 1 is Monday.
 
-# Changelog for Cldr v2.3.2
+## Cldr v2.3.2
 
 This is the changelog for Cldr v2.3.2 released on March 8th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -670,7 +682,7 @@ This is the changelog for Cldr v2.3.2 released on March 8th, 2019.  For older ch
     * `Jason` if configured
     * `Poison` if configured
 
-# Changelog for Cldr v2.3.1
+## Cldr v2.3.1
 
 This is the changelog for Cldr v2.3.1 released on March 6th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -678,7 +690,7 @@ This is the changelog for Cldr v2.3.1 released on March 6th, 2019.  For older ch
 
 * Fix dialyzer errors.  In some cases, notably related to `nimble_parsec`, errors are generated that need to be fixed in a dependency.  These errors are added to the `.dialyzer_ignore_warnings` file for now.
 
-# Changelog for Cldr v2.3.0
+## Cldr v2.3.0
 
 This is the changelog for Cldr v2.3.0 released on March 4th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -718,7 +730,7 @@ iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-ca", MyApp.Cldr
 
 * Fix a race condition when starting up the compile-time locale cache
 
-# Changelog for Cldr v2.2.7
+## Cldr v2.2.7
 
 This is the changelog for Cldr v2.2.7 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -801,7 +813,7 @@ iex> TestBackend.Cldr.validate_locale "en-u-ca-buddhist"
 }}
 ```
 
-# Changelog for Cldr v2.2.6
+## Cldr v2.2.6
 
 This is the changelog for Cldr v2.2.6 released on February 23rd, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -809,7 +821,7 @@ This is the changelog for Cldr v2.2.6 released on February 23rd, 2019.  For olde
 
 * Adds `Cldr.Config.territory_currency_data/0` that maps a territory code (like "US") to a list of currencies reflecting the historic and current usage of currencies in that territory.
 
-# Changelog for Cldr v2.2.5
+## Cldr v2.2.5
 
 This is the changelog for Cldr v2.2.5 released on February 18th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -821,7 +833,7 @@ This is the changelog for Cldr v2.2.5 released on February 18th, 2019.  For olde
 
 * Fix regex for parsing currency names into currency strings
 
-# Changelog for Cldr v2.2.4
+## Cldr v2.2.4
 
 This is the changelog for Cldr v2.2.4 released on February 10th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -833,7 +845,7 @@ This is the changelog for Cldr v2.2.4 released on February 10th, 2019.  For olde
 
 * Log a warning if a CLDR provider module could not be found
 
-# Changelog for Cldr v2.2.3
+## Cldr v2.2.3
 
 This is the changelog for Cldr v2.2.3 released on February 9th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -841,7 +853,7 @@ This is the changelog for Cldr v2.2.3 released on February 9th, 2019.  For older
 
 * Fix parsing of currency names that have date ranges or annotations within them like "US dollar (next day)" and "Afghan afghani (1927–2002)"
 
-# Changelog for Cldr v2.2.2
+## Cldr v2.2.2
 
 This is the changelog for Cldr v2.2.2 released on February 9th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -849,7 +861,7 @@ This is the changelog for Cldr v2.2.2 released on February 9th, 2019.  For older
 
 * add `Cldr.Config.currencies_for/2` to return a map of the currency definition for a locale
 
-# Changelog for Cldr v2.2.1
+## Cldr v2.2.1
 
 This is the changelog for Cldr v2.2.1 released on January 30th, 2019.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -861,7 +873,7 @@ This is the changelog for Cldr v2.2.1 released on January 30th, 2019.  For older
 
 * Added a section on migrating from `Cldr` 1.x to 2.x.
 
-# Changelog for Cldr v2.2.0
+## Cldr v2.2.0
 
 This is the changelog for Cldr v2.2.0 released on December 23nd, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -871,7 +883,7 @@ This is the changelog for Cldr v2.2.0 released on December 23nd, 2018.  For olde
 
 * Use `IO.warn/1` for compiler warnings related to global configuration and Cldr providers configuration for a backend.
 
-# Changelog for Cldr v2.1.0
+## Cldr v2.1.0
 
 This is the changelog for Cldr v2.1.0 released on December 1st, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -894,7 +906,7 @@ end
 
 The default behaviour is the same as `Cldr 2.0` in that all known cldr providers are configured.
 
-# Changelog for Cldr v2.0.4
+## Cldr v2.0.4
 
 This is the changelog for Cldr v2.0.4 released on November 26th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -902,7 +914,7 @@ This is the changelog for Cldr v2.0.4 released on November 26th, 2018.  For olde
 
 * Dependency plugin check was using `Mix.Project.in_project/3` which actually changes directory which during compilation is a bad thing (since compilation is in parallel and within a single Unix process).  The plugin dependency list is now static.  Thanks to @robotvert. Closes #93.
 
-# Changelog for Cldr v2.0.3
+## Cldr v2.0.3
 
 This is the changelog for Cldr v2.0.3 released on November 25th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -910,7 +922,7 @@ This is the changelog for Cldr v2.0.3 released on November 25th, 2018.  For olde
 
 * Check for a `json` library existence as early as possible in the compile cycle since it is required during compilation of `Cldr`.
 
-# Changelog for Cldr v2.0.2
+## Cldr v2.0.2
 
 This is the changelog for Cldr v2.0.2 released on November 24th, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -922,7 +934,7 @@ This is the changelog for Cldr v2.0.2 released on November 24th, 2018.  For olde
 
 * `Cldr.Substitution.substitute/2` now conforms to its documentation and substitutes a list of terms into a list format
 
-# Changelog for Cldr v2.0.1
+## Cldr v2.0.1
 
 This is the changelog for Cldr v2.0.1 released on November 22, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
@@ -930,7 +942,7 @@ This is the changelog for Cldr v2.0.1 released on November 22, 2018.  For older 
 
 * Fixes a bug whereby a backend configured with locales, but no default locale (and no global configuration), would crash during compilation
 
-# Changelog for Cldr v2.0.0
+## Cldr v2.0.0
 
 This is the changelog for Cldr v2.0.0 released on November 22, 2018.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 

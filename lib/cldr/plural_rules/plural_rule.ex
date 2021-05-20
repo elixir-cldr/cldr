@@ -23,7 +23,7 @@ defmodule Cldr.Number.PluralRule do
   * `number` is an integer, float or Decimal number
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+    is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
 
   * `options` is a keyword list of options
 
@@ -34,7 +34,7 @@ defmodule Cldr.Number.PluralRule do
     default is `Cldr.get_locale/0`.
 
   * `backend` is any module that includes `use Cldr` and therefore
-     is a `Cldr` backend module.  The default is `Cldr.default_backend/0`.
+     is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
      This option allows the backend to be specified as an argument or an option.
 
   * `type` is either `Cardinal` or `Ordinal`. The default is `Cardinal`.
@@ -54,15 +54,20 @@ defmodule Cldr.Number.PluralRule do
     	:other
 
   """
-  def plural_type(number, backend \\ Cldr.default_backend!(), options \\ [])
+  def plural_type(number, backend \\ nil, options \\ [])
 
   def plural_type(number, options, []) when is_list(options) do
     {_locale, backend} = Cldr.locale_and_backend_from(options)
     plural_type(number, backend, options)
   end
 
+  def plural_type(number, nil, options) do
+    {_locale, backend} = Cldr.locale_and_backend_from(options)
+    plural_type(number, backend, options)
+  end
+
   def plural_type(number, backend, options) do
-    locale = Keyword.get(options, :locale, Cldr.get_locale())
+    locale = Keyword.get_lazy(options, :locale, &Cldr.get_locale/0)
     type = Keyword.get(options, :type, Cardinal)
     module = Module.concat([backend, Number, type])
     module.plural_rule(number, locale)

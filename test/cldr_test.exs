@@ -296,24 +296,6 @@ defmodule Cldr.Test do
     end
   end
 
-  test "that we get an exception when relying on Cldr.default_backend() and its not configured" do
-    backend = Application.get_env(:ex_cldr, :default_backend)
-    Application.put_env(:ex_cldr, :default_backend, nil)
-
-    assert_raise Cldr.NoDefaultBackendError, "No default :ex_cldr backend is configured", fn ->
-      Cldr.validate_locale("en")
-    end
-
-    Application.put_env(:ex_cldr, :default_backend, backend)
-  end
-
-  test "that we don't get an exception if a default backend is configured" do
-    default = Application.get_env(:ex_cldr, :default_backend)
-    Application.put_env(:ex_cldr, :default_backend, MyApp.Cldr)
-    {:ok, _locale} = Cldr.validate_locale("en")
-    Application.put_env(:ex_cldr, :default_backend, default)
-  end
-
   test "Cldr.Chars.to_string for a language_tag" do
     {:ok, locale} = Cldr.validate_locale("en-US-u-cu-AUD-nu-thai", MyApp.Cldr)
     assert Cldr.to_string(locale) == "en-Latn-US-u-cu-AUD-nu-thai"
