@@ -46,7 +46,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.new("en-ES", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-Latn-ES",
+        canonical_locale_name: "en-ES",
         cldr_locale_name: "en",
         extensions: %{},
         gettext_locale_name: "en",
@@ -102,7 +102,7 @@ defmodule Cldr.Locale do
         requested_locale_name: "mo",
         script: "Latn",
         transform: %{},
-        canonical_locale_name: "ro-Latn-RO",
+        canonical_locale_name: "ro-RO",
         cldr_locale_name: "ro",
         territory: :RO
       }}
@@ -118,7 +118,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.new("en", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-Latn-US",
+        canonical_locale_name: "en-US",
         cldr_locale_name: "en",
         extensions: %{},
         gettext_locale_name: "en",
@@ -153,7 +153,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.new("en-XX", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-Latn-US",
+        canonical_locale_name: "en-US",
         cldr_locale_name: "en",
         extensions: %{},
         gettext_locale_name: "en",
@@ -192,7 +192,7 @@ defmodule Cldr.Locale do
         :ok,
         %Cldr.LanguageTag{
           backend: MyApp.Cldr,
-          canonical_locale_name: "en-Latn-AU",
+          canonical_locale_name: "en-AU",
           cldr_locale_name: "en-AU",
           extensions: %{},
           gettext_locale_name: "en",
@@ -343,6 +343,17 @@ defmodule Cldr.Locale do
 
   defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
+
+  @doc """
+  Mapping of language data to known
+  scripts and territories
+
+  """
+  @language_data Cldr.Config.language_data()
+
+  def language_data do
+    @language_data
+  end
 
   @doc """
   Returns mappings between a locale
@@ -764,7 +775,7 @@ defmodule Cldr.Locale do
         :ok,
         %Cldr.LanguageTag{
           backend: TestBackend.Cldr,
-          canonical_locale_name: "en-Latn-US",
+          canonical_locale_name: "en-US",
           cldr_locale_name: "en",
           extensions: %{},
           gettext_locale_name: "en",
@@ -1034,7 +1045,7 @@ defmodule Cldr.Locale do
   ## Example
 
       iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
-      "en-Latn-US"
+      "en-US"
 
   """
   @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
@@ -1065,19 +1076,17 @@ defmodule Cldr.Locale do
   ## Example
 
       iex> Cldr.Locale.locale_name_from("en", "Latn", "001", nil)
-      "en-Latn-001"
+      "en-001"
 
       iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", nil)
-      "en-Latn-001"
+      "en-001"
 
   """
   @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variant()) ::
           locale_name()
 
   def locale_name_from(language, script, territory, variant) do
-    [language, script, territory, variant]
-    |> Enum.reject(&is_nil/1)
-    |> Enum.join("-")
+    Cldr.Config.locale_name_from(language, script, territory, variant)
   end
 
   @doc """

@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.23.0
+
+This is the changelog for Cldr v2.23.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name.  Fixing this conformance is also a prerequisite for generating local display names.
+
 ## Cldr v2.22.1
 
 This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

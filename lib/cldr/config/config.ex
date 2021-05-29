@@ -531,10 +531,45 @@ defmodule Cldr.Config do
     fun.(locale_name_from(language, nil, nil, nil)) || nil
   end
 
-  defp locale_name_from(language, script, territory, variant) do
+  # Also called from Cldr.Locale
+
+  @doc false
+  def locale_name_from(language, script, territory, variant) do
     [language, script, territory, variant]
+    |> omit_script_if_only_one()
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
+  end
+
+  # If the language has only one script for a given territory then
+  # we omit it in the canonical form
+  defp omit_script_if_only_one([_language, nil, _territory, _variant] = tag) do
+    tag
+  end
+
+  # If the language has only one script for a given territory then
+  # we omit it in the canonical form
+  defp omit_script_if_only_one([language, script, territory, variant]) do
+    language_map = Map.get(language_data(), language, %{})
+    script = maybe_nil_script(Map.get(language_map, :primary), script, territory)
+
+    [language, script, territory, variant]
+  end
+
+  # No :secondary
+  defp maybe_nil_script(nil, _script, _territory) do
+    nil
+  end
+
+  # There is only one script for this territory and its the requested one
+  # so its not required for the canonical form
+  defp maybe_nil_script(%{scripts: [script], territories: _territories}, script, _territory) do
+    nil
+  end
+
+  # In all other cases we keep the script
+  defp maybe_nil_script(%{scripts: _scripts, territories: _territories}, script, _territory) do
+    script
   end
 
   @doc """
@@ -588,6 +623,23 @@ defmodule Cldr.Config do
       other -> other
     end)
     |> Map.new()
+  end
+
+  @doc """
+  Return the langauge data that maps
+  valid territories and scripts
+
+  """
+  @language_data_file "language_data.json"
+  def language_data do
+    Path.join(cldr_data_dir(), @language_data_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys(level: 2..1000)
+    |> Cldr.Map.deep_map(fn
+      {:territories = k, list} -> {k, Enum.map(list, &String.to_atom/1)}
+      other -> other
+    end)
   end
 
   @doc """
