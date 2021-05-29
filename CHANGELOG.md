@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.23.0
+
+This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* `Cldr.locale_and_backend_from/1` now supports `map` of options as the argument.
+
 ## Cldr v2.22.1
 
 This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

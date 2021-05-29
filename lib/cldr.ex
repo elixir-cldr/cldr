@@ -2101,6 +2101,12 @@ defmodule Cldr do
   end
 
   @doc false
+  def locale_and_backend_from(options) when is_map(options) do
+    locale = Map.get(options, :locale)
+    backend = Map.get(options, :backend)
+    locale_and_backend_from(locale, backend)
+  end
+
   def locale_and_backend_from(options) when is_list(options) do
     locale = Keyword.get(options, :locale)
     backend = Keyword.get(options, :backend)
