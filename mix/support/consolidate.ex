@@ -54,6 +54,7 @@ defmodule Cldr.Consolidate do
     save_grammatical_features()
     save_grammatical_gender()
     save_parent_locales()
+    save_language_data()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -225,6 +226,43 @@ defmodule Cldr.Consolidate do
     save_file(cldr_version(), path)
 
     assert_package_file_configured!(path)
+  end
+
+  @doc false
+  def save_language_data do
+    path = Path.join(consolidated_output_dir(), "language_data.json")
+
+    language_data =
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/languageData.json"])
+      |> File.read!()
+      |> Jason.decode!()
+      |> get_in(["supplemental", "languageData"])
+      |> Cldr.Map.rename_keys("_scripts", "scripts")
+      |> Cldr.Map.rename_keys("_territories", "territories")
+      |> Enum.map(fn
+        {<<lang :: bytes-2, "-alt-secondary" >>, data} ->
+          data = normalise_language_data(data)
+          {lang, {:secondary, data}}
+        {<<lang :: bytes-3, "-alt-secondary" >>, data} ->
+          data = normalise_language_data(data)
+          {lang, {:secondary, data}}
+        {lang, data} ->
+          data = normalise_language_data(data)
+          {lang, {:primary, data}}
+      end)
+      |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
+      |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
+      |> Map.new
+
+    save_file(language_data, path)
+    assert_package_file_configured!(path)
+  end
+
+  defp normalise_language_data(data) do
+    data
+    |> Map.put_new("territories", [])
+    |> Map.put_new("scripts", [])
   end
 
   @doc false

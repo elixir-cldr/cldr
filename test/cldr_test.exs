@@ -42,7 +42,7 @@ defmodule Cldr.Test do
     assert TestBackend.Cldr.default_locale() ==
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
-               canonical_locale_name: "en-Latn-001",
+               canonical_locale_name: "en-001",
                cldr_locale_name: "en-001",
                language_subtags: [],
                extensions: %{},

@@ -8,6 +8,10 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * `Cldr.locale_and_backend_from/1` now supports `map` of options as the argument.
 
+### Bug Fixes
+
+* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name.  Fixing this conformance is also a prerequisite for generating local display names.
+
 ## Cldr v2.22.1
 
 This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

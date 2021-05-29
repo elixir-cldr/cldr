@@ -105,6 +105,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/parent_locales.json",
         "priv/cldr/time_preferences.json",
         "priv/cldr/language_tags.ebin",
+        "priv/cldr/language_data.json",
         "priv/cldr/deprecated/measurement_system.json",
         "priv/cldr/deprecated/unit_preference.json"
       ]

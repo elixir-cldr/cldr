@@ -97,7 +97,7 @@ defmodule Cldr.AcceptLanguage do
          {1.0,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "da-Latn-DK",
+            canonical_locale_name: "da-DK",
             cldr_locale_name: "da",
             language_subtags: [],
             extensions: %{},
@@ -143,7 +143,7 @@ defmodule Cldr.AcceptLanguage do
          {1.0,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "da-Latn-DK",
+            canonical_locale_name: "da-DK",
             cldr_locale_name: "da",
             language_subtags: [],
             extensions: %{},
@@ -236,7 +236,7 @@ defmodule Cldr.AcceptLanguage do
         {1.0,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "da-Latn-DK",
+           canonical_locale_name: "da-DK",
            cldr_locale_name: "da",
            language_subtags: [],
            extensions: %{},
@@ -280,7 +280,7 @@ defmodule Cldr.AcceptLanguage do
         {1.0,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "da-Latn-DK",
+           canonical_locale_name: "da-DK",
            cldr_locale_name: "da",
            language_subtags: [],
            extensions: %{},
