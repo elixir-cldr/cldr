@@ -518,42 +518,47 @@ defmodule Cldr.Config do
   end
 
   defp first_match(language, _script, nil, fun) do
-    fun.(locale_name_from(language, nil, nil, nil)) || nil
+    fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   defp first_match(language, nil, _territory, fun) do
-    fun.(locale_name_from(language, nil, nil, nil)) || nil
+    fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   defp first_match(language, script, territory, fun) do
-    fun.(locale_name_from(language, script, nil, nil)) ||
-    fun.(locale_name_from(language, nil, territory, nil)) ||
-    fun.(locale_name_from(language, nil, nil, nil)) || nil
+    fun.(locale_name_from(language, script, nil, [])) ||
+    fun.(locale_name_from(language, nil, territory, [])) ||
+    fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   # Also called from Cldr.Locale
 
   @doc false
-  def locale_name_from(language, script, territory, variant) do
-    [language, script, territory, variant]
+  def locale_name_from(language, script, territory, variants) do
+    [language, script, territory, join_variants(variants)]
     |> omit_script_if_only_one()
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
 
+  @doc false
+  def join_variants([]), do: nil
+  def join_variants(variants),
+    do: variants |> Enum.sort |> Enum.join("-")
+
   # If the language has only one script for a given territory then
   # we omit it in the canonical form
-  defp omit_script_if_only_one([_language, nil, _territory, _variant] = tag) do
+  defp omit_script_if_only_one([_language, nil, _territory, _variants] = tag) do
     tag
   end
 
   # If the language has only one script for a given territory then
   # we omit it in the canonical form
-  defp omit_script_if_only_one([language, script, territory, variant]) do
+  defp omit_script_if_only_one([language, script, territory, variants]) do
     language_map = Map.get(language_data(), language, %{})
     script = maybe_nil_script(Map.get(language_map, :primary), script, territory)
 
-    [language, script, territory, variant]
+    [language, script, territory, variants]
   end
 
   # No :secondary

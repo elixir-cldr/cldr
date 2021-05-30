@@ -29,7 +29,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
                script: "Latn",
                territory: :US,
                transform: %{},
-               language_variant: nil
+               language_variants: []
              }
   end
 

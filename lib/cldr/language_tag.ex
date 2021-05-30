@@ -160,7 +160,7 @@ defmodule Cldr.LanguageTag do
             language_subtags: [],
             script: nil,
             territory: nil,
-            language_variant: nil,
+            language_variants: [],
             locale: %{},
             transform: %{},
             extensions: %{},
@@ -177,7 +177,7 @@ defmodule Cldr.LanguageTag do
           language_subtags: [String.t()],
           script: String.t() | nil,
           territory: Cldr.territory(),
-          language_variant: String.t() | nil,
+          language_variants: [String.t()] | [],
           locale: Cldr.LanguageTag.U.t(),
           transform: map(),
           extensions: map(),
@@ -260,7 +260,7 @@ defmodule Cldr.LanguageTag do
         locale.language_subtags,
         locale.script,
         locale.territory,
-        locale.language_variant
+        Cldr.Config.join_variants(locale.language_variants)
       ]
       |> List.flatten()
       |> Enum.reject(&is_nil/1)

@@ -76,21 +76,44 @@ defmodule Cldr.Rfc5646.Helpers do
     {:error, "Can't flatten a non-list"}
   end
 
-  def collapse_extensions(args) do
-    extensions =
-      args
-      |> Enum.filter(fn
-        {x, _y} -> x == :extension
-        _ -> false
-      end)
-      |> Keyword.values()
-      |> Cldr.Map.merge_map_list()
-
-    args
-    |> Enum.reject(fn
-      {x, _y} -> x == :extension
-      _ -> false
-    end)
-    |> Keyword.put(:extensions, extensions)
+  def collapse_extensions([]) do
+    []
   end
+
+  def collapse_extensions([{:extensions, var1}, {:extension, var2} | rest]) do
+    collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
+  end
+
+  def collapse_extensions([{:extension, var1}, {:extension, var2} | rest]) do
+    collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
+  end
+
+  def collapse_extensions([{:extension, var1} | rest]) when is_map(var1) do
+    [{:extensions, var1} | collapse_extensions(rest)]
+  end
+
+  def collapse_extensions([head | rest]) do
+    [head | collapse_extensions(rest)]
+  end
+
+  def collapse_variants([]) do
+    []
+  end
+
+  def collapse_variants([{:language_variants, var1}, {:language_variant, var2} | rest]) do
+    collapse_variants([{:language_variants, [var2 | var1]} | rest])
+  end
+
+  def collapse_variants([{:language_variant, var1}, {:language_variant, var2} | rest]) do
+    collapse_variants([{:language_variants, [var1, var2]} | rest])
+  end
+
+  def collapse_variants([{:language_variant, var1} | rest]) when is_binary(var1) do
+    [{:language_variants, [var1]} | collapse_variants(rest)]
+  end
+
+  def collapse_variants([head | rest]) do
+    [head | collapse_variants(rest)]
+  end
+
 end

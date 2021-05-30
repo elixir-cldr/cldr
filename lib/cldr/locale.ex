@@ -58,7 +58,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: :ES,
         transform: %{},
-        language_variant: nil
+        language_variants: []
       }}
 
   ### Matching locales to requested locale names
@@ -96,7 +96,7 @@ defmodule Cldr.Locale do
         gettext_locale_name: nil,
         language: "ro",
         language_subtags: [],
-        language_variant: nil,
+        language_variants: [],
         locale: %{}, private_use: [],
         rbnf_locale_name: "ro",
         requested_locale_name: "mo",
@@ -130,7 +130,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: :US,
         transform: %{},
-        language_variant: nil
+        language_variants: []
       }}
 
   Which shows that a the likely subtag for the script is "Latn" and the likely
@@ -165,7 +165,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: :US,
         transform: %{},
-        language_variant: nil
+        language_variants: []
       }}
 
   ### Locale extensions
@@ -197,8 +197,8 @@ defmodule Cldr.Locale do
           extensions: %{},
           gettext_locale_name: "en",
           language: "en",
-          language_subtags: '',
-          language_variant: nil,
+          language_subtags: [],
+          language_variants: [],
           locale: %Cldr.LanguageTag.U{
             alternative_collation: nil,
             backward_level2: nil,
@@ -245,7 +245,7 @@ defmodule Cldr.Locale do
   @type language :: String.t() | nil
   @type script :: String.t() | nil
   @type territory :: String.t() | nil
-  @type variant :: String.t() | nil
+  @type variants :: [String.t()] | []
   @type subtags :: [String.t(), ...] | []
 
   @root_locale "root"
@@ -438,16 +438,15 @@ defmodule Cldr.Locale do
     end
   end
 
-  defp find_parent(%LanguageTag{language_variant: variant} = locale, backend)
-      when not is_nil(variant) do
+  defp find_parent(%LanguageTag{language_variants: [_|_] = variants} = locale, backend) do
     %LanguageTag{language: language, script: script, territory: territory} = locale
-    first_match(language, script, territory, nil, &known_locale(&1, backend))
+    first_match(language, script, territory, variants, &known_locale(&1, backend))
   end
 
   defp find_parent(%LanguageTag{territory: territory} = locale, backend)
       when not is_nil(territory) do
     %LanguageTag{language: language, script: script} = locale
-    first_match(language, script, nil, nil, &known_locale(&1, backend))
+    first_match(language, script, nil, [], &known_locale(&1, backend))
   end
 
   defp find_parent(%LanguageTag{language: language}, backend) do
@@ -787,7 +786,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: :US,
           transform: %{},
-          language_variant: nil
+          language_variants: []
         }
       }
 
@@ -941,32 +940,32 @@ defmodule Cldr.Locale do
            language: language,
            script: script,
            territory: territory,
-           language_variant: variant
+           language_variants: variants
          },
          fun
        )
        when is_function(fun, 1) do
-    first_match(language, script, territory, variant, fun)
+    first_match(language, script, territory, variants, fun)
   end
 
-  defp first_match(language, script, territory, variant, fun) do
-    # Including variant
-    fun.(locale_name_from(language, script, territory, variant)) ||
-      fun.(locale_name_from(language, nil, territory, variant)) ||
-      fun.(locale_name_from(language, script, nil, variant)) ||
-      fun.(locale_name_from(language, nil, nil, variant)) ||
+  defp first_match(language, script, territory, variants, fun) do
+    # Including variants
+    fun.(locale_name_from(language, script, territory, variants)) ||
+      fun.(locale_name_from(language, nil, territory, variants)) ||
+      fun.(locale_name_from(language, script, nil, variants)) ||
+      fun.(locale_name_from(language, nil, nil, variants)) ||
 
-      # Not including variant
-      fun.(locale_name_from(language, script, territory, nil)) ||
-      fun.(locale_name_from(language, nil, territory, nil)) ||
-      fun.(locale_name_from(language, script, nil, nil)) ||
-      fun.(locale_name_from(language, nil, nil, nil)) || nil
+      # Not including variants
+      fun.(locale_name_from(language, script, territory, [])) ||
+      fun.(locale_name_from(language, nil, territory, [])) ||
+      fun.(locale_name_from(language, script, nil, [])) ||
+      fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   @doc """
   Normalize the casing of a locale name.
 
-  ## Options
+  ## Argument
 
   * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
     or a `Cldr.LanguageTag` struct
@@ -983,10 +982,10 @@ defmodule Cldr.Locale do
   * lower case for a language
   * capital case for a script
   * upper case for a region/territory
+  * lower case for everything else
 
-  **Note** this function is intended to support only the CLDR
-  locale names which have a format that is a subset of the full
-  language tag specification.
+  **Note** this function does not validate that
+  the locale name is available or configured.
 
   For proper parsing of local names and language tags, see
   `Cldr.Locale.canonical_language_tag/2`
@@ -1003,34 +1002,52 @@ defmodule Cldr.Locale do
       "en"
 
       iex> Cldr.Locale.normalize_locale_name "ca_es_valencia"
-      "ca-ES-VALENCIA"
+      "ca-ES-valencia"
 
   """
-  @spec normalize_locale_name(locale_name) :: locale_name
+  @spec normalize_locale_name(locale_name) :: locale_name | {:error, {module(), String.t()}}
   def normalize_locale_name(locale_name) when is_binary(locale_name) do
-    case String.split(locale_name, ~r/[-_]/) do
-      [lang, other] ->
-        if String.length(other) == 4 do
-          String.downcase(lang) <> "-" <> String.capitalize(other)
-        else
-          String.downcase(lang) <> "-" <> String.upcase(other)
-        end
+    locale_name = locale_name_from_posix(locale_name)
 
-      [lang, script, region] ->
-        # Its a lang-script-region
-        # Its lang-region-variant
-        if String.length(script) == 4 do
-          String.downcase(lang) <>
-            "-" <> String.capitalize(script) <> "-" <> String.upcase(region)
-        else
-          String.downcase(lang) <> "-" <> String.upcase(script) <> "-" <> String.upcase(region)
-        end
+    with {:ok, parsed} <- Cldr.Rfc5646.Parser.parse(locale_name) do
+      Enum.reduce(parsed, [], fn
+        {:language, language}, acc ->
+          [String.downcase(language) | acc]
+        {:script, script}, acc ->
+          [String.capitalize(script) | acc]
+        {:territory, territory}, acc ->
+          [String.upcase(territory) | acc]
+        {:locale, locale}, acc ->
+          locale =
+            Enum.reduce(locale, [], fn {k, v}, accc ->
+              [String.downcase(k) <> "-" <> String.downcase(v) | accc]
+            end)
+            |> Enum.reverse()
+            |> Enum.join("-")
+          ["u-" <> locale | acc]
+        {_key, []}, acc ->
+          acc
+        {:extensions, extension}, acc ->
+          extensions =
+            Enum.map(extension, fn {ext, values} ->
+              values =
+                values
+                |> Enum.chunk_every(2)
+                |> Enum.sort
+                |> Enum.map(&Enum.join(&1, "-"))
+                |> Enum.join("-")
 
-      [lang] ->
-        String.downcase(lang)
-
-      _ ->
-        locale_name_from_posix(locale_name)
+              ext <> "-" <> values
+            end)
+            |> Enum.sort
+            |> Enum.join("-")
+          [extensions | acc]
+        {other, value}, acc when is_atom(other) and is_binary(value) ->
+          [String.downcase(value) | acc]
+        {other, [_|_] = values}, acc when is_atom(other) ->
+          [Enum.join(values, "-") | acc]
+      end)
+      |> Enum.join("-")
     end
   end
 
@@ -1054,9 +1071,9 @@ defmodule Cldr.Locale do
         language: language,
         script: script,
         territory: territory,
-        language_variant: variant
+        language_variants: variants
       }) do
-    locale_name_from(language, script, territory, variant)
+    locale_name_from(language, script, territory, variants)
   end
 
   @doc """
@@ -1065,8 +1082,10 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-  * `language`, `script`, `territory` and `variant` are string
+  * `language`, `script`, `territory` are string
     representations, or `nil`, of the language subtags
+
+  * `variants` is a list of language variants or `[]`
 
   ## Returns
 
@@ -1075,18 +1094,18 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.locale_name_from("en", "Latn", "001", nil)
+      iex> Cldr.Locale.locale_name_from("en", "Latn", "001", [])
       "en-001"
 
-      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", nil)
+      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", [])
       "en-001"
 
   """
-  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variant()) ::
+  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variants()) ::
           locale_name()
 
-  def locale_name_from(language, script, territory, variant) do
-    Cldr.Config.locale_name_from(language, script, territory, variant)
+  def locale_name_from(language, script, territory, variants) do
+    Cldr.Config.locale_name_from(language, script, territory, variants)
   end
 
   @doc """
@@ -1122,7 +1141,7 @@ defmodule Cldr.Locale do
         gettext_locale_name: nil,
         language: "ro",
         language_subtags: [],
-        language_variant: nil,
+        language_variants: [],
         locale: %{}, private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "mo",
@@ -1228,7 +1247,7 @@ defmodule Cldr.Locale do
         script: "Hans",
         territory: :SG,
         transform: %{},
-        language_variant: nil
+        language_variants: []
       }
 
   """
@@ -1236,12 +1255,12 @@ defmodule Cldr.Locale do
         %LanguageTag{language: language, script: script, territory: territory} = language_tag
       ) do
     subtags =
-      likely_subtags(locale_name_from(language, script, territory, nil)) ||
-        likely_subtags(locale_name_from(language, nil, territory, nil)) ||
-        likely_subtags(locale_name_from(language, script, nil, nil)) ||
-        likely_subtags(locale_name_from(language, nil, nil, nil)) ||
-        likely_subtags(locale_name_from("und", script, nil, nil)) ||
-        likely_subtags(locale_name_from("und", nil, nil, nil))
+      likely_subtags(locale_name_from(language, script, territory, [])) ||
+        likely_subtags(locale_name_from(language, nil, territory, [])) ||
+        likely_subtags(locale_name_from(language, script, nil, [])) ||
+        likely_subtags(locale_name_from(language, nil, nil, [])) ||
+        likely_subtags(locale_name_from("und", script, nil, [])) ||
+        likely_subtags(locale_name_from("und", nil, nil, []))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
@@ -1322,7 +1341,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: :TZ,
           transform: %{},
-          language_variant: nil
+          language_variants: []
         },
         "fuf" => %Cldr.LanguageTag{
           canonical_locale_name: nil,
@@ -1336,7 +1355,7 @@ defmodule Cldr.Locale do
           script: "Latn",
           territory: :GN,
           transform: %{},
-          language_variant: nil
+          language_variants: []
         },
         ...
 
@@ -1372,7 +1391,7 @@ defmodule Cldr.Locale do
         script: "Latn",
         territory: :US,
         transform: %{},
-        language_variant: nil
+        language_variants: []
       }
 
   """

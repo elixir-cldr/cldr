@@ -77,4 +77,8 @@ cp $CLDR_STAGING/common/subdivisions/* $CLDR_PRODUCTION/subdivisions
 cp $EX_CLDR/data/measurement_systems.xml $CLDR_PRODUCTION/measurement_systems.xml
 cp $EX_CLDR/data/iso_currencies.xml $CLDR_PRODUCTION/iso_currencies.xml
 
+# Copy test data
+cp $CLDR_REPO/common/testData/localeCanonicalization.txt $EX_CLDR/test/data/locale_canonicalization.txt
+cp $CLDR_REPO/common/testData/localeDisplayName.txt $EX_CLDR/test/data/locale_display_name.txt
+
 cd $OLDPWD

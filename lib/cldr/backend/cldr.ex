@@ -40,7 +40,7 @@ defmodule Cldr.Backend do
             script: "Latn",
             territory: :"001",
             transform: %{},
-            language_variant: nil
+            language_variants: []
           }
 
       """
@@ -282,7 +282,7 @@ defmodule Cldr.Backend do
              requested_locale_name: "pl",
              script: "Latn",
              transform: %{},
-             language_variant: nil
+             language_variants: []
            }
 
       """
@@ -324,7 +324,7 @@ defmodule Cldr.Backend do
              script: "Latn",
              territory: :US,
              transform: %{},
-             language_variant: nil
+             language_variants: []
            }}
 
           iex> #{inspect(__MODULE__)}.put_locale("invalid-locale!")
@@ -525,7 +525,7 @@ defmodule Cldr.Backend do
             script: "Latn",
             territory: :US,
             transform: %{},
-            language_variant: nil
+            language_variants: []
           }}
 
 
@@ -545,7 +545,7 @@ defmodule Cldr.Backend do
             script: "Latn",
             territory: :"001",
             transform: %{},
-            language_variant: nil
+            language_variants: []
           }}
 
           iex> #{inspect(__MODULE__)}.validate_locale("zzz")

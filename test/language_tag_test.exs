@@ -97,11 +97,11 @@ defmodule CldrLanguageTagTest do
                %Cldr.LanguageTag{
                  canonical_locale_name: nil,
                  cldr_locale_name: nil,
-                 extensions: '',
+                 extensions: %{},
                  gettext_locale_name: nil,
                  language: "en",
-                 language_subtags: '',
-                 language_variant: nil,
+                 language_subtags: [],
+                 language_variants: [],
                  locale: %Cldr.LanguageTag.U{
                    alternative_collation: nil,
                    backward_level2: nil,
@@ -130,7 +130,7 @@ defmodule CldrLanguageTagTest do
                    variable_top: nil,
                    variant: nil
                  },
-                 private_use: '',
+                 private_use: [],
                  rbnf_locale_name: nil,
                  requested_locale_name: "en-AU-u-ms-ussystem",
                  script: nil,
@@ -144,11 +144,11 @@ defmodule CldrLanguageTagTest do
               %Cldr.LanguageTag{
                 canonical_locale_name: nil,
                 cldr_locale_name: nil,
-                extensions: [],
+                extensions: %{},
                 gettext_locale_name: nil,
                 language: "en",
                 language_subtags: [],
-                language_variant: nil,
+                language_variants: [],
                 locale: %Cldr.LanguageTag.U{
                   alternative_collation: nil,
                   backward_level2: nil,
@@ -190,11 +190,11 @@ defmodule CldrLanguageTagTest do
               %Cldr.LanguageTag{
                 canonical_locale_name: nil,
                 cldr_locale_name: nil,
-                extensions: [],
+                extensions: %{},
                 gettext_locale_name: nil,
                 language: "en",
                 language_subtags: [],
-                language_variant: nil,
+                language_variants: [],
                 locale: %Cldr.LanguageTag.U{
                   alternative_collation: nil,
                   backward_level2: nil,
@@ -236,11 +236,11 @@ defmodule CldrLanguageTagTest do
               %Cldr.LanguageTag{
                 canonical_locale_name: nil,
                 cldr_locale_name: nil,
-                extensions: [],
+                extensions: %{},
                 gettext_locale_name: nil,
                 language: "en",
                 language_subtags: [],
-                language_variant: nil,
+                language_variants: [],
                 locale: %Cldr.LanguageTag.U{
                   alternative_collation: nil,
                   backward_level2: nil,

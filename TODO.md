@@ -8,10 +8,7 @@ See TR35 https://unicode.org/reports/tr35/tr35-general.html#locale_display_name_
 
 * [ ] Normalizing variant names should be lower case per TR35
 
-* [x] Reformat locale display name languages (in normalization) to cater for:
-  * _alt_variant
-  * _alt_short
+* [ ] variant and language substitutions don't respect the `und-` implied language prefix in canonicalization
 
-* [x] Check inheritance chain for locales. In CLDR39, "nb" inherits from "no". Probably applies only to RBNF where we should be looking up parent locales if no data is found (and root as the falback).
+* [ ] remove `und` language from langauge tags (should be nil) including for pre-generated language tags (important for alias resolution)
 
-* [x] Add parentLocales.json to the package. Should be used for RBNF locale lookup.

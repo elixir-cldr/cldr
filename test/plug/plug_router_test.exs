@@ -42,7 +42,7 @@ defmodule Cldr.Plug.Router.Test do
              script: "Latn",
              territory: :FR,
              transform: %{},
-             language_variant: nil
+             language_variants: []
            }
 
     assert Cldr.get_locale() == %Cldr.LanguageTag{
@@ -59,7 +59,7 @@ defmodule Cldr.Plug.Router.Test do
              script: "Latn",
              territory: :FR,
              transform: %{},
-             language_variant: nil
+             language_variants: []
            }
   end
 

@@ -10,7 +10,11 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 ### Bug Fixes
 
-* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name.  Fixing this conformance is also a prerequisite for generating local display names.
+* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name. Fixing this conformance is also a prerequisite for generating local display names.
+
+* Fixes `Cldr.Locale.normalize_locale_name/1` to correctly case all keys in lower case except script (capital case) and region (upper case). It will now also process arbitrary locale names.
+
+* A language tag can have more than one variant and this was not correctly implemented. As a result, the `t:Cldr.LanguageTag` struct field `variant` is renamed `variants` and is now a list with a default of `[]` rather than `nil`.
 
 ## Cldr v2.22.1
 
