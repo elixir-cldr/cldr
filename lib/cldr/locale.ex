@@ -1045,7 +1045,7 @@ defmodule Cldr.Locale do
         {other, value}, acc when is_atom(other) and is_binary(value) ->
           [String.downcase(value) | acc]
         {other, [_|_] = values}, acc when is_atom(other) ->
-          [Enum.join(values, "-") | acc]
+          [String.downcase(Enum.join(values, "-")) | acc]
       end)
       |> Enum.join("-")
     end
@@ -1067,13 +1067,13 @@ defmodule Cldr.Locale do
   """
   @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
 
-  def locale_name_from(%LanguageTag{
-        language: language,
-        script: script,
-        territory: territory,
-        language_variants: variants
-      }) do
-    locale_name_from(language, script, territory, variants)
+  # TODO proper formation of a canonical name required
+  def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag) do
+    locale_name_from(tag.language, tag.script, tag.territory, tag.language_variants)
+  end
+
+  def locale_name_from(%LanguageTag{canonical_locale_name: canonical_locale_name}) do
+    canonical_locale_name
   end
 
   @doc """
