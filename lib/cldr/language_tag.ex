@@ -150,6 +150,8 @@ defmodule Cldr.LanguageTag do
   represents English as spoken in Australia, with the number system "latn" but
   formatting currencies with the "accounting" style.
   """
+  import Kernel, except: [to_string: 1]
+
   alias Cldr.LanguageTag.{Parser, U}
 
   if Code.ensure_loaded?(Jason) do
@@ -267,11 +269,7 @@ defmodule Cldr.LanguageTag do
       |> Enum.join("-")
 
     locale_extension = U.to_string(locale.locale)
-
-    if locale_extension != "" do
-      basic_tag <> "-u-" <> locale_extension
-    else
-      basic_tag
-    end
+    if locale_extension != "", do: basic_tag <> "-u-" <> locale_extension, else: basic_tag
   end
+
 end

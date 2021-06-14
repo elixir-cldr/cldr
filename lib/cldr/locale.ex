@@ -813,16 +813,13 @@ defmodule Cldr.Locale do
     canonical_tag =
       language_tag
       |> put_requested_locale_name(supress_requested_locale_substitution?)
-      |> substitute_aliases
-      |> add_likely_subtags
-
-    canonical_tag =
-      canonical_tag
-      |> Map.put(:canonical_locale_name, locale_name_from(canonical_tag))
-      |> Map.put(:backend, backend)
-      |> put_cldr_locale_name(backend)
-      |> put_rbnf_locale_name(backend)
-      |> put_gettext_locale_name(backend)
+      |> substitute_aliases()
+      |> put_canonical_locale_name()
+      |> put_likely_subtags()
+      |> put_backend(backend)
+      |> put_cldr_locale_name()
+      |> put_rbnf_locale_name()
+      |> put_gettext_locale_name()
 
     {:ok, canonical_tag}
   end
@@ -849,263 +846,6 @@ defmodule Cldr.Locale do
       {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
-  end
-
-  @spec put_requested_locale_name(Cldr.LanguageTag.t(), boolean()) :: Cldr.LanguageTag.t()
-  defp put_requested_locale_name(language_tag, true) do
-    language_tag
-  end
-
-  defp put_requested_locale_name(language_tag, false) do
-    Map.put(language_tag, :requested_locale_name, locale_name_from(language_tag))
-  end
-
-  @spec put_cldr_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
-  defp put_cldr_locale_name(%LanguageTag{} = language_tag, backend) do
-    cldr_locale_name = cldr_locale_name(language_tag, backend)
-    %{language_tag | cldr_locale_name: cldr_locale_name}
-  end
-
-  @spec put_rbnf_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
-  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, backend) do
-    rbnf_locale_name = rbnf_locale_name(language_tag, backend)
-    %{language_tag | rbnf_locale_name: rbnf_locale_name}
-  end
-
-  @spec put_gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: Cldr.LanguageTag.t()
-  def put_gettext_locale_name(%LanguageTag{} = language_tag, backend) do
-    gettext_locale_name = gettext_locale_name(language_tag, backend)
-    %{language_tag | gettext_locale_name: gettext_locale_name}
-  end
-
-  @spec cldr_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name() | nil
-  defp cldr_locale_name(%LanguageTag{} = language_tag, backend) do
-    first_match(language_tag, &Cldr.known_locale_name(&1, backend)) ||
-      Cldr.known_locale_name(language_tag.requested_locale_name, backend)
-  end
-
-  @spec rbnf_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name | nil
-  defp rbnf_locale_name(%LanguageTag{} = language_tag, backend) do
-    first_match(language_tag, &Cldr.known_rbnf_locale_name(&1, backend))
-  end
-
-  @spec gettext_locale_name(Cldr.LanguageTag.t(), Cldr.backend()) :: locale_name | nil
-  defp gettext_locale_name(%LanguageTag{} = language_tag, backend) do
-    language_tag
-    |> first_match(&known_gettext_locale_name(&1, backend))
-    |> locale_name_to_posix
-  end
-
-  @spec known_gettext_locale_name(locale_name(), Cldr.backend() | Cldr.Config.t()) ::
-          locale_name() | false
-
-  def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
-    gettext_locales = backend.known_gettext_locale_names()
-    Enum.find(gettext_locales, &(&1 == locale_name)) || false
-  end
-
-  # This clause is only called at compile time when we're
-  # building a backend.  In normal use is should not be used.
-  @doc false
-  def known_gettext_locale_name(locale_name, config) when is_map(config) do
-    gettext_locales = Cldr.Config.known_gettext_locale_names(config)
-    Enum.find(gettext_locales, &(&1 == locale_name)) || false
-  end
-
-  @doc """
-  Execute a function for a locale returning
-  the first match on language, script, territory,
-  and variant combination.
-
-  A match is determined when the `fun/1` returns
-  a `truthy` value.
-
-  ## Arguments
-
-  * `language_tag` is any language tag returned by
-    `Cldr.Locale.new/2`.
-
-  * `fun/1` is single-arity function that takes a string
-    locale name. The locale name is a built from the language,
-    script, territory and variant combinations of `language_tag`.
-
-  ## Returns
-
-  * The first `truthy` value returned by `fun/1` or `nil` if no
-    match is made.
-
-  """
-  def first_match(
-         %LanguageTag{
-           language: language,
-           script: script,
-           territory: territory,
-           language_variants: variants
-         },
-         fun
-       )
-       when is_function(fun, 1) do
-    first_match(language, script, territory, variants, fun)
-  end
-
-  defp first_match(language, script, territory, variants, fun) do
-    # Including variants
-    fun.(locale_name_from(language, script, territory, variants)) ||
-      fun.(locale_name_from(language, nil, territory, variants)) ||
-      fun.(locale_name_from(language, script, nil, variants)) ||
-      fun.(locale_name_from(language, nil, nil, variants)) ||
-
-      # Not including variants
-      fun.(locale_name_from(language, script, territory, [])) ||
-      fun.(locale_name_from(language, nil, territory, [])) ||
-      fun.(locale_name_from(language, script, nil, [])) ||
-      fun.(locale_name_from(language, nil, nil, [])) || nil
-  end
-
-  @doc """
-  Normalize the casing of a locale name.
-
-  ## Argument
-
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct
-
-  ## Returns
-
-  * The normalized locale name as a `String.t`
-
-  ## Method
-
-  Locale names are case insensitive but certain common
-  casing is followed in practise:
-
-  * lower case for a language
-  * capital case for a script
-  * upper case for a region/territory
-  * lower case for everything else
-
-  **Note** this function does not validate that
-  the locale name is available or configured.
-
-  For proper parsing of local names and language tags, see
-  `Cldr.Locale.canonical_language_tag/2`
-
-  ## Examples
-
-      iex> Cldr.Locale.normalize_locale_name "zh_hant"
-      "zh-Hant"
-
-      iex> Cldr.Locale.normalize_locale_name "en_us"
-      "en-US"
-
-      iex> Cldr.Locale.normalize_locale_name "EN"
-      "en"
-
-      iex> Cldr.Locale.normalize_locale_name "ca_es_valencia"
-      "ca-ES-valencia"
-
-  """
-  @spec normalize_locale_name(locale_name) :: locale_name | {:error, {module(), String.t()}}
-  def normalize_locale_name(locale_name) when is_binary(locale_name) do
-    locale_name = locale_name_from_posix(locale_name)
-
-    with {:ok, parsed} <- Cldr.Rfc5646.Parser.parse(locale_name) do
-      Enum.reduce(parsed, [], fn
-        {:language, language}, acc ->
-          [String.downcase(language) | acc]
-        {:script, script}, acc ->
-          [String.capitalize(script) | acc]
-        {:territory, territory}, acc ->
-          [String.upcase(territory) | acc]
-        {:locale, locale}, acc ->
-          locale =
-            Enum.reduce(locale, [], fn {k, v}, accc ->
-              [String.downcase(k) <> "-" <> String.downcase(v) | accc]
-            end)
-            |> Enum.reverse()
-            |> Enum.join("-")
-          ["u-" <> locale | acc]
-        {_key, []}, acc ->
-          acc
-        {:extensions, extension}, acc ->
-          extensions =
-            Enum.map(extension, fn {ext, values} ->
-              values =
-                values
-                |> Enum.chunk_every(2)
-                |> Enum.sort
-                |> Enum.map(&Enum.join(&1, "-"))
-                |> Enum.join("-")
-
-              ext <> "-" <> values
-            end)
-            |> Enum.sort
-            |> Enum.join("-")
-          [extensions | acc]
-        {other, value}, acc when is_atom(other) and is_binary(value) ->
-          [String.downcase(value) | acc]
-        {other, [_|_] = values}, acc when is_atom(other) ->
-          [String.downcase(Enum.join(values, "-")) | acc]
-      end)
-      |> Enum.join("-")
-    end
-  end
-
-  @doc """
-  Return a locale name from a `Cldr.LanguageTag`
-
-  ## Options
-
-  * `locale_name` is any `Cldr.LanguageTag` struct returned by
-    `Cldr.Locale.new!/2`
-
-  ## Example
-
-      iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
-      "en-US"
-
-  """
-  @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
-
-  # TODO proper formation of a canonical name required
-  def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag) do
-    locale_name_from(tag.language, tag.script, tag.territory, tag.language_variants)
-  end
-
-  def locale_name_from(%LanguageTag{canonical_locale_name: canonical_locale_name}) do
-    canonical_locale_name
-  end
-
-  @doc """
-  Return a locale name by combining language, script, territory and variant
-  parameters
-
-  ## Arguments
-
-  * `language`, `script`, `territory` are string
-    representations, or `nil`, of the language subtags
-
-  * `variants` is a list of language variants or `[]`
-
-  ## Returns
-
-  * The locale name constructed from the non-nil arguments joined
-    by a "-"
-
-  ## Example
-
-      iex> Cldr.Locale.locale_name_from("en", "Latn", "001", [])
-      "en-001"
-
-      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", [])
-      "en-001"
-
-  """
-  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variants()) ::
-          locale_name()
-
-  def locale_name_from(language, script, territory, variants) do
-    Cldr.Config.locale_name_from(language, script, territory, variants)
   end
 
   @doc """
@@ -1151,17 +891,76 @@ defmodule Cldr.Locale do
 
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
-    language_tag
-    |> substitute(:language)
-    |> substitute(:script)
-    |> substitute(:territory)
-    |> merge_language_tags(language_tag)
-    |> remove_unknown(:script)
-    |> remove_unknown(:territory)
+    updated_tag =
+      language_tag
+      |> substitute(:requested_name)
+      |> substitute(:language)
+      |> substitute(:variant)
+      |> substitute(:script)
+      |> substitute(:territory)
+      |> remove_unknown(:script)
+      |> remove_unknown(:territory)
+
+    if updated_tag == language_tag do
+      updated_tag
+    else
+      substitute_aliases(updated_tag)
+    end
   end
 
-  defp substitute(%LanguageTag{language: language}, :language) do
-    aliases(language, :language) || %LanguageTag{}
+
+  defp substitute(%LanguageTag{requested_locale_name: locale} = language_tag, :requested_name) do
+    if alias_tag = aliases(locale, :language) do
+      merge_language_tags(alias_tag, language_tag, [])
+    else
+      language_tag
+    end
+  end
+
+  # No variants so we just check the language for an alias
+  defp substitute(%LanguageTag{language_variants: []} = language_tag, :language) do
+    if alias_tag = aliases(language_tag.language, :language) do
+      merge_language_tags(alias_tag, language_tag, [language_tag.language])
+    else
+      language_tag
+    end
+  end
+
+  # One or more language variants which, when combined with the language,
+  # may have an alias
+  defp substitute(%LanguageTag{language_variants: variants} = language_tag, :language) do
+    variants = variant_selectors(variants)
+    language = language_tag.language
+
+    {alias_key, alias_tag} = find_language_alias(language, variants, :language)
+
+    if alias_tag do
+      merge_language_tags(alias_tag, language_tag, alias_key)
+    else
+      language_tag
+    end
+  end
+
+  defp substitute(%LanguageTag{language_variants: []} = language_tag, :variant) do
+    language_tag
+  end
+
+  defp substitute(%LanguageTag{language_variants: [variant]} = language_tag, :variant) do
+    {alias_key, substitution} =
+      find_alias([[variant]], :variant) || find_language_alias("und", [variant], :language)
+
+    merge_variants(language_tag, substitution, alias_key)
+  end
+
+  defp substitute(%LanguageTag{language_variants: variants} = language_tag, :variant) do
+    variants = variant_selectors(variants)
+    {alias_key, substitution} = find_alias(variants, :variant)
+
+    if substitution do
+      merge_variants(language_tag, substitution, alias_key)
+    else
+      language_tag
+    end
   end
 
   defp substitute(%LanguageTag{script: script} = language_tag, :script) do
@@ -1169,17 +968,16 @@ defmodule Cldr.Locale do
   end
 
   defp substitute(%LanguageTag{territory: territory} = language_tag, :territory) do
-    %{language_tag | territory: aliases(territory, :region) || territory}
-  end
+    territory =
+      case aliases(territory, :region) || territory do
+        territories when is_list(territories) -> hd(territories)
+        territory when is_atom(territory) -> territory
+        other -> String.to_existing_atom(other)
+      end
 
-  defp merge_language_tags(alias_tag, original_language_tag) do
-    Map.merge(alias_tag, original_language_tag, fn
-      :language, v_alias, v_original ->
-        if empty?(v_alias), do: v_original, else: v_alias
-
-      _k, v_alias, v_original ->
-        if empty?(v_original), do: v_alias, else: v_original
-    end)
+    %{language_tag | territory: territory}
+  rescue ArgumentError ->
+    language_tag
   end
 
   defp remove_unknown(%LanguageTag{script: "Zzzz"} = language_tag, :script) do
@@ -1193,6 +991,251 @@ defmodule Cldr.Locale do
   end
 
   defp remove_unknown(%LanguageTag{} = language_tag, :territory), do: language_tag
+
+  defp put_canonical_locale_name(language_tag) do
+    language_tag
+    |> Map.put(:canonical_locale_name, canonical_locale_name(language_tag))
+  end
+
+  defp put_backend(language_tag, backend) do
+    language_tag
+    |> Map.put(:backend, backend)
+  end
+
+  @spec put_requested_locale_name(Cldr.LanguageTag.t(), boolean()) :: Cldr.LanguageTag.t()
+  defp put_requested_locale_name(language_tag, true) do
+    language_tag
+  end
+
+  defp put_requested_locale_name(language_tag, false) do
+    language_tag
+    |> Map.put(:requested_locale_name, locale_name_from(language_tag, false))
+  end
+
+  @spec put_cldr_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  defp put_cldr_locale_name(%LanguageTag{} = language_tag) do
+    cldr_locale_name = cldr_locale_name(language_tag)
+    %{language_tag | cldr_locale_name: cldr_locale_name}
+  end
+
+  @spec put_rbnf_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag) do
+    rbnf_locale_name = rbnf_locale_name(language_tag)
+    %{language_tag | rbnf_locale_name: rbnf_locale_name}
+  end
+
+  @spec put_gettext_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(%LanguageTag{} = language_tag) do
+    gettext_locale_name = gettext_locale_name(language_tag)
+    %{language_tag | gettext_locale_name: gettext_locale_name}
+  end
+
+  @spec put_gettext_locale_name(Cldr.LanguageTag.t(), Cldr.Config.t()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(%LanguageTag{} = language_tag, config) do
+    gettext_locale_name = gettext_locale_name(language_tag, config)
+    %{language_tag | gettext_locale_name: gettext_locale_name}
+  end
+
+  @spec cldr_locale_name(Cldr.LanguageTag.t()) :: locale_name() | nil
+  defp cldr_locale_name(%LanguageTag{} = language_tag) do
+    first_match(language_tag, &Cldr.known_locale_name(&1, language_tag.backend)) ||
+      Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
+  end
+
+  @spec rbnf_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
+  defp rbnf_locale_name(%LanguageTag{} = language_tag) do
+    first_match(language_tag, &Cldr.known_rbnf_locale_name(&1, language_tag.backend))
+  end
+
+  @spec gettext_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
+  defp gettext_locale_name(%LanguageTag{} = language_tag) do
+    language_tag
+    |> first_match(&known_gettext_locale_name(&1, language_tag.backend))
+    |> locale_name_to_posix
+  end
+
+  # Used at compile time only
+  defp gettext_locale_name(%LanguageTag{} = language_tag, config) do
+    language_tag
+    |> first_match(&known_gettext_locale_name(&1, config))
+    |> locale_name_to_posix
+  end
+
+  @spec known_gettext_locale_name(locale_name(), Cldr.backend() | Cldr.Config.t()) ::
+          locale_name() | false
+
+  def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
+    gettext_locales = backend.known_gettext_locale_names()
+    Enum.find(gettext_locales, &(&1 == locale_name)) || false
+  end
+
+  # This clause is only called at compile time when we're
+  # building a backend.  In normal use is should not be used.
+  @doc false
+  def known_gettext_locale_name(locale_name, config) when is_map(config) do
+    gettext_locales = Cldr.Config.known_gettext_locale_names(config)
+    Enum.find(gettext_locales, &(&1 == locale_name)) || false
+  end
+
+  @doc """
+  Execute a function for a locale returning
+  the first match on language, script, territory,
+  and variant combination.
+
+  A match is determined when the `fun/1` returns
+  a `truthy` value.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by
+    `Cldr.Locale.new/2`.
+
+  * `fun/1` is single-arity function that takes a string
+    locale name. The locale name is a built from the language,
+    script, territory and variant combinations of `language_tag`.
+
+  ## Returns
+
+  * The first `truthy` value returned by `fun/1` or `nil` if no
+    match is made.
+
+  """
+
+  def first_match(%LanguageTag{} = language_tag, fun) when is_function(fun, 1) do
+    %LanguageTag{language: language, script: script, territory: territory, language_variants: variants} = language_tag
+    first_match(language, script, territory, variants, fun)
+  end
+
+  defp first_match(language, script, territory, variants, fun) do
+    # Including variants
+    fun.(locale_name_from(language, script, territory, variants)) ||
+      fun.(locale_name_from(language, nil, territory, variants)) ||
+      fun.(locale_name_from(language, script, nil, variants)) ||
+      fun.(locale_name_from(language, nil, nil, variants)) ||
+
+      # Not including variants
+      fun.(locale_name_from(language, script, territory, [])) ||
+      fun.(locale_name_from(language, nil, territory, [])) ||
+      fun.(locale_name_from(language, script, nil, [])) ||
+      fun.(locale_name_from(language, nil, nil, [])) || nil
+  end
+
+  # @doc """
+  # Normalize the casing of a locale name.
+  #
+  # ## Argument
+  #
+  # * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
+  #   or a `Cldr.LanguageTag` struct
+  #
+  # ## Returns
+  #
+  # * The normalized locale name as a `String.t`
+  #
+  # ## Method
+  #
+  # Locale names are case insensitive but certain common
+  # casing is followed in practise:
+  #
+  # * lower case for a language
+  # * capital case for a script
+  # * upper case for a region/territory
+  # * lower case for everything else
+  #
+  # **Note** this function does not validate that
+  # the locale name is available or configured.
+  #
+  # For proper parsing of local names and language tags, see
+  # `Cldr.Locale.canonical_language_tag/2`
+  #
+  # ## Examples
+  #
+  #     iex> Cldr.Locale.normalize_locale_name "zh_hant"
+  #     "zh-Hant"
+  #
+  #     iex> Cldr.Locale.normalize_locale_name "en_us"
+  #     "en-US"
+  #
+  #     iex> Cldr.Locale.normalize_locale_name "EN"
+  #     "en"
+  #
+  #     iex> Cldr.Locale.normalize_locale_name "ca_es_valencia"
+  #     "ca-ES-valencia"
+  #
+  # """
+  # @spec normalize_locale_name(locale_name) :: locale_name | {:error, {module(), String.t()}}
+  # def normalize_locale_name(locale_name) when is_binary(locale_name) do
+  #   locale_name = locale_name_from_posix(locale_name)
+  #
+  #   with {:ok, parsed} <- Cldr.Rfc5646.Parser.parse(locale_name) do
+  #     canonical_locale_name(parsed)
+  #   end
+  # end
+
+  def canonical_locale_name(%Cldr.LanguageTag{} = language_tag) do
+    Cldr.LanguageTag.to_string(language_tag)
+  end
+
+  @doc """
+  Return a locale name from a `Cldr.LanguageTag`
+
+  ## Options
+
+  * `locale_name` is any `Cldr.LanguageTag` struct returned by
+    `Cldr.Locale.new!/2`
+
+  ## Example
+
+      iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
+      "en-US"
+
+  """
+  @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
+
+  # TODO proper formation of a canonical name required
+  def locale_name_from(language_tag, omit_singular_script? \\ true)
+
+  def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_singular_script?) do
+    locale_name_from(tag.language, tag.script, tag.territory, tag.language_variants, omit_singular_script?)
+  end
+
+  def locale_name_from(%LanguageTag{canonical_locale_name: canonical_locale_name}, _omit_singular_script?) do
+    canonical_locale_name
+  end
+
+  @doc """
+  Return a locale name by combining language, script, territory and variant
+  parameters
+
+  ## Arguments
+
+  * `language`, `script`, `territory` are string
+    representations, or `nil`, of the language subtags
+
+  * `variants` is a list of language variants or `[]`
+
+  ## Returns
+
+  * The locale name constructed from the non-nil arguments joined
+    by a "-"
+
+  ## Example
+
+      iex> Cldr.Locale.locale_name_from("en", "Latn", "001", [])
+      "en-001"
+
+      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", [])
+      "en-001"
+
+  """
+  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variants()) ::
+          locale_name()
+
+  # TODO Should not be required - delete this
+  # need a proper formation of the canonical name
+  def locale_name_from(language, script, territory, variants, omit_singular_scipt? \\ true) do
+    Cldr.Config.locale_name_from(language, script, territory, variants, omit_singular_scipt?)
+  end
 
   @doc """
   Replace empty subtags within a `t:Cldr.LanguageTag.t/0` with the most likely
@@ -1251,7 +1294,7 @@ defmodule Cldr.Locale do
       }
 
   """
-  def add_likely_subtags(
+  def put_likely_subtags(
         %LanguageTag{language: language, script: script, territory: territory} = language_tag
       ) do
     subtags =
@@ -1263,6 +1306,89 @@ defmodule Cldr.Locale do
         likely_subtags(locale_name_from("und", nil, nil, []))
 
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
+  end
+
+  # From TR35 https://unicode-org.github.io/cldr/ldml/tr35.html#replacement
+
+  # if type.field ≠ {}
+  #   source.field = (source.field - type.field) ∪ replacement.field
+  # else if source.field = {} and replacement.field ≠ {}
+  #   source.field = replacement.field
+  #
+  defp merge_language_tags(alias_tag, original_language_tag, type_field) do
+    Map.merge(alias_tag, original_language_tag, fn
+      _k, "und", source_field ->
+        source_field
+      :language_variants, replacement_field, source_field ->
+        # IO.inspect replacement_field, label: "Replacement field"
+        # IO.inspect source_field, label: "Source field"
+        # IO.inspect type_field, label: "Type field"
+        if type_field == [] do
+          replacement_field
+        else
+          ((source_field -- type_field) ++ replacement_field) |> Enum.uniq |> Enum.sort
+        end
+      :requested_locale_name, _replacement_field, source_field ->
+        source_field
+      :territory, replacement_field, source_field ->
+        # IO.inspect replacement_field, label: "Replacement field"
+        # IO.inspect source_field, label: "Source field"
+        # IO.inspect type_field, label: "Type field"
+        if type_field == [], do: replacement_field, else: source_field
+      _k, replacement_field, source_field ->
+        if empty?(replacement_field), do: source_field, else: replacement_field
+    end)
+  end
+
+  def merge_variants(%LanguageTag{} = language_tag, nil, nil) do
+    language_tag
+  end
+
+  def merge_variants(%LanguageTag{} = language_tag, variant, alias_key) when is_binary(variant) do
+    variants =
+      ((language_tag.language_variants -- alias_key) ++ [variant])
+      |> Enum.uniq
+      |> Enum.sort
+
+    %{language_tag | language_variants: variants}
+  end
+
+  # This will crash if there are more than 3 variants
+  # which is possible but highly unlikely
+  def variant_selectors([a]), do: [[a]]
+  def variant_selectors([a, b]), do: [[a, b], [a], [b]]
+  def variant_selectors([a, b, c]), do: [[a, b, c], [a, b], [a, c], [b, c], [a], [b], [c]]
+
+  def find_language_alias(language, variants, type) do
+    variants =
+      Enum.flat_map(variants, &([[language | &1], ["und" | &1]]))
+
+    alias_match =
+      Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
+        alias_key = Enum.join(variant, "-")
+        if alias_tag = aliases(alias_key, type) do
+          # IO.inspect alias_tag, label: "found alias for #{inspect variant} type #{inspect type}"
+          {:halt, {variant, alias_tag}}
+        else
+          {:cont, acc}
+        end
+      end)
+
+    case alias_match do
+      {nil, nil} -> {[language], aliases(language, :language)}
+      matched -> matched
+    end
+  end
+
+  def find_alias(variants, type) do
+    Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
+      alias_key = Enum.join(variant, "-")
+      if alias_tag = aliases(alias_key, type) do
+        {:halt, {variant, alias_tag}}
+      else
+        {:cont, acc}
+      end
+    end)
   end
 
   @doc """
@@ -1425,6 +1551,7 @@ defmodule Cldr.Locale do
   """
   @alias_keys Map.keys(@aliases)
   @spec aliases(locale_name(), atom()) :: map() | nil
+
   def aliases(key, type) when type in @alias_keys do
     aliases()
     |> Map.get(type)

@@ -98,31 +98,20 @@ defmodule Cldr.LanguageTag.Parser do
         territory when territory < 100 -> "0#{territory}"
         _ -> "#{territory}"
       end
-
-    territory =
-      case Cldr.validate_territory(territory) do
-        {:ok, territory} -> territory
-        {:error, _} -> territory
-      end
+      |> String.upcase
 
     Map.put(language_tag, :territory, territory)
   end
 
   defp normalize_territory(%LanguageTag{territory: territory} = language_tag) do
-    territory =
-      case Cldr.validate_territory(territory) do
-        {:ok, territory} -> territory
-        {:error, _} -> nil
-      end
-
-    Map.put(language_tag, :territory, territory)
+    Map.put(language_tag, :territory, String.upcase(territory))
   end
 
   defp normalize_variants(%LanguageTag{language_variants: []} = language_tag), do: language_tag
 
   defp normalize_variants(%LanguageTag{language_variants: variants} = language_tag) do
     language_tag
-    |> Map.put(:language_variants, Enum.map(variants, &String.downcase/1))
+    |> Map.put(:language_variants, Enum.map(variants, &String.downcase/1) |> Enum.sort())
   end
 
   @doc false

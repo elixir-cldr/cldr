@@ -1,3 +1,10 @@
+# Test with Gettext
+defmodule WithGettextBackend.Cldr do
+  use Cldr,
+    gettext: TestGettext.Gettext,
+    providers: []
+end
+
 defmodule TestBackend.Cldr do
   use Cldr,
     default_locale: "en-001",
@@ -19,13 +26,6 @@ defmodule AnotherBackend.Cldr do
   use Cldr,
     locales: ["en"],
     data_dir: "./another_backend/cldr/data_dir",
-    providers: []
-end
-
-# Test with Gettext
-defmodule WithGettextBackend.Cldr do
-  use Cldr,
-    gettext: TestGettext.Gettext,
     providers: []
 end
 

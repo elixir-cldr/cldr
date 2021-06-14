@@ -52,8 +52,7 @@ defmodule Cldr.Backend do
       @compile {:inline, default_locale: 0}
       @spec default_locale :: Cldr.LanguageTag.t() | no_return()
       def default_locale do
-        @default_locale
-        |> Cldr.Locale.put_gettext_locale_name(__MODULE__)
+        Cldr.Locale.put_gettext_locale_name(@default_locale)
       end
 
       @doc """
@@ -104,7 +103,7 @@ defmodule Cldr.Backend do
       with `Cldr` locale names.
 
       """
-      @known_gettext_locale_names Config.known_gettext_locale_names(config)
+      @known_gettext_locale_names Cldr.Config.known_gettext_locale_names(config)
       @spec known_gettext_locale_names() :: [Locale.locale_name()]
       def known_gettext_locale_names do
         @known_gettext_locale_names

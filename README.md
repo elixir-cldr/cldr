@@ -373,16 +373,16 @@ iex> MyApp.Cldr.DateTime.Relative.to_string(1234, unit: :year, locale: "fr")
 ```
 ## Gettext Backend Pluralization Support
 
-There is an experimental plurals module for Gettext called `Cldr.Gettext.Plural`.  It is configured in `Gettext` by:
+There is an experimental plurals module for Gettext called `MyApp.Cldr.Gettext.Plural` (where `MyApp.Cldr` is the name of your backend module). It is configured in `Gettext` by:
 ```elixir
     defmodule MyApp.Gettext do
-      use Gettext, plural_forms: Cldr.Gettext.Plural
+      use Gettext, otp_app: :my_app, plural_forms: MyApp.Cldr.Gettext.Plural
     end
 ```
 
-`Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
+`MyApp.Cldr.Gettext.Plural` will fall back to `Gettext` pluralisation if the locale is not known to `Cldr`.  This module is only compiled if `Gettext` is configured as a dependency in your project.
 
-Note that `Cldr.Gettext.Plural` does not guarantee to return the same `plural index` as `Gettext`'s own pluralization engine which can introduce some compatibility issues if you plan to mix plural engines.
+Note that `MyApp.Cldr.Gettext.Plural` does not guarantee to return the same `plural index` as `Gettext`'s own pluralization engine which can introduce some compatibility issues if you plan to mix plural engines.
 
 ## Plugs
 

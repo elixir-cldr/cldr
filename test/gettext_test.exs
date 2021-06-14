@@ -1,17 +1,17 @@
 defmodule Cldr.Gettext.Test do
   use ExUnit.Case, async: true
 
-  test "get the gettext module and find its configured locales" do
-    gettext_module = TestBackend.Cldr.__cldr__(:gettext)
-    otp_app = gettext_module.__gettext__(:otp_app)
-
-    config = Application.get_env(otp_app, gettext_module)
-    default_locale = config[:default_locale]
-
-    assert default_locale == "en"
+  test "that Cldr.Config gets the list of locales when there is no global default" do
+    assert TestBackend.Cldr.known_gettext_locale_names() == ["en", "en-GB", "es", "it"]
   end
 
-  test "that Cldr.Config gets the list of locales when there is no global default" do
-    assert TestBackend.Cldr.known_gettext_locale_names() == ["en", "en-GB", "es"]
+  test "that an incorrect configuration raises" do
+    alias TestGettext.Gettext, as: T
+
+    assert T.lngettext("it", "default", nil, "One new email", "%{count} new emails", 1, %{}) ==
+             {:ok, "Una nuova email"}
+
+    assert T.lngettext("it", "default", nil, "One new email", "%{count} new emails", 2, %{}) ==
+             {:ok, "2 nuove email"}
   end
 end

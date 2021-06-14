@@ -12,7 +12,7 @@ defmodule Cldr.Gettext.Plural do
           """
         end
 
-        @behaviour :"Elixir.Gettext.Plural"
+        @behaviour Elixir.Gettext.Plural
 
         alias Cldr.LanguageTag
         alias Cldr.Locale
@@ -45,7 +45,7 @@ defmodule Cldr.Gettext.Plural do
           with {:ok, locale} <- unquote(config.backend).validate_locale(locale_name) do
             nplurals(locale)
           else
-            {:error, _reason} -> raise :"Elixir.Gettext.Plural.UnknownLocaleError", locale_name
+            {:error, _reason} -> raise Elixir.Gettext.Plural.UnknownLocaleError, locale_name
           end
         end
 
@@ -95,7 +95,7 @@ defmodule Cldr.Gettext.Plural do
           with {:ok, locale} <- unquote(config.backend).validate_locale(locale_name) do
             plural(locale, n)
           else
-            {:error, _reason} -> raise :"Elixir.Gettext.Plural.UnknownLocaleError", locale_name
+            {:error, _reason} -> raise Elixir.Gettext.Plural.UnknownLocaleError, locale_name
           end
         end
       end

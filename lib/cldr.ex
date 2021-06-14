@@ -1350,8 +1350,16 @@ defmodule Cldr do
     {:ok, territory}
   end
 
+  # See if its an alias
   def validate_territory(territory) when is_atom(territory) do
-    {:error, unknown_territory_error(territory)}
+    case Cldr.Locale.aliases(territory, :region) do
+      substitution when is_list(substitution) ->
+        {:ok, hd(substitution)}
+      substitution when is_atom(substitution) ->
+        {:ok, substitution}
+      nil ->
+        {:error, unknown_territory_error(territory)}
+    end
   end
 
   def validate_territory(territory) when is_binary(territory) do
@@ -2071,8 +2079,14 @@ defmodule Cldr do
       iex> Cldr.flag "UN"
       "🇺🇳"
 
-      iex> Cldr.flag :UK
-      {:error, {Cldr.UnknownTerritoryError, "The territory :UK is unknown"}}
+      iex> Cldr.flag(:UK)
+      "🇬🇧"
+
+      iex> Cldr.flag(:GB)
+      "🇬🇧"
+
+      iex> Cldr.flag(:UX)
+      {:error, {Cldr.UnknownTerritoryError, "The territory :UX is unknown"}}
 
   """
 

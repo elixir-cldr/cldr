@@ -237,7 +237,7 @@ defmodule Cldr.Test do
              ["en", "en-001", "fr", "root"]
 
     assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
-             ["en", "en-001", "en-GB", "es", "root"]
+             ["en", "en-001", "en-GB", "es", "it", "root"]
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
@@ -290,8 +290,8 @@ defmodule Cldr.Test do
       assert {:docs_v1, _, :elixir, _, :hidden, %{}, _} = Code.fetch_docs(DefaultBackend.Cldr)
     end
 
-    assert "that module docs are generated for a backend" do
-      {:docs_v1, 1, :elixir, "text/markdown", %{"en" => _}, %{}, _} =
+    test "that module docs are generated for a backend" do
+      assert {:docs_v1, _, :elixir, "text/markdown", %{"en" => _}, %{}, _} =
         Code.fetch_docs(TestBackend.Cldr)
     end
   end

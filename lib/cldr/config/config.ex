@@ -356,7 +356,7 @@ defmodule Cldr.Config do
   """
   @spec known_gettext_locale_names(t()) :: [Locale.locale_name()]
   def known_gettext_locale_names(config) do
-    if gettext_configured?(config) && Application.ensure_all_started(:gettext) do
+    if gettext_configured?(config) do
       otp_app = gettext(config).__gettext__(:otp_app)
       gettext_backend = gettext(config)
 
@@ -534,9 +534,9 @@ defmodule Cldr.Config do
   # Also called from Cldr.Locale
 
   @doc false
-  def locale_name_from(language, script, territory, variants) do
+  def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
     [language, script, territory, join_variants(variants)]
-    |> omit_script_if_only_one()
+    |> omit_script_if_only_one(omit_singular_script?)
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
   end
@@ -548,16 +548,20 @@ defmodule Cldr.Config do
 
   # If the language has only one script for a given territory then
   # we omit it in the canonical form
-  defp omit_script_if_only_one([_language, nil, _territory, _variants] = tag) do
+  defp omit_script_if_only_one([_language, nil, _territory, _variants] = tag, _) do
     tag
   end
 
   # If the language has only one script for a given territory then
   # we omit it in the canonical form
-  defp omit_script_if_only_one([language, script, territory, variants]) do
+  defp omit_script_if_only_one([language, script, territory, variants], true) do
     language_map = Map.get(language_data(), language, %{})
     script = maybe_nil_script(Map.get(language_map, :primary), script, territory)
 
+    [language, script, territory, variants]
+  end
+
+  defp omit_script_if_only_one([language, script, territory, variants], false) do
     [language, script, territory, variants]
   end
 
@@ -1348,7 +1352,9 @@ defmodule Cldr.Config do
   """
   @spec gettext_configured?(t()) :: boolean
   def gettext_configured?(config) do
-    gettext(config) && ensure_compiled?(Gettext) && ensure_compiled?(gettext(config))
+    Application.ensure_all_started(:gettext)
+    gettext_module = gettext(config)
+    gettext_module && ensure_compiled?(Gettext) && ensure_compiled?(gettext_module)
   end
 
   @doc """
@@ -1359,7 +1365,7 @@ defmodule Cldr.Config do
   its variants, a locale can be specified as a regex which will
   then do a match against all CLDR locales.
 
-  For locale names that have a Script or Vairant component the base
+  For locale names that have a Script or Variant component the base
   language is also configured since plural rules will fall back to the
   language for these locale names.
 
@@ -1763,7 +1769,6 @@ defmodule Cldr.Config do
     |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
     |> Map.new()
     |> Cldr.Map.atomize_keys(level: 1..1)
-    |> Cldr.Map.deep_map(&Cldr.Map.atomize_keys/1, only: :region)
     |> Cldr.Map.deep_map(&Cldr.Map.atomize_values/1, only: :region)
     |> Map.new()
     |> structify_languages
@@ -2661,7 +2666,7 @@ defmodule Cldr.Config do
   def ensure_compiled?(module) do
     case Code.ensure_compiled(module) do
       {:module, _} -> true
-      {:error, _} -> false
+      {:error, _error} -> false
     end
   end
 end

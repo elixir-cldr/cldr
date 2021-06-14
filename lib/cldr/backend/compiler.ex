@@ -39,15 +39,15 @@ defmodule Cldr.Backend.Compiler do
       def __cldr__(:otp_app), do: unquote(Map.get(config, :otp_app))
       def __cldr__(:config), do: unquote(Macro.escape(config))
 
+      if Code.ensure_loaded?(Gettext) do
+        unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
+      end
+
       unquote(Cldr.Backend.define_backend_functions(config))
       unquote(Cldr.Locale.define_locale_new(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
       unquote(Cldr.Number.PluralRule.define_plural_ranges(config))
       unquote(Cldr.Config.define_provider_modules(config))
-
-      if Code.ensure_loaded?(Gettext) do
-        unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
-      end
     end
   end
 end

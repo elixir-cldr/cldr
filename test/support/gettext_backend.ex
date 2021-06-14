@@ -5,8 +5,7 @@ defmodule TestGettext.Gettext do
   """
   use Gettext,
     otp_app: Cldr.Config.app_name(),
-    priv: "priv/gettext_test",
-    plural_forms: TestBackend.Gettext.Plural
+    priv: "priv/gettext_test"
 end
 
 defmodule TestGettext.GettextUnknown do
@@ -18,3 +17,5 @@ defmodule TestGettext.GettextUnknown do
     otp_app: Cldr.Config.app_name(),
     priv: "priv/gettext_unknown"
 end
+
+

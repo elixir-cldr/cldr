@@ -15,4 +15,5 @@ if Mix.env() in [:release, :test, :dev] do
       generate_docs: true,
       providers: []
   end
+
 end

@@ -8,6 +8,8 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * `Cldr.locale_and_backend_from/1` now supports `map` of options as the argument.
 
+* `Cldr.validate_territory/1` now correctly substitutes for known aliases.
+
 ### Bug Fixes
 
 * Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name. Fixing this conformance is also a prerequisite for generating local display names.
@@ -15,6 +17,8 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 * Fixes `Cldr.Locale.normalize_locale_name/1` to correctly case all keys in lower case except script (capital case) and region (upper case). It will now also process arbitrary locale names.
 
 * A language tag can have more than one variant and this was not correctly implemented. As a result, the `t:Cldr.LanguageTag` struct field `variant` is renamed `variants` and is now a list with a default of `[]` rather than `nil`.
+
+* Fix a race condition which could return in correct results for a backend `known_gettext_locale_names/0`
 
 ## Cldr v2.22.1
 
