@@ -6,9 +6,15 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 ### Enhancements
 
+* `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements).
+
 * `Cldr.locale_and_backend_from/1` now supports `map` of options as the argument.
 
-* `Cldr.validate_territory/1` now correctly substitutes for known aliases.
+* `Cldr.validate_territory/1` now correctly substitutes for known aliases. For example `MyApp.Cldr.validate_locale("en-UK")` will correctly return `en-GB`.
+
+* Implemented the `String.Chars` protocol to support `Kernel.to_string/1`
+
+* Implemented the `Inspect` protocol to support `inspect/2`
 
 ### Bug Fixes
 

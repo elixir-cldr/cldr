@@ -532,8 +532,6 @@ defmodule Cldr.Config do
       fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
-  # Also called from Cldr.Locale
-
   @doc false
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
     [language, script, territory, join_variants(variants)]

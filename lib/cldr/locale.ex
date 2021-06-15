@@ -1242,10 +1242,52 @@ defmodule Cldr.Locale do
   @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variants()) ::
           locale_name()
 
-  # TODO Should not be required - delete this
-  # need a proper formation of the canonical name
-  def locale_name_from(language, script, territory, variants, omit_singular_scipt? \\ true) do
-    Cldr.Config.locale_name_from(language, script, territory, variants, omit_singular_scipt?)
+  def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
+    [language, script, territory, join_variants(variants)]
+    |> omit_script_if_only_one(omit_singular_script?)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("-")
+  end
+
+  @doc false
+  def join_variants([]), do: nil
+
+  def join_variants(variants),
+    do: variants |> Enum.sort() |> Enum.join("-")
+
+  # If the language has only one script for a given territory then
+  # we omit it in the canonical form
+  defp omit_script_if_only_one([_language, nil, _territory, _variants] = tag, _) do
+    tag
+  end
+
+  # If the language has only one script for a given territory then
+  # we omit it in the canonical form
+  defp omit_script_if_only_one([language, script, territory, variants], true) do
+    language_map = Map.get(language_data(), language, %{})
+    script = maybe_nil_script(Map.get(language_map, :primary), script, territory)
+
+    [language, script, territory, variants]
+  end
+
+  defp omit_script_if_only_one([language, script, territory, variants], false) do
+    [language, script, territory, variants]
+  end
+
+  # No :secondary
+  defp maybe_nil_script(nil, _script, _territory) do
+    nil
+  end
+
+  # There is only one script for this territory and its the requested one
+  # so its not required for the canonical form
+  defp maybe_nil_script(%{scripts: [script], territories: _territories}, script, _territory) do
+    nil
+  end
+
+  # In all other cases we keep the script
+  defp maybe_nil_script(%{scripts: _scripts, territories: _territories}, script, _territory) do
+    script
   end
 
   @doc """
