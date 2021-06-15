@@ -82,6 +82,6 @@ cp $CLDR_REPO/common/testData/localeCanonicalization.txt $EX_CLDR/test/data/loca
 cp $CLDR_REPO/common/testData/localeDisplayName.txt $EX_CLDR/test/data/locale_display_name.txt
 
 # Copy validity data
-cp -R $CLDR_REPO/common/validity/ $EX_CLDR/priv/validity/
+cp -R $CLDR_REPO/common/validity/ $EX_CLDR/priv/cldr/validity/
 
 cd $OLDPWD
