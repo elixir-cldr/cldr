@@ -50,7 +50,7 @@ defmodule CldrLocaleParserTest do
   test "That invalid territory code is handled" do
     assert {:ok, language_tag} = Parser.parse("en-AAAA")
     assert language_tag.language == "en"
-    assert is_nil(language_tag.territory)
+    assert language_tag.territory == "AA"
   end
 
   test "That nonexistent territory code is handled" do

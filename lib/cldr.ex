@@ -1352,11 +1352,11 @@ defmodule Cldr do
 
   # See if its an alias
   def validate_territory(territory) when is_atom(territory) do
-    case Cldr.Locale.aliases(territory, :region) do
+    case Cldr.Locale.aliases(Atom.to_string(territory), :region) do
       substitution when is_list(substitution) ->
         {:ok, hd(substitution)}
 
-      substitution when is_atom(substitution) ->
+      substitution when is_atom(substitution) and substitution != nil ->
         {:ok, substitution}
 
       nil ->
