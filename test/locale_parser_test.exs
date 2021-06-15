@@ -50,13 +50,13 @@ defmodule CldrLocaleParserTest do
   test "That invalid territory code is handled" do
     assert {:ok, language_tag} = Parser.parse("en-AAAA")
     assert language_tag.language == "en"
-    assert language_tag.territory == "AA"
+    assert language_tag.territory == nil
   end
 
   test "That nonexistent territory code is handled" do
     assert {:ok, language_tag} = Parser.parse("en-AA")
     assert language_tag.language == "en"
-    assert language_tag.territory == nil
+    assert language_tag.territory == "AA"
   end
 
   test "That invalid currency code is handled" do
