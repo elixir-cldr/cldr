@@ -865,6 +865,21 @@ defmodule Cldr.Locale do
     end
   end
 
+  @doc false
+  def canonical_locale_name(locale_name) when is_binary(locale_name) do
+    with {:ok, tag} <- Cldr.LanguageTag.Parser.parse(locale_name) do
+      {:ok, Cldr.LanguageTag.to_string(tag)}
+    end
+  end
+
+  @doc false
+  def canonical_locale_name!(locale_name) when is_binary(locale_name) do
+    case canonical_locale_name(locale_name) do
+      {:ok, canonical_name} -> canonical_name
+      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
   @doc """
   Substitute deprectated subtags with a `Cldr.LanguageTag` with their
   non-deprecated alternatives.

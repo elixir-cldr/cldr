@@ -16,8 +16,8 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.get("languages")
       |> Enum.map(fn {language, display_name} ->
         case String.split(language, "_alt_") do
-          [name] -> {Cldr.Locale.normalize_locale_name(name), display_name}
-          [name, alt] -> {{:alt, Cldr.Locale.normalize_locale_name(name)}, {alt, display_name}}
+          [name] -> {Cldr.Locale.canonical_locale_name(name), display_name}
+          [name, alt] -> {{:alt, Cldr.Locale.canonical_locale_name(name)}, {alt, display_name}}
         end
       end)
       |> Map.new()
