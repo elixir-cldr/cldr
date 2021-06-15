@@ -679,7 +679,8 @@ defmodule Cldr.Backend do
 
       defp do_validate_locale(locale_name) do
         with {:ok, locale} <- Cldr.Locale.new(locale_name, unquote(backend)),
-             {:ok, locale} <- known_cldr_locale(locale, locale_name) do
+             {:ok, locale} <- known_cldr_locale(locale, locale_name),
+             {:ok, locale} <- known_cldr_territory(locale) do
           {:ok, locale}
         end
       end
@@ -690,6 +691,14 @@ defmodule Cldr.Backend do
 
       defp known_cldr_locale(%LanguageTag{} = locale, _locale_name) do
         {:ok, locale}
+      end
+
+      defp known_cldr_territory(%LanguageTag{territory: territory} = language_tag) do
+        if territory in Cldr.known_territories() do
+          {:ok, language_tag}
+        else
+          {:error, Cldr.unknown_territory_error(territory)}
+        end
       end
 
       @doc """

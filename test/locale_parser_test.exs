@@ -5,6 +5,8 @@ defmodule CldrLocaleParserTest do
 
   doctest Cldr.LanguageTag.Parser
 
+  # T extension not yet supported in the parser
+
   @language_codes [
     # "und-Cyrl-t-und-latn-m0-ungegn-2007",
     "en-US-x-twain",

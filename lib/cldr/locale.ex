@@ -143,17 +143,14 @@ defmodule Cldr.Locale do
 
   ### Unknown territory codes
 
-  Whilst `Cldr` is tolerant of invalid territory codes, it is also important
-  that such invalid codes not shadow the potential replacement of deprecated
-  codes nor the insertion of likely subtags.  Therefore invalid territory
-  codes are ignored during this process.  For example requesting a locale
-  name "en-XX" which requests the invalid territory "XX", the following
-  will be returned:
+  Whilst `Cldr` is tolerant of invalid territory codes. Therefore validity is
+  not checked by `Cldr.Locale.new/2` but it is checked by `Cldr.validate_locale/2`
+  which is the recommended api for forming language tags.
 
       iex> Cldr.Locale.new("en-XX", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-US",
+        canonical_locale_name: "en-XX",
         cldr_locale_name: "en",
         extensions: %{},
         gettext_locale_name: "en",
@@ -161,9 +158,9 @@ defmodule Cldr.Locale do
         locale: %{},
         private_use: [],
         rbnf_locale_name: "en",
-        requested_locale_name: "en",
+        requested_locale_name: "en-XX",
         script: "Latn",
-        territory: :US,
+        territory: :XX,
         transform: %{},
         language_variants: []
       }}
@@ -902,24 +899,26 @@ defmodule Cldr.Locale do
         language: "ro",
         language_subtags: [],
         language_variants: [],
-        locale: %{}, private_use: [],
+        locale: %{},
+        private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "mo",
-        script: nil, transform: %{},
-        territory: nil
+        script: [],
+        territory: [],
+        transform: %{}
       }
 
   """
   def substitute_aliases(%LanguageTag{} = language_tag) do
     updated_tag =
       language_tag
+      |> remove_unknown(:script)
+      |> remove_unknown(:territory)
       |> substitute(:requested_name)
       |> substitute(:language)
       |> substitute(:variant)
       |> substitute(:script)
       |> substitute(:territory)
-      |> remove_unknown(:script)
-      |> remove_unknown(:territory)
       |> put_canonical_locale_name()
 
     if updated_tag == language_tag do

@@ -20,6 +20,8 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Fix a race condition which could return in correct results for a backend `known_gettext_locale_names/0`
 
+* `Cldr.validate_locale/2` will now return an error if the territory for a locale is unknown to CLDR. Note that `Cldr.Locale.new/1,2` does not check territory validity.
+
 ## Cldr v2.22.1
 
 This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
