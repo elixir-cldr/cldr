@@ -163,7 +163,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: nil,
+               canonical_locale_name: "en-US",
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},
@@ -182,7 +182,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: nil,
+               canonical_locale_name: "sr-Arab-AQ",
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},
@@ -201,7 +201,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: nil,
+               canonical_locale_name: "sr-Latn-AQ",
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},

@@ -270,7 +270,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.get_locale
           %Cldr.LanguageTag{
              backend: #{__MODULE__},
-             canonical_locale_name: "pl-PL",
+             canonical_locale_name: "pl",
              cldr_locale_name: "pl",
              extensions: %{},
              language: "pl",
@@ -310,7 +310,7 @@ defmodule Cldr.Backend do
           {:ok,
            %Cldr.LanguageTag{
              backend: #{inspect(__MODULE__)},
-             canonical_locale_name: "en-US",
+             canonical_locale_name: "en",
              cldr_locale_name: "en",
              language_subtags: [],
              extensions: %{},
@@ -512,7 +512,7 @@ defmodule Cldr.Backend do
           {:ok,
           %Cldr.LanguageTag{
             backend: #{inspect(__MODULE__)},
-            canonical_locale_name: "en-US",
+            canonical_locale_name: "en",
             cldr_locale_name: "en",
             extensions: %{},
             gettext_locale_name: "en",

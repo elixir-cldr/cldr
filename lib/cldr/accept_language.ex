@@ -97,7 +97,7 @@ defmodule Cldr.AcceptLanguage do
          {1.0,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "da-DK",
+            canonical_locale_name: "da",
             cldr_locale_name: "da",
             language_subtags: [],
             extensions: %{},
@@ -115,7 +115,7 @@ defmodule Cldr.AcceptLanguage do
          {0.3,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "zh-Hant-TW",
+            canonical_locale_name: "zh-TW",
             cldr_locale_name: "zh-Hant",
             language_subtags: [],
             extensions: %{},
@@ -143,7 +143,7 @@ defmodule Cldr.AcceptLanguage do
          {1.0,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "da-DK",
+            canonical_locale_name: "da",
             cldr_locale_name: "da",
             language_subtags: [],
             extensions: %{},
@@ -161,7 +161,7 @@ defmodule Cldr.AcceptLanguage do
          {0.3,
           %Cldr.LanguageTag{
             backend: TestBackend.Cldr,
-            canonical_locale_name: "zh-Hant-TW",
+            canonical_locale_name: "zh-TW",
             cldr_locale_name: "zh-Hant",
             language_subtags: [],
             extensions: %{},
@@ -236,7 +236,7 @@ defmodule Cldr.AcceptLanguage do
         {1.0,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "da-DK",
+           canonical_locale_name: "da",
            cldr_locale_name: "da",
            language_subtags: [],
            extensions: %{},
@@ -254,7 +254,7 @@ defmodule Cldr.AcceptLanguage do
         {0.3,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "zh-Hant-TW",
+           canonical_locale_name: "zh-TW",
            cldr_locale_name: "zh-Hant",
            language_subtags: [],
            extensions: %{},
@@ -280,7 +280,7 @@ defmodule Cldr.AcceptLanguage do
         {1.0,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "da-DK",
+           canonical_locale_name: "da",
            cldr_locale_name: "da",
            language_subtags: [],
            extensions: %{},
@@ -298,7 +298,7 @@ defmodule Cldr.AcceptLanguage do
         {0.3,
          %Cldr.LanguageTag{
            backend: TestBackend.Cldr,
-           canonical_locale_name: "zh-Hant-TW",
+           canonical_locale_name: "zh-TW",
            cldr_locale_name: "zh-Hant",
            language_subtags: [],
            extensions: %{},
@@ -344,7 +344,7 @@ defmodule Cldr.AcceptLanguage do
       {:ok,
        %Cldr.LanguageTag{
          backend: TestBackend.Cldr,
-         canonical_locale_name: "zh-Hant-TW",
+         canonical_locale_name: "zh-TW",
          cldr_locale_name: "zh-Hant",
          language_subtags: [],
          extensions: %{},
@@ -364,7 +364,7 @@ defmodule Cldr.AcceptLanguage do
       {:ok,
        %Cldr.LanguageTag{
          backend: TestBackend.Cldr,
-         canonical_locale_name: "zh-Hant-TW",
+         canonical_locale_name: "zh-TW",
          cldr_locale_name: "zh-Hant",
          language_subtags: [],
          extensions: %{},

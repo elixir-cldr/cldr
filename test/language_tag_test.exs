@@ -134,7 +134,7 @@ defmodule CldrLanguageTagTest do
                  rbnf_locale_name: nil,
                  requested_locale_name: "en-AU-u-ms-ussystem",
                  script: nil,
-                 territory: :AU,
+                 territory: "AU",
                  transform: %{}
                }
              }
@@ -181,7 +181,7 @@ defmodule CldrLanguageTagTest do
                 rbnf_locale_name: nil,
                 requested_locale_name: "en-AU-u-ms-uksystem",
                 script: nil,
-                territory: :AU,
+                territory: "AU",
                 transform: %{}
               }}
 
@@ -227,7 +227,7 @@ defmodule CldrLanguageTagTest do
                 rbnf_locale_name: nil,
                 requested_locale_name: "en-AU-u-ms-uk_system",
                 script: nil,
-                territory: :AU,
+                territory: "AU",
                 transform: %{}
               }}
 
@@ -273,7 +273,7 @@ defmodule CldrLanguageTagTest do
                 rbnf_locale_name: nil,
                 requested_locale_name: "en-AU-u-ms-metric",
                 script: nil,
-                territory: :AU,
+                territory: "AU",
                 transform: %{}
               }}
   end

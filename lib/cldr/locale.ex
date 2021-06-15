@@ -102,7 +102,7 @@ defmodule Cldr.Locale do
         requested_locale_name: "mo",
         script: "Latn",
         transform: %{},
-        canonical_locale_name: "ro-RO",
+        canonical_locale_name: "ro",
         cldr_locale_name: "ro",
         territory: :RO
       }}
@@ -118,7 +118,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.new("en", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-US",
+        canonical_locale_name: "en",
         cldr_locale_name: "en",
         extensions: %{},
         gettext_locale_name: "en",
@@ -192,7 +192,7 @@ defmodule Cldr.Locale do
         :ok,
         %Cldr.LanguageTag{
           backend: MyApp.Cldr,
-          canonical_locale_name: "en-AU",
+          canonical_locale_name: "en-AU-u-cf-accounting-tz-ausyd",
           cldr_locale_name: "en-AU",
           extensions: %{},
           gettext_locale_name: "en",
@@ -775,7 +775,7 @@ defmodule Cldr.Locale do
         :ok,
         %Cldr.LanguageTag{
           backend: TestBackend.Cldr,
-          canonical_locale_name: "en-US",
+          canonical_locale_name: "en",
           cldr_locale_name: "en",
           extensions: %{},
           gettext_locale_name: "en",
@@ -895,7 +895,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{
         backend: nil,
-        canonical_locale_name: nil,
+        canonical_locale_name: "ro",
         cldr_locale_name: nil,
         extensions: %{},
         gettext_locale_name: nil,
@@ -1175,7 +1175,7 @@ defmodule Cldr.Locale do
   ## Example
 
       iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
-      "en-US"
+      "en"
 
   """
   @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
@@ -1271,7 +1271,7 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.add_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
+      iex> Cldr.Locale.put_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
       %Cldr.LanguageTag{
         backend: nil,
         canonical_locale_name: nil,
@@ -1285,7 +1285,7 @@ defmodule Cldr.Locale do
         rbnf_locale_name: nil,
         requested_locale_name: "zh-SG",
         script: "Hans",
-        territory: :SG,
+        territory: "SG",
         transform: %{},
         language_variants: []
       }
