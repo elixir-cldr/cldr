@@ -340,6 +340,9 @@ defmodule Cldr.Locale do
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
+  defdelegate new(locale_name), to: __MODULE__, as: :canonical_language_tag
+  defdelegate new!(locale), to: __MODULE__, as: :canonical_language_tag!
+
   defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
 
@@ -1030,7 +1033,7 @@ defmodule Cldr.Locale do
 
   defp put_canonical_locale_name(language_tag) do
     language_tag
-    |> Map.put(:canonical_locale_name, canonical_locale_name(language_tag))
+    |> Map.put(:canonical_locale_name, Cldr.LanguageTag.to_string(language_tag))
   end
 
   defp put_backend(language_tag, backend) do
@@ -1159,62 +1162,6 @@ defmodule Cldr.Locale do
       fun.(locale_name_from(language, nil, territory, [])) ||
       fun.(locale_name_from(language, script, nil, [])) ||
       fun.(locale_name_from(language, nil, nil, [])) || nil
-  end
-
-  # @doc """
-  # Normalize the casing of a locale name.
-  #
-  # ## Argument
-  #
-  # * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
-  #   or a `Cldr.LanguageTag` struct
-  #
-  # ## Returns
-  #
-  # * The normalized locale name as a `String.t`
-  #
-  # ## Method
-  #
-  # Locale names are case insensitive but certain common
-  # casing is followed in practise:
-  #
-  # * lower case for a language
-  # * capital case for a script
-  # * upper case for a region/territory
-  # * lower case for everything else
-  #
-  # **Note** this function does not validate that
-  # the locale name is available or configured.
-  #
-  # For proper parsing of local names and language tags, see
-  # `Cldr.Locale.canonical_language_tag/2`
-  #
-  # ## Examples
-  #
-  #     iex> Cldr.Locale.normalize_locale_name "zh_hant"
-  #     "zh-Hant"
-  #
-  #     iex> Cldr.Locale.normalize_locale_name "en_us"
-  #     "en-US"
-  #
-  #     iex> Cldr.Locale.normalize_locale_name "EN"
-  #     "en"
-  #
-  #     iex> Cldr.Locale.normalize_locale_name "ca_es_valencia"
-  #     "ca-ES-valencia"
-  #
-  # """
-  # @spec normalize_locale_name(locale_name) :: locale_name | {:error, {module(), String.t()}}
-  # def normalize_locale_name(locale_name) when is_binary(locale_name) do
-  #   locale_name = locale_name_from_posix(locale_name)
-  #
-  #   with {:ok, parsed} <- Cldr.Rfc5646.Parser.parse(locale_name) do
-  #     canonical_locale_name(parsed)
-  #   end
-  # end
-
-  def canonical_locale_name(%Cldr.LanguageTag{} = language_tag) do
-    Cldr.LanguageTag.to_string(language_tag)
   end
 
   @doc """
@@ -1378,7 +1325,7 @@ defmodule Cldr.Locale do
     end)
   end
 
-  def merge_variants(replacement, source_tag, type_tag) do
+  defp merge_variants(replacement, source_tag, type_tag) do
     type_field = type_field_from(type_tag, :language_variants)
     replacement_field = type_field_from(replacement, :language_variants)
     source_field = type_field_from(source_tag, :language_variants)
@@ -1441,16 +1388,16 @@ defmodule Cldr.Locale do
 
   # This will crash if there are more than 4 variants
   # which is possible but highly unlikely
-  def variant_selectors([a]),
+  defp variant_selectors([a]),
     do: [[a]]
 
-  def variant_selectors([a, b]),
+  defp variant_selectors([a, b]),
     do: [[a, b], [a], [b]]
 
-  def variant_selectors([a, b, c]),
+  defp variant_selectors([a, b, c]),
     do: [[a, b, c], [a, b], [a, c], [b, c], [a], [b], [c]]
 
-  def variant_selectors([a, b, c, d]),
+  defp variant_selectors([a, b, c, d]),
     do: [
       [a, b, c, d],
       [a, b, c],
@@ -1468,7 +1415,7 @@ defmodule Cldr.Locale do
       [d]
     ]
 
-  def sort_variants(language, variants) do
+  defp sort_variants(language, variants) do
     Enum.flat_map(variants, &[[language | &1], ["und" | &1]])
     |> Enum.sort(fn
       ["und" | rest1], ["und" | rest2] ->
@@ -1496,7 +1443,7 @@ defmodule Cldr.Locale do
     # |> IO.inspect
   end
 
-  def find_language_alias(language, variants, type) do
+  defp find_language_alias(language, variants, type) do
     variants = sort_variants(language, variants)
 
     Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
@@ -1511,7 +1458,7 @@ defmodule Cldr.Locale do
     end)
   end
 
-  def find_alias(variants, type) do
+  defp find_alias(variants, type) do
     Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
       alias_key = Enum.join(variant, "-")
 
