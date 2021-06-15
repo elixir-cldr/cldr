@@ -1,4 +1,3 @@
-
 defmodule Cldr do
   @moduledoc """
   Cldr provides the core functions to retrieve and manage
@@ -158,8 +157,8 @@ defmodule Cldr do
 
   def get_locale(backend) do
     Process.get(@process_dictionary_key) ||
-    backend.default_locale() ||
-    default_locale()
+      backend.default_locale() ||
+      default_locale()
   end
 
   @doc """
@@ -805,7 +804,8 @@ defmodule Cldr do
 
   """
   @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
-  def known_locale_name?(locale_name, backend \\ default_backend!()) when is_binary(locale_name) do
+  def known_locale_name?(locale_name, backend \\ default_backend!())
+      when is_binary(locale_name) do
     locale_name in backend.known_locale_names
   end
 
@@ -1355,8 +1355,10 @@ defmodule Cldr do
     case Cldr.Locale.aliases(territory, :region) do
       substitution when is_list(substitution) ->
         {:ok, hd(substitution)}
+
       substitution when is_atom(substitution) ->
         {:ok, substitution}
+
       nil ->
         {:error, unknown_territory_error(territory)}
     end
@@ -2092,7 +2094,7 @@ defmodule Cldr do
 
   def flag(%LanguageTag{} = locale) do
     locale
-    |> Cldr.Locale.territory_from_locale
+    |> Cldr.Locale.territory_from_locale()
     |> Atom.to_charlist()
     |> generate_flag
   end
@@ -2159,7 +2161,7 @@ defmodule Cldr do
     require Logger
 
     if System.get_env("CLDR_DEBUG") do
-      Logger.debug message
+      Logger.debug(message)
     end
   end
 end

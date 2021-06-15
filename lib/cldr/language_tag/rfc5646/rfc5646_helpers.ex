@@ -115,5 +115,4 @@ defmodule Cldr.Rfc5646.Helpers do
   def collapse_variants([head | rest]) do
     [head | collapse_variants(rest)]
   end
-
 end

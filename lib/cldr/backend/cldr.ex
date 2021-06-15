@@ -588,10 +588,11 @@ defmodule Cldr.Backend do
       def normalize_lenient_parse(string, scope, locale \\ get_locale()) do
         with {:ok, locale} <- validate_locale(locale) do
           locale_name = locale.cldr_locale_name
-          Enum.reduce lenient_parse_map(scope, locale_name), string, fn
+
+          Enum.reduce(lenient_parse_map(scope, locale_name), string, fn
             {replacement, regex}, acc ->
               String.replace(acc, regex, replacement)
-          end
+          end)
         end
       end
 
@@ -603,22 +604,26 @@ defmodule Cldr.Backend do
       # 2. Remove compound patterns like `{Rs}` which
       #    are not supported in Erlang's re
 
-      @remove_compounds Regex.compile!("{.*}",[:ungreedy])
+      @remove_compounds Regex.compile!("{.*}", [:ungreedy])
 
       for locale_name <- Cldr.Config.known_locale_names(config) do
         lenient_parse =
           locale_name
           |> Cldr.Config.get_locale(config)
           |> Map.get(:lenient_parse)
-          |> Cldr.Map.deep_map(fn {k, v} ->
-            regex =
-              v
-              |> String.replace("\x5c\x5c", "\x5c")
-              |> String.replace(@remove_compounds, "")
-            {k, Regex.compile!(regex, "u")}
-          end, level: 2)
+          |> Cldr.Map.deep_map(
+            fn {k, v} ->
+              regex =
+                v
+                |> String.replace("\x5c\x5c", "\x5c")
+                |> String.replace(@remove_compounds, "")
+
+              {k, Regex.compile!(regex, "u")}
+            end,
+            level: 2
+          )
           |> Cldr.Map.atomize_keys(level: 1)
-          |> Map.new
+          |> Map.new()
 
         for {scope, map} <- lenient_parse do
           def lenient_parse_map(unquote(scope), unquote(locale_name)) do
@@ -768,7 +773,6 @@ defmodule Cldr.Backend do
       defdelegate validate_territory(territory), to: Cldr
       defdelegate validate_currency(currency), to: Cldr
       defdelegate validate_number_system(number_system), to: Cldr
-
     end
   end
 end

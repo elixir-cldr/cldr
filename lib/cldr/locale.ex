@@ -17,7 +17,7 @@ defmodule Cldr.Locale do
   * a Language code and Script such as `zh-Hant`
 
   * and in only two cases a Language code, Territory code and Variant
-    such as `ca-ES-VALENCIA` and `en-US-POSIX`.
+    such as `ca-ES-valencia` and `en-US-posix`.
 
   The RFC defines a language tag as:
 
@@ -67,10 +67,10 @@ defmodule Cldr.Locale do
   locale, `Cldr` attempt to match against a set of reductions in the
   following order and will return the first match:
 
-  * language, script, territory, variant
-  * language, territory, variant
-  * language, script, variant
-  * language, variant
+  * language, script, territory, [variants]
+  * language, territory, [variants]
+  * language, script, [variants]
+  * language, [variants]
   * language, script, territory
   * language, territory
   * language, script
@@ -280,15 +280,15 @@ defmodule Cldr.Locale do
 
         ## Examples
 
-            iex> #{inspect __MODULE__}.territory_from_locale "en-US"
+            iex> #{inspect(__MODULE__)}.territory_from_locale "en-US"
             :US
 
-            iex> #{inspect __MODULE__}.territory_from_locale "en-US-u-rg-GBzzzz"
+            iex> #{inspect(__MODULE__)}.territory_from_locale "en-US-u-rg-GBzzzz"
             :GB
 
         """
         @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-          Cldr.territory
+                Cldr.territory()
 
         @doc since: "2.18.2"
 
@@ -317,14 +317,14 @@ defmodule Cldr.Locale do
 
         ## Examples
 
-            iex> #{inspect __MODULE__}.timezone_from_locale "en-US-u-tz-ausyd"
+            iex> #{inspect(__MODULE__)}.timezone_from_locale "en-US-u-tz-ausyd"
             "Australia/Sydney"
 
         """
         @doc since: "2.19.0"
 
         @spec timezone_from_locale(LanguageTag.t() | Cldr.Locale.locale_name()) ::
-                String.t() | {:error, {module(), String.t}}
+                String.t() | {:error, {module(), String.t()}}
 
         def timezone_from_locale(locale) when is_binary(locale) do
           Cldr.Locale.timezone_from_locale(locale, unquote(config.backend))
@@ -333,7 +333,6 @@ defmodule Cldr.Locale do
         def timezone_from_locale(%LanguageTag{} = locale) do
           Cldr.Locale.timezone_from_locale(locale)
         end
-
       end
     end
   end
@@ -410,7 +409,7 @@ defmodule Cldr.Locale do
 
   """
   @spec parent(LanguageTag.t()) ::
-    {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
 
   def parent(%LanguageTag{language: "root"}) do
     {:error, no_parent_error("root")}
@@ -429,8 +428,8 @@ defmodule Cldr.Locale do
     end
   end
 
- @spec parent(locale_name(), Cldr.backend()) ::
-   {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
+  @spec parent(locale_name(), Cldr.backend()) ::
+          {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
 
   def parent(locale_name, backend \\ Cldr.default_backend!()) when is_binary(locale_name) do
     with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
@@ -438,13 +437,13 @@ defmodule Cldr.Locale do
     end
   end
 
-  defp find_parent(%LanguageTag{language_variants: [_|_] = variants} = locale, backend) do
+  defp find_parent(%LanguageTag{language_variants: [_ | _] = variants} = locale, backend) do
     %LanguageTag{language: language, script: script, territory: territory} = locale
     first_match(language, script, territory, variants, &known_locale(&1, backend))
   end
 
   defp find_parent(%LanguageTag{territory: territory} = locale, backend)
-      when not is_nil(territory) do
+       when not is_nil(territory) do
     %LanguageTag{language: language, script: script} = locale
     first_match(language, script, nil, [], &known_locale(&1, backend))
   end
@@ -463,6 +462,7 @@ defmodule Cldr.Locale do
   # then return "root" to avoid loops
   defp return_parent_or_default(parent, child, backend) when is_nil(parent) do
     default_locale = Cldr.default_locale(backend)
+
     if child.language == default_locale.language do
       Cldr.validate_locale(@root_locale, backend)
     else
@@ -479,7 +479,7 @@ defmodule Cldr.Locale do
   end
 
   defp no_parent_error(locale_name) do
-    {Cldr.NoParentError, "The locale #{inspect locale_name} has no parent locale"}
+    {Cldr.NoParentError, "The locale #{inspect(locale_name)} has no parent locale"}
   end
 
   @doc """
@@ -662,7 +662,7 @@ defmodule Cldr.Locale do
   """
 
   @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
-          String.t() | {:error, {module(), String.t}}
+          String.t() | {:error, {module(), String.t()}}
 
   @doc since: "2.19.0"
 
@@ -729,11 +729,9 @@ defmodule Cldr.Locale do
     zone_count = length(zones)
 
     {:error,
-      {Cldr.AmbiguousTimezoneError,
-        "Cannot determine the timezone since the territory #{inspect territory} " <>
-        "has #{zone_count} timezone IDs"
-      }
-    }
+     {Cldr.AmbiguousTimezoneError,
+      "Cannot determine the timezone since the territory #{inspect(territory)} " <>
+        "has #{zone_count} timezone IDs"}}
   end
 
   @doc """
@@ -792,8 +790,7 @@ defmodule Cldr.Locale do
 
   """
 
-  def canonical_language_tag(locale_name, backend)
-      when is_binary(locale_name) do
+  def canonical_language_tag(locale_name, backend) when is_binary(locale_name) do
     if locale_name in backend.known_locale_names do
       Cldr.validate_locale(locale_name, backend)
     else
@@ -814,7 +811,6 @@ defmodule Cldr.Locale do
       language_tag
       |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases()
-      |> put_canonical_locale_name()
       |> put_likely_subtags()
       |> put_backend(backend)
       |> put_cldr_locale_name()
@@ -822,6 +818,19 @@ defmodule Cldr.Locale do
       |> put_gettext_locale_name()
 
     {:ok, canonical_tag}
+  end
+
+  @doc false
+  def canonical_language_tag(locale_name) when is_binary(locale_name) do
+    canonical_language_tag(locale_name, Cldr.default_backend!)
+  end
+
+  def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
+    canonical_language_tag(language_tag, Cldr.default_backend!())
+  end
+
+  def canonical_language_tag(%LanguageTag{backend: backend} = language_tag) do
+    canonical_language_tag(language_tag, backend)
   end
 
   @doc """
@@ -841,8 +850,16 @@ defmodule Cldr.Locale do
   """
   @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t(), Cldr.backend()) ::
           Cldr.LanguageTag.t() | none()
+
   def canonical_language_tag!(language_tag, backend) do
     case canonical_language_tag(language_tag, backend) do
+      {:ok, canonical_tag} -> canonical_tag
+      {:error, {exception, reason}} -> raise exception, reason
+    end
+  end
+
+  def canonical_language_tag!(language_tag) do
+    case canonical_language_tag(language_tag) do
       {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
@@ -900,6 +917,7 @@ defmodule Cldr.Locale do
       |> substitute(:territory)
       |> remove_unknown(:script)
       |> remove_unknown(:territory)
+      |> put_canonical_locale_name()
 
     if updated_tag == language_tag do
       updated_tag
@@ -908,10 +926,26 @@ defmodule Cldr.Locale do
     end
   end
 
+  defp substitute(%LanguageTag{canonical_locale_name: locale} = language_tag, :requested_name)
+       when not is_nil(locale) do
+    locale_name = locale_name_from(language_tag.language, nil, language_tag.territory, [])
+
+    if replacement_tag = aliases(locale_name, :language) do
+      type_tag = Cldr.LanguageTag.Parser.parse!(locale_name)
+
+      replacement_tag =
+        Map.put(replacement_tag, :language_variants, language_tag.language_variants)
+
+      merge_language_tags(replacement_tag, language_tag, type_tag)
+    else
+      language_tag
+    end
+  end
 
   defp substitute(%LanguageTag{requested_locale_name: locale} = language_tag, :requested_name) do
-    if alias_tag = aliases(locale, :language) do
-      merge_language_tags(alias_tag, language_tag, [])
+    if replacement_tag = aliases(locale, :language) do
+      type_tag = Cldr.LanguageTag.Parser.parse!(locale)
+      merge_language_tags(replacement_tag, language_tag, type_tag)
     else
       language_tag
     end
@@ -919,8 +953,9 @@ defmodule Cldr.Locale do
 
   # No variants so we just check the language for an alias
   defp substitute(%LanguageTag{language_variants: []} = language_tag, :language) do
-    if alias_tag = aliases(language_tag.language, :language) do
-      merge_language_tags(alias_tag, language_tag, [language_tag.language])
+    if replacement_tag = aliases(language_tag.language, :language) do
+      type_tag = Cldr.LanguageTag.Parser.parse!(language_tag.language)
+      merge_language_tags(replacement_tag, language_tag, type_tag)
     else
       language_tag
     end
@@ -932,10 +967,10 @@ defmodule Cldr.Locale do
     variants = variant_selectors(variants)
     language = language_tag.language
 
-    {alias_key, alias_tag} = find_language_alias(language, variants, :language)
+    {type_tag, replacement_tag} = find_language_alias(language, variants, :language)
 
-    if alias_tag do
-      merge_language_tags(alias_tag, language_tag, alias_key)
+    if replacement_tag do
+      merge_language_tags(replacement_tag, language_tag, type_tag)
     else
       language_tag
     end
@@ -946,18 +981,18 @@ defmodule Cldr.Locale do
   end
 
   defp substitute(%LanguageTag{language_variants: [variant]} = language_tag, :variant) do
-    {alias_key, substitution} =
+    {type_tag, replacement_tag} =
       find_alias([[variant]], :variant) || find_language_alias("und", [variant], :language)
 
-    merge_variants(language_tag, substitution, alias_key)
+    merge_variants(replacement_tag, language_tag, type_tag)
   end
 
   defp substitute(%LanguageTag{language_variants: variants} = language_tag, :variant) do
     variants = variant_selectors(variants)
-    {alias_key, substitution} = find_alias(variants, :variant)
+    {type_tag, replacement_tag} = find_alias(variants, :variant)
 
-    if substitution do
-      merge_variants(language_tag, substitution, alias_key)
+    if replacement_tag do
+      merge_variants(replacement_tag, language_tag, type_tag)
     else
       language_tag
     end
@@ -976,8 +1011,9 @@ defmodule Cldr.Locale do
       end
 
     %{language_tag | territory: territory}
-  rescue ArgumentError ->
-    language_tag
+  rescue
+    ArgumentError ->
+      language_tag
   end
 
   defp remove_unknown(%LanguageTag{script: "Zzzz"} = language_tag, :script) do
@@ -1102,18 +1138,23 @@ defmodule Cldr.Locale do
   """
 
   def first_match(%LanguageTag{} = language_tag, fun) when is_function(fun, 1) do
-    %LanguageTag{language: language, script: script, territory: territory, language_variants: variants} = language_tag
+    %LanguageTag{
+      language: language,
+      script: script,
+      territory: territory,
+      language_variants: variants
+    } = language_tag
+
     first_match(language, script, territory, variants, fun)
   end
 
   defp first_match(language, script, territory, variants, fun) do
     # Including variants
+    # Not including variants
     fun.(locale_name_from(language, script, territory, variants)) ||
       fun.(locale_name_from(language, nil, territory, variants)) ||
       fun.(locale_name_from(language, script, nil, variants)) ||
       fun.(locale_name_from(language, nil, nil, variants)) ||
-
-      # Not including variants
       fun.(locale_name_from(language, script, territory, [])) ||
       fun.(locale_name_from(language, nil, territory, [])) ||
       fun.(locale_name_from(language, script, nil, [])) ||
@@ -1196,10 +1237,19 @@ defmodule Cldr.Locale do
   def locale_name_from(language_tag, omit_singular_script? \\ true)
 
   def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_singular_script?) do
-    locale_name_from(tag.language, tag.script, tag.territory, tag.language_variants, omit_singular_script?)
+    locale_name_from(
+      tag.language,
+      tag.script,
+      tag.territory,
+      tag.language_variants,
+      omit_singular_script?
+    )
   end
 
-  def locale_name_from(%LanguageTag{canonical_locale_name: canonical_locale_name}, _omit_singular_script?) do
+  def locale_name_from(
+        %LanguageTag{canonical_locale_name: canonical_locale_name},
+        _omit_singular_script?
+      ) do
     canonical_locale_name
   end
 
@@ -1294,9 +1344,9 @@ defmodule Cldr.Locale do
       }
 
   """
-  def put_likely_subtags(
-        %LanguageTag{language: language, script: script, territory: territory} = language_tag
-      ) do
+  def put_likely_subtags(%LanguageTag{} = language_tag) do
+    %LanguageTag{language: language, script: script, territory: territory} = language_tag
+
     subtags =
       likely_subtags(locale_name_from(language, script, territory, [])) ||
         likely_subtags(locale_name_from(language, nil, territory, [])) ||
@@ -1308,83 +1358,167 @@ defmodule Cldr.Locale do
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
 
-  # From TR35 https://unicode-org.github.io/cldr/ldml/tr35.html#replacement
+  @merge_fields [:language, :script, :territory, :language_variants]
+  defp merge_language_tags(replacement_tag, source_tag, type_tag) do
+    Map.merge(replacement_tag, source_tag, fn
+      _k, "und", source_field ->
+        source_field
 
+      k, replacement_field, source_field when k in @merge_fields ->
+        # IO.inspect k, label: "Field"
+        type_field = type_field_from(type_tag, k) # |> IO.inspect(label: "Type")
+        replacement_field = field_from(replacement_field)# |> IO.inspect(label: "Replacement")
+        source_field = field_from(source_field, k) # |> IO.inspect(label: "Source")
+        replaced = replace(source_field, replacement_field, type_field)
+
+        if k == :language_variants || replaced == [], do: replaced, else: hd(replaced)
+
+      _k, _replacement_field, source_field ->
+        source_field
+    end)
+  end
+
+  def merge_variants(replacement, source_tag, type_tag) do
+    type_field = type_field_from(type_tag, :language_variants)
+    replacement_field = type_field_from(replacement, :language_variants)
+    source_field = type_field_from(source_tag, :language_variants)
+    replaced = replace(source_field, replacement_field, type_field)
+
+    %{source_tag | language_variants: replaced}
+  end
+
+  # From TR35 https://unicode-org.github.io/cldr/ldml/tr35.html#replacement
   # if type.field ≠ {}
   #   source.field = (source.field - type.field) ∪ replacement.field
   # else if source.field = {} and replacement.field ≠ {}
   #   source.field = replacement.field
   #
-  defp merge_language_tags(alias_tag, original_language_tag, type_field) do
-    Map.merge(alias_tag, original_language_tag, fn
-      _k, "und", source_field ->
-        source_field
-      :language_variants, replacement_field, source_field ->
-        # IO.inspect replacement_field, label: "Replacement field"
-        # IO.inspect source_field, label: "Source field"
-        # IO.inspect type_field, label: "Type field"
-        if type_field == [] do
-          replacement_field
-        else
-          ((source_field -- type_field) ++ replacement_field) |> Enum.uniq |> Enum.sort
-        end
-      :requested_locale_name, _replacement_field, source_field ->
-        source_field
-      :territory, replacement_field, source_field ->
-        # IO.inspect replacement_field, label: "Replacement field"
-        # IO.inspect source_field, label: "Source field"
-        # IO.inspect type_field, label: "Type field"
-        if type_field == [], do: replacement_field, else: source_field
-      _k, replacement_field, source_field ->
-        if empty?(replacement_field), do: source_field, else: replacement_field
-    end)
+  defp replace(source_field, replacement_field, [_ | _] = type_field) do
+    (source_field -- type_field) ++ replacement_field
+    # |> Enum.sort
   end
 
-  def merge_variants(%LanguageTag{} = language_tag, nil, nil) do
-    language_tag
+  defp replace([], [_ | _] = replacement_field, _type_field) do
+    replacement_field
   end
 
-  def merge_variants(%LanguageTag{} = language_tag, variant, alias_key) when is_binary(variant) do
-    variants =
-      ((language_tag.language_variants -- alias_key) ++ [variant])
-      |> Enum.uniq
-      |> Enum.sort
-
-    %{language_tag | language_variants: variants}
+  defp replace(source_field, _replacement_field, _type_field) do
+    source_field
   end
 
-  # This will crash if there are more than 3 variants
+  defp type_field_from(nil, _), do: []
+
+  defp type_field_from(tag, :language_variants = key) do
+    Map.fetch!(tag, key)
+  end
+
+  defp type_field_from(tag, :territory = key) do
+    case Map.fetch!(tag, key) do
+      nil -> []
+      other -> [String.to_existing_atom(other)]
+    end
+  end
+
+  defp type_field_from(tag, key) do
+    case Map.fetch!(tag, key) do
+      nil -> []
+      other -> [other]
+    end
+  end
+
+  defp field_from(nil), do: []
+  defp field_from(field) when is_list(field), do: field
+  defp field_from(field), do: [field]
+
+  defp field_from(field, :territory) when is_binary(field) do
+    case Integer.parse(field) do
+      {int, ""} when int in 0..999 -> [String.to_atom(field)]
+      _other -> [String.to_existing_atom(field)]
+    end
+  end
+
+  defp field_from(field, _), do: field_from(field)
+
+  # This will crash if there are more than 4 variants
   # which is possible but highly unlikely
-  def variant_selectors([a]), do: [[a]]
-  def variant_selectors([a, b]), do: [[a, b], [a], [b]]
-  def variant_selectors([a, b, c]), do: [[a, b, c], [a, b], [a, c], [b, c], [a], [b], [c]]
+  def variant_selectors([a]),
+    do: [[a]]
+
+  def variant_selectors([a, b]),
+    do: [[a, b], [a], [b]]
+
+  def variant_selectors([a, b, c]),
+    do: [[a, b, c], [a, b], [a, c], [b, c], [a], [b], [c]]
+
+  def variant_selectors([a, b, c, d]),
+    do: [
+      [a, b, c, d],
+      [a, b, c],
+      [a, c, d],
+      [b, c, d],
+      [a, b],
+      [a, c],
+      [a, d],
+      [b, c],
+      [b, d],
+      [c, d],
+      [a],
+      [b],
+      [c],
+      [d]
+    ]
+
+  def sort_variants(language, variants) do
+    Enum.flat_map(variants, &[[language | &1], ["und" | &1]])
+    |> Enum.sort(fn
+      ["und" | rest1], ["und" | rest2] ->
+        if length(rest1) == length(rest2),
+          do: rest1 < rest2,
+          else: length(rest1) > length(rest2)
+
+      ["und" | rest1], rest2 ->
+        if length(rest1) == length(rest2),
+          do: rest1 < rest2,
+          else: length(rest1) > length(rest2)
+
+      rest1, ["und" | rest2] ->
+        if length(rest1) == length(rest2),
+          do: rest1 < rest2,
+          else: length(rest1) > length(rest2)
+
+      rest1, rest2 ->
+        if length(rest1) == length(rest2),
+          do: rest1 < rest2,
+          else: length(rest1) > length(rest2)
+    end)
+    |> List.insert_at(0, [language])
+
+    # |> IO.inspect
+  end
 
   def find_language_alias(language, variants, type) do
-    variants =
-      Enum.flat_map(variants, &([[language | &1], ["und" | &1]]))
+    variants = sort_variants(language, variants)
 
-    alias_match =
-      Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
-        alias_key = Enum.join(variant, "-")
-        if alias_tag = aliases(alias_key, type) do
-          # IO.inspect alias_tag, label: "found alias for #{inspect variant} type #{inspect type}"
-          {:halt, {variant, alias_tag}}
-        else
-          {:cont, acc}
-        end
-      end)
+    Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
+      alias_key = Enum.join(variant, "-")
 
-    case alias_match do
-      {nil, nil} -> {[language], aliases(language, :language)}
-      matched -> matched
-    end
+      if alias_tag = aliases(alias_key, type) do
+        type_field = Cldr.LanguageTag.Parser.parse!(alias_key)
+        {:halt, {type_field, alias_tag}}
+      else
+        {:cont, acc}
+      end
+    end)
   end
 
   def find_alias(variants, type) do
     Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
       alias_key = Enum.join(variant, "-")
+
       if alias_tag = aliases(alias_key, type) do
-        {:halt, {variant, alias_tag}}
+        type_tag = Cldr.LanguageTag.Parser.parse!("und-" <> alias_key)
+        replacement_tag = Cldr.LanguageTag.Parser.parse!("und-" <> alias_tag)
+        {:halt, {type_tag, replacement_tag}}
       else
         {:cont, acc}
       end
@@ -1551,6 +1685,12 @@ defmodule Cldr.Locale do
   """
   @alias_keys Map.keys(@aliases)
   @spec aliases(locale_name(), atom()) :: map() | nil
+
+  def aliases(key, :region = type) do
+    aliases()
+    |> Map.get(type)
+    |> Map.get(to_string(key))
+  end
 
   def aliases(key, type) when type in @alias_keys do
     aliases()

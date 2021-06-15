@@ -17,5 +17,3 @@ defmodule TestGettext.GettextUnknown do
     otp_app: Cldr.Config.app_name(),
     priv: "priv/gettext_unknown"
 end
-
-

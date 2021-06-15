@@ -89,35 +89,37 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
   end
 
   test "No logging configured for no-match warnings" do
-    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr, no_match_log_level: :error)
+    opts =
+      Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr, no_match_log_level: :error)
 
     assert capture_log(fn ->
-      :get
-      |> conn("/")
-      |> put_req_header("accept-language", "xx")
-      |> Cldr.Plug.AcceptLanguage.call(opts)
-    end) =~ "Cldr.NoMatchingLocale: No configured locale could be matched to \"xx\""
+             :get
+             |> conn("/")
+             |> put_req_header("accept-language", "xx")
+             |> Cldr.Plug.AcceptLanguage.call(opts)
+           end) =~ "Cldr.NoMatchingLocale: No configured locale could be matched to \"xx\""
   end
 
   test "Log level not configured for no-match warnings" do
     opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr, no_match_log_level: nil)
 
     assert capture_log(fn ->
-      :get
-      |> conn("/")
-      |> put_req_header("accept-language", "xx")
-      |> Cldr.Plug.AcceptLanguage.call(opts)
-    end) == ""
+             :get
+             |> conn("/")
+             |> put_req_header("accept-language", "xx")
+             |> Cldr.Plug.AcceptLanguage.call(opts)
+           end) == ""
   end
 
   test "Log level configured for no-match warnings below logger configured level" do
-    opts = Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr, no_match_log_level: :info)
+    opts =
+      Cldr.Plug.AcceptLanguage.init(cldr_backend: TestBackend.Cldr, no_match_log_level: :info)
 
     assert capture_log(fn ->
-      :get
-      |> conn("/")
-      |> put_req_header("accept-language", "xx")
-      |> Cldr.Plug.AcceptLanguage.call(opts)
-    end) == ""
+             :get
+             |> conn("/")
+             |> put_req_header("accept-language", "xx")
+             |> Cldr.Plug.AcceptLanguage.call(opts)
+           end) == ""
   end
 end

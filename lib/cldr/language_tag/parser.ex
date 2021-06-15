@@ -98,7 +98,7 @@ defmodule Cldr.LanguageTag.Parser do
         territory when territory < 100 -> "0#{territory}"
         _ -> "#{territory}"
       end
-      |> String.upcase
+      |> String.upcase()
 
     Map.put(language_tag, :territory, territory)
   end

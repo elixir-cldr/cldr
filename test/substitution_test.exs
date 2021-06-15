@@ -8,4 +8,3 @@ defmodule Cldr.Substitution.Test do
     assert Cldr.Substitution.substitute("1", template) == [string]
   end
 end
-

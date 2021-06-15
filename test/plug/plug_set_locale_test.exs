@@ -77,10 +77,12 @@ defmodule Cldr.Plug.SetLocale.Test do
   test "session key deprecation is emitted" do
     try do
       assert capture_io(:stderr, fn ->
-        Cldr.Plug.SetLocale.init(session_key: "key", cldr: WithNoGettextBackend.Cldr)
-      end) =~ "The :session_key option is deprecated and will be removed in a future release"
-    rescue RuntimeError ->
-      true
+               Cldr.Plug.SetLocale.init(session_key: "key", cldr: WithNoGettextBackend.Cldr)
+             end) =~
+               "The :session_key option is deprecated and will be removed in a future release"
+    rescue
+      RuntimeError ->
+        true
     end
   end
 

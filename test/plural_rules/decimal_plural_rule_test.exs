@@ -17,9 +17,7 @@ defmodule Decimal.PluralRule.Test do
         true
 
       {:.., _context, [from, to]} ->
-        test "#{inspect(module)}: Validate range #{inspect(from)}..#{inspect(to)} is in plural category #{
-               inspect(category)
-             } for locale #{inspect(locale_name)}" do
+        test "#{inspect(module)}: Validate range #{inspect(from)}..#{inspect(to)} is in plural category #{inspect(category)} for locale #{inspect(locale_name)}" do
           assert unquote(module).plural_rule(
                    unquote(Macro.escape(from)),
                    unquote(Macro.escape(locale))
@@ -32,9 +30,7 @@ defmodule Decimal.PluralRule.Test do
         end
 
       dec ->
-        test "#{inspect(module)}: Validate number #{inspect(dec)} is in plural category #{
-               inspect(category)
-             } for locale #{inspect(locale_name)}" do
+        test "#{inspect(module)}: Validate number #{inspect(dec)} is in plural category #{inspect(category)} for locale #{inspect(locale_name)}" do
           assert unquote(module).plural_rule(
                    unquote(Macro.escape(dec)),
                    unquote(Macro.escape(locale))

@@ -292,7 +292,7 @@ defmodule Cldr.Test do
 
     test "that module docs are generated for a backend" do
       assert {:docs_v1, _, :elixir, "text/markdown", %{"en" => _}, %{}, _} =
-        Code.fetch_docs(TestBackend.Cldr)
+               Code.fetch_docs(TestBackend.Cldr)
     end
   end
 

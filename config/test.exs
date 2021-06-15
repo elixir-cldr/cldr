@@ -6,8 +6,7 @@ config :ex_cldr,
   default_backend: TestBackend.Cldr
 
 # For testing data_dir config
-config :logger, WithOtpAppBackend.Cldr,
-  data_dir: "./with_opt_app_backend/cldr/some_dir"
+config :logger, WithOtpAppBackend.Cldr, data_dir: "./with_opt_app_backend/cldr/some_dir"
 
 # Other configs
 config :plug,

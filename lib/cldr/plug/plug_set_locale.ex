@@ -393,7 +393,8 @@ if Code.ensure_loaded?(Plug) do
 
     defp validate_app_and_scope!(:gettext, module) when is_atom(module) do
       Cldr.Code.ensure_compiled?(module) ||
-        raise(ArgumentError, "Gettext backend #{inspect module} is unknown")
+        raise(ArgumentError, "Gettext backend #{inspect(module)} is unknown")
+
       :ok
     end
 
@@ -486,8 +487,12 @@ if Code.ensure_loaded?(Plug) do
       do: Keyword.put(options, :session_key, @session_key)
 
     defp validate_session_key(options, session_key) when is_binary(session_key) do
-      IO.warn "The :session_key option is deprecated and will be removed in " <>
-              "a future release", []
+      IO.warn(
+        "The :session_key option is deprecated and will be removed in " <>
+          "a future release",
+        []
+      )
+
       options
     end
 

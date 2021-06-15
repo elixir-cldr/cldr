@@ -199,9 +199,7 @@ defmodule Cldr.Consolidate do
   # From time-to-time the locale data is out of sync
   # with the json data and hence locales may need to be
   # omitted.
-  @invalid_locales [
-
-  ]
+  @invalid_locales []
 
   def all_locales() do
     download_data_dir()
@@ -241,19 +239,21 @@ defmodule Cldr.Consolidate do
       |> Cldr.Map.rename_keys("_scripts", "scripts")
       |> Cldr.Map.rename_keys("_territories", "territories")
       |> Enum.map(fn
-        {<<lang :: bytes-2, "-alt-secondary" >>, data} ->
+        {<<lang::bytes-2, "-alt-secondary">>, data} ->
           data = normalise_language_data(data)
           {lang, {:secondary, data}}
-        {<<lang :: bytes-3, "-alt-secondary" >>, data} ->
+
+        {<<lang::bytes-3, "-alt-secondary">>, data} ->
           data = normalise_language_data(data)
           {lang, {:secondary, data}}
+
         {lang, data} ->
           data = normalise_language_data(data)
           {lang, {:primary, data}}
       end)
       |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
       |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
-      |> Map.new
+      |> Map.new()
 
     save_file(language_data, path)
     assert_package_file_configured!(path)
@@ -599,7 +599,7 @@ defmodule Cldr.Consolidate do
     |> File.read!()
     |> Jason.decode!()
     |> get_in(["supplemental", "grammaticalData"])
-    |> Cldr.Normalize.GrammaticalFeatures.normalize
+    |> Cldr.Normalize.GrammaticalFeatures.normalize()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -902,8 +902,7 @@ defmodule Cldr.Consolidate do
   end
 
   defp localized_subdivisions(locale) do
-    subdivisions_src_path =
-      Path.join(download_data_dir(), ["subdivisions/", "#{locale}.xml"])
+    subdivisions_src_path = Path.join(download_data_dir(), ["subdivisions/", "#{locale}.xml"])
 
     if File.exists?(subdivisions_src_path) do
       parse_xml_subdivisions(subdivisions_src_path)

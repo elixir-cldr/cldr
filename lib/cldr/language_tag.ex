@@ -231,8 +231,12 @@ defmodule Cldr.LanguageTag do
 
   @doc """
   Reconstitute a textual language tag from a
-  LanguageTag that is suitable
-  to pass to a collator.
+  LanguageTag that is suitable to pass to a collator.
+
+  Note that this function will always calculate the
+  canonical locale name. `Kernel.to_string/1` will
+  return the pre-calculated canonical locale name and
+  is to be preferred.
 
   ## Arguments
 
@@ -272,4 +276,15 @@ defmodule Cldr.LanguageTag do
     if locale_extension != "", do: basic_tag <> "-u-" <> locale_extension, else: basic_tag
   end
 
+  defimpl String.Chars do
+    def to_string(language_tag) do
+      language_tag.canonical_locale_name
+    end
+  end
+
+  defimpl Inspect do
+    def inspect(language_tag, _opts) do
+      "#Cldr.LanguageTag<" <> language_tag.canonical_locale_name <> ">"
+    end
+  end
 end

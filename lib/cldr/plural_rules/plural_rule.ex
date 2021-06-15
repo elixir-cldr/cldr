@@ -299,27 +299,27 @@ defmodule Cldr.Number.PluralRule do
       def pluralize(%Decimal{sign: sign, coef: coef, exp: 0} = number, locale, substitutions)
           when is_integer(coef) do
         number
-        |> Decimal.to_integer
+        |> Decimal.to_integer()
         |> do_pluralize(locale, substitutions)
       end
 
       def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
           when is_integer(coef) and exp > 0 do
         number
-        |> Decimal.to_integer
+        |> Decimal.to_integer()
         |> do_pluralize(locale, substitutions)
       end
 
       def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
           when is_integer(coef) and exp < 0 and rem(coef, 10) == 0 do
         number
-        |> Decimal.to_integer
+        |> Decimal.to_integer()
         |> do_pluralize(locale, substitutions)
       end
 
       def pluralize(%Decimal{} = number, %LanguageTag{} = locale, %{} = substitutions) do
         number
-        |> Decimal.to_float
+        |> Decimal.to_float()
         |> do_pluralize(locale, substitutions)
       end
 

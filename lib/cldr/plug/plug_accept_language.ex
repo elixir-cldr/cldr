@@ -72,11 +72,13 @@ if Code.ensure_loaded?(Plug) do
           locale
 
         {:error, {Cldr.NoMatchingLocale = exception, reason}} ->
-          if options.log_level, do: Logger.log(options.log_level,"#{inspect exception}: #{reason}")
+          if options.log_level,
+            do: Logger.log(options.log_level, "#{inspect(exception)}: #{reason}")
+
           nil
 
         {:error, {exception, reason}} ->
-          Logger.warn("#{inspect exception}: #{reason}")
+          Logger.warn("#{inspect(exception)}: #{reason}")
           nil
       end
     end

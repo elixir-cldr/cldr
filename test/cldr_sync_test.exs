@@ -38,6 +38,4 @@ defmodule Cldr.SyncTest do
 
     Application.put_env(:ex_cldr, :default_backend, default)
   end
-
-
 end

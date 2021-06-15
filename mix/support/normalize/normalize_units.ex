@@ -74,14 +74,18 @@ defmodule Cldr.Normalize.Units do
         {type, template} ->
           {type, Substitution.parse(template)}
       end)
-      |> Enum.group_by(&(elem(&1, 0)), &(elem(&1, 1)))
+      |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
       |> Enum.map(fn
-        {k, v} when is_atom(k) -> {k, Map.new(v)}
-        {k, [v]} -> {k, v}
+        {k, v} when is_atom(k) ->
+          {k, Map.new(v)}
+
+        {k, [v]} ->
+          {k, v}
+
         {k, v} when is_list(v) ->
           {k, map_nested_compounds(v)}
       end)
-      |> Map.new
+      |> Map.new()
 
     %{unit => parsed_formats}
   end
@@ -106,6 +110,7 @@ defmodule Cldr.Normalize.Units do
     case String.split(rest, "_", parts: 2) do
       [count] ->
         {count, template}
+
       [count, rest] ->
         {count, compound_unit(rest, template)}
     end
@@ -141,19 +146,22 @@ defmodule Cldr.Normalize.Units do
 
   def map_nested_compounds([{key, value} | rest], acc) do
     mapped_value = map_nested_compounds(value)
-    acc = Map.update(acc, key, mapped_value, fn
-      current when is_map(current) and is_map(mapped_value) ->
-        Map.merge(current, mapped_value)
 
-      current when is_map(current) ->
-        Map.put(current, :nominative, mapped_value)
+    acc =
+      Map.update(acc, key, mapped_value, fn
+        current when is_map(current) and is_map(mapped_value) ->
+          Map.merge(current, mapped_value)
 
-      current when is_list(current) ->
-        value
-        |> map_nested_compounds()
-        |> Map.put(:nominative, current)
-    end)
-    map_nested_compounds(rest,acc)
+        current when is_map(current) ->
+          Map.put(current, :nominative, mapped_value)
+
+        current when is_list(current) ->
+          value
+          |> map_nested_compounds()
+          |> Map.put(:nominative, current)
+      end)
+
+    map_nested_compounds(rest, acc)
   end
 
   def units_for_locale(locale) do

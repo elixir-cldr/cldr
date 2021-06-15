@@ -168,13 +168,14 @@ defmodule Cldr.Config do
 
   """
   def download_data_dir do
-    System.get_env("CLDR_PRODUCTION") || raise(ArgumentError, """
-    The environment variable $CLDR_PRODUCTION must be set to the
-    directory where the CLDR json data is stored.
+    System.get_env("CLDR_PRODUCTION") ||
+      raise(ArgumentError, """
+      The environment variable $CLDR_PRODUCTION must be set to the
+      directory where the CLDR json data is stored.
 
-    See DEVELOPMENT.md for more information about CLDR data
-    and generating the json files.
-    """)
+      See DEVELOPMENT.md for more information about CLDR data
+      and generating the json files.
+      """)
   end
 
   @doc """
@@ -416,8 +417,8 @@ defmodule Cldr.Config do
       config.locales
       |> Enum.flat_map(&fallback_chain/1)
       |> Kernel.++(config.locales)
-      |> Enum.uniq
-      |> Enum.sort
+      |> Enum.uniq()
+      |> Enum.sort()
 
     %{config | locales: expanded_locales}
   end
@@ -459,14 +460,14 @@ defmodule Cldr.Config do
   def fallback_chain(locale_name) do
     locale_name
     |> fallback_chain([])
-    |> Enum.reverse
+    |> Enum.reverse()
   end
 
   @doc false
   def fallback_chain(locale_name, acc) do
     case fallback(locale_name) do
       nil -> acc
-      fallback-> fallback_chain(fallback, [fallback | acc])
+      fallback -> fallback_chain(fallback, [fallback | acc])
     end
   end
 
@@ -502,7 +503,7 @@ defmodule Cldr.Config do
     all_locale_names = all_locale_names()
 
     fun = fn locale_name ->
-      (locale_name in all_locale_names) && locale_name
+      locale_name in all_locale_names && locale_name
     end
 
     if inherited = Map.get(parent_locales(), locale_name) do
@@ -527,8 +528,8 @@ defmodule Cldr.Config do
 
   defp first_match(language, script, territory, fun) do
     fun.(locale_name_from(language, script, nil, [])) ||
-    fun.(locale_name_from(language, nil, territory, [])) ||
-    fun.(locale_name_from(language, nil, nil, [])) || nil
+      fun.(locale_name_from(language, nil, territory, [])) ||
+      fun.(locale_name_from(language, nil, nil, [])) || nil
   end
 
   # Also called from Cldr.Locale
@@ -543,8 +544,9 @@ defmodule Cldr.Config do
 
   @doc false
   def join_variants([]), do: nil
+
   def join_variants(variants),
-    do: variants |> Enum.sort |> Enum.join("-")
+    do: variants |> Enum.sort() |> Enum.join("-")
 
   # If the language has only one script for a given territory then
   # we omit it in the canonical form
@@ -719,7 +721,7 @@ defmodule Cldr.Config do
 
   def known_locale_names(%__MODULE__{locales: :all}) do
     all_locale_names()
-    |> Enum.sort
+    |> Enum.sort()
   end
 
   def known_locale_names(%__MODULE__{locales: locales}) do
@@ -1414,7 +1416,7 @@ defmodule Cldr.Config do
     name =
       locale_name
       |> locale_name_from_posix
-      |> String.downcase
+      |> String.downcase()
 
     Map.get(known_locales_map(), name, locale_name)
   end
@@ -1422,7 +1424,7 @@ defmodule Cldr.Config do
   defp known_locales_map do
     all_locale_names()
     |> Enum.map(fn x -> {String.downcase(x), x} end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
@@ -1518,7 +1520,7 @@ defmodule Cldr.Config do
 
   # Read the file.
   defp read_locale_file(path) do
-    Cldr.maybe_log("Cldr.Config reading locale file #{inspect path}")
+    Cldr.maybe_log("Cldr.Config reading locale file #{inspect(path)}")
     {:ok, file} = File.open(path, [:read, :binary, :utf8])
     contents = IO.read(file, :all)
     File.close(file)
@@ -1984,9 +1986,13 @@ defmodule Cldr.Config do
 
     data
     |> Enum.map(fn {k, v} ->
-      {k, v |> Cldr.Map.integerize_keys(only: ["0", "1"]) |> Cldr.Map.atomize_keys(except: [0, 1]) |> Cldr.Map.atomize_values()}
+      {k,
+       v
+       |> Cldr.Map.integerize_keys(only: ["0", "1"])
+       |> Cldr.Map.atomize_keys(except: [0, 1])
+       |> Cldr.Map.atomize_values()}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
@@ -2170,7 +2176,7 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Enum.map(fn {k, v} -> {k, %{v | type: String.to_atom(v.type)}} end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc false
@@ -2179,10 +2185,12 @@ defmodule Cldr.Config do
     |> Path.join("time_preferences.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys(only: fn
+    |> Cldr.Map.atomize_keys(
+      only: fn
         {k, _v} -> not String.contains?(k, "_")
         _ -> false
-    end)
+      end
+    )
     |> Cldr.Map.deep_map(fn
       {k, v} when is_binary(k) -> {String.replace(k, "_", "-"), v}
       other -> other
@@ -2477,16 +2485,20 @@ defmodule Cldr.Config do
 
       [unknown_locale] ->
         IO.warn(
-          "The locale #{inspect unknown_locale} is configured in the #{gettext} " <>
-          "gettext backend but is unknown to CLDR. It will be ignored by CLDR.", []
+          "The locale #{inspect(unknown_locale)} is configured in the #{gettext} " <>
+            "gettext backend but is unknown to CLDR. It will be ignored by CLDR.",
+          []
         )
+
         Map.put(config, :locales, locales -- [unknown_locale])
 
       unknown_locales ->
         IO.warn(
-          "The locales #{inspect unknown_locales} are configured in the #{gettext} " <>
-          "gettext backend but are unknown to CLDR. They will be ignored by CLDR.", []
+          "The locales #{inspect(unknown_locales)} are configured in the #{gettext} " <>
+            "gettext backend but are unknown to CLDR. They will be ignored by CLDR.",
+          []
         )
+
         Map.put(config, :locales, locales -- unknown_locales)
     end
   end
@@ -2501,8 +2513,9 @@ defmodule Cldr.Config do
   end
 
   def dedup_provider_modules(%{providers: providers, backend: backend} = config) do
-    groups = Enum.group_by(providers, &(&1))
+    groups = Enum.group_by(providers, & &1)
     config = Map.put(config, :providers, Map.keys(groups))
+
     duplicates =
       groups
       |> Enum.filter(fn {_k, v} -> length(v) > 1 end)
@@ -2510,8 +2523,9 @@ defmodule Cldr.Config do
 
     if length(duplicates) > 0 do
       IO.warn(
-        "Duplicate Cldr backend providers #{inspect providers} for " <>
-        "backend #{inspect backend} have been ignored", []
+        "Duplicate Cldr backend providers #{inspect(providers)} for " <>
+          "backend #{inspect(backend)} have been ignored",
+        []
       )
     end
 
@@ -2616,7 +2630,8 @@ defmodule Cldr.Config do
           "only supports the #{inspect(@non_deprecated_keys)} keys. The keys " <>
           "#{inspect(remaining_config)} should be configured in a backend module or " <>
           "via the :otp_app configuration of a backend module.  See the readme for " <>
-          "further information.", []
+          "further information.",
+        []
       )
     end
   end

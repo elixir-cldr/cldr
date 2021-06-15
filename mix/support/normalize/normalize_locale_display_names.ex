@@ -20,7 +20,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
           [name, alt] -> {{:alt, Cldr.Locale.normalize_locale_name(name)}, {alt, display_name}}
         end
       end)
-      |> Map.new
+      |> Map.new()
 
     # Now take care of -ALT-VARIANT and -ALT-SHORT
     filter = fn {k, _v} -> match?({:alt, _x}, k) end
@@ -28,7 +28,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     alt =
       languages
       |> Enum.filter(filter)
-      |> Map.new
+      |> Map.new()
 
     languages =
       languages
@@ -37,13 +37,14 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
         case Map.fetch(alt, {:alt, k}) do
           {:ok, {alt, display_name}} ->
             {k, %{:default => v, String.to_atom(alt) => display_name}}
-          :error -> {k, v}
+
+          :error ->
+            {k, v}
         end
       end)
-      |> Map.new
+      |> Map.new()
 
     locale_display_names = Map.put(locale_display_names, "languages", languages)
     Map.put(content, "locale_display_names", locale_display_names)
   end
-
 end

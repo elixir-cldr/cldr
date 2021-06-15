@@ -15,5 +15,4 @@ defmodule Cldr.Locale.Parent.Test do
   test "parent locales from Cldr.Locale.parent_locales/0" do
     assert Cldr.Locale.parent("nb") == TestBackend.Cldr.Locale.new("no")
   end
-
 end

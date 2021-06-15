@@ -1,8 +1,8 @@
 defmodule Cldr.CanonicalLocaleGenerator do
   def data do
     Path.join(__DIR__, "../data/locale_canonicalization.txt")
-    |> Path.expand
-    |> File.read!
+    |> Path.expand()
+    |> File.read!()
     |> String.split("\n")
     |> Enum.with_index()
     |> Enum.reject(fn {elem, _index} -> String.starts_with?(elem, "#") end)

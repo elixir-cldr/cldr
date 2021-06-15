@@ -18,18 +18,14 @@ defmodule Integer.PluralRule.Test do
 
       {:.., _context, [from, to]} ->
         Enum.each(from..to, fn int ->
-          test "#{inspect(module)}: Validate number #{inspect(int)} in range #{inspect(from)}..#{
-                 inspect(to)
-               } is in plural category #{inspect(category)} for locale #{inspect(locale_name)}" do
+          test "#{inspect(module)}: Validate number #{inspect(int)} in range #{inspect(from)}..#{inspect(to)} is in plural category #{inspect(category)} for locale #{inspect(locale_name)}" do
             assert unquote(module).plural_rule(unquote(int), unquote(Macro.escape(locale))) ==
                      unquote(category)
           end
         end)
 
       int ->
-        test "#{inspect(module)}: Validate number #{inspect(int)} is in plural category #{
-               inspect(category)
-             } for locale #{inspect(locale_name)}" do
+        test "#{inspect(module)}: Validate number #{inspect(int)} is in plural category #{inspect(category)} for locale #{inspect(locale_name)}" do
           assert unquote(module).plural_rule(unquote(int), unquote(Macro.escape(locale))) ==
                    unquote(category)
         end
