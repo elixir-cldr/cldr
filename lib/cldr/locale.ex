@@ -1361,6 +1361,10 @@ defmodule Cldr.Locale do
     Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
   end
 
+  # The process of applying alias substitutions is a map merge.
+  # In merging we ignore "und" fields, merge fields of interes
+  # and preserve all the other fields unchanged.
+
   @merge_fields [:language, :script, :territory, :language_variants]
   defp merge_language_tags(replacement_tag, source_tag, type_tag) do
     Map.merge(replacement_tag, source_tag, fn
@@ -1368,10 +1372,9 @@ defmodule Cldr.Locale do
         source_field
 
       k, replacement_field, source_field when k in @merge_fields ->
-        # IO.inspect k, label: "Field"
-        type_field = type_field_from(type_tag, k) # |> IO.inspect(label: "Type")
-        replacement_field = field_from(replacement_field)# |> IO.inspect(label: "Replacement")
-        source_field = field_from(source_field, k) # |> IO.inspect(label: "Source")
+        type_field = type_field_from(type_tag, k)
+        replacement_field = field_from(replacement_field)
+        source_field = field_from(source_field, k)
         replaced = replace(source_field, replacement_field, type_field)
 
         if k == :language_variants || replaced == [], do: replaced, else: hd(replaced)
@@ -1390,15 +1393,20 @@ defmodule Cldr.Locale do
     %{source_tag | language_variants: replaced}
   end
 
-  # From TR35 https://unicode-org.github.io/cldr/ldml/tr35.html#replacement
+  # Merge a single map field according to TR35
+  # https://unicode-org.github.io/cldr/ldml/tr35.html#replacement
+  #
   # if type.field ≠ {}
   #   source.field = (source.field - type.field) ∪ replacement.field
   # else if source.field = {} and replacement.field ≠ {}
   #   source.field = replacement.field
   #
+  # The `Kernel.--` and `Kernel.++` operators appear to preseve order
+  # and since the data is ordered on arrival it appears to remain
+  # ordered after replacement.
+
   defp replace(source_field, replacement_field, [_ | _] = type_field) do
     (source_field -- type_field) ++ replacement_field
-    # |> Enum.sort
   end
 
   defp replace([], [_ | _] = replacement_field, _type_field) do
@@ -1408,6 +1416,10 @@ defmodule Cldr.Locale do
   defp replace(source_field, _replacement_field, _type_field) do
     source_field
   end
+
+  # In order to support replace/3, all arguments needs
+  # to be lists. This function converts field from
+  # a language tag into the most relevant list representation.
 
   defp type_field_from(nil, _), do: []
 
@@ -1429,6 +1441,11 @@ defmodule Cldr.Locale do
     end
   end
 
+  # Convert a simple term into its most
+  # relevant list representation in order
+  # to support replace/4 which uses
+  # list operations.
+
   defp field_from(nil), do: []
   defp field_from(field) when is_list(field), do: field
   defp field_from(field), do: [field]
@@ -1441,6 +1458,11 @@ defmodule Cldr.Locale do
   end
 
   defp field_from(field, _), do: field_from(field)
+
+  # When looking for alias substitutions we need to check
+  # a number of possible combinations of language and
+  # variants. For performance reasons we pre-calculate
+  # the combinations.
 
   # This will crash if there are more than 4 variants
   # which is possible but highly unlikely
@@ -1471,6 +1493,10 @@ defmodule Cldr.Locale do
       [d]
     ]
 
+  # When we sort the candidate variants its a bi-level sort
+  # First on the length of the variants (ignoring "und") and
+  # then lexically
+
   defp sort_variants(language, variants) do
     Enum.flat_map(variants, &[[language | &1], ["und" | &1]])
     |> Enum.sort(fn
@@ -1495,9 +1521,14 @@ defmodule Cldr.Locale do
           else: length(rest1) > length(rest2)
     end)
     |> List.insert_at(0, [language])
-
-    # |> IO.inspect
   end
+
+  # Finding a language alias requires recursing
+  # over the list of possible variants that are in
+  # a known and stable order. Since the merging of
+  # substitutions works on langauge tags, a successful
+  # match parses and returns the variant combination
+  # that led to the match.
 
   defp find_language_alias(language, variants, type) do
     variants = sort_variants(language, variants)
@@ -1513,6 +1544,11 @@ defmodule Cldr.Locale do
       end
     end)
   end
+
+  # Similarly, finding a variant match recurses over
+  # the possible combinations and returns a
+  # language tag representing the variant combination
+  # that matched.
 
   defp find_alias(variants, type) do
     Enum.reduce_while(variants, {nil, nil}, fn variant, acc ->
