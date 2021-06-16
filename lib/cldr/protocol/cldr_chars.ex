@@ -41,3 +41,4 @@ defimpl Cldr.Chars, for: Any do
     Kernel.to_string(language_tag)
   end
 end
+

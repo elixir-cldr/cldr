@@ -59,7 +59,7 @@ defmodule Cldr.LanguageTag.U do
             variable_top: atom(),
             variant: atom()
           }
-          | map()
+          | %{}
 
   alias Cldr.Config
   alias Cldr.LanguageTag.Parser
@@ -242,9 +242,28 @@ defmodule Cldr.LanguageTag.U do
     |> Map.to_list()
     |> tl()
     |> Enum.reject(fn {_k, v} -> is_nil(v) end)
-    |> Enum.map(fn {k, v} -> "#{inverse_locale_key_map()[k]}-#{inverse(k, v)}" end)
+    |> Enum.map(&key_value_pair/1)
     |> Enum.reject(&is_nil/1)
+    |> Enum.sort()
     |> Enum.join("-")
+  end
+
+  defp key_value_pair({_k, nil}) do
+    nil
+  end
+
+  defp key_value_pair({k, v}) do
+    key =
+      inverse_locale_key_map()
+      |> Map.get(k)
+
+    value =
+      k
+      |> inverse(v)
+      |> Kernel.to_string()
+      |> String.downcase()
+
+    key <> "-" <> value
   end
 
   defp inverse(:calendar, :gregorian), do: :gregory

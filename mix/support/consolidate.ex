@@ -54,6 +54,7 @@ defmodule Cldr.Consolidate do
     save_grammatical_gender()
     save_parent_locales()
     save_language_data()
+    save_validity_data()
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
       max_concurrency: @max_concurrency,
@@ -425,6 +426,40 @@ defmodule Cldr.Consolidate do
       contains: ~x"./@contains"s
     )
     |> Enum.map(fn map -> {map.type, String.split(map.contains)} end)
+    |> Map.new()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  @doc false
+  @validity_data [
+    {"region", "territories"},
+    {"language", "languages"},
+    {"script", "scripts"},
+    {"subdivision", "subdivisions"},
+    {"variant", "variants"}
+  ]
+  def save_validity_data() do
+    for {from, to} <- @validity_data do
+      save_validity("validity/#{from}.xml", "validity/#{to}.json")
+    end
+  end
+
+  def save_validity(from, to) do
+    import SweetXml
+
+    path = Path.join(consolidated_output_dir(), to)
+
+    download_data_dir()
+    |> Path.join([from])
+    |> File.read!()
+    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+    |> xpath(~x"//id"l,
+      status: ~x"./@idStatus"s,
+      data: ~x"./text()"s
+    )
+    |> Enum.map(fn map -> {map.status, String.split(map.data, ~r/\s/, trim: true)} end)
     |> Map.new()
     |> save_file(path)
 

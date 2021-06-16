@@ -73,15 +73,15 @@ cp $CLDR_REPO/common/bcp47/timezone.xml $CLDR_PRODUCTION/timezones.xml
 mkdir -p $CLDR_PRODUCTION/subdivisions
 cp $CLDR_STAGING/common/subdivisions/* $CLDR_PRODUCTION/subdivisions
 
+mkdir -p $CLDR_PRODUCTION/validity
+cp -R $CLDR_REPO/common/validity/ $CLDR_PRODUCTION/validity/
+
 # ex_cldr additional data required for data generation
 cp $EX_CLDR/data/measurement_systems.xml $CLDR_PRODUCTION/measurement_systems.xml
 cp $EX_CLDR/data/iso_currencies.xml $CLDR_PRODUCTION/iso_currencies.xml
 
 # Copy test data
-cp $CLDR_REPO/common/testData/localeIdentifiers/localeCanonicalization.txt $EX_CLDR/test/data/locale_canonicalization.txt
-# cp $CLDR_REPO/common/testData/localeIdentifiers/localeDisplayName.txt $EX_CLDR/test/data/locale_display_name.txt
-
-# Copy validity data
-cp -R $CLDR_REPO/common/validity/ $EX_CLDR/priv/cldr/validity/
+cp $CLDR_REPO/common/testData/localeIdentifiers/localeCanonicalization.txt \
+   $EX_CLDR/test/data/locale_canonicalization.txt
 
 cd $OLDPWD

@@ -12,9 +12,11 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * `Cldr.validate_territory/1` now correctly substitutes for known aliases. For example `MyApp.Cldr.validate_locale("en-UK")` will correctly return `en-GB`.
 
-* Implemented the `String.Chars` protocol to support `Kernel.to_string/1`
+* Implement the `String.Chars` protocol to support `Kernel.to_string/1`
 
-* Implemented the `Inspect` protocol to support `inspect/2`
+* Implement the `Inspect` protocol to support `inspect/2`
+
+* Add `Cldr.LanguageTag.sigil_l/2` to simplify creating `t:Cldr.LanguageTag` structs.
 
 ### Bug Fixes
 

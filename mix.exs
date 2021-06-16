@@ -107,7 +107,12 @@ defmodule Cldr.Mixfile do
         "priv/cldr/language_tags.ebin",
         "priv/cldr/language_data.json",
         "priv/cldr/deprecated/measurement_system.json",
-        "priv/cldr/deprecated/unit_preference.json"
+        "priv/cldr/deprecated/unit_preference.json",
+        "priv/cldr/validity/territories.json",
+        "priv/cldr/validity/languages.json",
+        "priv/cldr/validity/scripts.json",
+        "priv/cldr/validity/subdivisions.json",
+        "priv/cldr/validity/variants.json"
       ]
     ]
   end
