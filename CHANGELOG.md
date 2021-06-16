@@ -8,13 +8,13 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements).
 
-* `Cldr.locale_and_backend_from/1` now supports `map` of options as the argument.
+* `Cldr.locale_and_backend_from/1` now supports a `map` of options as the argument.
 
 * `Cldr.validate_territory/1` now correctly substitutes for known aliases. For example `MyApp.Cldr.validate_locale("en-UK")` will correctly return `en-GB`.
 
-* Implement the `String.Chars` protocol to support `Kernel.to_string/1`
+* Implement the `String.Chars` protocol to support `Kernel.to_string/1` for `t:Cldr.LanguageTag` structs.
 
-* Implement the `Inspect` protocol to support `inspect/2`
+* Implement the `Inspect` protocol to support `inspect/2` for t:Cldr.LanguageTag` structs.
 
 * Add `Cldr.LanguageTag.sigil_l/2` to simplify creating `t:Cldr.LanguageTag` structs.
 
@@ -26,9 +26,9 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * A language tag can have more than one variant and this was not correctly implemented. As a result, the `t:Cldr.LanguageTag` struct field `variant` is renamed `variants` and is now a list with a default of `[]` rather than `nil`.
 
-* Fix a race condition which could return in correct results for a backend `known_gettext_locale_names/0`
+* Fix a race condition which could return incorrect results for a backend `known_gettext_locale_names/0`
 
-* `Cldr.validate_locale/2` will now return an error if the territory for a locale is unknown to CLDR. Note that `Cldr.Locale.new/1,2` does not check territory validity.
+* `Cldr.validate_locale/2` will now return an error if the territory for a locale is unknown to CLDR. Note that `Cldr.Locale.new/1,2` checks only if the territory is valid - not if it is known to CLDR.
 
 ## Cldr v2.22.1
 
