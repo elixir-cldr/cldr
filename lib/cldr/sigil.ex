@@ -3,8 +3,13 @@ defmodule Cldr.LanguageTag.Sigil do
     {:<<>>, [_], [locale]} = locale
 
     case validate_locale(String.split(locale, "|")) do
-      {:ok, locale} -> quote do unquote(Macro.escape(locale)) end
-      {:error, {exception, reason}} -> raise exception, reason
+      {:ok, locale} ->
+        quote do
+          unquote(Macro.escape(locale))
+        end
+
+      {:error, {exception, reason}} ->
+        raise exception, reason
     end
   end
 

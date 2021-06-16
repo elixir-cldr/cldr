@@ -822,7 +822,7 @@ defmodule Cldr.Locale do
 
   @doc false
   def canonical_language_tag(locale_name) when is_binary(locale_name) do
-    canonical_language_tag(locale_name, Cldr.default_backend!)
+    canonical_language_tag(locale_name, Cldr.default_backend!())
   end
 
   def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do

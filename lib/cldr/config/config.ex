@@ -595,6 +595,22 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return a map of validity data
+
+  The types are :languages, :scripts,
+  :territories, :subdivisions, :variants
+
+  """
+  @validity_type [:languages, :scripts, :territories, :subdivisions, :variants]
+  def validity(type) when type in @validity_type do
+    Path.join(cldr_data_dir(), "validity/#{type}.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Map.new()
+  end
+
+  @doc """
   Return a map of plural ranges
 
   """
