@@ -8,8 +8,15 @@ defmodule Doc.Test do
 
   doctest Cldr.LanguageTag
   doctest Cldr.LanguageTag.Parser
+  doctest Cldr.LanguageTag.Sigil
   doctest Cldr.AcceptLanguage
   doctest Cldr.Substitution
+
+  doctest Cldr.Validity.Territory
+  doctest Cldr.Validity.Script
+  doctest Cldr.Validity.Variant
+  doctest Cldr.Validity.Language
+  doctest Cldr.Validity.Subdivision
 
   doctest TestBackend.Cldr
   doctest TestBackend.Cldr.Locale
