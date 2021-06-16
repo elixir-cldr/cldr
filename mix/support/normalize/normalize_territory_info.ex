@@ -26,7 +26,7 @@ defmodule Cldr.Normalize.Territories do
     if language_population = Map.get(v, @key) do
       language_population =
         language_population
-        |> Enum.map(fn {k1, v1} -> {Locale.canonical_locale_name(k1), v1} end)
+        |> Enum.map(fn {k1, v1} -> {Locale.canonical_locale_name!(k1), v1} end)
         |> Enum.into(%{})
 
       {k, Map.put(v, @key, language_population)}

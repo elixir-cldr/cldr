@@ -1251,9 +1251,7 @@ defmodule Cldr.Locale do
 
   @doc false
   def join_variants([]), do: nil
-
-  def join_variants(variants),
-    do: variants |> Enum.sort() |> Enum.join("-")
+  def join_variants(variants), do: variants |> Enum.sort() |> Enum.join("-")
 
   # If the language has only one script for a given territory then
   # we omit it in the canonical form

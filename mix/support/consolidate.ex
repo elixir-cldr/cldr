@@ -28,7 +28,6 @@ defmodule Cldr.Consolidate do
   def consolidate_locales do
     ensure_output_dir_exists!(consolidated_output_dir())
     ensure_output_dir_exists!(consolidated_locales_dir())
-
     save_cldr_version()
     save_plurals()
     save_number_systems()
@@ -55,7 +54,6 @@ defmodule Cldr.Consolidate do
     save_grammatical_gender()
     save_parent_locales()
     save_language_data()
-
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
       max_concurrency: @max_concurrency,
@@ -151,8 +149,8 @@ defmodule Cldr.Consolidate do
 
     with {:ok, files} <- File.ls(dir) do
       Enum.map(files, &Path.join(dir, &1))
-      |> Enum.map(&File.read!(&1))
-      |> Enum.map(&Jason.decode!(&1))
+      |> Enum.map(fn f -> IO.puts("File: #{f}"); File.read!(f) end)
+      |> Enum.map(&Jason.decode!/1)
       |> merge_maps
     else
       {:error, _} -> %{}

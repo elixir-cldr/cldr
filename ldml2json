@@ -78,8 +78,8 @@ cp $EX_CLDR/data/measurement_systems.xml $CLDR_PRODUCTION/measurement_systems.xm
 cp $EX_CLDR/data/iso_currencies.xml $CLDR_PRODUCTION/iso_currencies.xml
 
 # Copy test data
-cp $CLDR_REPO/common/testData/localeCanonicalization.txt $EX_CLDR/test/data/locale_canonicalization.txt
-cp $CLDR_REPO/common/testData/localeDisplayName.txt $EX_CLDR/test/data/locale_display_name.txt
+cp $CLDR_REPO/common/testData/localeIdentifiers/localeCanonicalization.txt $EX_CLDR/test/data/locale_canonicalization.txt
+# cp $CLDR_REPO/common/testData/localeIdentifiers/localeDisplayName.txt $EX_CLDR/test/data/locale_display_name.txt
 
 # Copy validity data
 cp -R $CLDR_REPO/common/validity/ $EX_CLDR/priv/cldr/validity/
