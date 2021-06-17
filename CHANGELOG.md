@@ -4,6 +4,20 @@
 
 This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Bug Fixes
+
+* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name. Fixing this conformance is also a prerequisite for generating local display names.
+
+* Fixes `Cldr.Locale.normalize_locale_name/1` to correctly case all keys in lower case except script (capital case) and region (upper case). It will now also process arbitrary locale names.
+
+* A language tag can have more than one variant and this was not correctly implemented. As a result, the `t:Cldr.LanguageTag` struct field `variant` is renamed `variants` and is now a list with a default of `[]` rather than `nil`.
+
+* Fix a race condition which could return incorrect results for a backend `known_gettext_locale_names/0`
+
+* `Cldr.validate_locale/2` will now return an error if the territory for a locale is unknown to CLDR. Note that `Cldr.Locale.new/1,2` checks only if the territory is valid - not if it is known to CLDR.
+
+* Locale inheritance no longer includes the "root" locale.  In alignment with [BCP 47](https://unicode-org.github.io/cldr/ldml/tr35.html#Unicode_Locale_Identifier_BCP_47_to_CLDR), the "root" locale is now longer a valid locale. Parsing a locale name "root" is still valid but it will return the "und" language instead.  While parsing is still correct, it remains a locale that is not valid for use in `ex_cldr`. The "root" locale is used only for a limited set of rules-based number formats.
+
 ### Enhancements
 
 * `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements).
@@ -17,18 +31,6 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 * Implement the `Inspect` protocol to support `inspect/2` for t:Cldr.LanguageTag` structs.
 
 * Add `Cldr.LanguageTag.sigil_l/2` to simplify creating `t:Cldr.LanguageTag` structs.
-
-### Bug Fixes
-
-* Corrects the formation of a canonical language tag. In previous releases, the script tag was always included as part of the canonical locale name. For example, `en-US` would become `en-Latn-US` because `Latn` is defined as a likely subtag of `en`. However [TR35](https://unicode-org.github.io/cldr/ldml/tr35.html#Contents) specifies that if the script is the only script specified for this language then it should be omitted from the canonical name. Fixing this conformance is also a prerequisite for generating local display names.
-
-* Fixes `Cldr.Locale.normalize_locale_name/1` to correctly case all keys in lower case except script (capital case) and region (upper case). It will now also process arbitrary locale names.
-
-* A language tag can have more than one variant and this was not correctly implemented. As a result, the `t:Cldr.LanguageTag` struct field `variant` is renamed `variants` and is now a list with a default of `[]` rather than `nil`.
-
-* Fix a race condition which could return incorrect results for a backend `known_gettext_locale_names/0`
-
-* `Cldr.validate_locale/2` will now return an error if the territory for a locale is unknown to CLDR. Note that `Cldr.Locale.new/1,2` checks only if the territory is valid - not if it is known to CLDR.
 
 ## Cldr v2.22.1
 

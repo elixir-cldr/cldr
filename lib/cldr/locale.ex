@@ -245,7 +245,7 @@ defmodule Cldr.Locale do
   @type variants :: [String.t()] | []
   @type subtags :: [String.t(), ...] | []
 
-  @root_locale "root"
+  @root_locale "und"
 
   @doc false
   def define_locale_new(config) do
@@ -411,8 +411,8 @@ defmodule Cldr.Locale do
   @spec parent(LanguageTag.t()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
 
-  def parent(%LanguageTag{language: "root"}) do
-    {:error, no_parent_error("root")}
+  def parent(%LanguageTag{language: @root_locale}) do
+    {:error, no_parent_error(@root_locale)}
   end
 
   def parent(%LanguageTag{backend: backend} = child) do
@@ -458,13 +458,12 @@ defmodule Cldr.Locale do
     Enum.find(backend.known_locale_names(), &(locale_name == &1))
   end
 
-  # If the language of the parent and default are the same
-  # then return "root" to avoid loops
+  # If the language of the parent then return an error
   defp return_parent_or_default(parent, child, backend) when is_nil(parent) do
     default_locale = Cldr.default_locale(backend)
 
     if child.language == default_locale.language do
-      Cldr.validate_locale(@root_locale, backend)
+      {:error, no_parent_error(child.canonical_locale_name)}
     else
       {:ok, default_locale}
     end
@@ -472,6 +471,10 @@ defmodule Cldr.Locale do
 
   defp return_parent_or_default(parent, _child, backend) do
     Cldr.validate_locale(parent, backend)
+  end
+
+  defp transfer_extensions({:error, _reason} = error, _child) do
+    error
   end
 
   defp transfer_extensions({:ok, parent}, child) do
@@ -927,6 +930,7 @@ defmodule Cldr.Locale do
   def substitute_aliases(%LanguageTag{} = language_tag) do
     updated_tag =
       language_tag
+      |> replace_root_with_und()
       |> remove_unknown(:script)
       |> remove_unknown(:territory)
       |> substitute(:requested_name)
@@ -1031,6 +1035,14 @@ defmodule Cldr.Locale do
   rescue
     ArgumentError ->
       language_tag
+  end
+
+  defp replace_root_with_und(%LanguageTag{language: "root"} = language_tag) do
+    %{language_tag | language: "und"}
+  end
+
+  defp replace_root_with_und(%LanguageTag{} = language_tag) do
+    language_tag
   end
 
   defp remove_unknown(%LanguageTag{script: "Zzzz"} = language_tag, :script) do
