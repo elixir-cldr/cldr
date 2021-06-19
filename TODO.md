@@ -6,7 +6,7 @@
   * [ ] territories need to be normalized (upcased and atomized)
   * [ ] scripts and territories have some alt forms that need to be structured
 
-* [ ] add Cldr.validate_script/1
+* [X] add Cldr.validate_script/1
 
 * [X] scripts can be an atom (now that they are validated)
 

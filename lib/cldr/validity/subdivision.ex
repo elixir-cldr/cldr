@@ -1,5 +1,6 @@
 defmodule Cldr.Validity.Subdivision do
   use Cldr.Validity, :subdivisions
+  @behaviour Cldr.Validity
 
   @doc since: "2.23.0"
 

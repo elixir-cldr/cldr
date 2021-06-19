@@ -32,6 +32,10 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Add `Cldr.LanguageTag.sigil_l/2` to simplify creating `t:Cldr.LanguageTag` structs.
 
+* Add `Cldr.validate_script/1` to normalize and validate a script code (which is now in atom format as its canonical form)
+
+* Pre-compiled language tags (which are stored in `priv/cldr/language_tags.ebin`) are now cached during compilation resulting in a modest performance improvement in compile times.
+
 ## Cldr v2.22.1
 
 This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

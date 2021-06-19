@@ -684,7 +684,11 @@ defmodule Cldr.Config do
   """
   @spec language_tag(Locale.locale_name()) :: Cldr.LanguageTag.t() | no_return()
   def language_tag(locale_name) do
-    Map.fetch!(all_language_tags(), locale_name)
+    if Cldr.Locale.Cache.compiling?() do
+      Cldr.Locale.Cache.get_language_tag(locale_name)
+    else
+      Map.fetch!(all_language_tags(), locale_name)
+    end
   end
 
   @doc """
@@ -2073,6 +2077,8 @@ defmodule Cldr.Config do
 
   """
   def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
+    Cldr.maybe_log("Cldr.Config getting calendar data for locale #{inspect locale_name}")
+
     locale_name
     |> get_locale(config)
     |> Map.get(:dates)
@@ -2162,6 +2168,8 @@ defmodule Cldr.Config do
 
   @doc false
   def decimal_formats_for(locale, config) do
+    Cldr.maybe_log("Cldr.Config getting decimal formats for locale #{inspect locale}")
+
     locale
     |> get_locale(config)
     |> Map.get(:number_formats)

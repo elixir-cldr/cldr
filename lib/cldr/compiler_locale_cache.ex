@@ -16,15 +16,31 @@ defmodule Cldr.Locale.Cache do
   end
 
   def get_locale(locale, path) do
+    ensure_genserver_started!()
+    do_get_locale(locale, path)
+  end
+
+  def get_language_tag(locale) do
+    ensure_genserver_started!()
+    do_get_language_tag(locale)
+  end
+
+  def put_all_language_tags(language_tags) do
+    for {locale, language_tag} <- language_tags do
+      :ets.insert(@table_name, {{:tag, locale}, language_tag})
+    end
+  end
+
+  defp ensure_genserver_started! do
     if compiling?() and not gen_server_started?() do
       case Cldr.Locale.Cache.start() do
-        {:ok, _pid} -> :ok
+        {:ok, _pid} ->
+          all_language_tags = Cldr.Config.all_language_tags()
+          put_all_language_tags(all_language_tags)
+          :ok
         {:error, {:already_started, _pid}} -> :ok
       end
     end
-
-    # GenServer.call(@gen_server_name, {:get_locale, locale, path}, @timeout)
-    do_get_locale(locale, path)
   end
 
   # Server (callbacks)
@@ -34,6 +50,7 @@ defmodule Cldr.Locale.Cache do
     # as the state.  State therefore is only the
     # reference to the ets table we use for caching
     create_ets_table!()
+    Process.flag(:trap_exit, true)
     {:ok, @table_name}
   end
 
@@ -42,12 +59,22 @@ defmodule Cldr.Locale.Cache do
     {:reply, locale, state}
   end
 
-  def terminate(_, _) do
-    IO.inspect(:terminating)
+  # handle the trapped exit call
+  def handle_info({:EXIT, _from, reason}, state) do
+    Cldr.maybe_log("Compile locale cache received EXIT message: #{inspect reason}")
+    {:stop, reason, state}
+  end
+
+  def terminate(reason, _) do
+    Cldr.maybe_log("Compile locale cache is terminating: #{inspect reason}")
   end
 
   def compiling? do
-    case Process.get(:elixir_compiler_pid) do
+    process_alive?(:elixir_compiler_pid) || process_alive?(:cldr_locale_cache)
+  end
+
+  defp process_alive?(name) do
+    case Process.get(name) do
       nil -> false
       pid when is_pid(pid) -> true
     end
@@ -94,6 +121,19 @@ defmodule Cldr.Locale.Cache do
         raise RuntimeError, inspect(other)
     end
   end
+
+  defp do_get_language_tag(locale) do
+    case :ets.lookup(@table_name, {:tag, locale}) do
+      [{{:tag, ^locale}, language_tag}] ->
+        Cldr.maybe_log("Compiler language tag cache: Hit for locale #{inspect(locale)}.")
+        language_tag
+
+      other ->
+        raise RuntimeError, "Compiler language tag cache: Unexpected miss " <>
+          "for locale #{inspect(locale)}. Got #{inspect other}."
+    end
+  end
+
 
   # We assign the compiler pid as the heir for our table so
   # that the table doesn't die with each compilation thread

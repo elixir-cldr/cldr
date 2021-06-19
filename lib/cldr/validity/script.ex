@@ -1,5 +1,6 @@
 defmodule Cldr.Validity.Script do
   use Cldr.Validity, :scripts
+  @behaviour Cldr.Validity
 
   @doc since: "2.23.0"
 

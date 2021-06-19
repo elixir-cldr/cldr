@@ -1,5 +1,6 @@
 defmodule Cldr.Validity.Language do
   use Cldr.Validity, :languages
+  @behaviour Cldr.Validity
 
   @doc since: "2.23.0"
 

@@ -633,17 +633,16 @@ defmodule Cldr.Backend do
         end
       end
 
-      language_tags = Cldr.Config.all_language_tags()
-
       # When validating known locale names we memoize the
       # parsed language tag for performance reasons and only
       # add the gettext locale name (if there is one) and the
       # backend module.
 
       for locale_name <- Cldr.Config.known_locale_names(config),
-          not is_nil(Map.get(language_tags, locale_name)) do
+          not is_nil(Cldr.Config.language_tag(locale_name)) do
         language_tag =
-          Map.get(language_tags, locale_name)
+          locale_name
+          |> Cldr.Config.language_tag()
           |> Cldr.Locale.put_gettext_locale_name(config)
           |> Map.put(:backend, __MODULE__)
 

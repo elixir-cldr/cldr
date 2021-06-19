@@ -1,5 +1,6 @@
 defmodule Cldr.Validity.Territory do
   use Cldr.Validity, :territories
+  @behaviour Cldr.Validity
 
   @doc since: "2.23.0"
 

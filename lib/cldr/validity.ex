@@ -2,10 +2,14 @@ defmodule Cldr.Validity do
   @moduledoc false
 
   @doc """
-  Normalizes a code.
+  Normalizes a language tag field.
   """
   @callback normalize(String.t() | atom()) :: {:ok, term} | {:error, String.t}
 
+  @doc """
+  Validates a language tag field
+  """
+  @callback validate(String.t() | atom()) :: {:ok, term, atom()} | {:error, String.t}
 
   defmacro __using__(type) do
     validity_data = Cldr.Config.validity(type)

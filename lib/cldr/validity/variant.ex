@@ -1,5 +1,6 @@
 defmodule Cldr.Validity.Variant do
   use Cldr.Validity, :variants
+  @behaviour Cldr.Validity
 
   @doc since: "2.23.0"
 
