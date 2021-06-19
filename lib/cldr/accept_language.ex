@@ -107,7 +107,7 @@ defmodule Cldr.AcceptLanguage do
             private_use: [],
             rbnf_locale_name: "da",
             requested_locale_name: "da",
-            script: "Latn",
+            script: :Latn,
             territory: :DK,
             transform: %{},
             language_variants: []
@@ -125,7 +125,7 @@ defmodule Cldr.AcceptLanguage do
             private_use: [],
             rbnf_locale_name: "zh-Hant",
             requested_locale_name: "zh-TW",
-            script: "Hant",
+            script: :Hant,
             territory: :TW,
             transform: %{},
             language_variants: []
@@ -153,7 +153,7 @@ defmodule Cldr.AcceptLanguage do
             private_use: [],
             rbnf_locale_name: "da",
             requested_locale_name: "da",
-            script: "Latn",
+            script: :Latn,
             territory: :DK,
             transform: %{},
             language_variants: []
@@ -171,7 +171,7 @@ defmodule Cldr.AcceptLanguage do
             private_use: [],
             rbnf_locale_name: "zh-Hant",
             requested_locale_name: "zh-TW",
-            script: "Hant",
+            script: :Hant,
             territory: :TW,
             transform: %{},
             language_variants: []
@@ -246,7 +246,7 @@ defmodule Cldr.AcceptLanguage do
            private_use: [],
            rbnf_locale_name: "da",
            requested_locale_name: "da",
-           script: "Latn",
+           script: :Latn,
            territory: :DK,
            transform: %{},
            language_variants: []
@@ -264,7 +264,7 @@ defmodule Cldr.AcceptLanguage do
            private_use: [],
            rbnf_locale_name: "zh-Hant",
            requested_locale_name: "zh-TW",
-           script: "Hant",
+           script: :Hant,
            territory: :TW,
            transform: %{},
            language_variants: []
@@ -290,7 +290,7 @@ defmodule Cldr.AcceptLanguage do
            private_use: [],
            rbnf_locale_name: "da",
            requested_locale_name: "da",
-           script: "Latn",
+           script: :Latn,
            territory: :DK,
            transform: %{},
            language_variants: []
@@ -308,7 +308,7 @@ defmodule Cldr.AcceptLanguage do
            private_use: [],
            rbnf_locale_name: "zh-Hant",
            requested_locale_name: "zh-TW",
-           script: "Hant",
+           script: :Hant,
            territory: :TW,
            transform: %{},
            language_variants: []
@@ -354,7 +354,7 @@ defmodule Cldr.AcceptLanguage do
          private_use: [],
          rbnf_locale_name: "zh-Hant",
          requested_locale_name: "zh-TW",
-         script: "Hant",
+         script: :Hant,
          territory: :TW,
          transform: %{},
          language_variants: []
@@ -374,7 +374,7 @@ defmodule Cldr.AcceptLanguage do
          private_use: [],
          rbnf_locale_name: "zh-Hant",
          requested_locale_name: "zh-TW",
-         script: "Hant",
+         script: :Hant,
          territory: :TW,
          transform: %{},
          language_variants: []

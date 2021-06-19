@@ -3,12 +3,12 @@
 * [ ] Resolve how to have a CLDR-based pluraliser module for Gettext. Currently this has a circular compile-time dependency because when the gettext module is compiled it expects the plurals module to exist. At the same time, ex_cldr expects the gettext backend to exist so it can find out what locales are available. This could be resolved if compiling the PO files was a final step in the compilation process but this seems unlikely to be possible.
 
 * locale display names data normalization needs adjusting
-  * [ ] territories need to be validated (upcased and atomized)
+  * [ ] territories need to be normalized (upcased and atomized)
   * [ ] scripts and territories have some alt forms that need to be structured
 
 * [ ] add Cldr.validate_script/1
 
-* [ ] scripts can be an atom (now that they are validated)
+* [X] scripts can be an atom (now that they are validated)
 
 * [ ] canonical_locale_name should combine extensions (sorted by key)
 

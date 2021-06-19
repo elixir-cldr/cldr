@@ -35,7 +35,6 @@ defmodule Cldr do
   @app_name Cldr.Config.app_name()
 
   @type backend :: module()
-  @type territory :: atom()
 
   alias Cldr.Config
   alias Cldr.Locale
@@ -141,7 +140,7 @@ defmodule Cldr do
          rbnf_locale_name: "pl",
          territory: :PL,
          requested_locale_name: "pl",
-         script: "Latn",
+         script: :Latn,
          transform: %{},
          language_variants: []
        }
@@ -207,7 +206,7 @@ defmodule Cldr do
          private_use: [],
          rbnf_locale_name: "en",
          requested_locale_name: "en",
-         script: "Latn",
+         script: :Latn,
          territory: :US,
          transform: %{},
          language_variants: []
@@ -330,7 +329,7 @@ defmodule Cldr do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en-001",
-        script: "Latn",
+        script: :Latn,
         territory: :"001",
         transform: %{},
         language_variants: []
@@ -381,7 +380,7 @@ defmodule Cldr do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en-001",
-        script: "Latn",
+        script: :Latn,
         territory: :"001",
         transform: %{},
         language_variants: []
@@ -598,7 +597,7 @@ defmodule Cldr do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en",
-        script: "Latn",
+        script: :Latn,
         territory: :US,
         transform: %{},
         language_variants: []
@@ -1313,6 +1312,84 @@ defmodule Cldr do
   end
 
   @doc """
+  Normalise and validate a script code.
+
+  ## Arguments
+
+  * `script` is any script code as a binary
+    or atom
+
+  ## Returns:
+
+  * `{:ok, normalized_script_code}` or
+
+  * `{:error, {Cldr.UnknownscriptError, message}}`
+
+  ## Examples
+
+      iex> Cldr.validate_script("thai")
+      {:ok, :Thai}
+
+      iex> Cldr.validate_script("qaai")
+      {:ok, :Zinh}
+
+      iex> Cldr.validate_script(Cldr.Locale.new!("en", TestBackend.Cldr))
+      {:ok, :Latn}
+
+      iex> Cldr.validate_script("aaaa")
+      {:error, {Cldr.InvalidScriptError, "The script \\"aaaa\\" is invalid"}}
+
+      iex> Cldr.validate_script(%{})
+      {:error, {Cldr.InvalidScriptError, "The script %{} is invalid"}}
+
+  """
+  @doc since: "2.23.0"
+
+  @spec validate_script(Cldr.Locale.script() | String.t()) ::
+          {:ok, atom()} | {:error, {module(), String.t()}}
+
+  def validate_script(script) when is_atom(script) do
+    script
+    |> to_string()
+    |> validate_script()
+    |> case do
+      {:ok, script} -> {:ok, script}
+      {:error, _} -> {:error, unknown_script_error(script)}
+    end
+  end
+
+  # See if its an alias
+  def validate_script(script) when is_binary(script) do
+    normalized_script = Cldr.Validity.Script.normalize(script)
+
+    expanded_script =
+      case Cldr.Locale.aliases(normalized_script, :script) do
+        substitution when is_binary(substitution) ->
+          substitution
+
+        nil ->
+          normalized_script
+      end
+
+    case Cldr.Validity.Script.validate(expanded_script) do
+      {:ok, script, _} -> {:ok, script}
+      _other -> {:error, unknown_script_error(script)}
+    end
+  end
+
+  def validate_script(%LanguageTag{script: nil} = locale) do
+    {:error, unknown_script_error(locale)}
+  end
+
+  def validate_script(%LanguageTag{script: script}) do
+    validate_script(script)
+  end
+
+  def validate_script(script) do
+    {:error, unknown_script_error(script)}
+  end
+
+  @doc """
   Normalise and validate a territory code.
 
   ## Arguments
@@ -1352,7 +1429,7 @@ defmodule Cldr do
 
   def validate_territory(territory) when is_atom(territory) do
     territory
-    |> Atom.to_string()
+    |> to_string()
     |> validate_territory()
     |> case do
       {:ok, territory} -> {:ok, territory}
@@ -1362,10 +1439,10 @@ defmodule Cldr do
 
   # See if its an alias
   def validate_territory(territory) when is_binary(territory) do
-    upcase_territory = String.upcase(territory)
+    normalized_territory = Cldr.Validity.Territory.normalize(territory)
 
     expanded_territory =
-      case Cldr.Locale.aliases(upcase_territory, :region) do
+      case Cldr.Locale.aliases(normalized_territory, :region) do
         substitution when is_list(substitution) ->
           hd(substitution)
 
@@ -1373,7 +1450,7 @@ defmodule Cldr do
           substitution
 
         nil ->
-          upcase_territory
+          normalized_territory
       end
       |> String.to_existing_atom()
 
@@ -1745,8 +1822,8 @@ defmodule Cldr do
       iex> Cldr.validate_number_system :latn
       {:ok, :latn}
 
-      iex> Cldr.validate_number_system "latn"
-      {:ok, :latn}
+      iex> Cldr.validate_number_system :arab
+      {:ok, :arab}
 
       iex> Cldr.validate_number_system "invalid"
       {
@@ -1848,13 +1925,44 @@ defmodule Cldr do
       {Cldr.UnknownNumberSystemError, "The number system :invalid is unknown"}
 
   """
-  @spec unknown_currency_error(any()) :: {Cldr.UnknownCurrencyError, String.t()}
+  @spec unknown_number_system_error(any()) :: {Cldr.UnknownNumberSystemError, String.t()}
   def unknown_number_system_error(number_system) when is_atom(number_system) do
     {Cldr.UnknownNumberSystemError, "The number system #{inspect(number_system)} is unknown"}
   end
 
   def unknown_number_system_error(number_system) do
     {Cldr.UnknownNumberSystemError, "The number system #{inspect(number_system)} is invalid"}
+  end
+
+  @doc """
+  Returns an error tuple for an invalid script.
+
+  ## Arguments
+
+  * `script` is any script as a string or an atom
+
+  ## Returns
+
+  * `{:error, {Cldr.InvalidScriptError, message}}`
+
+  ## Examples
+
+      iex> Cldr.unknown_script_error "invalid"
+      {Cldr.InvalidScriptError, "The script \\"invalid\\" is invalid"}
+
+      iex> Cldr.unknown_script_error :invalid
+      {Cldr.InvalidScriptError, "The script :invalid is invalid"}
+
+  """
+  @doc since: "2.23.0"
+
+  @spec unknown_script_error(any()) :: {Cldr.InvalidScriptError, String.t()}
+  def unknown_script_error(script) when is_atom(script) do
+    {Cldr.InvalidScriptError, "The script #{inspect(script)} is invalid"}
+  end
+
+  def unknown_script_error(script) do
+    {Cldr.InvalidScriptError, "The script #{inspect(script)} is invalid"}
   end
 
   @doc """

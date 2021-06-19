@@ -1,6 +1,8 @@
 defmodule Cldr.Validity.Subdivision do
   use Cldr.Validity, :subdivisions
 
+  @doc since: "2.23.0"
+
   def validate(nil) do
     {:ok, nil, nil}
   end
@@ -15,6 +17,8 @@ defmodule Cldr.Validity.Subdivision do
       other -> other
     end
   end
+
+  @doc since: "2.23.0"
 
   def normalize(code) when is_binary(code) do
     String.downcase(code)

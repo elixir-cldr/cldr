@@ -1,6 +1,7 @@
-
 defmodule Cldr.Validity.Territory do
   use Cldr.Validity, :territories
+
+  @doc since: "2.23.0"
 
   def validate(nil) do
     {:ok, nil, nil}
@@ -16,6 +17,7 @@ defmodule Cldr.Validity.Territory do
     end
   end
 
+  @doc since: "2.23.0"
   def normalize(code) when is_integer(code) do
     case code do
       code when code < 10 -> "00#{code}"

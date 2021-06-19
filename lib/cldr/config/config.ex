@@ -1735,7 +1735,7 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory(Cldr.territory() | String.t()) :: %{} | {:error, {module(), String.t()}}
+  @spec territory(Cldr.Locale.territory() | String.t()) :: %{} | {:error, {module(), String.t()}}
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territories()
@@ -1789,7 +1789,7 @@ defmodule Cldr.Config do
   defp structify_languages(map) do
     languages =
       Enum.map(map.language, fn {k, v} ->
-        {k, struct(Cldr.LanguageTag, normalize_territory(v))}
+        {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
       end)
       |> Map.new()
 
@@ -1808,15 +1808,15 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} ->
-      {k, struct(Cldr.LanguageTag, normalize_territory(v))}
+      {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
     end)
     |> Map.new()
   end
 
-  defp normalize_territory(map) do
+  defp normalize_territory_and_region(map) do
     map
     |> Cldr.Map.atomize_keys()
-    |> Cldr.Map.atomize_values(only: :territory)
+    |> Cldr.Map.atomize_values(only: [:territory, :script])
   end
 
   @doc """

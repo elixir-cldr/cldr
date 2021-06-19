@@ -177,10 +177,10 @@ defmodule Cldr.LanguageTag do
   @type t :: %__MODULE__{
           language: String.t(),
           language_subtags: [String.t()],
-          script: String.t() | nil,
-          territory: Cldr.territory(),
+          script: Cldr.Locale.script(),
+          territory: Cldr.Locale.territory(),
           language_variants: [String.t()] | [],
-          locale: Cldr.LanguageTag.U.t(),
+          locale: Cldr.LanguageTag.U.t() | %{},
           transform: map(),
           extensions: map(),
           private_use: [String.t()],

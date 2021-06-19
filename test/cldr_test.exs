@@ -52,7 +52,7 @@ defmodule Cldr.Test do
                private_use: [],
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
-               script: "Latn",
+               script: :Latn,
                territory: :"001",
                transform: %{},
                language_variants: []
@@ -211,7 +211,7 @@ defmodule Cldr.Test do
                private_use: [],
                rbnf_locale_name: nil,
                requested_locale_name: "sh_AQ",
-               script: "Latn",
+               script: :Latn,
                territory: "AQ",
                transform: %{},
                language_variants: []

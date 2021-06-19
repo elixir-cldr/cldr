@@ -31,7 +31,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                private_use: [],
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
-               script: "Latn",
+               script: :Latn,
                territory: :"001",
                transform: %{}
              },
@@ -60,7 +60,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                private_use: [],
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
-               script: "Latn",
+               script: :Latn,
                territory: :"001",
                transform: %{}
              },
@@ -104,7 +104,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                private_use: [],
                rbnf_locale_name: "en",
                requested_locale_name: "en-001",
-               script: "Latn",
+               script: :Latn,
                territory: :"001",
                transform: %{}
              },
@@ -169,7 +169,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                private_use: [],
                rbnf_locale_name: "fr",
                requested_locale_name: "fr",
-               script: "Latn",
+               script: :Latn,
                territory: :FR,
                transform: %{},
                language_variants: []
@@ -204,7 +204,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language: "ru",
                rbnf_locale_name: "ru",
                requested_locale_name: "ru",
-               script: "Cyrl",
+               script: :Cyrl,
                territory: :RU
              }
 
@@ -237,7 +237,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language: "ru",
                rbnf_locale_name: "ru",
                requested_locale_name: "ru",
-               script: "Cyrl",
+               script: :Cyrl,
                territory: :RU
              }
 
@@ -269,7 +269,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language: "zh",
                rbnf_locale_name: "zh-Hant",
                requested_locale_name: "zh-Hant",
-               script: "Hant",
+               script: :Hant,
                territory: :TW
              }
 
@@ -300,7 +300,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language: "zh",
                rbnf_locale_name: "zh-Hant",
                requested_locale_name: "zh-Hant",
-               script: "Hant",
+               script: :Hant,
                territory: :TW
              }
 
@@ -365,7 +365,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                private_use: [],
                rbnf_locale_name: "pl",
                requested_locale_name: "pl",
-               script: "Latn",
+               script: :Latn,
                territory: :PL,
                transform: %{},
                language_variants: []
@@ -397,7 +397,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variants: [],
                locale: %{},
                private_use: [],
-               script: "Latn",
+               script: :Latn,
                transform: %{},
                canonical_locale_name: "es",
                cldr_locale_name: "es",
@@ -456,7 +456,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variants: [],
                locale: %{},
                private_use: [],
-               script: "Latn",
+               script: :Latn,
                transform: %{},
                canonical_locale_name: "es",
                cldr_locale_name: "es",

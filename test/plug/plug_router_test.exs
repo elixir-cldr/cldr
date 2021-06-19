@@ -39,7 +39,7 @@ defmodule Cldr.Plug.Router.Test do
              private_use: [],
              rbnf_locale_name: "fr",
              requested_locale_name: "fr",
-             script: "Latn",
+             script: :Latn,
              territory: :FR,
              transform: %{},
              language_variants: []
@@ -56,7 +56,7 @@ defmodule Cldr.Plug.Router.Test do
              private_use: [],
              rbnf_locale_name: "fr",
              requested_locale_name: "fr",
-             script: "Latn",
+             script: :Latn,
              territory: :FR,
              transform: %{},
              language_variants: []

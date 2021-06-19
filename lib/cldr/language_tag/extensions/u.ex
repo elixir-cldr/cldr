@@ -63,7 +63,6 @@ defmodule Cldr.LanguageTag.U do
             va: atom(),
             dx: atom()
           }
-          | %{}
 
   alias Cldr.Config
   alias Cldr.LanguageTag.Parser

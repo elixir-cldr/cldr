@@ -20,9 +20,8 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     # what the gettext locale name will be (if any)
     language_tags =
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
-        with {:ok, language_tag} <- Cldr.LanguageTag.parse(locale_name),
-             {:ok, canonical_tag} <-
-               Cldr.Locale.canonical_language_tag(language_tag, @test_backend) do
+        with {:ok, canonical_tag} <-
+               Cldr.Locale.canonical_language_tag(locale_name, @test_backend) do
           language_tag =
             canonical_tag
             |> Map.put(:cldr_locale_name, locale_name)
@@ -35,7 +34,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
             raise exception, reason
         end
       end
-      |> Enum.into(%{})
+      |> Map.new()
 
     output_path = Path.expand(Path.join("priv/cldr/", "language_tags.ebin"))
     File.write!(output_path, :erlang.term_to_binary(language_tags))

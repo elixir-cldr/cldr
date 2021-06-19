@@ -1,6 +1,12 @@
 defmodule Cldr.Validity do
   @moduledoc false
 
+  @doc """
+  Normalizes a code.
+  """
+  @callback normalize(String.t() | atom()) :: {:ok, term} | {:error, String.t}
+
+
   defmacro __using__(type) do
     validity_data = Cldr.Config.validity(type)
     Cldr.Validity.generate_validity_checks(validity_data)

@@ -38,7 +38,7 @@ defmodule Cldr.Backend do
             private_use: [],
             rbnf_locale_name: "en",
             requested_locale_name: "en-001",
-            script: "Latn",
+            script: :Latn,
             territory: :"001",
             transform: %{},
             language_variants: []
@@ -67,7 +67,7 @@ defmodule Cldr.Backend do
 
       """
       @default_territory @default_locale |> Cldr.Locale.territory_from_locale()
-      @spec default_territory() :: Cldr.territory()
+      @spec default_territory() :: Cldr.Locale.territory()
       def default_territory do
         @default_territory
       end
@@ -280,7 +280,7 @@ defmodule Cldr.Backend do
              rbnf_locale_name: "pl",
              territory: :PL,
              requested_locale_name: "pl",
-             script: "Latn",
+             script: :Latn,
              transform: %{},
              language_variants: []
            }
@@ -321,7 +321,7 @@ defmodule Cldr.Backend do
              private_use: [],
              rbnf_locale_name: "en",
              requested_locale_name: "en",
-             script: "Latn",
+             script: :Latn,
              territory: :US,
              transform: %{},
              language_variants: []
@@ -522,7 +522,7 @@ defmodule Cldr.Backend do
             private_use: [],
             rbnf_locale_name: "en",
             requested_locale_name: "en",
-            script: "Latn",
+            script: :Latn,
             territory: :US,
             transform: %{},
             language_variants: []
@@ -542,7 +542,7 @@ defmodule Cldr.Backend do
             private_use: [],
             rbnf_locale_name: "en",
             requested_locale_name: "en-001",
-            script: "Latn",
+            script: :Latn,
             territory: :"001",
             transform: %{},
             language_variants: []

@@ -26,7 +26,7 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
                private_use: [],
                rbnf_locale_name: "en",
                requested_locale_name: "en",
-               script: "Latn",
+               script: :Latn,
                territory: :US,
                transform: %{},
                language_variants: []

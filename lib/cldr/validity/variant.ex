@@ -1,6 +1,8 @@
 defmodule Cldr.Validity.Variant do
   use Cldr.Validity, :variants
 
+  @doc since: "2.23.0"
+
   def validate([]) do
     {:ok, [], nil}
   end
@@ -14,6 +16,12 @@ defmodule Cldr.Validity.Variant do
     end)
   end
 
+  # Its not in the validity list but there is a
+  # CLDR locale called "en-posix"
+  def validate("posix") do
+    {:ok, "posix", :obsolete}
+  end
+
   def validate(code) do
     code
     |> normalize()
@@ -23,6 +31,8 @@ defmodule Cldr.Validity.Variant do
       other -> other
     end
   end
+
+  @doc since: "2.23.0"
 
   def normalize(list) when is_list(list) do
     Enum.map(list, &normalize/1)

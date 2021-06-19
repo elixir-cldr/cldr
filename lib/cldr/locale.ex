@@ -55,7 +55,7 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en-ES",
-        script: "Latn",
+        script: :Latn,
         territory: :ES,
         transform: %{},
         language_variants: []
@@ -100,7 +100,7 @@ defmodule Cldr.Locale do
         locale: %{}, private_use: [],
         rbnf_locale_name: "ro",
         requested_locale_name: "mo",
-        script: "Latn",
+        script: :Latn,
         transform: %{},
         canonical_locale_name: "ro",
         cldr_locale_name: "ro",
@@ -127,13 +127,13 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en",
-        script: "Latn",
+        script: :Latn,
         territory: :US,
         transform: %{},
         language_variants: []
       }}
 
-  Which shows that a the likely subtag for the script is "Latn" and the likely
+  Which shows that a the likely subtag for the script is :Latn and the likely
   territory is "US".
 
   Using the example for Substitutions above, we can see the
@@ -159,7 +159,7 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: "en",
         requested_locale_name: "en-XX",
-        script: "Latn",
+        script: :Latn,
         territory: :XX,
         transform: %{},
         language_variants: []
@@ -227,7 +227,7 @@ defmodule Cldr.Locale do
           private_use: '',
           rbnf_locale_name: "en",
           requested_locale_name: "en-AU",
-          script: "Latn",
+          script: :Latn,
           territory: :AU,
           transform: %{}
         }
@@ -239,10 +239,20 @@ defmodule Cldr.Locale do
 
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
+
+  @typedoc "The name of a language a string format"
   @type language :: String.t() | nil
-  @type script :: String.t() | nil
-  @type territory :: String.t() | nil
+
+  @typedoc "The name of a script in an atom format"
+  @type script :: atom() | String.t() | nil
+
+  @typedoc "The name of a territory in an atom format"
+  @type territory :: atom() | String.t() | nil
+
+  @typedoc "The list of language variants as strings"
   @type variants :: [String.t()] | []
+
+  @typedoc "The list of language subtags as strings"
   @type subtags :: [String.t(), ...] | []
 
   @root_locale "und"
@@ -285,7 +295,7 @@ defmodule Cldr.Locale do
 
         """
         @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-                Cldr.territory()
+          Cldr.Locale.territory()
 
         @doc since: "2.18.2"
 
@@ -320,7 +330,7 @@ defmodule Cldr.Locale do
         """
         @doc since: "2.19.0"
 
-        @spec timezone_from_locale(LanguageTag.t() | Cldr.Locale.locale_name()) ::
+        @spec timezone_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
                 String.t() | {:error, {module(), String.t()}}
 
         def timezone_from_locale(locale) when is_binary(locale) do
@@ -404,8 +414,6 @@ defmodule Cldr.Locale do
 
   * If no parent language exists then move to the default
     locale and its inheritance chain.
-
-  * As a last resort, use the `root` locale.
 
   """
   @spec parent(LanguageTag.t()) ::
@@ -545,7 +553,7 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
-  @spec territory_from_locale(LanguageTag.t() | locale_name()) :: Cldr.territory()
+  @spec territory_from_locale(LanguageTag.t() | locale_name()) :: Cldr.Locale.territory()
 
   @doc since: "2.18.2"
 
@@ -625,7 +633,7 @@ defmodule Cldr.Locale do
   """
 
   @spec territory_from_locale(locale_name(), Cldr.backend()) ::
-          Cldr.territory() | {:error, {module(), String.t()}}
+          territory() | {:error, {module(), String.t()}}
 
   @doc since: "2.18.2"
 
@@ -781,7 +789,7 @@ defmodule Cldr.Locale do
           private_use: [],
           rbnf_locale_name: "en",
           requested_locale_name: "en",
-          script: "Latn",
+          script: :Latn,
           territory: :US,
           transform: %{},
           language_variants: []
@@ -791,16 +799,12 @@ defmodule Cldr.Locale do
   """
 
   def canonical_language_tag(locale_name, backend) when is_binary(locale_name) do
-    if locale_name in backend.known_locale_names do
-      Cldr.validate_locale(locale_name, backend)
-    else
-      case LanguageTag.parse(locale_name) do
-        {:ok, language_tag} ->
-          canonical_language_tag(language_tag, backend)
+    case LanguageTag.parse(locale_name) do
+      {:ok, language_tag} ->
+        canonical_language_tag(language_tag, backend)
 
-        {:error, reason} ->
-          {:error, reason}
-      end
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -966,16 +970,6 @@ defmodule Cldr.Locale do
       language_tag
     end
   end
-
-  # defp substitute(%LanguageTag{requested_locale_name: locale} = language_tag, :requested_name) do
-  #   IO.inspect locale, label: "Reuested replacement"
-  #   if replacement_tag = aliases(locale, :language) do
-  #     type_tag = Cldr.LanguageTag.Parser.parse!(locale)
-  #     merge_language_tags(replacement_tag, language_tag, type_tag)
-  #   else
-  #     language_tag
-  #   end
-  # end
 
   # No variants so we just check the language for an alias
   defp substitute(%LanguageTag{language_variants: []} = language_tag, :language) do
@@ -1236,8 +1230,9 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-  * `language`, `script`, `territory` are string
-    representations, or `nil`, of the language subtags
+  * `language`, `script`, `territory` are stringa
+    that are expected to be in their normalized form
+    (ie are appropriately capitalized)
 
   * `variants` is a list of language variants or `[]`
 
@@ -1255,7 +1250,7 @@ defmodule Cldr.Locale do
       "en-001"
 
   """
-  @spec locale_name_from(language(), script(), Cldr.territory() | territory(), variants()) ::
+  @spec locale_name_from(language(), script(), territory(), variants()) ::
           locale_name()
 
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
@@ -1355,7 +1350,7 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "zh-SG",
-        script: "Hans",
+        script: :Hans,
         territory: "SG",
         transform: %{},
         language_variants: []
@@ -1667,7 +1662,7 @@ defmodule Cldr.Locale do
           private_use: [],
           rbnf_locale_name: nil,
           requested_locale_name: nil,
-          script: "Latn",
+          script: :Latn,
           territory: :TZ,
           transform: %{},
           language_variants: []
@@ -1681,7 +1676,7 @@ defmodule Cldr.Locale do
           private_use: [],
           rbnf_locale_name: nil,
           requested_locale_name: nil,
-          script: "Latn",
+          script: :Latn,
           territory: :GN,
           transform: %{},
           language_variants: []
@@ -1717,7 +1712,7 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "en-Latn-US",
-        script: "Latn",
+        script: :Latn,
         territory: :US,
         transform: %{},
         language_variants: []
@@ -1753,7 +1748,7 @@ defmodule Cldr.Locale do
 
   """
   @alias_keys Map.keys(@aliases)
-  @spec aliases(locale_name(), atom()) :: map() | nil
+  @spec aliases(locale_name(), atom()) :: String.t() | list(String.t()) | LanguageTag.t() | nil
 
   def aliases(key, :region = type) do
     aliases()
