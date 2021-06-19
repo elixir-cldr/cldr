@@ -197,32 +197,32 @@ defmodule Cldr.Locale do
           language_subtags: [],
           language_variants: [],
           locale: %Cldr.LanguageTag.U{
-            alternative_collation: nil,
-            backward_level2: nil,
             calendar: nil,
-            case_first: nil,
-            case_level: nil,
+            cf: :accounting,
+            col_alternate: nil,
+            col_backwards: nil,
+            col_case_first: nil,
+            col_case_level: nil,
+            col_normalization: nil,
+            col_numeric: nil,
+            col_reorder: nil,
+            col_strength: nil,
             collation: nil,
             currency: nil,
-            currency_format: :accounting,
-            emoji_style: nil,
-            first_day_of_week: nil,
-            hiragana_quarternary: nil,
-            hour_cycle: nil,
-            line_break_style: nil,
-            line_break_word: nil,
-            measurement_system: nil,
-            normalization: nil,
-            number_system: nil,
-            numeric: nil,
-            region_override: nil,
-            reorder: nil,
-            sentence_break_supression: nil,
-            strength: nil,
-            subdivision: nil,
+            dx: nil,
+            em: nil,
+            fw: nil,
+            hc: nil,
+            lb: nil,
+            lw: nil,
+            ms: nil,
+            numbers: nil,
+            rg: nil,
+            sd: nil,
+            ss: nil,
             timezone: "ausyd",
-            variable_top: nil,
-            variant: nil
+            va: nil,
+            vt: nil
           },
           private_use: '',
           rbnf_locale_name: "en",
@@ -549,15 +549,12 @@ defmodule Cldr.Locale do
 
   @doc since: "2.18.2"
 
-  def territory_from_locale(%LanguageTag{locale: %{region_override: _}} = language_tag) do
-    language_tag.locale.region_override ||
-      language_tag.territory ||
-      Cldr.default_territory()
+  def territory_from_locale(%LanguageTag{locale: %{rg: _rg}} = language_tag) do
+    language_tag.locale.rg || language_tag.territory || Cldr.default_territory()
   end
 
   def territory_from_locale(%LanguageTag{} = language_tag) do
-    language_tag.territory ||
-      Cldr.default_territory()
+    language_tag.territory || Cldr.default_territory()
   end
 
   def territory_from_locale(locale_name) when is_binary(locale_name) do
