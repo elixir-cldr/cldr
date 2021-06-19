@@ -1782,11 +1782,7 @@ defmodule Cldr.Config do
     |> Path.join("aliases.json")
     |> File.read!()
     |> json_library().decode!
-    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> Map.new()
     |> Cldr.Map.atomize_keys(level: 1..1)
-    |> Cldr.Map.deep_map(&Cldr.Map.atomize_values/1, only: :region)
-    |> Map.new()
     |> structify_languages
   end
 

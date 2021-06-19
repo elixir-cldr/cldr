@@ -605,7 +605,7 @@ defmodule Cldr do
       }}
 
       iex> Cldr.validate_locale("zzz", TestBackend.Cldr)
-      {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+      {:error, {Cldr.InvalidLanguageError, "The language \\"zzz\\" is invalid"}}
 
   """
   @spec validate_locale(Locale.locale_name() | LanguageTag.t(), backend()) ::
@@ -1350,25 +1350,39 @@ defmodule Cldr do
     {:ok, territory}
   end
 
-  # See if its an alias
   def validate_territory(territory) when is_atom(territory) do
-    case Cldr.Locale.aliases(Atom.to_string(territory), :region) do
-      substitution when is_list(substitution) ->
-        {:ok, hd(substitution)}
-
-      substitution when is_atom(substitution) and substitution != nil ->
-        {:ok, substitution}
-
-      nil ->
-        {:error, unknown_territory_error(territory)}
+    territory
+    |> Atom.to_string()
+    |> validate_territory()
+    |> case do
+      {:ok, territory} -> {:ok, territory}
+      {:error, _} -> {:error, unknown_territory_error(territory)}
     end
   end
 
+  # See if its an alias
   def validate_territory(territory) when is_binary(territory) do
-    territory
-    |> String.upcase()
-    |> String.to_existing_atom()
-    |> validate_territory
+    upcase_territory = String.upcase(territory)
+
+    expanded_territory =
+      case Cldr.Locale.aliases(upcase_territory, :region) do
+        substitution when is_list(substitution) ->
+          hd(substitution)
+
+        substitution when is_binary(substitution) ->
+          substitution
+
+        nil ->
+          upcase_territory
+      end
+      |> String.to_existing_atom()
+
+    if expanded_territory in known_territories() do
+      {:ok, expanded_territory}
+    else
+      {:error, unknown_territory_error(territory)}
+    end
+
   rescue
     ArgumentError ->
       {:error, unknown_territory_error(territory)}

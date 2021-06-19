@@ -810,17 +810,23 @@ defmodule Cldr.Locale do
   def canonical_language_tag(%LanguageTag{} = language_tag, backend) do
     supress_requested_locale_substitution? = !language_tag.language
 
-    canonical_tag =
+    language_tag =
       language_tag
       |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases()
+
+    with {:ok, language_tag} <- validate_subtags(language_tag) do
+      language_tag
+      |> put_canonical_locale_name()
+      |> remove_unknown(:script)
+      |> remove_unknown(:territory)
       |> put_likely_subtags()
       |> put_backend(backend)
       |> put_cldr_locale_name()
       |> put_rbnf_locale_name()
       |> put_gettext_locale_name()
-
-    {:ok, canonical_tag}
+      |> wrap(:ok)
+    end
   end
 
   @doc false
@@ -834,6 +840,10 @@ defmodule Cldr.Locale do
 
   def canonical_language_tag(%LanguageTag{backend: backend} = language_tag) do
     canonical_language_tag(language_tag, backend)
+  end
+
+  defp wrap(term, tag) do
+    {tag, term}
   end
 
   @doc """
@@ -910,7 +920,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{
         backend: nil,
-        canonical_locale_name: "ro",
+        canonical_locale_name: nil,
         cldr_locale_name: nil,
         extensions: %{},
         gettext_locale_name: nil,
@@ -921,8 +931,8 @@ defmodule Cldr.Locale do
         private_use: [],
         rbnf_locale_name: nil,
         requested_locale_name: "mo",
-        script: [],
-        territory: [],
+        script: nil,
+        territory: nil,
         transform: %{}
       }
 
@@ -931,14 +941,11 @@ defmodule Cldr.Locale do
     updated_tag =
       language_tag
       |> replace_root_with_und()
-      |> remove_unknown(:script)
-      |> remove_unknown(:territory)
       |> substitute(:requested_name)
       |> substitute(:language)
       |> substitute(:variant)
       |> substitute(:script)
       |> substitute(:territory)
-      |> put_canonical_locale_name()
 
     if updated_tag == language_tag do
       updated_tag
@@ -947,9 +954,9 @@ defmodule Cldr.Locale do
     end
   end
 
-  defp substitute(%LanguageTag{canonical_locale_name: locale} = language_tag, :requested_name)
-       when not is_nil(locale) do
-    locale_name = locale_name_from(language_tag.language, nil, language_tag.territory, [])
+  defp substitute(%LanguageTag{canonical_locale_name: nil} = language_tag, :requested_name) do
+    locale_name =
+      locale_name_from(language_tag.language, nil, language_tag.territory, [])
 
     if replacement_tag = aliases(locale_name, :language) do
       type_tag = Cldr.LanguageTag.Parser.parse!(locale_name)
@@ -963,14 +970,15 @@ defmodule Cldr.Locale do
     end
   end
 
-  defp substitute(%LanguageTag{requested_locale_name: locale} = language_tag, :requested_name) do
-    if replacement_tag = aliases(locale, :language) do
-      type_tag = Cldr.LanguageTag.Parser.parse!(locale)
-      merge_language_tags(replacement_tag, language_tag, type_tag)
-    else
-      language_tag
-    end
-  end
+  # defp substitute(%LanguageTag{requested_locale_name: locale} = language_tag, :requested_name) do
+  #   IO.inspect locale, label: "Reuested replacement"
+  #   if replacement_tag = aliases(locale, :language) do
+  #     type_tag = Cldr.LanguageTag.Parser.parse!(locale)
+  #     merge_language_tags(replacement_tag, language_tag, type_tag)
+  #   else
+  #     language_tag
+  #   end
+  # end
 
   # No variants so we just check the language for an alias
   defp substitute(%LanguageTag{language_variants: []} = language_tag, :language) do
@@ -1028,7 +1036,7 @@ defmodule Cldr.Locale do
       case aliases(territory, :region) || territory do
         territories when is_list(territories) -> hd(territories)
         territory when is_atom(territory) -> territory
-        other -> String.to_existing_atom(other)
+        other -> other
       end
 
     %{language_tag | territory: territory}
@@ -1206,7 +1214,6 @@ defmodule Cldr.Locale do
   """
   @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
 
-  # TODO proper formation of a canonical name required
   def locale_name_from(language_tag, omit_singular_script? \\ true)
 
   def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_singular_script?) do
@@ -1255,9 +1262,10 @@ defmodule Cldr.Locale do
           locale_name()
 
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
-    [language, script, territory, join_variants(variants)]
+    [language, script, territory, variants]
     |> omit_script_if_only_one(omit_singular_script?)
     |> Enum.reject(&is_nil/1)
+    |> Enum.reject(&(&1 == []))
     |> Enum.join("-")
   end
 
@@ -1385,9 +1393,8 @@ defmodule Cldr.Locale do
         type_field = type_field_from(type_tag, k)
         replacement_field = field_from(replacement_field)
         source_field = field_from(source_field, k)
-        replaced = replace(source_field, replacement_field, type_field)
-
-        if k == :language_variants || replaced == [], do: replaced, else: hd(replaced)
+        # IO.inspect {source_field, replacement_field, type_field}, label: inspect(k)
+        replace(k, source_field, replacement_field, type_field)
 
       _k, _replacement_field, source_field ->
         source_field
@@ -1398,7 +1405,7 @@ defmodule Cldr.Locale do
     type_field = type_field_from(type_tag, :language_variants)
     replacement_field = type_field_from(replacement, :language_variants)
     source_field = type_field_from(source_tag, :language_variants)
-    replaced = replace(source_field, replacement_field, type_field)
+    replaced = replace(:language_variants, source_field, replacement_field, type_field)
 
     %{source_tag | language_variants: replaced}
   end
@@ -1415,19 +1422,42 @@ defmodule Cldr.Locale do
   # and since the data is ordered on arrival it appears to remain
   # ordered after replacement.
 
-  defp replace(source_field, replacement_field, [_ | _] = type_field) do
-    (source_field -- type_field) ++ replacement_field
+  defp replace(:language_variants, source_field, replacement_field, [_ | _] = type_field) do
+    do_replace(source_field, replacement_field, type_field)
   end
 
-  defp replace([], [_ | _] = replacement_field, _type_field) do
+  defp replace(_field, source_field, replacement_field, [_ | _] = type_field) do
+    case do_replace(source_field, replacement_field, type_field) do
+      [] -> nil
+      other -> hd(other)
+    end
+  end
+
+  defp replace(:language_variants, [], [_ | _] = replacement_field, _type_field) do
     replacement_field
   end
 
-  defp replace(source_field, _replacement_field, _type_field) do
+  defp replace(_field, [], [replacement_field], _type_field) do
+    replacement_field
+  end
+
+  defp replace(:language_variants, source_field, _replacement_field, _type_field) do
     source_field
   end
 
-  # In order to support replace/3, all arguments needs
+  defp replace(_field, [], _replacement_field, _type_field) do
+    nil
+  end
+
+  defp replace(_field, [element], _replacement_field, _type_field) do
+    element
+  end
+
+  defp do_replace(source_field, replacement_field, type_field) do
+    (source_field -- type_field) ++ replacement_field
+  end
+
+  # In order to support replace/3, all arguments need
   # to be lists. This function converts field from
   # a language tag into the most relevant list representation.
 
@@ -1435,13 +1465,6 @@ defmodule Cldr.Locale do
 
   defp type_field_from(tag, :language_variants = key) do
     Map.fetch!(tag, key)
-  end
-
-  defp type_field_from(tag, :territory = key) do
-    case Map.fetch!(tag, key) do
-      nil -> []
-      other -> [String.to_existing_atom(other)]
-    end
   end
 
   defp type_field_from(tag, key) do
@@ -1462,8 +1485,8 @@ defmodule Cldr.Locale do
 
   defp field_from(field, :territory) when is_binary(field) do
     case Integer.parse(field) do
-      {int, ""} when int in 0..999 -> [String.to_atom(field)]
-      _other -> [String.to_existing_atom(field)]
+      {int, ""} when int in 0..999 -> [field]
+      _other -> [field]
     end
   end
 
@@ -1745,6 +1768,59 @@ defmodule Cldr.Locale do
     aliases()
     |> Map.get(type)
     |> Map.get(key)
+  end
+
+  defp validate_subtags(language_tag) do
+    with {:ok, language_tag} <- validate(language_tag, :language),
+         {:ok, language_tag} <- validate(language_tag, :script),
+         {:ok, language_tag} <- validate(language_tag, :territory),
+         {:ok, language_tag} <- validate(language_tag, :variants) do
+      {:ok, language_tag}
+    end
+  end
+
+  defp validate(language_tag, :language) do
+    case Cldr.Validity.Language.validate(language_tag.language) do
+      {:ok, language, _} -> {:ok, %{language_tag | language: language}}
+      {:error, _} -> {:error, invalid_language_error(language_tag.language)}
+    end
+  end
+
+  defp validate(language_tag, :script) do
+    case Cldr.Validity.Script.validate(language_tag.script) do
+      {:ok, script, _} -> {:ok, %{language_tag | script: script}}
+      {:error, _} -> {:error, invalid_script_error(language_tag.script)}
+    end
+  end
+
+  defp validate(language_tag, :territory) do
+    case Cldr.Validity.Territory.validate(language_tag.territory) do
+      {:ok, territory, _} -> {:ok, %{language_tag | territory: territory}}
+      {:error, _} -> {:error, invalid_territory_error(language_tag.territory)}
+    end
+  end
+
+  defp validate(language_tag, :variants) do
+    case Cldr.Validity.Variant.validate(language_tag.language_variants) do
+      {:ok, variants, _} -> {:ok, %{language_tag | language_variants: variants}}
+      {:error, variant} -> {:error, invalid_variant_error(variant)}
+    end
+  end
+
+  def invalid_language_error(language) do
+    {Cldr.InvalidLanguageError, "The language #{inspect(language)} is invalid"}
+  end
+
+  def invalid_script_error(script) do
+    {Cldr.InvalidScriptError, "The script #{inspect(script)} is invalid"}
+  end
+
+  def invalid_territory_error(territory) do
+    {Cldr.InvalidTerritoryError, "The territory #{inspect(territory)} is invalid"}
+  end
+
+  def invalid_variant_error(variant) do
+    {Cldr.InvalidVariantError, "The variant #{inspect(variant)} is invalid"}
   end
 
   @doc """

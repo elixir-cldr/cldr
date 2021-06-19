@@ -26,26 +26,17 @@ defmodule Cldr.LanguageTag.Parser do
   def parse(locale) do
     case Cldr.Rfc5646.Parser.parse(normalize_locale_name(locale)) do
       {:ok, language_tag} ->
-        normalized_tag =
-          language_tag
-          |> structify(LanguageTag)
-          |> Map.put(:requested_locale_name, locale)
-          |> normalize_language
-          |> normalize_script
-          |> normalize_variants
-          |> normalize_territory
-          |> U.canonicalize_locale_keys()
-          |> T.canonicalize_transform_keys()
-
-        {:ok, normalized_tag}
+        language_tag
+        |> Keyword.put(:requested_locale_name, locale)
+        |> normalize_tag()
+        |> structify(LanguageTag)
+        |> U.canonicalize_locale_keys()
+        |> T.canonicalize_transform_keys()
+        |> wrap(:ok)
 
       {:error, reason} ->
         {:error, reason}
     end
-  end
-
-  defp structify(list, module) do
-    struct(module, list)
   end
 
   @doc """
@@ -68,50 +59,42 @@ defmodule Cldr.LanguageTag.Parser do
     end
   end
 
+  defp wrap(term, atom) do
+    {atom, term}
+  end
+
+  defp normalize_tag(language_tag) do
+    Enum.map(language_tag,&normalize_field/1)
+  end
+
+  def normalize_field({:language = field, language}) do
+    {field, Cldr.Validity.Language.normalize(language)}
+  end
+
+  def normalize_field({:script = field, script}) do
+    {field, Cldr.Validity.Script.normalize(script)}
+  end
+
+  def normalize_field({:territory = field, territory}) do
+    {field, Cldr.Validity.Territory.normalize(territory)}
+  end
+
+  def normalize_field({:language_variants = field, variants}) do
+    {field, Cldr.Validity.Variant.normalize(variants)}
+  end
+
+  def normalize_field(other) do
+    other
+  end
+
   defp normalize_locale_name(name) do
     name
     |> String.downcase()
     |> Locale.locale_name_from_posix()
   end
 
-  defp normalize_language(%LanguageTag{language: nil} = language_tag), do: language_tag
-
-  defp normalize_language(%LanguageTag{language: language} = language_tag) do
-    language_tag
-    |> Map.put(:language, String.downcase(language))
-  end
-
-  defp normalize_script(%LanguageTag{script: nil} = language_tag), do: language_tag
-
-  defp normalize_script(%LanguageTag{script: script} = language_tag) do
-    language_tag
-    |> Map.put(:script, script |> String.downcase() |> String.capitalize())
-  end
-
-  defp normalize_territory(%LanguageTag{territory: nil} = language_tag), do: language_tag
-
-  defp normalize_territory(%LanguageTag{territory: territory} = language_tag)
-       when is_integer(territory) do
-    territory =
-      case territory do
-        territory when territory < 10 -> "00#{territory}"
-        territory when territory < 100 -> "0#{territory}"
-        _ -> "#{territory}"
-      end
-      |> String.upcase()
-
-    Map.put(language_tag, :territory, territory)
-  end
-
-  defp normalize_territory(%LanguageTag{territory: territory} = language_tag) do
-    Map.put(language_tag, :territory, String.upcase(territory))
-  end
-
-  defp normalize_variants(%LanguageTag{language_variants: []} = language_tag), do: language_tag
-
-  defp normalize_variants(%LanguageTag{language_variants: variants} = language_tag) do
-    language_tag
-    |> Map.put(:language_variants, Enum.map(variants, &String.downcase/1) |> Enum.sort())
+  defp structify(list, module) do
+    struct(module, list)
   end
 
   @doc false

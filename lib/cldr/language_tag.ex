@@ -284,7 +284,7 @@ defmodule Cldr.LanguageTag do
 
   defimpl Inspect do
     def inspect(%Cldr.LanguageTag{canonical_locale_name: nil} = language_tag, _opts) do
-      Kernel.inspect(language_tag, structs: false)
+      "#Cldr.LanguageTag<" <> language_tag.requested_locale_name <> "> [parsed]"
     end
 
     def inspect(%Cldr.LanguageTag{} = language_tag, _opts) do

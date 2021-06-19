@@ -1,19 +1,24 @@
 defmodule GenerateLanguageTag do
   require ExUnitProperties
 
-  @alpha [?a..?z, ?A..?Z]
-
-  @known_territories Cldr.Config.known_territories() |> Enum.map(&Atom.to_string/1)
+  @known_territories Cldr.Validity.all_valid(:territories)
+  @known_scripts Cldr.Validity.all_valid(:scripts)
+  @known_languages Cldr.Validity.all_valid(:languages)
 
   def valid_language_tag do
     ExUnitProperties.gen all(
-                           language <- StreamData.string(@alpha, min_length: 2, max_length: 3),
+                           language <-
+                             StreamData.member_of(@known_languages),
                            script <-
                              StreamData.one_of([
-                               StreamData.string(@alpha, length: 4),
+                               StreamData.member_of(@known_scripts),
                                StreamData.constant(nil)
                              ]),
-                           region <- StreamData.member_of(@known_territories)
+                           region <-
+                             StreamData.one_of([
+                               StreamData.member_of(@known_territories),
+                               StreamData.constant(nil)
+                             ])
                          ) do
       [language, script, region]
       |> Enum.reject(&is_nil/1)

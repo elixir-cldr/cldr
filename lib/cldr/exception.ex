@@ -275,3 +275,51 @@ defmodule Cldr.NoParentError do
     %__MODULE__{message: message}
   end
 end
+
+defmodule Cldr.InvalidLanguageError do
+  @moduledoc """
+  Exception raised when a language
+  is invalid
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidScriptError do
+  @moduledoc """
+  Exception raised when a script
+  is invalid
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidTerritoryError do
+  @moduledoc """
+  Exception raised when a territory
+  is invalid
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidVariantError do
+  @moduledoc """
+  Exception raised when a language
+  variant is invalid
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end

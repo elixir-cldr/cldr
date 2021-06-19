@@ -3,7 +3,7 @@ defmodule Cldr.Locale.Parent.Test do
 
   test "parent locales" do
     assert Cldr.Locale.parent("en-US") ==
-      {:error, {Cldr.NoParentError, "The locale \"en-US\" has no parent locale"}}
+             {:error, {Cldr.NoParentError, "The locale \"en-US\" has no parent locale"}}
 
     assert Cldr.Locale.parent("en-001") == TestBackend.Cldr.Locale.new("en")
     assert Cldr.Locale.parent("en-AU") == TestBackend.Cldr.Locale.new("en-001")

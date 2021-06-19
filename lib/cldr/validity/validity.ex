@@ -52,4 +52,24 @@ defmodule Cldr.Validity do
     <<range_end::utf8>> = range_end
     {base, range_start, range_end}
   end
+
+  # Only used for testing
+  def all_valid(type) do
+    validity_data = Cldr.Config.validity(type)
+
+    for {_status, codes} <- validity_data do
+      {code_ranges, simple_codes} = Cldr.Validity.partition(codes)
+
+      range_check =
+        for range <- code_ranges, range != [] do
+          {base, range_start, range_end} = Cldr.Validity.range_from(range)
+          for char <- range_start..range_end do
+            base <> << char :: utf8>>
+          end
+        end
+
+      simple_codes ++ range_check
+    end
+    |> List.flatten
+  end
 end

@@ -95,9 +95,9 @@ defmodule Cldr.Plug.AcceptLanguage.Test do
     assert capture_log(fn ->
              :get
              |> conn("/")
-             |> put_req_header("accept-language", "xx")
+             |> put_req_header("accept-language", "ab")
              |> Cldr.Plug.AcceptLanguage.call(opts)
-           end) =~ "Cldr.NoMatchingLocale: No configured locale could be matched to \"xx\""
+           end) =~ "Cldr.NoMatchingLocale: No configured locale could be matched to \"ab\""
   end
 
   test "Log level not configured for no-match warnings" do

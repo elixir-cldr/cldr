@@ -549,7 +549,7 @@ defmodule Cldr.Backend do
           }}
 
           iex> #{inspect(__MODULE__)}.validate_locale("zzz")
-          {:error, {Cldr.UnknownLocaleError, "The locale \\"zzz\\" is not known."}}
+          {:error, {Cldr.InvalidLanguageError, "The language \\"zzz\\" is invalid"}}
 
       """
       @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::

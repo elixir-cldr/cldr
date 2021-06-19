@@ -163,7 +163,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("en-US")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: "en-US",
+               canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},
@@ -174,7 +174,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "en-US",
                script: nil,
-               territory: :US,
+               territory: "US",
                transform: %{},
                language_variants: []
              }
@@ -182,7 +182,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_Arab_AQ")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: "sr-Arab-AQ",
+               canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},
@@ -193,7 +193,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "sh_Arab_AQ",
                script: "Arab",
-               territory: :AQ,
+               territory: "AQ",
                transform: %{},
                language_variants: []
              }
@@ -201,7 +201,7 @@ defmodule Cldr.Test do
     assert Cldr.Locale.substitute_aliases(Cldr.LanguageTag.Parser.parse!("sh_AQ")) ==
              %Cldr.LanguageTag{
                backend: nil,
-               canonical_locale_name: "sr-Latn-AQ",
+               canonical_locale_name: nil,
                cldr_locale_name: nil,
                language_subtags: [],
                extensions: %{},
@@ -212,7 +212,7 @@ defmodule Cldr.Test do
                rbnf_locale_name: nil,
                requested_locale_name: "sh_AQ",
                script: "Latn",
-               territory: :AQ,
+               territory: "AQ",
                transform: %{},
                language_variants: []
              }

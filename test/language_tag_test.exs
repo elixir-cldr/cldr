@@ -4,7 +4,7 @@ defmodule CldrLanguageTagTest do
 
   @tag timeout: :infinity
   property "check that we can parse language tags" do
-    check all(language_tag <- GenerateLanguageTag.valid_language_tag(), max_runs: 1_000) do
+    check all(language_tag <- GenerateLanguageTag.valid_language_tag(), max_runs: 500) do
       assert {:ok, _} = Cldr.AcceptLanguage.parse(language_tag, TestBackend.Cldr)
     end
   end
@@ -38,12 +38,9 @@ defmodule CldrLanguageTagTest do
   end
 
   test "Language-Variant" do
-    # Implementation does not support language-variant,
-    # only language-script-region-variant
-    # and language-region-variant
-    # assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj")
-    # assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj-biske")
-    # assert {:ok, _} = Cldr.LanguageTag.parse("sl-nedis")
+    assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj")
+    assert {:ok, _} = Cldr.LanguageTag.parse("sl-rozaj-biske")
+    assert {:ok, _} = Cldr.LanguageTag.parse("sl-nedis")
   end
 
   test "Language-Region-Variant" do
