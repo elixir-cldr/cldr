@@ -25,6 +25,17 @@ defmodule Cldr.Locale.Cache do
     do_get_language_tag(locale)
   end
 
+  def compiling? do
+    process_alive?(:elixir_compiler_pid) || process_alive?(:cldr_locale_cache)
+  end
+
+  defp process_alive?(name) do
+    case Process.get(name) do
+      nil -> false
+      pid when is_pid(pid) -> true
+    end
+  end
+
   def put_all_language_tags(language_tags) do
     for {locale, language_tag} <- language_tags do
       :ets.insert(@table_name, {{:tag, locale}, language_tag})
@@ -33,6 +44,7 @@ defmodule Cldr.Locale.Cache do
 
   defp ensure_genserver_started! do
     if compiling?() and not gen_server_started?() do
+      Cldr.maybe_log("Starting the compiler locale cache")
       case Cldr.Locale.Cache.start() do
         {:ok, _pid} ->
           all_language_tags = Cldr.Config.all_language_tags()
@@ -67,17 +79,6 @@ defmodule Cldr.Locale.Cache do
 
   def terminate(reason, _) do
     Cldr.maybe_log("Compile locale cache is terminating: #{inspect reason}")
-  end
-
-  def compiling? do
-    process_alive?(:elixir_compiler_pid) || process_alive?(:cldr_locale_cache)
-  end
-
-  defp process_alive?(name) do
-    case Process.get(name) do
-      nil -> false
-      pid when is_pid(pid) -> true
-    end
   end
 
   def gen_server_started? do

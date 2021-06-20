@@ -945,16 +945,12 @@ defmodule Cldr.Config do
   are known.
 
   """
-  @max_concurrency :"Elixir.System".schedulers_online() * 2
+
   def known_number_system_types(config) do
     config
     |> known_locale_names()
-    |> Task.async_stream(__MODULE__, :number_systems_for, [config],
-      max_concurrency: @max_concurrency,
-      timeout: :infinity
-    )
-    |> Enum.to_list()
-    |> Enum.flat_map(fn {:ok, {:ok, systems}} -> Map.keys(systems) end)
+    |> Enum.map(&number_systems_for(&1, config))
+    |> Enum.flat_map(fn {:ok, systems} -> Map.keys(systems) end)
     |> Enum.uniq()
     |> Enum.sort()
   end
