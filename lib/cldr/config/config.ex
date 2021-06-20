@@ -2327,13 +2327,13 @@ defmodule Cldr.Config do
     Map.put(content, :list_formats, dates)
   end
 
-  @language_variant_keys ["default", "menu", "short", "long", "variant"]
+  @alt_keys ["default", "menu", "short", "long", "variant"]
   defp structure_locale_display_names(content) do
     locale_display_names =
       content
       |> Map.get(:locale_display_names)
-      |> Cldr.Map.atomize_keys(skip: "languages")
-      |> Cldr.Map.atomize_keys(only: @language_variant_keys)
+      |> Cldr.Map.atomize_keys(skip: ["languages", "variants"])
+      |> Cldr.Map.atomize_keys(only: @alt_keys)
 
     Map.put(content, :locale_display_names, locale_display_names)
   end

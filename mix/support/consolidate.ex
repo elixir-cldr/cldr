@@ -152,7 +152,7 @@ defmodule Cldr.Consolidate do
     with {:ok, files} <- File.ls(dir) do
       Enum.map(files, &Path.join(dir, &1))
       |> Enum.map(fn f ->
-        IO.puts("File: #{f}")
+        # IO.puts("File: #{f}")
         File.read!(f)
       end)
       |> Enum.map(&Jason.decode!/1)
