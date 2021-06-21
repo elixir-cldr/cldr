@@ -16,6 +16,7 @@ defmodule Cldr.Validity do
     Cldr.Validity.generate_validity_checks(validity_data)
   end
 
+  @doc false
   def generate_validity_checks(validity_data) do
     quote bind_quoted: [validity_data: Macro.escape(validity_data)] do
       for {status, codes} <- validity_data do
@@ -45,6 +46,7 @@ defmodule Cldr.Validity do
     end
   end
 
+  @doc false
   def partition(list) do
     Enum.reduce(list, {[], []}, fn elem, {ranges, simple} ->
       if String.contains?(elem, "~") do
@@ -55,6 +57,7 @@ defmodule Cldr.Validity do
     end)
   end
 
+  @doc false
   def range_from(code_range) do
     [left, range_end] = String.split(code_range, "~")
     {base, range_start} = String.split_at(left, -1)
@@ -64,6 +67,7 @@ defmodule Cldr.Validity do
   end
 
   # Only used for testing
+  @doc false
   def all_valid(type) do
     validity_data = Cldr.Config.validity(type)
 
