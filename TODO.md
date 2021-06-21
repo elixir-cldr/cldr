@@ -6,19 +6,19 @@
   * [ ] territories need to be normalized (upcased and atomized)
   * [ ] scripts and territories have some alt forms that need to be structured
 
-* [X] add Cldr.validate_script/1
-
-* [X] scripts can be an atom (now that they are validated)
-
 * [ ] canonical_locale_name should combine extensions (sorted by key)
 
 * [ ] parse and validate 't' extension (and add to_string)
+
+* [X] add Cldr.validate_script/1
+
+* [X] scripts can be an atom (now that they are validated)
 
 * [X] Use validity data in `Cldr.Locale.canonical_language_tag/1`
 
 * [X] Implement validity data through `Cldr.Locale.{Territory, Language, Script, Variant, Subdivision}`
 
-* [X] Support the territory UK as a synonum for GB
+* [X] Support the territory UK as a synonym for GB
 
 * [X] Normalizing variant names should be lower case per TR35
 

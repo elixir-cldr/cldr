@@ -46,10 +46,7 @@ defmodule Cldr.Locale.Cache do
     if compiling?() and not gen_server_started?() do
       Cldr.maybe_log("Starting the compiler locale cache")
       case Cldr.Locale.Cache.start() do
-        {:ok, _pid} ->
-          all_language_tags = Cldr.Config.all_language_tags()
-          put_all_language_tags(all_language_tags)
-          :ok
+        {:ok, _pid} -> :ok
         {:error, {:already_started, _pid}} -> :ok
       end
     end
@@ -62,6 +59,8 @@ defmodule Cldr.Locale.Cache do
     # as the state.  State therefore is only the
     # reference to the ets table we use for caching
     create_ets_table!()
+    all_language_tags = Cldr.Config.all_language_tags()
+    put_all_language_tags(all_language_tags)
     Process.flag(:trap_exit, true)
     {:ok, @table_name}
   end

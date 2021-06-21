@@ -18,6 +18,8 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Locale inheritance no longer includes the "root" locale.  In alignment with [BCP 47](https://unicode-org.github.io/cldr/ldml/tr35.html#Unicode_Locale_Identifier_BCP_47_to_CLDR), the "root" locale is now longer a valid locale. Parsing a locale name "root" is still valid but it will return the "und" language instead.  While parsing is still correct, it remains a locale that is not valid for use in `ex_cldr`. The "root" locale is used only for a limited set of rules-based number formats.
 
+* Correct territory containment chain for the territory `US`.
+
 ### Enhancements
 
 * `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements).

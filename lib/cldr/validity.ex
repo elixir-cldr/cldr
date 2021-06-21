@@ -4,7 +4,7 @@ defmodule Cldr.Validity do
   @doc """
   Normalizes a language tag field.
   """
-  @callback normalize(String.t() | atom()) :: {:ok, term} | {:error, String.t}
+  @callback normalize(String.t() | atom()) :: String.t() | atom()
 
   @doc """
   Validates a language tag field

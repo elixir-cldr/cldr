@@ -381,23 +381,92 @@ defmodule Cldr.Consolidate do
   def save_territory_containment do
     path = Path.join(consolidated_output_dir(), "territory_containment.json")
 
-    territory_parents =
-      consolidated_output_dir()
-      |> Path.join(@territory_containers_file)
-      |> File.read!()
-      |> Jason.decode!()
-      |> Enum.flat_map(fn {k, v} ->
-        Enum.map(v, fn t -> {t, k} end)
-      end)
-
-    territory_parents
-    |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
-    |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
-    |> Enum.map(fn {k, v} -> {k, Enum.sort(v, fn x, y -> length(x) > length(y) end)} end)
-    |> Map.new()
+    consolidated_output_dir()
+    |> Path.join(@territory_containers_file)
+    |> File.read!()
+    |> Jason.decode!()
+    |> build_tree()
+    |> Enum.map(&Enum.reverse/1)
+    |> Enum.map(fn [hd | rest] -> {hd, rest} end)
+    |> Map.new
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  defp build_tree(tree, leaf \\ "001", level \\ 0) do
+    if leaves = Map.get(tree, leaf) do
+      Enum.map(leaves, &(build_tree(tree, &1, level + 1)))
+    else
+      leaf
+    end
+    |> merge_leaf(leaf)
+  end
+
+  # [a, b, c], d => [[d, a], [d, b], [d, c]]
+  defp merge_leaf([first | _rest] = subtree, leaf) when is_binary(first) do
+    Enum.map(subtree, &[leaf, &1])
+  end
+
+  # [[d, a], [d, b], [d, c]], e => [[e, d, a], [e, d, b], ...]
+  defp merge_leaf([[first | _] | _rest] = subtree, leaf) when is_binary(first) do
+    Enum.map(subtree, &[leaf | &1])
+  end
+
+  defp merge_leaf(subtree, leaf) when is_list(subtree) do
+    Enum.map(subtree, &merge_leaf(&1, leaf))
+    |> combine_lists
+  end
+
+  defp merge_leaf(leaf, leaf) do
+    leaf
+  end
+
+  defp combine_lists([a]) when is_list(a) do
+    combine_lists(a)
+  end
+
+  defp combine_lists([[a | _] | _rest] = list) when is_binary(a) do
+    list
+  end
+
+  defp combine_lists([a, b | rest]) when is_list(a) and is_list(b) do
+    combine_lists([a ++ b | rest])
+  end
+
+  defp combine_lists(a) do
+    a
+  end
+
+  # def build_tree(tree, leaf \\ "001", level \\ 0) do
+  #   if leaves = Map.get(tree, leaf) do
+  #     %{leaf => Enum.map(leaves, &build_tree(tree, &1, level + 1))}
+  #   else
+  #     leaf
+  #   end
+  # end
+
+  def tree_walk(tree, acc \\ []) do
+    Enum.map(tree, fn
+      {k, v} when is_map(v) -> tree_walk(v, [k | acc])
+      {k, v} when is_list(v) -> Enum.map(v, &[&1, k | acc])
+    end)
+  end
+
+  @doc false
+  def parents(_territory_parents, nil) do
+    []
+  end
+
+  # def parents(territory_parents, territory) when is_atom(territory) do
+  #   [territory | parents(territory_parents, Keyword.get(territory_parents, territory))]
+  # end
+
+  def parents(territory_parents, territory) when is_binary(territory) do
+    [
+      territory
+      | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))
+    ]
   end
 
   @doc false
@@ -488,21 +557,6 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
-  end
-
-  defp parents(_territory_parents, nil) do
-    []
-  end
-
-  defp parents(territory_parents, territory) when is_atom(territory) do
-    [territory | parents(territory_parents, Keyword.get(territory_parents, territory))]
-  end
-
-  defp parents(territory_parents, territory) when is_binary(territory) do
-    [
-      territory
-      | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))
-    ]
   end
 
   @doc false
