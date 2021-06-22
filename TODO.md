@@ -2,10 +2,6 @@
 
 * [ ] Resolve how to have a CLDR-based pluraliser module for Gettext. Currently this has a circular compile-time dependency because when the gettext module is compiled it expects the plurals module to exist. At the same time, ex_cldr expects the gettext backend to exist so it can find out what locales are available. This could be resolved if compiling the PO files was a final step in the compilation process but this seems unlikely to be possible.
 
-* locale display names data normalization needs adjusting
-  * [ ] territories need to be normalized (upcased and atomized)
-  * [ ] scripts and territories have some alt forms that need to be structured
-
 * [ ] canonical_locale_name should combine extensions (sorted by key)
 
 * [ ] parse and validate 't' extension (and add to_string)
@@ -31,4 +27,6 @@
 * [X] Ensure all language tags have a canonical form that is BCP-47. Mostly they are but we need to:
    * [X] Replace the special language identifier "root" with the BCP 47 primary language tag "und"
 
-
+* locale display names data normalization needs adjusting
+  * [X] territories need to be normalized (upcased and atomized)
+  * [X] scripts and territories have some alt forms that need to be structured

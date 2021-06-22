@@ -256,6 +256,7 @@ defmodule Cldr.Locale do
   @type subtags :: [String.t(), ...] | []
 
   @root_locale "und"
+  @root_rbnf_locale_name "root"
 
   @doc false
   def define_locale_new(config) do
@@ -1107,6 +1108,10 @@ defmodule Cldr.Locale do
   end
 
   @spec rbnf_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
+  defp rbnf_locale_name(%LanguageTag{language: @root_locale}) do
+    @root_rbnf_locale_name
+  end
+
   defp rbnf_locale_name(%LanguageTag{} = language_tag) do
     first_match(language_tag, &Cldr.known_rbnf_locale_name(&1, language_tag.backend))
   end
