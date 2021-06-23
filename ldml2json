@@ -73,8 +73,13 @@ cp $CLDR_REPO/common/bcp47/timezone.xml $CLDR_PRODUCTION/timezones.xml
 mkdir -p $CLDR_PRODUCTION/subdivisions
 cp $CLDR_STAGING/common/subdivisions/* $CLDR_PRODUCTION/subdivisions
 
+# Validity data for language, script and territory
 mkdir -p $CLDR_PRODUCTION/validity
 cp -R $CLDR_REPO/common/validity/ $CLDR_PRODUCTION/validity/
+
+# BCP 47 data for validating U and T extension values
+mkdir -p $CLDR_PRODUCTION/bcp47
+cp -R $CLDR_REPO/common/bcp47/ $CLDR_PRODUCTION/bcp47/
 
 # ex_cldr additional data required for data generation
 cp $EX_CLDR/data/measurement_systems.xml $CLDR_PRODUCTION/measurement_systems.xml

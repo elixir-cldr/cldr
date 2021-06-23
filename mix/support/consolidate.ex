@@ -947,7 +947,8 @@ defmodule Cldr.Consolidate do
     end
   end
 
-  defp save_file(content, path) do
+  @doc false
+  def save_file(content, path) do
     File.write!(path, Cldr.Config.json_library().encode!(content))
   end
 

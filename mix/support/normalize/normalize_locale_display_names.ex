@@ -26,11 +26,25 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.get("territories")
       |> merge_alt(&String.upcase/1)
 
+    locale_display_pattern =
+      locale_display_names
+      |> Map.get("locale_display_pattern")
+      |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
+      |> Map.new()
+
+    code_patterns =
+      locale_display_names
+      |> Map.get("code_patterns")
+      |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
+      |> Map.new()
+
     locale_display_names =
       locale_display_names
       |> Map.put("languages", languages)
       |> Map.put("scripts", scripts)
       |> Map.put("territories", territories)
+      |> Map.put("locale_display_pattern", locale_display_pattern)
+      |> Map.put("code_patterns", code_patterns)
 
     Map.put(content, "locale_display_names", locale_display_names)
   end
