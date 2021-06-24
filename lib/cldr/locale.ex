@@ -189,7 +189,7 @@ defmodule Cldr.Locale do
         :ok,
         %Cldr.LanguageTag{
           backend: MyApp.Cldr,
-          canonical_locale_name: "en-AU-u-cf-accounting-tz-ausyd",
+          canonical_locale_name: "en-AU-u-cf-account-tz-ausyd",
           cldr_locale_name: "en-AU",
           extensions: %{},
           gettext_locale_name: "en",
@@ -198,7 +198,7 @@ defmodule Cldr.Locale do
           language_variants: [],
           locale: %Cldr.LanguageTag.U{
             calendar: nil,
-            cf: :accounting,
+            cf: :account,
             col_alternate: nil,
             col_backwards: nil,
             col_case_first: nil,
@@ -220,7 +220,7 @@ defmodule Cldr.Locale do
             rg: nil,
             sd: nil,
             ss: nil,
-            timezone: "ausyd",
+            timezone: "Australia/Sydney",
             va: nil,
             vt: nil
           },
@@ -235,6 +235,8 @@ defmodule Cldr.Locale do
 
   """
   alias Cldr.LanguageTag
+  alias Cldr.LanguageTag.{U, T}
+
   import Cldr.Helpers, only: [empty?: 1]
 
   @typedoc "The name of a locale in a string format"
@@ -296,7 +298,7 @@ defmodule Cldr.Locale do
 
         """
         @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-          Cldr.Locale.territory()
+                Cldr.Locale.territory()
 
         @doc since: "2.18.2"
 
@@ -517,7 +519,7 @@ defmodule Cldr.Locale do
       :CA
 
       iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx"
-      :US
+      {:error, {Cldr.LanguageTag.ParseError, "The value \\"xxxxx\\" is not valid for the key \\"rg\\""}}
 
   ## Notes
 
@@ -595,7 +597,7 @@ defmodule Cldr.Locale do
       :CA
 
       iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx", TestBackend.Cldr
-      :US
+      {:error, {Cldr.LanguageTag.ParseError, "The value \\"xxxxx\\" is not valid for the key \\"rg\\""}}
 
   ## Notes
 
@@ -677,9 +679,7 @@ defmodule Cldr.Locale do
 
   def timezone_from_locale(%LanguageTag{locale: %{timezone: timezone}})
       when not is_nil(timezone) do
-    case Cldr.Timezone.validate_timezone(timezone) do
-      {:ok, zone} -> zone
-    end
+    timezone
   end
 
   def timezone_from_locale(%LanguageTag{} = language_tag) do
@@ -817,7 +817,9 @@ defmodule Cldr.Locale do
       |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases()
 
-    with {:ok, language_tag} <- validate_subtags(language_tag) do
+    with {:ok, language_tag} <- validate_subtags(language_tag),
+         {:ok, language_tag} <- U.canonicalize_locale_keys(language_tag),
+         {:ok, language_tag} <- T.canonicalize_transform_keys(language_tag) do
       language_tag
       |> put_canonical_locale_name()
       |> remove_unknown(:script)
@@ -957,8 +959,7 @@ defmodule Cldr.Locale do
   end
 
   defp substitute(%LanguageTag{canonical_locale_name: nil} = language_tag, :requested_name) do
-    locale_name =
-      locale_name_from(language_tag.language, nil, language_tag.territory, [])
+    locale_name = locale_name_from(language_tag.language, nil, language_tag.territory, [])
 
     if replacement_tag = aliases(locale_name, :language) do
       type_tag = Cldr.LanguageTag.Parser.parse!(locale_name)

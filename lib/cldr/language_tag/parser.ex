@@ -8,7 +8,6 @@ defmodule Cldr.LanguageTag.Parser do
   """
   alias Cldr.LanguageTag
   alias Cldr.Locale
-  alias Cldr.LanguageTag.{U, T}
 
   @doc """
   Parse a locale name into a `t:Cldr.LanguageTag`
@@ -26,13 +25,12 @@ defmodule Cldr.LanguageTag.Parser do
   def parse(locale) do
     case Cldr.Rfc5646.Parser.parse(normalize_locale_name(locale)) do
       {:ok, language_tag} ->
-        language_tag
-        |> Keyword.put(:requested_locale_name, locale)
-        |> normalize_tag()
-        |> structify(LanguageTag)
-        |> U.canonicalize_locale_keys()
-        |> T.canonicalize_transform_keys()
-        |> wrap(:ok)
+        language_tag =
+          language_tag
+          |> Keyword.put(:requested_locale_name, locale)
+          |> normalize_tag()
+          |> structify(LanguageTag)
+          |> wrap(:ok)
 
       {:error, reason} ->
         {:error, reason}
@@ -64,7 +62,7 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   defp normalize_tag(language_tag) do
-    Enum.map(language_tag,&normalize_field/1)
+    Enum.map(language_tag, &normalize_field/1)
   end
 
   def normalize_field({:language = field, language}) do

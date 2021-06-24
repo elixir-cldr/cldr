@@ -37,41 +37,39 @@ defmodule CldrLocaleParserTest do
     assert {:error, _error} = Parser.parse("-invalid")
   end
 
-  test "That invalid language code is handled" do
+  test "That invalid language code is parsed" do
     assert {:ok, language_tag} = Parser.parse("aaaaa")
     assert is_nil(language_tag.cldr_locale_name)
     assert language_tag.language == "aaaaa"
   end
 
-  test "That nonexistent language code is handled" do
+  test "That nonexistent language code is parsed" do
     assert {:ok, language_tag} = Parser.parse("zz")
     assert is_nil(language_tag.cldr_locale_name)
     assert language_tag.language == "zz"
   end
 
-  test "That invalid territory code is handled" do
+  test "That invalid territory code is parsed" do
     assert {:ok, language_tag} = Parser.parse("en-AAAA")
     assert language_tag.language == "en"
     assert language_tag.territory == nil
   end
 
-  test "That nonexistent territory code is handled" do
-    assert {:ok, language_tag} = Parser.parse("en-AA")
+  test "That nonexistent territory code is parsed" do
+    assert {:ok, language_tag} = Parser.parse("en-YX")
     assert language_tag.language == "en"
-    assert language_tag.territory == "AA"
+    assert language_tag.territory == "YX"
   end
 
-  test "That invalid currency code is handled" do
+  test "That invalid currency code is parsed" do
     assert {:ok, language_tag} = Parser.parse("en-US-u-cu-AAAAAA")
     assert language_tag.language == "en"
     assert language_tag.territory == "US"
-    assert is_nil(language_tag.locale.currency)
   end
 
-  test "That nonexistent currency code is handled" do
+  test "That nonexistent currency code is parsed" do
     assert {:ok, language_tag} = Parser.parse("en-US-u-cu-AAA")
     assert language_tag.language == "en"
     assert language_tag.territory == "US"
-    assert is_nil(language_tag.locale.currency)
   end
 end

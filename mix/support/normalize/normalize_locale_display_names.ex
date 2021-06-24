@@ -49,7 +49,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     Map.put(content, "locale_display_names", locale_display_names)
   end
 
-  def merge_alt(map, normalizer_fun \\ &(&1)) do
+  def merge_alt(map, normalizer_fun \\ & &1) do
     map =
       map
       |> Enum.map(fn {code, display_name} ->

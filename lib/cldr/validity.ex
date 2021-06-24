@@ -9,7 +9,7 @@ defmodule Cldr.Validity do
   @doc """
   Validates a language tag field
   """
-  @callback validate(String.t() | atom()) :: {:ok, term, atom()} | {:error, String.t}
+  @callback validate(String.t() | atom()) :: {:ok, term, atom()} | {:error, String.t()}
 
   defmacro __using__(type) do
     validity_data = Cldr.Config.validity(type)
@@ -77,13 +77,14 @@ defmodule Cldr.Validity do
       range_check =
         for range <- code_ranges, range != [] do
           {base, range_start, range_end} = Cldr.Validity.range_from(range)
+
           for char <- range_start..range_end do
-            base <> << char :: utf8>>
+            base <> <<char::utf8>>
           end
         end
 
       simple_codes ++ range_check
     end
-    |> List.flatten
+    |> List.flatten()
   end
 end

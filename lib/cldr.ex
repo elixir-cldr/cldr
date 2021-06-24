@@ -1462,7 +1462,6 @@ defmodule Cldr do
     else
       {:error, unknown_territory_error(territory)}
     end
-
   rescue
     ArgumentError ->
       {:error, unknown_territory_error(territory)}

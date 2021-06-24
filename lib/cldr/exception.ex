@@ -323,6 +323,3 @@ defmodule Cldr.InvalidVariantError do
     %__MODULE__{message: message}
   end
 end
-
-
-

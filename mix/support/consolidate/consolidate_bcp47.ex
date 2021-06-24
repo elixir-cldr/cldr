@@ -1,7 +1,13 @@
 defmodule Cldr.Consolidate.Bcp47 do
   @u_files [
-    "collation.xml", "calendar.xml", "currency.xml", "measure.xml",
-    "number.xml", "segmentation.xml", "timezone.xml", "variant.xml"
+    "collation.xml",
+    "calendar.xml",
+    "currency.xml",
+    "measure.xml",
+    "number.xml",
+    "segmentation.xml",
+    "timezone.xml",
+    "variant.xml"
   ]
 
   @bcp47_dir "bcp47"
@@ -18,6 +24,7 @@ defmodule Cldr.Consolidate.Bcp47 do
     end)
     |> Enum.map(&flatten_u_list/1)
     |> Map.new()
+    |> split_timezone_names()
     |> Cldr.Consolidate.save_file(path)
 
     Cldr.Consolidate.assert_package_file_configured!(path)
@@ -32,8 +39,7 @@ defmodule Cldr.Consolidate.Bcp47 do
     |> String.replace(~r/<!DOCTYPE.*>\n/, "")
     |> xpath(~x"//keyword/key"l,
       name: ~x"./@name"s,
-      valid: [~x"./type"l,
-        name: ~x"./@name"s, alias: ~x"./@alias"s]
+      valid: [~x"./type"l, name: ~x"./@name"s, alias: ~x"./@alias"s]
     )
   end
 
@@ -50,4 +56,16 @@ defmodule Cldr.Consolidate.Bcp47 do
     |> Map.new()
   end
 
+  defp split_timezone_names(map) do
+    tz =
+      map
+      |> Map.fetch!("tz")
+      |> Enum.map(fn
+        {k, nil} -> {k, nil}
+        {k, v} -> {k, String.split(v)}
+      end)
+      |> Map.new()
+
+    Map.put(map, "tz", tz)
+  end
 end

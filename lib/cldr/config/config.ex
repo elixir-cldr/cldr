@@ -597,8 +597,9 @@ defmodule Cldr.Config do
   @doc """
   Return a map of validity data
 
-  The types are :languages, :scripts,
-  :territories, :subdivisions, :variants
+  The types are `:languages`, `:scripts`,
+  `:territories`, `:subdivisions`, `:variants`
+  and `:u`
 
   """
   @validity_type [:languages, :scripts, :territories, :subdivisions, :variants]
@@ -608,6 +609,18 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Map.new()
+  end
+
+  def validity(:u) do
+    Path.join(cldr_data_dir(), "bcp47/u.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.deep_map(fn
+      k when is_binary(k) -> k
+      {k, "quaternary quarternary"} -> {k, "quaternary"}
+      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
+      {k, v} -> {String.replace(k, "-", "_"), v}
+    end)
   end
 
   @doc """
@@ -2076,7 +2089,7 @@ defmodule Cldr.Config do
 
   """
   def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
-    Cldr.maybe_log("Cldr.Config getting calendar data for locale #{inspect locale_name}")
+    Cldr.maybe_log("Cldr.Config getting calendar data for locale #{inspect(locale_name)}")
 
     locale_name
     |> get_locale(config)
@@ -2167,7 +2180,7 @@ defmodule Cldr.Config do
 
   @doc false
   def decimal_formats_for(locale, config) do
-    Cldr.maybe_log("Cldr.Config getting decimal formats for locale #{inspect locale}")
+    Cldr.maybe_log("Cldr.Config getting decimal formats for locale #{inspect(locale)}")
 
     locale
     |> get_locale(config)

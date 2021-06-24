@@ -388,7 +388,7 @@ defmodule Cldr.Consolidate do
     |> build_tree()
     |> Enum.map(&Enum.reverse/1)
     |> Enum.map(fn [hd | rest] -> {hd, rest} end)
-    |> Map.new
+    |> Map.new()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -396,7 +396,7 @@ defmodule Cldr.Consolidate do
 
   defp build_tree(tree, leaf \\ "001", level \\ 0) do
     if leaves = Map.get(tree, leaf) do
-      Enum.map(leaves, &(build_tree(tree, &1, level + 1)))
+      Enum.map(leaves, &build_tree(tree, &1, level + 1))
     else
       leaf
     end

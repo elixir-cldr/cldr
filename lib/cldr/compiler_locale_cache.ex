@@ -45,6 +45,7 @@ defmodule Cldr.Locale.Cache do
   defp ensure_genserver_started! do
     if compiling?() and not gen_server_started?() do
       Cldr.maybe_log("Starting the compiler locale cache")
+
       case Cldr.Locale.Cache.start() do
         {:ok, _pid} -> :ok
         {:error, {:already_started, _pid}} -> :ok
@@ -72,12 +73,12 @@ defmodule Cldr.Locale.Cache do
 
   # handle the trapped exit call
   def handle_info({:EXIT, _from, reason}, state) do
-    Cldr.maybe_log("Compile locale cache received EXIT message: #{inspect reason}")
+    Cldr.maybe_log("Compile locale cache received EXIT message: #{inspect(reason)}")
     {:stop, reason, state}
   end
 
   def terminate(reason, _) do
-    Cldr.maybe_log("Compile locale cache is terminating: #{inspect reason}")
+    Cldr.maybe_log("Compile locale cache is terminating: #{inspect(reason)}")
   end
 
   def gen_server_started? do
@@ -128,12 +129,15 @@ defmodule Cldr.Locale.Cache do
         Cldr.maybe_log("Compiler language tag cache: Hit for locale #{inspect(locale)}.")
         language_tag
 
-      other ->
-        raise RuntimeError, "Compiler language tag cache: Unexpected miss " <>
-          "for locale #{inspect(locale)}. Got #{inspect other}."
+      [] ->
+        Cldr.maybe_log("Compiler language tag cache miss. Will retry.")
+        Process.sleep(100)
+        do_get_language_tag(locale)
+        # raise RuntimeError,
+        #       "Compiler language tag cache: Unexpected miss " <>
+        #         "for locale #{inspect(locale)}. Got #{inspect(other)}."
     end
   end
-
 
   # We assign the compiler pid as the heir for our table so
   # that the table doesn't die with each compilation thread

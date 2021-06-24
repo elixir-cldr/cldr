@@ -2,6 +2,8 @@
 
 * [ ] Resolve how to have a CLDR-based pluraliser module for Gettext. Currently this has a circular compile-time dependency because when the gettext module is compiled it expects the plurals module to exist. At the same time, ex_cldr expects the gettext backend to exist so it can find out what locales are available. This could be resolved if compiling the PO files was a final step in the compilation process but this seems unlikely to be possible.
 
+* [ ] allow lenient parse of language tags and make that the default in the plugs since that the expected behaviour
+
 * [ ] canonical_locale_name should combine extensions (sorted by key)
 
 * [ ] parse and validate 't' extension (and add to_string)

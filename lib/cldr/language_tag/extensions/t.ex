@@ -17,7 +17,7 @@ defmodule Cldr.LanguageTag.T do
   end
 
   def canonicalize_transform_keys(%Cldr.LanguageTag{transform: nil} = language_tag) do
-    language_tag
+    {:ok, language_tag}
   end
 
   def canonicalize_transform_keys(%Cldr.LanguageTag{transform: locale} = language_tag) do
@@ -31,6 +31,6 @@ defmodule Cldr.LanguageTag.T do
       end)
       |> Enum.into(%{})
 
-    Map.put(language_tag, :transform, canon_transform)
+    {:ok, Map.put(language_tag, :transform, canon_transform)}
   end
 end
