@@ -4,9 +4,11 @@
 
 * [ ] allow lenient parse of language tags and make that the default in the plugs since that the expected behaviour
 
-* [ ] canonical_locale_name should combine extensions (sorted by key)
+* [ ] Parsing extensions doesn't group by key ie `a-bb-cccc-dd-eeee` productions `%{"a" => ["bb", "cccc", "dd", "eeee"]}`
 
-* [ ] parse and validate 't' extension (and add to_string)
+* [X] canonical_locale_name should combine extensions (sorted by key)
+
+* [X] parse and validate 't' extension (and add to_string)
 
 * [X] add Cldr.validate_script/1
 
