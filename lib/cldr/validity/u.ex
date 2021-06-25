@@ -245,12 +245,14 @@ defmodule Cldr.Validity.U do
     other
   end
 
-  defp invalid_value_error(key, value) do
+  @doc false
+  def invalid_value_error(key, value) do
     {Cldr.LanguageTag.ParseError,
      "The value #{inspect(value)} is not valid for the key #{inspect(key)}"}
   end
 
-  defp invalid_key_error(key) do
+  @doc false
+  def invalid_key_error(key) do
     {Cldr.LanguageTag.ParseError, "The key #{inspect(key)} is not valid for the -u- subtag"}
   end
 end

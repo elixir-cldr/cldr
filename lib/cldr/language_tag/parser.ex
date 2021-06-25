@@ -25,12 +25,11 @@ defmodule Cldr.LanguageTag.Parser do
   def parse(locale) do
     case Cldr.Rfc5646.Parser.parse(normalize_locale_name(locale)) do
       {:ok, language_tag} ->
-        language_tag =
-          language_tag
-          |> Keyword.put(:requested_locale_name, locale)
-          |> normalize_tag()
-          |> structify(LanguageTag)
-          |> wrap(:ok)
+        language_tag
+        |> Keyword.put(:requested_locale_name, locale)
+        |> normalize_tag()
+        |> structify(LanguageTag)
+        |> wrap(:ok)
 
       {:error, reason} ->
         {:error, reason}
@@ -81,6 +80,10 @@ defmodule Cldr.LanguageTag.Parser do
     {field, Cldr.Validity.Variant.normalize(variants)}
   end
 
+  # Everything is downcased before parsing
+  # and thats the canonical form so no need to
+  # do it again, just return the value
+
   def normalize_field(other) do
     other
   end
@@ -95,25 +98,4 @@ defmodule Cldr.LanguageTag.Parser do
     struct(module, list)
   end
 
-  @doc false
-  def canonicalize_key([key, valid, default], param) when is_function(valid) do
-    case valid.(param) do
-      {:ok, value} -> {key, value}
-      {:error, _} -> {key, default}
-    end
-  end
-
-  def canonicalize_key([key, :any, default], param) do
-    value = param || default
-    {key, value}
-  end
-
-  def canonicalize_key([key, valid, default], param) do
-    value = if param in valid, do: param, else: default
-    {key, value}
-  end
-
-  def canonicalize_key(key, value) when is_atom(key) do
-    {key, value}
-  end
 end

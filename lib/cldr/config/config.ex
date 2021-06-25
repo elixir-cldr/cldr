@@ -623,6 +623,17 @@ defmodule Cldr.Config do
     end)
   end
 
+  def validity(:t) do
+    Path.join(cldr_data_dir(), "bcp47/t.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.deep_map(fn
+      k when is_binary(k) -> k
+      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
+      {k, v} -> {String.replace(k, "-", "_"), v}
+    end)
+  end
+
   @doc """
   Return a map of plural ranges
 

@@ -152,7 +152,7 @@ defmodule Cldr.LanguageTag do
   """
   import Kernel, except: [to_string: 1]
 
-  alias Cldr.LanguageTag.{Parser, U}
+  alias Cldr.LanguageTag.Parser
 
   if Code.ensure_loaded?(Jason) do
     @derive Jason.Encoder
@@ -259,21 +259,46 @@ defmodule Cldr.LanguageTag do
 
   """
   @spec to_string(t) :: String.t()
-  def to_string(%__MODULE__{} = locale) do
+  def to_string(%__MODULE__{} = language_tag) do
     basic_tag =
       [
-        locale.language,
-        locale.language_subtags,
-        locale.script,
-        locale.territory,
-        Cldr.Config.join_variants(locale.language_variants)
+        language_tag.language,
+        language_tag.language_subtags,
+        language_tag.script,
+        language_tag.territory,
+        Cldr.Config.join_variants(language_tag.language_variants)
       ]
       |> List.flatten()
       |> Enum.reject(&is_nil/1)
       |> Enum.join("-")
 
-    locale_extension = U.to_string(locale.locale)
-    if locale_extension != "", do: basic_tag <> "-u-" <> locale_extension, else: basic_tag
+    extensions =
+      [{"u", language_tag.locale}, {"t", language_tag.transform}]
+      |> Map.new
+      |> Map.merge(language_tag.extensions)
+      |> Enum.map(fn {k, v} -> {k, Cldr.to_string(v)} end)
+      |> Enum.reject(fn {_k, v} -> v == "" end)
+      |> Enum.sort()
+      |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
+      |> Enum.join("-")
+
+    if extensions != "", do: basic_tag <> "-" <> extensions, else: basic_tag
+  end
+
+  # This is primarily to support
+  # implementing canonical locale names
+  defimpl Cldr.Chars, for: Map do
+    def to_string(%{}) do
+      ""
+    end
+  end
+
+  defimpl Cldr.Chars, for: List do
+    def to_string(list) do
+      list
+      |> Enum.sort()
+      |> Enum.join("-")
+    end
   end
 
   defimpl String.Chars do
@@ -284,7 +309,7 @@ defmodule Cldr.LanguageTag do
 
   defimpl Inspect do
     def inspect(%Cldr.LanguageTag{canonical_locale_name: nil} = language_tag, _opts) do
-      "#Cldr.LanguageTag<" <> language_tag.requested_locale_name <> "> [parsed]"
+      "#Cldr.LanguageTag<" <> language_tag.requested_locale_name <> " [parsed]> "
     end
 
     def inspect(%Cldr.LanguageTag{} = language_tag, _opts) do

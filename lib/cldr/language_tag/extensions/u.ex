@@ -49,12 +49,17 @@ defmodule Cldr.LanguageTag.U do
     end)
   end
 
-  @doc false
-  def to_string(%__MODULE__{} = language_tag) do
-    for field <- @fields, value = Map.get(language_tag, field), !is_nil(value) do
+  def encode(%__MODULE__{} = u_extension) do
+    for field <- @fields, value = Map.get(u_extension, field), !is_nil(value) do
       Cldr.Validity.U.encode(field, value)
     end
     |> Enum.sort()
+  end
+
+  @doc false
+  def to_string(%__MODULE__{} = u_extension) do
+    u_extension
+    |> encode()
     |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
     |> Enum.join("-")
   end
@@ -65,6 +70,12 @@ defmodule Cldr.LanguageTag.U do
   end
 
   defimpl String.Chars do
+    def to_string(locale) do
+      Cldr.LanguageTag.U.to_string(locale)
+    end
+  end
+
+  defimpl Cldr.Chars do
     def to_string(locale) do
       Cldr.LanguageTag.U.to_string(locale)
     end
