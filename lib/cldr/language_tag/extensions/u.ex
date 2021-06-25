@@ -75,7 +75,7 @@ defmodule Cldr.LanguageTag.U do
     end
   end
 
-  defimpl Cldr.Chars do
+  defimpl Cldr.LanguageTag.Chars do
     def to_string(locale) do
       Cldr.LanguageTag.U.to_string(locale)
     end

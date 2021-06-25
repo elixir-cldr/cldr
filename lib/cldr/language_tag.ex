@@ -276,7 +276,7 @@ defmodule Cldr.LanguageTag do
       [{"u", language_tag.locale}, {"t", language_tag.transform}]
       |> Map.new
       |> Map.merge(language_tag.extensions)
-      |> Enum.map(fn {k, v} -> {k, Cldr.to_string(v)} end)
+      |> Enum.map(fn {k, v} -> {k, Cldr.LanguageTag.Chars.to_string(v)} end)
       |> Enum.reject(fn {_k, v} -> v == "" end)
       |> Enum.sort()
       |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
@@ -287,13 +287,13 @@ defmodule Cldr.LanguageTag do
 
   # This is primarily to support
   # implementing canonical locale names
-  defimpl Cldr.Chars, for: Map do
+  defimpl Cldr.LanguageTag.Chars, for: Map do
     def to_string(%{}) do
       ""
     end
   end
 
-  defimpl Cldr.Chars, for: List do
+  defimpl Cldr.LanguageTag.Chars, for: List do
     def to_string(list) do
       list
       |> Enum.sort()
