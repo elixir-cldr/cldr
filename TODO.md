@@ -4,7 +4,7 @@
 
 * [ ] allow lenient parse of language tags and make that the default in the plugs since that the expected behaviour
 
-* [ ] Parsing extensions doesn't group by key ie `a-bb-cccc-dd-eeee` productions `%{"a" => ["bb", "cccc", "dd", "eeee"]}`
+* [X] Turns out the following was incorrect and the code is doing the right thing. ~~Parsing extensions doesn't group by key ie `a-bb-cccc-dd-eeee` productions `%{"a" => ["bb", "cccc", "dd", "eeee"]}`~~
 
 * [X] canonical_locale_name should combine extensions (sorted by key)
 
