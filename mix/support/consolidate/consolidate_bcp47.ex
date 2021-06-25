@@ -1,4 +1,6 @@
 defmodule Cldr.Consolidate.Bcp47 do
+  @moduledoc false
+
   @u_files [
     "collation.xml",
     "calendar.xml",
@@ -23,6 +25,7 @@ defmodule Cldr.Consolidate.Bcp47 do
 
   def consolidate() do
     consolidate(:u)
+    consolidate(:t)
   end
 
   def consolidate(:u) do

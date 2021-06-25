@@ -55,6 +55,7 @@ defmodule Cldr.Consolidate do
     save_parent_locales()
     save_language_data()
     save_validity_data()
+    save_bcp47_data()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -152,7 +153,6 @@ defmodule Cldr.Consolidate do
     with {:ok, files} <- File.ls(dir) do
       Enum.map(files, &Path.join(dir, &1))
       |> Enum.map(fn f ->
-        # IO.puts("File: #{f}")
         File.read!(f)
       end)
       |> Enum.map(&Jason.decode!/1)
@@ -537,6 +537,15 @@ defmodule Cldr.Consolidate do
     |> save_file(path)
 
     assert_package_file_configured!(path)
+  end
+
+  @doc """
+  Save the BCP 47 validity data
+  for the -u- and -t- extensions
+
+  """
+  def save_bcp47_data do
+    Cldr.Consolidate.Bcp47.consolidate()
   end
 
   def save_territory_subdivision_containment do
