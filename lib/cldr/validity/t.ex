@@ -74,6 +74,24 @@ defmodule Cldr.Validity.T do
     end
   end
 
+  defp encode_key(key, values) when is_list(values) do
+    values
+    |> Enum.map(&encode_key(key, &1))
+    |> Enum.join("-")
+  end
+
+  defp encode_key(_key, {year}) do
+    to_string(year)
+  end
+
+  defp encode_key(_key, {year, month}) do
+    to_string(year) <> pad(month) <> to_string(month)
+  end
+
+  defp encode_key(_key, {year, month, day}) do
+    to_string(year) <> pad(month) <> to_string(month) <> pad(day) <> to_string(day)
+  end
+
   defp encode_key("language", nil) do
     nil
   end
@@ -87,12 +105,36 @@ defmodule Cldr.Validity.T do
 
   for {key, values} <- @validity_data, key in @process_keys do
     defp valid(unquote(key), value) when value in unquote(values) do
-      {:ok, value}
+      {:ok, String.to_atom(value)}
+    end
+  end
+
+  defp valid(key, values) when is_list(values) do
+    case valid_list(key, values) do
+      {:ok, values} ->
+        # Dates sort to the end
+        Enum.sort(values, fn
+          <<digit_1::utf8, _rest_1::binary>>,  <<digit_2::utf8, _rest_2::binary>>
+              when digit_1 in [?0..?9] and digit_2 in [?0..?9] ->
+            digit_1 < digit_2
+          <<digit_1::utf8, _rest::binary>>, _date_2 when digit_1 in [?0..?9] ->
+            false
+          _date_1, <<digit_1::utf8, _rest::binary>>  when digit_1 in [?0..?9] ->
+            true
+          value_1, value_2 ->
+            value_1 < value_2
+        end)
+        |> wrap(:ok)
+
+      other -> other
     end
   end
 
   defp valid(key, value) when key in @valid_keys do
-    {:error, U.invalid_value_error(key, value)}
+    case Integer.parse(value) do
+      {_integer, ""} -> {:ok, make_date_tuple(value)}
+      _other -> {:error, U.invalid_value_error(key, value)}
+    end
   end
 
   defp valid("language", language) do
@@ -101,6 +143,41 @@ defmodule Cldr.Validity.T do
 
   defp valid(key, _value) do
     {:error, U.invalid_key_error(key)}
+  end
+
+  def valid_list(key, values) do
+    Enum.reduce_while(values, {:ok, []}, fn value, {:ok, acc} ->
+      # if we push a date tuple on a prior round then the
+      # date tuple isnt in last place which it is required to
+      # be so we return an error
+      if length(acc) > 0 && is_tuple(hd(acc)) do
+        {:halt, {:error, invalid_date_order(key, hd(acc))}}
+      else
+        case valid(key, value) do
+          {:ok, value} -> {:cont, {:ok, [value | acc]}}
+          {:error, _value} -> {:halt, {:error, U.invalid_value_error(key, value)}}
+        end
+      end
+    end)
+  end
+
+  def wrap(term, atom) do
+    {atom, term}
+  end
+
+  def pad(number) when number < 10, do: " "
+  def pad(_number), do: ""
+
+  defp make_date_tuple(<<year::binary-4,month::binary-2, day::binary-2>>) do
+    {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
+  end
+
+  defp make_date_tuple(<<year::binary-4,month::binary-2>>) do
+    {String.to_integer(year), String.to_integer(month)}
+  end
+
+  defp make_date_tuple(<<year::binary-4>>) do
+    {String.to_integer(year)}
   end
 
   defp map(key) do
@@ -121,6 +198,13 @@ defmodule Cldr.Validity.T do
 
   defp atomize(other) do
     other
+  end
+
+  defp invalid_date_order(key, value) do
+    encoded = encode_key(key, value)
+
+    {Cldr.LanguageTag.ParseError,
+       "The date #{inspect(encoded)} must be the last value in a subtag"}
   end
 
 end
