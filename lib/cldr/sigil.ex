@@ -25,11 +25,11 @@ defmodule Cldr.LanguageTag.Sigil do
 
       iex> import Cldr.LanguageTag.Sigil
       iex> ~l(en-US-u-ca-gregory)
-      #Cldr.LanguageTag<en-US-u-ca-gregory>
+      #Cldr.LanguageTag<en-US-u-ca-gregory [validated]>
 
       iex> import Cldr.LanguageTag.Sigil
       iex> ~l(en-US-u-ca-gregory|MyApp.Cldr)
-      #Cldr.LanguageTag<en-US-u-ca-gregory>
+      #Cldr.LanguageTag<en-US-u-ca-gregory [validated]>
 
   """
   defmacro sigil_l(locale_name, _opts) do
