@@ -2,6 +2,7 @@ defmodule Cldr.Validity.T do
   alias Cldr.Validity.U
 
   @field_mapping %{
+    "language" => :language,
     "m0" => :m0,
     "s0" => :s0,
     "d0" => :d0,
@@ -15,8 +16,8 @@ defmodule Cldr.Validity.T do
   @fields Map.values(@field_mapping)
   @inverse_field_mapping Enum.map(@field_mapping, fn {k, v} -> {v, k} end) |> Map.new()
   @validity_data Cldr.Config.validity(:t)
-  @dont_process_keys []
-  @valid_keys Map.keys(@validity_data)
+  @dont_process_keys ["language"]
+  @valid_keys Map.keys(@validity_data) ++ @dont_process_keys
   @process_keys @valid_keys -- @dont_process_keys
 
   def fields do
@@ -31,6 +32,14 @@ defmodule Cldr.Validity.T do
   and the canonical value or an error.
 
   """
+  def decode("language" = key, {:ok, language_tag}) do
+    {:ok, {map(key), language_tag}}
+  end
+
+  def decode("language", {:error, error_language_tag}) do
+    {:error, error_language_tag}
+  end
+
   def decode(key, value) do
     with {:ok, value} <- valid(key, value) do
       {:ok, {map(key), atomize(value)}}
@@ -46,6 +55,7 @@ defmodule Cldr.Validity.T do
   of a language tag.
 
   """
+
   def encode(key, value) do
     unmapped_key = unmap(key)
     {unmapped_key, encode_key(unmapped_key, value)}
@@ -64,7 +74,15 @@ defmodule Cldr.Validity.T do
     end
   end
 
-  # valid function check that the value provided
+  defp encode_key("language", nil) do
+    nil
+  end
+
+  defp encode_key("language", language) do
+    String.downcase(language.canonical_locale_name)
+  end
+
+  # Check that the value provided
   # is acceptable for the given key.
 
   for {key, values} <- @validity_data, key in @process_keys do
@@ -75,6 +93,10 @@ defmodule Cldr.Validity.T do
 
   defp valid(key, value) when key in @valid_keys do
     {:error, U.invalid_value_error(key, value)}
+  end
+
+  defp valid("language", language) do
+    language
   end
 
   defp valid(key, _value) do

@@ -51,7 +51,7 @@ defmodule Cldr.LanguageTag.T do
 
   @doc false
   def encode(%__MODULE__{} = t_extension) do
-    for field <- @fields, value = Map.get(t_extension, field), !is_nil(value) do
+    for field <- @fields -- ["language"], value = Map.get(t_extension, field), !is_nil(value) do
       Cldr.Validity.T.encode(field, value)
     end
     |> Enum.sort()
@@ -59,10 +59,17 @@ defmodule Cldr.LanguageTag.T do
 
   @doc false
   def to_string(%__MODULE__{} = t_extension) do
-    t_extension
-    |> encode()
-    |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
-    |> Enum.join("-")
+    {_, language} =
+      Cldr.Validity.T.encode(:language, t_extension.language)
+
+    params =
+      t_extension
+      |> encode()
+      |> Enum.reject(&(elem(&1, 0) == "language"))
+      |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
+      |> Enum.join("-")
+
+    if language, do: language <> "-" <> params, else: params
   end
 
   @doc false

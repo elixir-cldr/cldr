@@ -22,6 +22,18 @@ defmodule Cldr.Rfc5646.Helpers do
     %{type => attributes}
   end
 
+  def merge_langtag_and_transform([langtag, %{} = subtags]) do
+    langtag =
+      struct(Cldr.LanguageTag, langtag)
+      |> Cldr.Locale.canonical_language_tag()
+
+    Map.put(subtags, "language", langtag)
+  end
+
+  def merge_langtag_and_transform([subtags]) do
+    subtags
+  end
+
   # Transform keywords to a map. Note that not
   # all keywords have a parameter so we set the
   # param to nil in those cases.

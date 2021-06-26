@@ -1230,6 +1230,10 @@ defmodule Cldr.Locale do
     canonical_locale_name
   end
 
+  def locale_name_from([language, script, territory, variants], _omit_singular_script?) do
+    locale_name_from(language, script, territory, variants)
+  end
+
   @doc """
   Return a locale name by combining language, script, territory and variant
   parameters

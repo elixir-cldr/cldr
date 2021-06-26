@@ -12,16 +12,20 @@ if Code.ensure_loaded?(NimbleParsec) do
     #                 *("-" extensions)
     @spec langtag :: NimbleParsec.t()
     def langtag do
-      language()
-      |> optional(ignore(dash()) |> concat(script()))
-      |> optional(ignore(dash()) |> concat(region()))
-      |> repeat(ignore(dash()) |> concat(variant()))
-      |> reduce(:collapse_variants)
+      basic_langtag()
       |> repeat(ignore(dash()) |> concat(extensions()))
       |> reduce(:collapse_extensions)
       |> optional(ignore(dash()) |> concat(private_use()))
       |> post_traverse({:flatten, []})
       |> label("a valid BCP-47 language tag")
+    end
+
+    def basic_langtag do
+      language()
+      |> optional(ignore(dash()) |> concat(script()))
+      |> optional(ignore(dash()) |> concat(region()))
+      |> repeat(ignore(dash()) |> concat(variant()))
+      |> reduce(:collapse_variants)
     end
 
     # language      = 2*3ALPHA            ; shortest ISO 639 code
@@ -140,9 +144,9 @@ if Code.ensure_loaded?(NimbleParsec) do
     def transform do
       ignore(ascii_string([?t, ?T], 1))
       |> ignore(dash())
-      |> concat(keyword())
-      |> reduce(:collapse_keywords)
-      |> times(min: 1)
+      |> optional(basic_langtag() |> ignore(dash()))
+      |> times(keyword() |> reduce(:collapse_keywords), min: 1)
+      |> reduce(:merge_langtag_and_transform)
       |> unwrap_and_tag(:transform)
       |> label("a BCP-47 language tag transform extension")
     end

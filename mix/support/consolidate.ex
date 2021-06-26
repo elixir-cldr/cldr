@@ -758,7 +758,7 @@ defmodule Cldr.Consolidate do
 
     [%{timezones: timezones}] =
       download_data_dir()
-      |> Path.join(["timezones.xml"])
+      |> Path.join(["bcp47/timezone.xml"])
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
       |> xpath(~x"//key"l,
