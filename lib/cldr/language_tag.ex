@@ -266,24 +266,28 @@ defmodule Cldr.LanguageTag do
         language_tag.language_subtags,
         language_tag.script,
         language_tag.territory,
-        Cldr.Config.join_variants(language_tag.language_variants)
+        language_tag.language_variants
       ]
-      |> List.flatten()
-      |> Enum.reject(&is_nil/1)
-      |> Enum.join("-")
+      |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
+      |> Enum.reject(&empty?/1)
 
     extensions =
       [{"u", language_tag.locale}, {"t", language_tag.transform}]
       |> Map.new
       |> Map.merge(language_tag.extensions)
-      |> Enum.map(fn {k, v} -> {k, Cldr.LanguageTag.Chars.to_string(v)} end)
-      |> Enum.reject(fn {_k, v} -> v == "" end)
+      |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
+      |> Enum.reject(&empty?/1)
       |> Enum.sort()
-      |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
-      |> Enum.join("-")
+      |> Enum.map(&join/1)
 
-    if extensions != "", do: basic_tag <> "-" <> extensions, else: basic_tag
+    Enum.join(basic_tag ++ extensions, "-")
   end
+
+  defp empty?({_k, ""}), do: true
+  defp empty?(""), do: true
+  defp empty?(_other), do: false
+
+  defp join({k, v}), do: "#{k}-#{v}"
 
   # This is primarily to support
   # implementing canonical locale names
@@ -293,7 +297,37 @@ defmodule Cldr.LanguageTag do
     end
   end
 
+  defimpl Cldr.LanguageTag.Chars, for: Tuple do
+    def to_string({k, v}) do
+      {k, Cldr.LanguageTag.Chars.to_string(v)}
+    end
+  end
+
+  defimpl Cldr.LanguageTag.Chars, for: Atom do
+    def to_string(nil) do
+      ""
+    end
+
+    def to_string(atom) do
+      Atom.to_string(atom)
+    end
+  end
+
+  defimpl Cldr.LanguageTag.Chars, for: BitString do
+    def to_string(nil) do
+      ""
+    end
+
+    def to_string(string) do
+      string
+    end
+  end
+
   defimpl Cldr.LanguageTag.Chars, for: List do
+    def to_string([]) do
+      ""
+    end
+
     def to_string(list) do
       list
       |> Enum.sort()
