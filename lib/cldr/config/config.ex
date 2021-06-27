@@ -687,6 +687,7 @@ defmodule Cldr.Config do
     |> Cldr.Map.atomize_keys(level: 2..1000)
     |> Cldr.Map.deep_map(fn
       {:territories = k, list} -> {k, Enum.map(list, &String.to_atom/1)}
+      {:scripts = k, list} -> {k, Enum.map(list, &String.to_atom/1)}
       other -> other
     end)
   end
@@ -2359,7 +2360,7 @@ defmodule Cldr.Config do
     locale_display_names =
       content
       |> Map.get(:locale_display_names)
-      |> Cldr.Map.atomize_keys(skip: ["languages", "variants"])
+      |> Cldr.Map.atomize_keys(skip: ["language", "variants"])
       |> Cldr.Map.atomize_keys(only: @alt_keys)
 
     Map.put(content, :locale_display_names, locale_display_names)

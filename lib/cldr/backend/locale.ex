@@ -107,7 +107,7 @@ defmodule Cldr.Locale.Backend do
 
         ## Examples
 
-            iex> #{inspect(__MODULE__)}.display_names("en")
+            => #{inspect(__MODULE__)}.display_names("en")
 
         """
         @doc since: "2.23.0"

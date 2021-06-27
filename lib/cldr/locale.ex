@@ -1061,6 +1061,26 @@ defmodule Cldr.Locale do
   end
 
   @doc """
+  Returns a display name for a locale suitable
+  for user interface requirements.
+
+  """
+  def display_name(%LanguageTag{} = locale) do
+    module = Module.concat(locale.backend, :Locale)
+    {:ok, display_names} = module.display_names(locale)
+    first_match(locale, &language_match_fun(&1, display_names.language), true)
+  end
+
+  defp language_match_fun(locale_name, language_names) do
+    if display_name = Map.get(language_names, locale_name) do
+      #consumed_keys = keys_consumed(locale_name)
+      {locale_name, display_name}
+    else
+      nil
+    end
+  end
+
+  @doc """
   Execute a function for a locale returning
   the first match on language, script, territory,
   and variant combination.
@@ -1084,7 +1104,7 @@ defmodule Cldr.Locale do
 
   """
 
-  def first_match(%LanguageTag{} = language_tag, fun) when is_function(fun, 1) do
+  def first_match(%LanguageTag{} = language_tag, fun, omit_singular_script? \\ false) when is_function(fun, 1) do
     %LanguageTag{
       language: language,
       script: script,
@@ -1092,20 +1112,24 @@ defmodule Cldr.Locale do
       language_variants: variants
     } = language_tag
 
-    first_match(language, script, territory, variants, fun)
+    first_match(language, script, territory, variants, fun, omit_singular_script?)
   end
 
-  defp first_match(language, script, territory, variants, fun) do
-    # Including variants
-    # Not including variants
-    fun.(locale_name_from(language, script, territory, variants)) ||
-      fun.(locale_name_from(language, nil, territory, variants)) ||
-      fun.(locale_name_from(language, script, nil, variants)) ||
-      fun.(locale_name_from(language, nil, nil, variants)) ||
-      fun.(locale_name_from(language, script, territory, [])) ||
-      fun.(locale_name_from(language, nil, territory, [])) ||
-      fun.(locale_name_from(language, script, nil, [])) ||
-      fun.(locale_name_from(language, nil, nil, [])) || nil
+  defp first_match(language, script, territory, variants, fun, omit_singular_script? \\ false)
+
+  defp first_match(language, script, territory, [], fun, omit_singular_script?) do
+    fun.(locale_name_from(language, script, territory, [], omit_singular_script?)) ||
+    fun.(locale_name_from(language, nil, territory, [], omit_singular_script?)) ||
+    fun.(locale_name_from(language, script, nil, [], omit_singular_script?)) ||
+    fun.(locale_name_from(language, nil, nil, [], omit_singular_script?)) || nil
+  end
+
+  defp first_match(language, script, territory, variants, fun, omit_singular_script?) do
+    fun.(locale_name_from(language, script, territory, variants, omit_singular_script?)) ||
+    fun.(locale_name_from(language, nil, territory, variants, omit_singular_script?)) ||
+    fun.(locale_name_from(language, script, nil, variants, omit_singular_script?)) ||
+    fun.(locale_name_from(language, nil, nil, variants, omit_singular_script?)) ||
+    first_match(language, script, territory, [], fun, omit_singular_script?)
   end
 
   @doc """
@@ -1143,8 +1167,8 @@ defmodule Cldr.Locale do
     canonical_locale_name
   end
 
-  def locale_name_from([language, script, territory, variants], _omit_singular_script?) do
-    locale_name_from(language, script, territory, variants)
+  def locale_name_from([language, script, territory, variants], omit_singular_script?) do
+    locale_name_from(language, script, territory, variants, omit_singular_script?)
   end
 
   @doc """
@@ -1153,11 +1177,17 @@ defmodule Cldr.Locale do
 
   ## Arguments
 
-  * `language`, `script`, `territory` are stringa
-    that are expected to be in their normalized form
-    (ie are appropriately capitalized)
+  * `language` is a string representing
+    a valid language code
 
-  * `variants` is a list of language variants or `[]`
+  * `script` is an atom that is a valid
+    script code.
+
+  * territory` is an atom that is a valid
+    territory code.
+
+  * `variants` is a list of language variants as lower
+    case string or `[]`
 
   ## Returns
 
@@ -1166,14 +1196,14 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.locale_name_from("en", "Latn", "001", [])
+      iex> Cldr.Locale.locale_name_from("en", :Latn, "001", [])
       "en-001"
 
-      iex> Cldr.Locale.locale_name_from("en", "Latn", :"001", [])
+      iex> Cldr.Locale.locale_name_from("en", :Latn, :"001", [])
       "en-001"
 
   """
-  @spec locale_name_from(language(), script(), territory(), variants()) ::
+  @spec locale_name_from(language(), script(), territory(), variants(), boolean) ::
           locale_name()
 
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
