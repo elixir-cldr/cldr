@@ -273,7 +273,7 @@ defmodule Cldr.LanguageTag do
 
     extensions =
       [{"u", language_tag.locale}, {"t", language_tag.transform}]
-      |> Map.new
+      |> Map.new()
       |> Map.merge(language_tag.extensions)
       |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
       |> Enum.reject(&empty?/1)

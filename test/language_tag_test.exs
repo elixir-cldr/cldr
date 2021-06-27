@@ -147,5 +147,4 @@ defmodule CldrLanguageTagTest do
                 transform: %{}
               }}
   end
-
 end

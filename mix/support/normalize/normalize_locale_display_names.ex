@@ -45,7 +45,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
         {"uksystem", description} -> {"imperial", description}
         other -> other
       end)
-      |> Map.new
+      |> Map.new()
 
     types =
       locale_display_names

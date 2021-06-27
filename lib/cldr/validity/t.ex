@@ -114,19 +114,23 @@ defmodule Cldr.Validity.T do
       {:ok, values} ->
         # Dates sort to the end
         Enum.sort(values, fn
-          <<digit_1::utf8, _rest_1::binary>>,  <<digit_2::utf8, _rest_2::binary>>
-              when digit_1 in [?0..?9] and digit_2 in [?0..?9] ->
+          <<digit_1::utf8, _rest_1::binary>>, <<digit_2::utf8, _rest_2::binary>>
+          when digit_1 in [?0..?9] and digit_2 in [?0..?9] ->
             digit_1 < digit_2
+
           <<digit_1::utf8, _rest::binary>>, _date_2 when digit_1 in [?0..?9] ->
             false
-          _date_1, <<digit_1::utf8, _rest::binary>>  when digit_1 in [?0..?9] ->
+
+          _date_1, <<digit_1::utf8, _rest::binary>> when digit_1 in [?0..?9] ->
             true
+
           value_1, value_2 ->
             value_1 < value_2
         end)
         |> wrap(:ok)
 
-      other -> other
+      other ->
+        other
     end
   end
 
@@ -168,11 +172,11 @@ defmodule Cldr.Validity.T do
   def pad(number) when number < 10, do: " "
   def pad(_number), do: ""
 
-  defp make_date_tuple(<<year::binary-4,month::binary-2, day::binary-2>>) do
+  defp make_date_tuple(<<year::binary-4, month::binary-2, day::binary-2>>) do
     {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
   end
 
-  defp make_date_tuple(<<year::binary-4,month::binary-2>>) do
+  defp make_date_tuple(<<year::binary-4, month::binary-2>>) do
     {String.to_integer(year), String.to_integer(month)}
   end
 
@@ -204,7 +208,6 @@ defmodule Cldr.Validity.T do
     encoded = encode_key(key, value)
 
     {Cldr.LanguageTag.ParseError,
-       "The date #{inspect(encoded)} must be the last value in a subtag"}
+     "The date #{inspect(encoded)} must be the last value in a subtag"}
   end
-
 end

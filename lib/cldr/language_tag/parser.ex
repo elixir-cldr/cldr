@@ -97,5 +97,4 @@ defmodule Cldr.LanguageTag.Parser do
   defp structify(list, module) do
     struct(module, list)
   end
-
 end

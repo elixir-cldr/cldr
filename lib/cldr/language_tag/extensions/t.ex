@@ -59,8 +59,7 @@ defmodule Cldr.LanguageTag.T do
 
   @doc false
   def to_string(%__MODULE__{} = t_extension) do
-    {_, language} =
-      Cldr.Validity.T.encode(:language, t_extension.language)
+    {_, language} = Cldr.Validity.T.encode(:language, t_extension.language)
 
     params =
       t_extension

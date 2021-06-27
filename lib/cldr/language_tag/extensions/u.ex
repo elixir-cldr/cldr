@@ -80,5 +80,4 @@ defmodule Cldr.LanguageTag.U do
       Cldr.LanguageTag.U.to_string(locale)
     end
   end
-
 end

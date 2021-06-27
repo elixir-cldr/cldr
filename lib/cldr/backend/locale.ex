@@ -1,5 +1,4 @@
 defmodule Cldr.Locale.Backend do
-
   @doc false
   def define_locale_backend(config) do
     quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
@@ -113,7 +112,7 @@ defmodule Cldr.Locale.Backend do
         @doc since: "2.23.0"
 
         @spec display_names(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-          {:ok, map()} | {:error, {module(), String.t()}}
+                {:ok, map()} | {:error, {module(), String.t()}}
 
         def display_names(locale)
 
@@ -132,7 +131,6 @@ defmodule Cldr.Locale.Backend do
         def display_names(locale) do
           {:error, Cldr.Locale.locale_error(locale)}
         end
-
       end
     end
   end

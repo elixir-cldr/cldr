@@ -18,7 +18,7 @@ defmodule Cldr.Consolidate.Bcp47 do
     "transform_ime.xml",
     "transform_keyboard.xml",
     "transform_mt.xml",
-    "transform-destination.xml",
+    "transform-destination.xml"
   ]
 
   @bcp47_dir "bcp47"

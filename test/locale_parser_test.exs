@@ -70,5 +70,4 @@ defmodule CldrLocaleParserTest do
     assert language_tag.language == "en"
     assert language_tag.territory == "US"
   end
-
 end

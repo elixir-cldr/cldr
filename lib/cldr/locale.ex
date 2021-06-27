@@ -363,13 +363,13 @@ defmodule Cldr.Locale do
 
   defp find_parent(%LanguageTag{language_variants: [_ | _] = variants} = locale, backend) do
     %LanguageTag{language: language, script: script, territory: territory} = locale
-    first_match(language, script, territory, variants, &known_locale(&1, backend))
+    first_match(language, script, territory, variants, &known_locale(&1, &2, backend))
   end
 
   defp find_parent(%LanguageTag{territory: territory} = locale, backend)
        when not is_nil(territory) do
     %LanguageTag{language: language, script: script} = locale
-    first_match(language, script, nil, [], &known_locale(&1, backend))
+    first_match(language, script, nil, [], &known_locale(&1, &2, backend))
   end
 
   defp find_parent(%LanguageTag{language: language}, backend) do
@@ -378,8 +378,12 @@ defmodule Cldr.Locale do
     |> known_locale(backend)
   end
 
-  defp known_locale(locale_name, backend) do
+  defp known_locale(locale_name, _tags \\ [], backend) do
     Enum.find(backend.known_locale_names(), &(locale_name == &1))
+  end
+
+  def known_rbnf_locale_name(locale_name, _tags \\ [], backend) do
+    Cldr.known_rbnf_locale_name(locale_name, backend)
   end
 
   # If the language of the parent then return an error
@@ -1017,7 +1021,7 @@ defmodule Cldr.Locale do
 
   @spec cldr_locale_name(Cldr.LanguageTag.t()) :: locale_name() | nil
   defp cldr_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &Cldr.known_locale_name(&1, language_tag.backend)) ||
+    first_match(language_tag, &known_locale(&1, &2, language_tag.backend)) ||
       Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
   end
 
@@ -1027,27 +1031,29 @@ defmodule Cldr.Locale do
   end
 
   defp rbnf_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &Cldr.known_rbnf_locale_name(&1, language_tag.backend))
+    first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend))
   end
 
   @spec gettext_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
   defp gettext_locale_name(%LanguageTag{} = language_tag) do
     language_tag
-    |> first_match(&known_gettext_locale_name(&1, language_tag.backend))
+    |> first_match(&known_gettext_locale_name(&1, &2, language_tag.backend))
     |> locale_name_to_posix
   end
 
   # Used at compile time only
   defp gettext_locale_name(%LanguageTag{} = language_tag, config) do
     language_tag
-    |> first_match(&known_gettext_locale_name(&1, config))
+    |> first_match(&known_gettext_locale_name(&1, &2, config))
     |> locale_name_to_posix
   end
 
   @spec known_gettext_locale_name(locale_name(), Cldr.backend() | Cldr.Config.t()) ::
           locale_name() | false
 
-  def known_gettext_locale_name(locale_name, backend) when is_atom(backend) do
+  def known_gettext_locale_name(locale_name, tags \\ [], backend)
+
+  def known_gettext_locale_name(locale_name, _tags, backend) when is_atom(backend) do
     gettext_locales = backend.known_gettext_locale_names()
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
@@ -1055,7 +1061,7 @@ defmodule Cldr.Locale do
   # This clause is only called at compile time when we're
   # building a backend.  In normal use is should not be used.
   @doc false
-  def known_gettext_locale_name(locale_name, config) when is_map(config) do
+  def known_gettext_locale_name(locale_name, _tags, config) when is_map(config) do
     gettext_locales = Cldr.Config.known_gettext_locale_names(config)
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
@@ -1068,12 +1074,12 @@ defmodule Cldr.Locale do
   def display_name(%LanguageTag{} = locale) do
     module = Module.concat(locale.backend, :Locale)
     {:ok, display_names} = module.display_names(locale)
-    first_match(locale, &language_match_fun(&1, display_names.language), true)
+    first_match(locale, &language_match_fun(&1, &2, display_names.language), true)
   end
 
-  defp language_match_fun(locale_name, language_names) do
+  defp language_match_fun(locale_name, _matched_tags, language_names) do
     if display_name = Map.get(language_names, locale_name) do
-      #consumed_keys = keys_consumed(locale_name)
+      # consumed_keys = keys_consumed(locale_name)
       {locale_name, display_name}
     else
       nil
@@ -1104,7 +1110,8 @@ defmodule Cldr.Locale do
 
   """
 
-  def first_match(%LanguageTag{} = language_tag, fun, omit_singular_script? \\ false) when is_function(fun, 1) do
+  def first_match(%LanguageTag{} = language_tag, fun, omit_singular_script? \\ false)
+      when is_function(fun, 2) do
     %LanguageTag{
       language: language,
       script: script,
@@ -1115,21 +1122,43 @@ defmodule Cldr.Locale do
     first_match(language, script, territory, variants, fun, omit_singular_script?)
   end
 
-  defp first_match(language, script, territory, variants, fun, omit_singular_script? \\ false)
+  defp first_match(language, script, territory, variants, fun, omit? \\ false)
 
-  defp first_match(language, script, territory, [], fun, omit_singular_script?) do
-    fun.(locale_name_from(language, script, territory, [], omit_singular_script?)) ||
-    fun.(locale_name_from(language, nil, territory, [], omit_singular_script?)) ||
-    fun.(locale_name_from(language, script, nil, [], omit_singular_script?)) ||
-    fun.(locale_name_from(language, nil, nil, [], omit_singular_script?)) || nil
+  defp first_match(language, script, territory, [], fun, omit?) do
+    fun.(locale_name_from(language, script, territory, [], omit?), [
+      :language,
+      :script,
+      :territory,
+      :variants
+    ]) ||
+      fun.(locale_name_from(language, nil, territory, [], omit?), [
+        :language,
+        :territory,
+        :variants
+      ]) ||
+      fun.(locale_name_from(language, script, nil, [], omit?), [:language, :script, :variants]) ||
+      fun.(locale_name_from(language, nil, nil, [], omit?), [:language, :variants]) || nil
   end
 
-  defp first_match(language, script, territory, variants, fun, omit_singular_script?) do
-    fun.(locale_name_from(language, script, territory, variants, omit_singular_script?)) ||
-    fun.(locale_name_from(language, nil, territory, variants, omit_singular_script?)) ||
-    fun.(locale_name_from(language, script, nil, variants, omit_singular_script?)) ||
-    fun.(locale_name_from(language, nil, nil, variants, omit_singular_script?)) ||
-    first_match(language, script, territory, [], fun, omit_singular_script?)
+  defp first_match(language, script, territory, variants, fun, omit?) do
+    fun.(locale_name_from(language, script, territory, variants, omit?), [
+      :language,
+      :script,
+      :territory,
+      :variants
+    ]) ||
+      fun.(locale_name_from(language, nil, territory, variants, omit?), [
+        :language,
+        :territory,
+        :variants
+      ]) ||
+      fun.(locale_name_from(language, script, nil, variants, omit?), [
+        :language,
+        :script,
+        :variants
+      ]) ||
+      fun.(locale_name_from(language, nil, nil, variants, omit?), [:language, :variants]) ||
+      first_match(language, script, territory, [], fun, omit?)
   end
 
   @doc """

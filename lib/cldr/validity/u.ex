@@ -105,20 +105,20 @@ defmodule Cldr.Validity.U do
   # the locale.
 
   for {key, values} <- @validity_data, key in @process_keys do
-    inverted_values = Enum.map(values, fn
-      {k, v} when is_list(v) -> Enum.map(v, fn tz -> {tz, k} end)
-      {k, nil} -> {String.to_atom(k), k}
-      {k, v} -> {String.to_atom(v), k}
-    end)
-    |> List.flatten()
-    |> Map.new()
+    inverted_values =
+      Enum.map(values, fn
+        {k, v} when is_list(v) -> Enum.map(v, fn tz -> {tz, k} end)
+        {k, nil} -> {String.to_atom(k), k}
+        {k, v} -> {String.to_atom(v), k}
+      end)
+      |> List.flatten()
+      |> Map.new()
 
     defp encode_key(unquote(key), value) when value in unquote(Map.keys(inverted_values)) do
       unquote(Macro.escape(inverted_values))
       |> Map.fetch!(value)
     end
   end
-
 
   defp encode_key("cu", value) do
     value
