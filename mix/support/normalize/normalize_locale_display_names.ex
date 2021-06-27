@@ -38,11 +38,29 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
       |> Map.new()
 
+    measurement_systems =
+      locale_display_names
+      |> get_in(["types", "ms"])
+      |> Enum.map(fn
+        {"uksystem", description} -> {"imperial", description}
+        other -> other
+      end)
+      |> Map.new
+
+    types =
+      locale_display_names
+      |> Map.get("types")
+      |> Map.put("ms", measurement_systems)
+
     locale_display_names =
       locale_display_names
-      |> Map.put("languages", languages)
-      |> Map.put("scripts", scripts)
-      |> Map.put("territories", territories)
+      |> Map.delete("languages")
+      |> Map.delete("scripts")
+      |> Map.delete("territories")
+      |> Map.put("language", languages)
+      |> Map.put("script", scripts)
+      |> Map.put("territory", territories)
+      |> Map.put("types", types)
       |> Map.put("locale_display_pattern", locale_display_pattern)
       |> Map.put("code_patterns", code_patterns)
 

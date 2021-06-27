@@ -80,6 +80,20 @@ defmodule Cldr.Validity.U do
   of a language tag.
 
   """
+
+  # Calendar names may be compound like
+  # islamic-rgsa
+  def encode(:calendar = key, value) do
+    unmapped_key = unmap(key)
+
+    value =
+      unmapped_key
+      |> encode_key(value)
+      |> String.replace("_", "-")
+
+    {unmapped_key, value}
+  end
+
   def encode(key, value) do
     unmapped_key = unmap(key)
     {unmapped_key, encode_key(unmapped_key, value)}
@@ -104,6 +118,7 @@ defmodule Cldr.Validity.U do
       |> Map.fetch!(value)
     end
   end
+
 
   defp encode_key("cu", value) do
     value
@@ -151,6 +166,12 @@ defmodule Cldr.Validity.U do
       |> maybe_get_list_head()
       |> wrap(:ok)
     end
+  end
+
+  # Calendar names may be compound like
+  # islamic-rgsa
+  defp valid("ca", values) when is_list(values) do
+    valid("ca", Enum.join(values, "_"))
   end
 
   # Codepoints?
