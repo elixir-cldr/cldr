@@ -1086,6 +1086,42 @@ defmodule Cldr.Locale do
     end
   end
 
+  potential_matches = quote do
+    [
+      {[language, script, territory, [], omit?], [:language, :script, :territory, :variants]},
+      {[language, nil, territory, [], omit?], [:language, :territory, :variants]},
+      {[language, script, nil, [], omit?], [:language, :script, :variants]},
+      {[language, nil, nil, [], omit?], [:language, :variants]}
+    ]
+  end
+
+  potential_variant_matches = quote do
+    [
+      {[language, script, territory, variants, omit?], [:language, :script, :territory, :variants]},
+      {[language, nil, territory, variants, omit?], [:language, :territory, :variants]},
+      {[language, script, nil, variants, omit?], [:language, :script, :variants]},
+      {[language, nil, nil, variants, omit?], [:language, :variants]}
+    ]
+  end
+
+  # Generate the expressions that check for
+  # the first match
+  defmacrop matches(matches) do
+    for {params, tags} <- matches do
+      params = Enum.map(params, fn
+        [] -> []
+        nil -> nil
+        var -> {:var!, [], [var]}
+      end)
+
+      quote do
+        var!(fun).(locale_name_from(unquote_splicing(params)), unquote(tags))
+      end
+    end
+    |> Enum.reverse
+    |> Enum.reduce(fn exp, acc -> {:||, [], [exp, acc]} end)
+  end
+
   @doc """
   Execute a function for a locale returning
   the first match on language, script, territory,
@@ -1112,12 +1148,8 @@ defmodule Cldr.Locale do
 
   def first_match(%LanguageTag{} = language_tag, fun, omit_singular_script? \\ false)
       when is_function(fun, 2) do
-    %LanguageTag{
-      language: language,
-      script: script,
-      territory: territory,
-      language_variants: variants
-    } = language_tag
+    %LanguageTag{language: language, script: script, territory: territory} = language_tag
+    %LanguageTag{language_variants: variants} = language_tag
 
     first_match(language, script, territory, variants, fun, omit_singular_script?)
   end
@@ -1125,40 +1157,11 @@ defmodule Cldr.Locale do
   defp first_match(language, script, territory, variants, fun, omit? \\ false)
 
   defp first_match(language, script, territory, [], fun, omit?) do
-    fun.(locale_name_from(language, script, territory, [], omit?), [
-      :language,
-      :script,
-      :territory,
-      :variants
-    ]) ||
-      fun.(locale_name_from(language, nil, territory, [], omit?), [
-        :language,
-        :territory,
-        :variants
-      ]) ||
-      fun.(locale_name_from(language, script, nil, [], omit?), [:language, :script, :variants]) ||
-      fun.(locale_name_from(language, nil, nil, [], omit?), [:language, :variants]) || nil
+    matches(unquote(potential_matches)) || nil
   end
 
   defp first_match(language, script, territory, variants, fun, omit?) do
-    fun.(locale_name_from(language, script, territory, variants, omit?), [
-      :language,
-      :script,
-      :territory,
-      :variants
-    ]) ||
-      fun.(locale_name_from(language, nil, territory, variants, omit?), [
-        :language,
-        :territory,
-        :variants
-      ]) ||
-      fun.(locale_name_from(language, script, nil, variants, omit?), [
-        :language,
-        :script,
-        :variants
-      ]) ||
-      fun.(locale_name_from(language, nil, nil, variants, omit?), [:language, :variants]) ||
-      first_match(language, script, territory, [], fun, omit?)
+    matches(unquote(potential_variant_matches)) || matches(unquote(potential_matches)) || nil
   end
 
   @doc """
@@ -1180,20 +1183,14 @@ defmodule Cldr.Locale do
   def locale_name_from(language_tag, omit_singular_script? \\ true)
 
   def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_singular_script?) do
-    locale_name_from(
-      tag.language,
-      tag.script,
-      tag.territory,
-      tag.language_variants,
-      omit_singular_script?
-    )
+    %LanguageTag{language: language, script: script, territory: territory} = tag
+    %LanguageTag{language_variants: language_variants} = tag
+
+    locale_name_from(language, script, territory, language_variants, omit_singular_script?)
   end
 
-  def locale_name_from(
-        %LanguageTag{canonical_locale_name: canonical_locale_name},
-        _omit_singular_script?
-      ) do
-    canonical_locale_name
+  def locale_name_from(%LanguageTag{canonical_locale_name: locale_name}, _omit_singular_script?) do
+    locale_name
   end
 
   def locale_name_from([language, script, territory, variants], omit_singular_script?) do
