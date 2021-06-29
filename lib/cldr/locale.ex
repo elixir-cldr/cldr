@@ -766,12 +766,6 @@ defmodule Cldr.Locale do
   defp maybe_put_likely_subtags(language_tag, _), do: language_tag
 
   @doc false
-  # def canonical_language_tag(locale_name, options \\ [])
-  #
-  # def canonical_language_tag(locale_name, options) when is_binary(locale_name) do
-  #   canonical_language_tag(locale_name, Cldr.default_backend!())
-  # end
-  #
   def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
     canonical_language_tag(language_tag, Cldr.default_backend!())
   end
