@@ -283,11 +283,14 @@ defmodule Cldr.LanguageTag do
     Enum.join(basic_tag ++ extensions, "-")
   end
 
-  defp empty?({_k, ""}), do: true
-  defp empty?(""), do: true
-  defp empty?(_other), do: false
-
   defp join({k, v}), do: "#{k}-#{v}"
+
+  @doc false
+  def empty?({_k, ""}), do: true
+  def empty?(""), do: true
+  def empty?(nil), do: true
+  def empty?([]), do: true
+  def empty?(_other), do: false
 
   # This is primarily to support
   # implementing canonical locale names

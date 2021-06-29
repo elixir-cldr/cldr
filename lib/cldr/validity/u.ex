@@ -33,7 +33,7 @@ defmodule Cldr.Validity.U do
     "dx" => :dx
   }
 
-  @fields Map.values(@field_mapping)
+  @fields Map.values(@field_mapping) |> Enum.sort
   @inverse_field_mapping Enum.map(@field_mapping, fn {k, v} -> {v, k} end) |> Map.new()
   @validity_data Cldr.Config.validity(:u)
   @dont_process_keys ["vt", "rg", "sd", "dx"]
@@ -45,6 +45,10 @@ defmodule Cldr.Validity.U do
   @doc false
   def fields do
     @fields
+  end
+
+  def field_mapping do
+    @field_mapping
   end
 
   @doc """

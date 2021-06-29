@@ -9,7 +9,9 @@ defmodule Cldr.Validity.Variant do
   end
 
   def validate(list) when is_list(list) do
-    Enum.reduce_while(list, {:ok, [], nil}, fn elem, {:ok, acc, _status} ->
+    list
+    |> Enum.reverse()
+    |> Enum.reduce_while({:ok, [], nil}, fn elem, {:ok, acc, _status} ->
       case validate(elem) do
         {:ok, variant, status} -> {:cont, {:ok, [variant | acc], status}}
         {:error, elem} -> {:halt, {:error, elem}}

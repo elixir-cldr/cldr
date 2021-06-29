@@ -1066,46 +1066,35 @@ defmodule Cldr.Locale do
     Enum.find(gettext_locales, &(&1 == locale_name)) || false
   end
 
-  @doc """
-  Returns a display name for a locale suitable
-  for user interface requirements.
-
-  """
-  def display_name(%LanguageTag{} = locale) do
-    module = Module.concat(locale.backend, :Locale)
-    {:ok, display_names} = module.display_names(locale)
-    first_match(locale, &language_match_fun(&1, &2, display_names.language), true)
-  end
-
-  defp language_match_fun(locale_name, _matched_tags, language_names) do
-    if display_name = Map.get(language_names, locale_name) do
-      # consumed_keys = keys_consumed(locale_name)
-      {locale_name, display_name}
-    else
-      nil
-    end
-  end
+  # Describes the ways in which a locale match can
+  # be constructed and the tags that are consumed
+  # in order to create a successful match.
 
   potential_matches = quote do
     [
-      {[language, script, territory, [], omit?], [:language, :script, :territory, :variants]},
-      {[language, nil, territory, [], omit?], [:language, :territory, :variants]},
-      {[language, script, nil, [], omit?], [:language, :script, :variants]},
-      {[language, nil, nil, [], omit?], [:language, :variants]}
+      {[language, script, territory, [], omit?], [:language, :script, :territory]},
+      {[language, nil, territory, [], omit?], [:language, :territory]},
+      {[language, script, nil, [], omit?], [:language, :script]},
+      {[language, nil, nil, [], omit?], [:language]}
     ]
   end
 
   potential_variant_matches = quote do
     [
-      {[language, script, territory, variants, omit?], [:language, :script, :territory, :variants]},
-      {[language, nil, territory, variants, omit?], [:language, :territory, :variants]},
-      {[language, script, nil, variants, omit?], [:language, :script, :variants]},
-      {[language, nil, nil, variants, omit?], [:language, :variants]}
+      {[language, script, territory, variants, omit?],
+        [:language, :script, :territory, :language_variants]},
+      {[language, nil, territory, variants, omit?],
+        [:language, :territory, :language_variants]},
+      {[language, script, nil, variants, omit?],
+        [:language, :script, :language_variants]},
+      {[language, nil, nil, variants, omit?],
+        [:language, :language_variants]}
     ]
   end
 
   # Generate the expressions that check for
   # the first match
+
   defmacrop matches(matches) do
     for {params, tags} <- matches do
       params = Enum.map(params, fn

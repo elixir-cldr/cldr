@@ -107,6 +107,11 @@ defmodule Cldr.Substitution do
     [item_1, string, item_0]
   end
 
+  # Takes care of the case when there are two parameters and two strings
+  def substitute([item_0, item_1], [0, string1, 1, string2]) do
+    [item_0, string1, item_1, string2]
+  end
+
   # Takes care of the common case where there are three parameters separated
   # by strings.
   def substitute([item_0, item_1, item_2], [0, string_1, 1, string_2, 2])

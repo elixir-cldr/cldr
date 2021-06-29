@@ -54,6 +54,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
 
     locale_display_names =
       locale_display_names
+      |> Cldr.Map.rename_keys("variants", "language_variants")
       |> Map.delete("languages")
       |> Map.delete("scripts")
       |> Map.delete("territories")

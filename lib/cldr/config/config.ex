@@ -2360,7 +2360,8 @@ defmodule Cldr.Config do
     locale_display_names =
       content
       |> Map.get(:locale_display_names)
-      |> Cldr.Map.atomize_keys(skip: ["language", "variants"])
+      |> Cldr.Map.rename_keys("variants", "language_variants")
+      |> Cldr.Map.atomize_keys(skip: ["language", "language_variants"])
       |> Cldr.Map.atomize_keys(only: @alt_keys)
 
     Map.put(content, :locale_display_names, locale_display_names)

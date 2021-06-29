@@ -24,6 +24,10 @@ defmodule Cldr.Validity.T do
     @fields
   end
 
+  def field_mapping do
+    @field_mapping
+  end
+
   @doc """
   Decodes and validates that a given value is valid
   for a given key.

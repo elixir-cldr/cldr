@@ -505,10 +505,31 @@ defmodule Cldr do
 
   """
   @spec to_string(term()) :: String.t()
-  @compile {:inline, to_string: 1}
 
   def to_string(term) do
     Cldr.Chars.to_string(term)
+  end
+
+  @doc """
+  Return a localised string suitable for
+  presentation purposes for structs that
+  implement the  `Cldr.LanguageTag.DisplayName`
+  protocol.
+
+  The `Cldr.LanguageTag.DisplayName` protocol is
+  implemented in this library for
+  `t:Cldr.LanguageTag.t`.
+
+  Other CLDR-related libraries implement
+  the protocol for the types they support
+  such as t:Cldr.Unit` and `t:Cldr.Currency`.
+
+  """
+  @spec display_name(term(), Cldr.LanguageTag.t()) :: String.t()
+  @display_name_options [prefer: :default, compound_locale: true]
+
+  def display_name(term, locale \\ Cldr.get_locale(), options \\ @display_name_options) do
+    Cldr.DisplayName.display_name(term, locale, options)
   end
 
   @doc """
