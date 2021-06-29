@@ -263,9 +263,6 @@ defmodule Cldr.Locale do
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
-  defdelegate new(locale_name), to: __MODULE__, as: :canonical_language_tag
-  defdelegate new!(locale), to: __MODULE__, as: :canonical_language_tag!
-
   defdelegate locale_name_to_posix(locale_name), to: Cldr.Config
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
 
@@ -672,6 +669,14 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
 
+  * `options` is a keyword list of options
+
+  ## Options
+
+  * `:add_likely_subtags` is a `boolean` thatdetermines if
+    subtags that are likely to be applicable to this language tag
+    are added to the language tag. The default is `true`.
+
   ## Returns
 
   * `{:ok, language_tag}` or
@@ -683,10 +688,12 @@ defmodule Cldr.Locale do
   1. The language tag is parsed in accordance with [RFC5646](https://tools.ietf.org/html/rfc5646)
 
   2. Any language, script or region aliases are replaced. This
-     will replace any obsolete elements with current versions
+     will replace any obsolete elements with current versions.
 
-  3. If a territory or script is not specified, a default is provided
-     using the CLDR information returned by `Cldr.Locale.likely_subtags/1`
+  3. If a territory, script or language variant is not specified,
+     then a default is provided using the CLDR information returned by
+     `Cldr.Locale.likely_subtags/1` if the option `:add_likely_subtags`
+     is `true` (the default).
 
   4. A `Cldr` locale name is selected that is the nearest fit to the
      requested locale.
@@ -715,19 +722,24 @@ defmodule Cldr.Locale do
       }
 
   """
+  @spec canonical_language_tag(locale_name | Cldr.LanguageTag.t(), Cldr.backend(), Keyword.t()) ::
+          {:ok, Cldr.LanguageTag.t()} | {:error, {module(), String.t()}}
 
-  def canonical_language_tag(locale_name, backend) when is_binary(locale_name) do
+  def canonical_language_tag(locale_name, backend, options \\ [])
+
+  def canonical_language_tag(locale_name, backend, options) when is_binary(locale_name) do
     case LanguageTag.parse(locale_name) do
       {:ok, language_tag} ->
-        canonical_language_tag(language_tag, backend)
+        canonical_language_tag(language_tag, backend, options)
 
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  def canonical_language_tag(%LanguageTag{} = language_tag, backend) do
+  def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
     supress_requested_locale_substitution? = !language_tag.language
+    likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
 
     language_tag =
       language_tag
@@ -741,7 +753,7 @@ defmodule Cldr.Locale do
       |> put_canonical_locale_name()
       |> remove_unknown(:script)
       |> remove_unknown(:territory)
-      |> put_likely_subtags()
+      |> maybe_put_likely_subtags(likely_subtags?)
       |> put_backend(backend)
       |> put_cldr_locale_name()
       |> put_rbnf_locale_name()
@@ -750,11 +762,16 @@ defmodule Cldr.Locale do
     end
   end
 
-  @doc false
-  def canonical_language_tag(locale_name) when is_binary(locale_name) do
-    canonical_language_tag(locale_name, Cldr.default_backend!())
-  end
+  defp maybe_put_likely_subtags(language_tag, true), do: put_likely_subtags(language_tag)
+  defp maybe_put_likely_subtags(language_tag, _), do: language_tag
 
+  @doc false
+  # def canonical_language_tag(locale_name, options \\ [])
+  #
+  # def canonical_language_tag(locale_name, options) when is_binary(locale_name) do
+  #   canonical_language_tag(locale_name, Cldr.default_backend!())
+  # end
+  #
   def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
     canonical_language_tag(language_tag, Cldr.default_backend!())
   end
@@ -779,21 +796,14 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
 
-  See `Cldr.Locale.canonical_language_tag/2` for more information.
+  See `Cldr.Locale.canonical_language_tag/3` for more information.
 
   """
-  @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t(), Cldr.backend()) ::
+  @spec canonical_language_tag!(locale_name | Cldr.LanguageTag.t(), Cldr.backend(), Keyword.t()) ::
           Cldr.LanguageTag.t() | none()
 
-  def canonical_language_tag!(language_tag, backend) do
-    case canonical_language_tag(language_tag, backend) do
-      {:ok, canonical_tag} -> canonical_tag
-      {:error, {exception, reason}} -> raise exception, reason
-    end
-  end
-
-  def canonical_language_tag!(language_tag) do
-    case canonical_language_tag(language_tag) do
+  def canonical_language_tag!(language_tag, backend, options \\ []) do
+    case canonical_language_tag(language_tag, backend, options) do
       {:ok, canonical_tag} -> canonical_tag
       {:error, {exception, reason}} -> raise exception, reason
     end
@@ -1272,9 +1282,18 @@ defmodule Cldr.Locale do
   Replace empty subtags within a `t:Cldr.LanguageTag.t/0` with the most likely
   subtag.
 
-  ## Options
+  ## Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+
+  * `options` is a keyword list of options
+
+  ## Options
+
+  * `:add_likely` is a boolean indicating whether to add
+    likely subtags. The default is `true`.
+
+  ## Notes
 
   A subtag is called empty if it has a missing script or territory subtag, or it is
   a base language subtag with the value `und`. In the description below,
@@ -1325,6 +1344,7 @@ defmodule Cldr.Locale do
       }
 
   """
+
   def put_likely_subtags(%LanguageTag{} = language_tag) do
     %LanguageTag{language: language, script: script, territory: territory} = language_tag
 
