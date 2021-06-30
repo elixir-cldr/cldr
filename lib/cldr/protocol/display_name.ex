@@ -5,7 +5,7 @@ defprotocol Cldr.DisplayName do
 
   """
 
-  @spec display_name(t, Cldr.LanguageTag.t(), Keyword.t()) :: String.t()
-  def display_name(language_tag, in_locale, options)
+  @spec display_name(t, Keyword.t()) :: String.t()
+  def display_name(language_tag, options)
 end
 

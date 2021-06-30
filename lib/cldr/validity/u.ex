@@ -10,11 +10,13 @@ defmodule Cldr.Validity.U do
     "ka" => :col_alternate,
     "kb" => :col_backwards,
     "kc" => :col_case_level,
-    "kn" => :col_numeric,
-    "kk" => :col_normalization,
-    "kr" => :col_reorder,
     "kf" => :col_case_first,
+    "kh" => :col_hiragana_quaternary,
+    "kk" => :col_normalization,
+    "kn" => :col_numeric,
+    "kr" => :col_reorder,
     "ks" => :col_strength,
+    "kv" => :kv,
     "cu" => :currency,
     "cf" => :cf,
     "nu" => :numbers,
@@ -36,7 +38,7 @@ defmodule Cldr.Validity.U do
   @fields Map.values(@field_mapping) |> Enum.sort
   @inverse_field_mapping Enum.map(@field_mapping, fn {k, v} -> {v, k} end) |> Map.new()
   @validity_data Cldr.Config.validity(:u)
-  @dont_process_keys ["vt", "rg", "sd", "dx"]
+  @dont_process_keys ["vt", "rg", "sd", "dx", "kr"]
   @valid_keys Map.keys(@validity_data)
   @process_keys @valid_keys -- @dont_process_keys
 
@@ -59,7 +61,7 @@ defmodule Cldr.Validity.U do
   and the canonical value or an error.
 
   """
-  @dont_atomize ["tz", "sd"]
+  @dont_atomize ["tz", "rg", "sd", "kr"]
   def decode(key, value) when key in @dont_atomize do
     with {:ok, value} <- valid(key, value) do
       {:ok, {map(key), value}}
@@ -130,11 +132,15 @@ defmodule Cldr.Validity.U do
     |> String.downcase()
   end
 
-  defp encode_key("rg", value) do
+  defp encode_key("rg", value) when is_atom(value) do
     value
     |> Atom.to_string()
     |> String.downcase()
     |> Kernel.<>(@region_subtag_filler)
+  end
+
+  defp encode_key("rg", value) do
+    value
   end
 
   defp encode_key("sd", value) do
@@ -145,6 +151,13 @@ defmodule Cldr.Validity.U do
   defp encode_key("vt", value) do
     value
     |> String.downcase()
+  end
+
+  defp encode_key("kr", values) when is_list(values) do
+    values
+    |> Enum.map(&to_string/1)
+    |> Enum.map(&String.downcase/1)
+    |> Enum.join("-")
   end
 
   defp encode_key("dx", value) when is_atom(value) do
@@ -219,6 +232,32 @@ defmodule Cldr.Validity.U do
         {:error, _script} -> {:halt, {:error, invalid_value_error(key, value)}}
       end
     end)
+  end
+
+  @kr_valid_values @validity_data["kr"] |> Map.delete("REORDER_CODE")
+  defp valid("kr", value) when is_binary(value) do
+    cond do
+      Map.has_key?(@kr_valid_values, value) ->
+        {:ok, [atomize(value)]}
+      true ->
+        case Cldr.Validity.Script.validate(value) do
+          {:ok, script, _status} -> {:ok, [script]}
+          other -> other
+        end
+    end
+  end
+
+  defp valid("kr" = key, values) when is_list(values) do
+    Enum.reduce_while(values, {:ok, []}, fn value, {:ok, acc} ->
+      case valid("kr", value) do
+        {:ok, [reorder_code]} -> {:cont, {:ok, [reorder_code | acc]}}
+        {:error, _reorder_code} -> {:halt, {:error, invalid_value_error(key, value)}}
+      end
+    end)
+    |> case do
+      {:ok, list} -> {:ok, Enum.reverse(list)}
+      other -> other
+    end
   end
 
   defp valid(key, value) when key in @valid_keys do

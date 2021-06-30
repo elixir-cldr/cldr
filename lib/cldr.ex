@@ -528,8 +528,9 @@ defmodule Cldr do
   @spec display_name(term(), Cldr.LanguageTag.t()) :: String.t()
   @display_name_options [prefer: :default, compound_locale: true]
 
-  def display_name(term, locale \\ Cldr.get_locale(), options \\ @display_name_options) do
-    Cldr.DisplayName.display_name(term, locale, options)
+  def display_name(term, options \\ []) do
+    options = Keyword.merge(@display_name_options, options)
+    Cldr.DisplayName.display_name(term, options)
   end
 
   @doc """

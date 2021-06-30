@@ -737,6 +737,11 @@ defmodule Cldr.Locale do
     end
   end
 
+  def canonical_language_tag(%LanguageTag{cldr_locale_name: locale} = tag, _backend, _options)
+       when not is_nil(locale) do
+    {:ok, tag}
+  end
+
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
     supress_requested_locale_substitution? = !language_tag.language
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
@@ -892,6 +897,10 @@ defmodule Cldr.Locale do
     else
       language_tag
     end
+  end
+
+  defp substitute(%LanguageTag{} = language_tag, :requested_name) do
+    language_tag
   end
 
   # No variants so we just check the language for an alias
