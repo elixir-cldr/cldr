@@ -144,8 +144,8 @@ if Code.ensure_loaded?(NimbleParsec) do
     def transform do
       ignore(ascii_string([?t, ?T], 1))
       |> ignore(dash())
-      |> optional(basic_langtag() |> ignore(dash()))
-      |> times(keyword() |> reduce(:collapse_keywords), min: 1)
+      |> optional(basic_langtag() |> ignore(optional(dash())))
+      |> repeat(keyword() |> reduce(:collapse_keywords))
       |> reduce(:merge_langtag_and_transform)
       |> unwrap_and_tag(:transform)
       |> label("a BCP-47 language tag transform extension")
