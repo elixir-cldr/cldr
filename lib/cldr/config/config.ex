@@ -1538,6 +1538,7 @@ defmodule Cldr.Config do
   @doc false
   @keys_to_integerize ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
   @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
+  @skip_keys ["zone"]
   def do_get_locale(locale, path, false) do
     path
     |> read_locale_file
@@ -1545,7 +1546,7 @@ defmodule Cldr.Config do
     |> assert_valid_keys!(locale)
     |> structure_number_formats()
     |> structure_units()
-    |> atomize_keys(required_modules() -- @dont_atomize_keys, except: @keys_to_integerize)
+    |> atomize_keys(required_modules() -- @dont_atomize_keys, skip: @skip_keys, except: @keys_to_integerize)
     |> structure_rbnf()
     |> atomize_number_systems()
     |> atomize_languages()
@@ -2339,10 +2340,20 @@ defmodule Cldr.Config do
     Map.put(content, :number_systems, number_systems)
   end
 
+  @date_atoms ["exemplar_city", "long", "standard", "generic", "daylight", "formal"]
   defp structure_date_formats(content) do
     dates =
       content.dates
       |> Cldr.Map.integerize_keys(only: @keys_to_integerize)
+
+    zones =
+      dates.time_zone_names.zone
+      |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
+      |> Cldr.Map.atomize_keys(only: @date_atoms)
+      |> IO.inspect
+
+    dates =
+      put_in(dates, [:time_zone_names, :zone], zones)
 
     Map.put(content, :dates, dates)
   end
