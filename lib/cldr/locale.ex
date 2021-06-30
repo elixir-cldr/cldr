@@ -673,9 +673,10 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `:add_likely_subtags` is a `boolean` thatdetermines if
-    subtags that are likely to be applicable to this language tag
-    are added to the language tag. The default is `true`.
+  * `:add_likely_subtags` is a `boolean` thatdetermines
+    if subtags that are likely to be applicable to this
+    language tag are added to the language tag. The default
+    is `true`.
 
   ## Returns
 
@@ -772,11 +773,11 @@ defmodule Cldr.Locale do
 
   @doc false
   def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
-    canonical_language_tag(language_tag, Cldr.default_backend!())
+    canonical_language_tag(language_tag, Cldr.default_backend!(), add_likely_subtags: false)
   end
 
   def canonical_language_tag(%LanguageTag{backend: backend} = language_tag) do
-    canonical_language_tag(language_tag, backend)
+    canonical_language_tag(language_tag, backend, add_likely_subtags: false)
   end
 
   defp wrap(term, tag) do

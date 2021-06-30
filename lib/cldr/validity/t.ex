@@ -44,6 +44,10 @@ defmodule Cldr.Validity.T do
     {:error, error_language_tag}
   end
 
+  def decode("x0" = key, private_use) do
+    {:ok, {map(key), private_use}}
+  end
+
   def decode(key, value) do
     with {:ok, value} <- valid(key, value) do
       {:ok, {map(key), atomize(value)}}
@@ -104,6 +108,14 @@ defmodule Cldr.Validity.T do
     String.downcase(language.canonical_locale_name)
   end
 
+  defp encode_key("x0", private_use) when is_list(private_use) do
+    Enum.join(private_use, "-")
+  end
+
+  defp encode_key("x0", private_use) do
+    private_use
+  end
+
   # Check that the value provided
   # is acceptable for the given key.
 
@@ -147,6 +159,10 @@ defmodule Cldr.Validity.T do
 
   defp valid("language", language) do
     language
+  end
+
+  defp valid("x0", private_use) do
+    private_use
   end
 
   defp valid(key, _value) do
