@@ -2350,7 +2350,6 @@ defmodule Cldr.Config do
       dates.time_zone_names.zone
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.atomize_keys(only: @date_atoms)
-      |> IO.inspect
 
     dates =
       put_in(dates, [:time_zone_names, :zone], zones)
