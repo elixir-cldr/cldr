@@ -28,7 +28,7 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Add `Cldr.DisplayName` protocol definition to return a localised string representation of CLDR-based structs such as `t:Cldr.LanguageTag`, `t:Cldr.Unit` and `t:Cldr.Currency`
 
-* `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements).
+* `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements) in [ex_cldr_locale_display](https://github.com/elixir-cldr/cldr_locale_display).
 
 * `Cldr.locale_and_backend_from/1` now supports a `map` of options as the argument.
 
