@@ -143,9 +143,8 @@ if Code.ensure_loaded?(NimbleParsec) do
     @spec transform :: NimbleParsec.t()
     def transform do
       ignore(ascii_string([?t, ?T], 1))
-      |> ignore(dash())
-      |> optional(basic_langtag() |> ignore(optional(dash())))
-      |> repeat(keyword() |> reduce(:collapse_keywords))
+      |> optional(ignore(dash()) |> concat(basic_langtag()))
+      |> concat(keywords())
       |> reduce(:merge_langtag_and_transform)
       |> unwrap_and_tag(:transform)
       |> label("a BCP-47 language tag transform extension")
@@ -176,7 +175,7 @@ if Code.ensure_loaded?(NimbleParsec) do
     @spec singleton :: NimbleParsec.t()
     def singleton do
       ascii_string([?0..?9, ?a..?s, ?A..?S, ?v..?w, ?V..?W, ?y..?z, ?Y..?Z], 1)
-      # |> label("a single alphanumeric character that is not 'x', 'u' or 't'")
+      |> label("a single alphanumeric character that is not 'x', 'u' or 't'")
     end
 
     @spec attributes :: NimbleParsec.t()

@@ -100,20 +100,30 @@ defmodule Cldr.Rfc5646.Helpers do
     []
   end
 
-  def collapse_extensions([{:extensions, var1}, {:extension, var2} | rest]) do
-    collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
+  def collapse_extensions(list) do
+    list
+    |> Enum.sort()
+    |> do_collapse_extensions()
   end
 
-  def collapse_extensions([{:extension, var1}, {:extension, var2} | rest]) do
-    collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
+  def do_collapse_extensions([]) do
+    []
   end
 
-  def collapse_extensions([{:extension, var1} | rest]) when is_map(var1) do
-    [{:extensions, var1} | collapse_extensions(rest)]
+  def do_collapse_extensions([{:extensions, var1}, {:extension, var2} | rest]) do
+    do_collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
   end
 
-  def collapse_extensions([head | rest]) do
-    [head | collapse_extensions(rest)]
+  def do_collapse_extensions([{:extension, var1}, {:extension, var2} | rest]) do
+    do_collapse_extensions([{:extensions, Map.merge(var1, var2)} | rest])
+  end
+
+  def do_collapse_extensions([{:extension, var1} | rest]) when is_map(var1) do
+    [{:extensions, var1} | do_collapse_extensions(rest)]
+  end
+
+  def do_collapse_extensions([head | rest]) do
+    [head | do_collapse_extensions(rest)]
   end
 
   def collapse_variants([]) do
