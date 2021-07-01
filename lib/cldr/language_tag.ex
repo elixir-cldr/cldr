@@ -356,6 +356,13 @@ defmodule Cldr.LanguageTag do
   end
 
   defimpl Inspect do
+    def inspect(%Cldr.LanguageTag{requested_locale_name: nil} = l, _opts) do
+      locale_name =
+        Cldr.Locale.locale_name_from(l.language, l.script, l.territory, l.language_variants)
+
+      "#Cldr.LanguageTag<" <> locale_name <> " [tokenized]>"
+    end
+
     def inspect(%Cldr.LanguageTag{canonical_locale_name: nil} = language_tag, _opts) do
       "#Cldr.LanguageTag<" <> language_tag.requested_locale_name <> " [parsed]>"
     end
