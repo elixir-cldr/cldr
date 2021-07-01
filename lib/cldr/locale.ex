@@ -739,7 +739,7 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{cldr_locale_name: locale} = tag, _backend, _options)
-       when not is_nil(locale) do
+       when is_binary(locale) do
     {:ok, tag}
   end
 
@@ -749,6 +749,7 @@ defmodule Cldr.Locale do
 
     language_tag =
       language_tag
+      |> transform_language(backend)
       |> put_requested_locale_name(supress_requested_locale_substitution?)
       |> substitute_aliases()
 
@@ -768,17 +769,31 @@ defmodule Cldr.Locale do
     end
   end
 
+  defp transform_language(%{transform: %{"language" => nil}} = language_tag, _backend) do
+    language_tag
+  end
+
+  defp transform_language(%{transform: %{"language" => language}} = language_tag, backend) do
+    canonical_language = canonical_language_tag(language, backend, add_likely_subtags: false)
+    transform = Map.put(language_tag.transform, "language", canonical_language)
+    Map.put(language_tag, :transform, transform)
+  end
+
+  defp transform_language(language_tag, _backend) do
+    language_tag
+  end
+
   defp maybe_put_likely_subtags(language_tag, true), do: put_likely_subtags(language_tag)
   defp maybe_put_likely_subtags(language_tag, _), do: language_tag
 
   @doc false
-  def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
-    canonical_language_tag(language_tag, Cldr.default_backend!(), add_likely_subtags: false)
-  end
-
-  def canonical_language_tag(%LanguageTag{backend: backend} = language_tag) do
-    canonical_language_tag(language_tag, backend, add_likely_subtags: false)
-  end
+  # def canonical_language_tag(%LanguageTag{backend: nil} = language_tag) do
+  #   canonical_language_tag(language_tag, Cldr.default_backend!(), add_likely_subtags: false)
+  # end
+  #
+  # def canonical_language_tag(%LanguageTag{backend: backend} = language_tag) do
+  #   canonical_language_tag(language_tag, backend, add_likely_subtags: false)
+  # end
 
   defp wrap(term, tag) do
     {tag, term}

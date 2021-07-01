@@ -20,6 +20,10 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Correct territory containment chain for the territory `US`.
 
+* Correctly parses and validates the [-t- extension](https://unicode-org.github.io/cldr/ldml/tr35.html#t_Extension) of a language tag.
+
+* Fixes inspecting a language tag that has a `-t-` extension and/or a private use (`-x-`) extension.
+
 ### Enhancements
 
 * Add `Cldr.DisplayName` protocol definition to return a localised string representation of CLDR-based structs such as `t:Cldr.LanguageTag`, `t:Cldr.Unit` and `t:Cldr.Currency`

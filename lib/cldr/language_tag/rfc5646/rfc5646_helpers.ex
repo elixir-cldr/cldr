@@ -25,7 +25,6 @@ defmodule Cldr.Rfc5646.Helpers do
   def merge_langtag_and_transform([langtag, %{} = subtags]) do
     langtag =
       struct(Cldr.LanguageTag, langtag)
-      |> Cldr.Locale.canonical_language_tag()
 
     Map.put(subtags, "language", langtag)
   end
@@ -33,7 +32,6 @@ defmodule Cldr.Rfc5646.Helpers do
   def merge_langtag_and_transform([subtags]) when is_list(subtags) do
     langtag =
       struct(Cldr.LanguageTag, subtags)
-      |> Cldr.Locale.canonical_language_tag()
 
      %{"language" => langtag}
   end
