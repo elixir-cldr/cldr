@@ -1,13 +1,13 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.23.0-dev"
+  @version "2.23.0"
 
   def project do
     [
       app: :ex_cldr,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.10",
       name: "Cldr",
       source_url: "https://github.com/elixir-cldr/cldr",
       docs: docs(),
@@ -50,7 +50,7 @@ defmodule Cldr.Mixfile do
       {:certifi, "~> 2.5", optional: true},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
-      {:nimble_parsec, "~> 0.5 or ~> 1.0"},
+      {:nimble_parsec, "~> 0.5 or ~> 1.0", optional: true},
       {:gettext, "~> 0.13", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
@@ -141,7 +141,10 @@ defmodule Cldr.Mixfile do
         ex_cldr_numbers: "https://hexdocs.pm/ex_cldr_numbers",
         ex_cldr_dates_times: "https://hexdocs.pm/ex_cldr_dates_times",
         ex_cldr_units: "https://hexdocs.pm/ex_cldr_units",
-        ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists"
+        ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists",
+        ex_cldr_calendars: "https://hexdocs.pm/ex_cldr_calendars",
+        ex_cldr_html: "https://hexdocs.pm/ex_cldr_html",
+        ex_cldr_messages: "https://hexdocs.pm/ex_cldr_messages"
       ],
       groups_for_modules: groups_for_modules(),
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
@@ -165,6 +168,10 @@ defmodule Cldr.Mixfile do
     [
       "Language Tag": ~r/^Cldr.LanguageTag.?/,
       "Plural Rules": ~r/^Cldr.Number.?/,
+      Protocols: [
+        Cldr.Chars,
+        Cldr.DisplayName
+        ],
       Plugs: ~r/^Cldr.Plug.?/,
       Gettext: ~r/^Cldr.Gettext.?/,
       Helpers: [
@@ -175,7 +182,12 @@ defmodule Cldr.Mixfile do
         Cldr.Macros,
         Cldr.Map,
         Cldr.Math,
-        Cldr.String
+        Cldr.String,
+        Cldr.Config,
+        Cldr.Install,
+        Cldr.Substitution,
+        Cldr.IsoCurrency,
+        Cldr.Timezone
       ],
       "Example Backend": ~r/^MyApp.?/
     ]

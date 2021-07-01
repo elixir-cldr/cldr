@@ -522,7 +522,7 @@ defmodule Cldr do
 
   Other CLDR-related libraries implement
   the protocol for the types they support
-  such as t:Cldr.Unit` and `t:Cldr.Currency`.
+  such as `t:Cldr.Unit` and `t:Cldr.Currency`.
 
   """
   @spec display_name(term(), Keyword.t()) :: String.t()
@@ -2093,8 +2093,7 @@ defmodule Cldr do
 
   ## Options
 
-  * `plural_type` is any number system type name **not** returned
-    by `Cldr.Number.PluralRule.known_plural_types/0`
+  * `plural_type` is any unknown number system type
 
   ## Returns
 

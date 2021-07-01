@@ -1,8 +1,10 @@
 defmodule Cldr.LanguageTag.T do
   @moduledoc """
-
+  Defines the struct for the BCP 47 `t`
+  extension.
 
   """
+
   import Cldr.LanguageTag, only: [empty?: 1]
 
   @fields Cldr.Validity.T.fields()

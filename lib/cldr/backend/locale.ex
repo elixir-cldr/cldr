@@ -1,5 +1,6 @@
 defmodule Cldr.Locale.Backend do
-  @doc false
+  @moduledoc false
+
   def define_locale_backend(config) do
     quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
       defmodule Locale do

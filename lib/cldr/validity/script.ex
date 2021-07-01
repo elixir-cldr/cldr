@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.Script do
+  @moduledoc false
+
   use Cldr.Validity, :scripts
   @behaviour Cldr.Validity
 

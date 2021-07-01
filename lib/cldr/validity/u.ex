@@ -1,9 +1,6 @@
 defmodule Cldr.Validity.U do
-  @moduledoc """
-  Validates the values of the BCP 47 "U"
-  extension to the language tag
+  @moduledoc false
 
-  """
   @field_mapping %{
     "ca" => :calendar,
     "co" => :collation,

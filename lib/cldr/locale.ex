@@ -1227,7 +1227,7 @@ defmodule Cldr.Locale do
   * `script` is an atom that is a valid
     script code.
 
-  * territory` is an atom that is a valid
+  * `territory` is an atom that is a valid
     territory code.
 
   * `variants` is a list of language variants as lower

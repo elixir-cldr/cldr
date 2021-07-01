@@ -7,9 +7,9 @@
 
 ## Introduction
 
-`Cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting of numbers, lists, currencies, calendars, units of measure and dates/times.  As of November 2020 and `ex_cldr` Version 2.18.0, `Cldr` is based upon [CLDR version 38.0.0](http://cldr.unicode.org/index/downloads/cldr-38).
+`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 8th 2021 and `ex_cldr` Version 2.20.0, `ex_cldr` is based upon [CLDR version 39.0](http://cldr.unicode.org/index/downloads/cldr-39).
 
-The first step is to define a module that will host the desired `Cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
+The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
 ```elixir
 @doc """
@@ -38,18 +38,21 @@ The functions you are mostly likely to use are:
 * `MyApp.Cldr.get_locale/0`
 * `MyApp.Cldr.known_locale_names/0`
 * `MyApp.Cldr.Locale.new/1`
+* `MyApp.Cldr.validate_locale/1`
 
 To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
 
 * `Cldr.Config.get_locale/2` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with higher performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/2`.
 
-## Use this package when you have a requirement to...
+## Use Case
+
+Use this library if you need to:
 
 * Support multiple languages and locales in your application
 
-* Need to support formatting numbers, dates, times, date-times, units and lists in one language or many
+* Support formatting numbers, dates, times, date-times, units and lists in one language or many
 
-* Access the data maintained in the CLDR repository in a functional manner
+* Need to access the data maintained in the CLDR repository in a functional manner
 
 * Parse an [Accept-Language](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4) http header or a [language tag](https://tools.ietf.org/html/bcp47)
 
@@ -57,7 +60,7 @@ To access the raw Cldr data for a locale the `Cldr.Config` module is available. 
 
 ## Elixir Version Requirements
 
-* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.6 or later.
+* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.10 or later.
 
 ## Installation
 
@@ -66,7 +69,7 @@ Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix
 ```elixir
 defp deps do
   [
-    {:ex_cldr, "~> 2.0"},
+    {:ex_cldr, "~> 2.23"},
     # Posion or any other compatible json library
     # that implements `encode!/1` and `decode!/1`
     # :jason is recommended
@@ -90,6 +93,8 @@ mix deps.compile
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
+* Locale name localisation: [ex_cldr_locale_display](https://hex.pm/packages/ex_cldr_locale_display)
+* HTML select helpers: [ex_cldr_html](https://hex.pm/packages/ex_cldr_html)
 * Calendars: [ex_cldr_calendars](https://hex.pm/packages/ex_cldr_calendars)
 * Calendar formatting: [ex_cldr_calendars_format](https://hex.pm/packages/ex_cldr_calendars_format)
 * Printf-like formatting: [ex_cldr_print](https://hex.pm/packages/ex_cldr_print)
@@ -233,16 +238,18 @@ The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not a
 
 The currently known providers and their `hex` package names are:
 
-  | Hex Package          | Provider Module   | Comment                                        |
-  | :------------------- | :---------------- | :--------------------------------------------- |
-  | ex_cldr_numbers      | Cldr.Number       | Formatting of numbers, currencies              |
-  | ex_cldr_lists        | Cldr.List         | Formatting of lists                            |
-  | ex_cldr_units        | Cldr.Unit         | Formatting of SI and Imperial units            |
-  | ex_cldr_territories  | Cldr.Territory    | Formatting of territory (country) data         |
-  | ex_cldr_languages    | Cldr.Language     | Formatting of language information             |
-  | ex_cldr_dates_times  | Cldr.DateTime     | Formatting of dates, times & datetimes         |
-  | ex_money             | Money             | Operations on and formatting of a money type   |
-  | ex_messages          | Cldr.Message      | Formatting of ICU-formatted messages           |
+  | Hex Package            | Provider Module    | Comment                                        |
+  | :--------------------- | :----------------- | :--------------------------------------------- |
+  | ex_cldr_numbers        | Cldr.Number        | Formatting of numbers, currencies              |
+  | ex_cldr_lists          | Cldr.List          | Formatting of lists                            |
+  | ex_cldr_units          | Cldr.Unit          | Formatting of SI and Imperial units            |
+  | ex_cldr_currency       | Cldr.Currency      | Currency definitions and localizations         |
+  | ex_cldr_territories    | Cldr.Territory     | Formatting of territory (country) data         |
+  | ex_cldr_languages      | Cldr.Language      | Formatting of language information             |
+  | ex_cldr_dates_times    | Cldr.DateTime      | Formatting of dates, times & datetimes         |
+  | ex_cldr_locale_display | Cldr.LocaleDisplay | Localising locale names                        |
+  | ex_money               | Money              | Operations on and formatting of a money type   |
+  | ex_messages            | Cldr.Message       | Formatting of ICU-formatted messages           |
 
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 
@@ -264,7 +271,7 @@ end
 3. Update any [plugs](#plugs) to configure the desired backend
 4. Adjust any API calls from `Cldr.some_function` to `MyApp.Cldr.some_function`.  Or better still, alias your backend module where required.  ie. `alias MyApp.Cldr, as: Cldr`
 
-## Downloading Configured Locales
+## Downloading Locales
 
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
@@ -273,7 +280,7 @@ or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.
 
-## Localizing and Formatting Numbers
+## Localizing Numbers
 
 The `Cldr.Number` module implemented in the [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers) package provides number formatting.  The public API for number formatting is `MyApp.Cldr.Number.to_string/2`.  Some examples:
 ```elixir
@@ -343,7 +350,7 @@ iex> MyApp.Cldr.Unit.available_units
 ```
 See `h MyApp.Cldr.Unit` and `h MyApp.Cldr.Unit.to_string` in `iex` for further information.
 
-## Localizing Dates, Times and DateTimes
+## Localizing Dates
 
 Formatting of relative dates and date times is supported in the `Cldr.DateTime.Relative` module implemented in the [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times) package.  The public API is `MyApp.Cldr.DateTime.to_string/2` and `MyApp.Cldr.DateTime.Relative.to_string/2`.  Some examples:
 ```elixir
@@ -371,7 +378,7 @@ iex> MyApp.Cldr.DateTime.Relative.to_string(1234, unit: :year)
 iex> MyApp.Cldr.DateTime.Relative.to_string(1234, unit: :year, locale: "fr")
 "dans 1 234 ans"
 ```
-## Gettext Backend Pluralization Support
+## Gettext Pluralization
 
 There is an experimental plurals module for Gettext called `MyApp.Cldr.Gettext.Plural` (where `MyApp.Cldr` is the name of your backend module). It is configured in `Gettext` by:
 ```elixir
@@ -463,9 +470,9 @@ defmodule MyAppWeb.Router do
 end
 ```
 
-## About Language Tags and Locale strings
+## About Language Tags
 
-Note that `Cldr` defines locale strings according to the [IETF standard](https://en.wikipedia.org/wiki/IETF_language_tag) as defined in [RFC5646](https://tools.ietf.org/html/rfc5646).  `Cldr` also implements the `u` extension as defined in [RFC6067](https://tools.ietf.org/html/rfc6067) and the `t` extension defined in [RFC6497](https://tools.ietf.org/html/rfc6497). This is also the standard used by [W3C](https://www.w3.org/TR/ltli/).
+Note that `ex_cldr` defines locale strings according to the [IETF standard](https://en.wikipedia.org/wiki/IETF_language_tag) as defined in [RFC5646](https://tools.ietf.org/html/rfc5646).  `ex_cldr` also implements the `u` extension as defined in [RFC6067](https://tools.ietf.org/html/rfc6067) and the `t` extension defined in [RFC6497](https://tools.ietf.org/html/rfc6497). This is also the standard used by [W3C](https://www.w3.org/TR/ltli/).
 
 The IETF standard is slightly different to the [ISO/IEC 15897](http://www.open-std.org/jtc1/sc22/wg20/docs/n610.pdf) standard used by Posix-based systems; primarily in that ISO 15897 uses a "_" separator whereas IETF and W3C use "-".
 
@@ -474,6 +481,37 @@ Locale string are case insensitive but there are common conventions:
 * Language codes are lower-cased
 * Territory codes are upper-cased
 * Script names are capital-cased
+* All other subtags are lower-cased
+
+### `Sigil_l`
+
+As of `ex_cldr` version 2.23.0, a sigil is available to simplify creating `t:Cldr.LanguageTag` structs. Usage is:
+```elixir
+iex> import Cldr.LanguageTag.Sigil
+Cldr.LanguageTag.Sigil
+
+# Returns a locale that is valid and known to
+# the default backend module
+iex> ~l(en-US)
+#Cldr.LanguageTag<en-US [validated]>
+
+# Same, but specifying the backend module
+# MyApp.Cldr specifically
+iex> ~l(en-US|MyApp.Cldr)
+#Cldr.LanguageTag<en-US [validated]>
+
+# The `u` flag will parse and validate
+# the language tag but it may not be known
+# as a configured locale
+iex> ~l(zh)u
+#Cldr.LanguageTag<zh [canonical]>
+
+# Language tags can convey a lot more information
+# than might be initially expected!
+iex> ~l(en-u-ca-ethiopic-cu-aud-sd-gbsct-t-d0-lower-k0-extended-m0-ungegn-x-ux)
+#Cldr.LanguageTag<en-t-d0-lower-k0-extended-m0-ungegn-u-ca-ethiopic-cu-aud-sd-gbsct-x-ux [validated]>
+
+```
 
 ### Locale extensions
 
@@ -502,13 +540,13 @@ iex> MyApp.Cldr.validate_locale "en-AU-u-tz-ausyd-cf-account"
    gettext_locale_name: "en",
    language: "en",
    language_subtags: [],
-   language_variant: nil,
-   locale: %{currency_format: :accounting, timezone: "Australia/Sydney"},
+   language_variants: nil,
+   locale: %Cldr.LanguageTag.U{cf: :account, timezone: "Australia/Sydney"},
    private_use: [],
    rbnf_locale_name: "en",
    requested_locale_name: "en-AU",
-   script: "Latn",
-   territory: "AU",
+   script: :Latn,
+   territory: :AU,
    transform: %{}
  }}
 ```
@@ -522,19 +560,19 @@ Other libraries in the family will progressively implement other extension keys.
 
 ### Notes
 
-* A language code is an ISO3166 language code.
+* A language code is an ISO-3166 language code.
 * Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portugese as used in Portugal.
-* In `Cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `Cldr.LanguageTag` struct.
-* The locales known to `Cldr` can be retrieved by `Cldr.known_locale_names/1` to get the locales known to this configuration of `Cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
-
-## Testing
-
-Tests cover the full 566 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
-
-Tests are run on Elixir 1.6 and later.  `Cldr` will not run on Elixir versions before 1.6.
+* In `ex_cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `t:Cldr.LanguageTag` struct.
+* The locales known to `ex_cldr` can be retrieved by `Cldr.known_locale_names/1` to get the locales known to this configuration of `ex_cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
 
 ## Developing ex_cldr
 
-See the file `DEVELOPMENT.md`
+See the file `DEVELOPMENT.md` in the github repository.
+
+### Testing
+
+Tests cover the full 566 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+
+Tests are run on Elixir 1.10 and later.  `ex_cldr` may not run on Elixir versions before 1.10.
 

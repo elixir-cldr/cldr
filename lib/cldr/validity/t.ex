@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.T do
+  @moduledoc false
+
   alias Cldr.Validity.U
 
   @field_mapping %{

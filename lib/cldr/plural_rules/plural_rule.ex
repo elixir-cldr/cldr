@@ -1,5 +1,11 @@
 defmodule Cldr.Number.PluralRule do
-  @moduledoc false
+  @moduledoc """
+  Defines the plural rule implementation
+  modules. The functions in this module
+  generate code to implement the plural
+  rules of CLDR.
+
+  """
 
   @type operand :: any()
   @type plural_type() :: :zero | :one | :two | :few | :many | :other
@@ -609,6 +615,7 @@ defmodule Cldr.Number.PluralRule do
     end
   end
 
+  @doc false
   def define_plural_ranges(config) do
     quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
       defmodule Number.PluralRule.Range do

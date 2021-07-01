@@ -301,9 +301,7 @@ defmodule Cldr.Backend do
         or a `Cldr.LanguageTag` struct returned by `#{inspect(__MODULE__)}.Locale.new!/1`
 
       See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
-      of a language tag and consult `Cldr.Rfc5646.Parser` for the
-      specification as implemented that includes the CLDR extensions for
-      "u" (locales) and "t" (transforms).
+      of a language tag.
 
       ## Examples
 
@@ -503,9 +501,7 @@ defmodule Cldr.Backend do
       ## Notes
 
       See [rfc5646](https://tools.ietf.org/html/rfc5646) for the specification
-      of a language tag and consult `Cldr.Rfc5646.Parser` for the
-      specification as implemented that includes the CLDR extensions for
-      "u" (locales) and "t" (transforms).
+      of a language tag.
 
       ## Examples
 

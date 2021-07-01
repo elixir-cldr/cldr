@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.Subdivision do
+  @moduledoc false
+
   use Cldr.Validity, :subdivisions
   @behaviour Cldr.Validity
 

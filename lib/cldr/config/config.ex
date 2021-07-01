@@ -1,5 +1,13 @@
 defmodule Cldr.Config do
-  @moduledoc false
+  @moduledoc """
+  Provider configuration support
+  functions for ex_cldr.
+
+  The functions in this module should
+  be considered private use and they
+  may change at any time.
+
+  """
 
   # The functions in this module are considered
   # private use.

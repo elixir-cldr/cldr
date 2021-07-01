@@ -2,7 +2,7 @@
 
 ## Cldr v2.23.0
 
-This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.23.0 released on July 1st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
@@ -36,13 +36,15 @@ This is the changelog for Cldr v2.23.0 released on ______, 2021.  For older chan
 
 * Implement the `String.Chars` protocol to support `Kernel.to_string/1` for `t:Cldr.LanguageTag` structs.
 
-* Implement the `Inspect` protocol to support `inspect/2` for t:Cldr.LanguageTag` structs.
+* Implement the `Inspect` protocol to support `inspect/2` for `t:Cldr.LanguageTag` structs.
 
 * Add `Cldr.LanguageTag.sigil_l/2` to simplify creating `t:Cldr.LanguageTag` structs.
 
 * Add `Cldr.validate_script/1` to normalize and validate a script code (which is now in atom format as its canonical form)
 
 * Pre-compiled language tags (which are stored in `priv/cldr/language_tags.ebin`) are now cached during compilation resulting in a minor performance improvement in compile times.
+
+* Pre-generate the rfc5646 parser which improves overall compile times.  As a result the `nimble_parsec` dependency is marked as `optional` since it is no long required by library consumers.
 
 ## Cldr v2.22.1
 
@@ -184,7 +186,7 @@ This is the changelog for Cldr v2.19.1 released on April 7th.  For older changel
 
 This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-## Breaking change
+### Breaking change
 
 * A parsed langauge tag would previously turn the `tz` parameter of the `u` extension into a timezone ID. For example, the language tag `en-AU-u-tz-ausyd` would decode `ausyd` into `Australia/Sydney`. From this release, parsing no longer decodes the `tz` parameter since doing so means that `to_string/1` does not work correctly.  Use `Cldr.Locale.timezone_from_locale/1` instead.
 

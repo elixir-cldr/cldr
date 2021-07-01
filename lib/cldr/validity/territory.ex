@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.Territory do
+  @moduledoc false
+
   use Cldr.Validity, :territories
   @behaviour Cldr.Validity
 

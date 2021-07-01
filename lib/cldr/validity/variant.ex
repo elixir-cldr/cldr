@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.Variant do
+  @moduledoc false
+
   use Cldr.Validity, :variants
   @behaviour Cldr.Validity
 

@@ -1,6 +1,7 @@
 defmodule Cldr.LanguageTag.U do
   @moduledoc """
-
+  Defines the struct for the BCP 47 `u`
+  extension.
 
   """
 

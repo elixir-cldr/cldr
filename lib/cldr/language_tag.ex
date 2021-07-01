@@ -193,7 +193,7 @@ defmodule Cldr.LanguageTag do
         }
 
   @doc """
-  Parse a locale name into a `Cldr.LangaugeTag` struct.
+  Parse a locale name into a `t:Cldr.LanguageTag` struct.
 
   ## Arguments
 

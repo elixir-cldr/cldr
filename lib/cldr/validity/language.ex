@@ -1,4 +1,6 @@
 defmodule Cldr.Validity.Language do
+  @moduledoc false
+
   use Cldr.Validity, :languages
   @behaviour Cldr.Validity
 
