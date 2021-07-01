@@ -278,10 +278,23 @@ defmodule Cldr.LanguageTag do
       |> Enum.reject(&empty?/1)
       |> Enum.map(&join/1)
 
-    Enum.join(basic_tag ++ extensions, "-")
+    private_use =
+      format_private_use(language_tag.private_use)
+
+    basic_tag ++ extensions ++ [private_use]
+    |> Enum.reject(&empty?/1)
+    |> Enum.join("-")
   end
 
   defp join({k, v}), do: "#{k}-#{v}"
+
+  defp format_private_use([]) do
+    []
+  end
+
+  defp format_private_use(private_use) do
+    "x-" <> Enum.join(private_use, "-")
+  end
 
   @doc false
   def empty?({_k, ""}), do: true
