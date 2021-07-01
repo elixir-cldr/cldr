@@ -2,8 +2,6 @@
 
 * [ ] Resolve how to have a CLDR-based pluraliser module for Gettext. Currently this has a circular compile-time dependency because when the gettext module is compiled it expects the plurals module to exist. At the same time, ex_cldr expects the gettext backend to exist so it can find out what locales are available. This could be resolved if compiling the PO files was a final step in the compilation process but this seems unlikely to be possible.
 
-* [X] Turns out the following was incorrect and the code is doing the right thing. ~~Parsing extensions doesn't group by key ie `a-bb-cccc-dd-eeee` productions `%{"a" => ["bb", "cccc", "dd", "eeee"]}`~~
-
 * [X] canonical_locale_name should combine extensions (sorted by key)
 
 * [X] parse and validate 't' extension (and add to_string)
