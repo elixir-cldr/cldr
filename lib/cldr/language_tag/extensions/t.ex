@@ -3,6 +3,7 @@ defmodule Cldr.LanguageTag.T do
 
 
   """
+  import Cldr.LanguageTag, only: [empty?: 1]
 
   @fields Cldr.Validity.T.fields()
 
@@ -67,7 +68,9 @@ defmodule Cldr.LanguageTag.T do
       |> Enum.map(fn {k, v} -> "#{k}-#{v}" end)
       |> Enum.join("-")
 
-    if language, do: language <> "-" <> params, else: params
+    [language, params]
+    |> Enum.reject(&empty?/1)
+    |> Enum.join("-")
   end
 
   @doc false

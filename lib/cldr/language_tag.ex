@@ -272,12 +272,10 @@ defmodule Cldr.LanguageTag do
       |> Enum.reject(&empty?/1)
 
     extensions =
-      [{"u", language_tag.locale}, {"t", language_tag.transform}]
-      |> Map.new()
-      |> Map.merge(language_tag.extensions)
+      [{"t", language_tag.transform},{"u", language_tag.locale}]
+      |> Kernel.++(Map.to_list(language_tag.extensions))
       |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
       |> Enum.reject(&empty?/1)
-      |> Enum.sort()
       |> Enum.map(&join/1)
 
     Enum.join(basic_tag ++ extensions, "-")
