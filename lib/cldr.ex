@@ -525,7 +525,7 @@ defmodule Cldr do
   such as t:Cldr.Unit` and `t:Cldr.Currency`.
 
   """
-  @spec display_name(term(), Cldr.LanguageTag.t()) :: String.t()
+  @spec display_name(term(), Keyword.t()) :: String.t()
   @display_name_options [prefer: :default, compound_locale: true]
 
   def display_name(term, options \\ []) do

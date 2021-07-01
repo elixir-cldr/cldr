@@ -2347,7 +2347,7 @@ defmodule Cldr.Config do
       |> Cldr.Map.integerize_keys(only: @keys_to_integerize)
 
     zones =
-      dates.time_zone_names.zone
+      get_in(dates, [:time_zone_names, :zone])
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.atomize_keys(only: @date_atoms)
 
