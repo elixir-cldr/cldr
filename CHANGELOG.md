@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.23.1
+
+This is the changelog for Cldr v2.23.1 released on August 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix doc errors. Thanks to @maennchen for the report. Doc errors in other `ex_cldr` packages are also updated.  Closes #149.
+
 ## Cldr v2.23.0
 
 This is the changelog for Cldr v2.23.0 released on July 1st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

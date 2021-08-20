@@ -1280,7 +1280,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__104(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__104(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__85(rest, acc, stack, context, line, offset)
   end
@@ -1548,7 +1548,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__127(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__127(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__108(rest, acc, stack, context, line, offset)
   end
@@ -1821,7 +1821,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__150(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__150(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__131(rest, acc, stack, context, line, offset)
   end
@@ -2055,7 +2055,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__172(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__172(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__154(rest, acc, stack, context, line, offset)
   end
@@ -2473,7 +2473,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__211(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__211(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__192(rest, acc, stack, context, line, offset)
   end
@@ -2738,7 +2738,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__236(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__236(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__217(rest, acc, stack, context, line, offset)
   end
@@ -4120,7 +4120,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__364(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__364(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__345(rest, acc, stack, context, line, offset)
   end
@@ -4388,7 +4388,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__387(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__387(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__368(rest, acc, stack, context, line, offset)
   end
@@ -4661,7 +4661,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__410(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__410(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__391(rest, acc, stack, context, line, offset)
   end
@@ -4895,7 +4895,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__432(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__432(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__414(rest, acc, stack, context, line, offset)
   end
@@ -5313,7 +5313,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__471(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__471(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__452(rest, acc, stack, context, line, offset)
   end
@@ -5578,7 +5578,7 @@ defmodule Cldr.Rfc5646.Parser do
     )
   end
 
-  defp language_tag__496(_, _, [{rest, acc, context, line, offset} | stack], _, _, _) do
+  defp language_tag__496(_, _, [{rest, _acc, context, line, offset} | stack], _, _, _) do
     [acc | stack] = stack
     language_tag__477(rest, acc, stack, context, line, offset)
   end
