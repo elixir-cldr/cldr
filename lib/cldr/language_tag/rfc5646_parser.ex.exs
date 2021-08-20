@@ -1,5 +1,12 @@
 defmodule Cldr.Rfc5646.Parser do
-  @moduledoc false
+  @moduledoc """
+  Implements parsing for [RFC5646](https://datatracker.ietf.org/doc/html/rfc5646) language
+  tags with [BCP47](https://tools.ietf.org/search/bcp47) extensions.
+
+  The primary interface to this module is the function
+  `Cldr.LanguageTag.parse/1`.
+
+  """
 
   alias Cldr.LanguageTag
 

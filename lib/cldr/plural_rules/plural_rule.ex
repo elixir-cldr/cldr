@@ -2,12 +2,17 @@ defmodule Cldr.Number.PluralRule do
   @moduledoc """
   Defines the plural rule implementation
   modules. The functions in this module
-  generate code to implement the plural
+  generates code to implement the plural
   rules of CLDR.
 
   """
 
   @type operand :: any()
+
+  @typedoc """
+  Defines the plural types into which a number
+  can be categorised.
+  """
   @type plural_type() :: :zero | :one | :two | :few | :many | :other
 
   @doc """
@@ -649,10 +654,10 @@ defmodule Cldr.Number.PluralRule do
 
         """
         @spec plural_rule(
-                first :: PluralRule.plural_type(),
-                last :: PluralRule.plural_type(),
+                first :: Cldr.Number.PluralRule.plural_type(),
+                last :: Cldr.Number.PluralRule.plural_type(),
                 locale :: Cldr.Locale.locale_name() | Cldr.LanguageTag.t()
-              ) :: PluralRule.plural_type()
+              ) :: Cldr.Number.PluralRule.plural_type()
 
         def plural_rule(first, last, %Cldr.LanguageTag{language: language}) do
           plural_rule(first, last, language)
