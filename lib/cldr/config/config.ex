@@ -920,7 +920,7 @@ defmodule Cldr.Config do
        :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :vaii, :wara, :wcho]
+       :tirh, :tnsa, :vaii, :wara, :wcho]
 
   """
   def known_number_systems do
@@ -2353,6 +2353,12 @@ defmodule Cldr.Config do
     dates =
       content.dates
       |> Cldr.Map.integerize_keys(only: @keys_to_integerize)
+      |> Cldr.Map.deep_map(fn
+        {:number_system, value} ->
+          {:number_system, Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
+        other ->
+          other
+      end)
 
     zones =
       get_in(dates, [:time_zone_names, :zone])

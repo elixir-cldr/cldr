@@ -12,6 +12,7 @@ export CLDR_REPO="${CLDR_REPO:=$HOME/Development/cldr_repo}"
 # be provisioned.
 export CLDR_STAGING="${CLDR_STAGING:=$HOME/Development/cldr_staging_data}"
 [ ! -d $CLDR_STAGING ] && { echo "Unicode CLDR staging directory $CLDR_STAGING was not found."; exit 1; }
+mkdir -p $CLDR_STAGING/seed/main
 
 # Location where the production data will be
 # provisioined.

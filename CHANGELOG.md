@@ -1,5 +1,21 @@
 # Changelog
 
+## Cldr v2.24.0
+
+This is the changelog for Cldr v2.24.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* `Cldr.Plug.PutSession` now uses the locale key `:canonical_locale_name` to serialize to the session. Previously it was using `:cldr_locale_name` which does not include any of the extension information. Extension information encodes user preferences and is required to properly support localisation.
+
+### Enhancements
+
+* Updates to CLDR release 40
+
+### Soft Deprecations
+
+* Deprecated the `:put_session?` option in `Cldr.Plug.SetLocale`.  Use the plug `Cldr.Plug.PutSession` instead.
+
 ## Cldr v2.23.1
 
 This is the changelog for Cldr v2.23.1 released on August 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

@@ -130,12 +130,11 @@ defmodule Cldr.Locale.Cache do
         language_tag
 
       [] ->
-        Cldr.maybe_log("Compiler language tag cache miss. Will retry.")
-        Process.sleep(100)
-        do_get_language_tag(locale)
-        # raise RuntimeError,
-        #       "Compiler language tag cache: Unexpected miss " <>
-        #         "for locale #{inspect(locale)}. Got #{inspect(other)}."
+        # A new locale for which there is no precomputed language tag yet
+        # In fact thats probably what we're about to do later on - create the
+        # precomputed tag.
+        Cldr.maybe_log("Compiler language tag cache miss for locale #{inspect(locale)}.")
+        nil
     end
   end
 

@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # Global config
 config :ex_cldr,

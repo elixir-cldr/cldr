@@ -14,6 +14,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Map.delete("fields")
       |> Cldr.Map.rename_keys("_numbers", "number_system")
       |> Cldr.Map.rename_keys("_value", "format")
+      |> normalize_date_formats
       |> compile_substitution_formats
 
     Map.put(content, "dates", dates)
@@ -41,5 +42,28 @@ defmodule Cldr.Normalize.DateTime do
         {k, v}
     end)
     |> Enum.into(%{})
+  end
+
+  defp normalize_date_formats(dates) do
+    dates
+    |> Cldr.Map.deep_map(fn
+      {"number_system" = k, v} ->
+        v =
+          v
+          |> String.split(";")
+          |> Enum.map(&split_number_system/1)
+          |> Map.new()
+       {k, v}
+
+      {k, v} ->
+        {k, v}
+    end)
+  end
+
+  defp split_number_system(system) do
+    case String.split(system, "=") do
+      [system] -> {"all", String.trim(system)}
+      [format_code, system] -> {String.trim(format_code), String.trim(system)}
+    end
   end
 end

@@ -53,7 +53,7 @@ if Code.ensure_loaded?(Plug) do
     @doc false
     def call(conn, _options) do
       case SetLocale.get_cldr_locale(conn) do
-        %Cldr.LanguageTag{cldr_locale_name: cldr_locale} ->
+        %Cldr.LanguageTag{canonical_locale_name: cldr_locale} ->
           conn
           |> fetch_session()
           |> put_session(SetLocale.session_key(), cldr_locale)

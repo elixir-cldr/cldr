@@ -59,7 +59,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {39, 0, 0}
+      {40, 0, 0}
 
   """
   @version Config.version()
@@ -1817,7 +1817,7 @@ defmodule Cldr do
        :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :vaii, :wara, :wcho]
+       :tirh, :tnsa, :vaii, :wara, :wcho]
 
   """
   @known_number_systems Cldr.Config.known_number_systems()

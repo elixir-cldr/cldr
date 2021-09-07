@@ -156,7 +156,7 @@ defmodule Cldr.Mixfile do
   # Defines the preferred environment for Mix tasks
   defp preferred_cli_env() do
     [
-      "cldr.generate_language_tags": :test
+
     ]
   end
 
