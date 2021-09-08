@@ -1547,6 +1547,7 @@ defmodule Cldr.Config do
   @keys_to_integerize Enum.map(-2..255, &to_string/1)
   @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
   @skip_keys ["zone"]
+
   def do_get_locale(locale, path, false) do
     path
     |> read_locale_file
@@ -1569,7 +1570,8 @@ defmodule Cldr.Config do
     Cldr.Locale.Cache.get_locale(locale, path)
   end
 
-  # Read the file.
+  # Read the file
+  @spec read_locale_file(binary()) :: binary()
   defp read_locale_file(path) do
     Cldr.maybe_log("Cldr.Config reading locale file #{inspect(path)}")
     {:ok, file} = File.open(path, [:read, :binary, :utf8])

@@ -1,5 +1,17 @@
 # Changelog
 
+## Cldr v2.23.2
+
+This is the changelog for Cldr v2.23.2 released on September 8th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Remove `telemetry` as a dependency. It is not required by `ex_cldr`. Thanks for the report from @benregn. Closes #154.
+
+* Integerize all the numeric keys in calendard. Including the 60 days of the Chinese calendar cycle and the 239 Japanese eras.
+
+* Change from `use Mix.Config` to `import Config` for configuration. This has been the standard since Elixir 1.9 and since only Elixir 1.10 is supported, the update can be made.
+
 ## Cldr v2.23.1
 
 This is the changelog for Cldr v2.23.1 released on August 20th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
