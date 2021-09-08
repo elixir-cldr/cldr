@@ -1907,7 +1907,7 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.calendars |> Map.get(:gregorian)
-      %{calendar_system: "solar", eras: %{0 => %{end: 0}, 1 => %{start: 1}}}
+      %{calendar_system: "solar", eras: %{0 => %{end: [0, 12, 31]}, 1 => %{start: [1, 1, 1]}}}
 
   """
   def calendars do
@@ -1915,9 +1915,8 @@ defmodule Cldr.Config do
     |> Path.join("calendars.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys(except: &Regex.match?(~r/[0-9]+/, elem(&1, 0)))
+    |> Cldr.Map.atomize_keys(except: @keys_to_integerize)
     |> Cldr.Map.integerize_keys()
-    |> add_era_end_dates
   end
 
   @deprecated "Use Cldr.Config.calendars/0"
@@ -2129,41 +2128,6 @@ defmodule Cldr.Config do
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
-  end
-
-  defp add_era_end_dates(calendars) do
-    Enum.map(calendars, fn {calendar, content} ->
-      new_content =
-        Enum.map(content, fn
-          {:eras, eras} -> {:eras, add_end_dates(eras)}
-          {k, v} -> {k, v}
-        end)
-        |> Enum.into(%{})
-
-      {calendar, new_content}
-    end)
-    |> Enum.into(%{})
-  end
-
-  defp add_end_dates(%{} = eras) do
-    eras
-    |> Enum.sort_by(fn {k, _v} -> k end, fn a, b -> a < b end)
-    |> add_end_dates
-    |> Enum.into(%{})
-  end
-
-  defp add_end_dates([{_, %{start: _start_1}} = era_1, {_, %{start: start_2}} = era_2]) do
-    {era, dates} = era_1
-    [{era, Map.put(dates, :end, start_2 - 1)}, era_2]
-  end
-
-  defp add_end_dates([{_, %{start: _start_1}} = era_1 | [{_, %{start: start_2}} | _] = tail]) do
-    {era, dates} = era_1
-    [{era, Map.put(dates, :end, start_2 - 1)}] ++ add_end_dates(tail)
-  end
-
-  defp add_end_dates(other) do
-    other
   end
 
   @doc """
