@@ -1544,7 +1544,7 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  @keys_to_integerize Enum.map(-2..60, &to_string/1)
+  @keys_to_integerize Enum.map(-2..255, &to_string/1)
   @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
   @skip_keys ["zone"]
   def do_get_locale(locale, path, false) do
