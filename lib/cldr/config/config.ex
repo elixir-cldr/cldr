@@ -1902,12 +1902,12 @@ defmodule Cldr.Config do
 
   @doc """
   Returns the data that defines start and end of
-  calendar epochs.
+  calendar eras.
 
   ## Example
 
       iex> Cldr.Config.calendars |> Map.get(:gregorian)
-      %{calendar_system: "solar", eras: %{0 => %{end: [0, 12, 31]}, 1 => %{start: [1, 1, 1]}}}
+      %{calendar_system: "solar", eras: [[0, %{end: [0, 12, 31]}], [1, %{start: [1, 1, 1]}]]}
 
   """
   def calendars do
