@@ -621,7 +621,7 @@ defmodule Cldr.Consolidate do
     |> Map.delete("generic")
     |> Cldr.Map.remove_leading_underscores()
     |> Cldr.Map.underscore_keys()
-    |> Cldr.Calendar.Conversion.convert_eras_to_iso_days()
+    |> Cldr.Normalize.CalendarEra.convert_eras()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -654,7 +654,7 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "dayPeriodRuleSet"])
     |> Cldr.Map.remove_leading_underscores()
-    |> Cldr.Calendar.Conversion.parse_time_periods()
+    |> Cldr.Normalize.CalendarEra.parse_time_periods()
     |> save_file(path)
 
     assert_package_file_configured!(path)
