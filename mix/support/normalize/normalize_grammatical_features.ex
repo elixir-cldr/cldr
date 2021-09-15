@@ -10,7 +10,7 @@ defmodule Cldr.Normalize.GrammaticalFeatures do
       {<<language::binary-size(3), "-targets-nominal">>, case_data} ->
         {language, format_case_data(case_data)}
 
-      {"root" = language, compound_data} ->
+      {"und" = language, compound_data} ->
         {language, format_compound_data(compound_data)}
 
       {<<language::binary-size(2)>>, compound_data} ->

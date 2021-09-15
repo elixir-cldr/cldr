@@ -3,7 +3,7 @@ defmodule Cldr.Config.Test do
   import ExUnit.CaptureIO
 
   @from_locales ["en", "en-au", "zh-hant-hk", "zh_haNt"]
-  @to_locales ["en", "en-001", "en-AU", "root", "zh-Hant", "zh-Hant-HK"]
+  @to_locales ["en", "en-001", "en-AU", "und", "zh-Hant", "zh-Hant-HK"]
 
   test "locale resolution in a config is case insensitive" do
     capture_io(:stderr, fn ->
@@ -53,7 +53,7 @@ defmodule Cldr.Config.Test do
 
     to_locales = [
       "ca",
-      "ca-ES-VALENCIA",
+      "ca-ES-valencia",
       "en",
       "en-001",
       "en-AU",
@@ -61,7 +61,7 @@ defmodule Cldr.Config.Test do
       "no",
       "pt",
       "pt-PT",
-      "root"
+      "und"
     ]
 
     capture_io(:stderr, fn ->

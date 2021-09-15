@@ -59,6 +59,8 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
         Map.get(rbnf_locale_names, language <> "-" <> variant) ||
         Map.get(rbnf_locale_names, language <> "-" <> territory) ||
         Map.get(rbnf_locale_names, language)
+      [language, territory, "u", "va", _variant] ->
+        rbnf_locale_name("#{language}-#{territory}")
     end
   end
 end

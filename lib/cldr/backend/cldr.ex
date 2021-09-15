@@ -14,7 +14,7 @@ defmodule Cldr.Backend do
       in this module or in `Gettext`.
 
       """
-      @omit_locales ["root"]
+      @omit_locales ["und"]
       @known_locale_names Cldr.Config.known_locale_names(config) -- @omit_locales
       def known_locale_names do
         @known_locale_names

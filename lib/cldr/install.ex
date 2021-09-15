@@ -3,7 +3,7 @@ defmodule Cldr.Install do
   Provides functions for installing locales.
 
   When installed as a package on from [hex](http://hex.pm), `Cldr` has only
-  the default locales `["en", "root"]` installed and configured.
+  the default locales `["en", "und"]` installed and configured.
 
   When other locales are added to the configuration `Cldr` will attempt to
   download the locale from [github](https://github.com/kipcole9/cldr)

@@ -6,7 +6,7 @@ defmodule Decimal.PluralRule.Test do
   @modules [TestBackend.Cldr.Number.Cardinal, TestBackend.Cldr.Number.Ordinal]
 
   for module <- @modules,
-      locale_name <- module.known_locale_names -- ["root"],
+      locale_name <- module.known_locale_names -- [Cldr.Config.root_locale_name()],
       {category, rule} <- module.plural_rules_for(locale_name),
       sample_type <- @sample_types,
       one_rule <- rule[sample_type] || [] do

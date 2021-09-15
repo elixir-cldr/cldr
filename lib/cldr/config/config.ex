@@ -75,6 +75,12 @@ defmodule Cldr.Config do
     "subdivisions"
   ]
 
+  @root_locale_name "und"
+
+  def root_locale_name do
+    @root_locale_name
+  end
+
   def include_module_docs?(false) do
     false
   end
@@ -737,7 +743,7 @@ defmodule Cldr.Config do
   If the configured locales is `:all` then all locales
   in CLDR are configured.
 
-  The locale "root" is always added to the list of configured locales since it
+  The locale "und" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
   The use of `:all` is not recommended since all 541 locales take
@@ -754,7 +760,7 @@ defmodule Cldr.Config do
         _ -> expand_locale_names(app_locale_names)
       end
 
-    ["root" | locale_names]
+    [@root_locale_name | locale_names]
     |> Enum.uniq()
     |> Enum.sort()
   end
@@ -2239,7 +2245,7 @@ defmodule Cldr.Config do
           |> locale_name_to_posix
           |> String.to_atom()
 
-        {Module.concat(backend, Rbnf.NumberSystem), function, "root"}
+        {Module.concat(backend, Rbnf.NumberSystem), function, @root_locale_name}
     end
   end
 
@@ -2668,7 +2674,6 @@ defmodule Cldr.Config do
     end
   end
 
-  @root_locale "root"
   def merge_locales_with_default(%{locales: :all} = config) do
     config
   end
@@ -2679,7 +2684,7 @@ defmodule Cldr.Config do
     default = config[:default_locale] || hd(locales)
 
     locales =
-      (locales ++ gettext ++ [default, @root_locale])
+      (locales ++ gettext ++ [default, @root_locale_name])
       |> Enum.reject(&is_nil/1)
       |> Enum.uniq()
       |> Enum.map(&canonical_name/1)
