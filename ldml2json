@@ -40,7 +40,7 @@ java -DCLDR_DIR=$CLDR_REPO \
 
 # We do this since processing all locales in a single run
 # reliably emits all locales (the consolidated
-# verison does not). Therefore the working aproach is to
+# version does not). Therefore the working aproach is to
 # do the following first
 
 # for FULLPATH in $CLDR_REPO/common/main/*.xml; do
