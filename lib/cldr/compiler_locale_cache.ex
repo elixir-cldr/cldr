@@ -46,7 +46,7 @@ defmodule Cldr.Locale.Cache do
     if compiling?() and not gen_server_started?() do
       Cldr.maybe_log("Starting the compiler locale cache")
 
-      case Cldr.Locale.Cache.start() do
+      case start() do
         {:ok, _pid} -> :ok
         {:error, {:already_started, _pid}} -> :ok
       end
@@ -121,6 +121,11 @@ defmodule Cldr.Locale.Cache do
       other ->
         raise RuntimeError, inspect(other)
     end
+  rescue ArgumentError ->
+    # We can very ocassionally get an exception when the gen_server
+    # is started but before the table is created and another thread
+    # tries to get a locale. In this case we just get the locale manually
+    Cldr.Config.do_get_locale(locale, path, false)
   end
 
   defp do_get_language_tag(locale) do

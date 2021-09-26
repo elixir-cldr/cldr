@@ -13,6 +13,11 @@ defmodule Cldr.Normalize.GrammaticalFeatures do
       {"und" = language, compound_data} ->
         {language, format_compound_data(compound_data)}
 
+      # TODO Remove when "und" has fully replaced "root" as
+      # the root locale
+      {"root" = _language, compound_data} ->
+        {"und", format_compound_data(compound_data)}
+
       {<<language::binary-size(2)>>, compound_data} ->
         {language, format_compound_data(compound_data)}
     end)
