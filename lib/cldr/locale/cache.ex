@@ -1,8 +1,13 @@
 defmodule Cldr.Locale.Cache do
   @moduledoc false
 
+  # Caches locales in an :ets table
+  # during compilation to improve performance
+
   use GenServer
   require Logger
+
+  alias Cldr.Locale.Loader
 
   @table_name :cldr_locales
   @gen_server_name :cldr_locale_cache
@@ -100,7 +105,7 @@ defmodule Cldr.Locale.Cache do
             "Reading and decoding the locale file."
         )
 
-        locale_data = Cldr.Config.do_get_locale(locale, path, false)
+        locale_data = Loader.do_get_locale(locale, path, false)
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
@@ -125,7 +130,7 @@ defmodule Cldr.Locale.Cache do
     # We can very ocassionally get an exception when the gen_server
     # is started but before the table is created and another thread
     # tries to get a locale. In this case we just get the locale manually
-    Cldr.Config.do_get_locale(locale, path, false)
+    Loader.do_get_locale(locale, path, false)
   end
 
   defp do_get_language_tag(locale) do
