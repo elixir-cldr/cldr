@@ -41,6 +41,8 @@ defmodule Cldr.Normalize.Number do
 
         Map.put(formats, number_system, locale_formats)
       end)
+      |> Map.new()
+      |> Cldr.Map.integerize_keys()
 
     content =
       Map.put(
@@ -49,7 +51,7 @@ defmodule Cldr.Normalize.Number do
         String.to_integer(numbers["minimum_grouping_digits"])
       )
 
-    Map.put(content, "number_formats", Enum.into(number_formats, %{}))
+    Map.put(content, "number_formats", number_formats)
   end
 
   @doc false

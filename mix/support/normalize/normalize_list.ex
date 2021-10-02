@@ -13,7 +13,7 @@ defmodule Cldr.Normalize.List do
       content
       |> get_in(["list_patterns"])
       |> Enum.map(fn {"list_pattern_type_" <> type, data} -> {type, compile_formats(data)} end)
-      |> Enum.into(%{})
+      |> Map.new()
 
     Map.put(content, "list_formats", lists)
   end

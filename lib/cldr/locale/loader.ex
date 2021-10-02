@@ -40,6 +40,7 @@ defmodule Cldr.Locale.Loader do
     do_get_locale(locale, backend.__cldr__(:config))
   end
 
+  @doc false
   def do_get_locale(locale, config) do
     {:ok, path} =
       case Config.locale_path(locale, config) do
@@ -53,24 +54,31 @@ defmodule Cldr.Locale.Loader do
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
-  @dont_atomize_keys ["languages", "lenient_parse", "locale_display_names", "subdivisions"]
-  @skip_keys ["zone"]
+  @alt_keys ["default", "menu", "short", "long", "variant", "standard"]
+  @lenient_parse_keys ["date", "general", "number"]
+  @language_keys ["language", "language_variants"]
 
+  @remaining_modules Cldr.Config.required_modules() --
+    [
+       "locale_display_names", "languages", "lenient_parse", "dates"
+    ]
+
+  @doc false
   def do_get_locale(locale, path, false) do
     path
-    |> read_locale_file
+    |> read_locale_file!
     |> Config.json_library().decode!
     |> assert_valid_keys!(locale)
-    |> structure_number_formats()
-    |> structure_units()
-    |> atomize_keys(Config.required_modules() -- @dont_atomize_keys,
-        skip: @skip_keys, except: Cldr.Config.keys_to_integerize())
-    |> structure_rbnf()
-    |> atomize_number_systems()
-    |> atomize_languages()
+    |> Cldr.Map.integerize_keys(filter: "list_formats")
+    |> Cldr.Map.integerize_keys(filter: "number_formats")
+    |> Cldr.Map.atomize_values(filter: "number_systems")
+    |> Cldr.Map.atomize_keys(filter: "locale_display_names", skip: @language_keys)
+    |> Cldr.Map.atomize_keys(filter: "locale_display_names", only: @alt_keys)
+    |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
+    |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
+    |> Cldr.Map.atomize_keys(filter: @remaining_modules)
     |> structure_date_formats()
-    |> structure_list_formats()
-    |> structure_locale_display_names()
+    |> Cldr.Map.atomize_keys(level: 1..1)
     |> Map.put(:name, locale)
   end
 
@@ -80,143 +88,36 @@ defmodule Cldr.Locale.Loader do
   end
 
   # Read the file.
-  defp read_locale_file(path) do
+  defp read_locale_file!(path) do
     Cldr.maybe_log("Cldr.Config reading locale file #{inspect(path)}")
-    {:ok, file} = File.open(path, [:read, :binary, :utf8])
-    contents = IO.read(file, :all)
-    File.close(file)
+    {:ok, contents} = File.open(path, [:read, :binary, :utf8], &IO.read(&1, :all))
     contents
   end
 
-  @date_atoms ["exemplar_city", "long", "standard", "generic", "daylight", "formal"]
+  @date_atoms [
+    "exemplar_city", "long", "standard", "generic",
+    "short", "daylight", "formal",
+    "daylight_savings", "generic"
+  ]
+
   defp structure_date_formats(content) do
     dates =
-      content.dates
+      content
+      |> Map.get("dates")
       |> Cldr.Map.integerize_keys(only: Cldr.Config.keys_to_integerize())
       |> Cldr.Map.deep_map(fn
         {:number_system, value} ->
-          {:number_system, Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
+          {:number_system,
+            Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
         other ->
           other
       end)
-
-    zones =
-      get_in(dates, [:time_zone_names, :zone])
-      |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.atomize_keys(only: @date_atoms)
-
-    dates =
-      put_in(dates, [:time_zone_names, :zone], zones)
+      |> Cldr.Map.atomize_keys(filter: "calendars")
+      |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
+      |> Cldr.Map.atomize_keys(level: 1..1)
 
     Map.put(content, :dates, dates)
-  end
-
-  defp structure_list_formats(content) do
-    dates =
-      content.list_formats
-      |> Cldr.Map.atomize_keys()
-
-    Map.put(content, :list_formats, dates)
-  end
-
-  @alt_keys ["default", "menu", "short", "long", "variant"]
-
-  defp structure_locale_display_names(content) do
-    locale_display_names =
-      content
-      |> Map.get(:locale_display_names)
-      |> Cldr.Map.rename_keys("variants", "language_variants")
-      |> Cldr.Map.atomize_keys(skip: ["language", "language_variants"])
-      |> Cldr.Map.atomize_keys(only: @alt_keys)
-
-    Map.put(content, :locale_display_names, locale_display_names)
-  end
-
-  # Put the rbnf rules into a %Rule{} struct
-  defp structure_rbnf(content) do
-    rbnf =
-      content[:rbnf]
-      |> Enum.map(fn {group, sets} ->
-        {group, structure_sets(sets)}
-      end)
-      |> Enum.into(%{})
-
-    Map.put(content, :rbnf, rbnf)
-  end
-
-  defp structure_number_formats(content) do
-    number_formats =
-      content["number_formats"]
-      |> Cldr.Map.integerize_keys()
-
-    Map.put(content, "number_formats", number_formats)
-  end
-
-  defp structure_units(content) do
-    units =
-      content["units"]
-      |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
-      |> Map.new()
-      |> Cldr.Map.atomize_keys()
-
-    Map.put(content, "units", units)
-  end
-
-  defp group_units(units) do
-    units
-    |> Enum.map(fn {k, v} ->
-      [group | key] =
-        cond do
-          String.starts_with?(k, "10p") -> [k | []]
-          String.starts_with?(k, "1024p") -> [k | []]
-          true -> String.split(k, "_", parts: 2)
-        end
-
-      if key == [] do
-        {"compound", group, v}
-      else
-        [key] = key
-        {group, key, v}
-      end
-    end)
-    |> Enum.reject(&is_nil/1)
-    |> Enum.group_by(
-      fn {group, _key, _value} -> group end,
-      fn {_group, key, value} -> {key, atomize_gender(value)} end
-    )
-    |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
-    |> Map.new()
-  end
-
-  defp atomize_gender(map) when is_map(map) do
-    map
-    |> Enum.map(&atomize_gender/1)
-    |> Map.new()
-  end
-
-  defp atomize_gender({"gender" = key, [gender]}), do: {key, String.to_atom(gender)}
-  defp atomize_gender({"gender" = key, gender}), do: {key, String.to_atom(gender)}
-  defp atomize_gender(other), do: other
-
-  defp structure_sets(sets) do
-    Enum.map(sets, fn {name, set} ->
-      name = underscore(name)
-      {underscore(name), Map.put(set, :rules, set[:rules])}
-    end)
-    |> Enum.into(%{})
-  end
-
-  # Number systems are stored as atoms, no new
-  # number systems are ever added at runtime so
-  # risk to overflowing the atom table is very low.
-  defp atomize_number_systems(content) do
-    number_systems =
-      content
-      |> Map.get(:number_systems)
-      |> Enum.map(fn {k, v} -> {k, atomize(v)} end)
-      |> Enum.into(%{})
-
-    Map.put(content, :number_systems, number_systems)
   end
 
   @doc false
@@ -227,34 +128,6 @@ defmodule Cldr.Locale.Loader do
 
   def underscore(other), do: other
 
-
-  # Convert to an atom but only if
-  # its a binary.
-  defp atomize(nil), do: nil
-  defp atomize(v) when is_binary(v), do: String.to_atom(v)
-  defp atomize(v), do: v
-
-  defp atomize_languages(content) do
-    languages =
-      content
-      |> Map.get(:languages)
-      |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_keys(v)} end)
-      |> Map.new()
-
-    Map.put(content, :languages, languages)
-  end
-
-  defp atomize_keys(content, modules, options) do
-    Enum.map(content, fn {module, values} ->
-      if module in modules && is_map(values) do
-        {String.to_atom(module), Cldr.Map.atomize_keys(values, options)}
-      else
-        {String.to_atom(module), values}
-      end
-    end)
-    |> Map.new()
-  end
-
   # Simple check that the locale content contains what we expect
   # by checking it has the keys we used when the locale was consolidated.
 
@@ -264,7 +137,7 @@ defmodule Cldr.Locale.Loader do
 
   defp assert_valid_keys!(content, locale) do
     for module <- Config.required_modules() do
-      if !Map.has_key?(content, module) and !:"Elixir.System".get_env("DEV") do
+      if !Map.has_key?(content, module) and !Elixir.System.get_env("DEV") do
         raise RuntimeError,
           message:
             "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
