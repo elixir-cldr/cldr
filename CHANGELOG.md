@@ -1,8 +1,8 @@
 # Changelog
 
-## Cldr v2.24.0
+## Cldr v2.24.0-rc.0
 
-This is the changelog for Cldr v2.24.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.24.0-rc.0 released on October 3rd.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 There has been a significant amount of refactoring of the code that packages the locale files and the code that loads a locale. This has a very minor performance improvement at compile time but the major benefit is for maintainability.
 

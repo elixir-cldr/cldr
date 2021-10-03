@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.23.1"
+  @version "2.24.0-rc.0"
 
   def project do
     [
@@ -44,8 +44,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      # {:cldr_utils, "~> 2.16"},
-      {:cldr_utils, path: "../cldr_utils"},
+      {:cldr_utils, "~> 2.17-rc"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:castore, "~> 0.1", optional: true},
       {:certifi, "~> 2.5", optional: true},
