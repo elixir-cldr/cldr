@@ -77,7 +77,7 @@ defmodule Cldr.Mixfile do
         "LICENSE*",
         "priv/cldr/locales/en.json",
         "priv/cldr/locales/en-001.json",
-        "priv/cldr/locales/root.json",
+        "priv/cldr/locales/und.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
         "priv/cldr/plural_rules.json",
