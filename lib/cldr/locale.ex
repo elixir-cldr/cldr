@@ -258,7 +258,7 @@ defmodule Cldr.Locale do
   @type subtags :: [String.t(), ...] | []
 
   @root_locale "und"
-  @root_rbnf_locale_name "root"
+  @root_rbnf_locale_name "und"
 
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!

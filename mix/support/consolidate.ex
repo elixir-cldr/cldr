@@ -153,13 +153,23 @@ defmodule Cldr.Consolidate do
     with {:ok, files} <- File.ls(dir) do
       Enum.map(files, &Path.join(dir, &1))
       |> Enum.map(fn f ->
-        File.read!(f)
+        File.read!(f) |> jason_decode!(f)
       end)
-      |> Enum.map(&Jason.decode!/1)
       |> merge_maps
     else
       {:error, _} -> %{}
     end
+  end
+
+  defp jason_decode!("", file) do
+    IO.puts "CLDR json file #{inspect file} was found to be empty. " <>
+      "This is likely a bug in the ldml2json converter"
+
+    %{}
+  end
+
+  defp jason_decode!(jason, _file) do
+    Jason.decode!(jason)
   end
 
   def cldr_locale_specific_dirs do
@@ -611,7 +621,7 @@ defmodule Cldr.Consolidate do
     |> Map.delete("generic")
     |> Cldr.Map.remove_leading_underscores()
     |> Cldr.Map.underscore_keys()
-    |> Cldr.Calendar.Conversion.convert_eras_to_iso_days()
+    |> Cldr.Normalize.CalendarEra.convert_eras()
     |> save_file(path)
 
     assert_package_file_configured!(path)
@@ -644,7 +654,7 @@ defmodule Cldr.Consolidate do
     |> Jason.decode!()
     |> get_in(["supplemental", "dayPeriodRuleSet"])
     |> Cldr.Map.remove_leading_underscores()
-    |> Cldr.Calendar.Conversion.parse_time_periods()
+    |> Cldr.Normalize.CalendarEra.parse_time_periods()
     |> save_file(path)
 
     assert_package_file_configured!(path)

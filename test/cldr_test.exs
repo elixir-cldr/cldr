@@ -136,7 +136,6 @@ defmodule Cldr.Test do
                "pt-PT",
                "qu",
                "ro",
-               "root",
                "ru",
                "se",
                "sk",
@@ -151,6 +150,7 @@ defmodule Cldr.Test do
                "th",
                "tr",
                "uk",
+               "und",
                "vi",
                "yue",
                "yue-Hans",
@@ -234,10 +234,10 @@ defmodule Cldr.Test do
 
   test "that configs merge correctly" do
     assert WithOtpAppBackend.Cldr.__cldr__(:config).locales ==
-             ["en", "en-001", "fr", "root"]
+             ["en", "en-001", "fr", "und"]
 
     assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
-             ["en", "en-001", "en-GB", "es", "it", "root"]
+             ["en", "en-001", "en-GB", "es", "it", "und"]
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end

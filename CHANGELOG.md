@@ -1,5 +1,25 @@
 # Changelog
 
+## Cldr v2.24.0-rc.0
+
+This is the changelog for Cldr v2.24.0-rc.0 released on October 3rd.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+There has been a significant amount of refactoring of the code that packages the locale files and the code that loads a locale. This has a very minor performance improvement at compile time but the major benefit is for maintainability.
+
+### Bug Fixes
+
+* `Cldr.Plug.PutSession` now uses the locale key `:canonical_locale_name` to serialize to the session. Previously it was using `:cldr_locale_name` which does not include any of the extension information. Extension information encodes user preferences and is required to properly support localisation.
+
+* `Cldr.known_territories/1` no longer includes reserved, deprecated, special use or private use territory codes.
+
+### Enhancements
+
+* Updates to CLDR release 40
+
+### Soft Deprecations
+
+* Deprecated the `:put_session?` option in `Cldr.Plug.SetLocale`.  Use the plug `Cldr.Plug.PutSession` instead.
+
 ## Cldr v2.23.2
 
 This is the changelog for Cldr v2.23.2 released on September 8th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

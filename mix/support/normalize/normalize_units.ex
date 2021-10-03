@@ -19,8 +19,10 @@ defmodule Cldr.Normalize.Units do
     normalized_units =
       units
       |> Enum.filter(fn {k, _v} -> k in @unit_types end)
-      |> Enum.into(%{})
+      |> Map.new()
       |> process_unit_types(@unit_types)
+      |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
+      |> Map.new()
 
     Map.put(content, "units", normalized_units)
   end
@@ -174,6 +176,42 @@ defmodule Cldr.Normalize.Units do
       {:error, {:units_file_not_found, locale_path(locale)}}
     end
   end
+
+  defp group_units(units) do
+    units
+    |> Enum.map(fn {k, v} ->
+      [group | key] =
+        cond do
+          String.starts_with?(k, "10p") -> [k | []]
+          String.starts_with?(k, "1024p") -> [k | []]
+          true -> String.split(k, "_", parts: 2)
+        end
+
+      if key == [] do
+        {"compound", group, v}
+      else
+        [key] = key
+        {group, key, v}
+      end
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.group_by(
+      fn {group, _key, _value} -> group end,
+      fn {_group, key, value} -> {key, atomize_gender(value)} end
+    )
+    |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
+    |> Map.new()
+  end
+
+  defp atomize_gender(map) when is_map(map) do
+    map
+    |> Enum.map(&atomize_gender/1)
+    |> Map.new()
+  end
+
+  defp atomize_gender({"gender" = key, [gender]}), do: {key, String.to_atom(gender)}
+  defp atomize_gender({"gender" = key, gender}), do: {key, String.to_atom(gender)}
+  defp atomize_gender(other), do: other
 
   @spec locale_path(binary) :: String.t()
   def locale_path(locale) when is_binary(locale) do

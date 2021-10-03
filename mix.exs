@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.23.2"
+  @version "2.24.0-rc.0"
 
   def project do
     [
@@ -44,7 +44,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:cldr_utils, "~> 2.15"},
+      {:cldr_utils, "~> 2.17-rc"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:castore, "~> 0.1", optional: true},
       {:certifi, "~> 2.5", optional: true},
@@ -77,7 +77,7 @@ defmodule Cldr.Mixfile do
         "LICENSE*",
         "priv/cldr/locales/en.json",
         "priv/cldr/locales/en-001.json",
-        "priv/cldr/locales/root.json",
+        "priv/cldr/locales/und.json",
         "priv/cldr/available_locales.json",
         "priv/cldr/number_systems.json",
         "priv/cldr/plural_rules.json",
@@ -155,7 +155,7 @@ defmodule Cldr.Mixfile do
   # Defines the preferred environment for Mix tasks
   defp preferred_cli_env() do
     [
-      "cldr.generate_language_tags": :test
+
     ]
   end
 

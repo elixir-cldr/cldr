@@ -14,7 +14,7 @@ defmodule Cldr.Backend do
       in this module or in `Gettext`.
 
       """
-      @omit_locales ["root"]
+      @omit_locales ["und"]
       @known_locale_names Cldr.Config.known_locale_names(config) -- @omit_locales
       def known_locale_names do
         @known_locale_names
@@ -602,7 +602,6 @@ defmodule Cldr.Backend do
       #    are not supported in Erlang's re
 
       @remove_compounds Regex.compile!("{.*}", [:ungreedy])
-
       for locale_name <- Cldr.Config.known_locale_names(config) do
         lenient_parse =
           locale_name
@@ -633,9 +632,9 @@ defmodule Cldr.Backend do
       # parsed language tag for performance reasons and only
       # add the gettext locale name (if there is one) and the
       # backend module.
-
       for locale_name <- Cldr.Config.known_locale_names(config),
           not is_nil(Cldr.Config.language_tag(locale_name)) do
+
         language_tag =
           locale_name
           |> Cldr.Config.language_tag()

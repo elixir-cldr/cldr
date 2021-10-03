@@ -9,9 +9,6 @@ defmodule Cldr.Config do
 
   """
 
-  # The functions in this module are considered
-  # private use.
-
   alias Cldr.Locale
   alias Cldr.LanguageTag
 
@@ -74,6 +71,25 @@ defmodule Cldr.Config do
     "locale_display_names",
     "subdivisions"
   ]
+
+  @root_locale_name "und"
+
+  @doc false
+  # Integer keys cater for 60 year cycles and 239 japanese eras
+  @keys_to_integerize Enum.map(-2..255, &to_string/1)
+
+  def keys_to_integerize do
+    @keys_to_integerize
+  end
+
+  # These delegates are here for backwards compatibility
+  # and will be removed when the daata is
+  defdelegate get_locale(locale, config), to: Cldr.Locale.Loader
+  defdelegate underscore(string), to: Cldr.Locale.Loader
+
+  def root_locale_name do
+    @root_locale_name
+  end
 
   def include_module_docs?(false) do
     false
@@ -737,7 +753,7 @@ defmodule Cldr.Config do
   If the configured locales is `:all` then all locales
   in CLDR are configured.
 
-  The locale "root" is always added to the list of configured locales since it
+  The locale "und" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
   The use of `:all` is not recommended since all 541 locales take
@@ -754,7 +770,7 @@ defmodule Cldr.Config do
         _ -> expand_locale_names(app_locale_names)
       end
 
-    ["root" | locale_names]
+    [@root_locale_name | locale_names]
     |> Enum.uniq()
     |> Enum.sort()
   end
@@ -920,7 +936,7 @@ defmodule Cldr.Config do
        :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :vaii, :wara, :wcho]
+       :tirh, :tnsa, :vaii, :wara, :wcho]
 
   """
   def known_number_systems do
@@ -1247,31 +1263,28 @@ defmodule Cldr.Config do
       [:"001", :"002", :"003", :"005", :"009", :"011", :"013", :"014", :"015", :"017",
        :"018", :"019", :"021", :"029", :"030", :"034", :"035", :"039", :"053", :"054",
        :"057", :"061", :"142", :"143", :"145", :"150", :"151", :"154", :"155", :"202",
-       :"419", :AA, :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AN, :AO, :AQ, :AR, :AS,
-       :AT, :AU, :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM,
-       :BN, :BO, :BQ, :BR, :BS, :BT, :BU, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG,
-       :CH, :CI, :CK, :CL, :CM, :CN, :CO, :CP, :CR, :CS, :CU, :CV, :CW, :CX, :CY, :CZ,
-       :DD, :DE, :DG, :DJ, :DK, :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET,
-       :EU, :EZ, :FI, :FJ, :FK, :FM, :FO, :FR, :FX, :GA, :GB, :GD, :GE, :GF, :GG, :GH,
-       :GI, :GL, :GM, :GN, :GP, :GQ, :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR,
-       :HT, :HU, :IC, :ID, :IE, :IL, :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO,
-       :JP, :KE, :KG, :KH, :KI, :KM, :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI,
-       :LK, :LR, :LS, :LT, :LU, :LV, :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML,
-       :MM, :MN, :MO, :MP, :MQ, :MR, :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC,
-       :NE, :NF, :NG, :NI, :NL, :NO, :NP, :NR, :NT, :NU, :NZ, :OM, :PA, :PE, :PF, :PG,
-       :PH, :PK, :PL, :PM, :PN, :PR, :PS, :PT, :PW, :PY, :QA, :QM, :QN, :QO, :QP, :QQ,
-       :QR, :QS, :QT, :QU, :QV, :QW, :QX, :QY, :QZ, :RE, :RO, :RS, :RU, :RW, :SA, :SB,
-       :SC, :SD, :SE, :SG, :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SU,
-       :SV, :SX, :SY, :SZ, :TA, :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO,
-       :TP, :TR, :TT, :TV, :TW, :TZ, :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE,
-       :VG, :VI, :VN, :VU, :WF, :WS, :XA, :XB, :XC, :XD, :XE, :XF, :XG, :XH, :XI, :XJ,
-       :XK, :XL, :XM, :XN, :XO, :XP, :XQ, :XR, :XS, :XT, :XU, :XV, :XW, :XX, :XY, :XZ,
-       :YD, :YE, :YT, :YU, :ZA, :ZM, :ZR, :ZW, :ZZ]
+       :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
+       :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
+       :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
+       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
+       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
+       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
+       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
+       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
+       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
+       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
+       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
+       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
+       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
+       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
+       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
+       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
+       :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
   def known_territories do
     :territories
-    |> Cldr.Validity.all_valid()
+    |> Cldr.Validity.known()
     |> Enum.sort()
     |> Enum.map(&String.to_atom/1)
   end
@@ -1782,6 +1795,9 @@ defmodule Cldr.Config do
     end
   end
 
+  @deprecated "Use Cldr.Config.territories/1"
+  defdelegate territory_info(territory), to: __MODULE__, as: :territory
+
   @doc """
   Returns a map of locale names to
   its parent locale name.
@@ -1796,19 +1812,6 @@ defmodule Cldr.Config do
     |> Path.join("parent_locales.json")
     |> File.read!()
     |> json_library().decode!
-  end
-
-  @deprecated "Use Cldr.Config.territories/1"
-  defdelegate territory_info(territory), to: __MODULE__, as: :territory
-
-  defp atomize_languages(content) do
-    languages =
-      content
-      |> Map.get(:languages)
-      |> Enum.map(fn {k, v} -> {k, Cldr.Map.atomize_keys(v)} end)
-      |> Map.new()
-
-    Map.put(content, :languages, languages)
   end
 
   @doc """
@@ -1903,12 +1906,12 @@ defmodule Cldr.Config do
 
   @doc """
   Returns the data that defines start and end of
-  calendar epochs.
+  calendar eras.
 
   ## Example
 
       iex> Cldr.Config.calendars |> Map.get(:gregorian)
-      %{calendar_system: "solar", eras: %{0 => %{end: 0}, 1 => %{start: 1}}}
+      %{calendar_system: "solar", eras: [[0, %{end: [0, 12, 31]}], [1, %{start: [1, 1, 1]}]]}
 
   """
   def calendars do
@@ -1916,9 +1919,8 @@ defmodule Cldr.Config do
     |> Path.join("calendars.json")
     |> File.read!()
     |> json_library().decode!
-    |> Cldr.Map.atomize_keys(except: &Regex.match?(~r/[0-9]+/, elem(&1, 0)))
+    |> Cldr.Map.atomize_keys(except: @keys_to_integerize)
     |> Cldr.Map.integerize_keys()
-    |> add_era_end_dates
   end
 
   @deprecated "Use Cldr.Config.calendars/0"
@@ -2132,41 +2134,6 @@ defmodule Cldr.Config do
     |> Map.keys()
   end
 
-  defp add_era_end_dates(calendars) do
-    Enum.map(calendars, fn {calendar, content} ->
-      new_content =
-        Enum.map(content, fn
-          {:eras, eras} -> {:eras, add_end_dates(eras)}
-          {k, v} -> {k, v}
-        end)
-        |> Enum.into(%{})
-
-      {calendar, new_content}
-    end)
-    |> Enum.into(%{})
-  end
-
-  defp add_end_dates(%{} = eras) do
-    eras
-    |> Enum.sort_by(fn {k, _v} -> k end, fn a, b -> a < b end)
-    |> add_end_dates
-    |> Enum.into(%{})
-  end
-
-  defp add_end_dates([{_, %{start: _start_1}} = era_1, {_, %{start: start_2}} = era_2]) do
-    {era, dates} = era_1
-    [{era, Map.put(dates, :end, start_2 - 1)}, era_2]
-  end
-
-  defp add_end_dates([{_, %{start: _start_1}} = era_1 | [{_, %{start: start_2}} | _] = tail]) do
-    {era, dates} = era_1
-    [{era, Map.put(dates, :end, start_2 - 1)}] ++ add_end_dates(tail)
-  end
-
-  defp add_end_dates(other) do
-    other
-  end
-
   @doc """
   Get the configured number formats that should be precompiled at application
   compilation time.
@@ -2276,7 +2243,7 @@ defmodule Cldr.Config do
           |> locale_name_to_posix
           |> String.to_atom()
 
-        {Module.concat(backend, Rbnf.NumberSystem), function, "root"}
+        {Module.concat(backend, Rbnf.NumberSystem), function, @root_locale_name}
     end
   end
 
@@ -2301,25 +2268,6 @@ defmodule Cldr.Config do
 
   # ------ Helpers ------
 
-  # Simple check that the locale content contains what we expect
-  # by checking it has the keys we used when the locale was consolidated.
-
-  # Set the environment variable DEV to bypass this check. That is
-  # only required if adding new content modules to a locale - which is
-  # an uncommon activity.
-
-  defp assert_valid_keys!(content, locale) do
-    for module <- required_modules() do
-      if !Map.has_key?(content, module) and !:"Elixir.System".get_env("DEV") do
-        raise RuntimeError,
-          message:
-            "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
-      end
-    end
-
-    content
-  end
-
   @doc """
   Identifies the top level keys in the consolidated locale file.
 
@@ -2336,144 +2284,6 @@ defmodule Cldr.Config do
   def required_modules do
     @cldr_modules
   end
-
-  # Number systems are stored as atoms, no new
-  # number systems are ever added at runtime so
-  # risk to overflowing the atom table is very low.
-  defp atomize_number_systems(content) do
-    number_systems =
-      content
-      |> Map.get(:number_systems)
-      |> Enum.map(fn {k, v} -> {k, atomize(v)} end)
-      |> Enum.into(%{})
-
-    Map.put(content, :number_systems, number_systems)
-  end
-
-  @date_atoms ["exemplar_city", "long", "standard", "generic", "daylight", "formal"]
-  defp structure_date_formats(content) do
-    dates =
-      content.dates
-      |> Cldr.Map.integerize_keys(only: @keys_to_integerize)
-
-    zones =
-      get_in(dates, [:time_zone_names, :zone])
-      |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
-      |> Cldr.Map.atomize_keys(only: @date_atoms)
-
-    dates =
-      put_in(dates, [:time_zone_names, :zone], zones)
-
-    Map.put(content, :dates, dates)
-  end
-
-  defp structure_list_formats(content) do
-    dates =
-      content.list_formats
-      |> Cldr.Map.atomize_keys()
-
-    Map.put(content, :list_formats, dates)
-  end
-
-  @alt_keys ["default", "menu", "short", "long", "variant"]
-  defp structure_locale_display_names(content) do
-    locale_display_names =
-      content
-      |> Map.get(:locale_display_names)
-      |> Cldr.Map.rename_keys("variants", "language_variants")
-      |> Cldr.Map.atomize_keys(skip: ["language", "language_variants"])
-      |> Cldr.Map.atomize_keys(only: @alt_keys)
-
-    Map.put(content, :locale_display_names, locale_display_names)
-  end
-
-  # Put the rbnf rules into a %Rule{} struct
-  defp structure_rbnf(content) do
-    rbnf =
-      content[:rbnf]
-      |> Enum.map(fn {group, sets} ->
-        {group, structure_sets(sets)}
-      end)
-      |> Enum.into(%{})
-
-    Map.put(content, :rbnf, rbnf)
-  end
-
-  defp structure_number_formats(content) do
-    number_formats =
-      content["number_formats"]
-      |> Cldr.Map.integerize_keys()
-
-    Map.put(content, "number_formats", number_formats)
-  end
-
-  defp structure_units(content) do
-    units =
-      content["units"]
-      |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
-      |> Map.new()
-      |> Cldr.Map.atomize_keys()
-
-    Map.put(content, "units", units)
-  end
-
-  defp group_units(units) do
-    units
-    |> Enum.map(fn {k, v} ->
-      [group | key] =
-        cond do
-          String.starts_with?(k, "10p") -> [k | []]
-          String.starts_with?(k, "1024p") -> [k | []]
-          true -> String.split(k, "_", parts: 2)
-        end
-
-      if key == [] do
-        {"compound", group, v}
-      else
-        [key] = key
-        {group, key, v}
-      end
-    end)
-    |> Enum.reject(&is_nil/1)
-    |> Enum.group_by(
-      fn {group, _key, _value} -> group end,
-      fn {_group, key, value} -> {key, atomize_gender(value)} end
-    )
-    |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
-    |> Map.new()
-  end
-
-  defp atomize_gender(map) when is_map(map) do
-    map
-    |> Enum.map(&atomize_gender/1)
-    |> Map.new()
-  end
-
-  defp atomize_gender({"gender" = key, [gender]}), do: {key, String.to_atom(gender)}
-  defp atomize_gender({"gender" = key, gender}), do: {key, String.to_atom(gender)}
-  defp atomize_gender(other), do: other
-
-  defp structure_sets(sets) do
-    Enum.map(sets, fn {name, set} ->
-      name = underscore(name)
-      {underscore(name), Map.put(set, :rules, set[:rules])}
-    end)
-    |> Enum.into(%{})
-  end
-
-  @doc false
-  def underscore(string) when is_binary(string) do
-    string
-    |> Cldr.String.to_underscore()
-  end
-
-  def underscore(other), do: other
-
-  # Convert to an atom but only if
-  # its a binary.
-  defp atomize(nil), do: nil
-  defp atomize(v) when is_binary(v), do: String.to_atom(v)
-  defp atomize(v), do: v
 
   @doc false
   def true_false() do
@@ -2699,7 +2509,6 @@ defmodule Cldr.Config do
     end
   end
 
-  @root_locale "root"
   def merge_locales_with_default(%{locales: :all} = config) do
     config
   end
@@ -2710,7 +2519,7 @@ defmodule Cldr.Config do
     default = config[:default_locale] || hd(locales)
 
     locales =
-      (locales ++ gettext ++ [default, @root_locale])
+      (locales ++ gettext ++ [default, @root_locale_name])
       |> Enum.reject(&is_nil/1)
       |> Enum.uniq()
       |> Enum.map(&canonical_name/1)

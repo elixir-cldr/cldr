@@ -1,8 +1,13 @@
 defmodule Cldr.Locale.Cache do
   @moduledoc false
 
+  # Caches locales in an :ets table
+  # during compilation to improve performance
+
   use GenServer
   require Logger
+
+  alias Cldr.Locale.Loader
 
   @table_name :cldr_locales
   @gen_server_name :cldr_locale_cache
@@ -46,7 +51,7 @@ defmodule Cldr.Locale.Cache do
     if compiling?() and not gen_server_started?() do
       Cldr.maybe_log("Starting the compiler locale cache")
 
-      case Cldr.Locale.Cache.start() do
+      case start() do
         {:ok, _pid} -> :ok
         {:error, {:already_started, _pid}} -> :ok
       end
@@ -100,7 +105,7 @@ defmodule Cldr.Locale.Cache do
             "Reading and decoding the locale file."
         )
 
-        locale_data = Cldr.Config.do_get_locale(locale, path, false)
+        locale_data = Loader.do_get_locale(locale, path, false)
 
         try do
           :ets.insert(@table_name, {locale, locale_data})
@@ -121,6 +126,11 @@ defmodule Cldr.Locale.Cache do
       other ->
         raise RuntimeError, inspect(other)
     end
+  rescue ArgumentError ->
+    # We can very ocassionally get an exception when the gen_server
+    # is started but before the table is created and another thread
+    # tries to get a locale. In this case we just get the locale manually
+    Loader.do_get_locale(locale, path, false)
   end
 
   defp do_get_language_tag(locale) do
@@ -130,12 +140,11 @@ defmodule Cldr.Locale.Cache do
         language_tag
 
       [] ->
-        Cldr.maybe_log("Compiler language tag cache miss. Will retry.")
-        Process.sleep(100)
-        do_get_language_tag(locale)
-        # raise RuntimeError,
-        #       "Compiler language tag cache: Unexpected miss " <>
-        #         "for locale #{inspect(locale)}. Got #{inspect(other)}."
+        # A new locale for which there is no precomputed language tag yet
+        # In fact thats probably what we're about to do later on - create the
+        # precomputed tag.
+        Cldr.maybe_log("Compiler language tag cache miss for locale #{inspect(locale)}.")
+        nil
     end
   end
 

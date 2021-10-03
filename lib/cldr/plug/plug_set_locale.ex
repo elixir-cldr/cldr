@@ -37,13 +37,6 @@ if Code.ensure_loaded?(Plug) do
       * `:session_key` - defines the key used to look for the locale
         in the session.  The default is `locale`.
 
-      * `:put_session?` - defines whether the resolved locale is
-        put in the session. The default is `false`. If set to
-        `true` then two items are stored in the session:
-        `locale.requested_locale_name` is stored under the configured
-        `:session_key` and the configured backend module is stored
-        in the session under the "cldr_backend" key.
-
     If a locale is found then `conn.private[:cldr_locale]` is also set.
     It can be retrieved with `Cldr.Plug.SetLocale.get_cldr_locale/1`.
 

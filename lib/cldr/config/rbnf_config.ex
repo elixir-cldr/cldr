@@ -34,8 +34,8 @@ defmodule Cldr.Rbnf.Config do
        "de", "ee", "el", "en", "eo", "es-419", "es", "et", "fa-AF", "fa", "fi", "fil",
        "fo", "fr-BE", "fr-CH", "fr", "ga", "he", "hi", "hr", "hu", "hy", "id", "is",
        "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lt", "lv", "mk", "ms", "mt",
-       "my", "nb", "nl", "nn", "pl", "pt-PT", "pt", "ro", "root", "ru", "se", "sk",
-       "sl", "sq", "sr-Latn", "sr", "sv", "ta", "th", "tr", "uk", "vi", "yue",
+       "my", "nb", "nl", "nn", "pl", "pt-PT", "pt", "ro", "ru", "se", "sk",
+       "sl", "sq", "sr-Latn", "sr", "sv", "ta", "th", "tr", "uk", "und", "vi", "yue",
        "zh-Hant", "zh"]
 
   """
@@ -57,10 +57,10 @@ defmodule Cldr.Rbnf.Config do
       ["lo", "eo", "ja", "el", "fo", "hu", "yue", "fil", "sq", "cy", "da", "sv", "ee",
        "et", "ta", "nl", "vi", "nb", "lv", "id", "pt-PT", "fa-AF", "lt", "my",
        "sr-Latn", "cs", "ms", "fa", "bg", "es", "en", "af", "mt", "am", "ca", "mk",
-       "ro", "de-CH", "ka", "root", "hr", "nn", "hy", "pt", "se", "he", "ga", "sr",
+       "ro", "de-CH", "ka", "hr", "nn", "hy", "pt", "se", "he", "ga", "sr",
        "hi", "ky", "ko", "zh-Hant", "kl", "km", "sk", "ru", "zh", "de", "fi", "it",
        "be", "pl", "az", "tr", "is", "fr-CH", "es-419", "th", "fr-BE", "fr", "sl",
-       "bs", "uk", "ar"]
+       "bs", "uk", "und", "ar"]
 
   """
   def known_locale_names(backend) do
