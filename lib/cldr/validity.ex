@@ -72,11 +72,38 @@ defmodule Cldr.Validity do
     validity_data = Cldr.Config.validity(type)
 
     for {_status, codes} <- validity_data do
-      {code_ranges, simple_codes} = Cldr.Validity.partition(codes)
+      {code_ranges, simple_codes} = partition(codes)
 
       range_check =
         for range <- code_ranges, range != [] do
-          {base, range_start, range_end} = Cldr.Validity.range_from(range)
+          {base, range_start, range_end} = range_from(range)
+
+          for char <- range_start..range_end do
+            base <> <<char::utf8>>
+          end
+        end
+
+      simple_codes ++ range_check
+    end
+    |> List.flatten()
+  end
+
+  # Returns a list of known data that omits
+  # valid (per the spec) but shouldn't be used
+  # in general practise
+
+  @omit_status [:deprecated, :reserved, :special, :unknown, :private_use]
+
+  @doc false
+  def known(type) do
+    validity_data = Cldr.Config.validity(type)
+
+    for {status, codes} <- validity_data, status not in @omit_status do
+      {code_ranges, simple_codes} = partition(codes)
+
+      range_check =
+        for range <- code_ranges, range != [] do
+          {base, range_start, range_end} = range_from(range)
 
           for char <- range_start..range_end do
             base <> <<char::utf8>>
