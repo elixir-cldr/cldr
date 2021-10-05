@@ -94,7 +94,7 @@ mix deps.compile
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
 * Locale name localisation: [ex_cldr_locale_display](https://hex.pm/packages/ex_cldr_locale_display)
-* HTML select helpers: [ex_cldr_html](https://hex.pm/packages/ex_cldr_html)
+* HTML select helpers: [ex_cldr_html](https://hex.pm/packages/cldr_html)
 * Calendars: [ex_cldr_calendars](https://hex.pm/packages/ex_cldr_calendars)
 * Calendar formatting: [ex_cldr_calendars_format](https://hex.pm/packages/ex_cldr_calendars_format)
 * Printf-like formatting: [ex_cldr_print](https://hex.pm/packages/ex_cldr_print)
