@@ -83,8 +83,12 @@ defmodule Cldr.Config do
   end
 
   # These delegates are here for backwards compatibility
-  # and will be removed when the daata is
+  # and will be removed when the data is
+
+  @doc false
   defdelegate get_locale(locale, config), to: Cldr.Locale.Loader
+
+  @doc false
   defdelegate underscore(string), to: Cldr.Locale.Loader
 
   def root_locale_name do

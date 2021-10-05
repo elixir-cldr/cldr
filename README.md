@@ -40,10 +40,6 @@ The functions you are mostly likely to use are:
 * `MyApp.Cldr.Locale.new/1`
 * `MyApp.Cldr.validate_locale/1`
 
-To access the raw Cldr data for a locale the `Cldr.Config` module is available.  Note that the functions in `Cldr.Config` are typically used by library authors.  The most useful function is:
-
-* `Cldr.Config.get_locale/2` which returns a map of all the CLDR data known to `Cldr`.  Since this data is read from a file, parsed and then formatted it is a function that should be used with care due to the material performance implications.  `Cldr` uses this function during compilation to build functions that return the relevant data with higher performance and these functions are to be preferred over the use of `Cldr.Config.get_locale/2`.
-
 ## Use Case
 
 Use this library if you need to:
