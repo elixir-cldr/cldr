@@ -73,7 +73,7 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.integerize_keys(filter: "number_formats")
     |> Cldr.Map.atomize_values(filter: "number_systems")
     |> Cldr.Map.atomize_keys(filter: "locale_display_names", skip: @language_keys)
-    |> Cldr.Map.atomize_keys(filter: "locale_display_names", only: @alt_keys)
+    |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)

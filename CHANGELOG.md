@@ -1,12 +1,20 @@
 # Changelog
 
+## Cldr v2.24.0-rc.2
+
+This is the changelog for Cldr v2.24.0-rc.2 released on October 18th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Correctly atomize the keys for the locale display names "language" types.
+
 ## Cldr v2.24.0-rc.1
 
 This is the changelog for Cldr v2.24.0-rc.1 released on October 18th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
-* This release updates the CLDR 40 data to the latest pre-release (it's likely the final release data).
+* This release updates the CLDR 40 data to the latest pre-release (it's likely the final release data).  In addition, the canonical format of some data has changed; for example subdivisions are now atoms, not strings.
 
 ## Cldr v2.24.0-rc.0
 

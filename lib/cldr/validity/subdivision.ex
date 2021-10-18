@@ -12,12 +12,11 @@ defmodule Cldr.Validity.Subdivision do
 
   def validate(code) do
     code
-    |> to_string()
-    |> String.downcase()
+    |> normalize()
     |> valid()
     |> case do
       {:error, _} -> {:error, code}
-      other -> other
+      {:ok, code, status} -> {:ok, String.to_atom(code), status}
     end
   end
 
@@ -29,5 +28,11 @@ defmodule Cldr.Validity.Subdivision do
 
   def normalize(nil) do
     nil
+  end
+
+  def normalize(code) when is_atom(code) do
+    code
+    |> Atom.to_string()
+    |> normalize()
   end
 end

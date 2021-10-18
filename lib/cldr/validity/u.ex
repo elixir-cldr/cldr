@@ -142,7 +142,6 @@ defmodule Cldr.Validity.U do
 
   defp encode_key("sd", value) do
     value
-    |> String.downcase()
   end
 
   defp encode_key("vt", value) do
