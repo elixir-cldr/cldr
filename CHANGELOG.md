@@ -1,8 +1,16 @@
 # Changelog
 
+## Cldr v2.24.0-rc.1
+
+This is the changelog for Cldr v2.24.0-rc.1 released on October 18th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* This release updates the CLDR 40 data to the latest pre-release (it's likely the final release data).
+
 ## Cldr v2.24.0-rc.0
 
-This is the changelog for Cldr v2.24.0-rc.0 released on October 3rd.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.24.0-rc.0 released on October 3rd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 There has been a significant amount of refactoring of the code that packages the locale files and the code that loads a locale. This has a very minor performance improvement at compile time but the major benefit is for maintainability.
 
