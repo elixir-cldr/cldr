@@ -1528,9 +1528,9 @@ defmodule Cldr do
     validate_territory(territory)
   end
 
-  defp validate_subdivision(subdivision) when is_binary(subdivision) do
-    case Map.fetch(known_territory_subdivision_containment(), subdivision) do
-      {:ok, _} -> {:ok, subdivision}
+  defp validate_subdivision(subdivision) do
+    case Cldr.Validity.Subdivision.validate(subdivision) do
+      {:ok, subdivision, status} when status in [:regular, :deprecated] -> {:ok, subdivision}
       _ -> {:error, unknown_territory_error(subdivision)}
     end
   end
