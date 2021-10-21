@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.24.0-rc.4
+
+This is the changelog for Cldr v2.24.0-rc.4 released on October 21st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversly incorrectly stringifying the number system in the same formats.
+
 ## Cldr v2.24.0-rc.3
 
 This is the changelog for Cldr v2.24.0-rc.3 released on October 18th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

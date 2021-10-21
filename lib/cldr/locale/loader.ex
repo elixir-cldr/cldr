@@ -106,14 +106,14 @@ defmodule Cldr.Locale.Loader do
       |> Map.get("dates")
       |> Cldr.Map.integerize_keys(only: Cldr.Config.keys_to_integerize())
       |> Cldr.Map.deep_map(fn
-        {:number_system, value} ->
+        {"number_system", value} ->
           {:number_system,
             Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
         other ->
           other
       end)
       |> Cldr.Map.atomize_keys(only: @date_atoms)
-      |> Cldr.Map.atomize_keys(filter: "calendars")
+      |> Cldr.Map.atomize_keys(filter: "calendars", skip: :number_system)
       |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
       |> Cldr.Map.atomize_keys(level: 1..1)
 
