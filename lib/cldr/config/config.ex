@@ -86,6 +86,7 @@ defmodule Cldr.Config do
   # and will be removed when the data is
 
   @doc false
+  @deprecated "Use Cldr.Locale.Loader.get_locale/2"
   defdelegate get_locale(locale, config), to: Cldr.Locale.Loader
 
   @doc false

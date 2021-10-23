@@ -605,7 +605,7 @@ defmodule Cldr.Backend do
       for locale_name <- Cldr.Config.known_locale_names(config) do
         lenient_parse =
           locale_name
-          |> Cldr.Config.get_locale(config)
+          |> Cldr.Locale.Loader.get_locale(config)
           |> Map.get(:lenient_parse)
           |> Cldr.Map.deep_map(
             fn {k, v} ->
@@ -651,7 +651,7 @@ defmodule Cldr.Backend do
       for locale_name <- Cldr.Config.known_locale_names(config) do
         delimiters =
           locale_name
-          |> Cldr.Config.get_locale(config)
+          |> Cldr.Locale.Loader.get_locale(config)
           |> Map.get(:delimiters)
 
         defp quote_marks_for(unquote(locale_name)) do
@@ -660,7 +660,7 @@ defmodule Cldr.Backend do
 
         ellipsis =
           locale_name
-          |> Cldr.Config.get_locale(config)
+          |> Cldr.Locale.Loader.get_locale(config)
           |> Map.get(:ellipsis)
 
         @doc false
