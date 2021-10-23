@@ -7,7 +7,7 @@
 
 ## Introduction
 
-`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 8th 2021 and `ex_cldr` Version 2.20.0, `ex_cldr` is based upon [CLDR version 39.0](http://cldr.unicode.org/index/downloads/cldr-39).
+`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 27th 2021 and `ex_cldr` Version 2.24.0, `ex_cldr` is based upon [CLDR version 40.0](http://cldr.unicode.org/index/downloads/cldr-40).
 
 The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
@@ -109,7 +109,7 @@ The preferred way to configure `Cldr` is to define the configuration in your bac
 
 ### Global configuration.
 
-In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:cacertfile` and `default_locale` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
+In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:default_locale`, `:default_backend`, `:cacertfile`, `:data_dir`, `:force_locale_download` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
 
 ```elixir
 config :ex_cldr,
@@ -568,7 +568,7 @@ See the file `DEVELOPMENT.md` in the github repository.
 
 ### Testing
 
-Tests cover the full 566 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full 571 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.10 and later.  `ex_cldr` may not run on Elixir versions before 1.10.
 
