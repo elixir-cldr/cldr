@@ -130,52 +130,53 @@ defmodule Cldr.Config do
     @app_name
   end
 
+  poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
+  jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
+  phoenix_json = Application.get_env(:phoenix, :json_library)
+  ecto_json = Application.get_env(:ecto, :json_library)
+  cldr_json = Application.get_env(:ex_cldr, :json_library)
+  @json_lib cldr_json || phoenix_json || ecto_json || jason || poison
+
+  cond do
+    Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) ->
+      :ok
+
+    cldr_json ->
+      raise ArgumentError,
+            "Could not load configured :json_library, " <>
+              "make sure #{inspect(cldr_json)} is listed as a dependency"
+    
+    true ->
+      raise ArgumentError, """
+      A JSON library has not been configured.\n
+      Please configure a JSON lib in your `mix.exs`
+      file. The suggested library is `:jason`.
+
+      For example in your `mix.exs`:
+
+          def deps() do
+            [
+              {:jason, "~> 1.0"},
+              ...
+            ]
+          end
+
+      You can then configure this library for `ex_cldr`
+      in your `config.exs` as follows:
+
+          config :ex_cldr,
+            json_library: Jason
+
+      If no configuration is provided, `ex_cldr` will
+      attempt to detect any JSON library configured
+      for Phoenix or Ecto then it will try to detect
+      if Jason or Poison are configured.
+      """
+  end
+
   @doc """
   Return the configured json lib
   """
-  @json_lib_error """
-   A JSON library has not been configured.\n
-   Please configure a JSON lib in your `mix.exs`
-   file. The suggested library is `:jason`.
-
-   For example in your `mix.exs`:
-
-     def deps() do
-       [
-         {:jason, "~> 1.0"},
-         ...
-       ]
-     end
-
-   You can then configure this library for `ex_cldr`
-   in your `config.exs` as follows:
-
-   config :ex_cldr,
-      json_library: Jason
-
-   If no configuration is provided, `ex_cldr` will
-   attempt to detect any JSON library configured
-   for Phoenix or Ecto then it will try to detect
-   if Jason or Poison are configured.
-
-  """
-  @poison if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
-  @jason if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
-  @phoenix_json Application.get_env(:phoenix, :json_library)
-  @ecto_json Application.get_env(:ecto, :json_library)
-  @default_json_lib @phoenix_json || @ecto_json || @jason || @poison
-  @json_lib Application.get_env(:ex_cldr, :json_library, @default_json_lib)
-
-  _ = @poison
-  _ = @jason
-  _ = @phoenix_json
-  _ = @ecto_json
-  _ = @json_lib_error
-
-  unless Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) do
-    raise ArgumentError, @json_lib_error
-  end
-
   def json_library do
     @json_lib
   end
