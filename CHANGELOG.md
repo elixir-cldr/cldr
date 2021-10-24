@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.24.0-rc.5
+
+This is the changelog for Cldr v2.24.0-rc.5 released on October 23rd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+This is expected to be the last RC before final release on October 27th.
+
+### Deprecations
+
+* Deprecated `Cldr.Config.get_locale/2` in favour of `Cldr.Locale.Loader.get_locale/2`.
+
 ## Cldr v2.24.0-rc.4
 
 This is the changelog for Cldr v2.24.0-rc.4 released on October 21st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
