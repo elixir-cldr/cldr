@@ -1,10 +1,20 @@
 # Changelog
 
+## Cldr v2.24.0-rc.6
+
+This is the changelog for Cldr v2.24.0-rc.6 released on October 5th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+This is expected to be the last RC before final release on October 27th.
+
+### Deprecations
+
+* Deprecated `Cldr.Config.known_locale_names/1` in favour of `Cldr.Locale.Loader.known_locale_names/1`
+
+* Deprecated `Cldr.Config.known_rbnf_locale_names/1` in favour of `Cldr.Locale.Loader.known_rbnf_locale_names/1`
+
 ## Cldr v2.24.0-rc.5
 
 This is the changelog for Cldr v2.24.0-rc.5 released on October 23rd, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
-
-This is expected to be the last RC before final release on October 27th.
 
 ### Deprecations
 

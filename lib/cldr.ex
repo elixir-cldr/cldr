@@ -38,6 +38,7 @@ defmodule Cldr do
 
   alias Cldr.Config
   alias Cldr.Locale
+  alias Cldr.Locale.Loader
   alias Cldr.LanguageTag
 
   require Config
@@ -80,7 +81,7 @@ defmodule Cldr do
 
     Cldr.Install.install_known_locale_names(config)
 
-    known_locale_count = Enum.count(Config.known_locale_names(config))
+    known_locale_count = Enum.count(Loader.known_locale_names(config))
     locale_string = if known_locale_count > 1, do: "locales named ", else: "locale named "
 
     if Enum.any?(Config.unknown_locale_names(config)) do
@@ -98,7 +99,7 @@ defmodule Cldr do
     IO.puts(
       "Generating #{inspect(config.backend)} for #{known_locale_count} " <>
         locale_string <>
-        "#{inspect(Config.known_locale_names(config), limit: 5)} with " <>
+        "#{inspect(Loader.known_locale_names(config), limit: 5)} with " <>
         "a default locale named #{inspect(Config.default_locale_name(config))}"
     )
 

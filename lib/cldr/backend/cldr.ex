@@ -15,7 +15,7 @@ defmodule Cldr.Backend do
 
       """
       @omit_locales ["und"]
-      @known_locale_names Cldr.Config.known_locale_names(config) -- @omit_locales
+      @known_locale_names Cldr.Locale.Loader.known_locale_names(config) -- @omit_locales
       def known_locale_names do
         @known_locale_names
       end
@@ -92,7 +92,7 @@ defmodule Cldr.Backend do
       formats (RBNF).
 
       """
-      @known_rbnf_locale_names Cldr.Config.known_rbnf_locale_names(config)
+      @known_rbnf_locale_names Cldr.Locale.Loader.known_rbnf_locale_names(config)
       @spec known_rbnf_locale_names() :: [Locale.locale_name()]
       def known_rbnf_locale_names do
         @known_rbnf_locale_names
@@ -602,7 +602,7 @@ defmodule Cldr.Backend do
       #    are not supported in Erlang's re
 
       @remove_compounds Regex.compile!("{.*}", [:ungreedy])
-      for locale_name <- Cldr.Config.known_locale_names(config) do
+      for locale_name <- Cldr.Locale.Loader.known_locale_names(config) do
         lenient_parse =
           locale_name
           |> Cldr.Locale.Loader.get_locale(config)
@@ -632,7 +632,7 @@ defmodule Cldr.Backend do
       # parsed language tag for performance reasons and only
       # add the gettext locale name (if there is one) and the
       # backend module.
-      for locale_name <- Cldr.Config.known_locale_names(config),
+      for locale_name <- Cldr.Locale.Loader.known_locale_names(config),
           not is_nil(Cldr.Config.language_tag(locale_name)) do
 
         language_tag =
@@ -648,7 +648,7 @@ defmodule Cldr.Backend do
         end
       end
 
-      for locale_name <- Cldr.Config.known_locale_names(config) do
+      for locale_name <- Cldr.Locale.Loader.known_locale_names(config) do
         delimiters =
           locale_name
           |> Cldr.Locale.Loader.get_locale(config)

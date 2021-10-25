@@ -145,7 +145,7 @@ defmodule Cldr.Config do
       raise ArgumentError,
             "Could not load configured :json_library, " <>
               "make sure #{inspect(cldr_json)} is listed as a dependency"
-    
+
     true ->
       raise ArgumentError, """
       A JSON library has not been configured.\n
@@ -787,24 +787,17 @@ defmodule Cldr.Config do
 
   """
   @spec known_locale_names(t() | Cldr.backend()) :: [Locale.locale_name()]
-  def known_locale_names(backend) when is_atom(backend) do
-    backend.__cldr__(:config)
-    |> known_locale_names
-  end
+  @deprecated "Use Cldr.Locale.Loader.known_locale_names/1"
+  defdelegate known_locale_names(config), to: Cldr.Locale.Loader
 
-  def known_locale_names(%__MODULE__{locales: :all}) do
-    all_locale_names()
-    |> Enum.sort()
-  end
+  @doc """
+  Returns a list of all locales that have RBNF data and that are
+  configured and available in the CLDR repository.
 
-  def known_locale_names(%__MODULE__{locales: locales}) do
-    Enum.sort(locales)
-  end
-
-  def known_rbnf_locale_names(config) do
-    known_locale_names(config)
-    |> Enum.filter(fn locale -> Map.get(get_locale(locale, config), :rbnf) != %{} end)
-  end
+  """
+  @spec known_rbnf_locale_names(t()) :: [Locale.locale_name()]
+  @deprecated "Use Cldr.Locale.Loader.known_rbnf_locale_names/1"
+  defdelegate known_rbnf_locale_names(config), to: Cldr.Locale.Loader
 
   @doc """
   Returns either the locale name (if its known)

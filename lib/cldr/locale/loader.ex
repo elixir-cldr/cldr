@@ -1,21 +1,53 @@
 defmodule Cldr.Locale.Loader do
-  @moduledoc false
+  @moduledoc """
+  Provides a public interface to read the
+  raw JSON locale files and return the
+  CLDR data in a consistent format.
 
-  # Encapsulate only the code that loads a
-  # locale from a .json file
+  The functions in this module are intended for the
+  use of authors writing additional CLDR-based
+  libraries.
 
-  # The intent is to isolate all the code that
-  # loads a locale so that eventually this can be
-  # shifted from here to the data consolidation phase
-  # if/when we choose to store locales in erlang
-  # term format rather than json.
+  In addition, the functions in this module are
+  intended for use at compile-time - not runtime -
+  since reading, decoding and processing a
+  locale file is an expensive operation.
 
-  # One intermediate step will be to shift the data
-  # structure manipulation into the consolidation phase
-  # leaving only the requirement to form atom and integer
-  # keys in the appropriate place.
+  """
 
   alias Cldr.Config
+  alias Cldr.Locale
+
+  @doc """
+  Returns a list of all locales that are configured and available
+  in the CLDR repository.
+
+  """
+  @spec known_locale_names(Config.t() | Cldr.backend()) :: [Locale.locale_name()]
+  def known_locale_names(backend) when is_atom(backend) do
+    backend.__cldr__(:config)
+    |> known_locale_names
+  end
+
+  def known_locale_names(%Config{locales: :all}) do
+    Cldr.Config.all_locale_names()
+    |> Enum.sort()
+  end
+
+  def known_locale_names(%Config{locales: locales}) do
+    Enum.sort(locales)
+  end
+
+  @doc """
+  Returns a list of all locales that have RBNF data and that are
+  configured and available in the CLDR repository.
+
+  """
+  @spec known_rbnf_locale_names(Config.t()) :: [Locale.locale_name()]
+  def known_rbnf_locale_names(config) do
+    known_locale_names(config)
+    |> Enum.filter(fn locale -> Map.get(get_locale(locale, config), :rbnf) != %{} end)
+  end
 
   @doc """
   Read the locale json, decode it and make any necessary transformations.

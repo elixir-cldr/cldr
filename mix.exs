@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.24.0-rc.5"
+  @version "2.24.0-rc.6"
 
   def project do
     [
@@ -178,6 +178,7 @@ defmodule Cldr.Mixfile do
         Cldr.Digits,
         Cldr.Helpers,
         Cldr.Locale.Cache,
+        Cldr.Locale.Loader,
         Cldr.Macros,
         Cldr.Map,
         Cldr.Math,
@@ -192,7 +193,8 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "src", "mix/support/units", "mix/tasks", "test"]
+  defp elixirc_paths(:test), do: ["lib", "src", "dev", "mix/support/units", "mix/tasks", "test"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "src", "bench"]
+  defp elixirc_paths(:release), do: ["lib", "dev", "src"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end

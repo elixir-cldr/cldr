@@ -14,7 +14,7 @@ defmodule Cldr.Config.Test do
       end)
     end)
 
-    assert Cldr.Config.known_locale_names(Cldr.Config.Test.ConfigTest) == @to_locales
+    assert Cldr.Locale.Loader.known_locale_names(Cldr.Config.Test.ConfigTest) == @to_locales
   end
 
   test "a backend locales configuration" do
@@ -74,6 +74,6 @@ defmodule Cldr.Config.Test do
       end)
     end)
 
-    assert Cldr.Config.known_locale_names(Cldr.Config.Test.AddFallback) == to_locales
+    assert Cldr.Locale.Loader.known_locale_names(Cldr.Config.Test.AddFallback) == to_locales
   end
 end

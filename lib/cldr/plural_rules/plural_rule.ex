@@ -131,7 +131,7 @@ defmodule Cldr.Number.PluralRule do
       @known_locale_names @rules_locales
                           |> MapSet.new()
                           |> MapSet.intersection(
-                            MapSet.new(Cldr.Config.known_locale_names(@config))
+                            MapSet.new(Cldr.Locale.Loader.known_locale_names(@config))
                           )
                           |> MapSet.to_list()
                           |> Enum.sort()
