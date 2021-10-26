@@ -6,6 +6,10 @@ defmodule Cldr.Normalize.DateTime do
     |> normalize_dates(locale)
   end
 
+  @normalize_number_systems_for [
+    "date_formats", "time_formats", "date_skeletons", "time_skeletons"
+  ]
+
   def normalize_dates(content, _locale) do
     dates =
       content
@@ -15,7 +19,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.rename_keys("_value", "format")
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
-          filter: "date_formats", only: "number_system")
+          filter: @normalize_number_systems_for, only: "number_system")
       |> Cldr.Map.deep_map(&compile_items/1, filter: "date_time_formats",
            only: ["interval_format_fallback"])
       |> Cldr.Map.deep_map(&compile_items/1,
