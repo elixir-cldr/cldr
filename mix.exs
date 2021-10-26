@@ -44,7 +44,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:cldr_utils, "~> 2.17-rc"},
+      {:cldr_utils, "~> 2.17"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:castore, "~> 0.1", optional: true},
       {:certifi, "~> 2.5", optional: true},
