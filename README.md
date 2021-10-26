@@ -272,9 +272,9 @@ end
 `Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
-* If installed from github then all 541 locales are installed when the repo is cloned into your application deps.
+* If installed from github then all 571 locales are installed when the repo is cloned into your application deps.
 
-* If installed from hex then only the locales "en", "en-001" and "root" are installed.  When you configure additional locales these will be downloaded during application compilation.
+* If installed from hex then only the locales "en", "en-001" and "und" are installed.  When you configure additional locales these will be downloaded during application compilation.
 
 ## Localizing Numbers
 

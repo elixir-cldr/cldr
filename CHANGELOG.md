@@ -1,8 +1,38 @@
 # Changelog
 
+## Cldr v2.24.0
+
+This is the changelog for Cldr v2.24.0 released on October 27th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Updated to [CLDR 40](https://cldr.unicode.org/index/downloads/cldr-40) data. In addition, the canonical format of some data has changed; for example subdivisions are now atoms, not strings. This change is primarily of interest to authors writing libraries that use the raw underlying locale data.
+
+### Bug Fixes
+
+* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversly incorrectly stringifying the number system in the same formats.
+
+* `Cldr.validate_territory_subdivision/1` was case sensitive and didn't correctly handle atoms and binaries. Required to support `ex_cldr_territories` properly.
+
+* Correctly atomize the keys for the locale display names "language" types.
+
+* `Cldr.Plug.PutSession` now uses the locale key `:canonical_locale_name` to serialize to the session. Previously it was using `:cldr_locale_name` which does not include any of the extension information. Extension information encodes user preferences and is required to properly support localisation.
+
+* `Cldr.known_territories/1` no longer includes reserved, deprecated, special use or private use territory codes.
+
+### Deprecations
+
+* Deprecated `Cldr.Config.known_locale_names/1` in favour of `Cldr.Locale.Loader.known_locale_names/1`.
+
+* Deprecated `Cldr.Config.known_rbnf_locale_names/1` in favour of `Cldr.Locale.Loader.known_rbnf_locale_names/1`.
+
+* Deprecated `Cldr.Config.get_locale/2` in favour of `Cldr.Locale.Loader.get_locale/2`.
+
+* Deprecated the `:put_session?` option in `Cldr.Plug.SetLocale`.  Use the plug `Cldr.Plug.PutSession` instead.
+
 ## Cldr v2.24.0-rc.6
 
-This is the changelog for Cldr v2.24.0-rc.6 released on October 5th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.24.0-rc.6 released on October 25th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 This is expected to be the last RC before final release on October 27th.
 
