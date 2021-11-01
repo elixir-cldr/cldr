@@ -142,7 +142,7 @@ git pull
 mix cldr.consolidate
 ```
 
-3. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
+3. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with to ensure all available locales are generated.
 ```bash
 mix cldr.generate_language_tags
 ```
