@@ -25,7 +25,7 @@ NOTE that `git-lfs` MUST be installed prior to cloning the repo.
 
 ```bash
 # Set to whatever directory is appropriate
-export $CLDR_REPO="$HOME/development/cldr_repo"
+export CLDR_REPO="$HOME/development/cldr_repo"
 git clone https://github.com/unicode-org/cldr $CLDR_REPO
 ```
 
@@ -35,7 +35,7 @@ Of course the locale name of the CLDR repo can be any valid repo name however fo
 
 A java compiler and the `maven` tool are requirements for generating the CLDR toolchain.
 
-Java is pre-installed on MacOS so installation should not be required. At least java release 9.0 is required. `maven` is not installed by default so the following is required:
+Java is pre-installed on MacOS so installation should not be required. At least java release 9.0 is required. `maven` is not installed by default on MacOS so the following may be required:
 
 ```bash
 brew install maven
@@ -117,7 +117,7 @@ Review the settings of the first 20 lines of `ldml2json` to ensure the environme
 
 4. Download the up-to-date ISO currency database
 ```bash
-MIX_ENV=gen mix cldr.download.iso_currency
+mix cldr.download.iso_currency
 ```
 
 5. Execute ldml2json
@@ -139,12 +139,12 @@ git pull
 
 2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`
 ```bash
-MIX_ENV=gen mix cldr.consolidate
+mix cldr.consolidate
 ```
 
 3. Then regenerate the `language_tags.ebin` file by executing the following. This task will run with `MIX_ENV=test` to ensure all available locales are generated.
 ```bash
-MIX_ENV=gen mix cldr.generate_language_tags
+mix cldr.generate_language_tags
 ```
 
 

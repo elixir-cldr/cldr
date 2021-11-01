@@ -192,7 +192,7 @@ defmodule Cldr.Mixfile do
   end
 
   defp elixirc_paths(:test), do: ["lib", "src", "dev", "mix/support/units", "mix/tasks", "test"]
-  defp elixirc_paths(:dev), do: ["lib", "mix", "src", "bench"]
+  defp elixirc_paths(:dev), do: ["lib", "mix", "src", "dev", "bench"]
   defp elixirc_paths(:release), do: ["lib", "dev", "src"]
   defp elixirc_paths(_), do: ["lib", "src"]
 end
