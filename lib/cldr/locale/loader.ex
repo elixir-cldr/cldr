@@ -120,9 +120,12 @@ defmodule Cldr.Locale.Loader do
   end
 
   # Read the file.
+  # TODO remove when :all is deprecated in Elixir 1.17
+  @read_flag if Version.compare(System.version(), "1.13.0-dev") == :lt, do: :all, else: :eof
+
   defp read_locale_file!(path) do
     Cldr.maybe_log("Cldr.Config reading locale file #{inspect(path)}")
-    {:ok, contents} = File.open(path, [:read, :binary, :utf8], &IO.read(&1, :all))
+    {:ok, contents} = File.open(path, [:read, :binary, :utf8], &IO.read(&1, @read_flag))
     contents
   end
 
