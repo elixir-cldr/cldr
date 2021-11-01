@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.24.1
+
+This is the changelog for Cldr v2.24.1 released on November 1st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix compilation performance regression when compiling `ex_cldr` on Elixir 1.13.  `ex_cldr` has relied upon a private API in Elixir to detect when compilation is in progress and to then cache locale files. This improves compilation performance when many locales are configured by up to 6x. However the private API has changed in Elixir 1.13 and there is now a public API as well (hooray!).  Thanks very much to @josevalim for the support as always, and for the PR that fixed the issue.
+
 ## Cldr v2.24.0
 
 This is the changelog for Cldr v2.24.0 released on October 27th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
