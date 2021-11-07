@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.25.0
+
+This is the changelog for Cldr v2.25.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Apply `@external_resource` for each configured locale in backend modules.
+
 ## Cldr v2.24.1
 
 This is the changelog for Cldr v2.24.1 released on November 1st, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
