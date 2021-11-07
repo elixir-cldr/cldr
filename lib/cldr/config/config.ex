@@ -1490,10 +1490,19 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the location of the json data for a locale or `nil`
-  if the locale can't be found.
+  Returns the location of the json data for a locale`
+
+  ## Arguments
 
   * `locale` is any locale returned from `Cldr.known_locale_names/1`
+
+  * `config` is any `t:Cldr.Config`
+
+  ## Returns
+
+  * `{:ok, path}` or
+
+  * `{:error, :not_found}`
 
   """
   @spec locale_path(String.t(), Cldr.backend() | t()) ::
@@ -1516,6 +1525,34 @@ defmodule Cldr.Config do
       File.exists?(client_path) -> {:ok, client_path}
       File.exists?(cldr_path) -> {:ok, cldr_path}
       true -> {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Returns the location of the json data for a locale`
+
+  ## Arguments
+
+  * `locale` is any locale returned from `Cldr.known_locale_names/1`
+
+  * `config` is any `t:Cldr.Config`
+
+  ## Returns
+
+  * `path` or
+
+  * raises an exception
+
+  """
+  @spec locale_path!(String.t(), Cldr.backend() | t()) ::
+          String.t() | no_return()
+
+  def locale_path!(locale, config) do
+    case locale_path(locale, config) do
+      {:ok, path} ->
+        path
+      {:error, _reason} ->
+        raise RuntimeError, "The locale file for #{inspect locale} was not found."
     end
   end
 

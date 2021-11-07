@@ -43,6 +43,10 @@ defmodule Cldr.Backend.Compiler do
         unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
       end
 
+      for locale_name <- Cldr.Locale.Loader.known_locale_names(unquote(Macro.escape(config))) do
+        @external_resource Cldr.Config.locale_path!(locale_name, unquote(Macro.escape(config)))
+      end
+
       unquote(Cldr.Backend.define_backend_functions(config))
       unquote(Cldr.Locale.Backend.define_locale_backend(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
