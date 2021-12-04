@@ -1490,7 +1490,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the location of the json data for a locale`
+  Returns the location of the json data for a `locale`
 
   ## Arguments
 
@@ -1529,7 +1529,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Returns the location of the json data for a locale`
+  Returns the location of the json data for a `locale`
 
   ## Arguments
 
