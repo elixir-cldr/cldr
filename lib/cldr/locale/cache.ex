@@ -32,9 +32,16 @@ defmodule Cldr.Locale.Cache do
 
   def compiling? do
     # TODO: When we depend on Elixir v1.11+, remove function_exported and elixir_compiler_pid
-    (function_exported?(Code, :can_await_module_compilation?, 0) and Code.can_await_module_compilation?())
-      || process_alive?(:elixir_compiler_pid) || process_alive?(:cldr_locale_cache)
+    process_alive?(:can_await_module_compilation?) ||
+			process_alive?(:elixir_compiler_pid) ||
+			process_alive?(:cldr_locale_cache)
   end
+
+	defp process_alive?(:can_await_module_compilation?) do
+		Code.ensure_loaded?(Code) &&
+		function_exported?(Code, :can_await_module_compilation?, 0) &&
+		apply(Code, :can_await_module_compilation?, [])
+	end
 
   defp process_alive?(name) do
     case Process.get(name) do

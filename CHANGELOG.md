@@ -1,8 +1,12 @@
 # Changelog
 
-## Cldr v2.25.0
+## Cldr v2.24.2
 
-This is the changelog for Cldr v2.25.0 released on ______, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.24.2 released on December 5th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Obviate compiler warning for `Code.can_await_module_compilation?/0` on Elixir versions where the function does not exist. Thanks to @DaTrader for the report.
 
 ### Enhancements
 
