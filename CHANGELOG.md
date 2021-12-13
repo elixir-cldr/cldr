@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.25.0
+
+This is the changelog for Cldr v2.25.0 released on ____, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Implement `Cldr.Gettext.Plural` allowing the creation of [gettext](https://hexdocs.pm/gettext) [plural forms](https://hexdocs.pm/gettext/Gettext.Plural.html#content) modules.
+
 ## Cldr v2.24.2
 
 This is the changelog for Cldr v2.24.2 released on December 5th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
