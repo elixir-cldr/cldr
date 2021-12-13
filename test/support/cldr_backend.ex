@@ -1,3 +1,5 @@
+require TestBackend.Gettext.Plural
+
 # Test with Gettext
 defmodule WithGettextBackend.Cldr do
   use Cldr,
@@ -40,5 +42,13 @@ defmodule WithOtpAppBackend.Cldr do
   use Cldr,
     locales: ["fr", "en"],
     otp_app: :logger,
+    providers: []
+end
+
+
+defmodule WithGettextPlural.Cldr do
+  use Cldr,
+    locales: ["en", "it", "pl"],
+    gettext: TestGettext.GettextWithCldrPlural,
     providers: []
 end

@@ -118,13 +118,6 @@ defmodule Cldr.Number.PluralRule do
                      |> Map.keys()
                      |> Enum.sort()
 
-      @nplurals_range [0, 1, 2, 3, 4, 5]
-      @gettext_nplurals @rules
-                        |> Enum.map(fn {locale, rules} ->
-                          {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
-                        end)
-                        |> Map.new()
-
       @config Keyword.get(unquote(opts), :config)
       @backend Map.get(@config, :backend)
 
@@ -167,12 +160,6 @@ defmodule Cldr.Number.PluralRule do
       @spec plural_rules :: map()
       def plural_rules do
         @rules
-      end
-
-      @doc false
-      @spec gettext_nplurals :: map()
-      def gettext_nplurals do
-        @gettext_nplurals
       end
 
       if unquote(module_name) == :cardinal do

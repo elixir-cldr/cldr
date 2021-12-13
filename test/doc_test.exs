@@ -22,8 +22,8 @@ defmodule Doc.Test do
   doctest TestBackend.Cldr.Locale
   doctest TestBackend.Cldr.Number.Ordinal
   doctest TestBackend.Cldr.Number.Cardinal
-  doctest TestBackend.Cldr.Gettext.Plural
   doctest TestBackend.Cldr.Number.PluralRule.Range
 
+  doctest TestBackend.Gettext.Plural
   doctest MyApp.Cldr
 end

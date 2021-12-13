@@ -39,10 +39,6 @@ defmodule Cldr.Backend.Compiler do
       def __cldr__(:otp_app), do: unquote(Map.get(config, :otp_app))
       def __cldr__(:config), do: unquote(Macro.escape(config))
 
-      if Code.ensure_loaded?(Gettext) do
-        unquote(Cldr.Gettext.Plural.define_gettext_plurals_module(config))
-      end
-
       for locale_name <- Cldr.Locale.Loader.known_locale_names(unquote(Macro.escape(config))) do
         @external_resource Cldr.Config.locale_path!(locale_name, unquote(Macro.escape(config)))
       end

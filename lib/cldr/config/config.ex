@@ -329,7 +329,7 @@ defmodule Cldr.Config do
   In order of priority return either:
 
   * The default locale for a given backend configuration
-  * The global default locale speficied in `mix.exs` under
+  * The global default locale specified in `mix.exs` under
     the `ex_cldr` key
   * The `Gettext.get_locale/1` for the current configuration
   * The system-wide default locale which is currently
