@@ -35,7 +35,7 @@ defmodule Cldr.Locale.Loader do
   end
 
   def known_locale_names(%Config{locales: locales}) do
-    Enum.sort(locales)
+    locales
   end
 
   @doc """

@@ -2,7 +2,11 @@
 
 ## Cldr v2.25.0
 
-This is the changelog for Cldr v2.25.0 released on ____, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.25.0 released on December 16th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fixes configuring locales when the default locale is in posix form (ie like `en_GB`) as apposed to BCP47 form (ie `en-GB`). In fixing this bug, forming the normalised list of configured locales is now also standarised. Thanks to @gazzer82 for the report. Closes #165
 
 ### Enhancements
 

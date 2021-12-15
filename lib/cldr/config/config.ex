@@ -338,12 +338,13 @@ defmodule Cldr.Config do
   """
   @spec default_locale_name(t() | map()) :: Locale.locale_name()
   def default_locale_name(%{} = config) do
-    Map.get(config, :default_locale) ||
-      Application.get_env(
-        app_name(),
-        :default_locale,
-        gettext_default_locale(config) || @default_locale_name
-      )
+    default =
+      Map.get(config, :default_locale) ||
+      Application.get_env(app_name(), :default_locale) ||
+      gettext_default_locale(config) ||
+      @default_locale_name
+
+    locale_name_from_posix(default)
   end
 
   @doc """
@@ -352,6 +353,7 @@ defmodule Cldr.Config do
   """
   def default_locale do
     Application.get_env(app_name(), :default_locale, @default_locale_name)
+    |> locale_name_from_posix()
   end
 
   @doc """
@@ -762,15 +764,19 @@ defmodule Cldr.Config do
   The locale "und" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
-  The use of `:all` is not recommended since all 541 locales take
+  The use of `:all` is not recommended since all 571 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
 
   """
   @spec configured_locale_names(t()) :: [Locale.locale_name()]
   def configured_locale_names(config) do
+    app_locale_names =
+      config
+      |> Map.get(:locales)
+
     locale_names =
-      case app_locale_names = Map.get(config, :locales) do
+      case app_locale_names do
         :all -> all_locale_names()
         nil -> expand_locale_names([default_locale_name(config)])
         _ -> expand_locale_names(app_locale_names)
@@ -2205,6 +2211,7 @@ defmodule Cldr.Config do
   """
   def locale_name_from_posix(nil), do: nil
   def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
+  def locale_name_from_posix(other), do: other
 
   @doc """
   Transforms a locale name from the CLDR format to the Posix format
@@ -2467,14 +2474,18 @@ defmodule Cldr.Config do
 
   def merge_locales_with_default(config) do
     gettext = known_gettext_locale_names(config)
-    locales = config[:locales] || [config[:default_locale] || @default_locale_name]
-    default = config[:default_locale] || hd(locales)
+    locales = configured_locale_names(config)
+    default = default_locale_name(config)
+
+    # locales = config[:locales] || [config[:default_locale] || @default_locale_name]
+    # default = config[:default_locale] || hd(locales)
 
     locales =
       (locales ++ gettext ++ [default, @root_locale_name])
       |> Enum.reject(&is_nil/1)
-      |> Enum.uniq()
       |> Enum.map(&canonical_name/1)
+      |> Enum.uniq()
+      |> Enum.sort()
 
     Map.put(config, :locales, locales)
   end
