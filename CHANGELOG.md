@@ -1,12 +1,24 @@
 # Changelog
 
+## Cldr v2.26.0
+
+This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+###
+
+* Fix setting the default backend with `Cldr.put_default_backend/1` which wasn't actually being set.
+
+### Enhancements
+
+* Adds `Cldr.put_gettext_locale/1` that sets the `gettext` locale for a given `t:Cldr.LanguageTag`.
+
 ## Cldr v2.25.0
 
 This is the changelog for Cldr v2.25.0 released on December 16th, 2021.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
-* Fixes configuring locales when the default locale is in posix form (ie like `en_GB`) as apposed to BCP47 form (ie `en-GB`). In fixing this bug, forming the normalised list of configured locales is now also standarised. Thanks to @gazzer82 for the report. Closes #165
+* Fixes configuring locales when the default locale is in posix form (ie like `en_GB`) as apposed to BCP47 form (ie `en-GB`). In fixing this bug, forming the normalised list of configured locales is now also standarised. Thanks to @gazzer82 for the report. Closes #165.
 
 ### Enhancements
 

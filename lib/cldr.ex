@@ -260,7 +260,7 @@ defmodule Cldr do
 
     ## Arguments
 
-    * `locale` a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`.
+    * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`.
 
     ## Returns
 
@@ -511,7 +511,7 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module. The default is `Cldr.default_backend/0`
+    is a `Cldr` backend module.
 
   ## Returns
 
@@ -522,6 +522,7 @@ defmodule Cldr do
   """
   def put_default_backend(backend) do
     with {:ok, backend} <- validate_backend(backend) do
+      :ok = Application.put_env(Cldr.Config.app_name(), :default_backend, backend)
       {:ok, backend}
     end
   end
