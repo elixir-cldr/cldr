@@ -1,0 +1,185 @@
+{
+  "spellout":
+  {
+    "de": {
+      "nominative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "genitive" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "dative" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "accusative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+    },
+  },
+  "ordinal":
+  {
+    "de": {
+      "nominative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "genitive" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "dative" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "accusative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+    },
+  },
+  "cardinal":
+  {
+    "de": {
+      "nominative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "genitive" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "dative" {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+      "accusative": {
+        "masculine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "feminine": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+        "neuter": {
+          "one": "rule_name",
+          "other": "rule_name"
+        },
+      },
+    },
+  },
+}
