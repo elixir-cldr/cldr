@@ -413,7 +413,16 @@ defmodule Cldr.Locale do
     {Cldr.NoParentError, "The locale #{inspect(locale_name)} has no parent locale"}
   end
 
+  @doc """
+  Returns a map of a territory code to its
+  most-spoken language.
+
+  """
   @language_for_territory Cldr.Config.language_tag_for_territory()
+  @doc since: "2.26.0"
+  def languages_for_territories do
+    @language_for_territory
+  end
 
   @doc """
   Returns the "best fit" locale for a given territory.
@@ -462,7 +471,7 @@ defmodule Cldr.Locale do
 
   def locale_for_territory(territory, backend \\ Cldr.default_backend!()) do
     with {:ok, territory} <- Cldr.validate_territory(territory) do
-      case Map.get(@language_for_territory, territory) do
+      case Map.get(languages_for_territories(), territory) do
         nil ->
           {:error, {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect territory}"}}
         language ->
