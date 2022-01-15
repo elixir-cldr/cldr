@@ -14,6 +14,8 @@ This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs
 
 * Adds `Cldr.Locale.locale_from_territory/{1,2}` to derive a "best fit" locale for a given territory.
 
+* Adds `Cldr.Locale.languages_for_territories/0` to return a map of territories to that territory's most spoken language.
+
 * Adds `Cldr.put_gettext_locale/1` that sets the `gettext` locale for a given `t:Cldr.LanguageTag`.
 
 * Adds `Cldr.TestHelper` module in `test/suport` to provide testing helpers.  Initially provides `with_no_default_backend/1` function.
