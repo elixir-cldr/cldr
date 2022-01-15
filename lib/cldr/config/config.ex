@@ -26,7 +26,7 @@ defmodule Cldr.Config do
             otp_app: nil,
             generate_docs: true,
             supress_warnings: false,
-            message_formats: [],
+            message_formats: %{},
             force_locale_download: false
 
   @type t :: %__MODULE__{
@@ -1755,6 +1755,37 @@ defmodule Cldr.Config do
 
   @deprecated "Use Cldr.Config.territories/1"
   defdelegate territory_info(territory), to: __MODULE__, as: :territory
+
+  @doc """
+  Return the mapping from a territory to a language tag.
+
+  This is used to derive a locale from a territory.
+
+  """
+  def language_tag_for_territory do
+    territories()
+    |> Enum.map(fn {territory, data} ->
+      {territory, Map.get(data, :language_population, %{})}
+    end)
+    |> Enum.map(fn {territory, data} ->
+      {territory, extract_population(data) |> Enum.sort(&population_sorter/2) |> get_head}
+    end)
+    |> Map.new()
+  end
+
+  defp extract_population(data) do
+    Enum.map(data, fn
+      {language, population} -> {language, population.population_percent}
+    end)
+    |> Enum.reject(&is_nil/1)
+  end
+
+  defp population_sorter(a, b) do
+    elem(a, 1) >= elem(b, 1)
+  end
+
+  defp get_head([]), do: nil
+  defp get_head([{language, _percent} | _rest]), do: language
 
   @doc """
   Returns a map of locale names to

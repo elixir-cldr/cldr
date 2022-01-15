@@ -1496,7 +1496,7 @@ defmodule Cldr do
 
   """
   @spec validate_territory(atom() | String.t()) ::
-          {:ok, atom()} | {:error, {module(), String.t()}}
+          {:ok, Locale.territory_code()} | {:error, {module(), String.t()}}
 
   def validate_territory(territory) when is_atom(territory) and territory in @known_territories do
     {:ok, territory}

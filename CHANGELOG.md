@@ -4,13 +4,19 @@
 
 This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-###
+### Bug Fixes
 
 * Fix setting the default backend with `Cldr.put_default_backend/1` which wasn't actually being set.
 
+* Fix `Config.message_formats` to default to an empty map, not an empty list.
+
 ### Enhancements
 
+* Adds `Cldr.Locale.locale_from_territory/{1,2}` to derive a "best fit" locale for a given territory.
+
 * Adds `Cldr.put_gettext_locale/1` that sets the `gettext` locale for a given `t:Cldr.LanguageTag`.
+
+* Adds `Cldr.TestHelper` module in `test/suport` to provide testing helpers.  Initially provides `with_no_default_backend/1` function.
 
 ## Cldr v2.25.0
 

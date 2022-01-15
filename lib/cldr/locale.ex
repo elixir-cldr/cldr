@@ -242,14 +242,17 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale in a string format"
   @type locale_name() :: String.t()
 
-  @typedoc "The name of a language a string format"
+  @typedoc "The name of a language"
   @type language :: String.t() | nil
 
-  @typedoc "The name of a script in an atom format"
+  @typedoc "The name of a script"
   @type script :: atom() | String.t() | nil
 
-  @typedoc "The name of a territory in an atom format"
+  @typedoc "The name of a territory"
   @type territory :: atom() | String.t() | nil
+
+  @typedoc "A territory code as an ISO3166 Alpha-2 in atom form"
+  @type territory_code :: atom()
 
   @typedoc "The list of language variants as strings"
   @type variants :: [String.t()] | []
@@ -408,6 +411,78 @@ defmodule Cldr.Locale do
 
   defp no_parent_error(locale_name) do
     {Cldr.NoParentError, "The locale #{inspect(locale_name)} has no parent locale"}
+  end
+
+  @language_for_territory Cldr.Config.language_tag_for_territory()
+
+  @doc """
+  Returns the "best fit" locale for a given territory.
+
+  Using the population percentage data from CLDR, the
+  language most commonly spoken in the given territory
+  is used to form a locale name which is then validated
+  against the given backend.
+
+  First a territory-specific locale is validated and if
+  that fails, the base language only is validate.
+
+  For example, if the territory is `AU` then then the
+  language most spoken is "en". First, the locale "en-AU"
+  is validated and if that fails, "en" is validated.
+
+  ## Arguments
+
+  * `territory` is any ISO 3166 Alpha-2 territory
+    code that can be validated by `Cldr.validate_territory/1`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  ## Returns
+
+  * `{:ok, language_tag}` or
+
+  * `{:error, {exception, reason}}`
+
+  ## Examples
+
+    iex> Cldr.Locale.locale_for_territory(:AU, TestBackend.Cldr)
+    Cldr.validate_locale("en-AU")
+
+    iex> Cldr.Locale.locale_for_territory(:US, TestBackend.Cldr)
+    Cldr.validate_locale("en-US")
+
+    iex> Cldr.Locale.locale_for_territory(:ZZ)
+    {:error, {Cldr.UnknownTerritoryError, "The territory :ZZ is unknown"}}
+
+  """
+  @doc since: "2.26.0"
+  @spec locale_for_territory(territory_code(), Cldr.backend()) ::
+    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+
+  def locale_for_territory(territory, backend \\ Cldr.default_backend!()) do
+    with {:ok, territory} <- Cldr.validate_territory(territory) do
+      case Map.get(@language_for_territory, territory) do
+        nil ->
+          {:error, {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect territory}"}}
+        language ->
+          validate_locale(language, territory, backend)
+      end
+    end
+  end
+
+  # See first if there is a territory specific version of this
+  # language, otherwise the base language itself
+
+  defp validate_locale(language, nil, backend) do
+    Cldr.validate_locale(language, backend)
+  end
+
+  defp validate_locale(language, territory, backend) do
+    case Cldr.validate_locale("#{language}-#{to_string(territory)}", backend) do
+      {:ok, locale} -> {:ok, locale}
+      {:error, _} -> validate_locale(language, nil, backend)
+    end
   end
 
   @doc """
