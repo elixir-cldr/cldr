@@ -549,6 +549,9 @@ defmodule Cldr.Locale do
 
   """
   @doc since: "2.26.0"
+  @spec locale_from_host(String.t(), Cldr.backend(), Keyword.t()) ::
+    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+
   def locale_from_host(host, backend, options \\ []) do
     tld_list = Keyword.get(options, :tlds, @consider_as_tld)
 
@@ -586,6 +589,9 @@ defmodule Cldr.Locale do
 
   """
   @doc since: "2.26.0"
+  @spec territory_from_host(String.t()) ::
+    {:ok, territory_code()} | {:error, {module(), String.t()}}
+
   def territory_from_host(host) do
     territory =
       host

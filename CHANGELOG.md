@@ -12,9 +12,11 @@ This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs
 
 ### Enhancements
 
-* Adds `Cldr.Locale.locale_from_territory/{1,2}` to derive a "best fit" locale for a given territory.
+* Adds `Cldr.Locale.locale_from_territory/{1,2}` to derive a "best fit" locale for a given territory. Also adds `<backend>.Locale.locale_from_territory/1`.
 
-* Adds `Cldr.Locale.locale_from_host/{2, 3}` to derive a "best fit" locale for a given host name.
+* Adds `Cldr.Locale.locale_from_host/{2, 3}` to derive a "best fit" locale for a given host name. Also adds `<backend>.Locale.locale_from_host/2`.
+  
+* Adds `Cldr.Locale.territory_from_host/1` to return the territory for a given host name. Also adds `<backend>.Locale.territory_from_host/1`.  
 
 * Adds `Cldr.Locale.languages_for_territories/0` to return a map of territories to that territory's most spoken language.
 
