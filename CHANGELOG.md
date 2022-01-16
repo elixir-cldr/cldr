@@ -17,6 +17,8 @@ This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs
 * Adds `Cldr.Locale.locale_from_host/{2, 3}` to derive a "best fit" locale for a given host name. Also adds `<backend>.Locale.locale_from_host/2`.
   
 * Adds `Cldr.Locale.territory_from_host/1` to return the territory for a given host name. Also adds `<backend>.Locale.territory_from_host/1`.  
+  
+* Adds `Cldr.Locale.consider_as_tlds/0` to return a list of valid territory suffixes that are considered as generic TLDs instead.  See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites.
 
 * Adds `Cldr.Locale.languages_for_territories/0` to return a map of territories to that territory's most spoken language.
 

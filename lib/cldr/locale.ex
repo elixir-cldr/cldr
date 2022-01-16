@@ -494,12 +494,27 @@ defmodule Cldr.Locale do
     end
   end
 
-  # See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites?hl=en&visit_id=637772702921334800-2044031820&rd=1 for an explanation of why some valid territory
-  # suffixxes are considered as TLDs.
-
   @consider_as_tld [
     :AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS
   ]
+
+  @doc """
+  Returns a list of territory top-level domains that are
+  considered to be generic top level domains.
+
+  See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites
+  for an explanation of why some valid territory suffixxes
+  are considered as TLDs.
+
+  ## Example
+
+      iex> Cldr.Locale.consider_as_tlds
+      [:AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS]
+
+  """
+  def consider_as_tlds do
+    @consider_as_tld
+  end
 
   @doc """
   Returns a "best fit" locale for a host name.
@@ -518,7 +533,7 @@ defmodule Cldr.Locale do
 
   * `:tlds` is a list of territory codes as upper-cased
     atoms that are to be considered as top-level domains.
-    The default list is `#{inspect @consider_as_tld}`.
+    The default list is `consider_as_tlds/0`.
 
   ## Returns
 
@@ -553,7 +568,7 @@ defmodule Cldr.Locale do
     {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def locale_from_host(host, backend, options \\ []) do
-    tld_list = Keyword.get(options, :tlds, @consider_as_tld)
+    tld_list = Keyword.get(options, :tlds, consider_as_tlds())
 
     with {:ok, territory} <- territory_from_host(host) do
       if territory in tld_list do
