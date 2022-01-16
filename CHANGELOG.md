@@ -20,7 +20,7 @@ This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs
   
 * Adds `Cldr.Locale.consider_as_tlds/0` to return a list of valid territory suffixes that are considered as generic TLDs instead.  See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites.
 
-* Adds `Cldr.Locale.languages_for_territories/0` to return a map of territories to that territory's most spoken language.
+* Adds `Cldr.Locale.languages_for_territories/0` to return a mapping of territories to that territory's most spoken language.
 
 * Adds `Cldr.put_gettext_locale/1` that sets the `gettext` locale for a given `t:Cldr.LanguageTag`.
 
