@@ -456,10 +456,10 @@ defmodule Cldr.Locale do
   ## Examples
 
     iex> Cldr.Locale.locale_for_territory(:AU, TestBackend.Cldr)
-    Cldr.validate_locale("en-AU")
+    Cldr.validate_locale("en-AU", TestBackend.Cldr)
 
     iex> Cldr.Locale.locale_for_territory(:US, TestBackend.Cldr)
-    Cldr.validate_locale("en-US")
+    Cldr.validate_locale("en-US", TestBackend.Cldr)
 
     iex> Cldr.Locale.locale_for_territory(:ZZ)
     {:error, {Cldr.UnknownTerritoryError, "The territory :ZZ is unknown"}}
@@ -473,7 +473,7 @@ defmodule Cldr.Locale do
     with {:ok, territory} <- Cldr.validate_territory(territory) do
       case Map.get(languages_for_territories(), territory) do
         nil ->
-          {:error, {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect territory}"}}
+          {:error, no_locale_for_territory_error(territory)}
         language ->
           validate_locale(language, territory, backend)
       end
@@ -491,6 +491,113 @@ defmodule Cldr.Locale do
     case Cldr.validate_locale("#{language}-#{to_string(territory)}", backend) do
       {:ok, locale} -> {:ok, locale}
       {:error, _} -> validate_locale(language, nil, backend)
+    end
+  end
+
+  # See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites?hl=en&visit_id=637772702921334800-2044031820&rd=1 for an explanation of why some valid territory
+  # suffixxes are considered as TLDs.
+
+  @consider_as_tld [
+    :AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS
+  ]
+
+  @doc """
+  Returns a "best fit" locale for a host name.
+
+  ## Arguments
+
+  * `host` is any valid host name
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  * `options` is a keyword list of options. The default
+    is `[]`.
+
+  ## Options
+
+  * `:tlds` is a list of territory codes as upper-cased
+    atoms that are to be considered as top-level domains.
+    The default list is `#{inspect @consider_as_tld}`.
+
+  ## Returns
+
+  * `{:ok, langauge_tag}` or
+
+  * `{:error, {exception, reason}}`
+
+  ## Notes
+
+  Certain top-level domains have become associated with content
+  underlated to the territory for who the domain is registered.
+  Therefore Google (and perhaps others) do not associate these
+  TLDs as belonging to the territory but rather are considered
+  generic top-level domain names.
+
+  ## Examples
+
+      iex> Cldr.Locale.locale_from_host "a.b.com.au", TestBackend.Cldr
+      Cldr.validate_locale("en-AU", TestBackend.Cldr)
+
+      iex> Cldr.Locale.locale_from_host "a.b.com.tv", TestBackend.Cldr
+      {:error,
+       {Cldr.UnknownLocaleError, "No locale was identified for territory \\"tv\\""}}
+
+      iex> Cldr.Locale.locale_from_host "a.b.com", TestBackend.Cldr
+      {:error,
+       {Cldr.UnknownLocaleError, "No locale was identified for territory \\"com\\""}}
+
+  """
+  @doc since: "2.26.0"
+  def locale_from_host(host, backend, options \\ []) do
+    tld_list = Keyword.get(options, :tlds, @consider_as_tld)
+
+    with {:ok, territory} <- territory_from_host(host) do
+      if territory in tld_list do
+        {:error, no_locale_for_territory_error(territory)}
+      else
+        locale_for_territory(territory, backend)
+      end
+    end
+  end
+
+  @doc """
+  Returns the last segment of a host that might
+  be a territory.
+
+  ## Arguments
+
+  * `host` is any valid host name
+
+  ## Returns
+
+  * `{:ok, territory}` or
+
+  * `{:error, {exception, reason}}`
+
+  ## Examples
+
+      iex> Cldr.Locale.territory_from_host("a.b.com.au")
+      {:ok, :AU}
+
+      iex> Cldr.Locale.territory_from_host("a.b.com")
+      {:error,
+       {Cldr.UnknownLocaleError, "No locale was identified for territory \\"com\\""}}
+
+  """
+  @doc since: "2.26.0"
+  def territory_from_host(host) do
+    territory =
+      host
+      |> String.split(".")
+      |> Enum.reverse()
+      |> hd()
+
+    try do
+      territory = String.upcase(territory) |> String.to_existing_atom()
+      Cldr.validate_territory(territory)
+    rescue ArgumentError ->
+      {:error, no_locale_for_territory_error(territory)}
     end
   end
 
@@ -1681,59 +1788,6 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Returns an error tuple for an invalid locale.
-
-  ## Arguments
-
-    * `locale_name` is any locale name returned by `Cldr.known_locale_names/1`
-
-  ## Returns
-
-  * `{:error, {Cldr.UnknownLocaleError, message}}`
-
-  ## Examples
-
-      iex> Cldr.Locale.locale_error :invalid
-      {Cldr.UnknownLocaleError, "The locale :invalid is not known."}
-
-  """
-  @spec locale_error(locale_name() | LanguageTag.t()) :: {Cldr.UnknownLocaleError, String.t()}
-  def locale_error(%LanguageTag{requested_locale_name: requested_locale_name}) do
-    locale_error(requested_locale_name)
-  end
-
-  def locale_error(locale_name) do
-    {Cldr.UnknownLocaleError, "The locale #{inspect(locale_name)} is not known."}
-  end
-
-  @doc """
-  Returns an error tuple for an invalid gettext locale.
-
-  ## Options
-
-    * `locale_name` is any locale name returned by `Cldr.known_gettext_locale_names/1`
-
-  ## Returns
-
-  * `{:error, {Cldr.UnknownLocaleError, message}}`
-
-  ## Examples
-
-      iex> Cldr.Locale.gettext_locale_error :invalid
-      {Cldr.UnknownLocaleError, "The gettext locale :invalid is not known."}
-
-  """
-  @spec gettext_locale_error(locale_name() | LanguageTag.t()) ::
-          {Cldr.UnknownLocaleError, String.t()}
-  def gettext_locale_error(%LanguageTag{gettext_locale_name: gettext_locale_name}) do
-    gettext_locale_error(gettext_locale_name)
-  end
-
-  def gettext_locale_error(locale_name) do
-    {Cldr.UnknownLocaleError, "The gettext locale #{inspect(locale_name)} is not known."}
-  end
-
-  @doc """
   Returns the map of likely subtags.
 
   Note that not all locales are guaranteed
@@ -1890,33 +1944,45 @@ defmodule Cldr.Locale do
     end
   end
 
+  @doc false
+  def locale_error(%LanguageTag{requested_locale_name: requested_locale_name}) do
+    locale_error(requested_locale_name)
+  end
+
+  def locale_error(locale_name) do
+    {Cldr.UnknownLocaleError, "The locale #{inspect(locale_name)} is not known."}
+  end
+
+  @doc false
+  def gettext_locale_error(%LanguageTag{gettext_locale_name: gettext_locale_name}) do
+    gettext_locale_error(gettext_locale_name)
+  end
+
+  def gettext_locale_error(locale_name) do
+    {Cldr.UnknownLocaleError, "The gettext locale #{inspect(locale_name)} is not known."}
+  end
+
+  @doc false
   def invalid_language_error(language) do
     {Cldr.InvalidLanguageError, "The language #{inspect(language)} is invalid"}
   end
 
+  @doc false
   def invalid_script_error(script) do
     {Cldr.InvalidScriptError, "The script #{inspect(script)} is invalid"}
   end
 
+  @doc false
   def invalid_territory_error(territory) do
     {Cldr.InvalidTerritoryError, "The territory #{inspect(territory)} is invalid"}
   end
 
+  @doc false
   def invalid_variant_error(variant) do
     {Cldr.InvalidVariantError, "The variant #{inspect(variant)} is invalid"}
   end
 
-  @doc """
-  Returns an error tuple for an invalid locale alias.
-
-  ## Options
-
-    * `locale_name` is any locale name returned by `Cldr.known_locale_names/1`
-
-  """
-  @spec alias_error(locale_name() | LanguageTag.t(), String.t()) ::
-          {Cldr.UnknownLocaleError, String.t()}
-
+  @doc false
   def alias_error(locale_name, alias_name) when is_binary(locale_name) do
     {
       Cldr.UnknownLocaleError,
@@ -1925,7 +1991,20 @@ defmodule Cldr.Locale do
     }
   end
 
+  @doc false
   def alias_error(%LanguageTag{requested_locale_name: requested_locale_name}, alias_name) do
     alias_error(requested_locale_name, alias_name)
+  end
+
+  @doc false
+  def no_locale_for_territory_error(territory) when is_binary(territory) do
+    {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect territory}"}
+  end
+
+  def no_locale_for_territory_error(territory) when is_atom(territory) do
+    territory
+    |> Atom.to_string()
+    |> String.downcase()
+    |> no_locale_for_territory_error()
   end
 end
