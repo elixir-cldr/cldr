@@ -2236,6 +2236,7 @@ defmodule Cldr.Config do
         locale_name =
           locale_name
           |> locale_name_from_posix
+          |> String.to_atom
 
         module = Module.concat(backend, Rbnf) |> Module.concat(ruleset_module)
         {module, function, locale_name}

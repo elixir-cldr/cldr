@@ -993,9 +993,14 @@ defmodule Cldr.Locale do
     %LanguageTag{cldr_locale_name: var!(locale_name), canonical_locale_name: var!(canonical_name)}
   end
 
-  def canonical_language_tag(unquote(unvalidated_match) = tag, _backend, _options)
+  def canonical_language_tag(unquote(unvalidated_match) = language_tag, backend, _options)
        when not is_nil(locale_name) and not is_nil(canonical_name) do
-    {:ok, tag}
+    language_tag =
+       language_tag
+       |> put_backend(backend)
+       |> put_gettext_locale_name()
+
+   {:ok, language_tag}
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
