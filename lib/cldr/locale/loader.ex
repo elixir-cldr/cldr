@@ -31,7 +31,6 @@ defmodule Cldr.Locale.Loader do
 
   def known_locale_names(%Config{locales: :all}) do
     Cldr.Config.all_locale_names()
-    |> Enum.sort()
   end
 
   def known_locale_names(%Config{locales: locales}) do

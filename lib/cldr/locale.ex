@@ -47,13 +47,13 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en-ES",
-        cldr_locale_name: "en",
+        cldr_locale_name: :en,
         extensions: %{},
         gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
-        rbnf_locale_name: "en",
+        rbnf_locale_name: :en,
         requested_locale_name: "en-ES",
         script: :Latn,
         territory: :ES,
@@ -98,12 +98,12 @@ defmodule Cldr.Locale do
         language_subtags: [],
         language_variants: [],
         locale: %{}, private_use: [],
-        rbnf_locale_name: "ro",
+        rbnf_locale_name: :ro,
         requested_locale_name: "mo",
         script: :Latn,
         transform: %{},
         canonical_locale_name: "ro",
-        cldr_locale_name: "ro",
+        cldr_locale_name: :ro,
         territory: :RO
       }}
 
@@ -119,13 +119,13 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en",
-        cldr_locale_name: "en",
+        cldr_locale_name: :en,
         extensions: %{},
         gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
-        rbnf_locale_name: "en",
+        rbnf_locale_name: :en,
         requested_locale_name: "en",
         script: :Latn,
         territory: :US,
@@ -151,13 +151,13 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en-XX",
-        cldr_locale_name: "en",
+        cldr_locale_name: :en,
         extensions: %{},
         gettext_locale_name: "en",
         language: "en",
         locale: %{},
         private_use: [],
-        rbnf_locale_name: "en",
+        rbnf_locale_name: :en,
         requested_locale_name: "en-XX",
         script: :Latn,
         territory: :XX,
@@ -190,7 +190,7 @@ defmodule Cldr.Locale do
         %Cldr.LanguageTag{
           backend: MyApp.Cldr,
           canonical_locale_name: "en-AU-u-cf-account-tz-ausyd",
-          cldr_locale_name: "en-AU",
+          cldr_locale_name: :"en-AU",
           extensions: %{},
           gettext_locale_name: "en",
           language: "en",
@@ -225,7 +225,7 @@ defmodule Cldr.Locale do
             vt: nil
           },
           private_use: '',
-          rbnf_locale_name: "en",
+          rbnf_locale_name: :en,
           requested_locale_name: "en-AU",
           script: :Latn,
           territory: :AU,
@@ -239,8 +239,8 @@ defmodule Cldr.Locale do
 
   import Cldr.Helpers, only: [empty?: 1]
 
-  @typedoc "The name of a locale in a string format"
-  @type locale_name() :: String.t()
+  @typedoc "The name of a locale"
+  @type locale_name() :: atom()
 
   @typedoc "The name of a language"
   @type language :: String.t() | nil
@@ -300,10 +300,24 @@ defmodule Cldr.Locale do
 
   """
   @spec parents(LanguageTag.t()) :: list(LanguageTag.t())
-  def parents(%LanguageTag{} = locale, acc \\ []) do
+  def parents(locale, acc \\ [])
+
+  def parents(%LanguageTag{} = locale, acc) do
     case parent(locale) do
       {:error, _} -> Enum.reverse(acc)
       {:ok, locale} -> parents(locale, [locale | acc])
+    end
+  end
+
+  def parents(locale, []) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, Cldr.default_backend!()) do
+      parents(locale)
+    end
+  end
+
+  def parents(locale, backend) when is_atom(backend) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
+      parents(locale)
     end
   end
 
@@ -343,9 +357,7 @@ defmodule Cldr.Locale do
     if parent = Map.get(parent_locale_map(), child.cldr_locale_name) do
       Cldr.validate_locale(parent, backend)
     else
-      {:ok, locale} = Cldr.LanguageTag.parse(child.cldr_locale_name)
-
-      locale
+      child
       |> find_parent(backend)
       |> return_parent_or_default(child, backend)
       |> transfer_extensions(child)
@@ -355,7 +367,7 @@ defmodule Cldr.Locale do
   @spec parent(locale_name(), Cldr.backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
 
-  def parent(locale_name, backend \\ Cldr.default_backend!()) when is_binary(locale_name) do
+  def parent(locale_name, backend \\ Cldr.default_backend!()) do
     with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
       parent(locale)
     end
@@ -378,16 +390,31 @@ defmodule Cldr.Locale do
     |> known_locale(backend)
   end
 
-  defp known_locale(locale_name, _tags \\ [], backend) do
+  defp known_locale(locale_name, tags \\ [], backend)
+
+  defp known_locale(nil, _tags, _backend) do
+    nil
+  end
+
+  defp known_locale(locale_name, tags, backend) when is_binary(locale_name) do
+    locale_name = String.to_existing_atom(locale_name)
+    known_locale(locale_name, tags, backend)
+  rescue ArgumentError ->
+    nil
+  end
+
+  defp known_locale(locale_name, _tags, backend) when is_atom(locale_name) do
     Enum.find(backend.known_locale_names(), &(locale_name == &1))
   end
 
   def known_rbnf_locale_name(locale_name, _tags \\ [], backend) do
+    locale_name = String.to_existing_atom(locale_name)
     Cldr.known_rbnf_locale_name(locale_name, backend)
+  rescue ArgumentError ->
+    nil
   end
 
-  # If the language of the parent then return an error
-  defp return_parent_or_default(parent, child, backend) when is_nil(parent) do
+  defp return_parent_or_default(parent, %LanguageTag{cldr_locale_name: parent} = child, backend) do
     default_locale = Cldr.default_locale(backend)
 
     if child.language == default_locale.language do
@@ -694,7 +721,7 @@ defmodule Cldr.Locale do
     language_tag.territory || Cldr.default_territory()
   end
 
-  def territory_from_locale(locale_name) when is_binary(locale_name) do
+  def territory_from_locale(locale_name) do
     territory_from_locale(locale_name, Cldr.default_backend!())
   end
 
@@ -919,13 +946,13 @@ defmodule Cldr.Locale do
         %Cldr.LanguageTag{
           backend: TestBackend.Cldr,
           canonical_locale_name: "en",
-          cldr_locale_name: "en",
+          cldr_locale_name: :en,
           extensions: %{},
           gettext_locale_name: "en",
           language: "en",
           locale: %{},
           private_use: [],
-          rbnf_locale_name: "en",
+          rbnf_locale_name: :en,
           requested_locale_name: "en",
           script: :Latn,
           territory: :US,
@@ -950,8 +977,24 @@ defmodule Cldr.Locale do
     end
   end
 
-  def canonical_language_tag(%LanguageTag{cldr_locale_name: locale} = tag, _backend, _options)
-       when is_binary(locale) do
+  def canonical_language_tag(locale_name, backend, options) when is_atom(locale_name) do
+    case Map.fetch(Cldr.Config.all_language_tags(), locale_name) do
+      {:ok, language_tag} ->
+        canonical_language_tag(language_tag, backend, options)
+
+      :error ->
+        locale_name
+        |> Atom.to_string()
+        |> canonical_language_tag(backend, options)
+    end
+  end
+
+  unvalidated_match = quote do
+    %LanguageTag{cldr_locale_name: var!(locale_name), canonical_locale_name: var!(canonical_name)}
+  end
+
+  def canonical_language_tag(unquote(unvalidated_match) = tag, _backend, _options)
+       when not is_nil(locale_name) and not is_nil(canonical_name) do
     {:ok, tag}
   end
 

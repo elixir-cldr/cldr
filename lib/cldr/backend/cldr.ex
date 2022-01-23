@@ -14,8 +14,9 @@ defmodule Cldr.Backend do
       in this module or in `Gettext`.
 
       """
-      @omit_locales ["und"]
+      @omit_locales [Cldr.Config.root_locale_name()]
       @known_locale_names Cldr.Locale.Loader.known_locale_names(config) -- @omit_locales
+
       def known_locale_names do
         @known_locale_names
       end
@@ -29,14 +30,14 @@ defmodule Cldr.Backend do
           %Cldr.LanguageTag{
             backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en-001",
-            cldr_locale_name: "en-001",
+            cldr_locale_name: :"en-001",
             language_subtags: [],
             extensions: %{},
             gettext_locale_name: "en",
             language: "en",
             locale: %{},
             private_use: [],
-            rbnf_locale_name: "en",
+            rbnf_locale_name: :en,
             requested_locale_name: "en-001",
             script: :Latn,
             territory: :"001",
@@ -66,10 +67,9 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @default_territory @default_locale |> Cldr.Locale.territory_from_locale()
       @spec default_territory() :: Cldr.Locale.territory()
       def default_territory do
-        @default_territory
+        Cldr.Locale.territory_from_locale(@default_locale)
       end
 
       @doc """
@@ -93,6 +93,7 @@ defmodule Cldr.Backend do
 
       """
       @known_rbnf_locale_names Cldr.Locale.Loader.known_rbnf_locale_names(config)
+
       @spec known_rbnf_locale_names() :: [Locale.locale_name()]
       def known_rbnf_locale_names do
         @known_rbnf_locale_names
@@ -120,15 +121,15 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_locale_name?("en")
+          iex> #{inspect(__MODULE__)}.known_locale_name?(:en)
           true
 
-          iex> #{inspect(__MODULE__)}.known_locale_name?("!!")
+          iex> #{inspect(__MODULE__)}.known_locale_name?(:"!!")
           false
 
       """
       @spec known_locale_name?(Locale.locale_name()) :: boolean
-      def known_locale_name?(locale_name) when is_binary(locale_name) do
+      def known_locale_name?(locale_name) when is_atom(locale_name) do
         locale_name in known_locale_names()
       end
 
@@ -143,15 +144,15 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?("en")
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?(:en)
           true
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?("!!")
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name?(:"!!")
           false
 
       """
       @spec known_rbnf_locale_name?(Locale.locale_name()) :: boolean
-      def known_rbnf_locale_name?(locale_name) when is_binary(locale_name) do
+      def known_rbnf_locale_name?(locale_name) when is_atom(locale_name) do
         locale_name in known_rbnf_locale_names()
       end
 
@@ -161,7 +162,8 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
+      * `locale` is any valid locale name returned by
+        `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
@@ -186,19 +188,20 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
+      * `locale` is any valid locale name returned by
+        `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_locale_name "en-AU"
-          "en-AU"
+          iex> #{inspect(__MODULE__)}.known_locale_name :"en-AU"
+          :"en-AU"
 
-          iex> #{inspect(__MODULE__)}.known_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_locale_name :"en-SA"
           false
 
       """
       @spec known_locale_name(Locale.locale_name()) :: String.t() | false
-      def known_locale_name(locale_name) when is_binary(locale_name) do
+      def known_locale_name(locale_name) when is_atom(locale_name) do
         if known_locale_name?(locale_name) do
           locale_name
         else
@@ -213,19 +216,20 @@ defmodule Cldr.Backend do
 
       ## Arguments
 
-      * `locale` is any valid locale name returned by `#{inspect(__MODULE__)}.known_locale_names/0`
+      * `locale` is any valid locale name returned by
+        `#{inspect(__MODULE__)}.known_locale_names/0`
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name "en"
-          "en"
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name :en
+          :en
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name :"en-SA"
           false
 
       """
       @spec known_rbnf_locale_name(Locale.locale_name()) :: String.t() | false
-      def known_rbnf_locale_name(locale_name) when is_binary(locale_name) do
+      def known_rbnf_locale_name(locale_name) when is_atom(locale_name) do
         if known_rbnf_locale_name?(locale_name) do
           locale_name
         else
@@ -272,12 +276,12 @@ defmodule Cldr.Backend do
           %Cldr.LanguageTag{
              backend: #{__MODULE__},
              canonical_locale_name: "pl",
-             cldr_locale_name: "pl",
+             cldr_locale_name: :pl,
              extensions: %{},
              language: "pl",
              locale: %{},
              private_use: [],
-             rbnf_locale_name: "pl",
+             rbnf_locale_name: :pl,
              territory: :PL,
              requested_locale_name: "pl",
              script: :Latn,
@@ -310,14 +314,14 @@ defmodule Cldr.Backend do
            %Cldr.LanguageTag{
              backend: #{inspect(__MODULE__)},
              canonical_locale_name: "en",
-             cldr_locale_name: "en",
+             cldr_locale_name: :en,
              language_subtags: [],
              extensions: %{},
              gettext_locale_name: "en",
              language: "en",
              locale: %{},
              private_use: [],
-             rbnf_locale_name: "en",
+             rbnf_locale_name: :en,
              requested_locale_name: "en",
              script: :Latn,
              territory: :US,
@@ -510,13 +514,13 @@ defmodule Cldr.Backend do
           %Cldr.LanguageTag{
             backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en",
-            cldr_locale_name: "en",
+            cldr_locale_name: :en,
             extensions: %{},
             gettext_locale_name: "en",
             language: "en",
             locale: %{},
             private_use: [],
-            rbnf_locale_name: "en",
+            rbnf_locale_name: :en,
             requested_locale_name: "en",
             script: :Latn,
             territory: :US,
@@ -530,13 +534,13 @@ defmodule Cldr.Backend do
           %Cldr.LanguageTag{
             backend: #{inspect(__MODULE__)},
             canonical_locale_name: "en-001",
-            cldr_locale_name: "en-001",
+            cldr_locale_name: :"en-001",
             extensions: %{},
             gettext_locale_name: "en",
             language: "en",
             locale: %{},
             private_use: [],
-            rbnf_locale_name: "en",
+            rbnf_locale_name: :en,
             requested_locale_name: "en-001",
             script: :Latn,
             territory: :"001",
@@ -565,6 +569,19 @@ defmodule Cldr.Backend do
           |> String.downcase()
           |> Cldr.Locale.locale_name_from_posix()
           |> do_validate_locale
+
+        case locale do
+          {:error, {Cldr.UnknownLocaleError, _}} -> {:error, Locale.locale_error(locale_name)}
+          {:error, reason} -> {:error, reason}
+          {:ok, locale} -> {:ok, locale}
+        end
+      end
+
+      def validate_locale(locale_name) when is_atom(locale_name) do
+        locale =
+          locale_name
+          |> Atom.to_string()
+          |> validate_locale
 
         case locale do
           {:error, {Cldr.UnknownLocaleError, _}} -> {:error, Locale.locale_error(locale_name)}
@@ -602,6 +619,7 @@ defmodule Cldr.Backend do
       #    are not supported in Erlang's re
 
       @remove_compounds Regex.compile!("{.*}", [:ungreedy])
+
       for locale_name <- Cldr.Locale.Loader.known_locale_names(config) do
         lenient_parse =
           locale_name
@@ -632,6 +650,7 @@ defmodule Cldr.Backend do
       # parsed language tag for performance reasons and only
       # add the gettext locale name (if there is one) and the
       # backend module.
+
       for locale_name <- Cldr.Locale.Loader.known_locale_names(config),
           not is_nil(Cldr.Config.language_tag(locale_name)) do
 
@@ -641,7 +660,10 @@ defmodule Cldr.Backend do
           |> Cldr.Locale.put_gettext_locale_name(config)
           |> Map.put(:backend, __MODULE__)
 
-        locale_name = String.downcase(locale_name)
+        locale_name =
+          locale_name
+          |> Atom.to_string()
+          |> String.downcase()
 
         defp do_validate_locale(unquote(locale_name)) do
           {:ok, unquote(Macro.escape(language_tag))}

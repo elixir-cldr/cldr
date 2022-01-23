@@ -93,7 +93,7 @@ defmodule Cldr.Number.PluralRule do
               "`type: :ordinal` are the only valid options"
     end
 
-    quote location: :keep do
+    quote location: :keep, generated: true do
       alias Cldr.Math
       alias Cldr.LanguageTag
       alias Cldr.Locale
@@ -344,7 +344,7 @@ defmodule Cldr.Number.PluralRule do
         plural_rules()[cldr_locale_name] || plural_rules()[language]
       end
 
-      def plural_rules_for(locale_name) when is_binary(locale_name) do
+      def plural_rules_for(locale_name) do
         with {:ok, locale} <- @backend.validate_locale(locale_name) do
           plural_rules_for(locale)
         end
@@ -441,18 +441,12 @@ defmodule Cldr.Number.PluralRule do
 
       def plural_rule(number, locale, rounding \\ Math.default_rounding())
 
-      def plural_rule(number, locale_name, rounding) when is_binary(locale_name) do
-        with {:ok, locale} <- @backend.validate_locale(locale_name) do
-          plural_rule(number, locale, rounding)
-        end
-      end
-
-      def plural_rule(number, locale, rounding) when is_binary(number) do
+      def plural_rule(number, %LanguageTag{} = locale, rounding) when is_binary(number) do
         plural_rule(Decimal.new(number), locale, rounding)
       end
 
       # Plural rule for an integer
-      def plural_rule(number, locale, _rounding) when is_integer(number) do
+      def plural_rule(number, %LanguageTag{} = locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
         v = 0
@@ -464,7 +458,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # For a compact integer
-      def plural_rule({number, e}, locale, _rounding) when is_integer(number) do
+      def plural_rule({number, e}, %LanguageTag{} = locale, _rounding) when is_integer(number) do
         n = abs(number)
         i = n
         v = 0
@@ -475,7 +469,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a float
-      def plural_rule(number, locale, rounding)
+      def plural_rule(number, %LanguageTag{} = locale, rounding)
           when is_float(number) and is_integer(rounding) and rounding > 0 do
         # Testing shows that this is working but just in case we
         # can go back to casting the number to a decimal and
@@ -492,7 +486,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a compact float
-      def plural_rule({number, e}, locale, rounding)
+      def plural_rule({number, e}, %LanguageTag{} = locale, rounding)
           when is_float(number) and is_integer(rounding) and rounding > 0 do
         # Testing shows that this is working but just in case we
         # can go back to casting the number to a decimal and
@@ -508,7 +502,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a %Decimal{}
-      def plural_rule(%Decimal{} = number, locale, rounding)
+      def plural_rule(%Decimal{} = number, %LanguageTag{} = locale, rounding)
           when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
@@ -541,7 +535,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       # Plural rule for a compact %Decimal{}
-      def plural_rule({%Decimal{} = number, e}, locale, rounding)
+      def plural_rule({%Decimal{} = number, e}, %LanguageTag{} = locale, rounding)
           when is_integer(rounding) and rounding > 0 do
         # n absolute value of the source number (integer and decimals).
         n = Decimal.abs(number)
@@ -570,6 +564,12 @@ defmodule Cldr.Number.PluralRule do
         n = Math.to_float(n)
 
         do_plural_rule(locale, n, i, v, w, f, t, e)
+      end
+
+      def plural_rule(number, locale_name, rounding) do
+        with {:ok, locale} <- @backend.validate_locale(locale_name) do
+          plural_rule(number, locale, rounding)
+        end
       end
     end
   end
@@ -718,7 +718,7 @@ defmodule Cldr.Number.PluralRule do
           }
         else
           language_tag
-          |> Map.put(:cldr_locale_name, language_tag.language)
+          |> Map.put(:cldr_locale_name, String.to_atom(language_tag.language))
           |> do_plural_rule(n, i, v, w, f, t, e)
         end
       end

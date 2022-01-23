@@ -12,7 +12,6 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
   @doc false
   def run(_) do
-
     # We set the gettext locale name to nil because we can't tell in advance
     # what the gettext locale name will be (if any)
 
@@ -20,6 +19,10 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
         with {:ok, canonical_tag} <-
                Cldr.Locale.canonical_language_tag(locale_name, @test_backend) do
+
+           if canonical_tag.canonical_locale_name == nil do
+             raise RuntimeError, inspect(canonical_tag, structs: false)
+           end
 
           language_tag =
             canonical_tag
@@ -40,27 +43,35 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     File.write!(output_path, :erlang.term_to_binary(language_tags))
   end
 
+  @rbnf_locale_names Cldr.Rbnf.Config.rbnf_locale_names()
+  |> Enum.map(&({&1, &1}))
+  |> Map.new
+
   defp rbnf_locale_name(locale_name) do
     rbnf_locale_names =
-      Cldr.Rbnf.Config.rbnf_locale_names()
-      |> Enum.map(&({&1, &1}))
-      |> Map.new
+      @rbnf_locale_names
+
+    locale_name =
+      Atom.to_string(locale_name)
 
     parts =
       String.split(locale_name, "-")
 
-    case parts do
-      [_language] ->
-        Map.get(rbnf_locale_names, locale_name)
-      [language, _territory] ->
-        Map.get(rbnf_locale_names, locale_name) || Map.get(rbnf_locale_names, language)
-      [language, variant, territory] ->
-        Map.get(rbnf_locale_names, locale_name) ||
-        Map.get(rbnf_locale_names, language <> "-" <> variant) ||
-        Map.get(rbnf_locale_names, language <> "-" <> territory) ||
-        Map.get(rbnf_locale_names, language)
-      [language, territory, "u", "va", _variant] ->
-        rbnf_locale_name("#{language}-#{territory}")
-    end
+    rbnf_locale =
+      case parts do
+        [_language] ->
+          Map.get(rbnf_locale_names, locale_name)
+        [language, _territory] ->
+          Map.get(rbnf_locale_names, locale_name) || Map.get(rbnf_locale_names, language)
+        [language, variant, territory] ->
+          Map.get(rbnf_locale_names, locale_name) ||
+          Map.get(rbnf_locale_names, language <> "-" <> variant) ||
+          Map.get(rbnf_locale_names, language <> "-" <> territory) ||
+          Map.get(rbnf_locale_names, language)
+        [language, territory, "u", "va", _variant] ->
+          rbnf_locale_name("#{language}-#{territory}")
+      end
+
+    if rbnf_locale, do: String.to_atom(rbnf_locale), else: rbnf_locale
   end
 end

@@ -186,7 +186,7 @@ defmodule Cldr.LanguageTag do
           private_use: [String.t()],
           requested_locale_name: String.t(),
           canonical_locale_name: String.t(),
-          cldr_locale_name: String.t() | nil,
+          cldr_locale_name: atom(),
           rbnf_locale_name: String.t() | nil,
           gettext_locale_name: String.t() | nil,
           backend: Cldr.backend()

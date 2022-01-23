@@ -43,14 +43,14 @@ defmodule Cldr.Test do
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
                canonical_locale_name: "en-001",
-               cldr_locale_name: "en-001",
+               cldr_locale_name: :"en-001",
                language_subtags: [],
                extensions: %{},
                gettext_locale_name: "en",
                language: "en",
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "en",
+               rbnf_locale_name: :en,
                requested_locale_name: "en-001",
                script: :Latn,
                territory: :"001",
@@ -69,93 +69,93 @@ defmodule Cldr.Test do
 
     assert Cldr.known_rbnf_locale_names() ==
              [
-               "af",
-               "ak",
-               "am",
-               "ar",
-               "az",
-               "be",
-               "bg",
-               "bs",
-               "ca",
-               "ccp",
-               "chr",
-               "cs",
-               "cy",
-               "da",
-               "de",
-               "de-CH",
-               "ee",
-               "el",
-               "en",
-               "en-IN",
-               "eo",
-               "es",
-               "es-419",
-               "et",
-               "fa",
-               "fa-AF",
-               "ff",
-               "fi",
-               "fil",
-               "fo",
-               "fr",
-               "fr-BE",
-               "fr-CH",
-               "ga",
-               "he",
-               "hi",
-               "hr",
-               "hu",
-               "hy",
-               "id",
-               "is",
-               "it",
-               "ja",
-               "ka",
-               "kl",
-               "km",
-               "ko",
-               "ky",
-               "lb",
-               "lo",
-               "lrc",
-               "lt",
-               "lv",
-               "mk",
-               "ms",
-               "mt",
-               "my",
-               "nb",
-               "ne",
-               "nl",
-               "nn",
-               "no",
-               "pl",
-               "pt",
-               "pt-PT",
-               "qu",
-               "ro",
-               "ru",
-               "se",
-               "sk",
-               "sl",
-               "sq",
-               "sr",
-               "sr-Latn",
-               "su",
-               "sv",
-               "sw",
-               "ta",
-               "th",
-               "tr",
-               "uk",
-               "und",
-               "vi",
-               "yue",
-               "yue-Hans",
-               "zh",
-               "zh-Hant"
+               :af,
+               :ak,
+               :am,
+               :ar,
+               :az,
+               :be,
+               :bg,
+               :bs,
+               :ca,
+               :ccp,
+               :chr,
+               :cs,
+               :cy,
+               :da,
+               :de,
+               :"de-CH",
+               :ee,
+               :el,
+               :en,
+               :"en-IN",
+               :eo,
+               :es,
+               :"es-419",
+               :et,
+               :fa,
+               :"fa-AF",
+               :ff,
+               :fi,
+               :fil,
+               :fo,
+               :fr,
+               :"fr-BE",
+               :"fr-CH",
+               :ga,
+               :he,
+               :hi,
+               :hr,
+               :hu,
+               :hy,
+               :id,
+               :is,
+               :it,
+               :ja,
+               :ka,
+               :kl,
+               :km,
+               :ko,
+               :ky,
+               :lb,
+               :lo,
+               :lrc,
+               :lt,
+               :lv,
+               :mk,
+               :ms,
+               :mt,
+               :my,
+               :nb,
+               :ne,
+               :nl,
+               :nn,
+               :no,
+               :pl,
+               :pt,
+               :"pt-PT",
+               :qu,
+               :ro,
+               :ru,
+               :se,
+               :sk,
+               :sl,
+               :sq,
+               :sr,
+               :"sr-Latn",
+               :su,
+               :sv,
+               :sw,
+               :ta,
+               :th,
+               :tr,
+               :uk,
+               :und,
+               :vi,
+               :yue,
+               :"yue-Hans",
+               :zh,
+               :"zh-Hant"
              ]
   end
 
@@ -234,10 +234,10 @@ defmodule Cldr.Test do
 
   test "that configs merge correctly" do
     assert WithOtpAppBackend.Cldr.__cldr__(:config).locales ==
-             ["en", "en-001", "fr", "und"]
+             [:en, :"en-001", :fr, :und]
 
     assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
-             ["en", "en-001", "en-GB", "es", "it", "und"]
+             [:en, :"en-001", :"en-GB", :es, :it, :und]
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
@@ -262,12 +262,12 @@ defmodule Cldr.Test do
   end
 
   test "return of currency map" do
-    {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
+    {:ok, currencies} = Cldr.Config.currencies_for(:en, WithOtpAppBackend.Cldr)
     assert Map.get(currencies, :AUD)
   end
 
   test "correct date parsing of currencies" do
-    {:ok, currencies} = Cldr.Config.currencies_for("en", WithOtpAppBackend.Cldr)
+    {:ok, currencies} = Cldr.Config.currencies_for(:en, WithOtpAppBackend.Cldr)
     assert Map.get(currencies, :YUM).from == 1994
     assert Map.get(currencies, :YUM).to == 2002
     assert Map.get(currencies, :UYI).name == "Uruguayan Peso (Indexed Units)"
@@ -275,7 +275,7 @@ defmodule Cldr.Test do
   end
 
   test "UTF8 names in currency annotations" do
-    {:ok, currencies} = Cldr.Config.currencies_for("de", TestBackend.Cldr)
+    {:ok, currencies} = Cldr.Config.currencies_for(:de, TestBackend.Cldr)
     assert Map.get(currencies, :USN).name == "US Dollar (Nächster Tag)"
   end
 
