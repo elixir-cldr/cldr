@@ -106,7 +106,7 @@ defmodule Cldr.Backend do
 
       """
       @known_gettext_locale_names Cldr.Config.known_gettext_locale_names(config)
-      @spec known_gettext_locale_names() :: [Locale.locale_name()]
+      @spec known_gettext_locale_names() :: [String.t()]
       def known_gettext_locale_names do
         @known_gettext_locale_names
       end
@@ -174,7 +174,7 @@ defmodule Cldr.Backend do
           false
 
       """
-      @spec known_gettext_locale_name?(Locale.locale_name()) :: boolean
+      @spec known_gettext_locale_name?(String.t()) :: boolean
       def known_gettext_locale_name?(locale_name) when is_binary(locale_name) do
         locale_name in known_gettext_locale_names()
       end
@@ -256,7 +256,7 @@ defmodule Cldr.Backend do
           false
 
       """
-      @spec known_gettext_locale_name(Locale.locale_name()) :: String.t() | false
+      @spec known_gettext_locale_name(String.t()) :: String.t() | false
       def known_gettext_locale_name(locale_name) when is_binary(locale_name) do
         if known_gettext_locale_name?(locale_name) do
           locale_name

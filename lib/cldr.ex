@@ -864,7 +864,7 @@ defmodule Cldr do
       nil
 
   """
-  @spec known_locale_name(Locale.locale_name() | String.t(), backend()) :: Atom.t() | nil
+  @spec known_locale_name(Locale.locale_name() | String.t(), backend()) :: atom() | nil
 
   def known_locale_name(locale_name, backend \\ default_backend!())
 
@@ -964,7 +964,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_gettext_locale_name?(Locale.locale_name(), backend) :: boolean
+  @spec known_gettext_locale_name?(String.t(), backend) :: boolean
   def known_gettext_locale_name?(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     locale_name in backend.known_gettext_locale_names
@@ -1027,7 +1027,7 @@ defmodule Cldr do
       false
 
   """
-  @spec known_gettext_locale_name(Locale.locale_name(), backend()) :: String.t() | false
+  @spec known_gettext_locale_name(String.t(), backend()) :: String.t() | false
   def known_gettext_locale_name(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
     backend.known_gettext_locale_name(locale_name)
