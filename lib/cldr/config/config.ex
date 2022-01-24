@@ -969,7 +969,7 @@ defmodule Cldr.Config do
   @spec known_number_systems_like(Locale.locale_name(), number_system(), t()) ::
           {:ok, list()} | {:error, {module(), String.t()}}
 
-  def known_number_systems_like(locale_name, number_system, config) do
+  def known_number_systems_like(locale_name, number_system, config) when is_atom(locale_name) do
     with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
          {:ok, symbols} <- number_symbols_for(locale_name, number_system, config),
          {:ok, names} <- number_system_names_for(locale_name, config) do
