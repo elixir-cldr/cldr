@@ -1758,7 +1758,9 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory(Cldr.Locale.territory() | String.t()) :: %{} | {:error, {module(), String.t()}}
+  @spec territory(Locale.territory_reference() | String.t()) ::
+    %{} | {:error, {module(), String.t()}}
+
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territories()

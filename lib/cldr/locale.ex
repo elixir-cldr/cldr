@@ -242,6 +242,9 @@ defmodule Cldr.Locale do
   @typedoc "The name of a locale"
   @type locale_name() :: atom()
 
+  @typedoc "A reference to a locale"
+  @type locale_reference :: LanguageTag.t() | locale_name() | String.t()
+
   @typedoc "The name of a language"
   @type language :: String.t() | nil
 
@@ -249,7 +252,7 @@ defmodule Cldr.Locale do
   @type script :: atom() | String.t() | nil
 
   @typedoc "The name of a territory"
-  @type territory :: atom() | String.t() | nil
+  @type territory_reference :: atom() | String.t() | nil
 
   @typedoc "A territory code as an ISO3166 Alpha-2 in atom form"
   @type territory_code :: atom()
@@ -260,8 +263,9 @@ defmodule Cldr.Locale do
   @typedoc "The list of language subtags as strings"
   @type subtags :: [String.t(), ...] | []
 
-  @root_locale "und"
-  @root_rbnf_locale_name "und"
+  @root_locale Cldr.Config.root_locale_name()
+  @root_language Atom.to_string(@root_locale)
+  @root_rbnf_locale_name Cldr.Config.root_locale_name()
 
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
@@ -776,8 +780,7 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
-  @spec territory_from_locale(LanguageTag.t() | locale_name() | String.t()) ::
-    Cldr.Locale.territory()
+  @spec territory_from_locale(LanguageTag.t() | locale_name() | String.t()) :: territory_code()
 
   @doc since: "2.18.2"
 
@@ -856,8 +859,8 @@ defmodule Cldr.Locale do
 
   """
 
-  @spec territory_from_locale(locale_name() | String.t(), Cldr.backend()) ::
-          territory() | {:error, {module(), String.t()}}
+  @spec territory_from_locale(locale_reference() | String.t(), Cldr.backend()) ::
+          territory_code() | {:error, {module(), String.t()}}
 
   @doc since: "2.18.2"
 
@@ -1324,7 +1327,7 @@ defmodule Cldr.Locale do
 
   defp remove_unknown(%LanguageTag{} = language_tag, :script), do: language_tag
 
-  defp remove_unknown(%LanguageTag{territory: "ZZ"} = language_tag, :territory) do
+  defp remove_unknown(%LanguageTag{territory: :ZZ} = language_tag, :territory) do
     %{language_tag | territory: nil}
   end
 
@@ -1381,7 +1384,7 @@ defmodule Cldr.Locale do
   end
 
   @spec rbnf_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
-  defp rbnf_locale_name(%LanguageTag{language: @root_locale}) do
+  defp rbnf_locale_name(%LanguageTag{language: @root_language}) do
     @root_rbnf_locale_name
   end
 
@@ -1573,7 +1576,7 @@ defmodule Cldr.Locale do
       "en-001"
 
   """
-  @spec locale_name_from(language(), script(), territory(), variants(), boolean) ::
+  @spec locale_name_from(language(), script(), territory_reference(), variants(), boolean) ::
           String.t()
 
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do

@@ -14,8 +14,11 @@ defmodule Cldr.Backend do
       in this module or in `Gettext`.
 
       """
-      @omit_locales [Cldr.Config.root_locale_name()]
-      @known_locale_names Cldr.Locale.Loader.known_locale_names(config) -- @omit_locales
+
+      alias Cldr.{Locale, Config, LanguageTag}
+
+      @omit_locales [Config.root_locale_name()]
+      @known_locale_names Locale.Loader.known_locale_names(config) -- @omit_locales
 
       def known_locale_names do
         @known_locale_names
@@ -47,12 +50,12 @@ defmodule Cldr.Backend do
 
       """
       @default_locale config
-                      |> Cldr.Config.default_locale_name()
-                      |> Cldr.Config.language_tag()
+                      |> Config.default_locale_name()
+                      |> Config.language_tag()
                       |> Map.put(:backend, __MODULE__)
 
       @compile {:inline, default_locale: 0}
-      @spec default_locale :: Cldr.LanguageTag.t() | no_return()
+      @spec default_locale :: LanguageTag.t() | no_return()
       def default_locale do
         Cldr.Locale.put_gettext_locale_name(@default_locale)
       end
@@ -67,7 +70,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @spec default_territory() :: Cldr.Locale.territory()
+      @spec default_territory() :: Locale.territory_code()
       def default_territory do
         Cldr.Locale.territory_from_locale(@default_locale)
       end
@@ -81,7 +84,7 @@ defmodule Cldr.Backend do
       return an empty list.
 
       """
-      @unknown_locale_names Cldr.Config.unknown_locale_names(config)
+      @unknown_locale_names Config.unknown_locale_names(config)
       @spec unknown_locale_names() :: [Locale.locale_name()]
       def unknown_locale_names do
         @unknown_locale_names
@@ -92,7 +95,7 @@ defmodule Cldr.Backend do
       formats (RBNF).
 
       """
-      @known_rbnf_locale_names Cldr.Locale.Loader.known_rbnf_locale_names(config)
+      @known_rbnf_locale_names Locale.Loader.known_rbnf_locale_names(config)
 
       @spec known_rbnf_locale_names() :: [Locale.locale_name()]
       def known_rbnf_locale_names do
@@ -105,7 +108,8 @@ defmodule Cldr.Backend do
       with `Cldr` locale names.
 
       """
-      @known_gettext_locale_names Cldr.Config.known_gettext_locale_names(config)
+      @known_gettext_locale_names Config.known_gettext_locale_names(config)
+
       @spec known_gettext_locale_names() :: [String.t()]
       def known_gettext_locale_names do
         @known_gettext_locale_names

@@ -14,8 +14,10 @@ defmodule Cldr.Locale.Backend do
           """
         end
 
-        def new(locale_name), do: Cldr.Locale.new(locale_name, unquote(config.backend))
-        def new!(locale_name), do: Cldr.Locale.new!(locale_name, unquote(config.backend))
+        alias Cldr.{Locale, LanguageTag}
+
+        def new(locale_name), do: Locale.new(locale_name, unquote(config.backend))
+        def new!(locale_name), do: Locale.new!(locale_name, unquote(config.backend))
 
         @doc """
         Returns the territory from a language tag or
@@ -41,17 +43,17 @@ defmodule Cldr.Locale.Backend do
             :GB
 
         """
-        @spec territory_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
-                Cldr.Locale.territory()
+        @spec territory_from_locale(LanguageTag.t() | Locale.locale_name()) ::
+          Locale.territory_code()
 
         @doc since: "2.18.2"
 
-        def territory_from_locale(locale) when is_binary(locale) do
-          Cldr.Locale.territory_from_locale(locale, unquote(config.backend))
+        def territory_from_locale(%LanguageTag{} = locale) do
+          Locale.territory_from_locale(locale)
         end
 
-        def territory_from_locale(%LanguageTag{} = locale) do
-          Cldr.Locale.territory_from_locale(locale)
+        def territory_from_locale(locale) do
+          Locale.territory_from_locale(locale, unquote(config.backend))
         end
 
         @doc """
@@ -79,15 +81,15 @@ defmodule Cldr.Locale.Backend do
         """
         @doc since: "2.19.0"
 
-        @spec timezone_from_locale(Cldr.LanguageTag.t() | Cldr.Locale.locale_name()) ::
+        @spec timezone_from_locale(LanguageTag.t() | Locale.locale_name()) ::
                 String.t() | {:error, {module(), String.t()}}
 
-        def timezone_from_locale(locale) when is_binary(locale) do
-          Cldr.Locale.timezone_from_locale(locale, unquote(config.backend))
+        def timezone_from_locale(%LanguageTag{} = locale) do
+          Locale.timezone_from_locale(locale)
         end
 
-        def timezone_from_locale(%LanguageTag{} = locale) do
-          Cldr.Locale.timezone_from_locale(locale)
+        def timezone_from_locale(locale) do
+          Locale.timezone_from_locale(locale, unquote(config.backend))
         end
 
         @doc """
@@ -129,11 +131,11 @@ defmodule Cldr.Locale.Backend do
 
         """
         @doc since: "2.26.0"
-        @spec locale_for_territory(Cldr.Locale.territory_code()) ::
+        @spec locale_for_territory(Locale.territory_code()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
         def locale_for_territory(territory) do
-          Cldr.Locale.locale_for_territory(territory)
+          Locale.locale_for_territory(territory)
         end
 
         @doc """
@@ -186,7 +188,7 @@ defmodule Cldr.Locale.Backend do
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
         def locale_from_host(host, options \\ []) do
-          Cldr.Locale.locale_from_host(host, unquote(config.backend), options)
+          Locale.locale_from_host(host, unquote(config.backend), options)
         end
 
         @doc """
@@ -215,7 +217,7 @@ defmodule Cldr.Locale.Backend do
         """
         @doc since: "2.26.0"
         @spec territory_from_host(String.t()) ::
-          {:ok, Cldr.Locale.territory_code()} | {:error, {module(), String.t()}}
+          {:ok, Locale.territory_code()} | {:error, {module(), String.t()}}
 
         def territory_from_host(host) do
           Cldr.Locale.territory_from_host(host)
