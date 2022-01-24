@@ -2116,7 +2116,7 @@ defmodule Cldr.Config do
        :islamic_rgsa, :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
 
   """
-  def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
+  def calendars_for_locale(locale_name, %{} = config) when is_atom(locale_name) do
     Cldr.maybe_log("Cldr.Config getting calendar data for locale #{inspect(locale_name)}")
 
     locale_name
@@ -2124,6 +2124,12 @@ defmodule Cldr.Config do
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
+  end
+
+  def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
+    locale_name
+    |> String.to_existing_atom()
+    |> calendars_for_locale(config)
   end
 
   def calendars_for_locale(locale_name, backend) when is_atom(backend) do

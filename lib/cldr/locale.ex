@@ -298,13 +298,20 @@ defmodule Cldr.Locale do
   Returns a list of all the parent locales
   for a given locale.
 
+  ## Examples
+
+        Cldr.Locale.parents "fr-ca"
+        => {:ok, [#Cldr.LanguageTag<fr [validated]>, #Cldr.LanguageTag<en [validated]>]}
+
   """
-  @spec parents(LanguageTag.t()) :: list(LanguageTag.t())
+  @spec parents(LanguageTag.t()) ::
+    {:ok, list(LanguageTag.t())} | {:error, {module(), String.t()}}
+
   def parents(locale, acc \\ [])
 
   def parents(%LanguageTag{} = locale, acc) do
     case parent(locale) do
-      {:error, _} -> Enum.reverse(acc)
+      {:error, _} -> {:ok, Enum.reverse(acc)}
       {:ok, locale} -> parents(locale, [locale | acc])
     end
   end
@@ -441,8 +448,74 @@ defmodule Cldr.Locale do
   end
 
   @doc """
+
+
+  """
+  @spec fallback_locales(LanguageTag.t()) ::
+          {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
+
+  def fallback_locales(%LanguageTag{} = locale) do
+    with {:ok, parents} <- parents(locale) do
+      {:ok, [locale | parents]}
+    end
+  end
+
+  @doc """
+
+
+  """
+
+  @spec fallback_locales(locale_name, Cldr.backend()) ::
+          {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
+
+  def fallback_locales(locale_name, backend \\ Cldr.default_backend!()) do
+    with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
+      fallback_locales(locale)
+    end
+  end
+
+  @doc """
+
+
+  """
+  @spec fallback_locales(LanguageTag.t()) ::
+          {:ok, [locale_name, ...]} | {:error, {module(), binary()}}
+
+  def fallback_locale_names(%LanguageTag{} = locale) do
+    with {:ok, fallbacks} <- fallback_locales(locale) do
+      locale_names = Enum.map(fallbacks, &Map.get(&1, :cldr_locale_name))
+      {:ok, locale_names}
+    end
+  end
+
+  @doc """
+
+
+  """
+
+  @spec fallback_locale_names(locale_name, Cldr.backend()) ::
+          {:ok, [locale_name, ...]} | {:error, {module(), binary()}}
+
+  def fallback_locale_names(locale_name, backend \\ Cldr.default_backend!()) do
+    with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
+      fallback_locale_names(locale)
+    end
+  end
+
+  @doc """
   Returns a map of a territory code to its
   most-spoken language.
+
+  ## Example
+
+        Cldr.Locale.languages_for_territories()
+        => %{
+          AQ: "und",
+          PE: "es",
+          SR: "nl",
+          NU: "en",
+          ...
+        }
 
   """
   @language_for_territory Cldr.Config.language_tag_for_territory()
