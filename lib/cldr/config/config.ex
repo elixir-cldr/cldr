@@ -1017,13 +1017,14 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_systems_for("en", %Cldr.Config{locales: ["en", "de"]})
+      iex> Cldr.Config.number_systems_for(:en, %Cldr.Config{locales: ["en", "de"]})
       {:ok, %{default: :latn, native: :latn}}
+
   """
   @spec number_systems_for(Locale.locale_name(), t()) ::
           {:ok, map()} | {:error, {module(), String.t()}}
 
-  def number_systems_for(locale_name, %__MODULE__{} = config) do
+  def number_systems_for(locale_name, %__MODULE__{} = config) when is_atom(locale_name) do
     if known_locale_name(locale_name, config) do
       number_systems =
         locale_name
@@ -1042,7 +1043,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_systems_for!("de", %Cldr.Config{locales: ["en", "de"]})
+      iex> Cldr.Config.number_systems_for!(:de, %Cldr.Config{locales: ["en", "de"]})
       %{default: :latn, native: :latn}
 
   """
@@ -1060,7 +1061,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_system_for("th", :thai, %Cldr.Config{locales: ["th", "de"]})
+      iex> Cldr.Config.number_system_for(:th, :thai, %Cldr.Config{locales: ["th", "de"]})
       {:ok, %{digits: "๐๑๒๓๔๕๖๗๘๙", type: :numeric}}
 
   """
@@ -1078,7 +1079,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_system_names_for("th", %Cldr.Config{locales: ["en", "th"]})
+      iex> Cldr.Config.number_system_names_for(:th, %Cldr.Config{locales: ["en", "th"]})
       {:ok, [:latn, :thai]}
 
   """
@@ -1459,7 +1460,7 @@ defmodule Cldr.Config do
 
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locale_names([String.t(), ...]) :: [Locale.locale_name(), ...]
+  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [Locale.locale_name(), ...]
   def expand_locale_names(locale_names) do
     Enum.map(locale_names, fn locale_name ->
       locale_name = to_string(locale_name)
@@ -1523,7 +1524,7 @@ defmodule Cldr.Config do
   * `{:error, :not_found}`
 
   """
-  @spec locale_path(String.t(), Cldr.backend() | t()) ::
+  @spec locale_path(Cldr.Locale.locale_name() | String.t(), Cldr.backend() | t()) ::
           {:ok, String.t()} | {:error, :not_found}
 
   def locale_path(locale, %{data_dir: _} = config) do
@@ -1853,7 +1854,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} ->
-      {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
+      {String.to_atom(k), struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
     end)
     |> Map.new()
   end

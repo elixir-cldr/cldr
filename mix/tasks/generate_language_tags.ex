@@ -20,10 +20,6 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
         with {:ok, canonical_tag} <-
                Cldr.Locale.canonical_language_tag(locale_name, @test_backend) do
 
-           if canonical_tag.canonical_locale_name == nil do
-             raise RuntimeError, inspect(canonical_tag, structs: false)
-           end
-
           language_tag =
             canonical_tag
             |> Map.put(:cldr_locale_name, locale_name)
@@ -69,7 +65,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
           Map.get(rbnf_locale_names, language <> "-" <> territory) ||
           Map.get(rbnf_locale_names, language)
         [language, territory, "u", "va", _variant] ->
-          rbnf_locale_name("#{language}-#{territory}")
+          rbnf_locale_name(String.to_atom("#{language}-#{territory}"))
       end
 
     if rbnf_locale, do: String.to_atom(rbnf_locale), else: rbnf_locale

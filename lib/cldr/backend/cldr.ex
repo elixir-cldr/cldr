@@ -552,7 +552,7 @@ defmodule Cldr.Backend do
           {:error, {Cldr.InvalidLanguageError, "The language \\"zzz\\" is invalid"}}
 
       """
-      @spec validate_locale(Locale.locale_name() | LanguageTag.t()) ::
+      @spec validate_locale(Locale.locale_name() | LanguageTag.t() | String.t()) ::
               {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
       def validate_locale(%LanguageTag{cldr_locale_name: nil} = locale) do

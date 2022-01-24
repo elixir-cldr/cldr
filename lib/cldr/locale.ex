@@ -465,9 +465,6 @@ defmodule Cldr.Locale do
 
   """
 
-  @spec fallback_locales(locale_name, Cldr.backend()) ::
-          {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
-
   def fallback_locales(locale_name, backend \\ Cldr.default_backend!()) do
     with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
       fallback_locales(locale)
@@ -478,7 +475,7 @@ defmodule Cldr.Locale do
 
 
   """
-  @spec fallback_locales(LanguageTag.t()) ::
+  @spec fallback_locale_names(LanguageTag.t()) ::
           {:ok, [locale_name, ...]} | {:error, {module(), binary()}}
 
   def fallback_locale_names(%LanguageTag{} = locale) do
@@ -492,9 +489,6 @@ defmodule Cldr.Locale do
 
 
   """
-
-  @spec fallback_locale_names(locale_name, Cldr.backend()) ::
-          {:ok, [locale_name, ...]} | {:error, {module(), binary()}}
 
   def fallback_locale_names(locale_name, backend \\ Cldr.default_backend!()) do
     with {:ok, locale} <- Cldr.validate_locale(locale_name, backend) do
@@ -782,7 +776,8 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
-  @spec territory_from_locale(LanguageTag.t() | locale_name()) :: Cldr.Locale.territory()
+  @spec territory_from_locale(LanguageTag.t() | locale_name() | String.t()) ::
+    Cldr.Locale.territory()
 
   @doc since: "2.18.2"
 
@@ -861,12 +856,12 @@ defmodule Cldr.Locale do
 
   """
 
-  @spec territory_from_locale(locale_name(), Cldr.backend()) ::
+  @spec territory_from_locale(locale_name() | String.t(), Cldr.backend()) ::
           territory() | {:error, {module(), String.t()}}
 
   @doc since: "2.18.2"
 
-  def territory_from_locale(locale, backend) when is_binary(locale) do
+  def territory_from_locale(locale, backend) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       territory_from_locale(locale)
     end
@@ -898,7 +893,7 @@ defmodule Cldr.Locale do
 
   """
 
-  @spec timezone_from_locale(LanguageTag.t() | locale_name()) ::
+  @spec timezone_from_locale(LanguageTag.t() | locale_name() | String.t()) ::
           String.t() | {:error, {module(), String.t()}}
 
   @doc since: "2.19.0"
@@ -919,7 +914,7 @@ defmodule Cldr.Locale do
     end
   end
 
-  def timezone_from_locale(locale_name) when is_binary(locale_name) do
+  def timezone_from_locale(locale_name) do
     timezone_from_locale(locale_name, Cldr.default_backend!())
   end
 
@@ -942,19 +937,19 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.timezone_from_locale "en-US-u-tz-ausyd", TestBackend.Cldr
       "Australia/Sydney"
 
-      iex> Cldr.Locale.timezone_from_locale "en-AU", TestBackend.Cldr
+      iex> Cldr.Locale.timezone_from_locale :"en-AU", TestBackend.Cldr
       {:error,
        {Cldr.AmbiguousTimezoneError,
         "Cannot determine the timezone since the territory :AU has 24 timezone IDs"}}
 
   """
 
-  @spec timezone_from_locale(locale_name(), Cldr.backend()) ::
+  @spec timezone_from_locale(locale_name() | String.t(), Cldr.backend()) ::
           String.t() | {:error, {module(), String.t()}}
 
   @doc since: "2.19.0"
 
-  def timezone_from_locale(locale, backend) when is_binary(locale) do
+  def timezone_from_locale(locale, backend) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       timezone_from_locale(locale)
     end
@@ -1035,7 +1030,7 @@ defmodule Cldr.Locale do
       }
 
   """
-  @spec canonical_language_tag(locale_name | Cldr.LanguageTag.t(), Cldr.backend(), Keyword.t()) ::
+  @spec canonical_language_tag(locale_name | Cldr.LanguageTag.t() | String.t(), Cldr.backend(), Keyword.t()) ::
           {:ok, Cldr.LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def canonical_language_tag(locale_name, backend, options \\ [])
@@ -1056,9 +1051,7 @@ defmodule Cldr.Locale do
         canonical_language_tag(language_tag, backend, options)
 
       :error ->
-        locale_name
-        |> Atom.to_string()
-        |> canonical_language_tag(backend, options)
+        canonical_language_tag(locale_name, backend, options)
     end
   end
 
@@ -1568,7 +1561,7 @@ defmodule Cldr.Locale do
 
   ## Returns
 
-  * The locale name constructed from the non-nil arguments joined
+  * The atom locale name constructed from the non-nil arguments joined
     by a "-"
 
   ## Example
@@ -1581,7 +1574,7 @@ defmodule Cldr.Locale do
 
   """
   @spec locale_name_from(language(), script(), territory(), variants(), boolean) ::
-          locale_name()
+          String.t()
 
   def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
     [language, script, territory, variants]
@@ -1938,8 +1931,8 @@ defmodule Cldr.Locale do
   ## Example
 
       Cldr.Locale.likely_subtags
-      %{
-        "bez" => %Cldr.LanguageTag{
+      => %{
+        bez; %Cldr.LanguageTag{
           backend: TestBackend.Cldr,
           canonical_locale_name: nil,
           cldr_locale_name: nil,
@@ -1954,7 +1947,7 @@ defmodule Cldr.Locale do
           transform: %{},
           language_variants: []
         },
-        "fuf" => %Cldr.LanguageTag{
+        fuf: %Cldr.LanguageTag{
           canonical_locale_name: nil,
           cldr_locale_name: nil,
           extensions: %{},
@@ -1987,7 +1980,7 @@ defmodule Cldr.Locale do
 
   ## Examples
 
-      iex> Cldr.Locale.likely_subtags "en"
+      iex> Cldr.Locale.likely_subtags :en
       %Cldr.LanguageTag{
         backend: nil,
         canonical_locale_name: nil,
@@ -2006,13 +1999,22 @@ defmodule Cldr.Locale do
       }
 
   """
-  @spec likely_subtags(locale_name) :: LanguageTag.t() | nil
-  def likely_subtags(locale_name) when is_binary(locale_name) do
+  @spec likely_subtags(locale_name | String.t()) :: LanguageTag.t() | nil
+
+  def likely_subtags(locale_name) when is_atom(locale_name) do
     Map.get(likely_subtags(), locale_name)
   end
 
   def likely_subtags(%LanguageTag{requested_locale_name: requested_locale_name}) do
     likely_subtags(requested_locale_name)
+  end
+
+  def likely_subtags(locale_name) when is_binary(locale_name) do
+    locale_name
+    |> String.to_existing_atom()
+    |> likely_subtags()
+  rescue ArgumentError ->
+    nil
   end
 
   @doc """
@@ -2035,9 +2037,10 @@ defmodule Cldr.Locale do
 
   """
   @alias_keys Map.keys(@aliases)
-  @spec aliases(locale_name(), atom()) :: String.t() | list(String.t()) | LanguageTag.t() | nil
+  @spec aliases(locale_name() | String.t(), atom()) ::
+    String.t() | list(String.t()) | LanguageTag.t() | nil
 
-  def aliases(key, :region = type) do
+  def aliases(key, :region = type) when is_atom(key) do
     aliases()
     |> Map.get(type)
     |> Map.get(to_string(key))
@@ -2047,6 +2050,14 @@ defmodule Cldr.Locale do
     aliases()
     |> Map.get(type)
     |> Map.get(key)
+  end
+
+  def aliases(key, type) when is_binary(key) do
+    key
+    |> String.to_existing_atom()
+    |> aliases(type)
+  rescue ArgumentError ->
+    nil
   end
 
   defp validate_subtags(language_tag) do
