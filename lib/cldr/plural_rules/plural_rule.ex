@@ -233,25 +233,25 @@ defmodule Cldr.Number.PluralRule do
 
         ## Examples
 
-            iex> #{inspect(__MODULE__)}.pluralize 1, "en", %{one: "one"}
+            iex> #{inspect(__MODULE__)}.pluralize 1, :en, %{one: "one"}
             "one"
 
-            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one"}
+            iex> #{inspect(__MODULE__)}.pluralize 2, :en, %{one: "one"}
             nil
 
-            iex> #{inspect(__MODULE__)}.pluralize 2, "en", %{one: "one", two: "two"}
+            iex> #{inspect(__MODULE__)}.pluralize 2, :en, %{one: "one", two: "two"}
             "two"
 
-            iex> #{inspect(__MODULE__)}.pluralize 22, "en", %{one: "one", two: "two", other: "other"}
+            iex> #{inspect(__MODULE__)}.pluralize 22, :en, %{one: "one", two: "two", other: "other"}
             "two"
 
-            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), "en", %{one: "one"}
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(1), :en, %{one: "one"}
             "one"
 
-            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one"}
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), :en, %{one: "one"}
             nil
 
-            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), "en", %{one: "one", two: "two"}
+            iex> #{inspect(__MODULE__)}.pluralize Decimal.new(2), :en, %{one: "one", two: "two"}
             "two"
 
             iex> #{inspect(__MODULE__)}.pluralize 1..10, "ar", %{one: "one", few: "few", other: "other"}
@@ -264,12 +264,7 @@ defmodule Cldr.Number.PluralRule do
       end
 
       @default_substitution :other
-      @spec pluralize(
-              Math.number_or_decimal() | %Range{},
-              LanguageTag.t() | Locale.locale_name(),
-              %{}
-            ) ::
-              any()
+      @spec pluralize(Math.number_or_decimal() | Range.t(), Locale.locale_reference(), %{}) :: any()
 
       def pluralize(%Range{first: first, last: last}, locale_name, substitutions) do
         with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
@@ -283,7 +278,8 @@ defmodule Cldr.Number.PluralRule do
         end
       end
 
-      def pluralize(number, locale_name, substitutions) when is_binary(locale_name) do
+      def pluralize(number, locale_name, substitutions)
+          when is_atom(locale_name) or is_binary(locale_name) do
         with {:ok, language_tag} <- @backend.validate_locale(locale_name) do
           pluralize(number, language_tag, substitutions)
         end
@@ -301,18 +297,16 @@ defmodule Cldr.Number.PluralRule do
         |> do_pluralize(locale, substitutions)
       end
 
-      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
+      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp}, locale, substitutions)
           when is_integer(coef) and exp > 0 do
-        number
-        |> Decimal.to_integer()
-        |> do_pluralize(locale, substitutions)
+        number = %Decimal{sign: sign, coef: coef * 10, exp: exp - 1}
+        pluralize(number, locale, substitutions)
       end
 
-      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp} = number, locale, substitutions)
+      def pluralize(%Decimal{sign: sign, coef: coef, exp: exp}, locale, substitutions)
           when is_integer(coef) and exp < 0 and rem(coef, 10) == 0 do
-        number
-        |> Decimal.to_integer()
-        |> do_pluralize(locale, substitutions)
+        number = %Decimal{sign: sign, coef: Kernel.div(coef, 10), exp: exp + 1}
+        pluralize(number, locale, substitutions)
       end
 
       def pluralize(%Decimal{} = number, %LanguageTag{} = locale, %{} = substitutions) do

@@ -38,4 +38,11 @@ defmodule Decimal.PluralRule.Test do
         end
     end
   end
+
+  test "Non-integer decimal pluralization" do
+    decimal = Decimal.new("1234.50")
+    substitutions = %{one: "one", two: "two", other: "other"}
+    assert TestBackend.Cldr.Number.Cardinal.pluralize(decimal, :en, substitutions) == "other"
+    assert TestBackend.Cldr.Number.Cardinal.pluralize(decimal, "en", substitutions) == "other"
+  end
 end
