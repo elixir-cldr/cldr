@@ -50,7 +50,7 @@ defmodule Cldr.Trans.Backend do
           """
         end
 
-        def __using__(_opts) do
+        defmacro __using__(_opts) do
           backend = unquote(backend)
 
           quote do
@@ -59,12 +59,12 @@ defmodule Cldr.Trans.Backend do
         end
 
         @doc false
-        def default_options do
+        def default_trans_options do
           [on_replace: :update, primary_key: false]
         end
 
-        defmacro translations(field_name, translation_module \\ Translation, options \\ []) do
-          options = Keyword.merge(unquote(backend).Trans.default_options(), options)
+        defmacro translations(field_name, translation_module, options \\ []) do
+          options = Keyword.merge(unquote(backend).Trans.default_trans_options(), options)
           backend = unquote(backend)
 
           quote do
