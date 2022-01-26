@@ -366,7 +366,7 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.quote "Quoted String"
           "“Quoted String”"
 
-          iex> #{inspect(__MODULE__)}.quote "Quoted String", locale: "ja"
+          iex> #{inspect(__MODULE__)}.quote "Quoted String", locale: :ja
           "「Quoted String」"
 
       """
@@ -416,13 +416,13 @@ defmodule Cldr.Backend do
           iex> #{inspect(__MODULE__)}.ellipsis "And furthermore"
           "And furthermore…"
 
-          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja"
+          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: :ja
           "And furthermore…there is much to be done"
 
           iex> #{inspect(__MODULE__)}.ellipsis "And furthermore", format: :word
           "And furthermore …"
 
-          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: "ja", format: :word
+          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: :ja, format: :word
           "And furthermore … there is much to be done"
 
       """

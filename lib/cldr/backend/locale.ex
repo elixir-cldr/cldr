@@ -222,7 +222,190 @@ defmodule Cldr.Locale.Backend do
         def territory_from_host(host) do
           Cldr.Locale.territory_from_host(host)
         end
+        @doc """
+        Returns the list of fallback locales, starting
+        with the provided locale.
 
+        Fallbacks are a list of locate names which can
+        be used to resolve translation or other localization
+        data if such localised data does not exist for
+        this specific locale. After locale-specific fallbacks
+        are determined, the the default locale and its fallbacks
+        are added to the chain.
+
+        ## Arguments
+
+        * `locale` is any `LanguageTag.t`
+
+        ## Returns
+
+        * `{:ok, list_of_locales}` or
+
+        * `{:error, {exception, reason}}`
+
+        ## Examples
+
+        In these examples the default locale is `:"en-001"`.
+
+            #{inspect __MODULE__}.fallback_locales(#{inspect __MODULE__}.new!("fr-CA"))
+            => {:ok,
+                 [#Cldr.LanguageTag<fr-CA [validated]>, #Cldr.LanguageTag<fr [validated]>,
+                  #Cldr.LanguageTag<en [validated]>]}
+
+            # Fallbacks are typically formed by progressively
+            # stripping variant, territory and script from the
+            # given locale name. But not always - there are
+            # certain fallbacks that take a different path.
+
+            #{inspect __MODULE__}.fallback_locales(#{inspect __MODULE__}.new!("nb"))
+            => {:ok,
+                 [#Cldr.LanguageTag<nb [validated]>, #Cldr.LanguageTag<no [validated]>,
+                  #Cldr.LanguageTag<en [validated]>]}
+
+        """
+        @spec fallback_locales(LanguageTag.t() | Cldr.Locale.locale_reference) ::
+                {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
+
+        @doc since: "2.26.0"
+        def fallback_locales(%LanguageTag{} = locale) do
+          Cldr.Locale.fallback_locales(locale)
+        end
+
+        @doc """
+        Returns the list of fallback locales, starting
+        with the provided locale name.
+
+        Fallbacks are a list of locate names which can
+        be used to resolve translation or other localization
+        data if such localised data does not exist for
+        this specific locale. After locale-specific fallbacks
+        are determined, the the default locale and its fallbacks
+        are added to the chain.
+
+        ## Arguments
+
+        * `locale_name` is any locale name returned by
+          `#{inspect __MODULE__}.known_locale_names/0`
+
+        ## Returns
+
+        * `{:ok, list_of_locales}` or
+
+        * `{:error, {exception, reason}}`
+
+        ## Examples
+
+        In these examples the default locale is `:"en-001"`.
+
+            #{inspect __MODULE__}.fallback_locales(:"fr-CA")
+            => {:ok,
+                 [#Cldr.LanguageTag<fr-CA [validated]>, #Cldr.LanguageTag<fr [validated]>,
+                  #Cldr.LanguageTag<en [validated]>]}
+
+            # Fallbacks are typically formed by progressively
+            # stripping variant, territory and script from the
+            # given locale name. But not always - there are
+            # certain fallbacks that take a different path.
+
+            #{inspect __MODULE__}.fallback_locales(:nb))
+            => {:ok,
+                 [#Cldr.LanguageTag<nb [validated]>, #Cldr.LanguageTag<no [validated]>,
+                  #Cldr.LanguageTag<en [validated]>]}
+
+        """
+
+        @doc since: "2.26.0"
+        def fallback_locales(locale_name) do
+          Cldr.Locale.fallback_locales(locale_name, unquote(config.backend))
+        end
+
+        @doc """
+        Returns the list of fallback locale names, starting
+        with the provided locale.
+
+        Fallbacks are a list of locate names which can
+        be used to resolve translation or other localization
+        data if such localised data does not exist for
+        this specific locale. After locale-specific fallbacks
+        are determined, the the default locale and its fallbacks
+        are added to the chain.
+
+        ## Arguments
+
+        * `locale` is any `Cldr,LangaugeTag.t`
+
+        ## Returns
+
+        * `{:ok, list_of_locale_names}` or
+
+        * `{:error, {exception, reason}}`
+
+        ## Examples
+
+        In these examples the default locale is `:"en-001"`.
+
+            iex> #{inspect __MODULE__}.fallback_locale_names(#{inspect __MODULE__}.new!("fr-CA"))
+            {:ok, [:"fr-CA", :fr, :"en-001", :en]}
+
+            # Fallbacks are typically formed by progressively
+            # stripping variant, territory and script from the
+            # given locale name. But not always - there are
+            # certain fallbacks that take a different path.
+
+            iex> #{inspect __MODULE__}.fallback_locale_names(#{inspect __MODULE__}.new!("nb"))
+            {:ok, [:nb, :no, :"en-001", :en]}
+
+        """
+        @spec fallback_locale_names(LanguageTag.t() | Cldr.Locale.locale_reference) ::
+                {:ok, [Cldr.Locale.locale_name, ...]} | {:error, {module(), binary()}}
+
+        @doc since: "2.26.0"
+        def fallback_locale_names(%LanguageTag{} = locale) do
+          Cldr.Locale.fallback_locale_names(locale)
+        end
+
+        @doc """
+        Returns the list of fallback locale names, starting
+        with the provided locale name.
+
+        Fallbacks are a list of locate names which can
+        be used to resolve translation or other localization
+        data if such localised data does not exist for
+        this specific locale. After locale-specific fallbacks
+        are determined, the the default locale and its fallbacks
+        are added to the chain.
+
+        ## Arguments
+
+        * `locale_name` is any locale name returned by
+          `#{inspect __MODULE__}.known_locale_names/0`
+
+        ## Returns
+
+        * `{:ok, list_of_locale_names}` or
+
+        * `{:error, {exception, reason}}`
+
+        ## Examples
+
+        In these examples the default locale is `:"en-001"`.
+
+            iex> #{inspect __MODULE__}.fallback_locale_names(:"fr-CA")
+            {:ok, [:"fr-CA", :fr, :"en-001", :en]}
+
+            # Fallbacks are typically formed by progressively
+            # stripping variant, territory and script from the
+            # given locale name. But not always - there are
+            # certain fallbacks that take a different path.
+
+            iex> #{inspect __MODULE__}.fallback_locale_names(:nb)
+            {:ok, [:nb, :no, :"en-001", :en]}
+
+        """
+        @doc since: "2.26.0"
+        def fallback_locale_names(locale_name) do
+          Cldr.Locale.fallback_locale_names(locale_name, unquote(config.backend))
+        end
       end
     end
   end
