@@ -45,6 +45,7 @@ defmodule Cldr.Backend.Compiler do
 
       unquote(Cldr.Backend.define_backend_functions(config))
       unquote(Cldr.Locale.Backend.define_locale_backend(config))
+      unquote(Cldr.Trans.Backend.define_locale_backend(config))
       unquote(Cldr.Number.PluralRule.define_ordinal_and_cardinal_modules(config))
       unquote(Cldr.Number.PluralRule.define_plural_ranges(config))
       unquote(Cldr.Config.define_provider_modules(config))
