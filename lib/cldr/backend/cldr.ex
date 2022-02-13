@@ -513,7 +513,7 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.validate_locale("en")
+          iex> #{inspect(__MODULE__)}.validate_locale(:en)
           {:ok,
           %Cldr.LanguageTag{
             backend: #{inspect(__MODULE__)},

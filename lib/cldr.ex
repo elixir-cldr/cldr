@@ -36,6 +36,8 @@ defmodule Cldr do
 
   @type backend :: module()
 
+  defguard is_locale_name(locale_name) when is_atom(locale_name) or is_binary(locale_name)
+
   alias Cldr.Config
   alias Cldr.Locale
   alias Cldr.Locale.Loader
@@ -223,7 +225,7 @@ defmodule Cldr do
 
   def put_locale(backend \\ nil, locale)
 
-  def put_locale(nil, locale) when is_binary(locale) do
+  def put_locale(nil, locale) when is_locale_name(locale) do
     backend = default_backend!()
 
     with {:ok, locale} <- backend.validate_locale(locale) do
@@ -231,9 +233,9 @@ defmodule Cldr do
     end
   end
 
-  def put_locale(backend, locale) when is_atom(backend) and is_binary(locale) do
+  def put_locale(backend, locale_name) when is_atom(backend) and is_locale_name(locale_name) do
     with {:ok, backend} <- validate_backend(backend),
-         {:ok, locale} <- backend.validate_locale(locale) do
+         {:ok, locale} <- backend.validate_locale(locale_name) do
       put_locale(locale)
     end
   end
@@ -660,7 +662,7 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.validate_locale("en", TestBackend.Cldr)
+      iex> Cldr.validate_locale(:en, TestBackend.Cldr)
       {:ok,
       %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
@@ -1716,7 +1718,7 @@ defmodule Cldr do
       {:ok, [:CA, :"021", :"019", :"001"]}
 
   """
-  def territory_chain(locale_name, backend) when is_binary(locale_name) and is_atom(backend) do
+  def territory_chain(locale_name, backend) when is_atom(backend) do
     with {:ok, locale} <- validate_locale(locale_name, backend) do
       territory_chain(locale)
     end

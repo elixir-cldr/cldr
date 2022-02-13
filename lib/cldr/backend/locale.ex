@@ -121,10 +121,10 @@ defmodule Cldr.Locale.Backend do
         ## Examples
 
           iex> #{inspect(__MODULE__)}.locale_for_territory(:AU)
-          #{config.backend}.validate_locale("en-AU")
+          #{config.backend}.validate_locale(:"en-AU")
 
           iex> #{inspect(__MODULE__)}.locale_for_territory(:US)
-          #{config.backend}.validate_locale("en-US")
+          #{config.backend}.validate_locale(:"en-US")
 
           iex> #{inspect(__MODULE__)}.locale_for_territory(:ZZ)
           {:error, {Cldr.UnknownTerritoryError, "The territory :ZZ is unknown"}}
@@ -172,7 +172,7 @@ defmodule Cldr.Locale.Backend do
         ## Examples
 
             iex> #{inspect(__MODULE__)}.locale_from_host "a.b.com.au"
-            #{config.backend}.validate_locale("en-AU")
+            #{config.backend}.validate_locale(:"en-AU")
 
             iex> #{inspect(__MODULE__)}.locale_from_host("a.b.com.tv")
             {:error,
