@@ -360,7 +360,7 @@ defmodule Cldr.AcceptLanguage do
          language_variants: []
        }}
 
-      iex(4)> Cldr.AcceptLanguage.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
+      iex> Cldr.AcceptLanguage.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
       {:ok,
        %Cldr.LanguageTag{
          backend: TestBackend.Cldr,
