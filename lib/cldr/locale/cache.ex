@@ -37,11 +37,11 @@ defmodule Cldr.Locale.Cache do
 			process_alive?(:cldr_locale_cache)
   end
 
-	defp process_alive?(:can_await_module_compilation?) do
-		Code.ensure_loaded?(Code) &&
-		function_exported?(Code, :can_await_module_compilation?, 0) &&
-		apply(Code, :can_await_module_compilation?, [])
-	end
+  defp process_alive?(:can_await_module_compilation?) do
+    Code.ensure_loaded?(Code) &&
+      function_exported?(Code, :can_await_module_compilation?, 0) &&
+	    apply(Code, :can_await_module_compilation?, [])
+  end
 
   defp process_alive?(name) do
     case Process.get(name) do
