@@ -644,7 +644,7 @@ defmodule Cldr.Locale do
       # given locale name. But not always - there are
       # certain fallbacks that take a different path.
 
-      iex> Cldr.Locale.fallback_locale_names(:"nb")
+      iex> Cldr.Locale.fallback_locale_names(:nb)
       {:ok, [:nb, :no, :"en-001", :en]}
 
   """

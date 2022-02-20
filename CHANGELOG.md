@@ -2,7 +2,7 @@
 
 ## Cldr v2.26.0
 
-This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.26.0 released on February 21st, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### LanguageTag structure changes
 
