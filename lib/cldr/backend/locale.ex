@@ -222,6 +222,7 @@ defmodule Cldr.Locale.Backend do
         def territory_from_host(host) do
           Cldr.Locale.territory_from_host(host)
         end
+
         @doc """
         Returns the list of fallback locales, starting
         with the provided locale.
@@ -285,7 +286,7 @@ defmodule Cldr.Locale.Backend do
         ## Arguments
 
         * `locale_name` is any locale name returned by
-          `#{inspect __MODULE__}.known_locale_names/0`
+          `#{inspect config.backend}.known_locale_names/0`
 
         ## Returns
 
@@ -378,7 +379,7 @@ defmodule Cldr.Locale.Backend do
         ## Arguments
 
         * `locale_name` is any locale name returned by
-          `#{inspect __MODULE__}.known_locale_names/0`
+          `#{inspect config.backend}.known_locale_names/0`
 
         ## Returns
 

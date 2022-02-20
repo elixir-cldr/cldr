@@ -516,11 +516,11 @@ defmodule Cldr.Locale do
   ## Arguments
 
   * `locale_name` is any locale name returned by
-    `Cldr.known_locale_names/2`
+    `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module. The default is
-    `Cldr.default_locale!/0`.
+    `Cldr.default_locale/0`.
 
   ## Returns
 
@@ -620,11 +620,11 @@ defmodule Cldr.Locale do
   ## Arguments
 
   * `locale_name` is any locale name returned by
-    `Cldr.known_locale_names/2`
+    `Cldr.known_locale_names/1`
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module. The default is
-    `Cldr.default_locale!/0`.
+    `Cldr.default_locale/0`.
 
   ## Returns
 
