@@ -22,6 +22,11 @@ defmodule Cldr.Locale.Loader do
   Returns a list of all locales that are configured and available
   in the CLDR repository.
 
+  ## Examples
+
+      iex> Cldr.Locale.Loader.known_locale_names %Cldr.Config{locales: ["en", "de"]}
+      [:de, :en, :und]
+
   """
   @spec known_locale_names(Config.t() | Cldr.backend()) :: [Locale.locale_name()]
   def known_locale_names(backend) when is_atom(backend) do
@@ -29,13 +34,8 @@ defmodule Cldr.Locale.Loader do
     |> known_locale_names
   end
 
-  def known_locale_names(%Config{locales: :all}) do
-    Cldr.Config.all_locale_names()
-    |> Enum.sort()
-  end
-
-  def known_locale_names(%Config{locales: locales}) do
-    locales
+  def known_locale_names(%Config{} = config) do
+    Cldr.Config.configured_locale_names(config)
   end
 
   @doc """
@@ -61,26 +61,26 @@ defmodule Cldr.Locale.Loader do
   during production run there is no file access or decoding.
 
   """
-  @spec get_locale(Cldr.Locale.locale_name(), config_or_backend :: Config.t() | Cldr.backend()) ::
+  @spec get_locale(Locale.locale_name(), config_or_backend :: Config.t() | Cldr.backend()) ::
           map() | no_return()
 
-  def get_locale(locale, %{data_dir: _} = config) do
+  def get_locale(locale, %{data_dir: _} = config) when is_atom(locale) do
     do_get_locale(locale, config)
   end
 
-  def get_locale(locale, backend) when is_atom(backend) do
+  def get_locale(locale, backend) when is_atom(locale) and is_atom(backend) do
     do_get_locale(locale, backend.__cldr__(:config))
   end
 
   @doc false
-  def do_get_locale(locale, config) do
+  def do_get_locale(locale, config) when is_atom(locale) do
     {:ok, path} =
       case Config.locale_path(locale, config) do
         {:ok, path} ->
           {:ok, path}
 
         {:error, :not_found} ->
-          raise RuntimeError, message: "Locale definition was not found for #{locale}"
+          raise RuntimeError, message: "Locale definition was not found for #{inspect locale}"
       end
 
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
@@ -115,7 +115,7 @@ defmodule Cldr.Locale.Loader do
   end
 
   @doc false
-  def do_get_locale(locale, path, true) do
+  def do_get_locale(locale, path, true) when is_atom(locale) do
     Cldr.Locale.Cache.get_locale(locale, path)
   end
 

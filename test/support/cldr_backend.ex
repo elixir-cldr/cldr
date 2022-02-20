@@ -1,5 +1,3 @@
-require TestBackend.Gettext.Plural
-
 # Test with Gettext
 defmodule WithGettextBackend.Cldr do
   use Cldr,

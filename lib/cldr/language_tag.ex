@@ -152,7 +152,8 @@ defmodule Cldr.LanguageTag do
   """
   import Kernel, except: [to_string: 1]
 
-  alias Cldr.LanguageTag.Parser
+  alias Cldr.Locale
+  alias Cldr.LanguageTag.{Parser, U, T}
 
   if Code.ensure_loaded?(Jason) do
     @derive Jason.Encoder
@@ -175,19 +176,19 @@ defmodule Cldr.LanguageTag do
             backend: nil
 
   @type t :: %__MODULE__{
-          language: String.t(),
+          language: Locale.language(),
           language_subtags: [String.t()],
-          script: Cldr.Locale.script(),
-          territory: Cldr.Locale.territory(),
-          language_variants: [String.t()] | [],
-          locale: Cldr.LanguageTag.U.t() | %{},
-          transform: map(),
+          script: Locale.script(),
+          territory: Locale.territory_code(),
+          language_variants: [String.t()],
+          locale: U.t() | %{},
+          transform: T.t() | %{},
           extensions: map(),
           private_use: [String.t()],
           requested_locale_name: String.t(),
           canonical_locale_name: String.t(),
-          cldr_locale_name: String.t() | nil,
-          rbnf_locale_name: String.t() | nil,
+          cldr_locale_name: Locale.locale_name(),
+          rbnf_locale_name: Locale.locale_name(),
           gettext_locale_name: String.t() | nil,
           backend: Cldr.backend()
         }
@@ -206,6 +207,7 @@ defmodule Cldr.LanguageTag do
   * `{:error, reason}`
 
   """
+  @spec parse(String.t()) :: {:ok, t()} | {:error, {module(), String.t()}}
   def parse(locale_name) when is_binary(locale_name) do
     Parser.parse(locale_name)
   end
@@ -224,7 +226,7 @@ defmodule Cldr.LanguageTag do
   * raises an exception
 
   """
-  @spec parse!(Cldr.Locale.locale_name()) :: t() | none()
+  @spec parse!(String.t()) :: t() | none()
   def parse!(locale_string) when is_binary(locale_string) do
     Parser.parse!(locale_string)
   end

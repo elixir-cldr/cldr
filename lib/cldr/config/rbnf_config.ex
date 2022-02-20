@@ -88,7 +88,7 @@ defmodule Cldr.Rbnf.Config do
       [:OrdinalRules, :SpelloutRules]
 
   """
-  @spec for_locale(Locale.locale_name()) ::
+  @spec for_locale(Locale.locale_name() | String.t()) ::
           {:ok, map()} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
 
   # TODO Use fallback paths to find RBNF data

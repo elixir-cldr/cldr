@@ -21,7 +21,7 @@ defmodule Cldr.Plug.SetLocale.Test do
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
                canonical_locale_name: "en-001",
-               cldr_locale_name: "en-001",
+               cldr_locale_name: :"en-001",
                extensions: %{},
                gettext_locale_name: "en",
                language: "en",
@@ -29,7 +29,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variants: [],
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "en",
+               rbnf_locale_name: :en,
                requested_locale_name: "en-001",
                script: :Latn,
                territory: :"001",
@@ -50,7 +50,7 @@ defmodule Cldr.Plug.SetLocale.Test do
              default: %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
                canonical_locale_name: "en-001",
-               cldr_locale_name: "en-001",
+               cldr_locale_name: :"en-001",
                extensions: %{},
                gettext_locale_name: "en",
                language: "en",
@@ -58,7 +58,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variants: [],
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "en",
+               rbnf_locale_name: :en,
                requested_locale_name: "en-001",
                script: :Latn,
                territory: :"001",
@@ -94,7 +94,7 @@ defmodule Cldr.Plug.SetLocale.Test do
              default: %Cldr.LanguageTag{
                backend: WithNoGettextBackend.Cldr,
                canonical_locale_name: "en-001",
-               cldr_locale_name: "en-001",
+               cldr_locale_name: :"en-001",
                extensions: %{},
                gettext_locale_name: nil,
                language: "en",
@@ -102,7 +102,7 @@ defmodule Cldr.Plug.SetLocale.Test do
                language_variants: [],
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "en",
+               rbnf_locale_name: :en,
                requested_locale_name: "en-001",
                script: :Latn,
                territory: :"001",
@@ -144,7 +144,7 @@ defmodule Cldr.Plug.SetLocale.Test do
       Cldr.Plug.SetLocale.init(gettext: BlatherBalls, cldr: TestBackend.Cldr)
     end
 
-    assert_raise Cldr.UnknownLocaleError, fn ->
+    assert_raise Cldr.InvalidLanguageError, fn ->
       Cldr.Plug.SetLocale.init(default: :nothing, cldr: TestBackend.Cldr)
     end
   end
@@ -161,13 +161,13 @@ defmodule Cldr.Plug.SetLocale.Test do
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
                canonical_locale_name: "fr",
-               cldr_locale_name: "fr",
+               cldr_locale_name: :fr,
                extensions: %{},
                gettext_locale_name: nil,
                language: "fr",
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "fr",
+               rbnf_locale_name: :fr,
                requested_locale_name: "fr",
                script: :Latn,
                territory: :FR,
@@ -200,9 +200,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                transform: %{},
                language_variants: [],
                canonical_locale_name: "ru",
-               cldr_locale_name: "ru",
+               cldr_locale_name: :ru,
                language: "ru",
-               rbnf_locale_name: "ru",
+               rbnf_locale_name: :ru,
                requested_locale_name: "ru",
                script: :Cyrl,
                territory: :RU
@@ -233,9 +233,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                transform: %{},
                language_variants: [],
                canonical_locale_name: "ru",
-               cldr_locale_name: "ru",
+               cldr_locale_name: :ru,
                language: "ru",
-               rbnf_locale_name: "ru",
+               rbnf_locale_name: :ru,
                requested_locale_name: "ru",
                script: :Cyrl,
                territory: :RU
@@ -265,9 +265,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                transform: %{},
                language_variants: [],
                canonical_locale_name: "zh-Hant",
-               cldr_locale_name: "zh-Hant",
+               cldr_locale_name: :"zh-Hant",
                language: "zh",
-               rbnf_locale_name: "zh-Hant",
+               rbnf_locale_name: :"zh-Hant",
                requested_locale_name: "zh-Hant",
                script: :Hant,
                territory: :TW
@@ -296,9 +296,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                transform: %{},
                language_variants: [],
                canonical_locale_name: "zh-Hant",
-               cldr_locale_name: "zh-Hant",
+               cldr_locale_name: :"zh-Hant",
                language: "zh",
-               rbnf_locale_name: "zh-Hant",
+               rbnf_locale_name: :"zh-Hant",
                requested_locale_name: "zh-Hant",
                script: :Hant,
                territory: :TW
@@ -357,13 +357,13 @@ defmodule Cldr.Plug.SetLocale.Test do
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
                canonical_locale_name: "pl",
-               cldr_locale_name: "pl",
+               cldr_locale_name: :pl,
                extensions: %{},
                gettext_locale_name: nil,
                language: "pl",
                locale: %{},
                private_use: [],
-               rbnf_locale_name: "pl",
+               rbnf_locale_name: :pl,
                requested_locale_name: "pl",
                script: :Latn,
                territory: :PL,
@@ -400,9 +400,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                script: :Latn,
                transform: %{},
                canonical_locale_name: "es",
-               cldr_locale_name: "es",
+               cldr_locale_name: :es,
                language: "es",
-               rbnf_locale_name: "es",
+               rbnf_locale_name: :es,
                requested_locale_name: "es",
                territory: :ES
              }
@@ -459,9 +459,9 @@ defmodule Cldr.Plug.SetLocale.Test do
                script: :Latn,
                transform: %{},
                canonical_locale_name: "es",
-               cldr_locale_name: "es",
+               cldr_locale_name: :es,
                language: "es",
-               rbnf_locale_name: "es",
+               rbnf_locale_name: :es,
                requested_locale_name: "es",
                territory: :ES
              }

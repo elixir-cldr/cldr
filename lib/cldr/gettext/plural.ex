@@ -75,7 +75,8 @@ defmodule Cldr.Gettext.Plural do
       @doc """
       Returns the number of plural forms for a given locale.
 
-      * `locale` is either a locale name in the list `#{unquote(inspect(backend))}.known_locale_names/0` or
+      * `locale` is either a locale name in the list
+        `#{unquote(inspect(backend))}.known_locale_names/0` or
         a `%LanguageTag{}` as returned by `Cldr.Locale.new/2`
 
       ## Examples
@@ -87,16 +88,23 @@ defmodule Cldr.Gettext.Plural do
           2
 
       """
-      @spec nplurals(Locale.locale_name()) :: pos_integer() | no_return()
+      @spec nplurals(Locale.locale_name() | String.t()) :: pos_integer() | no_return()
 
       def nplurals(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
         nplurals(cldr_locale_name)
       end
 
-      def nplurals(locale_name) when is_binary(locale_name) do
+      def nplurals(locale_name) when is_atom(locale_name) do
         gettext_nplurals()
         |> Map.fetch!(locale_name)
         |> Enum.count()
+      end
+
+      def nplurals(locale_name) when is_binary(locale_name) do
+        locale_name = String.to_existing_atom(locale_name)
+        nplurals(locale_name)
+      rescue ArgumentError ->
+        raise KeyError, "Key #{inspect locale_name} not found"
       end
 
       @doc """
@@ -130,7 +138,7 @@ defmodule Cldr.Gettext.Plural do
           1
 
       """
-      @spec plural(Locale.locale_name() | LanguageTag.t(), number()) ::
+      @spec plural(String.t() | LanguageTag.t(), number()) ::
               0 | pos_integer() | no_return()
 
       def plural(%LanguageTag{cldr_locale_name: cldr_locale_name} = locale, n) do
@@ -141,7 +149,7 @@ defmodule Cldr.Gettext.Plural do
         |> Keyword.get(rule)
       end
 
-      def plural(locale_name, n) when is_binary(locale_name) do
+      def plural(locale_name, n) do
         with {:ok, locale} <- unquote(backend).validate_locale(locale_name) do
           plural(locale, n)
         else

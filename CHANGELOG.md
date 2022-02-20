@@ -4,20 +4,34 @@
 
 This is the changelog for Cldr v2.26.0 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### LanguageTag structure changes
+
+* `Cldr.LanguageTag.t` has been revised with the `:cldr_locale_name` and `:rbnf_locale_name` now being atoms rather than binaries.  This is unlikely to affect client code. The primary benefit, apart from a slightly improve
+
 ### Bug Fixes
 
 * Fix setting the default backend with `Cldr.put_default_backend/1` which wasn't actually being set.
 
 * Fix `Config.message_formats` to default to an empty map, not an empty list.
 
+* Fix `Cldr.Locale.parents/1` to return an `{:ok, list}` tuple on success rather than a bare list.
+
+* Fix `<backend>.Cldr.Number.{Cardinal, Ordinal, Spellout}.pluralize/3` for non-integer `Decimal` numbers.
+
 ### Enhancements
+
+* Add `<backend>.Trans` module to support closer integration with the [trans](https://hex.pm/packages/trans) for database translations.
+
+* Add `Cldr.Locale.fallback_locales/1` to return the list of recursively created parent locales, including the provided locale. This can be used to support resolving translations from a system that might be sparsely populated.
+
+* Add `Cldr.Locale.fallback_locale_names/1` that returns the `:cldr_locale_name` component of the locales returned by `Cldr.Locale.fallback_locales/1`.
 
 * Adds `Cldr.Locale.locale_from_territory/{1,2}` to derive a "best fit" locale for a given territory. Also adds `<backend>.Locale.locale_from_territory/1`.
 
 * Adds `Cldr.Locale.locale_from_host/{2, 3}` to derive a "best fit" locale for a given host name. Also adds `<backend>.Locale.locale_from_host/2`.
-  
-* Adds `Cldr.Locale.territory_from_host/1` to return the territory for a given host name. Also adds `<backend>.Locale.territory_from_host/1`.  
-  
+
+* Adds `Cldr.Locale.territory_from_host/1` to return the territory for a given host name. Also adds `<backend>.Locale.territory_from_host/1`.
+
 * Adds `Cldr.Locale.consider_as_tlds/0` to return a list of valid territory suffixes that are considered as generic TLDs instead.  See https://developers.google.com/search/docs/advanced/crawling/managing-multi-regional-sites.
 
 * Adds `Cldr.Locale.languages_for_territories/0` to return a mapping of territories to that territory's most spoken language.

@@ -50,7 +50,7 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
-  @default_locale_name "en-001"
+  @default_locale_name :"en-001"
 
   @cldr_modules [
     "number_formats",
@@ -72,7 +72,7 @@ defmodule Cldr.Config do
     "subdivisions"
   ]
 
-  @root_locale_name "und"
+  @root_locale_name :und
 
   @doc false
   # Integer keys cater for 60 year cycles and 239 japanese eras
@@ -345,6 +345,7 @@ defmodule Cldr.Config do
       @default_locale_name
 
     locale_name_from_posix(default)
+    |> String.to_atom
   end
 
   @doc """
@@ -432,6 +433,7 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @available_locales_file)
     |> File.read!()
     |> json_library().decode!
+    |> Enum.map(&String.to_atom/1)
     |> Enum.sort()
   end
 
@@ -541,7 +543,7 @@ defmodule Cldr.Config do
     if inherited = Map.get(parent_locales(), locale_name) do
       inherited
     else
-      {:ok, locale} = Cldr.LanguageTag.Parser.parse(locale_name)
+      {:ok, locale} = Cldr.LanguageTag.Parser.parse(to_string(locale_name))
       first_match(locale.language, locale.script, locale.territory, fun)
     end
   end
@@ -967,7 +969,7 @@ defmodule Cldr.Config do
   @spec known_number_systems_like(Locale.locale_name(), number_system(), t()) ::
           {:ok, list()} | {:error, {module(), String.t()}}
 
-  def known_number_systems_like(locale_name, number_system, config) do
+  def known_number_systems_like(locale_name, number_system, config) when is_atom(locale_name) do
     with {:ok, %{digits: digits}} <- number_system_for(locale_name, number_system, config),
          {:ok, symbols} <- number_symbols_for(locale_name, number_system, config),
          {:ok, names} <- number_system_names_for(locale_name, config) do
@@ -1015,13 +1017,14 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_systems_for("en", %Cldr.Config{locales: ["en", "de"]})
+      iex> Cldr.Config.number_systems_for(:en, %Cldr.Config{locales: ["en", "de"]})
       {:ok, %{default: :latn, native: :latn}}
+
   """
   @spec number_systems_for(Locale.locale_name(), t()) ::
           {:ok, map()} | {:error, {module(), String.t()}}
 
-  def number_systems_for(locale_name, %__MODULE__{} = config) do
+  def number_systems_for(locale_name, %__MODULE__{} = config) when is_atom(locale_name) do
     if known_locale_name(locale_name, config) do
       number_systems =
         locale_name
@@ -1040,7 +1043,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_systems_for!("de", %Cldr.Config{locales: ["en", "de"]})
+      iex> Cldr.Config.number_systems_for!(:de, %Cldr.Config{locales: ["en", "de"]})
       %{default: :latn, native: :latn}
 
   """
@@ -1058,7 +1061,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_system_for("th", :thai, %Cldr.Config{locales: ["th", "de"]})
+      iex> Cldr.Config.number_system_for(:th, :thai, %Cldr.Config{locales: ["th", "de"]})
       {:ok, %{digits: "๐๑๒๓๔๕๖๗๘๙", type: :numeric}}
 
   """
@@ -1076,7 +1079,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.number_system_names_for("th", %Cldr.Config{locales: ["en", "th"]})
+      iex> Cldr.Config.number_system_names_for(:th, %Cldr.Config{locales: ["en", "th"]})
       {:ok, [:latn, :thai]}
 
   """
@@ -1136,16 +1139,16 @@ defmodule Cldr.Config do
 
   ## Examples
 
-      iex> Cldr.Config.system_name_from(:default, "en", TestBackend.Cldr)
+      iex> Cldr.Config.system_name_from(:default, :en, TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from("latn", "en", TestBackend.Cldr)
+      iex> Cldr.Config.system_name_from("latn", :en, TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from(:native, "en", TestBackend.Cldr)
+      iex> Cldr.Config.system_name_from(:native, :en, TestBackend.Cldr)
       {:ok, :latn}
 
-      iex> Cldr.Config.system_name_from(:nope, "en", TestBackend.Cldr)
+      iex> Cldr.Config.system_name_from(:nope, :en, TestBackend.Cldr)
       {
         :error,
         {Cldr.UnknownNumberSystemError, "The number system :nope is unknown"}
@@ -1442,24 +1445,30 @@ defmodule Cldr.Config do
   ## Examples
 
       iex> Cldr.Config.expand_locale_names(["en-A+"])
-      ["en", "en-AE", "en-AG", "en-AI", "en-AS", "en-AT", "en-AU"]
+      [:en, :"en-AE", :"en-AG", :"en-AI", :"en-AS", :"en-AT", :"en-AU"]
 
       iex> Cldr.Config.expand_locale_names(["fr-*"])
-      ["fr", "fr-BE", "fr-BF", "fr-BI", "fr-BJ", "fr-BL", "fr-CA", "fr-CD", "fr-CF",
-       "fr-CG", "fr-CH", "fr-CI", "fr-CM", "fr-DJ", "fr-DZ", "fr-GA", "fr-GF",
-       "fr-GN", "fr-GP", "fr-GQ", "fr-HT", "fr-KM", "fr-LU", "fr-MA", "fr-MC",
-       "fr-MF", "fr-MG", "fr-ML", "fr-MQ", "fr-MR", "fr-MU", "fr-NC", "fr-NE",
-       "fr-PF", "fr-PM", "fr-RE", "fr-RW", "fr-SC", "fr-SN", "fr-SY", "fr-TD",
-       "fr-TG", "fr-TN", "fr-VU", "fr-WF", "fr-YT"]
+      [
+        :fr, :"fr-BE", :"fr-BF", :"fr-BI", :"fr-BJ", :"fr-BL", :"fr-CA",
+        :"fr-CD", :"fr-CF", :"fr-CG", :"fr-CH", :"fr-CI", :"fr-CM", :"fr-DJ",
+        :"fr-DZ", :"fr-GA", :"fr-GF", :"fr-GN", :"fr-GP", :"fr-GQ", :"fr-HT",
+        :"fr-KM", :"fr-LU", :"fr-MA", :"fr-MC", :"fr-MF", :"fr-MG", :"fr-ML",
+        :"fr-MQ", :"fr-MR", :"fr-MU", :"fr-NC", :"fr-NE", :"fr-PF", :"fr-PM",
+        :"fr-RE", :"fr-RW", :"fr-SC", :"fr-SN", :"fr-SY", :"fr-TD", :"fr-TG",
+        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT"
+      ]
+
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locale_names([Locale.locale_name(), ...]) :: [Locale.locale_name(), ...]
+  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [Locale.locale_name(), ...]
   def expand_locale_names(locale_names) do
     Enum.map(locale_names, fn locale_name ->
+      locale_name = to_string(locale_name)
+
       if String.contains?(locale_name, @wildcard_matchers) do
         case Regex.compile(locale_name) do
           {:ok, regex} ->
-            Enum.filter(all_locale_names(), &Regex.match?(regex, &1))
+            Enum.filter(all_locale_names(), &match_name?(regex, &1))
 
           {:error, reason} ->
             raise ArgumentError,
@@ -1471,13 +1480,17 @@ defmodule Cldr.Config do
     end)
     |> List.flatten()
     |> Enum.map(fn locale_name ->
-      case String.split(locale_name, "-") do
-        [language] -> language
-        [language | _rest] -> [language, locale_name]
+      case String.split(to_string(locale_name), "-") do
+        [language] -> String.to_atom(language)
+        [language | _rest] -> [String.to_atom(language), locale_name]
       end
     end)
     |> List.flatten()
     |> Enum.uniq()
+  end
+
+  defp match_name?(regex, locale_name) do
+    Regex.match?(regex, Atom.to_string(locale_name))
   end
 
   def canonical_name(locale_name) do
@@ -1491,7 +1504,7 @@ defmodule Cldr.Config do
 
   defp known_locales_map do
     all_locale_names()
-    |> Enum.map(fn x -> {String.downcase(x), x} end)
+    |> Enum.map(fn x -> {Atom.to_string(x) |> String.downcase(), x} end)
     |> Map.new()
   end
 
@@ -1511,7 +1524,7 @@ defmodule Cldr.Config do
   * `{:error, :not_found}`
 
   """
-  @spec locale_path(String.t(), Cldr.backend() | t()) ::
+  @spec locale_path(Cldr.Locale.locale_name() | String.t(), Cldr.backend() | t()) ::
           {:ok, String.t()} | {:error, :not_found}
 
   def locale_path(locale, %{data_dir: _} = config) do
@@ -1745,7 +1758,9 @@ defmodule Cldr.Config do
       {:error, {Cldr.UnknownTerritoryError, "The territory \\"abc\\" is unknown"}}
 
   """
-  @spec territory(Cldr.Locale.territory() | String.t()) :: %{} | {:error, {module(), String.t()}}
+  @spec territory(Locale.territory_reference() | String.t()) ::
+    %{} | {:error, {module(), String.t()}}
+
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
       territories()
@@ -1801,6 +1816,8 @@ defmodule Cldr.Config do
     |> Path.join("parent_locales.json")
     |> File.read!()
     |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values()
   end
 
   @doc """
@@ -1839,7 +1856,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} ->
-      {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
+      {String.to_atom(k), struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
     end)
     |> Map.new()
   end
@@ -2102,7 +2119,7 @@ defmodule Cldr.Config do
        :islamic_rgsa, :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
 
   """
-  def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
+  def calendars_for_locale(locale_name, %{} = config) when is_atom(locale_name) do
     Cldr.maybe_log("Cldr.Config getting calendar data for locale #{inspect(locale_name)}")
 
     locale_name
@@ -2110,6 +2127,12 @@ defmodule Cldr.Config do
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
+  end
+
+  def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
+    locale_name
+    |> String.to_existing_atom()
+    |> calendars_for_locale(config)
   end
 
   def calendars_for_locale(locale_name, backend) when is_atom(backend) do
@@ -2222,6 +2245,7 @@ defmodule Cldr.Config do
         locale_name =
           locale_name
           |> locale_name_from_posix
+          |> String.to_atom
 
         module = Module.concat(backend, Rbnf) |> Module.concat(ruleset_module)
         {module, function, locale_name}
@@ -2242,7 +2266,11 @@ defmodule Cldr.Config do
   """
   def locale_name_from_posix(nil), do: nil
   def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
-  def locale_name_from_posix(other), do: other
+  def locale_name_from_posix(name) when is_atom(name) do
+    name
+    |> Atom.to_string()
+    |> locale_name_from_posix()
+  end
 
   @doc """
   Transforms a locale name from the CLDR format to the Posix format
@@ -2339,8 +2367,9 @@ defmodule Cldr.Config do
   end
 
   defp remove_gettext_only_locales(%{locales: locales, gettext: gettext} = config) do
+    locales = if locales == :all, do: all_locale_names(), else: locales
     gettext_locales = known_gettext_locale_names(config)
-    unknown_locales = Enum.filter(gettext_locales, &(&1 not in all_locale_names()))
+    unknown_locales = Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
 
     case unknown_locales do
       [] ->
@@ -2508,9 +2537,6 @@ defmodule Cldr.Config do
     locales = configured_locale_names(config)
     default = default_locale_name(config)
 
-    # locales = config[:locales] || [config[:default_locale] || @default_locale_name]
-    # default = config[:default_locale] || hd(locales)
-
     locales =
       (locales ++ gettext ++ [default, @root_locale_name])
       |> Enum.reject(&is_nil/1)
@@ -2533,7 +2559,7 @@ defmodule Cldr.Config do
       end)
       |> Enum.sort(&plural_sorter/2)
 
-    {locale, sorted_rules}
+    {String.to_atom(locale), sorted_rules}
   end
 
   defp plural_sorter({:zero, _}, _), do: true
