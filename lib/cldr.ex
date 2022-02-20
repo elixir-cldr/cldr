@@ -2369,7 +2369,7 @@ defmodule Cldr do
     {locale, locale.backend}
   end
 
-  def locale_and_backend_from(locale, nil) when is_binary(locale) do
+  def locale_and_backend_from(locale, nil) when is_locale_name(locale) do
     {locale, Cldr.default_backend!()}
   end
 
@@ -2377,7 +2377,7 @@ defmodule Cldr do
     {backend.get_locale(), backend}
   end
 
-  def locale_and_backend_from(locale, backend) when is_binary(locale) do
+  def locale_and_backend_from(locale, backend) when is_locale_name(locale) do
     {locale, backend}
   end
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.26.1
+
+This is the changelog for Cldr v2.26.1 released on February 21st, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.locale_and_backend_from/2` for atom locales. Since this is a private API there should be no upstream issues with dependent libraries.
+
 ## Cldr v2.26.0
 
 This is the changelog for Cldr v2.26.0 released on February 21st, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
