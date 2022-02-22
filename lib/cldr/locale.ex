@@ -1207,12 +1207,11 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(locale_name, backend, options) when is_atom(locale_name) do
-    case Map.fetch(Cldr.Config.all_language_tags(), locale_name) do
-      {:ok, language_tag} ->
-        canonical_language_tag(language_tag, backend, options)
-
-      :error ->
-        canonical_language_tag(locale_name, backend, options)
+    language_tag = Map.get(Cldr.Config.all_language_tags(), locale_name)
+    if Keyword.get(options, :add_likely_subtags, true) && language_tag do
+      canonical_language_tag(language_tag, backend, options)
+    else
+      canonical_language_tag(to_string(locale_name), backend, options)
     end
   end
 

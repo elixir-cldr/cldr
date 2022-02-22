@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.26.2
+
+This is the changelog for Cldr v2.26.2 released on February 22nd, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.Locale.canonical_language_tag/3` for cases when the `:add_likely_subtags` is `false` and the locale name is `known`.
+
 ## Cldr v2.26.1
 
 This is the changelog for Cldr v2.26.1 released on February 21st, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
