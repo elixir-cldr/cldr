@@ -914,10 +914,10 @@ defmodule Cldr.Config do
        :SHP, :SIT, :SKK, :SLL, :SOS, :SRD, :SRG, :SSP, :STD, :STN, :SUR, :SVC, :SYP,
        :SZL, :THB, :TJR, :TJS, :TMM, :TMT, :TND, :TOP, :TPE, :TRL, :TRY, :TTD, :TWD,
        :TZS, :UAH, :UAK, :UGS, :UGX, :USD, :USN, :USS, :UYI, :UYP, :UYU, :UYW, :UZS,
-       :VEB, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA, :XBB, :XBC,
-       :XBD, :XCD, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT, :XRE, :XSU, :XTS,
-       :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR, :ZMK, :ZMW, :ZRN,
-       :ZRZ, :ZWD, :ZWL, :ZWR]
+       :VEB, :VED, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA, :XBB,
+       :XBC, :XBD, :XCD, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT, :XRE, :XSU,
+       :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR, :ZMK, :ZMW,
+       :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
 
   """
   def known_currencies do
@@ -1638,26 +1638,39 @@ defmodule Cldr.Config do
         currency: [GBP: %{from: ~D[1694-07-27]}],
         gdp: 2925000000000,
         language_population: %{
-          "bn" => %{population_percent: 0.67},
-          "cy" => %{official_status: "official_regional", population_percent: 0.77},
-          "de" => %{population_percent: 6},
-          "el" => %{population_percent: 0.33},
-          "en" => %{official_status: "official", population_percent: 99},
-          "fr" => %{population_percent: 19},
-          "ga" => %{official_status: "official_regional", population_percent: 0.026},
-          "gd" => %{official_status: "official_regional", population_percent: 0.099, writing_percent: 5},
-          "it" => %{population_percent: 0.33},
-          "ks" => %{population_percent: 0.19},
+          "ar" => %{population_percent: 0.3},
+          "bn" => %{population_percent: 0.4},
+          "cy" => %{official_status: "official_regional", population_percent: 1.3},
+          "de" => %{population_percent: 9},
+          "en" => %{official_status: "official", population_percent: 98},
+          "es" => %{population_percent: 8},
+          "fr" => %{population_percent: 23},
+          "ga" => %{official_status: "official_regional", population_percent: 0.15},
+          "gd" => %{
+            official_status: "official_regional",
+            population_percent: 0.11,
+            writing_percent: 5
+          },
+          "gu" => %{population_percent: 2.9},
+          "it" => %{population_percent: 0.2},
           "kw" => %{population_percent: 0.003},
-          "ml" => %{population_percent: 0.035},
-          "pa" => %{population_percent: 0.79},
-          "sco" => %{population_percent: 2.7, writing_percent: 5},
-          "syl" => %{population_percent: 0.51},
-          "yi" => %{population_percent: 0.049},
-          "zh-Hant" => %{population_percent: 0.54}
+          "lt" => %{population_percent: 0.2},
+          "pa" => %{population_percent: 3.6},
+          "pl" => %{population_percent: 4},
+          "pt" => %{population_percent: 0.2},
+          "sco" => %{population_percent: 2.5, writing_percent: 5},
+          "so" => %{population_percent: 0.2},
+          "ta" => %{population_percent: 3.2},
+          "tr" => %{population_percent: 0.2},
+          "ur" => %{population_percent: 3.5},
+          "zh-Hant" => %{population_percent: 0.3}
         },
         literacy_percent: 99,
-        measurement_system: %{default: :uksystem, paper_size: :a4, temperature: :uksystem},
+        measurement_system: %{
+          default: :uksystem,
+          paper_size: :a4,
+          temperature: :uksystem
+        },
         population: 65761100
       }
 
