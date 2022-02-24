@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.26.3
+
+This is the changelog for Cldr v2.26.3 released on February 24th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix spec of `Cldr.put_locale/2`. Thanks to @alappe for the report. Closes #167.
+
 ## Cldr v2.26.2
 
 This is the changelog for Cldr v2.26.2 released on February 22nd, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
@@ -22,7 +30,7 @@ This is the changelog for Cldr v2.26.0 released on February 21st, 2022.  For old
 
 ### LanguageTag structure changes
 
-* `Cldr.LanguageTag.t` has been revised with the `:cldr_locale_name` and `:rbnf_locale_name` now being atoms rather than binaries.  This is unlikely to affect client code. The primary benefit, apart from a slightly improve
+* `Cldr.LanguageTag.t` has been revised with the `:cldr_locale_name` and `:rbnf_locale_name` now being atoms rather than binaries.  This is unlikely to affect client code. The primary benefit, apart from a slightly improved memory space, is the easier integration planned with the [trans](https://hex.pm/packages/trans) library.
 
 ### Bug Fixes
 

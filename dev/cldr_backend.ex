@@ -8,6 +8,10 @@ defmodule MyApp.Cldr do
     generate_docs: true,
     providers: []
 
+    def for_dialyzer do
+      Cldr.put_locale("en")
+      Cldr.put_locale(:en)
+    end
 end
 
 
