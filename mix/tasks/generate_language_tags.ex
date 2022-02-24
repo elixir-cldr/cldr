@@ -39,13 +39,11 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     File.write!(output_path, :erlang.term_to_binary(language_tags))
   end
 
-  @rbnf_locale_names Cldr.Rbnf.Config.rbnf_locale_names()
-  |> Enum.map(&({&1, &1}))
-  |> Map.new
-
   defp rbnf_locale_name(locale_name) do
     rbnf_locale_names =
-      @rbnf_locale_names
+      Cldr.Rbnf.Config.rbnf_locale_names()
+      |> Enum.map(&({&1, &1}))
+      |> Map.new
 
     locale_name =
       Atom.to_string(locale_name)
