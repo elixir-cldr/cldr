@@ -215,7 +215,7 @@ defmodule Cldr.AcceptLanguage do
   Parses an `Accept-Language` header value in its string
   or tokenized form to produce a list of tuples of the form
   `[{quality, %Cldr.LanguageTag{}}, ...]` sorted by quality
-  in decending order.
+  in descending order.
 
   * `accept-language` is any string in the format defined by [rfc2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4)
 

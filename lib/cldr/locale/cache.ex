@@ -136,7 +136,7 @@ defmodule Cldr.Locale.Cache do
         raise RuntimeError, inspect(other)
     end
   rescue ArgumentError ->
-    # We can very ocassionally get an exception when the gen_server
+    # We can very occasionally get an exception when the gen_server
     # is started but before the table is created and another thread
     # tries to get a locale. In this case we just get the locale manually
     Loader.do_get_locale(locale, path, false)
@@ -150,7 +150,7 @@ defmodule Cldr.Locale.Cache do
 
       [] ->
         # A new locale for which there is no precomputed language tag yet
-        # In fact thats probably what we're about to do later on - create the
+        # In fact that's probably what we're about to do later on - create the
         # precomputed tag.
         Cldr.maybe_log("Compiler language tag cache miss for locale #{inspect(locale)}.")
         nil

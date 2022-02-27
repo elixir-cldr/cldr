@@ -165,7 +165,7 @@ defmodule Cldr.Number.PluralRule do
       if unquote(module_name) == :cardinal do
         @doc """
         Pluralize a number using #{unquote(module_name)} plural rules
-        and a substition map.
+        and a substitution map.
 
         ## Arguments
 
@@ -213,7 +213,7 @@ defmodule Cldr.Number.PluralRule do
       else
         @doc """
         Pluralize a number using #{unquote(module_name)} plural rules
-        and a substition map.
+        and a substitution map.
 
         ## Arguments
 
