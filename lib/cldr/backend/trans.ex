@@ -29,7 +29,7 @@ defmodule Cldr.Trans.Backend do
               end
 
           Using the `translate/3` macro in this module, the following
-          will configure structued translations for all locales configured
+          will configure structured translations for all locales configured
           in this backend.  An example is:
 
               defmodule MyApp.Article do
@@ -42,7 +42,7 @@ defmodule Cldr.Trans.Backend do
                   field :body, :string
 
                   # The translation module name and the options
-                  # may be ommitted - the defaults are those shown
+                  # may be omitted - the defaults are those shown
                   translations :translations, Translations, on_replace: :update, primary_key: false
                 end
               end

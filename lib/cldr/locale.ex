@@ -1150,7 +1150,7 @@ defmodule Cldr.Locale do
 
   * `{:ok, language_tag}` or
 
-  * `{:eror, reason}`
+  * `{:error, reason}`
 
   ## Method
 
@@ -1326,7 +1326,7 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Substitute deprectated subtags with a `Cldr.LanguageTag` with their
+  Substitute deprecated subtags with a `Cldr.LanguageTag` with their
   non-deprecated alternatives.
 
   ## Arguments
@@ -1903,7 +1903,7 @@ defmodule Cldr.Locale do
   # else if source.field = {} and replacement.field ≠ {}
   #   source.field = replacement.field
   #
-  # The `Kernel.--` and `Kernel.++` operators appear to preseve order
+  # The `Kernel.--` and `Kernel.++` operators appear to preserve order
   # and since the data is ordered on arrival it appears to remain
   # ordered after replacement.
 
@@ -2044,7 +2044,7 @@ defmodule Cldr.Locale do
   # Finding a language alias requires recursing
   # over the list of possible variants that are in
   # a known and stable order. Since the merging of
-  # substitutions works on langauge tags, a successful
+  # substitutions works on language tags, a successful
   # match parses and returns the variant combination
   # that led to the match.
 

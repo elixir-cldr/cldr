@@ -147,7 +147,7 @@ or_range_list(Operand, [A | B]) ->
   or_function(conditional(equals, Operand, A),
               or_range_list(Operand, B));
 
-% When theres only one value
+% When there's only one value
 or_range_list(Operand, Value) ->
   conditional(equals, Operand, Value).
 

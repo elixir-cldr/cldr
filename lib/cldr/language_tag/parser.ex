@@ -81,7 +81,7 @@ defmodule Cldr.LanguageTag.Parser do
   end
 
   # Everything is downcased before parsing
-  # and thats the canonical form so no need to
+  # and that's the canonical form so no need to
   # do it again, just return the value
 
   def normalize_field(other) do

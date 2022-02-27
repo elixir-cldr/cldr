@@ -174,7 +174,7 @@ defmodule Cldr.Validity.T do
   def valid_list(key, values) do
     Enum.reduce_while(values, {:ok, []}, fn value, {:ok, acc} ->
       # if we push a date tuple on a prior round then the
-      # date tuple isnt in last place which it is required to
+      # date tuple isn't in last place which it is required to
       # be so we return an error
       if length(acc) > 0 && is_tuple(hd(acc)) do
         {:halt, {:error, invalid_date_order(key, hd(acc))}}
