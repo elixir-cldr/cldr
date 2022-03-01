@@ -198,11 +198,12 @@ defmodule Cldr.LanguageTag do
 
   ## Arguments
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any [BCP 47](https://tools.ietf.org/search/bcp47)
+    string.
 
   ## Returns
 
-  * `{:ok, language_tag}` or
+  * `{:ok, t:Cldr.LanguageTag}` or
 
   * `{:error, reason}`
 
@@ -217,11 +218,12 @@ defmodule Cldr.LanguageTag do
 
   ## Arguments
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any [BCP 47](https://tools.ietf.org/search/bcp47)
+    string.
 
   ## Returns
 
-  * `language_tag` or
+  * `t:Cldr.LanguageTag` or
 
   * raises an exception
 
