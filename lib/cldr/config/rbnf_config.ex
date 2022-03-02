@@ -6,40 +6,50 @@ defmodule Cldr.Rbnf.Config do
 
   @default_radix 10
 
-  @doc """
-  Returns the directory where the production
-  RBNF data is stored.
+  if File.exists?(Cldr.Config.download_data_dir()) do
+    @doc """
+    Returns the directory where the production
+    RBNF data is stored.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
-      true
+        iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
+        true
 
-  """
+    """
+  else
+    @doc false
+  end
+
   @spec rbnf_dir :: String.t()
   def rbnf_dir do
     data_dir = Path.join(Cldr.Config.download_data_dir(), "/cldr-rbnf")
     Path.join(data_dir, "rbnf")
   end
 
-  @doc """
-  Returns a list of the locales for which there is an rbnf rule set
+  if File.exists?(Cldr.Config.download_data_dir()) do
+    @doc """
+    Returns a list of the locales for which there is an rbnf rule set
 
-  Relies on the presence of downloaded CLDR data. This function is
-  usefully primarily to a Cldr library developer.
+    Relies on the presence of downloaded CLDR data. This function is
+    usefully primarily to a Cldr library developer.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.Rbnf.Config.rbnf_locale_names
-      [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
-       :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
-       :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-       :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-       :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :root,
-       :ru, :se, :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk,
-       :und, :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
+        iex> Cldr.Rbnf.Config.rbnf_locale_names
+        [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
+         :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
+         :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
+         :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
+         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :root,
+         :ru, :se, :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk,
+         :und, :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
-  """
+    """
+  else
+    @doc false
+  end
+
   @spec rbnf_locale_names :: [String.t()] | []
   def rbnf_locale_names do
     rbnf_dir()
@@ -49,25 +59,30 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.map(&String.to_atom/1)
   end
 
-  @doc """
-  Returns the list of locales that is the intersection of
-  `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locale_names/0`
+  if File.exists?(Cldr.Config.download_data_dir()) do
+    @doc """
+    Returns the list of locales that is the intersection of
+    `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locale_names/0`
 
-  This list is therefore the set of known locales for which
-  there are rbnf rules defined.
+    This list is therefore the set of known locales for which
+    there are rbnf rules defined.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.Rbnf.Config.known_locale_names(TestBackend.Cldr)
-      [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
-       :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
-       :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-       :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-       :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
-       :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
-       :"yue-Hans", :zh, :"zh-Hant"]
+        iex> Cldr.Rbnf.Config.known_locale_names(TestBackend.Cldr)
+        [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
+         :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
+         :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
+         :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
+         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
+         :"yue-Hans", :zh, :"zh-Hant"]
 
-  """
+    """
+  else
+    @doc false
+  end
+
   def known_locale_names(backend) do
     MapSet.intersection(
       MapSet.new(Cldr.known_locale_names(backend)),
