@@ -92,23 +92,28 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.sort()
   end
 
-  @doc """
-  Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
+  if File.exists?(Cldr.Config.download_data_dir()) do
+    @doc """
+    Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
 
-  * `locale_name` is any locale returned by `Rbnf.known_locales/0`.
+    * `locale_name` is any locale returned by `Rbnf.known_locales/0`.
 
-  Note that `for_locale/1` does not raise if the locale does not exist
-  like the majority of `Cldr`.  This is by design since the set of locales
-  that have rbnf rules is substantially less than the set of locales
-  supported by `Cldr`.
+    Note that `for_locale/1` does not raise if the locale does not exist
+    like the majority of `Cldr`.  This is by design since the set of locales
+    that have rbnf rules is substantially less than the set of locales
+    supported by `Cldr`.
 
-  ## Example
+    ## Example
 
-      iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale(:en)
-      iex> Map.keys(rules)
-      [:OrdinalRules, :SpelloutRules]
+        iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale(:en)
+        iex> Map.keys(rules)
+        [:OrdinalRules, :SpelloutRules]
 
-  """
+    """
+  else
+    @doc false
+  end
+
   @spec for_locale(Locale.locale_name() | String.t()) ::
           {:ok, map()} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
 
