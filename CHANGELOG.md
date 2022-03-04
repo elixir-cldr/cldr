@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.26.4
+
+This is the changelog for Cldr v2.26.4 released on March 3rd, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Remove spurious `Cldr.Trans` module.
+
 ## Cldr v2.26.3
 
 This is the changelog for Cldr v2.26.3 released on February 24th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
