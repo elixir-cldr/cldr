@@ -1,12 +1,18 @@
 # Changelog
 
-## Cldr v2.26.4
+## Cldr v2.27.0
 
-This is the changelog for Cldr v2.26.4 released on March 3rd, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.27.0 released on March 5th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
 * Remove spurious `Cldr.Trans` module.
+
+### Enhancements
+
+* Add `Cldr.Locale.is_locale_name/1` guard.  This is an area that needs some cleanup since we have
+  * `Cldr.is_locale_name/1` that permits atoms and strings since it is used to guard functions that might use `Cldr.validate_locale/2`. Therefore this is most useful for functions that take user input.
+  * `Cldr.Locale.is_locale_name/1` that permits only atom locale names since this the canonical form.
 
 ## Cldr v2.26.3
 

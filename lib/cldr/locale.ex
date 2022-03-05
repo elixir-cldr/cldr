@@ -239,6 +239,8 @@ defmodule Cldr.Locale do
 
   import Cldr.Helpers, only: [empty?: 1]
 
+  defguard is_locale_name(locale_name) when is_atom(locale_name)
+
   @typedoc "The name of a locale"
   @type locale_name() :: atom()
 
