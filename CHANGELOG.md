@@ -10,6 +10,10 @@ This is the changelog for Cldr v2.27.0 released on March 5th, 2022.  For older c
 
 ### Enhancements
 
+* Add `Cldr.Locale.fallback_locale_names!/1` to return the locale fallback chain or raise an execption.
+
+* Add `Cldr.with_locale/2` to execute a function with the process locale set to a given locale. The current locale is put back in place after the function executes.
+
 * Add `Cldr.Locale.is_locale_name/1` guard.  This is an area that needs some cleanup since we have
   * `Cldr.is_locale_name/1` that permits atoms and strings since it is used to guard functions that might use `Cldr.validate_locale/2`. Therefore this is most useful for functions that take user input.
   * `Cldr.Locale.is_locale_name/1` that permits only atom locale names since this the canonical form.

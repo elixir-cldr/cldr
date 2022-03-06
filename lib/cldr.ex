@@ -356,6 +356,30 @@ defmodule Cldr do
   end
 
   @doc """
+  Execute a function with a locale ensuring that the
+  current locale is restored after the function.
+
+  """
+  @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
+  def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
+    current_locale = get_locale()
+
+    try do
+      put_locale(locale)
+      fun.()
+    after
+      Cldr.put_locale(current_locale)
+    end
+  end
+
+  @spec with_locale(Cldr.Locale.locale_name(), backend(), fun) :: any
+  def with_locale(locale, backend \\ default_backend!(), fun) when is_locale_name(locale) do
+    with {:ok, locale} = validate_locale(locale, backend) do
+      with_locale(locale, fun)
+    end
+  end
+
+  @doc """
   Returns the global default `locale` for a
   given backend.
 
