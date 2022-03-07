@@ -829,7 +829,7 @@ defmodule Cldr.Locale do
     is a `Cldr` backend module.
 
   * `options` is a keyword list of options. The default
-    is `[]`.
+    is `[tlds: Cldr.Locale.consider_as_tlds()]`.
 
   ## Options
 
