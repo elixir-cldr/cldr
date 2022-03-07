@@ -2,11 +2,11 @@
 
 ## Cldr v2.27.0
 
-This is the changelog for Cldr v2.27.0 released on March 5th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.27.0 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
-* Remove spurious `Cldr.Trans` module.
+* Remove spurious `Cldr.Trans` module. The new [ex_cldr_trans](https://hex.pm/packages/ex_cldr_trans) provides this capability.
 
 ### Enhancements
 
