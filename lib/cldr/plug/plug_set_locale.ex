@@ -20,6 +20,8 @@ if Code.ensure_loaded?(Plug) do
         * `:body` will look for a locale by examining `conn.body_params`
         * `:cookie` will look for a locale in the request cookie(s)
         * `:session` will look for a locale in the session
+        * `:host` will attempt to resolve a locale from the host name top-level
+          domain using `Cldr.Locale.locale_from_host/3`
 
       * `:default` - the default locale to set if no locale is
         found by other configured methods.  It can be a string like "en"
