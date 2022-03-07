@@ -10,6 +10,8 @@ This is the changelog for Cldr v2.27.0 released on March 5th, 2022.  For older c
 
 ### Enhancements
 
+* Add `:host` to the list of places that `Cldr.Plug.SetLocale` can look for to derive a locale for a request.
+
 * Add `Cldr.Locale.fallback_locale_names!/1` to return the locale fallback chain or raise an execption.
 
 * Add `Cldr.with_locale/2` to execute a function with the process locale set to a given locale. The current locale is put back in place after the function executes.
