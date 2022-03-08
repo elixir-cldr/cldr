@@ -6,7 +6,7 @@ defmodule Cldr.Rbnf.Config do
 
   @default_radix 10
 
-  if File.exists?(Cldr.Config.download_data_dir()) do
+  if Cldr.Config.installation_has_production_data? do
     @doc """
     Returns the directory where the production
     RBNF data is stored.
@@ -27,7 +27,7 @@ defmodule Cldr.Rbnf.Config do
     Path.join(data_dir, "rbnf")
   end
 
-  if File.exists?(Cldr.Config.download_data_dir()) do
+  if Cldr.Config.installation_has_production_data? do
     @doc """
     Returns a list of the locales for which there is an rbnf rule set
 
@@ -59,7 +59,7 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.map(&String.to_atom/1)
   end
 
-  if File.exists?(Cldr.Config.download_data_dir()) do
+  if Cldr.Config.installation_has_production_data? do
     @doc """
     Returns the list of locales that is the intersection of
     `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locale_names/0`
@@ -92,7 +92,7 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.sort()
   end
 
-  if File.exists?(Cldr.Config.download_data_dir()) do
+  if Cldr.Config.installation_has_production_data? do
     @doc """
     Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
 

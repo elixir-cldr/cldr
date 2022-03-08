@@ -197,8 +197,10 @@ defmodule Cldr.Config do
   package.
 
   """
+  @production_location "CLDR_PRODUCTION"
+
   def download_data_dir do
-    System.get_env("CLDR_PRODUCTION") ||
+    installation_has_production_data?() ||
       raise(ArgumentError, """
       The environment variable $CLDR_PRODUCTION must be set to the
       directory where the CLDR json data is stored.
@@ -206,6 +208,11 @@ defmodule Cldr.Config do
       See DEVELOPMENT.md for more information about CLDR data
       and generating the json files.
       """)
+  end
+
+  @doc false
+  def installation_has_production_data? do
+    System.get_env(@production_location)
   end
 
   @doc """

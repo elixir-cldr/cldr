@@ -26,3 +26,4 @@ defmodule Cldr.IsoCurrency do
     @currencies
   end
 end
+

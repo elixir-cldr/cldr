@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.27.1
+
+This is the changelog for Cldr v2.27.1 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Don't depend on CLDR product data being available at compile time. Eggregious error inserted in release 2.27.0. Thanks to @dkln for the report. Closes #170.
+
 ## Cldr v2.27.0
 
 This is the changelog for Cldr v2.27.0 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
