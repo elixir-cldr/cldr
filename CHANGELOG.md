@@ -6,7 +6,7 @@ This is the changelog for Cldr v2.27.1 released on March 8th, 2022.  For older c
 
 ### Bug Fixes
 
-* Don't depend on CLDR production data being available at compile time. Eggregious error inserted in release 2.27.0. Thanks to @dkln for the report. Closes #170.
+* Don't depend on CLDR production data being available at compile time in the hex package (since it won't be available at all!). Eggregious error inserted in release 2.27.0. Thanks to @dkln for the report. Closes #170.
 
 ## Cldr v2.27.0
 
