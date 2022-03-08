@@ -212,7 +212,8 @@ defmodule Cldr.Config do
 
   @doc false
   def installation_has_production_data? do
-    System.get_env(@production_location)
+    location = System.get_env(@production_location, "")
+    if File.exists?(location), do: location, else: false
   end
 
   @doc """
