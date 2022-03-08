@@ -200,7 +200,7 @@ defmodule Cldr.Config do
   @production_location "CLDR_PRODUCTION"
 
   def download_data_dir do
-    installation_has_production_data?() ||
+    production_data_location() ||
       raise(ArgumentError, """
       The environment variable $CLDR_PRODUCTION must be set to the
       directory where the CLDR json data is stored.
@@ -211,9 +211,9 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def installation_has_production_data? do
+  def production_data_location do
     location = System.get_env(@production_location, "")
-    if File.exists?(location), do: location, else: false
+    if File.exists?(location), do: location, else: nil
   end
 
   @doc """
