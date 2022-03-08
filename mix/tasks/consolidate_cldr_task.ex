@@ -7,7 +7,7 @@ if Cldr.Config.production_data_location && Cldr.Code.ensure_compiled?(Cldr.Conso
 
     use Mix.Task
 
-    @shortdoc "Consolidate cldr json data into a single per-locale set of files"
+    @shortdoc "Consolidate CLDR JSON data into a single per-locale set of files"
 
     @doc false
     def run(_) do

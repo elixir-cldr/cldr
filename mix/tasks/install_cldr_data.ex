@@ -27,6 +27,7 @@ defmodule Mix.Tasks.Cldr.Install.Locales do
   @shortdoc "Install all configured `Cldr` locales for a given backend."
 
   @backend_error_message "A Cldr backend module name must be provided"
+
   @doc false
   def run([]) do
     raise ArgumentError, @backend_error_message
