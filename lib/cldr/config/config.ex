@@ -197,8 +197,10 @@ defmodule Cldr.Config do
   package.
 
   """
+  @production_location "CLDR_PRODUCTION"
+
   def download_data_dir do
-    System.get_env("CLDR_PRODUCTION") ||
+    production_data_location() ||
       raise(ArgumentError, """
       The environment variable $CLDR_PRODUCTION must be set to the
       directory where the CLDR json data is stored.
@@ -206,6 +208,12 @@ defmodule Cldr.Config do
       See DEVELOPMENT.md for more information about CLDR data
       and generating the json files.
       """)
+  end
+
+  @doc false
+  def production_data_location do
+    location = System.get_env(@production_location, "")
+    if File.exists?(location), do: location, else: nil
   end
 
   @doc """
@@ -228,7 +236,7 @@ defmodule Cldr.Config do
   Returns the path of the CLDR data directory for the ex_cldr app.
 
   This is the directory where base CLDR data files are stored
-  incuding included locale files.
+  including included locale files.
 
   """
   def cldr_data_dir do
@@ -709,7 +717,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the langauge data that maps
+  Return the language data that maps
   valid territories and scripts
 
   """
@@ -957,7 +965,7 @@ defmodule Cldr.Config do
   separators as the supplied one.
 
   Transliterating between locale & number systems is expensive.  To avoid
-  unncessary transliteration we look for locale and number systems that have
+  unnecessary transliteration we look for locale and number systems that have
   the same digits and separators.  Typically we are comparing to locale "en"
   and number system "latn" since this is what the number formatting routines use
   as placeholders.
@@ -2031,7 +2039,7 @@ defmodule Cldr.Config do
 
   # TODO Review with each CLDR release
   # Note that this assume there is only one option provided
-  # which in the initial realease is true but may not be
+  # which in the initial release is true but may not be
   # later
   defp set_skeleton([""]),
     do: []

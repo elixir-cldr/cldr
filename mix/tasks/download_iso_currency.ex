@@ -1,4 +1,4 @@
-if File.exists?(Cldr.Config.download_data_dir()) do
+if Cldr.Config.production_data_location do
   defmodule Mix.Tasks.Cldr.Download.IsoCurrency do
     @moduledoc """
     Downloads the ISO Currency codes from the ISO site

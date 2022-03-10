@@ -1,8 +1,8 @@
 defmodule Cldr.Substitution do
   @moduledoc """
-  Compiles substituation formats that are of the form
+  Compiles substitution formats that are of the form
   "{0} something {1}" into a token list that allows for
-  more efficient parameter substituation at runtime.
+  more efficient parameter substitution at runtime.
   """
 
   @doc """
@@ -10,7 +10,7 @@ defmodule Cldr.Substitution do
   allow efficient parameter substitution at runtime.
 
   * `template` is a binary that may include parameter markers that
-  are substituded for values at runtime.
+  are substituted for values at runtime.
 
   Returns:
 

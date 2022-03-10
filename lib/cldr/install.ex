@@ -77,7 +77,7 @@ defmodule Cldr.Install do
     end
   end
 
-  # Normally a library function shouldn't raise an exception (thats up
+  # Normally a library function shouldn't raise an exception (that's up
   # to the client app) but we install locales only at compilation time
   # and an exception then is the appropriate response.
   defp do_install_locale_name(locale_name, _config, false) do

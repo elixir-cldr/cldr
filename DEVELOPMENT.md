@@ -137,7 +137,7 @@ cd $EX_CLDR
 git pull
 ```
 
-2. After updating the respository, the locales need to be consolidated into the format used by `ex_cldr`
+2. After updating the repository, the locales need to be consolidated into the format used by `ex_cldr`
 ```bash
 mix cldr.consolidate
 ```

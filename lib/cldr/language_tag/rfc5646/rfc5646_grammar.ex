@@ -164,7 +164,7 @@ if Code.ensure_loaded?(NimbleParsec) do
     # ; Single alphanumerics
     #  ; "x" reserved for private use
     #  ; "u" reserved for CLDR use as locale
-    #  ; "t" reserved for CLDR use as tranforms
+    #  ; "t" reserved for CLDR use as transforms
     # singleton     = DIGIT                 ; 0 - 9
     #                 / %x41-53             ; A - S
     #                 / %x56-57             ; V - W

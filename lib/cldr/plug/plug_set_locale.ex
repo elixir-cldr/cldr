@@ -20,6 +20,8 @@ if Code.ensure_loaded?(Plug) do
         * `:body` will look for a locale by examining `conn.body_params`
         * `:cookie` will look for a locale in the request cookie(s)
         * `:session` will look for a locale in the session
+        * `:host` will attempt to resolve a locale from the host name top-level
+          domain using `Cldr.Locale.locale_from_host/3`
 
       * `:default` - the default locale to set if no locale is
         found by other configured methods.  It can be a string like "en"
@@ -160,7 +162,7 @@ if Code.ensure_loaded?(Plug) do
     @private_key :cldr_locale
     @session_key "cldr_locale"
 
-    @from_options [:accept_language, :path, :body, :query, :session, :cookie]
+    @from_options [:accept_language, :path, :body, :query, :session, :cookie, :host]
     @app_options [:cldr, :gettext]
 
     @language_header "accept-language"
@@ -275,6 +277,12 @@ if Code.ensure_loaded?(Plug) do
       |> Map.get(:cookies)
       |> Map.get(param)
       |> Cldr.validate_locale(options[:cldr])
+    end
+
+    defp fetch_param(conn, :host, _param, options) do
+      conn
+      |> Map.get(:host)
+      |> Cldr.Locale.locale_from_host(options[:cldr])
     end
 
     defp return_if_valid_locale(nil) do

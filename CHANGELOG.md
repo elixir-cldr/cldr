@@ -1,5 +1,33 @@
 # Changelog
 
+## Cldr v2.27.1
+
+This is the changelog for Cldr v2.27.1 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Don't depend on CLDR production data being available at compile time in the hex package (since it won't be available at all!). Eggregious error inserted in release 2.27.0. Thanks to @dkln for the report. Closes #170.
+
+## Cldr v2.27.0
+
+This is the changelog for Cldr v2.27.0 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Remove spurious `Cldr.Trans` module. The new [ex_cldr_trans](https://hex.pm/packages/ex_cldr_trans) provides this capability.
+
+### Enhancements
+
+* Add `:host` to the list of places that `Cldr.Plug.SetLocale` can look for to derive a locale for a request.
+
+* Add `Cldr.Locale.fallback_locale_names!/1` to return the locale fallback chain or raise an execption.
+
+* Add `Cldr.with_locale/2` to execute a function with the process locale set to a given locale. The current locale is put back in place after the function executes.
+
+* Add `Cldr.Locale.is_locale_name/1` guard.  This is an area that needs some cleanup since we have
+  * `Cldr.is_locale_name/1` that permits atoms and strings since it is used to guard functions that might use `Cldr.validate_locale/2`. Therefore this is most useful for functions that take user input.
+  * `Cldr.Locale.is_locale_name/1` that permits only atom locale names since this the canonical form.
+
 ## Cldr v2.26.3
 
 This is the changelog for Cldr v2.26.3 released on February 24th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
@@ -106,7 +134,7 @@ This is the changelog for Cldr v2.24.0 released on October 27th, 2021.  For olde
 
 ### Bug Fixes
 
-* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversly incorrectly stringifying the number system in the same formats.
+* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversely incorrectly stringifying the number system in the same formats.
 
 * `Cldr.validate_territory_subdivision/1` was case sensitive and didn't correctly handle atoms and binaries. Required to support `ex_cldr_territories` properly.
 
@@ -152,7 +180,7 @@ This is the changelog for Cldr v2.24.0-rc.4 released on October 21st, 2021.  For
 
 ### Bug Fixes
 
-* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversly incorrectly stringifying the number system in the same formats.
+* Fixes an issue with the locale loader which was incorrectly atomizing date part keys in date/time formats and conversely incorrectly stringifying the number system in the same formats.
 
 ## Cldr v2.24.0-rc.3
 
@@ -246,7 +274,7 @@ This is the changelog for Cldr v2.23.0 released on July 1st, 2021.  For older ch
 
 * Add `Cldr.DisplayName` protocol definition to return a localised string representation of CLDR-based structs such as `t:Cldr.LanguageTag`, `t:Cldr.Unit` and `t:Cldr.Currency`
 
-* `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequsite to impementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements) in [ex_cldr_locale_display](https://github.com/elixir-cldr/cldr_locale_display).
+* `Cldr.Locale.new/1,2` now passes all ~1600 validation tests for parsing and forming the canonical locale name. This is a prerequisite to implementing the [Locale Display Algorithm](https://unicode-org.github.io/cldr/ldml/tr35-general.html#Display_Name_Elements) in [ex_cldr_locale_display](https://github.com/elixir-cldr/cldr_locale_display).
 
 * `Cldr.locale_and_backend_from/1` now supports a `map` of options as the argument.
 
@@ -270,7 +298,7 @@ This is the changelog for Cldr v2.22.1 released on May 20th, 2021.  For older ch
 
 ### Bug Fixes
 
-* `Cldr.Number.PluralRule.plural_type/2` correcly returns a plural type when no backend is provided, no default backend is configured and the locale is a `t:Cldr.LanguageTag`
+* `Cldr.Number.PluralRule.plural_type/2` correctly returns a plural type when no backend is provided, no default backend is configured and the locale is a `t:Cldr.LanguageTag`
 
 * `Cldr.validate_locale/1` doesn't raise if there is no default backend configured and the locale is a `t:Cldr.LanguageTag`
 
@@ -406,7 +434,7 @@ This is the changelog for Cldr v2.19.0 released on February 6th, 2021.  For olde
 
 ### Breaking change
 
-* A parsed langauge tag would previously turn the `tz` parameter of the `u` extension into a timezone ID. For example, the language tag `en-AU-u-tz-ausyd` would decode `ausyd` into `Australia/Sydney`. From this release, parsing no longer decodes the `tz` parameter since doing so means that `to_string/1` does not work correctly.  Use `Cldr.Locale.timezone_from_locale/1` instead.
+* A parsed language tag would previously turn the `tz` parameter of the `u` extension into a timezone ID. For example, the language tag `en-AU-u-tz-ausyd` would decode `ausyd` into `Australia/Sydney`. From this release, parsing no longer decodes the `tz` parameter since doing so means that `to_string/1` does not work correctly.  Use `Cldr.Locale.timezone_from_locale/1` instead.
 
 ### Enhancements
 
@@ -474,7 +502,7 @@ This is the changelog for Cldr v2.18.0 released on November 1st, 2020.  For olde
 
 * Deprecate `Cldr.default_backend/0` in favour of `Cldr.default_backend!/0` which more clearly expresses that the function will raise if no default backend is configured.
 
-* Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
+* Changes the behaviour of `Cldr.put_locale/{1, 2}`. In previous releases the intent was that a process would store a locale for a given backend. Logically however, it is more appropriate to store a locale on a per-process basis, not per backend per process.  The backend is an important asset, but only insofaras it hosts locale-specific content.  Therefore in this release, `Cldr.put_locale/{1, 2}` always stores the locale on a per-process basis and there is only one locale, not one specialised per backend. This also simplifies `Cldr.get_locale/0` which now returns the process's locale or the default locale.
 
 * Support plural categories of "compact decimals". These are represented as `{number, formatting_exponent}`. See [TR35](https://unicode-org.github.io/cldr/ldml/tr35-numbers.html#Plural_rules_syntax) for more information. This notation is only supported for `Cldr.Number.PluralRule.plural_type/2`. In CLDR version 38 only the locale "fr" includes rules that differ for some compact formats. For example:
 ```
@@ -518,7 +546,7 @@ This is the changelog for Cldr v2.17.0 released on September 8th, 2020.  For old
 
 ### Bug Fixes
 
-* Corrects `Cldr.Plug.SetLocale` testing for body parameters. Previous version of `Plug` would parse body parameters for an HTTP `get` verb which is not standard behaviour. The test now uses the HTTP `put` verb where body paramters are expected to be parsed.
+* Corrects `Cldr.Plug.SetLocale` testing for body parameters. Previous version of `Plug` would parse body parameters for an HTTP `get` verb which is not standard behaviour. The test now uses the HTTP `put` verb where body parameters are expected to be parsed.
 
 * Corrects internal links to the readme.
 
@@ -560,7 +588,7 @@ This is the changelog for Cldr v2.16.0 released on June 6th, 2020.  For older ch
 
 However:
 
-* If locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducable builds are important, using the `force_locale_download: true` in a backend or in global configuration adds additional certainty.  The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
+* If locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducible builds are important, using the `force_locale_download: true` in a backend or in global configuration adds additional certainty.  The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
 
 ```elixir
 defmodule MyApp.Cldr do
@@ -606,7 +634,7 @@ a means for conversion.  In addition, some data file names are changed to be mor
 
 * Updates the data source to [CLDR release 37](http://cldr.unicode.org/index/downloads/cldr-37).
 
-* Require that a certificate trust store be configured in order to download locales. A system trust store will be automatically detected in many situations. In other cases configuring [castore](https://hex.pm/packages/castore) or [certifi](https://hex.pm/pacakges/certifi) will be automatically detected. A specific trust store can be configured under the `:cacertfile` key of the `:ex_cldr` configuration in `config.exs`. Note that on Windows either `castore`, `certifi` or a configured trust store will be requried.
+* Require that a certificate trust store be configured in order to download locales. A system trust store will be automatically detected in many situations. In other cases configuring [castore](https://hex.pm/packages/castore) or [certifi](https://hex.pm/packages/certifi) will be automatically detected. A specific trust store can be configured under the `:cacertfile` key of the `:ex_cldr` configuration in `config.exs`. Note that on Windows either `castore`, `certifi` or a configured trust store will be required.
 
 * Add `Cldr.put_default_locale/{1, 2}` to set the system-wide default locale. The removes the need to configure a default locale in `config.exs` in keeping with modern Elixir app configuration strategies.
 
@@ -778,7 +806,7 @@ This is the changelog for Cldr v2.9.0 released on August August 24th, 2019.  For
 
 ### Enhancements
 
-* Includes the compound unit fields from units in the generated locale data.  This enables formatting of compount units, like the "per" form which is used when there is no predefined unit style. This functionality is enabled in [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6.
+* Includes the compound unit fields from units in the generated locale data.  This enables formatting of compound units, like the "per" form which is used when there is no predefined unit style. This functionality is enabled in [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) version 2.6.
 
 * Add `Cldr.quote/3` and `MyApp.Cldr.quote/2` that add locale-specific quotation marks around a string.  The locale data files are updated to include this information.
 
@@ -834,7 +862,7 @@ This is the changelog for Cldr v2.7.0 released on April 22nd, 2019.  For older c
 
 ### Enhancements
 
-* Updates to CLDR version 35.1.0 which is primarily related to the change of Japanese era with the ascension of a new emporer on April 1st.
+* Updates to CLDR version 35.1.0 which is primarily related to the change of Japanese era with the ascension of a new emperor on April 1st.
 
 ## Cldr v2.6.2
 

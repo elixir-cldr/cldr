@@ -1,4 +1,4 @@
-if File.exists?(Cldr.Config.download_data_dir()) && Cldr.Code.ensure_compiled?(Cldr.Consolidate) do
+if Cldr.Config.production_data_location && Cldr.Code.ensure_compiled?(Cldr.Consolidate) do
   defmodule Mix.Tasks.Cldr.Consolidate do
     @moduledoc """
     Mix task to consolidate the cldr data into a set of files, one file per
@@ -7,7 +7,7 @@ if File.exists?(Cldr.Config.download_data_dir()) && Cldr.Code.ensure_compiled?(C
 
     use Mix.Task
 
-    @shortdoc "Consolidate cldr json data into a single per-locale set of files"
+    @shortdoc "Consolidate CLDR JSON data into a single per-locale set of files"
 
     @doc false
     def run(_) do

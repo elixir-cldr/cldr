@@ -1,93 +1,119 @@
 defmodule Cldr.Rbnf.Config do
   @moduledoc false
 
+  require Cldr
   alias Cldr.Locale
 
   @default_radix 10
 
-  @doc """
-  Returns the directory where the production
-  RBNF data is stored.
+  if Cldr.Config.production_data_location do
+    @doc """
+    Returns the directory where the production
+    RBNF data is stored.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
-      true
+        iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
+        true
 
-  """
+    """
+  else
+    @doc false
+  end
+
   @spec rbnf_dir :: String.t()
   def rbnf_dir do
     data_dir = Path.join(Cldr.Config.download_data_dir(), "/cldr-rbnf")
     Path.join(data_dir, "rbnf")
   end
 
-  @doc """
-  Returns a list of the locales for which there is an rbnf rule set
+  if Cldr.Config.production_data_location do
+    @doc """
+    Returns a list of the locales for which there is an rbnf rule set
 
-  Relies on the presence of downloaded CLDR data. This function is
-  usefully primarily to a Cldr library developer.
+    Relies on the presence of downloaded CLDR data. This function is
+    usefully primarily to a Cldr library developer.
 
-  ## Example
+    ## Example
 
-      iex> Cldr.Rbnf.Config.rbnf_locales
-      ["af", "am", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy", "da", "de-CH",
-       "de", "ee", "el", "en", "eo", "es-419", "es", "et", "fa-AF", "fa", "fi", "fil",
-       "fo", "fr-BE", "fr-CH", "fr", "ga", "he", "hi", "hr", "hu", "hy", "id", "is",
-       "it", "ja", "ka", "kl", "km", "ko", "ky", "lo", "lt", "lv", "mk", "ms", "mt",
-       "my", "nb", "nl", "nn", "pl", "pt-PT", "pt", "ro", "ru", "se", "sk",
-       "sl", "sq", "sr-Latn", "sr", "sv", "ta", "th", "tr", "uk", "und", "vi", "yue",
-       "zh-Hant", "zh"]
+        iex> Cldr.Rbnf.Config.rbnf_locale_names
+        [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
+         :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
+         :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
+         :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
+         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :root,
+         :ru, :se, :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk,
+         :und, :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
-  """
-  @spec rbnf_locale_names :: [String.t()] | []
-  def rbnf_locale_names do
-    Enum.map(File.ls!(rbnf_dir()), &Path.basename(&1, ".json"))
+    """
+  else
+    @doc false
   end
 
-  @doc """
-  Returns the list of locales that is the intersection of
-  `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locales/0`
+  @spec rbnf_locale_names :: [String.t()] | []
+  def rbnf_locale_names do
+    rbnf_dir()
+    |> File.ls!()
+    |> Enum.map(&Path.basename(&1, ".json"))
+    |> Enum.sort()
+    |> Enum.map(&String.to_atom/1)
+  end
 
-  This list is therefore the set of known locales for which
-  there are rbnf rules defined.
+  if Cldr.Config.production_data_location do
+    @doc """
+    Returns the list of locales that is the intersection of
+    `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locale_names/0`
 
-  ## Example
+    This list is therefore the set of known locales for which
+    there are rbnf rules defined.
 
-      iex> Cldr.Rbnf.Config.known_locale_names
-      ["lo", "eo", "ja", "el", "fo", "hu", "yue", "fil", "sq", "cy", "da", "sv", "ee",
-       "et", "ta", "nl", "vi", "nb", "lv", "id", "pt-PT", "fa-AF", "lt", "my",
-       "sr-Latn", "cs", "ms", "fa", "bg", "es", "en", "af", "mt", "am", "ca", "mk",
-       "ro", "de-CH", "ka", "hr", "nn", "hy", "pt", "se", "he", "ga", "sr",
-       "hi", "ky", "ko", "zh-Hant", "kl", "km", "sk", "ru", "zh", "de", "fi", "it",
-       "be", "pl", "az", "tr", "is", "fr-CH", "es-419", "th", "fr-BE", "fr", "sl",
-       "bs", "uk", "und", "ar"]
+    ## Example
 
-  """
+        iex> Cldr.Rbnf.Config.known_locale_names(TestBackend.Cldr)
+        [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
+         :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
+         :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
+         :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
+         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
+         :"yue-Hans", :zh, :"zh-Hant"]
+
+    """
+  else
+    @doc false
+  end
+
   def known_locale_names(backend) do
     MapSet.intersection(
       MapSet.new(Cldr.known_locale_names(backend)),
       MapSet.new(rbnf_locale_names())
     )
     |> MapSet.to_list()
+    |> Enum.sort()
   end
 
-  @doc """
-  Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
+  if Cldr.Config.production_data_location do
+    @doc """
+    Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
 
-  * `locale_name` is any locale returned by `Rbnf.known_locales/0`.
+    * `locale_name` is any locale returned by `Rbnf.known_locales/0`.
 
-  Note that `for_locale/1` does not raise if the locale does not exist
-  like the majority of `Cldr`.  This is by design since the set of locales
-  that have rbnf rules is substantially less than the set of locales
-  supported by `Cldr`.
+    Note that `for_locale/1` does not raise if the locale does not exist
+    like the majority of `Cldr`.  This is by design since the set of locales
+    that have rbnf rules is substantially less than the set of locales
+    supported by `Cldr`.
 
-  ## Example
+    ## Example
 
-      iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale("en")
-      iex> Map.keys(rules)
-      [:OrdinalRules, :SpelloutRules]
+        iex> {:ok, rules} = Cldr.Rbnf.Config.for_locale(:en)
+        iex> Map.keys(rules)
+        [:OrdinalRules, :SpelloutRules]
 
-  """
+    """
+  else
+    @doc false
+  end
+
   @spec for_locale(Locale.locale_name() | String.t()) ::
           {:ok, map()} | {:error, {Cldr.Rbnf.NotAvailable, String.t()}}
 
@@ -95,7 +121,7 @@ defmodule Cldr.Rbnf.Config do
   # Use Cldr.Locale.first_match/2 with a fun that returns
   # a valid RBNF locale
 
-  def for_locale(locale_name) when is_binary(locale_name) do
+  def for_locale(locale_name) when Cldr.is_locale_name(locale_name) do
     with true <- File.exists?(locale_path(locale_name)) do
       rules =
         locale_name
@@ -173,7 +199,7 @@ defmodule Cldr.Rbnf.Config do
   end
 
   @spec locale_path(binary) :: String.t()
-  defp locale_path(locale) when is_binary(locale) do
+  defp locale_path(locale) when Cldr.is_locale_name(locale) do
     Path.join(rbnf_dir(), "/#{locale}.json")
   end
 

@@ -26,4 +26,5 @@ defmodule Doc.Test do
 
   doctest TestBackend.Gettext.Plural
   doctest MyApp.Cldr
+  doctest Cldr.Rbnf.Config
 end

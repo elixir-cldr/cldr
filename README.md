@@ -66,7 +66,7 @@ Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix
 defp deps do
   [
     {:ex_cldr, "~> 2.23"},
-    # Posion or any other compatible json library
+    # Poison or any other compatible json library
     # that implements `encode!/1` and `decode!/1`
     # :jason is recommended
     {:jason, "~> 1.0"}
@@ -187,7 +187,7 @@ The configuration keys available for `Cldr` are:
      * If no `:default_locale` key, then a configured `Gettext` default locale for this backend is chosen
      * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, use `Cldr.default_locale/0` which returns either the default locale configurated in `mix.exs` under the `ex_cldr` key or then the system default locale will is currently `en-001`
 
- * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenince it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
+ * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenience it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
 ```elixir
 use Cldr,
@@ -217,7 +217,7 @@ use Cldr,
 
  * `:supress_warnings` defines whether warnings are logged when a provider module is configured but not available. It also controls whether warnings are logged when a number format is compiled at runtime. Its purpose is to help identify those formats which might best be added to the `:precompile_number_formats` configuration. The default is `false`. Warning are not logged when set to `true`.
 
- * `:force_locale_download` determines whether to always download locale files during compilation. Locale data is `ex_cldr` version dependent. When a new version of `ex_cldr` is installed, no locales are installed and therefore locales are downloaded at compilation time as required. This ensures that the right version of the locale data is always associated with the right version of `ex_cldr`. However if locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducable builds are important, setting the `force_locale_download: true` in a backend or in global configuration adds additional certainty. The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
+ * `:force_locale_download` determines whether to always download locale files during compilation. Locale data is `ex_cldr` version dependent. When a new version of `ex_cldr` is installed, no locales are installed and therefore locales are downloaded at compilation time as required. This ensures that the right version of the locale data is always associated with the right version of `ex_cldr`. However if locale data is being cached in CI/CD there is some possibility that there can be a version mismatch.  Since reproducible builds are important, setting the `force_locale_download: true` in a backend or in global configuration adds additional certainty. The default setting is `false` thereby retaining compatibility with existing behaviour. The configuration can also be made dependent on `mix` environment as shown in this example:
 
 ```elixir
 defmodule MyApp.Cldr do
@@ -305,7 +305,7 @@ See `h MyApp.Cldr.Number` and `h MyApp.Cldr.Number.to_string` in `iex` for furth
 
 ## Localizing Lists
 
-The `Cldr.List` module provides list formatting and is implemented in the [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) package.  The public API for list formating is `Cldr.List.to_string/2`.  Some examples:
+The `Cldr.List` module provides list formatting and is implemented in the [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists) package.  The public API for list formatting is `Cldr.List.to_string/2`.  Some examples:
 ```elixir
 iex> MyApp.Cldr.List.to_string(["a", "b", "c"], locale: "en")
 "a, b, and c"
@@ -565,7 +565,7 @@ Other libraries in the family will progressively implement other extension keys.
 
 * A language code is an ISO-3166 language code.
 * Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
-* Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portugese as used in Portugal.
+* Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portuguese as used in Portugal.
 * In `ex_cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `t:Cldr.LanguageTag` struct.
 * The locales known to `ex_cldr` can be retrieved by `Cldr.known_locale_names/1` to get the locales known to this configuration of `ex_cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
 

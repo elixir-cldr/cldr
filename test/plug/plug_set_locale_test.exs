@@ -178,6 +178,36 @@ defmodule Cldr.Plug.SetLocale.Test do
     assert Cldr.get_locale() == conn.private[:cldr_locale]
   end
 
+  test "set the locale from the host" do
+    opts = Cldr.Plug.SetLocale.init(from: :host, cldr: TestBackend.Cldr)
+
+    conn =
+      :get
+      |> conn("/")
+      |> Map.put(:host, "www.site.fr")
+      |> Cldr.Plug.SetLocale.call(opts)
+
+    assert conn.private[:cldr_locale] ==
+             %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
+               canonical_locale_name: "fr-FR",
+               cldr_locale_name: :fr,
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "fr",
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: :fr,
+               requested_locale_name: "fr-FR",
+               script: :Latn,
+               territory: :FR,
+               transform: %{},
+               language_variants: []
+             }
+
+    assert Cldr.get_locale() == conn.private[:cldr_locale]
+  end
+
   test "set the locale from the session" do
     opts = Cldr.Plug.SetLocale.init(from: :session, cldr: TestBackend.Cldr)
     session_opts = Plug.Session.init(store: :cookie, key: "_key", signing_salt: "X")

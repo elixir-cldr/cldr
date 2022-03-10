@@ -127,7 +127,7 @@ defmodule Cldr.LanguageTag do
   nu        | Number system identifier         | arabext, armnlow, roman, tamldec
   rg        | Region override                  | The value is a unicode_region_subtag for a regular region (not a macroregion), suffixed by "ZZZZ"
   sd        | Subdivision identifier           | A unicode_subdivision_id, which is a unicode_region_subtagconcatenated with a unicode_subdivision_suffix.
-  ss        | Break supressions identifier     | none, standard
+  ss        | Break suppressions identifier     | none, standard
   tz        | Timezone identifier              | Short identifiers defined in terms of a TZ time zone database
   va        | Common variant type              | POSIX style locale variant
 
@@ -198,11 +198,12 @@ defmodule Cldr.LanguageTag do
 
   ## Arguments
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any [BCP 47](https://tools.ietf.org/search/bcp47)
+    string.
 
   ## Returns
 
-  * `{:ok, language_tag}` or
+  * `{:ok, t:Cldr.LanguageTag}` or
 
   * `{:error, reason}`
 
@@ -217,11 +218,12 @@ defmodule Cldr.LanguageTag do
 
   ## Arguments
 
-  * `locale_name` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any [BCP 47](https://tools.ietf.org/search/bcp47)
+    string.
 
   ## Returns
 
-  * `language_tag` or
+  * `t:Cldr.LanguageTag` or
 
   * raises an exception
 
