@@ -2360,9 +2360,12 @@ defmodule Cldr do
     end
   end
 
+  # See https://en.wikipedia.org/wiki/Regional_indicator_symbol
+  @unicode_flag_codepoint_offset 0x1F1A5
+
   defp generate_flag([_, _] = iso_code) do
     iso_code
-    |> Enum.map(&(&1 + 127_397))
+    |> Enum.map(&(&1 + @unicode_flag_codepoint_offset))
     |> Kernel.to_string()
   end
 

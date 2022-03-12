@@ -45,27 +45,24 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
       |> Enum.map(&({&1, &1}))
       |> Map.new
 
-    locale_name =
-      Atom.to_string(locale_name)
-
     parts =
-      String.split(locale_name, "-")
+      locale_name
+      |> Atom.to_string()
+      |> String.split("-")
 
-    rbnf_locale =
-      case parts do
-        [_language] ->
-          Map.get(rbnf_locale_names, locale_name)
-        [language, _territory] ->
-          Map.get(rbnf_locale_names, locale_name) || Map.get(rbnf_locale_names, language)
-        [language, variant, territory] ->
-          Map.get(rbnf_locale_names, locale_name) ||
-          Map.get(rbnf_locale_names, language <> "-" <> variant) ||
-          Map.get(rbnf_locale_names, language <> "-" <> territory) ||
-          Map.get(rbnf_locale_names, language)
-        [language, territory, "u", "va", _variant] ->
-          rbnf_locale_name(String.to_atom("#{language}-#{territory}"))
-      end
-
-    if rbnf_locale, do: String.to_atom(rbnf_locale), else: rbnf_locale
+    case parts do
+      [_language] ->
+        Map.get(rbnf_locale_names, locale_name)
+      [language, _territory] ->
+        Map.get(rbnf_locale_names, locale_name) ||
+        Map.get(rbnf_locale_names, String.to_atom(language))
+      [language, variant, territory] ->
+        Map.get(rbnf_locale_names, locale_name) ||
+        Map.get(rbnf_locale_names, String.to_atom(language <> "-" <> variant)) ||
+        Map.get(rbnf_locale_names, String.to_atom(language <> "-" <> territory)) ||
+        Map.get(rbnf_locale_names, String.to_atom(language))
+      [language, territory, "u", "va", _variant] ->
+        rbnf_locale_name(String.to_atom("#{language}-#{territory}"))
+    end
   end
 end
