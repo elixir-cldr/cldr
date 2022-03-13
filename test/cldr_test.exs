@@ -300,4 +300,8 @@ defmodule Cldr.Test do
     {:ok, locale} = Cldr.validate_locale("en-US-u-nu-thai-cu-AUD", MyApp.Cldr)
     assert Cldr.to_string(locale) == "en-Latn-US-u-cu-aud-nu-thai"
   end
+
+  test "MyApp.Cldr.known_gettext_locale_names/0" do
+    assert MyApp.Cldr.known_gettext_locale_names == ["en", "en-GB", "es", "it"]
+  end
 end

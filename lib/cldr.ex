@@ -847,7 +847,7 @@ defmodule Cldr do
 
   @doc """
   Returns a list of GetText locale names but in CLDR format with
-  underscore replaces by hyphen in order to facilitate comparisons
+  underscore replaced by hyphen in order to facilitate comparisons
   with Cldr locale names.
 
   ## Arguments
