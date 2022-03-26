@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.28.0
+
+This is the changelog for Cldr v2.28.0 released on ______, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Update [CLDR](https://cldr.unicode.org) to [release 41](https://cldr.unicode.org/index/downloads/cldr-41)
+
 ## Cldr v2.27.1
 
 This is the changelog for Cldr v2.27.1 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
