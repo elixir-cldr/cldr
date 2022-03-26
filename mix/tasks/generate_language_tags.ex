@@ -37,6 +37,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
     output_path = Path.expand(Path.join("priv/cldr/", "language_tags.ebin"))
     File.write!(output_path, :erlang.term_to_binary(language_tags))
+    IO.puts "Wrote binary term file of #{Enum.count(language_tags)} langauge tags to #{output_path}"
   end
 
   defp rbnf_locale_name(locale_name) do

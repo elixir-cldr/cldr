@@ -41,16 +41,16 @@ defmodule Cldr.Rbnf.Config do
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
          :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :root,
-         :ru, :se, :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk,
-         :und, :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
+         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
+         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vi, :yue,
+         :"yue-Hans", :zh, :"zh-Hant"]
 
     """
   else
     @doc false
   end
 
-  @spec rbnf_locale_names :: [String.t()] | []
+  @spec rbnf_locale_names :: [Locale.locale_name()] | []
   def rbnf_locale_names do
     rbnf_dir()
     |> File.ls!()
@@ -74,8 +74,8 @@ defmodule Cldr.Rbnf.Config do
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
          :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :nb, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
-         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
+         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
+         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
          :"yue-Hans", :zh, :"zh-Hant"]
 
     """

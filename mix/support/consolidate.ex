@@ -719,10 +719,10 @@ defmodule Cldr.Consolidate do
     path = Path.join(consolidated_output_dir(), "grammatical_gender.json")
 
     download_data_dir()
-    |> Path.join(["cldr-core", "/supplemental", "/grammaticalGenderFeatures.json"])
+    |> Path.join(["cldr-core", "/supplemental", "/grammaticalFeatures.json"])
     |> File.read!()
     |> Jason.decode!()
-    |> get_in(["supplemental", "grammaticalGenderData"])
+    |> get_in(["supplemental", "grammaticalData"])
     |> Cldr.Normalize.GrammaticalFeatures.normalize_gender()
     |> save_file(path)
 

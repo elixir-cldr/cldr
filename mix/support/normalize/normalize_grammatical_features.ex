@@ -70,7 +70,11 @@ defmodule Cldr.Normalize.GrammaticalFeatures do
 
       {<<language::binary-size(3), "-targets-nominal">>, gender_data} ->
         {language, format_gender_data(gender_data)}
+
+      _other ->
+        nil
     end)
+    |> Enum.reject(&is_nil/1)
     |> Enum.group_by(fn {k, _v} -> k end, fn {_k, v} -> v end)
     |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
     |> Map.new()
