@@ -18,6 +18,9 @@ defmodule Cldr.Locale.Loader do
   alias Cldr.Config
   alias Cldr.Locale
 
+  @max_concurrency System.schedulers_online() * 2
+  @timeout 10_000
+
   @doc """
   Returns a list of all locales that are configured and available
   in the CLDR repository.
@@ -43,7 +46,29 @@ defmodule Cldr.Locale.Loader do
   configured and available in the CLDR repository.
 
   """
+
   @spec known_rbnf_locale_names(Config.t()) :: [Locale.locale_name()]
+  def known_rbnf_locale_names(%Cldr.Config{locales: :all} = config) do
+    config
+    |> known_locale_names()
+    |> Task.async_stream(fn locale_name ->
+        rbnf =
+          locale_name
+          |> get_locale(config)
+          |> Map.get(:rbnf)
+
+        if Enum.empty?(rbnf), do: nil, else: locale_name
+      end,
+      max_concurrency: @max_concurrency,
+      timeout: @timeout
+      )
+    |> Enum.reduce_while([], fn
+      {:ok, nil}, acc -> {:cont, acc}
+      {:ok, locale_name}, acc -> {:cont, [locale_name | acc]}
+    end)
+    |> Enum.sort()
+  end
+
   def known_rbnf_locale_names(config) do
     known_locale_names(config)
     |> Enum.filter(fn locale -> Map.get(get_locale(locale, config), :rbnf) != %{} end)
