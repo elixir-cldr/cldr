@@ -31,7 +31,7 @@ defmodule Cldr.Config do
 
   @type t :: %__MODULE__{
           default_locale: binary(),
-          locales: [binary(), ...],
+          locales: [binary(), ...] | :all,
           add_fallback_locales: boolean(),
           backend: module(),
           gettext: module() | nil,

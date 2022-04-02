@@ -2,11 +2,11 @@
 
 ## Cldr v2.28.0
 
-This is the changelog for Cldr v2.28.0 released on ______, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.28.0 released on April 6th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
-* Update [CLDR](https://cldr.unicode.org) to [release 41](https://cldr.unicode.org/index/downloads/cldr-41)
+* Update [CLDR](https://cldr.unicode.org) to [release 41](https://cldr.unicode.org/index/downloads/cldr-41). This is minor CLDR release adding `en-MV`, `hi-Latn` and `ks-Deva` locales and continuing data improvements on unit grammar. Changes to locales in this release can be found on the [locale change](https://unicode-org.github.io/cldr-staging/charts/41/delta/index.html) page.
 
 ## Cldr v2.27.1
 

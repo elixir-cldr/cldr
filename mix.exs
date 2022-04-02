@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.28.0-rc.0"
+  @version "2.28.0"
 
   def project do
     [
