@@ -5,6 +5,21 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
+## If you use Cldr.Plug.SetLocale
+
+Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been extracted to their own `ex_cldr_plugs` library. you will need to add that dependency to your application. For example:
+
+```elixir
+# in mix.exs
+def deps do
+  [
+    {:ex_cldr, "~> 2.29},
+    {:ex_cldr_plugs, "~> 1.0"},
+    ...
+  ]
+end
+```
+
 ## Introduction
 
 `ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 27th 2021 and `ex_cldr` Version 2.24.0, `ex_cldr` is based upon [CLDR version 40.0](http://cldr.unicode.org/index/downloads/cldr-40).
