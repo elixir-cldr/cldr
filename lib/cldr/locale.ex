@@ -420,7 +420,7 @@ defmodule Cldr.Locale do
     Enum.find(backend.known_locale_names(), &(locale_name == &1))
   end
 
-  def known_rbnf_locale_name(locale_name, _tags \\ [], backend) do
+  defp known_rbnf_locale_name(locale_name, _tags, backend) do
     locale_name = String.to_existing_atom(locale_name)
     Cldr.known_rbnf_locale_name(locale_name, backend)
   rescue ArgumentError ->
@@ -1591,8 +1591,23 @@ defmodule Cldr.Locale do
     @root_rbnf_locale_name
   end
 
+  # Get the rbnf locale name for this locale. If not found, see
+  # if a parent has RBNF> Note parent in this case means direct parent,
+  # not the fallback chain.
   defp rbnf_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend))
+    cond do
+      rbnf_locale = first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend)) ->
+        rbnf_locale
+
+      parent = Map.get(parent_locale_map(), language_tag.cldr_locale_name) ->
+        case Cldr.validate_locale(parent, language_tag.backend) do
+          {:ok, parent} -> rbnf_locale_name(parent)
+          {:error, _} -> nil
+        end
+
+      true ->
+         nil
+    end
   end
 
   @spec gettext_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil

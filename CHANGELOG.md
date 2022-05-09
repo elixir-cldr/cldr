@@ -2,11 +2,15 @@
 
 ## Cldr v2.29.0
 
-This is the changelog for Cldr v2.29.0 released on ______, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.29.0 released on May 10th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Migration
 
 * The plugs `Cldr.Plug.SetLocale`, `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.PutSession` have been extracted to their own library, [ex_cldr_plug](https://hex.pm/packages/ex_cldr_plug). Therefore adding `{:ex_cldr_plug, "~> 1.0"}` to the `deps` of any application using these plugs is required.
+
+### Bug Fixes
+
+* Fixes resolving the RBNF locale name for locales that inherit the RBNF locale from a parent. This is true for at least the "nb" locale which in previous releases had its own RBNF locale data but now inherits from "no". Thanks to @juanperi for the report. Closes [#175](https://github.com/elixir-cldr/cldr/issues/175).
 
 ## Cldr v2.28.0
 
