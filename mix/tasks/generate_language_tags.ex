@@ -53,17 +53,29 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
     case parts do
       [_language] ->
-        Map.get(rbnf_locale_names, locale_name)
-      [language, _territory] ->
         Map.get(rbnf_locale_names, locale_name) ||
-        Map.get(rbnf_locale_names, String.to_atom(language))
+        parent_rbnf_locale(locale_name)
+      [language, territory] ->
+        Map.get(rbnf_locale_names, locale_name) ||
+        Map.get(rbnf_locale_names, String.to_atom(language <> "-" <> territory)) ||
+        Map.get(rbnf_locale_names, String.to_atom(language)) ||
+        parent_rbnf_locale(locale_name)
       [language, variant, territory] ->
         Map.get(rbnf_locale_names, locale_name) ||
         Map.get(rbnf_locale_names, String.to_atom(language <> "-" <> variant)) ||
         Map.get(rbnf_locale_names, String.to_atom(language <> "-" <> territory)) ||
-        Map.get(rbnf_locale_names, String.to_atom(language))
+        Map.get(rbnf_locale_names, String.to_atom(language)) ||
+        parent_rbnf_locale(locale_name)
       [language, territory, "u", "va", _variant] ->
         rbnf_locale_name(String.to_atom("#{language}-#{territory}"))
+    end
+  end
+
+  defp parent_rbnf_locale(locale) do
+    if parent = Map.get(Cldr.Locale.parent_locale_map(), locale) do
+      rbnf_locale_name(parent)
+    else
+      nil
     end
   end
 end

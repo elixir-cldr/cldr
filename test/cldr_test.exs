@@ -136,6 +136,29 @@ defmodule Cldr.Test do
              }
   end
 
+
+  test "That RBNF locale names can be inherited" do
+    assert {:ok, locale} = Cldr.validate_locale("nb", TestBackend.Cldr)
+    assert locale ==
+      %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        canonical_locale_name: "nb",
+        cldr_locale_name: :nb,
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "nb",
+        language_subtags: [],
+        language_variants: [],
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: :no,
+        requested_locale_name: "nb",
+        script: :Latn,
+        territory: :NO,
+        transform: %{}
+      }
+  end
+
   test "that we can have repeated currencies in a territory" do
     assert Cldr.Config.territory(:PS)[:currency] ==
              [
