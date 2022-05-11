@@ -6,7 +6,7 @@ This is the changelog for Cldr v2.29.0 released on May 10th, 2022.  For older ch
 
 ### Migration
 
-* The plugs `Cldr.Plug.SetLocale`, `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.PutSession` have been extracted to their own library, [ex_cldr_plug](https://hex.pm/packages/ex_cldr_plug). Therefore adding `{:ex_cldr_plug, "~> 1.0"}` to the `deps` of any application using these plugs is required.
+* The plugs `Cldr.Plug.SetLocale`, `Cldr.Plug.AcceptLanguage` and `Cldr.Plug.PutSession` have been extracted to their own library, [ex_cldr_plugs](https://hex.pm/packages/ex_cldr_plugs). Therefore adding `{:ex_cldr_plugs, "~> 1.0"}` to the `deps` of any application using these plugs is required.
 
 ### Bug Fixes
 
