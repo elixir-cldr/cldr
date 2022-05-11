@@ -100,6 +100,7 @@ mix deps.compile
 
 `ex_cldr` includes only basic functions to maintain the CLDR data repository in an accessible manner and to manage locale definitions.  Additional functionality is available by adding additional packages:
 
+* Plugs for setting the locale from an HTTP request: [ex_cldr_plugs](https://hex.pm/packages/ex_cldr_plugs)
 * Number formatting: [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
 * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
