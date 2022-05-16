@@ -147,22 +147,34 @@ end
 
 ### Otp App Configuration
 
-In the backend configuration example above the `:otp_app` key has been defined.  This means that configuration for `Cldr` has been defined in `mix.exs` under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
+In the backend configuration example above the `:otp_app` key has been defined.  This means that `Cldr` will look for additional configuration, defined under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
 
 ```elixir
+# cldr.ex
 defmodule MyApp.Cldr do
-  use Cldr, otp_app: :my_app
+  use Cldr, 
+    otp_app: :my_app,
+    default_locale: "en",
+    gettext: MyApp.Gettext,
+    json_library: Jason,
+    data_dir: "./priv/cldr",
+    precompile_number_formats: ["¤¤#,##0.##"],
+    providers: [Cldr.Number]
 end
 ```
 
 ```elixir
-# In mix.exs
+# config/config.exs
 config :my_app, MyApp.Cldr,
-  default_locale: "en",
+  # a single locale, for fast compilation in dev / test
+  locales: ["en"]
+```
+
+```elixir
+# config/production.exs
+config :my_app, MyApp.Cldr,
+  # these will take a while to compile
   locales: ["fr", "en", "bs", "si", "ak", "th"],
-  gettext: MyApp.Gettext,
-  data_dir: "./priv/cldr",
-  precompile_number_formats: ["¤¤#,##0.##"],
   precompile_transliterations: [{:latn, :arab}, {:thai, :latn}]
 ```
 
