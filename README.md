@@ -122,25 +122,7 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 
 `Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 541 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use.
 
-The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.  However configuration can also be defined in other ways:
-
-### Global configuration.
-
-In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:default_locale`, `:default_backend`, `:cacertfile`, `:data_dir`, `:force_locale_download` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
-
-```elixir
-config :ex_cldr,
-  default_locale: "en",
-  default_backend: MyApp.Cldr,
-  json_library: Jason,
-  cacertfile: "path/to/cacertfile"
-```
-
-Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
-
-On most platforms other than Windows the `:cacertfile` will be automatically detected. Any configured `:cacertfile` will take precedence on all platforms.
-
-**If configuration beyond the keys `:default_locale`, `:cacertfile` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
+The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.
 
 ### Backend Module Configuration
 
@@ -185,6 +167,24 @@ config :my_app, MyApp.Cldr,
 ```
 
 Multiple backends can be configured under a single `:otp_app` if required.
+
+### Global configuration.
+
+In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:default_locale`, `:default_backend`, `:cacertfile`, `:data_dir`, `:force_locale_download` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
+
+```elixir
+config :ex_cldr,
+  default_locale: "en",
+  default_backend: MyApp.Cldr,
+  json_library: Jason,
+  cacertfile: "path/to/cacertfile"
+```
+
+Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
+
+On most platforms other than Windows the `:cacertfile` will be automatically detected. Any configured `:cacertfile` will take precedence on all platforms.
+
+**If configuration beyond the keys `:default_locale`, `:cacertfile` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
 ### Configuration Priority
 
