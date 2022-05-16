@@ -27,14 +27,14 @@ end
 The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
 ```elixir
-@doc """
-Define a backend module that will host our
-Cldr configuration and public API.
-
-Most function calls in Cldr will be calls
-to functions on this module.
-"""
 defmodule MyApp.Cldr do
+  @moduledoc """
+  Define a backend module that will host our
+  Cldr configuration and public API.
+
+  Most function calls in Cldr will be calls
+  to functions on this module.
+  """
   use Cldr,
     locales: ["en", "fr", "zh", "th"],
     default_locale: "en"
