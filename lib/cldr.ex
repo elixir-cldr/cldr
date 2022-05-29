@@ -309,14 +309,14 @@ defmodule Cldr do
   @doc """
   Set's the system default locale.
 
-  The locale set here is the based level
+  The locale set here is the base level
   system default equivalent to setting the
   `:default_locale` key in `config.exs`.
 
   ## Arguments
 
   * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
-    with a non-nil `:cldr_locale_name`
+    with a non-nil `:cldr_locale_name`.
 
   ## Returns
 
@@ -331,16 +331,16 @@ defmodule Cldr do
   @doc """
   Sets the system default locale.
 
-  The locale set here is the based level
+  The locale set here is the base level
   system default equivalent to setting the
   `:default_locale` key in `config.exs`.
 
   ## Arguments
 
-  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.
 
   ## Returns
 
@@ -359,7 +359,20 @@ defmodule Cldr do
   Execute a function with a locale ensuring that the
   current locale is restored after the function.
 
+  ## Arguments
+
+  * `locale` is any `t:Cldr.LanguageTag.t/0`, tyically returned
+    by `Cldr.validate_locale/2`.
+
+  * `fun` is any 0-arity function or function capture.
+
+  ## Returns
+
+  * The value returned by the function `fun/0`.
+
   """
+  @doc since: "2.27.0"
+
   @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
   def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
     current_locale = get_locale()
@@ -371,6 +384,26 @@ defmodule Cldr do
       Cldr.put_locale(current_locale)
     end
   end
+
+  @doc """
+  Execute a function with a locale ensuring that the
+  current locale is restored after the function.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
+
+  * `fun` is any 0-arity function or function capture.
+
+  ## Returns
+
+  * The value returned by the function `fun/0`.
+
+  """
+  @doc since: "2.27.0"
 
   @spec with_locale(Cldr.Locale.locale_name(), backend(), fun) :: any
   def with_locale(locale, backend \\ default_backend!(), fun) when is_locale_name(locale) do
@@ -386,11 +419,11 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.
 
   ## Returns
 
-  * The default locale for the backend
+  * The default locale for the backend.
 
   ## Example
 
