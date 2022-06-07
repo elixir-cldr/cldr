@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.30.0
+
+This is the changelog for Cldr v2.30.0 released on June 5th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds a backend module for `AcceptLanguage` which defines `MyApp.Cldr.AcceptLanguage.parse/1` and `MyApp.Cldr.AcceptLanguage.best_match/1`
+
 ## Cldr v2.29.0
 
 This is the changelog for Cldr v2.29.0 released on May 10th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
