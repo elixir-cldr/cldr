@@ -1075,6 +1075,78 @@ defmodule Cldr.Locale do
   end
 
   @doc """
+  Returns the script for a locale.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`. If
+    the parameter is a `locale_name` then a default backend must be
+    configured in `config.exs` or an exception will be raised.
+
+  ## Returns
+
+  * The script to be used for localization purposes.
+
+  ## Examples
+
+      iex> Cldr.Locale.script_from_locale "en-US"
+      :Latn
+
+      iex> Cldr.Locale.script_from_locale "th"
+      :Thai
+
+  """
+
+  @spec script_from_locale(LanguageTag.t() | locale_name()) :: script()
+
+  @doc since: "2.31.0"
+
+  def script_from_locale(%LanguageTag{} = language_tag) do
+    language_tag.script || Cldr.default_script()
+  end
+
+  def script_from_locale(locale_name) do
+    script_from_locale(locale_name, Cldr.default_backend!())
+  end
+
+  @doc """
+  Returns the script for a locale.
+
+  ## Arguments
+
+  * `locale_name` is any locale name returned by
+    `Cldr.known_locale_names/1`.
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  ## Returns
+
+  * The script to be used for localization purposes.
+
+  ## Examples
+
+      iex> Cldr.Locale.script_from_locale "en-US", TestBackend.Cldr
+      :Latn
+
+      iex> Cldr.Locale.script_from_locale "th", TestBackend.Cldr
+      :Thai
+
+  """
+
+  @spec script_from_locale(locale_reference(), Cldr.backend()) ::
+          script() | {:error, {module(), String.t()}}
+
+  @doc since: "2.31.0"
+
+  def script_from_locale(locale, backend) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
+      script_from_locale(locale)
+    end
+  end
+
+  @doc """
   Returns the effective time zone for a locale.
 
   ## Arguments

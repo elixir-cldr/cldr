@@ -507,6 +507,24 @@ defmodule Cldr do
     end
   end
 
+  @default_script :Latn
+
+  @doc """
+  Returns the default script.
+
+  ## Returns
+
+  * The default script which is `#{@default_script}.
+
+  """
+
+  @doc since: "2.31.0"
+  @spec default_script :: Locale.script()
+
+  def default_script do
+    @default_script
+  end
+
   @doc """
   Returns the default territory when a locale
   does not specify one and none can be inferred.

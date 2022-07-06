@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.31.0
+
+This is the changelog for Cldr v2.31.0 released on July 6th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds `Cldr.Locale.script_from_locale/{1, 2}` and `Cldr.default_script/0`.
+
 ## Cldr v2.30.0
 
 This is the changelog for Cldr v2.30.0 released on June 5th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
