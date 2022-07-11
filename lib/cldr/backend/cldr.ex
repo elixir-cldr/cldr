@@ -348,6 +348,61 @@ defmodule Cldr.Backend do
       end
 
       @doc """
+      Execute a function with a locale ensuring that the
+      current locale is restored after the function.
+
+      ## Arguments
+
+      * `locale` is any `t:Cldr.LanguageTag.t/0`, tyically returned
+        by `Cldr.validate_locale/2`.
+
+      * `fun` is any 0-arity function or function capture.
+
+      ## Returns
+
+      * The value returned by the function `fun/0` or
+
+      * raises an exception if the current locale cannot be
+        identified.
+
+      """
+      @doc since: "2.32.0"
+
+      @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
+      def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
+        Cldr.with_locale(locale, fun)
+      end
+
+      @doc """
+      Execute a function with a locale ensuring that the
+      current locale is restored after the function.
+
+      ## Arguments
+
+      * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
+
+      * `fun` is any 0-arity function or function capture.
+
+      ## Returns
+
+      * The value returned by the function `fun/0` or
+
+      * {:error, {exception, reason}}` if the locale is invalid or
+
+      * raises an exception if the current locale cannot be
+        identified.
+
+      """
+      @doc since: "2.32.0"
+
+      @spec with_locale(Cldr.Locale.locale_name(), fun) :: any
+      def with_locale(locale, fun) when Cldr.is_locale_name(locale) do
+        with {:ok, locale} = validate_locale(locale) do
+          with_locale(locale, fun)
+        end
+      end
+
+      @doc """
       Add locale-specific quotation marks around a string.
 
       ## Arguments

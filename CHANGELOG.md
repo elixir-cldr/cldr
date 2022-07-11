@@ -1,5 +1,17 @@
 # Changelog
 
+## Cldr v2.32.0
+
+This is the changelog for Cldr v2.32.0 released on July 11th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.with_locale/{2, 3}` to source the current locale from the backend of the supplied new locale.  This reduces the chances of an exception resulting from a non-existent default backend and a default locale that is not set.
+
+### Enhancements
+
+* Add `with_locale/2` to Cldr backend modules. This ultimately delegates to `Cldr.with_locale/{2, 3}`
+
 ## Cldr v2.31.0
 
 This is the changelog for Cldr v2.31.0 released on July 6th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

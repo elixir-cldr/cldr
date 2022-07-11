@@ -368,20 +368,23 @@ defmodule Cldr do
 
   ## Returns
 
-  * The value returned by the function `fun/0`.
+  * The value returned by the function `fun/0` or
+
+  * raises an exception if the current locale cannot be
+    identified.
 
   """
   @doc since: "2.27.0"
 
   @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
   def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
-    current_locale = get_locale()
+    current_locale = get_locale(locale.backend)
 
     try do
-      put_locale(locale)
+      put_locale(locale.backend, locale)
       fun.()
     after
-      Cldr.put_locale(current_locale)
+      put_locale(locale.backend, current_locale)
     end
   end
 
@@ -400,7 +403,12 @@ defmodule Cldr do
 
   ## Returns
 
-  * The value returned by the function `fun/0`.
+  * The value returned by the function `fun/0` or
+
+  * {:error, {exception, reason}}` if the locale is invalid or
+
+  * raises an exception if the current locale cannot be
+    identified.
 
   """
   @doc since: "2.27.0"
@@ -514,7 +522,7 @@ defmodule Cldr do
 
   ## Returns
 
-  * The default script which is `#{@default_script}.
+  * The default script which is `#{@default_script}`.
 
   """
 

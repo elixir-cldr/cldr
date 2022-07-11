@@ -226,6 +226,19 @@ defmodule Cldr.Test do
     assert {:ok, _locale} = Cldr.validate_locale("en-au-u-ca-buddhist", TestBackend.Cldr)
   end
 
+  test "with_locale" do
+    original_locale = Cldr.get_locale(TestBackend.Cldr)
+    {:ok, fr_locale} = TestBackend.Cldr.validate_locale("fr")
+
+    assert Cldr.with_locale("fr", TestBackend.Cldr, fn -> Cldr.get_locale(TestBackend.Cldr) end) ==
+      fr_locale
+
+    assert Cldr.with_locale(fr_locale, fn -> Cldr.get_locale(TestBackend.Cldr) end) ==
+      fr_locale
+
+    assert original_locale == Cldr.get_locale(TestBackend.Cldr)
+  end
+
   if function_exported?(Code, :fetch_docs, 1) do
     test "that no module docs are generated for a backend" do
       assert {:docs_v1, _, :elixir, _, :hidden, %{}, _} = Code.fetch_docs(DefaultBackend.Cldr)
