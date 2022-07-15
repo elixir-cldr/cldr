@@ -338,7 +338,7 @@ defmodule Cldr.Backend do
             "Expected a BCP47 language tag. Could not parse the remaining \\"!\\" starting at position 15"}}
 
       """
-      @spec put_locale(Locale.locale_name() | LanguageTag.t()) ::
+      @spec put_locale(Locale.locale_reference()) ::
               {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
       def put_locale(locale_name) do
