@@ -405,7 +405,7 @@ defmodule Cldr do
 
   * The value returned by the function `fun/0` or
 
-  * {:error, {exception, reason}}` if the locale is invalid or
+  * `{:error, {exception, reason}}` if the locale is invalid or
 
   * raises an exception if the current locale cannot be
     identified.
