@@ -374,7 +374,7 @@ defmodule Cldr do
     identified.
 
   """
-  @doc since: "2.27.0"
+  @doc since: "2.32.0"
 
   @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
   def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
