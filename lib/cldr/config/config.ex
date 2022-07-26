@@ -2397,19 +2397,25 @@ defmodule Cldr.Config do
         config
 
       [unknown_locale] ->
-        IO.warn(
-          "The locale #{inspect(unknown_locale)} is configured in the #{gettext} " <>
-            "gettext backend but is unknown to CLDR. It will be ignored by CLDR.",
-          []
+        unknown = locale_name_to_posix(unknown_locale)
+
+        note(
+          "The locale #{inspect(unknown)} is configured in the #{inspect gettext} " <>
+            "gettext backend but is unknown to CLDR. It will not be used to configure CLDR " <>
+            "but it will still be used to match CLDR locales to Gettext locales at runtime.",
+          config
         )
 
         Map.put(config, :locales, locales -- [unknown_locale])
 
       unknown_locales ->
-        IO.warn(
-          "The locales #{inspect(unknown_locales)} are configured in the #{gettext} " <>
-            "gettext backend but are unknown to CLDR. They will be ignored by CLDR.",
-          []
+        unknown = Enum.map(unknown_locales, &locale_name_to_posix/1)
+
+        note(
+          "The locales #{inspect(unknown)} are configured in the #{inspect gettext} " <>
+            "gettext backend but are unknown to CLDR. They will not be used to configure CLDR " <>
+            "but they will still be used to match CLDR locales to Gettext locales at runtime.",
+          config
         )
 
         Map.put(config, :locales, locales -- unknown_locales)
@@ -2418,6 +2424,17 @@ defmodule Cldr.Config do
 
   defp remove_gettext_only_locales(config) do
     config
+  end
+
+  @doc false
+  def note(text, config) do
+    if config[:supress_warnings] do
+      [IO.ANSI.yellow(), "note: ", IO.ANSI.reset(), text]
+      |> :erlang.iolist_to_binary()
+      |> IO.puts
+    else
+      :ok
+    end
   end
 
   @doc false
@@ -2434,7 +2451,7 @@ defmodule Cldr.Config do
       |> Enum.filter(fn {_k, v} -> length(v) > 1 end)
       |> Enum.map(&elem(&1, 0))
 
-    if length(duplicates) > 0 do
+    if length(duplicates) > 0 && !config[:surpress_warnings] do
       IO.warn(
         "Duplicate Cldr backend providers #{inspect(providers)} for " <>
           "backend #{inspect(backend)} have been ignored",
@@ -2485,7 +2502,7 @@ defmodule Cldr.Config do
     end
   end
 
-  defp log_provider_warning(_module, _function, _args, %{supress_warnings: true}) do
+  defp log_provider_warning(_module, _function, _args, _config) do
     :ok
   end
 
@@ -2537,7 +2554,7 @@ defmodule Cldr.Config do
       |> Keyword.delete(:_default_locale)
       |> Enum.map(&elem(&1, 0))
 
-    if length(remaining_config) > 0 do
+    if length(remaining_config) > 0 && !remaining_config[:supress_warnings] do
       IO.warn(
         "Using the global configuration is deprecated.  Global configuration " <>
           "only supports the #{inspect(@non_deprecated_keys)} keys. The keys " <>
