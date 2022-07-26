@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr v2.32.1
+
+This is the changelog for Cldr v2.32.1 released on July 26th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Don't use `IO.warn/2` when compiling a backend and a known Gettext locale can't be matched to a Cldr locale.  `IO.warn/2` will cause errors if the compilation setting `warnings_as_errors: true` is set.  Instead, these messages will be output as a "note" that does not trigger warnings. In addition the error message has been improved to make clear that although the Gettext locale has no Cldr equivalent, it will still be matched at runtime.  See the conversation at https://elixirforum.com/t/bridging-locale-name-differences-between-ex-cldr-gettext. Thanks to @lenards for the report.
+
 ## Cldr v2.32.0
 
 This is the changelog for Cldr v2.32.0 released on July 23rd, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
