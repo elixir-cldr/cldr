@@ -4,7 +4,7 @@ defmodule Cldr.Backend do
   def define_backend_functions(config) do
     backend = config.backend
 
-    quote location: :keep, bind_quoted: [config: Macro.escape(config), backend: backend] do
+    quote location: :keep,bind_quoted: [config: Macro.escape(config), backend: backend] do
       @doc """
       Returns a list of the known locale names.
 

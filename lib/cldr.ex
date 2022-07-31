@@ -697,7 +697,7 @@ defmodule Cldr do
         "The backend :something_else is not known or not a backend module."}}
 
   """
-  @spec validate_backend(backend :: atom()) :: {:ok, atom()} | {:error, {atom(), binary()}}
+  @spec validate_backend(backend :: atom()) :: {:ok, atom()} | {:error, {atom(), String.t()}}
   def validate_backend(backend) when is_atom(backend) do
     if Cldr.Code.ensure_compiled?(backend) && function_exported?(backend, :__cldr__, 1) do
       {:ok, backend}
