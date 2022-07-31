@@ -30,16 +30,16 @@ defmodule Cldr.Config do
             force_locale_download: false
 
   @type t :: %__MODULE__{
-          default_locale: binary(),
+          default_locale: String.t(),
           locales: [binary(), ...] | :all,
           add_fallback_locales: boolean(),
           backend: module(),
           gettext: module() | nil,
-          data_dir: binary(),
-          precompile_number_formats: [binary(), ...],
+          data_dir: String.t(),
+          precompile_number_formats: [String.t(), ...],
           precompile_transliterations: [{atom(), atom()}, ...],
-          precompile_date_time_formats: [binary(), ...],
-          precompile_interval_formats: [binary(), ...],
+          precompile_date_time_formats: [String.t(), ...],
+          precompile_interval_formats: [String.t(), ...],
           otp_app: atom() | nil,
           providers: [atom(), ...],
           generate_docs: boolean(),
@@ -132,9 +132,9 @@ defmodule Cldr.Config do
 
   poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
-  phoenix_json = Application.get_env(:phoenix, :json_library)
-  ecto_json = Application.get_env(:ecto, :json_library)
-  cldr_json = Application.get_env(:ex_cldr, :json_library)
+  phoenix_json = Application.compile_env(:phoenix, :json_library)
+  ecto_json = Application.compile_env(:ecto, :json_library)
+  cldr_json = Application.compile_env(:ex_cldr, :json_library)
   @json_lib cldr_json || phoenix_json || ecto_json || jason || poison
 
   cond do
@@ -2466,19 +2466,19 @@ defmodule Cldr.Config do
 
     cond do
       !Code.ensure_loaded?(module) ->
-        Logger.warn(
+        Logger.warning(
           "#{inspect(config.backend)}: The CLDR provider module #{inspect(module)} " <>
             "was not found"
         )
 
       !function_exported?(module, function, 1) ->
-        Logger.warn(
+        Logger.warning(
           "#{inspect(config.backend)}: The CLDR provider module #{inspect(module)} " <>
             "does not implement the function #{function}/#{length(args)}"
         )
 
       true ->
-        Logger.warn(
+        Logger.warning(
           "#{inspect(config.backend)}: Could not execute the CLDR provider " <>
             "#{inspect(module)}.#{function}/#{length(args)}"
         )

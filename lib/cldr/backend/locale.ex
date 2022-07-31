@@ -265,7 +265,7 @@ defmodule Cldr.Locale.Backend do
 
         """
         @spec fallback_locales(LanguageTag.t() | Cldr.Locale.locale_reference) ::
-                {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
+                {:ok, [LanguageTag.t(), ...]} | {:error, {module(), String.t()}}
 
         @doc since: "2.26.0"
         def fallback_locales(%LanguageTag{} = locale) do
@@ -358,7 +358,7 @@ defmodule Cldr.Locale.Backend do
 
         """
         @spec fallback_locale_names(LanguageTag.t() | Cldr.Locale.locale_reference) ::
-                {:ok, [Cldr.Locale.locale_name, ...]} | {:error, {module(), binary()}}
+                {:ok, [Cldr.Locale.locale_name, ...]} | {:error, {module(), String.t()}}
 
         @doc since: "2.26.0"
         def fallback_locale_names(%LanguageTag{} = locale) do

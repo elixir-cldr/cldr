@@ -101,6 +101,7 @@ defmodule Cldr.Number.PluralRule do
       import Cldr.Digits,
         only: [number_of_integer_digits: 1, remove_trailing_zeros: 1, fraction_as_integer: 2]
 
+      import Cldr.Math, only: [mod: 2, within: 2]
       import Cldr.Number.PluralRule.Compiler
       import Cldr.Number.PluralRule.Transformer
 
