@@ -10,6 +10,8 @@ This is the changelog for Cldr v2.33.0 released on July 31st, 2022.  For older c
 
 * Removes warnings for Elixir 1.14.  As a result `ex_cldr` now supported Elixir 1.11 and later only (support for Elixir 1.10 has been discontinued).
 
+* Allow either `ratio 2.x` or `ratio 3.x` depdendencies to be configured. This library is only used during the development of `ex_cldr` and is not normally used by library consumers. However [ex_cldr_units](https://hex.pm/packages/ex_cldr_units) does use `ratio` so this flexibility helps downstream maintenance, especially when `ratio` is updated to avoid Elixir 1.14 deprecation warnings.
+
 ## Cldr v2.32.1
 
 This is the changelog for Cldr v2.32.1 released on July 26th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

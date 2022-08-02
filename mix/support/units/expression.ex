@@ -8,8 +8,6 @@ Protocol.derive(Jason.Encoder, Ratio)
 defmodule Cldr.Unit.Expression do
   @moduledoc false
 
-  use Ratio
-
   def run("", _constants) do
     0
   end

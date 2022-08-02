@@ -57,7 +57,7 @@ defmodule Cldr.Mixfile do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true},
-      {:ratio, "~> 2.0", only: [:dev, :test], optional: true}
+      {:ratio, "~> 2.0 or ~> 3.0", only: [:dev, :test], optional: true}
     ]
   end
 
