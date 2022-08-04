@@ -5,7 +5,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-## If you use Cldr.Plug.SetLocale
+## If you use Cldr.Plug.PutLocale
 
 Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been extracted to their own `ex_cldr_plugs` library. you will need to add that dependency to your application. For example:
 
@@ -13,8 +13,8 @@ Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been 
 # in mix.exs
 def deps do
   [
-    {:ex_cldr, "~> 2.29},
-    {:ex_cldr_plugs, "~> 1.0"},
+    {:ex_cldr, "~> 2.33"},
+    {:ex_cldr_plugs, "~> 1.2"},
     ...
   ]
 end
@@ -71,7 +71,7 @@ Use this library if you need to:
 
 ## Elixir Version Requirements
 
-* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.10 or later.
+* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.11 or later.
 
 ## Installation
 
@@ -80,7 +80,7 @@ Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix
 ```elixir
 defp deps do
   [
-    {:ex_cldr, "~> 2.23"},
+    {:ex_cldr, "~> 2.33"},
     # Poison or any other compatible json library
     # that implements `encode!/1` and `decode!/1`
     # :jason is recommended
@@ -528,5 +528,5 @@ See the file `DEVELOPMENT.md` in the github repository.
 
 Tests cover the full 571 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.10 and later.  `ex_cldr` may not run on Elixir versions before 1.10.
+Tests are run on Elixir 1.11 and later.  `ex_cldr` may not run on Elixir versions before 1.11.
 
