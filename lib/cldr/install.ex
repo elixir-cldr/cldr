@@ -89,7 +89,7 @@ defmodule Cldr.Install do
     require Logger
 
     output_file_name = locale_output_file_name(locale_name, config)
-    url = String.to_charlist("#{base_url()}#{locale_filename(locale_name)}")
+    url = "#{base_url()}#{locale_filename(locale_name)}"
 
     case Cldr.Http.get(url) do
       {:ok, body} ->

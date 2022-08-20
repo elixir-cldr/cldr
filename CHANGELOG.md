@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.33.1
+
+This is the changelog for Cldr v2.33.1 released on August 20th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Enhancements
+
+* Now delegates locale installation to `Cldr.Http.get/2` in the [cldr_utils](https://hex.pm/packages/cldr_utils) library so that we can centralise request handling and provide an "unsafe TLS" option for downloading to support resolution of [#184](https://github.com/elixir-cldr/cldr/issues/184).
+
 ## Cldr v2.33.0
 
 This is the changelog for Cldr v2.33.0 released on July 31st, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
