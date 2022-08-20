@@ -5,9 +5,8 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-## CI Using Github Actions {: .info}
-
-If you are using Github Actions for your CI you may find there is an [SSL error when compilation is downloading locales](https://github.com/elixir-cldr/cldr/issues/184). Community feedback indicates that testing with OTP-25 resolves the issue.
+> ### CI Using Github Actions {: .info}
+> If you are using Github Actions for your CI you may find there is an [SSL error when compilation is downloading locales](https://github.com/elixir-cldr/cldr/issues/184). Community feedback indicates that testing with OTP-25 resolves the issue.
 
 ## If you use Cldr.Plug.PutLocale
 
@@ -26,7 +25,7 @@ end
 
 ## Introduction
 
-`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of October 27th 2021 and `ex_cldr` Version 2.24.0, `ex_cldr` is based upon [CLDR version 40.0](http://cldr.unicode.org/index/downloads/cldr-40).
+`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 6th 2022 and `ex_cldr` Version 2.28.0, `ex_cldr` is based upon [CLDR version 41.0](http://cldr.unicode.org/index/downloads/cldr-41).
 
 The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
