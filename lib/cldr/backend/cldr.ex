@@ -103,7 +103,7 @@ defmodule Cldr.Backend do
       end
 
       @doc """
-      Returns a list of GetText locale names but in CLDR format with
+      Returns a list of Gettext locale names but in CLDR format with
       underscore replaced by hyphen in order to facilitate comparisons
       with `Cldr` locale names.
 

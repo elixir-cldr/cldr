@@ -677,7 +677,7 @@ defmodule Cldr do
   ## Arguments
 
   * `backend` is any module name that may be a
-    `CLDR` backend module.
+    `Cldr` backend module.
 
   ## Returns
 
@@ -905,7 +905,7 @@ defmodule Cldr do
   end
 
   @doc """
-  Returns a list of GetText locale names but in CLDR format with
+  Returns a list of Gettext locale names but in CLDR format with
   underscore replaced by hyphen in order to facilitate comparisons
   with Cldr locale names.
 
@@ -1091,7 +1091,7 @@ defmodule Cldr do
   @doc """
   Returns either the Gettext `locale_name` in Cldr format or
   `false` based upon whether the locale name is configured in
-  `GetText`.
+  `Gettext`.
 
   ## Arguments
 
