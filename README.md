@@ -5,9 +5,6 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-> ### CI Using Github Actions {: .info}
-> If you are using Github Actions for your CI you may find there is an [SSL error when compilation is downloading locales](https://github.com/elixir-cldr/cldr/issues/184). Community feedback indicates that testing with OTP-25 resolves the issue.
-
 ## If you use Cldr.Plug.PutLocale
 
 Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been extracted to their own `ex_cldr_plugs` library. you will need to add that dependency to your application. For example:
