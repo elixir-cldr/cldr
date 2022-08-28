@@ -8,6 +8,7 @@ Protocol.derive(Jason.Encoder, Ratio)
 defmodule Cldr.Unit.Expression do
   @moduledoc false
 
+  @dialyzer {:nowarn_function, run: 2}
   def run("", _constants) do
     0
   end

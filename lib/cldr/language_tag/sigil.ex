@@ -39,7 +39,7 @@ defmodule Cldr.LanguageTag.Sigil do
 
   """
   defmacro sigil_l(locale_name, 'u') do
-    {:<<>>, [_], [locale_name]} = locale_name
+    {:<<>>, _, [locale_name]} = locale_name
 
     case parse_locale(String.split(locale_name, "|")) do
       {:ok, locale_name} ->
@@ -53,7 +53,7 @@ defmodule Cldr.LanguageTag.Sigil do
   end
 
   defmacro sigil_l(locale_name, _opts) do
-    {:<<>>, [_], [locale_name]} = locale_name
+    {:<<>>, _, [locale_name]} = locale_name
 
     case validate_locale(String.split(locale_name, "|")) do
       {:ok, locale_name} ->

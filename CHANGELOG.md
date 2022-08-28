@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.33.2
+
+This is the changelog for Cldr v2.33.2 released on August 28th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Fixes a bug in `Cldr.LanguageTag.Sigil.sigil_l/2`. With the changes in metadata structure for Elixir 14 a pattern match was failing. The pattern is now fixed and is backwards compatible with earlier Elixir versions.
+
 ## Cldr v2.33.1
 
 This is the changelog for Cldr v2.33.1 released on August 20th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
