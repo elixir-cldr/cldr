@@ -34,7 +34,8 @@ defmodule Cldr.Test do
                "ellipsis",
                "lenient_parse",
                "locale_display_names",
-               "subdivisions"
+               "subdivisions",
+               "person_names"
              ]
   end
 

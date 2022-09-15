@@ -69,7 +69,8 @@ defmodule Cldr.Config do
     "ellipsis",
     "lenient_parse",
     "locale_display_names",
-    "subdivisions"
+    "subdivisions",
+    "person_names"
   ]
 
   @root_locale_name :und

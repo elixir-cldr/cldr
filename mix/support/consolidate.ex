@@ -122,6 +122,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.Ellipsis.normalize(locale)
     |> Normalize.LenientParse.normalize(locale)
     |> Normalize.LocaleDisplayNames.normalize(locale)
+    |> Normalize.PersonName.normalize(locale)
   end
 
   # Remove the top two levels of the map since they add nothing
