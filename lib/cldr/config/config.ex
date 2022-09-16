@@ -2214,6 +2214,7 @@ defmodule Cldr.Config do
     |> Map.values()
     |> Enum.map(&Map.delete(&1, :currency_spacing))
     |> Enum.map(&Map.delete(&1, :currency_long))
+    |> Enum.map(&Map.delete(&1, :currency_with_iso))
     |> Enum.map(&Map.delete(&1, :other))
     |> Enum.map(&Map.values/1)
     |> List.flatten()
