@@ -124,6 +124,7 @@ defmodule Cldr.LanguageTag do
   lb        | Line break style identifier      | strict, normal, loose
   lw        | Word break identifier            | normal, breakall, keepall
   ms        | Measurement system identifier    | metric, ussystem, uksystem
+  mu        | Measurement unit override        | celsius, fahrenhe, kelvin
   nu        | Number system identifier         | arabext, armnlow, roman, tamldec
   rg        | Region override                  | The value is a unicode_region_subtag for a regular region (not a macroregion), suffixed by "ZZZZ"
   sd        | Subdivision identifier           | A unicode_subdivision_id, which is a unicode_region_subtagconcatenated with a unicode_subdivision_suffix.
