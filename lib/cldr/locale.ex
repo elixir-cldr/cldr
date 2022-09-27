@@ -110,8 +110,8 @@ defmodule Cldr.Locale do
   ### Likely subtags
 
   CLDR also provides data to indetify the most likely subtags for a
-  requested locale name.  This data is based on the default content data,
-  the population data, and the the suppress-script data in [BCP47]. It is
+  requested locale name. This data is based on the default content data,
+  the population data, and the suppress-script data in [BCP47]. It is
   heuristically derived, and may change over time. For example, when
   requesting the locale "en", the following is returned:
 
@@ -461,7 +461,7 @@ defmodule Cldr.Locale do
   be used to resolve translation or other localization
   data if such localised data does not exist for
   this specific locale. After locale-specific fallbacks
-  are determined, the the default locale and its fallbacks
+  are determined, the default locale and its fallbacks
   are added to the chain.
 
   ## Arguments
@@ -512,7 +512,7 @@ defmodule Cldr.Locale do
   be used to resolve translation or other localization
   data if such localised data does not exist for
   this specific locale. After locale-specific fallbacks
-  are determined, the the default locale and its fallbacks
+  are determined, the default locale and its fallbacks
   are added to the chain.
 
   ## Arguments
@@ -562,13 +562,13 @@ defmodule Cldr.Locale do
 
   @doc """
   Returns the list of fallback locale names, starting with
-  the the provided locale.
+  the provided locale.
 
   Fallbacks are a list of locate names which can
   be used to resolve translation or other localization
   data if such localised data does not exist for
   this specific locale. After locale-specific fallbacks
-  are determined, the the default locale and its fallbacks
+  are determined, the default locale and its fallbacks
   are added to the chain.
 
   ## Arguments
@@ -610,13 +610,13 @@ defmodule Cldr.Locale do
 
   @doc """
   Returns the list of fallback locale names, starting with
-  the the provided locale.
+  the provided locale.
 
   Fallbacks are a list of locate names which can
   be used to resolve translation or other localization
   data if such localised data does not exist for
   this specific locale. After locale-specific fallbacks
-  are determined, the the default locale and its fallbacks
+  are determined, the default locale and its fallbacks
   are added to the chain.
 
   ## Arguments
@@ -660,7 +660,7 @@ defmodule Cldr.Locale do
   be used to resolve translation or other localization
   data if such localised data does not exist for
   this specific locale. After locale-specific fallbacks
-  are determined, the the default locale and its fallbacks
+  are determined, the default locale and its fallbacks
   are added to the chain.
 
   ## Arguments
