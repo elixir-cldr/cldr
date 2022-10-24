@@ -34,7 +34,8 @@ defmodule Cldr.Test do
                "ellipsis",
                "lenient_parse",
                "locale_display_names",
-               "subdivisions"
+               "subdivisions",
+               "person_names"
              ]
   end
 
@@ -71,7 +72,7 @@ defmodule Cldr.Test do
       [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
        :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
        :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-       :id, :is, :it, :ja, :ka, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
+       :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
        :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
        :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vi, :yue,
        :"yue-Hans", :zh, :"zh-Hant"]

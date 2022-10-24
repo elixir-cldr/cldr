@@ -9,6 +9,7 @@ defmodule Cldr.Unit.Expression do
   @moduledoc false
   @dialyzer {:nowarn_function, run: 2}
 
+  @dialyzer {:nowarn_function, run: 2}
   def run("", _constants) do
     0
   end
@@ -33,11 +34,11 @@ defmodule Cldr.Unit.Expression do
   end
 
   def run(["*", v1, v2], constants) do
-    run(v1, constants) * run(v2, constants)
+    Ratio.mult(run(v1, constants), run(v2, constants))
   end
 
   def run(["/", v1, v2], constants) do
-    run(v1, constants) / run(v2, constants)
+    Ratio.div(run(v1, constants), run(v2, constants))
   end
 
   def run(["^", v1, v2], constants) do

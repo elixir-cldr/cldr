@@ -23,6 +23,7 @@ defmodule Cldr.Validity.U do
     "lb" => :lb,
     "lw" => :lw,
     "ms" => :ms,
+    "mu" => :mu,
     "ss" => :ss,
     "tz" => :timezone,
     "rg" => :rg,

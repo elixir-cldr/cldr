@@ -9,7 +9,7 @@ if Cldr.Config.production_data_location do
 
     @shortdoc "Download ISO Currency codes and definitions"
 
-    @url 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml'
+    @url 'https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml'
     @output_file_name Path.join(Cldr.Config.download_data_dir(), "iso_currencies.xml")
 
     @doc false

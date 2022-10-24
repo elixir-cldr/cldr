@@ -69,7 +69,8 @@ defmodule Cldr.Config do
     "ellipsis",
     "lenient_parse",
     "locale_display_names",
-    "subdivisions"
+    "subdivisions",
+    "person_names"
   ]
 
   @root_locale_name :und
@@ -946,9 +947,9 @@ defmodule Cldr.Config do
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
        :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
        :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
-       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :khmr, :knda, :lana, :lanatham,
+       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :kawi, :khmr, :knda, :lana, :lanatham,
        :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
-       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
+       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :nagm,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
        :tirh, :tnsa, :vaii, :wara, :wcho]
@@ -1463,7 +1464,7 @@ defmodule Cldr.Config do
         :"fr-KM", :"fr-LU", :"fr-MA", :"fr-MC", :"fr-MF", :"fr-MG", :"fr-ML",
         :"fr-MQ", :"fr-MR", :"fr-MU", :"fr-NC", :"fr-NE", :"fr-PF", :"fr-PM",
         :"fr-RE", :"fr-RW", :"fr-SC", :"fr-SN", :"fr-SY", :"fr-TD", :"fr-TG",
-        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT"
+        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT", :frr
       ]
 
   """
@@ -1651,6 +1652,7 @@ defmodule Cldr.Config do
           "cy" => %{official_status: "official_regional", population_percent: 1.3},
           "de" => %{population_percent: 9},
           "en" => %{official_status: "official", population_percent: 98},
+          "en-Shaw" => %{population_percent: 0},
           "es" => %{population_percent: 8},
           "fr" => %{population_percent: 23},
           "ga" => %{official_status: "official_regional", population_percent: 0.15},
@@ -1768,7 +1770,8 @@ defmodule Cldr.Config do
           "en" => %{official_status: "de_facto_official", population_percent: 96},
           "it" => %{population_percent: 1.9},
           "wbp" => %{population_percent: 0.0098},
-          "zh-Hant" => %{population_percent: 2.1}
+          "zh-Hant" => %{population_percent: 2.1},
+          "hnj" => %{population_percent: 0.0086}
         },
         literacy_percent: 99,
         measurement_system: %{default: :metric, paper_size: :a4, temperature: :metric},
@@ -1965,7 +1968,7 @@ defmodule Cldr.Config do
           denominator: 13469199089641601294165159418313264309149074316066816,
           numerator: 12746616238742849396626455585282990375683527307233
         },
-        offset: 0,
+        offset: %{denominator: 1, numerator: 0},
         systems: [:ussystem]
       }
 
@@ -2211,6 +2214,7 @@ defmodule Cldr.Config do
     |> Map.values()
     |> Enum.map(&Map.delete(&1, :currency_spacing))
     |> Enum.map(&Map.delete(&1, :currency_long))
+    |> Enum.map(&Map.delete(&1, :currency_with_iso))
     |> Enum.map(&Map.delete(&1, :other))
     |> Enum.map(&Map.values/1)
     |> List.flatten()

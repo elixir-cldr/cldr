@@ -122,8 +122,9 @@ defmodule Cldr.LanguageTag do
   fw        | First day of the week identifier | sun, mon, tue, wed, ...
   hc        | Hour cycle identifier            | h12, h23, h11, h24
   lb        | Line break style identifier      | strict, normal, loose
-  lw        | Word break identifier            | normal, breakall, keepall
+  lw        | Word break identifier            | normal, breakall, keepall, phrase
   ms        | Measurement system identifier    | metric, ussystem, uksystem
+  mu        | Measurement unit override        | celsius, fahrenhe, kelvin which overrides the ms key
   nu        | Number system identifier         | arabext, armnlow, roman, tamldec
   rg        | Region override                  | The value is a unicode_region_subtag for a regular region (not a macroregion), suffixed by "ZZZZ"
   sd        | Subdivision identifier           | A unicode_subdivision_id, which is a unicode_region_subtagconcatenated with a unicode_subdivision_suffix.

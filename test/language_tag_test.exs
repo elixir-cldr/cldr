@@ -147,4 +147,15 @@ defmodule CldrLanguageTagTest do
                 transform: %{}
               }}
   end
+
+  test "with u extension and measurement unit override" do
+    import Cldr.LanguageTag.Sigil
+
+    assert ~l"en-u-mu-celsius"
+    assert ~l"en-u-mu-fahrenhe"
+    assert ~l"en-u-mu-kelvin"
+
+    assert Cldr.validate_locale("en-u-mu-bogus") ==
+      {:error, {Cldr.LanguageTag.ParseError, "The value \"bogus\" is not valid for the key \"mu\""}}
+  end
 end

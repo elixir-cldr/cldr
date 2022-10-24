@@ -62,7 +62,7 @@ defmodule Cldr do
   ## Example
 
       iex> Cldr.version
-      {41, 0, 0}
+      {42, 0, 0}
 
   """
   @version Config.version()
@@ -1980,9 +1980,9 @@ defmodule Cldr do
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
        :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
        :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
-       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :khmr, :knda, :lana, :lanatham,
+       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :kawi, :khmr, :knda, :lana, :lanatham,
        :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
-       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng,
+       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :nagm,
        :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
        :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
        :tirh, :tnsa, :vaii, :wara, :wcho]
