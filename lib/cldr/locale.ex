@@ -12,7 +12,7 @@ defmodule Cldr.Locale do
 
   * a Language code such as `en` or `fr`
 
-  * a Language code and Tertitory code such as `en-GB`
+  * a Language code and Territory code such as `en-GB`
 
   * a Language code and Script such as `zh-Hant`
 
