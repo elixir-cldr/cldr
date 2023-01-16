@@ -1772,13 +1772,13 @@ defmodule Cldr.Locale do
   * `language_tag` is any language tag returned by
     `Cldr.Locale.new/2`.
 
-  * `fun/1` is single-arity function that takes a string
-    locale name. The locale name is a built from the language,
+  * `fun/2` is 2-arity function that takes a string
+    locale name and subtags. The locale name is a built from the language,
     script, territory and variant combinations of `language_tag`.
 
   ## Returns
 
-  * The first `truthy` value returned by `fun/1` or `nil` if no
+  * The first `truthy` value returned by `fun/2` or `nil` if no
     match is made.
 
   """
