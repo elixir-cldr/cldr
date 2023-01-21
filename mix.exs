@@ -47,7 +47,7 @@ defmodule Cldr.Mixfile do
       {:cldr_utils, "~> 2.18"},
 
       {:decimal, "~> 1.6 or ~> 2.0"},
-      {:castore, "~> 0.1", optional: true},
+      {:castore, "~> 0.1 or ~> 1.0", optional: true},
       {:certifi, "~> 2.5", optional: true},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
