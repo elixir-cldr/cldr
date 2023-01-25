@@ -2,6 +2,16 @@
 
 ## Cldr v2.34.0
 
+This is the changelog for Cldr v2.34.1 released on January 25th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Removes the dependecies [castore](https://hex.pm/packages/castore) and [certifi](https://hex.pm/packages/certifi) since they are not required by `ex_cldr` (they are optional dependencies of the dependent [ex_cldr_utils](https://hex.pm/package/ex_cldr_utils)). Thanks to @maennchen for the PR but deleting the dependency definitions here seems more appropriate. Closes #191.
+
+## Cldr v2.34.0
+
 This is the changelog for Cldr v2.34.0 released on October 19th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
