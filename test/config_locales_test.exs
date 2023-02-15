@@ -92,4 +92,14 @@ defmodule Cldr.Config.Test do
     assert Cldr.Config.Test.PosixDefaultLocale.known_locale_names() == [:en, :"en-GB"]
     assert Cldr.Config.Test.PosixDefaultLocale.default_locale().cldr_locale_name == :"en-GB"
   end
+
+  test "that redundant Cldr.Currency is warned if Cldr.Number is configured" do
+    assert capture_io(:stderr, fn ->
+      capture_io(fn ->
+        defmodule ConfigRedundant do
+          use Cldr, default_locale: "en", providers: [Cldr.Number, Cldr.Currency]
+        end
+      end)
+    end) =~ "The provider Cldr.Currency is redundant"
+  end
 end

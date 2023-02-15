@@ -2447,7 +2447,7 @@ defmodule Cldr.Config do
   end
 
   def dedup_provider_modules(%{providers: providers, backend: backend} = config) do
-    groups = Enum.group_by(providers, & &1)
+    groups = Enum.group_by(providers, & &1) |> maybe_remove_currency_provider()
     config = Map.put(config, :providers, Map.keys(groups))
 
     duplicates =
@@ -2468,6 +2468,19 @@ defmodule Cldr.Config do
 
   def dedup_provider_modules(config) do
     config
+  end
+
+  defp maybe_remove_currency_provider(providers) do
+    if Map.has_key?(providers, Cldr.Number) and Map.has_key?(providers, Cldr.Currency) do
+      IO.warn(
+        "The provider Cldr.Currency is redundant when Cldr.Number is configured. Please remove " <>
+        "Cldr.Currency from your CLDR backend provider configuration.", []
+      )
+
+      Map.delete(providers, Cldr.Currency)
+    else
+      providers
+    end
   end
 
   # Returns the AST of any configured plugins

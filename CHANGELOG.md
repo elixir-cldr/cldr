@@ -1,6 +1,16 @@
 # Changelog
 
-## Cldr v2.34.0
+## Cldr v2.34.2
+
+This is the changelog for Cldr v2.34.2 released on ____, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Notify if `Cldr.Currency` backend provider is configured when `Cldr.Number` is already configured. `Cldr.Number` provider already configures `Cldr.Currency` so a compiler warning is generated if it is explicitly configured. Thanks for @lawik for the report. Closes #194.
+
+## Cldr v2.34.1
 
 This is the changelog for Cldr v2.34.1 released on January 25th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
