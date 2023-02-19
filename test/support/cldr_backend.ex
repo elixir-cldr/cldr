@@ -1,3 +1,7 @@
+require TestBackend.Gettext.Plural
+require TestGettext.Gettext
+require TestGettext.GettextWithCldrPlural
+
 # Test with Gettext
 defmodule WithGettextBackend.Cldr do
   use Cldr,
