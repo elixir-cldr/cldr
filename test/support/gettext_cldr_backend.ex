@@ -3,6 +3,8 @@ defmodule TestGettext.GettextWithCldrPlural do
   Implements a Gettext-compatible module but using Cldr locales.  Its for
   testing only.
   """
+  require TestBackend.Gettext.Plural
+
   use Gettext,
     otp_app: Cldr.Config.app_name(),
     plural_forms: TestBackend.Gettext.Plural,

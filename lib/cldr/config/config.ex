@@ -748,12 +748,18 @@ defmodule Cldr.Config do
 
   @doc """
   Return the saved language tag for the
-  given locale name
+  given locale name.
   """
   @spec language_tag(Locale.locale_name()) :: Cldr.LanguageTag.t() | no_return()
+
+  # Even if compiling its possible, at the beginning, that
+  # the cache server isn't fully up and runing to we return a
+  # non-cached version is absolutely necessary
+
   def language_tag(locale_name) do
     if Cldr.Locale.Cache.compiling?() do
-      Cldr.Locale.Cache.get_language_tag(locale_name)
+      Cldr.Locale.Cache.get_language_tag(locale_name) ||
+        Map.fetch!(all_language_tags(), locale_name)
     else
       Map.fetch!(all_language_tags(), locale_name)
     end
