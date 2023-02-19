@@ -1,3 +1,5 @@
+require TestBackend.Gettext.Plural
+
 defmodule TestGettext.Gettext do
   @moduledoc """
   Implements a Gettext-compatible module but using Cldr locales.  Its for
