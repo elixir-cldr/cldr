@@ -8,6 +8,8 @@ This is the changelog for Cldr v2.34.2 released on ____, 2023.  For older change
 
 ### Bug Fixes
 
+* Fix compatibility for CLDR-based Gettext plural backends for Gettext versions >= 0.22.
+
 * Notify if `Cldr.Currency` backend provider is configured when `Cldr.Number` is already configured. `Cldr.Number` provider already configures `Cldr.Currency` so a compiler warning is generated if it is explicitly configured. Thanks for @lawik for the report. Closes #194.
 
 ## Cldr v2.34.1

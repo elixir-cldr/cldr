@@ -56,22 +56,6 @@ defmodule Cldr.Gettext.Plural do
       alias Cldr.LanguageTag
       alias Cldr.Locale
 
-      @rules Cldr.Config.cldr_data_dir()
-             |> Path.join("/plural_rules.json")
-             |> File.read!()
-             |> Cldr.Config.json_library().decode!
-             |> Map.get("cardinal")
-             |> Cldr.Config.normalize_plural_rules()
-             |> Map.new()
-
-
-      @nplurals_range [0, 1, 2, 3, 4, 5]
-      @gettext_nplurals @rules
-                        |> Enum.map(fn {locale, rules} ->
-                          {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
-                        end)
-                        |> Map.new()
-
       @doc """
       Returns the number of plural forms for a given locale.
 
@@ -90,21 +74,44 @@ defmodule Cldr.Gettext.Plural do
       """
       @spec nplurals(Locale.locale_name() | String.t()) :: pos_integer() | no_return()
 
+      # This is a very unsophisticated fallback mechanism to
+      # resolve the plurals for a given locale. It only falls
+      # back to the language part of a language tag.
+
       def nplurals(%LanguageTag{cldr_locale_name: cldr_locale_name}) do
         nplurals(cldr_locale_name)
       end
 
       def nplurals(locale_name) when is_atom(locale_name) do
-        gettext_nplurals()
-        |> Map.fetch!(locale_name)
-        |> Enum.count()
+        case Map.fetch(gettext_nplurals(), locale_name) do
+          {:ok, plurals} ->
+            Enum.count(plurals)
+
+          :error ->
+            case String.split(Atom.to_string(locale_name), "-") do
+              [string_locale_name] ->
+                raise KeyError, "Key #{inspect locale_name} not found"
+
+              [language | _rest] ->
+                nplurals(language)
+             end
+        end
       end
 
+      # We are using String.to_atom/1 which is not a preferred
+      # option however it is not being called with user input
+      # and will only be called from Gettext configuration so
+      # the risk is considered mitigated. It is used because
+      # when compiling modules that `use` this one we cannot
+      # guarantee that the configured CLDR locales are compiled
+      # and therefore we cannot assume that the atoms representing
+      # those locales have been instantiated.
+
       def nplurals(locale_name) when is_binary(locale_name) do
-        locale_name = String.to_existing_atom(locale_name)
-        nplurals(locale_name)
-      rescue ArgumentError ->
-        raise KeyError, "Key #{inspect locale_name} not found"
+        locale_name
+        |> Cldr.Config.locale_name_from_posix()
+        |> String.to_atom()
+        |> nplurals()
       end
 
       @doc """
@@ -137,6 +144,9 @@ defmodule Cldr.Gettext.Plural do
           iex> #{inspect(__MODULE__)}.plural("en", 112)
           1
 
+          iex> #{inspect(__MODULE__)}.plural("en_GB", 112)
+          1
+
       """
       @spec plural(String.t() | LanguageTag.t(), number()) ::
               0 | pos_integer() | no_return()
@@ -144,9 +154,23 @@ defmodule Cldr.Gettext.Plural do
       def plural(%LanguageTag{cldr_locale_name: cldr_locale_name} = locale, n) do
         rule = unquote(backend).Number.Cardinal.plural_rule(n, cldr_locale_name)
 
-        gettext_nplurals()
-        |> Map.get(cldr_locale_name)
-        |> Keyword.get(rule)
+        case Map.fetch(gettext_nplurals(), cldr_locale_name) do
+          {:ok, rules} ->
+            Keyword.fetch!(rules, rule)
+
+          :error ->
+            case String.split(Atom.to_string(cldr_locale_name), "-") do
+              [string_locale_name] ->
+                raise KeyError, "Key #{inspect cldr_locale_name} not found"
+
+              [language | _rest] ->
+                rule = unquote(backend).Number.Cardinal.plural_rule(n, String.to_atom(language))
+
+                gettext_nplurals()
+                |> Map.fetch!(String.to_atom(language))
+                |> Keyword.fetch!(rule)
+             end
+        end
       end
 
       def plural(locale_name, n) do
@@ -156,6 +180,22 @@ defmodule Cldr.Gettext.Plural do
           {:error, _reason} -> raise Elixir.Gettext.Plural.UnknownLocaleError, locale_name
         end
       end
+
+      @rules Cldr.Config.cldr_data_dir()
+             |> Path.join("/plural_rules.json")
+             |> File.read!()
+             |> Cldr.Config.json_library().decode!
+             |> Map.get("cardinal")
+             |> Cldr.Config.normalize_plural_rules()
+             |> Map.new()
+
+
+      @nplurals_range [0, 1, 2, 3, 4, 5]
+      @gettext_nplurals @rules
+                        |> Enum.map(fn {locale, rules} ->
+                          {locale, Keyword.keys(rules) |> Enum.zip(@nplurals_range)}
+                        end)
+                        |> Map.new()
 
       defp gettext_nplurals do
         @gettext_nplurals
