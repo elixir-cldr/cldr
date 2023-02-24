@@ -20,7 +20,7 @@ This is the changelog for Cldr v2.34.1 released on January 25th, 2023.  For olde
 
 ### Bug Fixes
 
-* Removes the dependecies [castore](https://hex.pm/packages/castore) and [certifi](https://hex.pm/packages/certifi) since they are not required by `ex_cldr` (they are optional dependencies of the dependent [ex_cldr_utils](https://hex.pm/package/ex_cldr_utils)). Thanks to @maennchen for the PR but deleting the dependency definitions here seems more appropriate. Closes #191.
+* Removes the dependencies [castore](https://hex.pm/packages/castore) and [certifi](https://hex.pm/packages/certifi) since they are not required by `ex_cldr` (they are optional dependencies of the dependent [ex_cldr_utils](https://hex.pm/package/ex_cldr_utils)). Thanks to @maennchen for the PR but deleting the dependency definitions here seems more appropriate. Closes #191.
 
 ## Cldr v2.34.0
 
