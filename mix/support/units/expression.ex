@@ -1,15 +1,15 @@
-# This module resolves the expressions in the CLDR unit_preferences.xml
-# file as a rational number using the Ratio library. This approach is
-# intended to preserve precision wherever possible.
-
 require Protocol
 Protocol.derive(Jason.Encoder, Ratio)
 
 defmodule Cldr.Unit.Expression do
   @moduledoc false
-  @dialyzer {:nowarn_function, run: 2}
+
+  # This module resolves the expressions in the CLDR unit_preferences.xml
+  # file as a rational number using the Ratio library. This approach is
+  # intended to preserve precision wherever possible.
 
   @dialyzer {:nowarn_function, run: 2}
+
   def run("", _constants) do
     0
   end
