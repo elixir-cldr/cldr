@@ -247,6 +247,8 @@ use Cldr,
 
  * `:precompile_interval_formats`: provides a means to have user-defined interval format strings precompiled at application compile time.  This has a performance benefit since precompiled formats execute approximately twice as fast as formats that are not precompiled. These formats are used by [ex_cldr_date_times](https://hex.pm/packages/ex_cldr_dates_times).
 
+ * `:default_currency_format` determines whether `Cldr.Number.to_string/2` will use `:currency` or `:accounting` if no format is specified but a currency is. The default is `nil` which means that the format will be derived from the locale.
+
  * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
 
  * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) which prevent the generation of docs for this backend.

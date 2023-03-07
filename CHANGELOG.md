@@ -12,9 +12,9 @@ This is the changelog for Cldr v2.35.0 released on March 7th, 2023.  For older c
 
 ### Enhancements
 
-* No longer `IO.warn/2` when `Cldr.Number` and `Cldr.Currency` are both configured as providers. A console note is still issued but it will not raise a compiler warning.
+* Add `:default_currency_format` option to a backend configuration. The value must be either `:currency`, `:accounting` or `nil` (the default). This option is used by `ex_cldr_numbers` from version 2.30.0 onwards. If `nil` the format will be derived from the locale.
 
-* Add `:default_currency_format` option to a backend configuration. The value must be either `:currency`, `:accounting` or `nil` (the default). This option is used by `ex_cldr_numbers` from version 2.35.0 onwards. If `nil` the format will be derived from the locale.
+* No longer `IO.warn/2` when `Cldr.Number` and `Cldr.Currency` are both configured as providers. A console note is still issued but it will not raise a compiler warning.
 
 ## Cldr v2.34.2
 
