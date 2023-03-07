@@ -28,7 +28,7 @@ defmodule Cldr.Config.Dependents do
   # For compatibility with the releases that don't configure
   # Reconsider this.
   def cldr_provider_modules(%Cldr.Config{providers: nil, backend: backend} = config) do
-    if !config.supress_warnings do
+    if !config.suppress_warnings do
       require Logger
 
       Logger.warning(

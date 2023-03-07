@@ -23,9 +23,10 @@ defmodule Cldr.Config do
             precompile_transliterations: [],
             precompile_date_time_formats: [],
             precompile_interval_formats: [],
+            default_currency_format: nil,
             otp_app: nil,
             generate_docs: true,
-            supress_warnings: false,
+            suppress_warnings: false,
             message_formats: %{},
             force_locale_download: false
 
@@ -40,10 +41,11 @@ defmodule Cldr.Config do
           precompile_transliterations: [{atom(), atom()}, ...],
           precompile_date_time_formats: [String.t(), ...],
           precompile_interval_formats: [String.t(), ...],
+          default_currency_format: :currency | :accounting | nil,
           otp_app: atom() | nil,
           providers: [atom(), ...],
           generate_docs: boolean(),
-          supress_warnings: boolean(),
+          suppress_warnings: boolean(),
           message_formats: map(),
           force_locale_download: boolean
         }
@@ -2361,9 +2363,10 @@ defmodule Cldr.Config do
     ]
   end
 
-  @doc false
   # Since this uses Mix it is only valid at compile
-  # time
+  # time.
+
+  @doc false
   def config_from_opts(module_config) do
     config =
       global_config()
@@ -2375,12 +2378,30 @@ defmodule Cldr.Config do
       config
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
+      |> Map.put(:default_currency_format, nil)
+      |> fix_suppress_warnings_typo()
       |> merge_locales_with_default()
       |> remove_gettext_only_locales()
       |> sort_locales()
       |> dedup_provider_modules()
+      |> validate_default_currency_format()
 
     struct(__MODULE__, config)
+  end
+
+  defp fix_suppress_warnings_typo(%{supress_warnings: suppress} = config) do
+    note(
+      "The option :supress_warnings has been deprecated and replaced with :suppress_warnings",
+      config
+    )
+
+    config
+    |> Map.delete(:supress_warnings)
+    |> Map.put(:suppress_warnings, suppress)
+  end
+
+  defp fix_suppress_warnings_typo(config) do
+    config
   end
 
   defp sort_locales(%{locales: :all} = config) do
@@ -2437,23 +2458,12 @@ defmodule Cldr.Config do
   end
 
   @doc false
-  def note(text, config) do
-    if config[:supress_warnings] do
-      [IO.ANSI.yellow(), "note: ", IO.ANSI.reset(), text]
-      |> :erlang.iolist_to_binary()
-      |> IO.puts
-    else
-      :ok
-    end
-  end
-
-  @doc false
   def dedup_provider_modules(%{providers: []} = config) do
     config
   end
 
   def dedup_provider_modules(%{providers: providers, backend: backend} = config) do
-    groups = Enum.group_by(providers, & &1) |> maybe_remove_currency_provider()
+    groups = Enum.group_by(providers, & &1) |> maybe_remove_currency_provider(config)
     config = Map.put(config, :providers, Map.keys(groups))
 
     duplicates =
@@ -2461,11 +2471,11 @@ defmodule Cldr.Config do
       |> Enum.filter(fn {_k, v} -> length(v) > 1 end)
       |> Enum.map(&elem(&1, 0))
 
-    if length(duplicates) > 0 && !config[:surpress_warnings] do
-      IO.warn(
+    if length(duplicates) > 0 && !config[:suppress_warnings] do
+      note(
         "Duplicate Cldr backend providers #{inspect(providers)} for " <>
           "backend #{inspect(backend)} have been ignored",
-        []
+        config
       )
     end
 
@@ -2476,16 +2486,38 @@ defmodule Cldr.Config do
     config
   end
 
-  defp maybe_remove_currency_provider(providers) do
+  defp maybe_remove_currency_provider(providers, config) do
     if Map.has_key?(providers, Cldr.Number) and Map.has_key?(providers, Cldr.Currency) do
-      IO.warn(
+      note(
         "The provider Cldr.Currency is redundant when Cldr.Number is configured. Please remove " <>
-        "Cldr.Currency from your CLDR backend provider configuration.", []
+        "Cldr.Currency from your CLDR backend provider configuration.", config
       )
 
       Map.delete(providers, Cldr.Currency)
     else
       providers
+    end
+  end
+
+  defp validate_default_currency_format(%{default_currency_format: format} = options)
+      when format in [:currency, :accounting, nil] do
+    options
+  end
+
+  defp validate_default_currency_format(%{default_currency_format: format}) do
+    raise ArgumentError,
+      "Invalid :default_currency_format option specified.\n" <>
+      "Valid options are :currency, :accounting or nil. Found #{inspect format}"
+  end
+
+  @doc false
+  def note(text, config) do
+    if !config[:suppress_warnings] do
+      [IO.ANSI.yellow(), "note: ", IO.ANSI.reset(), text]
+      |> :erlang.iolist_to_binary()
+      |> IO.puts
+    else
+      :ok
     end
   end
 
@@ -2501,7 +2533,7 @@ defmodule Cldr.Config do
     end
   end
 
-  defp log_provider_warning(module, function, args, %{supress_warnings: false} = config) do
+  defp log_provider_warning(module, function, args, %{suppress_warnings: false} = config) do
     require Logger
 
     cond do
@@ -2577,7 +2609,7 @@ defmodule Cldr.Config do
       |> Keyword.delete(:_default_locale)
       |> Enum.map(&elem(&1, 0))
 
-    if length(remaining_config) > 0 && !remaining_config[:supress_warnings] do
+    if length(remaining_config) > 0 && !remaining_config[:suppress_warnings] do
       IO.warn(
         "Using the global configuration is deprecated.  Global configuration " <>
           "only supports the #{inspect(@non_deprecated_keys)} keys. The keys " <>

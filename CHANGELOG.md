@@ -1,5 +1,21 @@
 # Changelog
 
+## Cldr v2.35.0
+
+This is the changelog for Cldr v2.35.0 released on March 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Deprecates `:supress_warnings` backend configuration option in favour of the correctly spelt `:suppress_warning`.
+
+### Enhancements
+
+* No longer `IO.warn/2` when `Cldr.Number` and `Cldr.Currency` are both configured as providers. A console note is still issued but it will not raise a compiler warning.
+
+* Add `:default_currency_format` option to a backend configuration. The value must be either `:currency`, `:accounting` or `nil` (the default). This option is used by `ex_cldr_numbers` from version 2.35.0 onwards. If `nil` the format will be derived from the locale.
+
 ## Cldr v2.34.2
 
 This is the changelog for Cldr v2.34.2 released on February 25th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
