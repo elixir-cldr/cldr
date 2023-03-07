@@ -117,4 +117,34 @@ defmodule Cldr.Config.Test do
       end
     end) =~ "The option :supress_warnings has been deprecated and replaced with :suppress_warnings"
   end
+
+  test ":default_currency_format is configured as :currency" do
+    capture_io(fn ->
+      defmodule DefaultCurrencyFormat do
+        use Cldr,
+          default_locale: "en",
+          providers: [Cldr.Currency],
+          suppress_warnings: false,
+          default_currency_format: :currency
+      end
+    end)
+
+    assert apply(Cldr.Config.Test.DefaultCurrencyFormat, :__cldr__, [:config]).default_currency_format ==
+      :currency
+  end
+
+  test ":default_currency_format is configured as :accounting" do
+    capture_io(fn ->
+      defmodule DefaultAccountingFormat do
+        use Cldr,
+          default_locale: "en",
+          providers: [Cldr.Currency],
+          suppress_warnings: false,
+          default_currency_format: :accounting
+      end
+    end)
+
+    assert apply(Cldr.Config.Test.DefaultAccountingFormat, :__cldr__, [:config]).default_currency_format ==
+      :accounting
+  end
 end

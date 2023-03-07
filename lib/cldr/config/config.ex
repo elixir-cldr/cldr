@@ -2378,7 +2378,7 @@ defmodule Cldr.Config do
       config
       |> Map.put(:default_locale, default_locale_name(config))
       |> Map.put(:data_dir, client_data_dir(config))
-      |> Map.put(:default_currency_format, nil)
+      |> Map.put_new(:default_currency_format, nil)
       |> fix_suppress_warnings_typo()
       |> merge_locales_with_default()
       |> remove_gettext_only_locales()

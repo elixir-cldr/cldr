@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.35.1
+
+This is the changelog for Cldr v2.35.1 released on March 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+** Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Fix bug that prevented setting `:default_currency_format` that slipped into the release (tests added).
+
 ## Cldr v2.35.0
 
 This is the changelog for Cldr v2.35.0 released on March 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
