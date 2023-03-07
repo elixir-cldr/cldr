@@ -4,4 +4,4 @@
 
 * [ ] Implement a CLDR-locale-aware shim for [ex_phone_number](https://hex.pm/packages/ex_phone_number) to make it easy to integrate phone number parsing and printing
 
-* [X] Add configuration option `:default_currency_format` to be either `:currency`, `:accounting` or `nil`. This is used by `ex_cldr_number`
+* [X] Add configuration option `:default_currency_format` to be either `:currency`, `:accounting` or `nil`. This is used by `ex_cldr_number` version 2.30.0 onwards.
