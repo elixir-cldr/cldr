@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.35.0 released on March 7th, 2023.  For older c
 
 ### Bug Fixes
 
-* Deprecates `:supress_warnings` backend configuration option in favour of the correctly spelt `:suppress_warning`.
+* Deprecates `:supress_warnings` backend configuration option in favour of the correctly spelt `:suppress_warnings`.
 
 ### Enhancements
 
