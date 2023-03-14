@@ -1,5 +1,27 @@
 # Changelog
 
+## Cldr v2.37.0
+
+This is the changelog for Cldr v2.37.0 released on ______, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Upgrade to [CLDR 43]() data.
+
+## Cldr v2.36.0
+
+This is the changelog for Cldr v2.36.0 released on March 13th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+**Note that `ex_cldr` version 2.36.0 data for interval formats is keyed differently than that of previous releases. The bug fix noted below means that this version of `ex_cldr` is only compatible with `ex_cldr_dates_times` version `2.13.3` and later. Only `ex_cldr_dates_times` is affected, other `ex_cldr` libraries are insensitive to this change.**
+
+### Bug Fixes
+
+* Fixes the date time interval format keys. In previous releases, the locale ingestion process would treat keys like `:Hm` as being the same as `:hm` and as a result only the lower case version would be saved. This means that locales that rely upon `0..23` or `1..24` hour formats could not be formatted correctly.
+
+* Fixes the `mix cldr.download.iso_currency` to use the `Cldr.Http.get/2` function to download the data. Doing so ensures that peer verification happens and no error log message is emitted.
+
 ## Cldr v2.35.1
 
 This is the changelog for Cldr v2.35.1 released on March 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
