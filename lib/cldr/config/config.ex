@@ -1289,20 +1289,20 @@ defmodule Cldr.Config do
        :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
        :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
        :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
-       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
-       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
-       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
-       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
-       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
-       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
-       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
-       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
-       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
-       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
-       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
-       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
-       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
-       :XK, :YE, :YT, :ZA, :ZM, :ZW]
+       :CL, :CM, :CN, :CO, :CP, :CQ, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ,
+       :DK, :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ,
+       :FK, :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP,
+       :GQ, :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE,
+       :IL, :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI,
+       :KM, :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU,
+       :LV, :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ,
+       :MR, :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL,
+       :NO, :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR,
+       :PS, :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE,
+       :SG, :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ,
+       :TA, :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW,
+       :TZ, :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF,
+       :WS, :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
   def known_territories do
@@ -1748,11 +1748,15 @@ defmodule Cldr.Config do
     |> Map.new()
   end
 
-  defp into_keyword_list(list) do
+  defp into_keyword_list(list) when is_list(list) do
     Enum.reduce(list, Keyword.new(), fn map, acc ->
       currency = Map.to_list(map) |> hd
       [currency | acc]
     end)
+  end
+
+  defp into_keyword_list(nil) do
+    Map.new
   end
 
   @doc """
@@ -1947,7 +1951,13 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.calendars |> Map.get(:gregorian)
-      %{calendar_system: "solar", eras: [[0, %{end: [0, 12, 31]}], [1, %{start: [1, 1, 1]}]]}
+      %{
+        calendar_system: :solar,
+        eras: [
+          [0, %{end: [0, 12, 31], aliases: ["bc", "bce"], code: :gregory_inverse}],
+          [1, %{start: [1, 1, 1], aliases: ["ad", "ce"], code: :gregory}]
+        ]
+      }
 
   """
   def calendars do
@@ -1957,6 +1967,16 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys(except: @keys_to_integerize)
     |> Cldr.Map.integerize_keys()
+    |> Cldr.Map.deep_map(fn
+      {:calendar_system, system} ->
+        {:calendar_system, String.replace(system, "-", "_") |> String.to_atom()}
+      {:aliases, aliases} ->
+        {:aliases, String.split(aliases)}
+      {:code, code} ->
+        {:code, String.replace(code, "-", "_") |> String.to_atom()}
+      other ->
+        other
+    end)
   end
 
   @deprecated "Use Cldr.Config.calendars/0"
