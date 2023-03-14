@@ -9,34 +9,18 @@ if Cldr.Config.production_data_location do
 
     @shortdoc "Download ISO Currency codes and definitions"
 
-    @url 'https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml'
+    @url "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml"
     @output_file_name Path.join(Cldr.Config.download_data_dir(), "iso_currencies.xml")
 
     @doc false
     def run(_) do
-      case :httpc.request(@url) do
-        {:ok, {{_version, 200, 'OK'}, _headers, body}} ->
-          @output_file_name
-          |> File.write!(:erlang.list_to_binary(body))
+      case Cldr.Http.get(@url) do
+        {:ok, body} ->
+          File.write(@output_file_name, body)
+          Logger.info "Downloaded current ISO currency codes to #{inspect @output_file_name}"
 
-          Logger.info("Downloaded ISO Currency data")
-          {:ok, @output_file_name}
-
-        {_, {{_version, code, message}, _headers, _body}} ->
-          Logger.error(
-            "Failed to download ISO Currency data from #{@url}. " <>
-              "HTTP Error: (#{code}) #{inspect(message)}"
-          )
-
-          {:error, code}
-
-        {:error, {:failed_connect, [{_, {host, _port}}, {_, _, sys_message}]}} ->
-          Logger.error(
-            "Failed to connect to #{inspect(host)} to download " <>
-              "ISO Currency data. Reason: #{inspect(sys_message)}"
-          )
-
-          {:error, sys_message}
+        other ->
+          other
       end
     end
   end

@@ -14,6 +14,9 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
   def run(_) do
     # We set the gettext locale name to nil because we can't tell in advance
     # what the gettext locale name will be (if any)
+    locale_count = length(Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names())
+    IO.puts "Generating language tags for #{locale_count} locales"
+    IO.inspect Cldr.Config.non_language_locale_names()
 
     language_tags =
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
@@ -37,7 +40,7 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
     output_path = Path.expand(Path.join("priv/cldr/", "language_tags.ebin"))
     File.write!(output_path, :erlang.term_to_binary(language_tags))
-    IO.puts "Wrote binary term file of #{Enum.count(language_tags)} langauge tags to #{output_path}"
+    IO.puts "Wrote binary term file of #{Enum.count(language_tags)} language tags to #{output_path}"
   end
 
   defp rbnf_locale_name(locale_name) do

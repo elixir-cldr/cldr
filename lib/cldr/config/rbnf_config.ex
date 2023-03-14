@@ -40,10 +40,10 @@ defmodule Cldr.Rbnf.Config do
         [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
-         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vi, :yue,
-         :"yue-Hans", :zh, :"zh-Hant"]
+         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv,
+         :mk, :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vec,
+         :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
     """
   else
@@ -73,10 +73,10 @@ defmodule Cldr.Rbnf.Config do
         [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
-         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
-         :"yue-Hans", :zh, :"zh-Hant"]
+         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv,
+         :mk, :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vec, :vi,
+         :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
     """
   else
