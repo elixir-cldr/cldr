@@ -50,7 +50,7 @@ defmodule Cldr.Mixfile do
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
       {:nimble_parsec, "~> 0.5 or ~> 1.0", optional: true},
-      {:ratio, "~> 2.0 or ~> 3.0", only: [:dev, :test], optional: true},
+      {:ratio, "~> 2.0 or ~> 3.0 or ~> 4.0 or ~> 4.0-rc", only: [:dev, :test], optional: true},
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
