@@ -2144,12 +2144,13 @@ defmodule Cldr.Locale do
       [d]
     ]
 
-  # When we sort the candidate variants its a bi-level sort
+  # When we sort the candidate variants its a bi-level sort.
   # First on the length of the variants (ignoring "und") and
-  # then lexically
+  # then lexically.
 
   defp sort_variants(language, variants) do
-    Enum.flat_map(variants, &[[language | &1], ["und" | &1]])
+    variants
+    |> Enum.flat_map(&[[language | &1], ["und" | &1]])
     |> Enum.sort(fn
       ["und" | rest1], ["und" | rest2] ->
         if length(rest1) == length(rest2),
