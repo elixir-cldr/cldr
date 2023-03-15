@@ -92,7 +92,8 @@ defmodule Cldr.Consolidate do
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
     |> put_localized_subdivisions(locale)
-    |> Cldr.Map.underscore_keys(except: "locale_display_names")
+    |> Cldr.Map.underscore_keys(except: "locale_display_names",
+      skip: ["availableFormats", "intervalFormats"])
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
     |> Cldr.Map.atomize_keys(except: :locale_display_names)

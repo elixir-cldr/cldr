@@ -6,7 +6,7 @@ This is the changelog for Cldr v2.37.0 released on ______, 2023.  For older chan
 
 ### Enhancements
 
-* Upgrade to [CLDR 43]() data.
+* Upgrade to [CLDR 43](https://cldr.unicode.org/index/downloads/cldr-43) data.
 
 ## Cldr v2.36.0
 
