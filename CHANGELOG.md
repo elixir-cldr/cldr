@@ -8,6 +8,8 @@ This is the changelog for Cldr v2.37.0 released on ______, 2023.  For older chan
 
 * Upgrade to [CLDR 43](https://cldr.unicode.org/index/downloads/cldr-43) data.
 
+* Adds `Cldr.version_string/0` to return the version of CLDR data as a string. This is then used to check the version of the locale data and forcing a download if the locale data is out of date for this release of `ex_cldr`.
+
 ## Cldr v2.36.0
 
 This is the changelog for Cldr v2.36.0 released on March 13th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

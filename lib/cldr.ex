@@ -56,6 +56,13 @@ defmodule Cldr do
     end
   end
 
+  @version_string Config.version()
+
+  @version @version_string
+           |> String.split(".")
+           |> Enum.map(&String.to_integer/1)
+           |> List.to_tuple()
+
   @doc """
   Returns the version of the CLDR repository as a tuple
 
@@ -65,14 +72,27 @@ defmodule Cldr do
       {43, 0, 0}
 
   """
-  @version Config.version()
-           |> String.split(".")
-           |> Enum.map(&String.to_integer/1)
-           |> List.to_tuple()
 
   @spec version :: {non_neg_integer, non_neg_integer, non_neg_integer}
   def version do
     @version
+  end
+
+  @doc """
+  Returns the version of the CLDR repository as a
+  string.
+
+  ## Example
+
+      iex> Cldr.version_string
+      "43.0.0"
+
+  """
+  @doc since: "2.37.0"
+
+  @spec version_string :: String.t
+  def version_string do
+    @version_string
   end
 
   @warn_if_greater_than 100
