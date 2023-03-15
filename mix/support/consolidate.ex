@@ -97,6 +97,7 @@ defmodule Cldr.Consolidate do
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
     |> Cldr.Map.atomize_keys(except: :locale_display_names)
+    |> add_version()
     |> save_locale(locale)
   end
 
@@ -124,6 +125,10 @@ defmodule Cldr.Consolidate do
     |> Normalize.LenientParse.normalize(locale)
     |> Normalize.LocaleDisplayNames.normalize(locale)
     |> Normalize.PersonName.normalize(locale)
+  end
+
+  defp add_version(content) do
+    Map.put(content, :version, Cldr.Config.version())
   end
 
   # Remove the top two levels of the map since they add nothing

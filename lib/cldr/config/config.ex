@@ -55,6 +55,7 @@ defmodule Cldr.Config do
   @default_locale_name :"en-001"
 
   @cldr_modules [
+    "version",
     "number_formats",
     "list_formats",
     "currencies",

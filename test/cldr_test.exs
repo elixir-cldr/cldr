@@ -18,6 +18,7 @@ defmodule Cldr.Test do
   test "that we have the correct modules (keys) for the json consolidation" do
     assert Cldr.Config.required_modules() ==
              [
+              "version",
                "number_formats",
                "list_formats",
                "currencies",

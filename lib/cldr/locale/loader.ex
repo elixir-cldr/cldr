@@ -136,12 +136,20 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)
     |> structure_date_formats()
     |> Cldr.Map.atomize_keys(level: 1..1)
+    |> parse_version()
     |> Map.put(:name, locale)
   end
 
   @doc false
   def do_get_locale(locale, path, true) when is_atom(locale) do
     Cldr.Locale.Cache.get_locale(locale, path)
+  end
+
+  defp parse_version(content) do
+    case Map.get(content, :version) do
+      nil -> content
+      version -> Map.put(content, :version, Version.parse!(version))
+    end
   end
 
   # Read the file.
