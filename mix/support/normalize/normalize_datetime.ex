@@ -21,6 +21,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.rename_keys("_numbers", "number_system")
       |> Cldr.Map.rename_keys("_value", "format")
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
+      |> Cldr.Map.underscore_keys(only: "intervalFormatFallback")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
         filter: @normalize_number_systems_for,
         only: "number_system"
@@ -93,7 +94,7 @@ defmodule Cldr.Normalize.DateTime do
     formats =
       formats
       |> Enum.map(fn {name, format} ->
-        case String.split(name, "_count_") do
+        case String.split(name, "-count-") do
           [_no_count] -> {name, format}
           [name, count] -> {name, %{count => format}}
         end
