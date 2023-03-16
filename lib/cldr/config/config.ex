@@ -1335,32 +1335,8 @@ defmodule Cldr.Config do
         locale_name
         |> get_locale(config)
         |> Map.get(:currencies)
-        |> Enum.map(fn {k, v} ->
-          name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
-
-          name =
-            (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))
-            |> String.trim()
-
-          from = convert_or_nilify(Map.get(name_and_range, "from"))
-          to = convert_or_nilify(Map.get(name_and_range, "to"))
-
-          count =
-            Enum.map(Map.get(v, :count), fn {k, v} ->
-              {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
-            end)
-            |> Map.new()
-
-          currency =
-            v
-            |> Map.put(:name, name)
-            |> Map.put(:from, from)
-            |> Map.put(:to, to)
-            |> Map.put(:count, count)
-
-          {k, currency}
-        end)
-        |> Enum.into(%{})
+        |> Enum.map(&split_currency_metadata/1)
+        |> Map.new()
 
       {:ok, currencies}
     else
@@ -1373,6 +1349,42 @@ defmodule Cldr.Config do
       {:ok, currencies} -> currencies
       {:error, {exception, reason}} -> raise exception, reason
     end
+  end
+
+  def split_currency_metadata({k, %{name: nil} = v}) do
+    v =
+      v
+      |> Map.put(:from, nil)
+      |> Map.put(:to, nil)
+      |> Map.put(:count, %{})
+
+    {k, v}
+  end
+
+  def split_currency_metadata({k, %{name: name} = v}) do
+    name_and_range = Regex.named_captures(@reg, name)
+
+    name =
+      (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))
+      |> String.trim()
+
+    from = convert_or_nilify(Map.get(name_and_range, "from"))
+    to = convert_or_nilify(Map.get(name_and_range, "to"))
+
+    count =
+      Enum.map(Map.get(v, :count), fn {k, v} ->
+        {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
+      end)
+      |> Map.new()
+
+    currency =
+      v
+      |> Map.put(:name, name)
+      |> Map.put(:from, from)
+      |> Map.put(:to, to)
+      |> Map.put(:count, count)
+
+    {k, currency}
   end
 
   defp convert_or_nilify("") do

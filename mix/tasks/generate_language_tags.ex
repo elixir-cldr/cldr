@@ -16,7 +16,6 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     # what the gettext locale name will be (if any)
     locale_count = length(Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names())
     IO.puts "Generating language tags for #{locale_count} locales"
-    IO.inspect Cldr.Config.non_language_locale_names()
 
     language_tags =
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
