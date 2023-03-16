@@ -1383,8 +1383,17 @@ defmodule Cldr.Config do
       |> Map.put(:from, from)
       |> Map.put(:to, to)
       |> Map.put(:count, count)
+      |> maybe_put_code_as_symbol(v.symbol, v.code)
 
     {k, currency}
+  end
+
+  defp maybe_put_code_as_symbol(currency, nil = _symbol, code) do
+    Map.put(currency, :symbol, code)
+  end
+
+  defp maybe_put_code_as_symbol(currency, _symbol, _code) do
+    currency
   end
 
   defp convert_or_nilify("") do
