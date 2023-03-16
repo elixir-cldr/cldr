@@ -58,41 +58,19 @@ defmodule Cldr do
 
   @version_string Config.version()
 
-  @version @version_string
-           |> String.split(".")
-           |> Enum.map(&String.to_integer/1)
-           |> List.to_tuple()
-
   @doc """
-  Returns the version of the CLDR repository as a tuple
+  Returns the version of the CLDR repository.
 
   ## Example
 
       iex> Cldr.version
-      {43, 0, 0}
+      Version.parse!(#{inspect(@version_string)})
 
   """
 
-  @spec version :: {non_neg_integer, non_neg_integer, non_neg_integer}
+  @spec version :: Version.t()
   def version do
-    @version
-  end
-
-  @doc """
-  Returns the version of the CLDR repository as a
-  string.
-
-  ## Example
-
-      iex> Cldr.version_string
-      "43.0.0"
-
-  """
-  @doc since: "2.37.0"
-
-  @spec version_string :: String.t
-  def version_string do
-    @version_string
+    Version.parse!(@version_string)
   end
 
   @warn_if_greater_than 100
@@ -241,7 +219,7 @@ defmodule Cldr do
 
   """
   @spec put_locale(backend(), Locale.locale_reference()) ::
-    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def put_locale(backend \\ nil, locale)
 
@@ -315,7 +293,9 @@ defmodule Cldr do
             {:ok, binary() | nil} | {:error, {module(), String.t()}}
 
     def put_gettext_locale(%LanguageTag{gettext_locale_name: nil} = locale) do
-      {:error, {Cldr.UnknownLocaleError, "Locale #{inspect locale} does not map to a known gettext locale name"}}
+      {:error,
+       {Cldr.UnknownLocaleError,
+        "Locale #{inspect(locale)} does not map to a known gettext locale name"}}
     end
 
     def put_gettext_locale(%LanguageTag{gettext_locale_name: gettext_locale_name} = locale) do
@@ -323,7 +303,6 @@ defmodule Cldr do
       _ = Gettext.put_locale(gettext_backend, gettext_locale_name)
       {:ok, gettext_locale_name}
     end
-
   end
 
   @doc """
@@ -985,8 +964,9 @@ defmodule Cldr do
   def known_locale_name(locale_name, backend) when is_binary(locale_name) do
     locale_name = String.to_existing_atom(locale_name)
     known_locale_name(locale_name, backend)
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   @doc """

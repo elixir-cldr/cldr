@@ -12,7 +12,8 @@ defmodule Cldr.Normalize.CalendarEra do
     eras =
       eras
       |> Enum.map(fn {era, dates} ->
-        [String.to_integer(String.replace(era, "_", "-")), adjust_era(dates)] end)
+        [String.to_integer(String.replace(era, "_", "-")), adjust_era(dates)]
+      end)
       |> Enum.sort()
 
     Map.put(content, "eras", eras)

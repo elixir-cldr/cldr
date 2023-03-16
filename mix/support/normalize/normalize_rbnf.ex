@@ -29,5 +29,4 @@ defmodule Cldr.Normalize.Rbnf do
     end)
     |> Map.new()
   end
-
 end

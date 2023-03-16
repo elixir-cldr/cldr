@@ -92,8 +92,10 @@ defmodule Cldr.Consolidate do
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
     |> put_localized_subdivisions(locale)
-    |> Cldr.Map.underscore_keys(except: "locale_display_names",
-      skip: ["availableFormats", "intervalFormats"])
+    |> Cldr.Map.underscore_keys(
+      except: "locale_display_names",
+      skip: ["availableFormats", "intervalFormats"]
+    )
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
     |> Cldr.Map.atomize_keys(except: :locale_display_names)
@@ -169,8 +171,10 @@ defmodule Cldr.Consolidate do
   end
 
   defp jason_decode!("", file) do
-    IO.puts "CLDR json file #{inspect file} was found to be empty. " <>
-      "This is likely a bug in the ldml2json converter"
+    IO.puts(
+      "CLDR json file #{inspect(file)} was found to be empty. " <>
+        "This is likely a bug in the ldml2json converter"
+    )
 
     %{}
   end

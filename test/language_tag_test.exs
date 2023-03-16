@@ -156,6 +156,7 @@ defmodule CldrLanguageTagTest do
     assert ~l"en-u-mu-kelvin"
 
     assert Cldr.validate_locale("en-u-mu-bogus") ==
-      {:error, {Cldr.LanguageTag.ParseError, "The value \"bogus\" is not valid for the key \"mu\""}}
+             {:error,
+              {Cldr.LanguageTag.ParseError, "The value \"bogus\" is not valid for the key \"mu\""}}
   end
 end

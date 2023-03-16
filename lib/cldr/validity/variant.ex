@@ -41,7 +41,7 @@ defmodule Cldr.Validity.Variant do
   def normalize(list) when is_list(list) do
     list
     |> Enum.map(&normalize/1)
-    |> Enum.sort
+    |> Enum.sort()
   end
 
   def normalize(code) when is_binary(code) do

@@ -277,16 +277,15 @@ defmodule Cldr.LanguageTag do
       |> Enum.reject(&empty?/1)
 
     extensions =
-      [{"t", language_tag.transform},{"u", language_tag.locale}]
+      [{"t", language_tag.transform}, {"u", language_tag.locale}]
       |> Kernel.++(Map.to_list(language_tag.extensions))
       |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
       |> Enum.reject(&empty?/1)
       |> Enum.map(&join/1)
 
-    private_use =
-      format_private_use(language_tag.private_use)
+    private_use = format_private_use(language_tag.private_use)
 
-    basic_tag ++ extensions ++ [private_use]
+    (basic_tag ++ extensions ++ [private_use])
     |> Enum.reject(&empty?/1)
     |> Enum.join("-")
   end

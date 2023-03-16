@@ -133,7 +133,7 @@ defmodule Cldr.Validity.T do
         # Dates sort to the end
         Enum.sort(values, fn
           <<digit_1::utf8, _rest_1::binary>>, <<digit_2::utf8, _rest_2::binary>>
-              when digit_1 >= ?0 and digit_1 <= ?9 and digit_2 >= ?0 and digit_2 <= ?9 ->
+          when digit_1 >= ?0 and digit_1 <= ?9 and digit_2 >= ?0 and digit_2 <= ?9 ->
             digit_1 < digit_2
 
           <<digit_1::utf8, _rest::binary>>, _date_2 when digit_1 >= ?0 and digit_1 <= ?9 ->

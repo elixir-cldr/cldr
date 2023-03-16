@@ -311,7 +311,7 @@ defmodule Cldr.Locale do
 
   """
   @spec parents(LanguageTag.t()) ::
-    {:ok, list(LanguageTag.t())} | {:error, {module(), String.t()}}
+          {:ok, list(LanguageTag.t())} | {:error, {module(), String.t()}}
 
   def parents(locale, acc \\ [])
 
@@ -412,8 +412,9 @@ defmodule Cldr.Locale do
   defp known_locale(locale_name, tags, backend) when is_binary(locale_name) do
     locale_name = String.to_existing_atom(locale_name)
     known_locale(locale_name, tags, backend)
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   defp known_locale(locale_name, _tags, backend) when is_atom(locale_name) do
@@ -423,8 +424,9 @@ defmodule Cldr.Locale do
   defp known_rbnf_locale_name(locale_name, _tags, backend) do
     locale_name = String.to_existing_atom(locale_name)
     Cldr.known_rbnf_locale_name(locale_name, backend)
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   defp return_parent_or_default(parent, %LanguageTag{cldr_locale_name: parent} = child, backend) do
@@ -550,7 +552,7 @@ defmodule Cldr.Locale do
             #Cldr.LanguageTag<en [validated]>]}
 
   """
-  @spec fallback_locales(locale_reference, Cldr.backend) ::
+  @spec fallback_locales(locale_reference, Cldr.backend()) ::
           {:ok, [LanguageTag.t(), ...]} | {:error, {module(), binary()}}
 
   @doc since: "2.26.0"
@@ -769,13 +771,14 @@ defmodule Cldr.Locale do
   """
   @doc since: "2.26.0"
   @spec locale_for_territory(territory_code(), Cldr.backend()) ::
-    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def locale_for_territory(territory, backend \\ Cldr.default_backend!()) do
     with {:ok, territory} <- Cldr.validate_territory(territory) do
       case Map.get(languages_for_territories(), territory) do
         nil ->
           {:error, no_locale_for_territory_error(territory)}
+
         language ->
           validate_locale(language, territory, backend)
       end
@@ -797,7 +800,25 @@ defmodule Cldr.Locale do
   end
 
   @consider_as_tld [
-    :AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS
+    :AD,
+    :AS,
+    :BZ,
+    :CC,
+    :CD,
+    :CO,
+    :DJ,
+    :FM,
+    :IO,
+    :LA,
+    :ME,
+    :MS,
+    :NU,
+    :SC,
+    :SR,
+    :SU,
+    :TV,
+    :TK,
+    :WS
   ]
 
   @doc """
@@ -867,7 +888,7 @@ defmodule Cldr.Locale do
   """
   @doc since: "2.26.0"
   @spec locale_from_host(String.t(), Cldr.backend(), Keyword.t()) ::
-    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def locale_from_host(host, backend, options \\ []) do
     tld_list = Keyword.get(options, :tlds, consider_as_tlds())
@@ -907,7 +928,7 @@ defmodule Cldr.Locale do
   """
   @doc since: "2.26.0"
   @spec territory_from_host(String.t()) ::
-    {:ok, territory_code()} | {:error, {module(), String.t()}}
+          {:ok, territory_code()} | {:error, {module(), String.t()}}
 
   def territory_from_host(host) do
     territory =
@@ -919,8 +940,9 @@ defmodule Cldr.Locale do
     try do
       territory = String.upcase(territory) |> String.to_existing_atom()
       Cldr.validate_territory(territory)
-    rescue ArgumentError ->
-      {:error, no_locale_for_territory_error(territory)}
+    rescue
+      ArgumentError ->
+        {:error, no_locale_for_territory_error(territory)}
     end
   end
 
@@ -1309,7 +1331,11 @@ defmodule Cldr.Locale do
       }
 
   """
-  @spec canonical_language_tag(locale_name | Cldr.LanguageTag.t() | String.t(), Cldr.backend(), Keyword.t()) ::
+  @spec canonical_language_tag(
+          locale_name | Cldr.LanguageTag.t() | String.t(),
+          Cldr.backend(),
+          Keyword.t()
+        ) ::
           {:ok, Cldr.LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def canonical_language_tag(locale_name, backend, options \\ [])
@@ -1326,6 +1352,7 @@ defmodule Cldr.Locale do
 
   def canonical_language_tag(locale_name, backend, options) when is_atom(locale_name) do
     language_tag = Map.get(Cldr.Config.all_language_tags(), locale_name)
+
     if Keyword.get(options, :add_likely_subtags, true) && language_tag do
       canonical_language_tag(language_tag, backend, options)
     else
@@ -1333,18 +1360,22 @@ defmodule Cldr.Locale do
     end
   end
 
-  unvalidated_match = quote do
-    %LanguageTag{cldr_locale_name: var!(locale_name), canonical_locale_name: var!(canonical_name)}
-  end
+  unvalidated_match =
+    quote do
+      %LanguageTag{
+        cldr_locale_name: var!(locale_name),
+        canonical_locale_name: var!(canonical_name)
+      }
+    end
 
   def canonical_language_tag(unquote(unvalidated_match) = language_tag, backend, _options)
-       when not is_nil(locale_name) and not is_nil(canonical_name) do
+      when not is_nil(locale_name) and not is_nil(canonical_name) do
     language_tag =
-       language_tag
-       |> put_backend(backend)
-       |> put_gettext_locale_name()
+      language_tag
+      |> put_backend(backend)
+      |> put_gettext_locale_name()
 
-   {:ok, language_tag}
+    {:ok, language_tag}
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
@@ -1668,7 +1699,8 @@ defmodule Cldr.Locale do
   # not the fallback chain.
   defp rbnf_locale_name(%LanguageTag{} = language_tag) do
     cond do
-      rbnf_locale = first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend)) ->
+      rbnf_locale =
+          first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend)) ->
         rbnf_locale
 
       parent = Map.get(parent_locale_map(), language_tag.cldr_locale_name) ->
@@ -1678,7 +1710,7 @@ defmodule Cldr.Locale do
         end
 
       true ->
-         nil
+        nil
     end
   end
 
@@ -1718,44 +1750,45 @@ defmodule Cldr.Locale do
   # be constructed and the tags that are consumed
   # in order to create a successful match.
 
-  potential_matches = quote do
-    [
-      {[language, script, territory, [], omit?], [:language, :script, :territory]},
-      {[language, nil, territory, [], omit?], [:language, :territory]},
-      {[language, script, nil, [], omit?], [:language, :script]},
-      {[language, nil, nil, [], omit?], [:language]}
-    ]
-  end
+  potential_matches =
+    quote do
+      [
+        {[language, script, territory, [], omit?], [:language, :script, :territory]},
+        {[language, nil, territory, [], omit?], [:language, :territory]},
+        {[language, script, nil, [], omit?], [:language, :script]},
+        {[language, nil, nil, [], omit?], [:language]}
+      ]
+    end
 
-  potential_variant_matches = quote do
-    [
-      {[language, script, territory, variants, omit?],
-        [:language, :script, :territory, :language_variants]},
-      {[language, nil, territory, variants, omit?],
-        [:language, :territory, :language_variants]},
-      {[language, script, nil, variants, omit?],
-        [:language, :script, :language_variants]},
-      {[language, nil, nil, variants, omit?],
-        [:language, :language_variants]}
-    ]
-  end
+  potential_variant_matches =
+    quote do
+      [
+        {[language, script, territory, variants, omit?],
+         [:language, :script, :territory, :language_variants]},
+        {[language, nil, territory, variants, omit?],
+         [:language, :territory, :language_variants]},
+        {[language, script, nil, variants, omit?], [:language, :script, :language_variants]},
+        {[language, nil, nil, variants, omit?], [:language, :language_variants]}
+      ]
+    end
 
   # Generate the expressions that check for
   # the first match
 
   defmacrop matches(matches) do
     for {params, tags} <- matches do
-      params = Enum.map(params, fn
-        [] -> []
-        nil -> nil
-        var -> {:var!, [], [var]}
-      end)
+      params =
+        Enum.map(params, fn
+          [] -> []
+          nil -> nil
+          var -> {:var!, [], [var]}
+        end)
 
       quote do
         var!(fun).(locale_name_from(unquote_splicing(params)), unquote(tags))
       end
     end
-    |> Enum.reverse
+    |> Enum.reverse()
     |> Enum.reduce(fn exp, acc -> {:||, [], [exp, acc]} end)
   end
 
@@ -2307,8 +2340,9 @@ defmodule Cldr.Locale do
     locale_name
     |> String.to_existing_atom()
     |> likely_subtags()
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   @doc """
@@ -2332,7 +2366,7 @@ defmodule Cldr.Locale do
   """
   @alias_keys Map.keys(@aliases)
   @spec aliases(locale_name() | String.t(), atom()) ::
-    String.t() | list(String.t()) | LanguageTag.t() | nil
+          String.t() | list(String.t()) | LanguageTag.t() | nil
 
   def aliases(key, :region = type) when is_atom(key) do
     aliases()
@@ -2350,8 +2384,9 @@ defmodule Cldr.Locale do
     key
     |> String.to_existing_atom()
     |> aliases(type)
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   defp validate_subtags(language_tag) do
@@ -2445,7 +2480,7 @@ defmodule Cldr.Locale do
 
   @doc false
   def no_locale_for_territory_error(territory) when is_binary(territory) do
-    {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect territory}"}
+    {Cldr.UnknownLocaleError, "No locale was identified for territory #{inspect(territory)}"}
   end
 
   def no_locale_for_territory_error(territory) when is_atom(territory) do

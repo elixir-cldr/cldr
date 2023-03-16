@@ -45,7 +45,6 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:cldr_utils, "~> 2.19"},
-
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
@@ -150,9 +149,7 @@ defmodule Cldr.Mixfile do
   end
 
   defp preferred_cli_env() do
-    [
-
-    ]
+    []
   end
 
   def aliases do
@@ -166,7 +163,7 @@ defmodule Cldr.Mixfile do
       Protocols: [
         Cldr.Chars,
         Cldr.DisplayName
-        ],
+      ],
       Plugs: ~r/^Cldr.Plug.?/,
       Gettext: ~r/^Cldr.Gettext.?/,
       Helpers: [

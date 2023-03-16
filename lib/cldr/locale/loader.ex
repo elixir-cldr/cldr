@@ -51,7 +51,8 @@ defmodule Cldr.Locale.Loader do
   def known_rbnf_locale_names(%Cldr.Config{locales: :all} = config) do
     config
     |> known_locale_names()
-    |> Task.async_stream(fn locale_name ->
+    |> Task.async_stream(
+      fn locale_name ->
         rbnf =
           locale_name
           |> get_locale(config)
@@ -61,7 +62,7 @@ defmodule Cldr.Locale.Loader do
       end,
       max_concurrency: @max_concurrency,
       timeout: @timeout
-      )
+    )
     |> Enum.reduce_while([], fn
       {:ok, nil}, acc -> {:cont, acc}
       {:ok, locale_name}, acc -> {:cont, [locale_name | acc]}
@@ -105,7 +106,7 @@ defmodule Cldr.Locale.Loader do
           {:ok, path}
 
         {:error, :not_found} ->
-          raise RuntimeError, message: "Locale definition was not found for #{inspect locale}"
+          raise RuntimeError, message: "Locale definition was not found for #{inspect(locale)}"
       end
 
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
@@ -116,9 +117,12 @@ defmodule Cldr.Locale.Loader do
   @language_keys ["language", "language_variants"]
 
   @remaining_modules Cldr.Config.required_modules() --
-    [
-       "locale_display_names", "languages", "lenient_parse", "dates"
-    ]
+                       [
+                         "locale_display_names",
+                         "languages",
+                         "lenient_parse",
+                         "dates"
+                       ]
 
   @doc false
   def do_get_locale(locale, path, false) do
@@ -156,16 +160,23 @@ defmodule Cldr.Locale.Loader do
   # TODO remove when :all is deprecated in Elixir 1.17
   @read_flag if Version.compare(System.version(), "1.13.0-dev") == :lt, do: :all, else: :eof
 
-  defp read_locale_file!(path) do
+  @doc false
+  def read_locale_file!(path) do
     Cldr.maybe_log("Cldr.Config reading locale file #{inspect(path)}")
     {:ok, contents} = File.open(path, [:read, :binary, :utf8], &IO.read(&1, @read_flag))
     contents
   end
 
   @date_atoms [
-    "exemplar_city", "long", "standard", "generic",
-    "short", "daylight", "formal",
-    "daylight_savings", "generic"
+    "exemplar_city",
+    "long",
+    "standard",
+    "generic",
+    "short",
+    "daylight",
+    "formal",
+    "daylight_savings",
+    "generic"
   ]
 
   defp structure_date_formats(content) do
@@ -176,7 +187,8 @@ defmodule Cldr.Locale.Loader do
       |> Cldr.Map.deep_map(fn
         {"number_system", value} ->
           {:number_system,
-            Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
+           Cldr.Map.atomize_values(value) |> Cldr.Map.stringify_keys(except: :all)}
+
         other ->
           other
       end)

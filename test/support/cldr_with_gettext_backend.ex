@@ -4,5 +4,3 @@ defmodule WithGettextBackend.Cldr do
     gettext: TestGettext.Gettext,
     providers: []
 end
-
-

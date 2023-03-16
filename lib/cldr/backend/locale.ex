@@ -44,7 +44,7 @@ defmodule Cldr.Locale.Backend do
 
         """
         @spec territory_from_locale(LanguageTag.t() | Locale.locale_name()) ::
-          Locale.territory_code()
+                Locale.territory_code()
 
         @doc since: "2.18.2"
 
@@ -132,7 +132,7 @@ defmodule Cldr.Locale.Backend do
         """
         @doc since: "2.26.0"
         @spec locale_for_territory(Locale.territory_code()) ::
-          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+                {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
         def locale_for_territory(territory) do
           Locale.locale_for_territory(territory)
@@ -185,7 +185,7 @@ defmodule Cldr.Locale.Backend do
         """
         @doc since: "2.26.0"
         @spec locale_from_host(String.t(), Keyword.t()) ::
-          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+                {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
         def locale_from_host(host, options \\ []) do
           Locale.locale_from_host(host, unquote(config.backend), options)
@@ -217,7 +217,7 @@ defmodule Cldr.Locale.Backend do
         """
         @doc since: "2.26.0"
         @spec territory_from_host(String.t()) ::
-          {:ok, Locale.territory_code()} | {:error, {module(), String.t()}}
+                {:ok, Locale.territory_code()} | {:error, {module(), String.t()}}
 
         def territory_from_host(host) do
           Cldr.Locale.territory_from_host(host)
@@ -248,7 +248,7 @@ defmodule Cldr.Locale.Backend do
 
         In these examples the default locale is `:"en-001"`.
 
-            #{inspect __MODULE__}.fallback_locales(#{inspect __MODULE__}.new!("fr-CA"))
+            #{inspect(__MODULE__)}.fallback_locales(#{inspect(__MODULE__)}.new!("fr-CA"))
             => {:ok,
                  [#Cldr.LanguageTag<fr-CA [validated]>, #Cldr.LanguageTag<fr [validated]>,
                   #Cldr.LanguageTag<en [validated]>]}
@@ -258,13 +258,13 @@ defmodule Cldr.Locale.Backend do
             # given locale name. But not always - there are
             # certain fallbacks that take a different path.
 
-            #{inspect __MODULE__}.fallback_locales(#{inspect __MODULE__}.new!("nb"))
+            #{inspect(__MODULE__)}.fallback_locales(#{inspect(__MODULE__)}.new!("nb"))
             => {:ok,
                  [#Cldr.LanguageTag<nb [validated]>, #Cldr.LanguageTag<no [validated]>,
                   #Cldr.LanguageTag<en [validated]>]}
 
         """
-        @spec fallback_locales(LanguageTag.t() | Cldr.Locale.locale_reference) ::
+        @spec fallback_locales(LanguageTag.t() | Cldr.Locale.locale_reference()) ::
                 {:ok, [LanguageTag.t(), ...]} | {:error, {module(), String.t()}}
 
         @doc since: "2.26.0"
@@ -286,7 +286,7 @@ defmodule Cldr.Locale.Backend do
         ## Arguments
 
         * `locale_name` is any locale name returned by
-          `#{inspect config.backend}.known_locale_names/0`
+          `#{inspect(config.backend)}.known_locale_names/0`
 
         ## Returns
 
@@ -298,7 +298,7 @@ defmodule Cldr.Locale.Backend do
 
         In these examples the default locale is `:"en-001"`.
 
-            #{inspect __MODULE__}.fallback_locales(:"fr-CA")
+            #{inspect(__MODULE__)}.fallback_locales(:"fr-CA")
             => {:ok,
                  [#Cldr.LanguageTag<fr-CA [validated]>, #Cldr.LanguageTag<fr [validated]>,
                   #Cldr.LanguageTag<en [validated]>]}
@@ -308,7 +308,7 @@ defmodule Cldr.Locale.Backend do
             # given locale name. But not always - there are
             # certain fallbacks that take a different path.
 
-            #{inspect __MODULE__}.fallback_locales(:nb))
+            #{inspect(__MODULE__)}.fallback_locales(:nb))
             => {:ok,
                  [#Cldr.LanguageTag<nb [validated]>, #Cldr.LanguageTag<no [validated]>,
                   #Cldr.LanguageTag<en [validated]>]}
@@ -345,7 +345,7 @@ defmodule Cldr.Locale.Backend do
 
         In these examples the default locale is `:"en-001"`.
 
-            iex> #{inspect __MODULE__}.fallback_locale_names(#{inspect __MODULE__}.new!("fr-CA"))
+            iex> #{inspect(__MODULE__)}.fallback_locale_names(#{inspect(__MODULE__)}.new!("fr-CA"))
             {:ok, [:"fr-CA", :fr, :"en-001", :en]}
 
             # Fallbacks are typically formed by progressively
@@ -353,12 +353,12 @@ defmodule Cldr.Locale.Backend do
             # given locale name. But not always - there are
             # certain fallbacks that take a different path.
 
-            iex> #{inspect __MODULE__}.fallback_locale_names(#{inspect __MODULE__}.new!("nb"))
+            iex> #{inspect(__MODULE__)}.fallback_locale_names(#{inspect(__MODULE__)}.new!("nb"))
             {:ok, [:nb, :no, :"en-001", :en]}
 
         """
-        @spec fallback_locale_names(LanguageTag.t() | Cldr.Locale.locale_reference) ::
-                {:ok, [Cldr.Locale.locale_name, ...]} | {:error, {module(), String.t()}}
+        @spec fallback_locale_names(LanguageTag.t() | Cldr.Locale.locale_reference()) ::
+                {:ok, [Cldr.Locale.locale_name(), ...]} | {:error, {module(), String.t()}}
 
         @doc since: "2.26.0"
         def fallback_locale_names(%LanguageTag{} = locale) do
@@ -379,7 +379,7 @@ defmodule Cldr.Locale.Backend do
         ## Arguments
 
         * `locale_name` is any locale name returned by
-          `#{inspect config.backend}.known_locale_names/0`
+          `#{inspect(config.backend)}.known_locale_names/0`
 
         ## Returns
 
@@ -391,7 +391,7 @@ defmodule Cldr.Locale.Backend do
 
         In these examples the default locale is `:"en-001"`.
 
-            iex> #{inspect __MODULE__}.fallback_locale_names(:"fr-CA")
+            iex> #{inspect(__MODULE__)}.fallback_locale_names(:"fr-CA")
             {:ok, [:"fr-CA", :fr, :"en-001", :en]}
 
             # Fallbacks are typically formed by progressively
@@ -399,7 +399,7 @@ defmodule Cldr.Locale.Backend do
             # given locale name. But not always - there are
             # certain fallbacks that take a different path.
 
-            iex> #{inspect __MODULE__}.fallback_locale_names(:nb)
+            iex> #{inspect(__MODULE__)}.fallback_locale_names(:nb)
             {:ok, [:nb, :no, :"en-001", :en]}
 
         """

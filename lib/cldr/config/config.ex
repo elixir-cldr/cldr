@@ -352,12 +352,12 @@ defmodule Cldr.Config do
   def default_locale_name(%{} = config) do
     default =
       Map.get(config, :default_locale) ||
-      Application.get_env(app_name(), :default_locale) ||
-      gettext_default_locale(config) ||
-      @default_locale_name
+        Application.get_env(app_name(), :default_locale) ||
+        gettext_default_locale(config) ||
+        @default_locale_name
 
     locale_name_from_posix(default)
-    |> String.to_atom
+    |> String.to_atom()
   end
 
   @doc """
@@ -1490,7 +1490,10 @@ defmodule Cldr.Config do
 
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [Locale.locale_name(), ...]
+  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [
+          Locale.locale_name(),
+          ...
+        ]
   def expand_locale_names(locale_names) do
     Enum.map(locale_names, fn locale_name ->
       locale_name = to_string(locale_name)
@@ -1600,8 +1603,9 @@ defmodule Cldr.Config do
     case locale_path(locale, config) do
       {:ok, path} ->
         path
+
       {:error, _reason} ->
-        raise RuntimeError, "The locale file for #{inspect locale} was not found."
+        raise RuntimeError, "The locale file for #{inspect(locale)} was not found."
     end
   end
 
@@ -1771,7 +1775,7 @@ defmodule Cldr.Config do
   end
 
   defp into_keyword_list(nil) do
-    Map.new
+    Map.new()
   end
 
   @doc """
@@ -1808,7 +1812,7 @@ defmodule Cldr.Config do
 
   """
   @spec territory(Locale.territory_reference() | String.t()) ::
-    %{} | {:error, {module(), String.t()}}
+          %{} | {:error, {module(), String.t()}}
 
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
@@ -1985,10 +1989,13 @@ defmodule Cldr.Config do
     |> Cldr.Map.deep_map(fn
       {:calendar_system, system} ->
         {:calendar_system, String.replace(system, "-", "_") |> String.to_atom()}
+
       {:aliases, aliases} ->
         {:aliases, String.split(aliases)}
+
       {:code, code} ->
         {:code, String.replace(code, "-", "_") |> String.to_atom()}
+
       other ->
         other
     end)
@@ -2311,7 +2318,7 @@ defmodule Cldr.Config do
         locale_name =
           locale_name
           |> locale_name_from_posix
-          |> String.to_atom
+          |> String.to_atom()
 
         module = Module.concat(backend, Rbnf) |> Module.concat(ruleset_module)
         {module, function, locale_name}
@@ -2332,6 +2339,7 @@ defmodule Cldr.Config do
   """
   def locale_name_from_posix(nil), do: nil
   def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
+
   def locale_name_from_posix(name) when is_atom(name) do
     name
     |> Atom.to_string()
@@ -2454,7 +2462,9 @@ defmodule Cldr.Config do
   defp remove_gettext_only_locales(%{locales: locales, gettext: gettext} = config) do
     locales = if locales == :all, do: all_locale_names(), else: locales
     gettext_locales = known_gettext_locale_names(config)
-    unknown_locales = Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
+
+    unknown_locales =
+      Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
 
     case unknown_locales do
       [] ->
@@ -2464,7 +2474,7 @@ defmodule Cldr.Config do
         unknown = locale_name_to_posix(unknown_locale)
 
         note(
-          "The locale #{inspect(unknown)} is configured in the #{inspect gettext} " <>
+          "The locale #{inspect(unknown)} is configured in the #{inspect(gettext)} " <>
             "gettext backend but is unknown to CLDR. It will not be used to configure CLDR " <>
             "but it will still be used to match CLDR locales to Gettext locales at runtime.",
           config
@@ -2476,7 +2486,7 @@ defmodule Cldr.Config do
         unknown = Enum.map(unknown_locales, &locale_name_to_posix/1)
 
         note(
-          "The locales #{inspect(unknown)} are configured in the #{inspect gettext} " <>
+          "The locales #{inspect(unknown)} are configured in the #{inspect(gettext)} " <>
             "gettext backend but are unknown to CLDR. They will not be used to configure CLDR " <>
             "but they will still be used to match CLDR locales to Gettext locales at runtime.",
           config
@@ -2523,7 +2533,8 @@ defmodule Cldr.Config do
     if Map.has_key?(providers, Cldr.Number) and Map.has_key?(providers, Cldr.Currency) do
       note(
         "The provider Cldr.Currency is redundant when Cldr.Number is configured. Please remove " <>
-        "Cldr.Currency from your CLDR backend provider configuration.", config
+          "Cldr.Currency from your CLDR backend provider configuration.",
+        config
       )
 
       Map.delete(providers, Cldr.Currency)
@@ -2533,14 +2544,14 @@ defmodule Cldr.Config do
   end
 
   defp validate_default_currency_format(%{default_currency_format: format} = options)
-      when format in [:currency, :accounting, nil] do
+       when format in [:currency, :accounting, nil] do
     options
   end
 
   defp validate_default_currency_format(%{default_currency_format: format}) do
     raise ArgumentError,
-      "Invalid :default_currency_format option specified.\n" <>
-      "Valid options are :currency, :accounting or nil. Found #{inspect format}"
+          "Invalid :default_currency_format option specified.\n" <>
+            "Valid options are :currency, :accounting or nil. Found #{inspect(format)}"
   end
 
   @doc false
@@ -2548,7 +2559,7 @@ defmodule Cldr.Config do
     if !config[:suppress_warnings] do
       [IO.ANSI.yellow(), "note: ", IO.ANSI.reset(), text]
       |> :erlang.iolist_to_binary()
-      |> IO.puts
+      |> IO.puts()
     else
       :ok
     end

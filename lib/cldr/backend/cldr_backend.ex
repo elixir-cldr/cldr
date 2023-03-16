@@ -4,7 +4,7 @@ defmodule Cldr.Backend do
   def define_backend_functions(config) do
     backend = config.backend
 
-    quote location: :keep,bind_quoted: [config: Macro.escape(config), backend: backend] do
+    quote location: :keep, bind_quoted: [config: Macro.escape(config), backend: backend] do
       @doc """
       Returns a list of the known locale names.
 
@@ -712,7 +712,6 @@ defmodule Cldr.Backend do
 
       for locale_name <- Cldr.Locale.Loader.known_locale_names(config),
           not is_nil(Cldr.Config.language_tag(locale_name)) do
-
         language_tag =
           locale_name
           |> Cldr.Config.language_tag()

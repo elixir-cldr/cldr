@@ -98,11 +98,11 @@ defmodule Cldr.LanguageTag.T do
   end
 
   defp display_field(field, display_names) do
-   get_in(display_names, [:keys, field])
+    get_in(display_names, [:keys, field])
   end
 
   defp display_value(language_tag, field, display_names) do
-    value =  Map.fetch!(language_tag, field)
+    value = Map.fetch!(language_tag, field)
     get_in(display_names, [:types, field, value])
   end
 

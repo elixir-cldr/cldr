@@ -89,33 +89,34 @@ defmodule Cldr.Config.Test do
       end)
     end)
 
-    assert apply(Cldr.Config.Test.PosixDefaultLocale, :known_locale_names,  []) ==
-      [:en, :"en-GB"]
+    assert apply(Cldr.Config.Test.PosixDefaultLocale, :known_locale_names, []) ==
+             [:en, :"en-GB"]
 
     assert apply(Cldr.Config.Test.PosixDefaultLocale, :default_locale, []).cldr_locale_name ==
-      :"en-GB"
+             :"en-GB"
   end
 
   test "that redundant Cldr.Currency is warned if Cldr.Number is configured" do
     assert capture_io(fn ->
-      defmodule ConfigRedundant do
-        use Cldr,
-          default_locale: "en",
-          providers: [Cldr.Number, Cldr.Currency],
-          suppress_warnings: false
-      end
-    end) =~ "The provider Cldr.Currency is redundant"
+             defmodule ConfigRedundant do
+               use Cldr,
+                 default_locale: "en",
+                 providers: [Cldr.Number, Cldr.Currency],
+                 suppress_warnings: false
+             end
+           end) =~ "The provider Cldr.Currency is redundant"
   end
 
   test "that :supress warnings is deprecated" do
     assert capture_io(fn ->
-      defmodule SupressWarnings do
-        use Cldr,
-          default_locale: "en",
-          providers: [Cldr.Number, Cldr.Currency],
-          supress_warnings: false
-      end
-    end) =~ "The option :supress_warnings has been deprecated and replaced with :suppress_warnings"
+             defmodule SupressWarnings do
+               use Cldr,
+                 default_locale: "en",
+                 providers: [Cldr.Number, Cldr.Currency],
+                 supress_warnings: false
+             end
+           end) =~
+             "The option :supress_warnings has been deprecated and replaced with :suppress_warnings"
   end
 
   test ":default_currency_format is configured as :currency" do
@@ -130,7 +131,7 @@ defmodule Cldr.Config.Test do
     end)
 
     assert apply(Cldr.Config.Test.DefaultCurrencyFormat, :__cldr__, [:config]).default_currency_format ==
-      :currency
+             :currency
   end
 
   test ":default_currency_format is configured as :accounting" do
@@ -145,6 +146,6 @@ defmodule Cldr.Config.Test do
     end)
 
     assert apply(Cldr.Config.Test.DefaultAccountingFormat, :__cldr__, [:config]).default_currency_format ==
-      :accounting
+             :accounting
   end
 end

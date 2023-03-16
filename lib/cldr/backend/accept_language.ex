@@ -100,12 +100,12 @@ defmodule Cldr.AcceptLanguage.Backend do
                 }}
              ]}
 
-            iex> #{inspect __MODULE__}.parse("invalid_tag")
+            iex> #{inspect(__MODULE__)}.parse("invalid_tag")
             {:error,
              {Cldr.LanguageTag.ParseError,
               "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 
-            iex> #{inspect __MODULE__}.parse("da,zh-TW;q=0.3,invalid_tag")
+            iex> #{inspect(__MODULE__)}.parse("da,zh-TW;q=0.3,invalid_tag")
             {:ok,
              [
                {1.0,
@@ -186,7 +186,7 @@ defmodule Cldr.AcceptLanguage.Backend do
 
         ## Example
 
-            iex> #{inspect __MODULE__}.parse!("da,zh-TW;q=0.3")
+            iex> #{inspect(__MODULE__)}.parse!("da,zh-TW;q=0.3")
             [
               {1.0,
                %Cldr.LanguageTag{
@@ -226,11 +226,11 @@ defmodule Cldr.AcceptLanguage.Backend do
                }}
             ]
 
-            #{inspect __MODULE__}.parse! "invalid_tag"
+            #{inspect(__MODULE__)}.parse! "invalid_tag"
             ** (Cldr.AcceptLanguageError) "Expected a BCP47 language tag. Could not parse the remaining "g" starting at position 11
                 (ex_cldr) lib/cldr/accept_language.ex:304: Cldr.AcceptLanguage.parse!/1
 
-            iex> #{inspect __MODULE__}.parse!("da,zh-TW;q=0.3,invalid_tag")
+            iex> #{inspect(__MODULE__)}.parse!("da,zh-TW;q=0.3,invalid_tag")
             [
               {1.0,
                %Cldr.LanguageTag{
@@ -294,7 +294,7 @@ defmodule Cldr.AcceptLanguage.Backend do
 
         ## Examples
 
-            iex> #{inspect __MODULE__}.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
+            iex> #{inspect(__MODULE__)}.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
             {:ok,
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -314,7 +314,7 @@ defmodule Cldr.AcceptLanguage.Backend do
                language_variants: []
              }}
 
-            iex> #{inspect __MODULE__}.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
+            iex> #{inspect(__MODULE__)}.best_match("da;q=0.1,zh-TW;q=0.3", TestBackend.Cldr)
             {:ok,
              %Cldr.LanguageTag{
                backend: TestBackend.Cldr,
@@ -334,12 +334,12 @@ defmodule Cldr.AcceptLanguage.Backend do
                language_variants: []
              }}
 
-            iex> #{inspect __MODULE__}.best_match("xx,yy;q=0.3")
+            iex> #{inspect(__MODULE__)}.best_match("xx,yy;q=0.3")
             {:error,
              {Cldr.NoMatchingLocale,
               "No configured locale could be matched to \\"xx,yy;q=0.3\\""}}
 
-            iex> #{inspect __MODULE__}.best_match("invalid_tag")
+            iex> #{inspect(__MODULE__)}.best_match("invalid_tag")
             {:error, {Cldr.LanguageTag.ParseError,
               "Expected a BCP47 language tag. Could not parse the remaining \\"g\\" starting at position 11"}}
 

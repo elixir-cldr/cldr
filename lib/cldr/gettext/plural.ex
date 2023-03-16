@@ -90,11 +90,11 @@ defmodule Cldr.Gettext.Plural do
           :error ->
             case String.split(Atom.to_string(locale_name), "-") do
               [string_locale_name] ->
-                raise KeyError, "Key #{inspect locale_name} not found"
+                raise KeyError, "Key #{inspect(locale_name)} not found"
 
               [language | _rest] ->
                 nplurals(language)
-             end
+            end
         end
       end
 
@@ -161,7 +161,7 @@ defmodule Cldr.Gettext.Plural do
           :error ->
             case String.split(Atom.to_string(cldr_locale_name), "-") do
               [string_locale_name] ->
-                raise KeyError, "Key #{inspect cldr_locale_name} not found"
+                raise KeyError, "Key #{inspect(cldr_locale_name)} not found"
 
               [language | _rest] ->
                 rule = unquote(backend).Number.Cardinal.plural_rule(n, String.to_atom(language))
@@ -169,7 +169,7 @@ defmodule Cldr.Gettext.Plural do
                 gettext_nplurals()
                 |> Map.fetch!(String.to_atom(language))
                 |> Keyword.fetch!(rule)
-             end
+            end
         end
       end
 
@@ -188,7 +188,6 @@ defmodule Cldr.Gettext.Plural do
              |> Map.get("cardinal")
              |> Cldr.Config.normalize_plural_rules()
              |> Map.new()
-
 
       @nplurals_range [0, 1, 2, 3, 4, 5]
       @gettext_nplurals @rules

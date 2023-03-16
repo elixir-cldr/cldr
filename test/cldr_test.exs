@@ -18,7 +18,7 @@ defmodule Cldr.Test do
   test "that we have the correct modules (keys) for the json consolidation" do
     assert Cldr.Config.required_modules() ==
              [
-              "version",
+               "version",
                "number_formats",
                "list_formats",
                "currencies",
@@ -70,13 +70,96 @@ defmodule Cldr.Test do
     alias TestBackend.Cldr
 
     assert Cldr.known_rbnf_locale_names() ==
-      [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
-       :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
-       :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-       :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv,
-       :mk, :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
-       :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vec,
-       :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
+             [
+               :af,
+               :ak,
+               :am,
+               :ar,
+               :az,
+               :be,
+               :bg,
+               :bs,
+               :ca,
+               :ccp,
+               :chr,
+               :cs,
+               :cy,
+               :da,
+               :de,
+               :"de-CH",
+               :ee,
+               :el,
+               :en,
+               :"en-IN",
+               :eo,
+               :es,
+               :"es-419",
+               :et,
+               :fa,
+               :"fa-AF",
+               :ff,
+               :fi,
+               :fil,
+               :fo,
+               :fr,
+               :"fr-BE",
+               :"fr-CH",
+               :ga,
+               :he,
+               :hi,
+               :hr,
+               :hu,
+               :hy,
+               :id,
+               :is,
+               :it,
+               :ja,
+               :ka,
+               :kk,
+               :kl,
+               :km,
+               :ko,
+               :ky,
+               :lb,
+               :lo,
+               :lrc,
+               :lt,
+               :lv,
+               :mk,
+               :ms,
+               :mt,
+               :my,
+               :ne,
+               :nl,
+               :nn,
+               :no,
+               :pl,
+               :pt,
+               :"pt-PT",
+               :qu,
+               :ro,
+               :ru,
+               :se,
+               :sk,
+               :sl,
+               :sq,
+               :sr,
+               :"sr-Latn",
+               :su,
+               :sv,
+               :sw,
+               :ta,
+               :th,
+               :tr,
+               :uk,
+               :und,
+               :vec,
+               :vi,
+               :yue,
+               :"yue-Hans",
+               :zh,
+               :"zh-Hant"
+             ]
   end
 
   test "that locale substitutions are applied" do
@@ -138,27 +221,27 @@ defmodule Cldr.Test do
              }
   end
 
-
   test "That RBNF locale names can be inherited" do
     assert {:ok, locale} = Cldr.validate_locale("nb", TestBackend.Cldr)
+
     assert locale ==
-      %Cldr.LanguageTag{
-        backend: TestBackend.Cldr,
-        canonical_locale_name: "nb",
-        cldr_locale_name: :nb,
-        extensions: %{},
-        gettext_locale_name: nil,
-        language: "nb",
-        language_subtags: [],
-        language_variants: [],
-        locale: %{},
-        private_use: [],
-        rbnf_locale_name: :no,
-        requested_locale_name: "nb",
-        script: :Latn,
-        territory: :NO,
-        transform: %{}
-      }
+             %Cldr.LanguageTag{
+               backend: TestBackend.Cldr,
+               canonical_locale_name: "nb",
+               cldr_locale_name: :nb,
+               extensions: %{},
+               gettext_locale_name: nil,
+               language: "nb",
+               language_subtags: [],
+               language_variants: [],
+               locale: %{},
+               private_use: [],
+               rbnf_locale_name: :no,
+               requested_locale_name: "nb",
+               script: :Latn,
+               territory: :NO,
+               transform: %{}
+             }
   end
 
   test "that we can have repeated currencies in a territory" do
@@ -233,10 +316,10 @@ defmodule Cldr.Test do
     {:ok, fr_locale} = TestBackend.Cldr.validate_locale("fr")
 
     assert Cldr.with_locale("fr", TestBackend.Cldr, fn -> Cldr.get_locale(TestBackend.Cldr) end) ==
-      fr_locale
+             fr_locale
 
     assert Cldr.with_locale(fr_locale, fn -> Cldr.get_locale(TestBackend.Cldr) end) ==
-      fr_locale
+             fr_locale
 
     assert original_locale == Cldr.get_locale(TestBackend.Cldr)
   end
@@ -258,6 +341,6 @@ defmodule Cldr.Test do
   end
 
   test "MyApp.Cldr.known_gettext_locale_names/0" do
-    assert MyApp.Cldr.known_gettext_locale_names == ["en", "en-GB", "es", "it"]
+    assert MyApp.Cldr.known_gettext_locale_names() == ["en", "en-GB", "es", "it"]
   end
 end
