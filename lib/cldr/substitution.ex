@@ -97,6 +97,11 @@ defmodule Cldr.Substitution do
     [string1, item, string2]
   end
 
+  # The case where its just two parameters
+  def substitute([item_0, item_1], [0, 1]) do
+    [item_0, item_1]
+  end
+
   # Takes care of the common case where there are two parameters separated
   # by a string.
   def substitute([item_0, item_1], [0, string, 1]) when is_binary(string) do
