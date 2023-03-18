@@ -701,8 +701,12 @@ defmodule Cldr.Config do
     end)
   end
 
+  @doc """
+  Returns a mapping from Unicode script names to the
+  respective subtag used in BCP 47 language tags.
+  """
   @script_metadata_path "script_metadata.csv"
-  def unicode_to_subtag_mapping do
+  def unicode_script_to_subtag_mapping do
     Path.join(cldr_data_dir(), @script_metadata_path)
     |> File.read!()
     |> String.split("\n")

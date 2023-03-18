@@ -37,7 +37,7 @@ defmodule Cldr.Validity.Script do
     nil
   end
 
-  @unicode_to_subtag_mapping Cldr.Config.unicode_to_subtag_mapping()
+  @unicode_to_subtag_mapping Cldr.Config.unicode_script_to_subtag_mapping()
 
   @doc false
   def unicode_to_subtag_map do
