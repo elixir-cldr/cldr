@@ -86,6 +86,10 @@ cp -R $CLDR_REPO/common/bcp47/ $CLDR_PRODUCTION/bcp47/
 cp $EX_CLDR/data/measurement_systems.xml $CLDR_PRODUCTION/measurement_systems.xml
 cp $EX_CLDR/data/iso_currencies.xml $CLDR_PRODUCTION/iso_currencies.xml
 
+# Data that maps from Unicode script names to Script code (subtag)
+cp $CLDR_REPO/tools/cldr-code/src/main/resources/org/unicode/cldr/util/data/Script_Metadata.csv \
+   $EX_CLDR/priv/cldr/script_metadata.csv
+
 # Copy test data
 cp $CLDR_REPO/common/testData/localeIdentifiers/localeCanonicalization.txt \
    $EX_CLDR/test/data/locale_canonicalization.txt

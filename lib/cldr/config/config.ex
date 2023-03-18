@@ -701,6 +701,30 @@ defmodule Cldr.Config do
     end)
   end
 
+  @script_metadata_path "script_metadata.csv"
+  def unicode_to_subtag_mapping do
+    Path.join(cldr_data_dir(), @script_metadata_path)
+    |> File.read!()
+    |> String.split("\n")
+    |> tl
+    |> tl
+    |> Enum.map(fn line ->
+      [_number, name, code | _rest] = String.split(line,",")
+
+      name =
+        name
+        |> String.replace(" ", "")
+        |> Cldr.String.underscore()
+        |> String.to_atom()
+
+      code =
+        String.to_atom(code)
+
+      {name, code}
+    end)
+    |> Map.new
+  end
+
   @doc """
   Return a map of measurement systems
 

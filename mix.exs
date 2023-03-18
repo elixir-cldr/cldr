@@ -100,6 +100,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/grammatical_gender.json",
         "priv/cldr/parent_locales.json",
         "priv/cldr/time_preferences.json",
+        "priv/cldr/script_metadata.csv",
         "priv/cldr/language_tags.ebin",
         "priv/cldr/language_data.json",
         "priv/cldr/deprecated/measurement_system.json",
@@ -141,7 +142,9 @@ defmodule Cldr.Mixfile do
         ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists",
         ex_cldr_calendars: "https://hexdocs.pm/ex_cldr_calendars",
         ex_cldr_html: "https://hexdocs.pm/ex_cldr_html",
-        ex_cldr_messages: "https://hexdocs.pm/ex_cldr_messages"
+        ex_cldr_messages: "https://hexdocs.pm/ex_cldr_messages",
+        ex_cldr_routes: "https://hexdocs.pm/ex_cldr_routes",
+        ex_cldr_person_names: "https://hexdocs.pm/ex_cldr_person_names"
       ],
       groups_for_modules: groups_for_modules(),
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
