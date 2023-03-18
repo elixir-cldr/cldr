@@ -1379,13 +1379,13 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
-    supress_requested_locale_substitution? = !language_tag.language
+    suppress_requested_locale_substitution? = !language_tag.language
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
 
     language_tag =
       language_tag
       |> transform_language(backend)
-      |> put_requested_locale_name(supress_requested_locale_substitution?)
+      |> put_requested_locale_name(suppress_requested_locale_substitution?)
       |> substitute_aliases()
 
     with {:ok, language_tag} <- validate_subtags(language_tag),

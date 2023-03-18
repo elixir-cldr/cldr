@@ -760,15 +760,18 @@ defmodule Cldr.Backend do
         end
       end
 
-      defp known_cldr_locale(%LanguageTag{cldr_locale_name: nil}, locale_name) do
+      @doc false
+      def known_cldr_locale(%LanguageTag{cldr_locale_name: nil}, locale_name) do
         {:error, Cldr.Locale.locale_error(locale_name)}
       end
 
-      defp known_cldr_locale(%LanguageTag{} = locale, _locale_name) do
+      @doc false
+      def known_cldr_locale(%LanguageTag{} = locale, _locale_name) do
         {:ok, locale}
       end
 
-      defp known_cldr_territory(%LanguageTag{territory: territory} = language_tag) do
+      @doc false
+      def known_cldr_territory(%LanguageTag{territory: territory} = language_tag) do
         if territory in Cldr.known_territories() do
           {:ok, language_tag}
         else
