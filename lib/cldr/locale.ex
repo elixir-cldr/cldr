@@ -2328,7 +2328,7 @@ defmodule Cldr.Locale do
   """
   @spec likely_subtags(locale_name | String.t()) :: LanguageTag.t() | nil
 
-  def likely_subtags(locale_name) when is_atom(locale_name) do
+  def likely_subtags(locale_name) when is_binary(locale_name) do
     Map.get(likely_subtags(), locale_name)
   end
 
@@ -2336,13 +2336,10 @@ defmodule Cldr.Locale do
     likely_subtags(requested_locale_name)
   end
 
-  def likely_subtags(locale_name) when is_binary(locale_name) do
+  def likely_subtags(locale_name) when is_atom(locale_name) do
     locale_name
-    |> String.to_existing_atom()
+    |> Atom.to_string()
     |> likely_subtags()
-  rescue
-    ArgumentError ->
-      nil
   end
 
   @doc """

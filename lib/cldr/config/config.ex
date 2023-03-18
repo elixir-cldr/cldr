@@ -1946,7 +1946,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} ->
-      {String.to_atom(k), struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
+      {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
     end)
     |> Map.new()
   end
