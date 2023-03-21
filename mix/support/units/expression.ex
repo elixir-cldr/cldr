@@ -1,11 +1,8 @@
-require Protocol
-Protocol.derive(Jason.Encoder, Ratio)
-
 defmodule Cldr.Unit.Expression do
   @moduledoc false
 
   # This module resolves the expressions in the CLDR unit_preferences.xml
-  # file as a rational number using the Ratio library. This approach is
+  # file as a Decimal or integer numbers. This approach is
   # intended to preserve precision wherever possible.
 
   import Kernel, except: [div: 2]
@@ -22,10 +19,6 @@ defmodule Cldr.Unit.Expression do
 
   def run(v, _constants) when is_integer(v) do
     v
-  end
-
-  def run(%Ratio{} = rational, _constants) do
-    rational
   end
 
   def run(v, constants) when is_binary(v) do
@@ -62,10 +55,6 @@ defmodule Cldr.Unit.Expression do
     Decimal.mult(Decimal.new(v1), Decimal.new(v2))
   end
 
-  # def mult(v1, v2) do
-  #   Ratio.mult(Ratio.new(v1), Ratio.new(v2))
-  # end
-
   def pow(v1, v2) when is_integer(v1) and is_integer(v2) do
     Cldr.Math.power(v1, v2)
   end
@@ -73,10 +62,6 @@ defmodule Cldr.Unit.Expression do
   def pow(%Decimal{} = v1, v2) when is_integer(v2) do
     Cldr.Math.power(v1, v2)
   end
-
-  # def pow(v1, v2) when is_integer(v2) do
-  #   Ratio.pow(Ratio.new(v1), Ratio.new(v2))
-  # end
 
   def div(v1, v2) when is_integer(v1) and is_integer(v2) do
     integer_div = Kernel.div(v1, v2)
@@ -91,9 +76,5 @@ defmodule Cldr.Unit.Expression do
   def div(v1, v2) do
     Decimal.div(Decimal.new(v1), Decimal.new(v2))
   end
-
-  # def div(v1, v2) do
-  #   Ratio.div(Ratio.new(v1), Ratio.new(v2))
-  # end
 
 end
