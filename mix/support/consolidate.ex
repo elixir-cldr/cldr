@@ -532,7 +532,8 @@ defmodule Cldr.Consolidate do
     {"language", "languages"},
     {"script", "scripts"},
     {"subdivision", "subdivisions"},
-    {"variant", "variants"}
+    {"variant", "variants"},
+    {"unit", "units"}
   ]
   def save_validity_data() do
     for {from, to} <- @validity_data do

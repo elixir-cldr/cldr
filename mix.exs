@@ -109,6 +109,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/validity/scripts.json",
         "priv/cldr/validity/subdivisions.json",
         "priv/cldr/validity/variants.json",
+        "priv/cldr/validity/units.json",
         "priv/cldr/bcp47/u.json",
         "priv/cldr/bcp47/t.json"
       ]
