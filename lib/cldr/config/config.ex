@@ -2049,11 +2049,8 @@ defmodule Cldr.Config do
       iex> Cldr.Config.units |> get_in([:conversions, :quart])
       %{
         base_unit: :cubic_meter,
-        factor: %{
-          denominator: 13469199089641601294165159418313264309149074316066816,
-          numerator: 12746616238742849396626455585282990375683527307233
-        },
-        offset: %{denominator: 1, numerator: 0},
+        factor: "0.000946352946",
+        offset: 0,
         systems: [:ussystem]
       }
 
