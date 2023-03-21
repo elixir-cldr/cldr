@@ -641,14 +641,15 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a map of validity data
+  Return a map of validity data for a given
+  type.
 
   The types are `:languages`, `:scripts`,
   `:territories`, `:subdivisions`, `:variants`
-  and `:u`
+  `:units`, `:u`, and `:t`
 
   """
-  @validity_type [:languages, :scripts, :territories, :subdivisions, :variants]
+  @validity_type [:languages, :scripts, :territories, :subdivisions, :variants, :units]
   def validity(type) when type in @validity_type do
     Path.join(cldr_data_dir(), "validity/#{type}.json")
     |> File.read!()
