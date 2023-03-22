@@ -649,11 +649,34 @@ defmodule Cldr.Config do
   `:units`, `:u`, and `:t`
 
   """
-  @validity_type [:languages, :scripts, :territories, :subdivisions, :variants, :units]
+  @validity_type [:languages, :scripts, :territories, :subdivisions, :variants]
   def validity(type) when type in @validity_type do
     Path.join(cldr_data_dir(), "validity/#{type}.json")
     |> File.read!()
     |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Map.new()
+  end
+
+  def validity(:units) do
+    Path.join(cldr_data_dir(), "validity/units.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Enum.map(fn {status, list} ->
+      list =
+        Enum.map(list, fn v ->
+          case String.split(v, "-", parts: 2) do
+            [v] ->
+              {status, v}
+
+            [_category, unit] ->
+              unit
+              |> String.replace("-", "_")
+          end
+        end)
+
+      {status, list}
+    end)
     |> Cldr.Map.atomize_keys()
     |> Map.new()
   end
