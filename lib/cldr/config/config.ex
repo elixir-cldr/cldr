@@ -666,12 +666,8 @@ defmodule Cldr.Config do
       list =
         Enum.map(list, fn v ->
           case String.split(v, "-", parts: 2) do
-            [v] ->
-              {status, v}
-
-            [_category, unit] ->
-              unit
-              |> String.replace("-", "_")
+            [v] -> v
+            [_category, unit] -> underscores(unit)
           end
         end)
 
