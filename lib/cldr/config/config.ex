@@ -665,8 +665,8 @@ defmodule Cldr.Config do
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
       {k, "quaternary quarternary"} -> {k, "quaternary"}
-      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
-      {k, v} -> {String.replace(k, "-", "_"), v}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(k)}
+      {k, v} -> {underscores(k), v}
     end)
   end
 
@@ -676,8 +676,8 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
-      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
-      {k, v} -> {String.replace(k, "-", "_"), v}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(k)}
+      {k, v} -> {underscores(k), v}
     end)
   end
 
@@ -2026,13 +2026,13 @@ defmodule Cldr.Config do
     |> Cldr.Map.integerize_keys()
     |> Cldr.Map.deep_map(fn
       {:calendar_system, system} ->
-        {:calendar_system, String.replace(system, "-", "_") |> String.to_atom()}
+        {:calendar_system, underscores(system) |> String.to_atom()}
 
       {:aliases, aliases} ->
         {:aliases, String.split(aliases)}
 
       {:code, code} ->
-        {:code, String.replace(code, "-", "_") |> String.to_atom()}
+        {:code, underscores(code) |> String.to_atom()}
 
       other ->
         other
@@ -2394,6 +2394,10 @@ defmodule Cldr.Config do
   end
 
   # ------ Helpers ------
+
+  defp underscores(string) do
+    String.replace(string, "-", "_")
+  end
 
   @doc """
   Identifies the top level keys in the consolidated locale file.
