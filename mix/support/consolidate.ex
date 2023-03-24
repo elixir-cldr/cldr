@@ -967,6 +967,10 @@ defmodule Cldr.Consolidate do
   end
 
   @doc false
+  def default(nil, default), do: default
+  def default(value, _default), do: value
+
+  @doc false
   def assert_package_file_configured!(path) do
     [_, path] = String.split(path, "/priv/")
     path = "priv/" <> path

@@ -10,6 +10,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     locale_display_names =
       content
       |> Map.fetch!("locale_display_names")
+      |> Cldr.Consolidate.default([])
 
     languages =
       locale_display_names
@@ -72,6 +73,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
   def merge_alt(map, normalizer_fun \\ & &1) do
     map =
       map
+      |> Cldr.Consolidate.default([])
       |> Enum.map(fn {code, display_name} ->
         case String.split(code, "_alt_") do
           [name] -> {normalizer_fun.(name), display_name}

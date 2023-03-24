@@ -10,6 +10,7 @@ defmodule Cldr.Normalize.TerritoryNames do
     territories =
       content
       |> get_in(["locale_display_names", "territories"])
+      |> Cldr.Consolidate.default([])
       |> Enum.map(fn {k, v} ->
         k = String.replace(k, ~r/^(.)_(.)/, "\\1\\2")
         {String.upcase(k), v}
