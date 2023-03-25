@@ -684,7 +684,7 @@ defmodule Cldr.Config do
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
       {k, "quaternary quarternary"} -> {k, "quaternary"}
-      {k, v} when is_binary(v) -> {underscores(k), underscores(k)}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(v)}
       {k, v} -> {underscores(k), v}
     end)
   end
@@ -695,7 +695,7 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
-      {k, v} when is_binary(v) -> {underscores(k), underscores(k)}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(v)}
       {k, v} -> {underscores(k), v}
     end)
   end
