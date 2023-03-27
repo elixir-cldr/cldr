@@ -127,6 +127,7 @@ defmodule Cldr.Consolidate do
     |> Normalize.LenientParse.normalize(locale)
     |> Normalize.LocaleDisplayNames.normalize(locale)
     |> Normalize.PersonName.normalize(locale)
+    |> Normalize.Layout.normalize(locale)
   end
 
   defp add_version(content) do

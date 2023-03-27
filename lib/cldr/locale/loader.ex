@@ -138,6 +138,7 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)
+    |> Cldr.Map.atomize_values(filter: :layout)
     |> structure_date_formats()
     |> Cldr.Map.atomize_keys(level: 1..1)
     |> parse_version()

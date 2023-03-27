@@ -36,7 +36,8 @@ defmodule Cldr.Test do
                "lenient_parse",
                "locale_display_names",
                "subdivisions",
-               "person_names"
+               "person_names",
+               "layout"
              ]
   end
 

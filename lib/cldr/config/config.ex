@@ -73,7 +73,8 @@ defmodule Cldr.Config do
     "lenient_parse",
     "locale_display_names",
     "subdivisions",
-    "person_names"
+    "person_names",
+    "layout"
   ]
 
   @root_locale_name :und
