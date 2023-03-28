@@ -2,7 +2,9 @@ defmodule Cldr.Locale.Backend do
   @moduledoc false
 
   def define_locale_backend(config) do
-    quote location: :keep, bind_quoted: [config: Macro.escape(config)] do
+    known_locale_names = Cldr.Locale.Loader.known_locale_names(config)
+
+    quote location: :keep, bind_quoted: [config: Macro.escape(config), known_locale_names: known_locale_names] do
       defmodule Locale do
         @moduledoc false
         if Cldr.Config.include_module_docs?(config.generate_docs) do
@@ -406,6 +408,50 @@ defmodule Cldr.Locale.Backend do
         @doc since: "2.26.0"
         def fallback_locale_names(locale_name) do
           Cldr.Locale.fallback_locale_names(locale_name, unquote(config.backend))
+        end
+
+        @doc """
+        Returns the script direction for a locale.
+
+        ## Arguments
+
+        * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+          or any `locale_name` returned by `Cldr.known_locale_names/1`.
+
+        ## Returns
+
+        * The script direction which is either `:ltr` (for left-to-right
+          scripts) or `:rtl` (for right-to-left scripts).
+
+        ## Examples
+
+            iex> #{inspect(__MODULE__)}.script_direction_from_locale "en-US"
+            :ltr
+
+            iex> #{inspect(__MODULE__)}.script_direction_from_locale :ar
+            :rtl
+
+        """
+        @doc since: "2.37.0"
+        def script_direction_from_locale(locale)
+
+        for locale_name <- known_locale_names do
+          locale_data = Cldr.Locale.Loader.get_locale(locale_name, config)
+          character_order = locale_data.layout.character_order
+
+          def script_direction_from_locale(unquote(locale_name)) do
+            unquote(character_order)
+          end
+        end
+
+        def script_direction_from_locale(%Cldr.LanguageTag{cldr_locale_name: cldr_locale_name}) do
+          script_direction_from_locale(cldr_locale_name)
+        end
+
+        def script_direction_from_locale(locale_name) do
+          with {:ok, locale} <- unquote(config.backend).validate_locale(locale_name) do
+            script_direction_from_locale(locale)
+          end
         end
       end
     end

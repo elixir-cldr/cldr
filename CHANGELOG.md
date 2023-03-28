@@ -12,6 +12,8 @@ This is the changelog for Cldr v2.37.0 released on ______, 2023.  For older chan
 
 * Changes `Cldr.version/0` to return the version of CLDR data as a `t:Version.t/0`. This is then used to check the version of the locale data and forcing a download if the locale data is out of date for this release of `ex_cldr`.
 
+* Adds `Cldr.Locale.script_direction_from_locale/1` and `MyApp.Cldr.Locale.script_direction_from_locale/1` to return `:ltr` (for left-to-right scripts) or `:rtl` (for right-to-left scripts). Closes #196. Thanks to @Doerge for the suggestion.
+
 * Adds `Cldr.Validity.Script.unicode_script_to_subtag/1` as public, undocumented function. This function is required by `ex_cldr_person_names` and may be documented in a future release. It maps between a unicode script name (like that returned by `Unicode.script/1` in the `unicode` library) to the appropriate subtag used by CLDR.
 
 * Unit data is now kept as Decimal not Ratio so `:ratio` is no longer a dependency here, or in `ex_cldr_units`.

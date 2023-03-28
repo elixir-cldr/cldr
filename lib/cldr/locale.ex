@@ -265,6 +265,9 @@ defmodule Cldr.Locale do
   @typedoc "The list of language subtags as strings"
   @type subtags :: [String.t(), ...] | []
 
+  @typedoc "The direction in which a script is rendered"
+  @type script_direction :: :ltr | :rtl
+
   @root_locale Cldr.Config.root_locale_name()
   @root_language Atom.to_string(@root_locale)
   @root_rbnf_locale_name Cldr.Config.root_locale_name()
@@ -1165,6 +1168,80 @@ defmodule Cldr.Locale do
   def script_from_locale(locale, backend) do
     with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
       script_from_locale(locale)
+    end
+  end
+
+  @doc """
+  Returns the script direction for a locale.
+
+  ## Arguments
+
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`. If
+    the parameter is a `locale_name` then a default backend must be
+    configured in `config.exs` or an exception will be raised.
+
+  ## Returns
+
+  * The script direction which is either `:ltr` (for left-to-right
+    scripts) or `:rtl` (for right-to-left scripts).
+
+  ## Examples
+
+      iex> Cldr.Locale.script_direction_from_locale "en-US"
+      :ltr
+
+      iex> Cldr.Locale.script_direction_from_locale "ar"
+      :rtl
+
+  """
+
+  @spec script_direction_from_locale(LanguageTag.t() | locale_name()) :: script_direction()
+
+  @doc since: "2.37.0"
+
+  def script_direction_from_locale(%LanguageTag{} = language_tag) do
+    Module.concat(language_tag.backend, Locale).script_direction_from_locale(language_tag)
+  end
+
+  def script_direction_from_locale(locale_name) do
+    script_direction_from_locale(locale_name, Cldr.default_backend!())
+  end
+
+  @doc """
+  Returns the script direction for a locale.
+
+  ## Arguments
+
+  * `locale_name` is any locale name returned by
+    `Cldr.known_locale_names/1`.
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.
+
+  ## Returns
+
+  * The script direction which is either `:ltr` (for left-to-right
+    scripts) or `:rtl` (for right-to-left scripts).
+
+  ## Examples
+
+      iex> Cldr.Locale.script_direction_from_locale :"en-US", TestBackend.Cldr
+      :ltr
+
+      iex> Cldr.Locale.script_direction_from_locale :he, TestBackend.Cldr
+      :rtl
+
+  """
+
+  @spec script_direction_from_locale(locale_reference(), Cldr.backend()) ::
+          script_direction() | {:error, {module(), String.t()}}
+
+  @doc since: "2.37.0"
+
+  def script_direction_from_locale(locale, backend) do
+    with {:ok, locale} <- Cldr.validate_locale(locale, backend) do
+      script_direction_from_locale(locale)
     end
   end
 
