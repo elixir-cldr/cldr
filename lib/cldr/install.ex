@@ -98,6 +98,7 @@ defmodule Cldr.Install do
     require Logger
 
     output_file_name = locale_output_file_name(locale_name, config)
+
     url = "#{base_url()}#{locale_filename(locale_name)}"
 
     case Cldr.Http.get(url) do
@@ -195,7 +196,7 @@ defmodule Cldr.Install do
       Logger.bare_log(
         :info,
         "Locale data for #{inspect(locale_name)} is stale. " <>
-          "Current locale data will be downloaded."
+          "Updated locale data will be downloaded."
       )
     end
 

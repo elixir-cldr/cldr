@@ -271,7 +271,7 @@ defmodule Cldr.Test do
 
   test "that data_dir is correctly resolved" do
     # data_dir configured in the otp_app
-    assert "./with_opt_app_backend/cldr/some_dir" ==
+    assert "./with_otp_app_backend/cldr/some_dir" ==
              Cldr.Config.client_data_dir(WithOtpAppBackend.Cldr)
 
     # data_dir configured on the module
