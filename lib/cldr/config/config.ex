@@ -52,6 +52,7 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
+  @root_locale_name :und
   @default_locale_name :"en-001"
 
   @cldr_modules [
@@ -76,8 +77,6 @@ defmodule Cldr.Config do
     "person_names",
     "layout"
   ]
-
-  @root_locale_name :und
 
   @doc false
   # Integer keys cater for 60 year cycles and 239 japanese eras

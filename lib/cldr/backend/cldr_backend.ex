@@ -17,7 +17,11 @@ defmodule Cldr.Backend do
 
       alias Cldr.{Locale, Config, LanguageTag}
 
-      @omit_locales [Config.root_locale_name()]
+      # We used to omit :und but the spec says thats the ultimate
+      # fallback so its back!
+
+      # @omit_locales [Config.root_locale_name()]
+      @omit_locales []
       @known_locale_names Locale.Loader.known_locale_names(config) -- @omit_locales
 
       def known_locale_names do
