@@ -37,6 +37,10 @@ defmodule Cldr.Normalize.DateTime do
         filter: "time_zone_names",
         only: ["gmt_format", "fallback_format"]
       )
+      |> Cldr.Map.deep_map(&compile_items/1,
+        filter: "month_patterns",
+        only: "leap"
+      )
       |> Cldr.Map.deep_map(&group_region_formats/1,
         only: "time_zone_names"
       )

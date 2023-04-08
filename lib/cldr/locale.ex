@@ -1844,8 +1844,10 @@ defmodule Cldr.Locale do
          [:language, :script, :territory, :language_variants]},
         {[language, nil, territory, variants, omit?],
          [:language, :territory, :language_variants]},
-        {[language, script, nil, variants, omit?], [:language, :script, :language_variants]},
-        {[language, nil, nil, variants, omit?], [:language, :language_variants]}
+        {[language, script, nil, variants, omit?],
+         [:language, :script, :language_variants]},
+        {[language, nil, nil, variants, omit?],
+         [:language, :language_variants]}
       ]
     end
 
