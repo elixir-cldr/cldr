@@ -2253,6 +2253,7 @@ defmodule Cldr.Config do
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
+    |> Enum.sort()
   end
 
   def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
