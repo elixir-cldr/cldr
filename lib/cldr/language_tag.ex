@@ -247,6 +247,10 @@ defmodule Cldr.LanguageTag do
 
   * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
+  * `omit_singlular_script?` is a boolean indicating if the
+    script name should be omitted if the landuage_tag territory has
+    only this one script. The default is `false`.
+
   ## Returns
 
   * A formatted string representation of the language tag that is also
@@ -256,15 +260,15 @@ defmodule Cldr.LanguageTag do
 
       iex> {:ok, locale} = Cldr.validate_locale "en-US", MyApp.Cldr
       iex> Cldr.LanguageTag.to_string(locale)
-      "en-Latn-US"
+      "en-US"
 
       iex> {:ok, locale} = Cldr.validate_locale "en-US-u-co-phonebk-nu-arab", MyApp.Cldr
       iex> Cldr.LanguageTag.to_string(locale)
-      "en-Latn-US-u-co-phonebk-nu-arab"
+      "en-US-u-co-phonebk-nu-arab"
 
   """
   @spec to_string(t) :: String.t()
-  def to_string(%__MODULE__{} = language_tag) do
+  def to_string(%__MODULE__{} = language_tag, omit_singular_script? \\ true) do
     basic_tag =
       [
         language_tag.language,
@@ -273,6 +277,7 @@ defmodule Cldr.LanguageTag do
         language_tag.territory,
         language_tag.language_variants
       ]
+      |> Locale.omit_script_if_only_one(omit_singular_script?)
       |> Enum.map(&Cldr.LanguageTag.Chars.to_string/1)
       |> Enum.reject(&empty?/1)
 
