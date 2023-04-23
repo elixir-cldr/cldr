@@ -279,6 +279,14 @@ defmodule Cldr.Locale do
   defdelegate locale_name_from_posix(locale_name), to: Cldr.Config
 
   @doc """
+  Returns the root language for CLDR.
+
+  """
+  def root_language do
+    @root_language
+  end
+
+  @doc """
   Mapping of language data to known
   scripts and territories
 
