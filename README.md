@@ -13,7 +13,7 @@ Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been 
 # in mix.exs
 def deps do
   [
-    {:ex_cldr, "~> 2.33"},
+    {:ex_cldr, "~> 2.37"},
     {:ex_cldr_plugs, "~> 1.2"},
     ...
   ]
@@ -22,7 +22,7 @@ end
 
 ## Introduction
 
-`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 6th 2022 and `ex_cldr` Version 2.28.0, `ex_cldr` is based upon [CLDR version 41.0](http://cldr.unicode.org/index/downloads/cldr-41).
+`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 28th 2023 and `ex_cldr` Version 2.37.0, `ex_cldr` is based upon [CLDR version 43.0](http://cldr.unicode.org/index/downloads/cldr-43).
 
 The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
@@ -80,7 +80,7 @@ Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix
 ```elixir
 defp deps do
   [
-    {:ex_cldr, "~> 2.33"},
+    {:ex_cldr, "~> 2.37"},
     # Poison or any other compatible json library
     # that implements `encode!/1` and `decode!/1`
     # :jason is recommended
@@ -535,7 +535,7 @@ See the file `DEVELOPMENT.md` in the github repository.
 
 ### Testing
 
-Tests cover the full 571 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full ~700 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
-Tests are run on Elixir 1.11 and later.  `ex_cldr` may not run on Elixir versions before 1.11.
+Tests are run on Elixir 1.11 and later.  `ex_cldr` is not supported on Elixir versions before 1.11.
 
