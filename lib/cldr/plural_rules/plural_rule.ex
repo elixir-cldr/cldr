@@ -265,7 +265,8 @@ defmodule Cldr.Number.PluralRule do
       end
 
       @default_substitution :other
-      @spec pluralize(Math.number_or_decimal() | Range.t(), Locale.locale_reference(), %{}) :: any()
+      @spec pluralize(Math.number_or_decimal() | Range.t(), Locale.locale_reference(), %{}) ::
+              any()
 
       def pluralize(%Range{first: first, last: last}, locale_name, substitutions) do
         with {:ok, language_tag} <- @backend.validate_locale(locale_name) do

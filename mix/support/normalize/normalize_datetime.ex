@@ -7,7 +7,10 @@ defmodule Cldr.Normalize.DateTime do
   end
 
   @normalize_number_systems_for [
-    "date_formats", "time_formats", "date_skeletons", "time_skeletons"
+    "date_formats",
+    "time_formats",
+    "date_skeletons",
+    "time_skeletons"
   ]
 
   def normalize_dates(content, _locale) do
@@ -20,17 +23,31 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.underscore_keys(only: "intervalFormatFallback")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
-          filter: @normalize_number_systems_for, only: "number_system")
-      |> Cldr.Map.deep_map(&compile_items/1, filter: "date_time_formats",
-           only: ["interval_format_fallback"])
+        filter: @normalize_number_systems_for,
+        only: "number_system"
+      )
       |> Cldr.Map.deep_map(&compile_items/1,
-          filter: "append_items")
-      |> Cldr.Map.deep_map(&compile_items/1, filter: "time_zone_names",
-          only: ["gmt_format", "fallback_format"])
+        filter: "date_time_formats",
+        only: ["interval_format_fallback"]
+      )
+      |> Cldr.Map.deep_map(&compile_items/1,
+        filter: "append_items"
+      )
+      |> Cldr.Map.deep_map(&compile_items/1,
+        filter: "time_zone_names",
+        only: ["gmt_format", "fallback_format"]
+      )
+      |> Cldr.Map.deep_map(&compile_items/1,
+        filter: "month_patterns",
+        only: "leap"
+      )
       |> Cldr.Map.deep_map(&group_region_formats/1,
-          only: "time_zone_names")
+        only: "time_zone_names"
+      )
       |> Cldr.Map.deep_map(&group_formats/1,
-          filter: "date_time_formats", only: "available_formats")
+        filter: "date_time_formats",
+        only: "available_formats"
+      )
 
     Map.put(content, "dates", dates)
   end
@@ -71,8 +88,8 @@ defmodule Cldr.Normalize.DateTime do
       "standard" => Cldr.Substitution.parse(standard)
     }
 
-   formats = Map.put(formats, "region_format", region_formats)
-   {key, formats}
+    formats = Map.put(formats, "region_format", region_formats)
+    {key, formats}
   end
 
   # Some of these formats may have _count_ structures so we need to
@@ -91,9 +108,8 @@ defmodule Cldr.Normalize.DateTime do
         {key, [item]} -> {key, item}
         {key, list} -> {key, Cldr.Map.merge_map_list(list)}
       end)
-      |> Map.new
+      |> Map.new()
 
     {key, formats}
   end
-
 end

@@ -6,4 +6,3 @@ defmodule DefaultBackend.Cldr do
     generate_docs: false,
     providers: []
 end
-

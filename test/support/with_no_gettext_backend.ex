@@ -3,4 +3,3 @@ defmodule WithNoGettextBackend.Cldr do
   use Cldr,
     providers: []
 end
-

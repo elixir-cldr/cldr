@@ -1,5 +1,29 @@
 # Changelog
 
+## Cldr v2.37.0
+
+This is the changelog for Cldr v2.37.0 released on ______, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Fixes `Cldr.Locale.parent/1` to use `:und` as the ultimate parent rather than the default locale. This brings closer conformance to the [CLDR specification](https://unicode.org/reports/tr35/).
+
+### Enhancements
+
+* Upgrade to [CLDR 43](https://cldr.unicode.org/index/downloads/cldr-43) data.
+
+* Locale data is now versioned. If a locale file is found but if has no version (data prior to this release) or a version that does not match, the appropriate locale file is downloaded. This ensures locale files and `ex_cldr` are kept in sync. Closes #188.
+
+* Changes `Cldr.version/0` to return the version of CLDR data as a `t:Version.t/0`. This is then used to check the version of the locale data and forcing a download if the locale data is out of date for this release of `ex_cldr`.
+
+* Adds `Cldr.Locale.script_direction_from_locale/1` and `MyApp.Cldr.Locale.script_direction_from_locale/1` to return `:ltr` (for left-to-right scripts) or `:rtl` (for right-to-left scripts). Closes #196. Thanks to @Doerge for the suggestion.
+
+* Adds `Cldr.Validity.Script.unicode_script_to_subtag/1` as public, undocumented function. This function is required by `ex_cldr_person_names` and may be documented in a future release. It maps between a unicode script name (like that returned by `Unicode.script/1` in the `unicode` library) to the appropriate subtag used by CLDR.
+
+* Unit data is now kept as Decimal not Ratio so `:ratio` is no longer a dependency here, or in `ex_cldr_units`.
+
 ## Cldr v2.36.0
 
 This is the changelog for Cldr v2.36.0 released on March 13th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

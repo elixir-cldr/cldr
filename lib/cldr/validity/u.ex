@@ -33,7 +33,7 @@ defmodule Cldr.Validity.U do
     "dx" => :dx
   }
 
-  @fields Map.values(@field_mapping) |> Enum.sort
+  @fields Map.values(@field_mapping) |> Enum.sort()
   @inverse_field_mapping Enum.map(@field_mapping, fn {k, v} -> {v, k} end) |> Map.new()
   @validity_data Cldr.Config.validity(:u)
   @dont_process_keys ["vt", "rg", "sd", "dx", "kr"]
@@ -236,6 +236,7 @@ defmodule Cldr.Validity.U do
     cond do
       Map.has_key?(@kr_valid_values, value) ->
         {:ok, [atomize(value)]}
+
       true ->
         case Cldr.Validity.Script.validate(value) do
           {:ok, script, _status} -> {:ok, [script]}

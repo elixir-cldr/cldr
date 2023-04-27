@@ -36,4 +36,27 @@ defmodule Cldr.Validity.Script do
   def normalize(nil) do
     nil
   end
+
+  @unicode_to_subtag_mapping Cldr.Config.unicode_script_to_subtag_mapping()
+
+  @doc false
+  def unicode_to_subtag_map do
+    @unicode_to_subtag_mapping
+  end
+
+  @doc false
+  def unicode_to_subtag(unicode) do
+    case Map.fetch(unicode_to_subtag_map(), unicode) do
+      {:ok, subtag} -> {:ok, subtag}
+      :error -> {:error, "No unicode language #{inspect unicode} found."}
+    end
+  end
+
+  @doc false
+  def unicode_to_subtag!(unicode) do
+    case unicode_to_subtag(unicode) do
+      {:ok, subtag} -> subtag
+      {:error, reason} -> raise Cldr.InvalidScriptError, reason
+    end
+  end
 end

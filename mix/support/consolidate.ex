@@ -88,16 +88,18 @@ defmodule Cldr.Consolidate do
   def consolidate_locale(locale) do
     IO.puts("Consolidating locale #{inspect(locale)}")
 
-    content =
     cldr_locale_specific_dirs()
     |> consolidate_locale_content(locale)
     |> level_up_locale(locale)
     |> put_localized_subdivisions(locale)
-    |> Cldr.Map.underscore_keys(except: "locale_display_names",
-      skip: ["availableFormats", "intervalFormats"])
+    |> Cldr.Map.underscore_keys(
+      except: "locale_display_names",
+      skip: ["availableFormats", "intervalFormats"]
+    )
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
     |> Cldr.Map.atomize_keys(except: :locale_display_names)
+    |> add_version()
     |> save_locale(locale)
   end
 
@@ -125,6 +127,11 @@ defmodule Cldr.Consolidate do
     |> Normalize.LenientParse.normalize(locale)
     |> Normalize.LocaleDisplayNames.normalize(locale)
     |> Normalize.PersonName.normalize(locale)
+    |> Normalize.Layout.normalize(locale)
+  end
+
+  defp add_version(content) do
+    Map.put(content, :version, Cldr.Config.version())
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -165,8 +172,10 @@ defmodule Cldr.Consolidate do
   end
 
   defp jason_decode!("", file) do
-    IO.puts "CLDR json file #{inspect file} was found to be empty. " <>
-      "This is likely a bug in the ldml2json converter"
+    IO.puts(
+      "CLDR json file #{inspect(file)} was found to be empty. " <>
+        "This is likely a bug in the ldml2json converter"
+    )
 
     %{}
   end
@@ -524,7 +533,8 @@ defmodule Cldr.Consolidate do
     {"language", "languages"},
     {"script", "scripts"},
     {"subdivision", "subdivisions"},
-    {"variant", "variants"}
+    {"variant", "variants"},
+    {"unit", "units"}
   ]
   def save_validity_data() do
     for {from, to} <- @validity_data do
@@ -956,6 +966,10 @@ defmodule Cldr.Consolidate do
       other -> other
     end
   end
+
+  @doc false
+  def default(nil, default), do: default
+  def default(value, _default), do: value
 
   @doc false
   def assert_package_file_configured!(path) do

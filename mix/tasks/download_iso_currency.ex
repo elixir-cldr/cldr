@@ -1,4 +1,4 @@
-if Cldr.Config.production_data_location do
+if Cldr.Config.production_data_location() do
   defmodule Mix.Tasks.Cldr.Download.IsoCurrency do
     @moduledoc """
     Downloads the ISO Currency codes from the ISO site
@@ -16,13 +16,11 @@ if Cldr.Config.production_data_location do
     def run(_) do
       case Cldr.Http.get(@url) do
         {:ok, body} ->
-          Logger.info("Downloaded ISO Currency data")
-          File.write!@output_file_name, (body)
-          {:ok, @output_file_name}
+          File.write(@output_file_name, body)
+          Logger.info("Downloaded current ISO currency codes to #{inspect(@output_file_name)}")
 
-        {:error, reason} ->
-          Logger.error(reason)
-          {:error, reason}
+        other ->
+          other
       end
     end
   end

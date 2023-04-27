@@ -13,6 +13,7 @@ defmodule Cldr.Install do
   installed.
 
   """
+  alias Cldr.Config
 
   defdelegate client_data_dir(config), to: Cldr.Config
   defdelegate client_locales_dir(config), to: Cldr.Config
@@ -64,7 +65,7 @@ defmodule Cldr.Install do
   def install_locale_name(locale_name, config, options \\ []) do
     force_download? = config.force_locale_download || options[:force]
 
-    if !locale_installed?(locale_name, config) || force_download? do
+    if installation_required?(locale_name, config, force_download?) do
       ensure_client_dirs_exist!(client_locales_dir(config))
       Application.ensure_started(:inets)
       Application.ensure_started(:ssl)
@@ -75,6 +76,14 @@ defmodule Cldr.Install do
       Cldr.maybe_log("Locale already installed and found at #{inspect(output_file_name)}")
       :already_installed
     end
+  end
+
+  defp installation_required?(_locale_name, _config, true = _force_download?) do
+    true
+  end
+
+  defp installation_required?(locale_name, config, _force_download?) do
+    !locale_installed?(locale_name, config) || locale_stale?(locale_name, config)
   end
 
   # Normally a library function shouldn't raise an exception (that's up
@@ -89,6 +98,7 @@ defmodule Cldr.Install do
     require Logger
 
     output_file_name = locale_output_file_name(locale_name, config)
+
     url = "#{base_url()}#{locale_filename(locale_name)}"
 
     case Cldr.Http.get(url) do
@@ -156,12 +166,41 @@ defmodule Cldr.Install do
   No checking of the validity of the `locale` itself is performed.  The
   check is based upon whether there is a locale file installed in the
   client application or in `Cldr` itself.
+
   """
   def locale_installed?(locale, config) do
     case Cldr.Config.locale_path(locale, config) do
       {:ok, _path} -> true
       _ -> false
     end
+  end
+
+  @doc """
+  Returns a `boolean` indicating if the requested locale has available
+  data but the data is stale (is a older version not supported by this
+  version of `ex_cldr`.)
+
+  """
+  def locale_stale?(locale_name, config) do
+    {:ok, path} = Config.locale_path(locale_name, config)
+
+    version =
+      path
+      |> Cldr.Locale.Loader.read_locale_file!()
+      |> Config.json_library().decode!
+      |> Map.get("version")
+
+    stale? = is_nil(version) || Version.compare(Cldr.version(), Version.parse!(version)) != :eq
+
+    if stale? do
+      Logger.bare_log(
+        :info,
+        "Locale data for #{inspect(locale_name)} is stale. " <>
+          "Updated locale data will be downloaded."
+      )
+    end
+
+    stale?
   end
 
   @doc """

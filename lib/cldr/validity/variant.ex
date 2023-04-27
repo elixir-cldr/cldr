@@ -12,7 +12,6 @@ defmodule Cldr.Validity.Variant do
 
   def validate(list) when is_list(list) do
     list
-    |> Enum.reverse()
     |> Enum.reduce_while({:ok, [], nil}, fn elem, {:ok, acc, _status} ->
       case validate(elem) do
         {:ok, variant, status} -> {:cont, {:ok, [variant | acc], status}}
@@ -40,7 +39,9 @@ defmodule Cldr.Validity.Variant do
   @doc since: "2.23.0"
 
   def normalize(list) when is_list(list) do
-    Enum.map(list, &normalize/1)
+    list
+    |> Enum.map(&normalize/1)
+    |> Enum.sort()
   end
 
   def normalize(code) when is_binary(code) do

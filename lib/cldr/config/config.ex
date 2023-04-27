@@ -52,9 +52,11 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
+  @root_locale_name :und
   @default_locale_name :"en-001"
 
   @cldr_modules [
+    "version",
     "number_formats",
     "list_formats",
     "currencies",
@@ -72,10 +74,9 @@ defmodule Cldr.Config do
     "lenient_parse",
     "locale_display_names",
     "subdivisions",
-    "person_names"
+    "person_names",
+    "layout"
   ]
-
-  @root_locale_name :und
 
   @doc false
   # Integer keys cater for 60 year cycles and 239 japanese eras
@@ -351,12 +352,12 @@ defmodule Cldr.Config do
   def default_locale_name(%{} = config) do
     default =
       Map.get(config, :default_locale) ||
-      Application.get_env(app_name(), :default_locale) ||
-      gettext_default_locale(config) ||
-      @default_locale_name
+        Application.get_env(app_name(), :default_locale) ||
+        gettext_default_locale(config) ||
+        @default_locale_name
 
     locale_name_from_posix(default)
-    |> String.to_atom
+    |> String.to_atom()
   end
 
   @doc """
@@ -640,11 +641,12 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a map of validity data
+  Return a map of validity data for a given
+  type.
 
   The types are `:languages`, `:scripts`,
   `:territories`, `:subdivisions`, `:variants`
-  and `:u`
+  `:units`, `:u`, and `:t`
 
   """
   @validity_type [:languages, :scripts, :territories, :subdivisions, :variants]
@@ -656,6 +658,25 @@ defmodule Cldr.Config do
     |> Map.new()
   end
 
+  def validity(:units) do
+    Path.join(cldr_data_dir(), "validity/units.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Enum.map(fn {status, list} ->
+      list =
+        Enum.map(list, fn v ->
+          case String.split(v, "-", parts: 2) do
+            [v] -> v
+            [_category, unit] -> underscores(unit)
+          end
+        end)
+
+      {status, list}
+    end)
+    |> Cldr.Map.atomize_keys()
+    |> Map.new()
+  end
+
   def validity(:u) do
     Path.join(cldr_data_dir(), "bcp47/u.json")
     |> File.read!()
@@ -663,8 +684,8 @@ defmodule Cldr.Config do
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
       {k, "quaternary quarternary"} -> {k, "quaternary"}
-      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
-      {k, v} -> {String.replace(k, "-", "_"), v}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(v)}
+      {k, v} -> {underscores(k), v}
     end)
   end
 
@@ -674,8 +695,8 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.deep_map(fn
       k when is_binary(k) -> k
-      {k, v} when is_binary(v) -> {String.replace(k, "-", "_"), String.replace(v, "-", "_")}
-      {k, v} -> {String.replace(k, "-", "_"), v}
+      {k, v} when is_binary(v) -> {underscores(k), underscores(v)}
+      {k, v} -> {underscores(k), v}
     end)
   end
 
@@ -698,6 +719,34 @@ defmodule Cldr.Config do
             end)
         }
     end)
+  end
+
+  @doc """
+  Returns a mapping from Unicode script names to the
+  respective subtag used in BCP 47 language tags.
+  """
+  @script_metadata_path "script_metadata.csv"
+  def unicode_script_to_subtag_mapping do
+    Path.join(cldr_data_dir(), @script_metadata_path)
+    |> File.read!()
+    |> String.split("\n")
+    |> tl
+    |> tl
+    |> Enum.map(fn line ->
+      [_number, name, code | _rest] = String.split(line,",")
+
+      name =
+        name
+        |> String.replace(" ", "")
+        |> Cldr.String.underscore()
+        |> String.to_atom()
+
+      code =
+        String.to_atom(code)
+
+      {name, code}
+    end)
+    |> Map.new
   end
 
   @doc """
@@ -1291,20 +1340,20 @@ defmodule Cldr.Config do
        :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
        :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
        :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
-       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
-       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
-       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
-       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
-       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
-       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
-       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
-       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
-       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
-       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
-       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
-       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
-       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
-       :XK, :YE, :YT, :ZA, :ZM, :ZW]
+       :CL, :CM, :CN, :CO, :CP, :CQ, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ,
+       :DK, :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ,
+       :FK, :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP,
+       :GQ, :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE,
+       :IL, :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI,
+       :KM, :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU,
+       :LV, :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ,
+       :MR, :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL,
+       :NO, :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR,
+       :PS, :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE,
+       :SG, :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ,
+       :TA, :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW,
+       :TZ, :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF,
+       :WS, :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
   def known_territories do
@@ -1334,32 +1383,8 @@ defmodule Cldr.Config do
         locale_name
         |> get_locale(config)
         |> Map.get(:currencies)
-        |> Enum.map(fn {k, v} ->
-          name_and_range = Regex.named_captures(@reg, Map.get(v, :name))
-
-          name =
-            (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))
-            |> String.trim()
-
-          from = convert_or_nilify(Map.get(name_and_range, "from"))
-          to = convert_or_nilify(Map.get(name_and_range, "to"))
-
-          count =
-            Enum.map(Map.get(v, :count), fn {k, v} ->
-              {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
-            end)
-            |> Map.new()
-
-          currency =
-            v
-            |> Map.put(:name, name)
-            |> Map.put(:from, from)
-            |> Map.put(:to, to)
-            |> Map.put(:count, count)
-
-          {k, currency}
-        end)
-        |> Enum.into(%{})
+        |> Enum.map(&split_currency_metadata/1)
+        |> Map.new()
 
       {:ok, currencies}
     else
@@ -1372,6 +1397,51 @@ defmodule Cldr.Config do
       {:ok, currencies} -> currencies
       {:error, {exception, reason}} -> raise exception, reason
     end
+  end
+
+  def split_currency_metadata({k, %{name: nil} = v}) do
+    v =
+      v
+      |> Map.put(:from, nil)
+      |> Map.put(:to, nil)
+      |> Map.put(:count, %{})
+
+    {k, v}
+  end
+
+  def split_currency_metadata({k, %{name: name} = v}) do
+    name_and_range = Regex.named_captures(@reg, name)
+
+    name =
+      (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))
+      |> String.trim()
+
+    from = convert_or_nilify(Map.get(name_and_range, "from"))
+    to = convert_or_nilify(Map.get(name_and_range, "to"))
+
+    count =
+      Enum.map(Map.get(v, :count), fn {k, v} ->
+        {k, String.replace(v, ~r/ \([0-9]{4}.*/, "")}
+      end)
+      |> Map.new()
+
+    currency =
+      v
+      |> Map.put(:name, name)
+      |> Map.put(:from, from)
+      |> Map.put(:to, to)
+      |> Map.put(:count, count)
+      |> maybe_put_code_as_symbol(v.symbol, v.code)
+
+    {k, currency}
+  end
+
+  defp maybe_put_code_as_symbol(currency, nil = _symbol, code) do
+    Map.put(currency, :symbol, code)
+  end
+
+  defp maybe_put_code_as_symbol(currency, _symbol, _code) do
+    currency
   end
 
   defp convert_or_nilify("") do
@@ -1477,7 +1547,10 @@ defmodule Cldr.Config do
 
   """
   @wildcard_matchers ["*", "+", ".", "["]
-  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [Locale.locale_name(), ...]
+  @spec expand_locale_names([Locale.locale_name() | String.t(), ...]) :: [
+          Locale.locale_name(),
+          ...
+        ]
   def expand_locale_names(locale_names) do
     Enum.map(locale_names, fn locale_name ->
       locale_name = to_string(locale_name)
@@ -1587,8 +1660,9 @@ defmodule Cldr.Config do
     case locale_path(locale, config) do
       {:ok, path} ->
         path
+
       {:error, _reason} ->
-        raise RuntimeError, "The locale file for #{inspect locale} was not found."
+        raise RuntimeError, "The locale file for #{inspect(locale)} was not found."
     end
   end
 
@@ -1750,11 +1824,15 @@ defmodule Cldr.Config do
     |> Map.new()
   end
 
-  defp into_keyword_list(list) do
+  defp into_keyword_list(list) when is_list(list) do
     Enum.reduce(list, Keyword.new(), fn map, acc ->
       currency = Map.to_list(map) |> hd
       [currency | acc]
     end)
+  end
+
+  defp into_keyword_list(nil) do
+    Map.new()
   end
 
   @doc """
@@ -1791,7 +1869,7 @@ defmodule Cldr.Config do
 
   """
   @spec territory(Locale.territory_reference() | String.t()) ::
-    %{} | {:error, {module(), String.t()}}
+          %{} | {:error, {module(), String.t()}}
 
   def territory(territory) do
     with {:ok, territory_code} <- Cldr.validate_territory(territory) do
@@ -1888,7 +1966,7 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Enum.map(fn {k, v} ->
-      {String.to_atom(k), struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
+      {k, struct(Cldr.LanguageTag, normalize_territory_and_region(v))}
     end)
     |> Map.new()
   end
@@ -1949,7 +2027,13 @@ defmodule Cldr.Config do
   ## Example
 
       iex> Cldr.Config.calendars |> Map.get(:gregorian)
-      %{calendar_system: "solar", eras: [[0, %{end: [0, 12, 31]}], [1, %{start: [1, 1, 1]}]]}
+      %{
+        calendar_system: :solar,
+        eras: [
+          [0, %{end: [0, 12, 31], aliases: ["bc", "bce"], code: :gregory_inverse}],
+          [1, %{start: [1, 1, 1], aliases: ["ad", "ce"], code: :gregory}]
+        ]
+      }
 
   """
   def calendars do
@@ -1959,6 +2043,19 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys(except: @keys_to_integerize)
     |> Cldr.Map.integerize_keys()
+    |> Cldr.Map.deep_map(fn
+      {:calendar_system, system} ->
+        {:calendar_system, underscores(system) |> String.to_atom()}
+
+      {:aliases, aliases} ->
+        {:aliases, String.split(aliases)}
+
+      {:code, code} ->
+        {:code, underscores(code) |> String.to_atom()}
+
+      other ->
+        other
+    end)
   end
 
   @deprecated "Use Cldr.Config.calendars/0"
@@ -1972,11 +2069,8 @@ defmodule Cldr.Config do
       iex> Cldr.Config.units |> get_in([:conversions, :quart])
       %{
         base_unit: :cubic_meter,
-        factor: %{
-          denominator: 13469199089641601294165159418313264309149074316066816,
-          numerator: 12746616238742849396626455585282990375683527307233
-        },
-        offset: %{denominator: 1, numerator: 0},
+        factor: "0.000946352946",
+        offset: 0,
         systems: [:ussystem]
       }
 
@@ -2159,6 +2253,7 @@ defmodule Cldr.Config do
     |> Map.get(:dates)
     |> Map.get(:calendars)
     |> Map.keys()
+    |> Enum.sort()
   end
 
   def calendars_for_locale(locale_name, %{} = config) when is_binary(locale_name) do
@@ -2278,7 +2373,7 @@ defmodule Cldr.Config do
         locale_name =
           locale_name
           |> locale_name_from_posix
-          |> String.to_atom
+          |> String.to_atom()
 
         module = Module.concat(backend, Rbnf) |> Module.concat(ruleset_module)
         {module, function, locale_name}
@@ -2299,6 +2394,7 @@ defmodule Cldr.Config do
   """
   def locale_name_from_posix(nil), do: nil
   def locale_name_from_posix(name) when is_binary(name), do: String.replace(name, "_", "-")
+
   def locale_name_from_posix(name) when is_atom(name) do
     name
     |> Atom.to_string()
@@ -2318,6 +2414,10 @@ defmodule Cldr.Config do
   end
 
   # ------ Helpers ------
+
+  defp underscores(string) do
+    String.replace(string, "-", "_")
+  end
 
   @doc """
   Identifies the top level keys in the consolidated locale file.
@@ -2421,7 +2521,9 @@ defmodule Cldr.Config do
   defp remove_gettext_only_locales(%{locales: locales, gettext: gettext} = config) do
     locales = if locales == :all, do: all_locale_names(), else: locales
     gettext_locales = known_gettext_locale_names(config)
-    unknown_locales = Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
+
+    unknown_locales =
+      Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
 
     case unknown_locales do
       [] ->
@@ -2431,7 +2533,7 @@ defmodule Cldr.Config do
         unknown = locale_name_to_posix(unknown_locale)
 
         note(
-          "The locale #{inspect(unknown)} is configured in the #{inspect gettext} " <>
+          "The locale #{inspect(unknown)} is configured in the #{inspect(gettext)} " <>
             "gettext backend but is unknown to CLDR. It will not be used to configure CLDR " <>
             "but it will still be used to match CLDR locales to Gettext locales at runtime.",
           config
@@ -2443,7 +2545,7 @@ defmodule Cldr.Config do
         unknown = Enum.map(unknown_locales, &locale_name_to_posix/1)
 
         note(
-          "The locales #{inspect(unknown)} are configured in the #{inspect gettext} " <>
+          "The locales #{inspect(unknown)} are configured in the #{inspect(gettext)} " <>
             "gettext backend but are unknown to CLDR. They will not be used to configure CLDR " <>
             "but they will still be used to match CLDR locales to Gettext locales at runtime.",
           config
@@ -2490,7 +2592,8 @@ defmodule Cldr.Config do
     if Map.has_key?(providers, Cldr.Number) and Map.has_key?(providers, Cldr.Currency) do
       note(
         "The provider Cldr.Currency is redundant when Cldr.Number is configured. Please remove " <>
-        "Cldr.Currency from your CLDR backend provider configuration.", config
+          "Cldr.Currency from your CLDR backend provider configuration.",
+        config
       )
 
       Map.delete(providers, Cldr.Currency)
@@ -2500,14 +2603,14 @@ defmodule Cldr.Config do
   end
 
   defp validate_default_currency_format(%{default_currency_format: format} = options)
-      when format in [:currency, :accounting, nil] do
+       when format in [:currency, :accounting, nil] do
     options
   end
 
   defp validate_default_currency_format(%{default_currency_format: format}) do
     raise ArgumentError,
-      "Invalid :default_currency_format option specified.\n" <>
-      "Valid options are :currency, :accounting or nil. Found #{inspect format}"
+          "Invalid :default_currency_format option specified.\n" <>
+            "Valid options are :currency, :accounting or nil. Found #{inspect(format)}"
   end
 
   @doc false
@@ -2515,7 +2618,7 @@ defmodule Cldr.Config do
     if !config[:suppress_warnings] do
       [IO.ANSI.yellow(), "note: ", IO.ANSI.reset(), text]
       |> :erlang.iolist_to_binary()
-      |> IO.puts
+      |> IO.puts()
     else
       :ok
     end

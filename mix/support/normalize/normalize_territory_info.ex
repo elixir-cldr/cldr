@@ -102,4 +102,3 @@ defmodule Cldr.Normalize.Territories do
     String.upcase(code)
   end
 end
-

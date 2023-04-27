@@ -23,17 +23,15 @@ defmodule Cldr.Rfc5646.Helpers do
   end
 
   def merge_langtag_and_transform([langtag, %{} = subtags]) do
-    langtag =
-      struct(Cldr.LanguageTag, langtag)
+    langtag = struct(Cldr.LanguageTag, langtag)
 
     Map.put(subtags, "language", langtag)
   end
 
   def merge_langtag_and_transform([subtags]) when is_list(subtags) do
-    langtag =
-      struct(Cldr.LanguageTag, subtags)
+    langtag = struct(Cldr.LanguageTag, subtags)
 
-     %{"language" => langtag}
+    %{"language" => langtag}
   end
 
   def merge_langtag_and_transform([subtags]) do

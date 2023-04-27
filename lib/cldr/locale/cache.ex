@@ -33,14 +33,14 @@ defmodule Cldr.Locale.Cache do
   def compiling? do
     # TODO: When we depend on Elixir v1.11+, remove function_exported and elixir_compiler_pid
     process_alive?(:can_await_module_compilation?) ||
-			process_alive?(:elixir_compiler_pid) ||
-			process_alive?(:cldr_locale_cache)
+      process_alive?(:elixir_compiler_pid) ||
+      process_alive?(:cldr_locale_cache)
   end
 
   defp process_alive?(:can_await_module_compilation?) do
     Code.ensure_loaded?(Code) &&
       function_exported?(Code, :can_await_module_compilation?, 0) &&
-	    apply(Code, :can_await_module_compilation?, [])
+      apply(Code, :can_await_module_compilation?, [])
   end
 
   defp process_alive?(name) do
@@ -135,11 +135,12 @@ defmodule Cldr.Locale.Cache do
       other ->
         raise RuntimeError, inspect(other)
     end
-  rescue ArgumentError ->
-    # We can very occasionally get an exception when the gen_server
-    # is started but before the table is created and another thread
-    # tries to get a locale. In this case we just get the locale manually
-    Loader.do_get_locale(locale, path, false)
+  rescue
+    ArgumentError ->
+      # We can very occasionally get an exception when the gen_server
+      # is started but before the table is created and another thread
+      # tries to get a locale. In this case we just get the locale manually
+      Loader.do_get_locale(locale, path, false)
   end
 
   defp do_get_language_tag(locale) do

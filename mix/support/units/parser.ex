@@ -31,7 +31,7 @@ defmodule Cldr.Unit.Parser do
   def parse_constant(constant) when is_binary(constant) do
     case Integer.parse(constant) do
       {integer, ""} -> integer
-      {_integer, _remainder} -> Float.parse(constant) |> elem(0)
+      {_integer, _remainder} -> Decimal.parse(constant) |> elem(0)
       :error -> constant
     end
   end

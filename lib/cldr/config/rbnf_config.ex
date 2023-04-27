@@ -6,7 +6,7 @@ defmodule Cldr.Rbnf.Config do
 
   @default_radix 10
 
-  if Cldr.Config.production_data_location do
+  if Cldr.Config.production_data_location() do
     @doc """
     Returns the directory where the production
     RBNF data is stored.
@@ -27,7 +27,7 @@ defmodule Cldr.Rbnf.Config do
     Path.join(data_dir, "rbnf")
   end
 
-  if Cldr.Config.production_data_location do
+  if Cldr.Config.production_data_location() do
     @doc """
     Returns a list of the locales for which there is an rbnf rule set
 
@@ -40,10 +40,10 @@ defmodule Cldr.Rbnf.Config do
         [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
-         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vi, :yue,
-         :"yue-Hans", :zh, :"zh-Hant"]
+         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv,
+         :mk, :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vec,
+         :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
     """
   else
@@ -59,7 +59,7 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.map(&String.to_atom/1)
   end
 
-  if Cldr.Config.production_data_location do
+  if Cldr.Config.production_data_location() do
     @doc """
     Returns the list of locales that is the intersection of
     `Cldr.known_locale_names/1` and `Cldr.Rbnf.rbnf_locale_names/0`
@@ -73,10 +73,10 @@ defmodule Cldr.Rbnf.Config do
         [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,
-         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv, :mk,
-         :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se, :sk,
-         :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :vi, :yue,
-         :"yue-Hans", :zh, :"zh-Hant"]
+         :id, :is, :it, :ja, :ka, :kk, :kl, :km, :ko, :ky, :lb, :lo, :lrc, :lt, :lv,
+         :mk, :ms, :mt, :my, :ne, :nl, :nn, :no, :pl, :pt, :"pt-PT", :qu, :ro, :ru, :se,
+         :sk, :sl, :sq, :sr, :"sr-Latn", :su, :sv, :sw, :ta, :th, :tr, :uk, :und, :vec,
+         :vi, :yue, :"yue-Hans", :zh, :"zh-Hant"]
 
     """
   else
@@ -92,7 +92,7 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.sort()
   end
 
-  if Cldr.Config.production_data_location do
+  if Cldr.Config.production_data_location() do
     @doc """
     Returns the rbnf rules for a `locale` or `{:error, :rbnf_file_not_found}`
 

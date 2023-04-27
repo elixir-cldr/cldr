@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.36.0"
+  @version "2.37.0-rc.4"
 
   def project do
     [
@@ -22,7 +22,7 @@ defmodule Cldr.Mixfile do
       preferred_cli_env: preferred_cli_env(),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(gettext inets jason mix sweet_xml ratio)a
+        plt_add_apps: ~w(gettext inets jason mix sweet_xml)a
       ],
       compilers: Mix.compilers()
     ]
@@ -31,7 +31,7 @@ defmodule Cldr.Mixfile do
   defp description do
     """
     Common Locale Data Repository (CLDR) functions for Elixir to localize and format numbers,
-    dates, lists and units with support for over 500 locales for internationalized (i18n) and
+    dates, lists and units with support for over 600 locales for internationalized (i18n) and
     localized (L10N) applications.
     """
   end
@@ -45,12 +45,10 @@ defmodule Cldr.Mixfile do
   defp deps do
     [
       {:cldr_utils, "~> 2.21"},
-
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
       {:nimble_parsec, "~> 0.5 or ~> 1.0", optional: true},
-      {:ratio, "~> 2.0 or ~> 3.0", only: [:dev, :test], optional: true},
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
@@ -101,6 +99,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/grammatical_gender.json",
         "priv/cldr/parent_locales.json",
         "priv/cldr/time_preferences.json",
+        "priv/cldr/script_metadata.csv",
         "priv/cldr/language_tags.ebin",
         "priv/cldr/language_data.json",
         "priv/cldr/deprecated/measurement_system.json",
@@ -110,6 +109,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/validity/scripts.json",
         "priv/cldr/validity/subdivisions.json",
         "priv/cldr/validity/variants.json",
+        "priv/cldr/validity/units.json",
         "priv/cldr/bcp47/u.json",
         "priv/cldr/bcp47/t.json"
       ]
@@ -142,7 +142,9 @@ defmodule Cldr.Mixfile do
         ex_cldr_lists: "https://hexdocs.pm/ex_cldr_lists",
         ex_cldr_calendars: "https://hexdocs.pm/ex_cldr_calendars",
         ex_cldr_html: "https://hexdocs.pm/ex_cldr_html",
-        ex_cldr_messages: "https://hexdocs.pm/ex_cldr_messages"
+        ex_cldr_messages: "https://hexdocs.pm/ex_cldr_messages",
+        ex_cldr_routes: "https://hexdocs.pm/ex_cldr_routes",
+        ex_cldr_person_names: "https://hexdocs.pm/ex_cldr_person_names"
       ],
       groups_for_modules: groups_for_modules(),
       skip_undefined_reference_warnings_on: ["changelog", "CHANGELOG.md"]
@@ -150,9 +152,7 @@ defmodule Cldr.Mixfile do
   end
 
   defp preferred_cli_env() do
-    [
-
-    ]
+    []
   end
 
   def aliases do
@@ -166,7 +166,7 @@ defmodule Cldr.Mixfile do
       Protocols: [
         Cldr.Chars,
         Cldr.DisplayName
-        ],
+      ],
       Plugs: ~r/^Cldr.Plug.?/,
       Gettext: ~r/^Cldr.Gettext.?/,
       Helpers: [

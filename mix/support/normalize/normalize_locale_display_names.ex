@@ -10,6 +10,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     locale_display_names =
       content
       |> Map.fetch!("locale_display_names")
+      |> Cldr.Consolidate.default([])
 
     languages =
       locale_display_names
@@ -18,17 +19,17 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
 
     scripts =
       locale_display_names
-      |> Map.get("scripts")
+      |> Map.get("scripts", %{})
       |> merge_alt(&String.capitalize/1)
 
     territories =
       locale_display_names
-      |> Map.get("territories")
+      |> Map.get("territories", %{})
       |> merge_alt(&String.upcase/1)
 
     locale_display_pattern =
       locale_display_names
-      |> Map.get("locale_display_pattern")
+      |> Map.get("locale_display_pattern", %{})
       |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
       |> Map.new()
 
@@ -40,7 +41,8 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
 
     measurement_systems =
       locale_display_names
-      |> get_in(["types", "ms"])
+      |> Map.get("types", %{})
+      |> Map.get("ms", %{})
       |> Enum.map(fn
         {"uksystem", description} -> {"imperial", description}
         other -> other
@@ -49,7 +51,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
 
     types =
       locale_display_names
-      |> Map.get("types")
+      |> Map.get("types", %{})
       |> Map.put("ms", measurement_systems)
 
     locale_display_names =
@@ -71,6 +73,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
   def merge_alt(map, normalizer_fun \\ & &1) do
     map =
       map
+      |> Cldr.Consolidate.default([])
       |> Enum.map(fn {code, display_name} ->
         case String.split(code, "_alt_") do
           [name] -> {normalizer_fun.(name), display_name}

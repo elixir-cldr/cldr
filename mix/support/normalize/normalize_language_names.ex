@@ -10,6 +10,7 @@ defmodule Cldr.Normalize.LanguageNames do
     territories =
       content
       |> get_in(["locale_display_names", "languages"])
+      |> Cldr.Consolidate.default([])
       |> Enum.map(fn {k, v} ->
         k =
           k

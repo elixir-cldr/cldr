@@ -27,7 +27,6 @@ defmodule Cldr.Rfc5646.Parser do
         "#{String.capitalize(first)}#{reason}. Could not parse the remaining #{inspect(rest)} " <>
           "starting at position #{offset + 1}"}}
 
-
   # parsec:Cldr.Rfc5646.Parser
 
   # language-tag  = langtag             ; normal language tags

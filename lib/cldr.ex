@@ -56,23 +56,21 @@ defmodule Cldr do
     end
   end
 
+  @version_string Config.version()
+
   @doc """
-  Returns the version of the CLDR repository as a tuple
+  Returns the version of the CLDR repository.
 
   ## Example
 
       iex> Cldr.version
-      {42, 0, 0}
+      Version.parse!(#{inspect(@version_string)})
 
   """
-  @version Config.version()
-           |> String.split(".")
-           |> Enum.map(&String.to_integer/1)
-           |> List.to_tuple()
 
-  @spec version :: {non_neg_integer, non_neg_integer, non_neg_integer}
+  @spec version :: Version.t()
   def version do
-    @version
+    Version.parse!(@version_string)
   end
 
   @warn_if_greater_than 100
@@ -221,7 +219,7 @@ defmodule Cldr do
 
   """
   @spec put_locale(backend(), Locale.locale_reference()) ::
-    {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
+          {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def put_locale(backend \\ nil, locale)
 
@@ -295,7 +293,9 @@ defmodule Cldr do
             {:ok, binary() | nil} | {:error, {module(), String.t()}}
 
     def put_gettext_locale(%LanguageTag{gettext_locale_name: nil} = locale) do
-      {:error, {Cldr.UnknownLocaleError, "Locale #{inspect locale} does not map to a known gettext locale name"}}
+      {:error,
+       {Cldr.UnknownLocaleError,
+        "Locale #{inspect(locale)} does not map to a known gettext locale name"}}
     end
 
     def put_gettext_locale(%LanguageTag{gettext_locale_name: gettext_locale_name} = locale) do
@@ -303,7 +303,6 @@ defmodule Cldr do
       _ = Gettext.put_locale(gettext_backend, gettext_locale_name)
       {:ok, gettext_locale_name}
     end
-
   end
 
   @doc """
@@ -965,8 +964,9 @@ defmodule Cldr do
   def known_locale_name(locale_name, backend) when is_binary(locale_name) do
     locale_name = String.to_existing_atom(locale_name)
     known_locale_name(locale_name, backend)
-  rescue ArgumentError ->
-    nil
+  rescue
+    ArgumentError ->
+      nil
   end
 
   @doc """
@@ -1405,20 +1405,20 @@ defmodule Cldr do
        :"419", :AC, :AD, :AE, :AF, :AG, :AI, :AL, :AM, :AO, :AQ, :AR, :AS, :AT, :AU,
        :AW, :AX, :AZ, :BA, :BB, :BD, :BE, :BF, :BG, :BH, :BI, :BJ, :BL, :BM, :BN, :BO,
        :BQ, :BR, :BS, :BT, :BV, :BW, :BY, :BZ, :CA, :CC, :CD, :CF, :CG, :CH, :CI, :CK,
-       :CL, :CM, :CN, :CO, :CP, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ, :DK,
-       :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ, :FK,
-       :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP, :GQ,
-       :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE, :IL,
-       :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI, :KM,
-       :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU, :LV,
-       :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ, :MR,
-       :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL, :NO,
-       :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR, :PS,
-       :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE, :SG,
-       :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ, :TA,
-       :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW, :TZ,
-       :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF, :WS,
-       :XK, :YE, :YT, :ZA, :ZM, :ZW]
+       :CL, :CM, :CN, :CO, :CP, :CQ, :CR, :CU, :CV, :CW, :CX, :CY, :CZ, :DE, :DG, :DJ,
+       :DK, :DM, :DO, :DZ, :EA, :EC, :EE, :EG, :EH, :ER, :ES, :ET, :EU, :EZ, :FI, :FJ,
+       :FK, :FM, :FO, :FR, :GA, :GB, :GD, :GE, :GF, :GG, :GH, :GI, :GL, :GM, :GN, :GP,
+       :GQ, :GR, :GS, :GT, :GU, :GW, :GY, :HK, :HM, :HN, :HR, :HT, :HU, :IC, :ID, :IE,
+       :IL, :IM, :IN, :IO, :IQ, :IR, :IS, :IT, :JE, :JM, :JO, :JP, :KE, :KG, :KH, :KI,
+       :KM, :KN, :KP, :KR, :KW, :KY, :KZ, :LA, :LB, :LC, :LI, :LK, :LR, :LS, :LT, :LU,
+       :LV, :LY, :MA, :MC, :MD, :ME, :MF, :MG, :MH, :MK, :ML, :MM, :MN, :MO, :MP, :MQ,
+       :MR, :MS, :MT, :MU, :MV, :MW, :MX, :MY, :MZ, :NA, :NC, :NE, :NF, :NG, :NI, :NL,
+       :NO, :NP, :NR, :NU, :NZ, :OM, :PA, :PE, :PF, :PG, :PH, :PK, :PL, :PM, :PN, :PR,
+       :PS, :PT, :PW, :PY, :QA, :QO, :RE, :RO, :RS, :RU, :RW, :SA, :SB, :SC, :SD, :SE,
+       :SG, :SH, :SI, :SJ, :SK, :SL, :SM, :SN, :SO, :SR, :SS, :ST, :SV, :SX, :SY, :SZ,
+       :TA, :TC, :TD, :TF, :TG, :TH, :TJ, :TK, :TL, :TM, :TN, :TO, :TR, :TT, :TV, :TW,
+       :TZ, :UA, :UG, :UM, :UN, :US, :UY, :UZ, :VA, :VC, :VE, :VG, :VI, :VN, :VU, :WF,
+       :WS, :XK, :YE, :YT, :ZA, :ZM, :ZW]
 
   """
   @known_territories Cldr.Config.known_territories()

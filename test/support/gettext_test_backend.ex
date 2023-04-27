@@ -7,4 +7,3 @@ defmodule TestGettext.Gettext do
     otp_app: Cldr.Config.app_name(),
     priv: "priv/gettext_test"
 end
-
