@@ -216,12 +216,15 @@ defmodule Cldr.Locale.Loader do
   # only required if adding new content modules to a locale - which is
   # an uncommon activity.
 
+  # We don't validate the "version" key because its not in older
+  # locale files which we will upgrade latter in the resolution cycle.
+
   defp assert_valid_keys!(content, locale) do
     for module <- Config.required_modules() do
-      if !Map.has_key?(content, module) and !Elixir.System.get_env("DEV") do
+      if !Map.has_key?(content, module) && !Elixir.System.get_env("DEV") do
         raise RuntimeError,
           message:
-            "Locale file #{inspect(locale)} is invalid - map key #{inspect(module)} was not found."
+            "Locale file #{inspect(locale)} is invalid - locale map key #{inspect(module)} was not found."
       end
     end
 
