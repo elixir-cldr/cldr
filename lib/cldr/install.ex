@@ -101,6 +101,11 @@ defmodule Cldr.Install do
 
     url = "#{base_url()}#{locale_filename(locale_name)}"
 
+    if proxy = System.get_env("HTTPS_PROXY") || System.get_env("https_proxy") do
+      %{host: host, port: port} = URI.parse(proxy)
+      :httpc.set_options([{:https_proxy, {{String.to_charlist(host), port}, []}}])
+    end
+
     case Cldr.Http.get(url) do
       {:ok, body} ->
         output_file_name
