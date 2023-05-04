@@ -28,7 +28,8 @@ defmodule Cldr.Config do
             generate_docs: true,
             suppress_warnings: false,
             message_formats: %{},
-            force_locale_download: false
+            force_locale_download: false,
+            https_proxy: nil
 
   @type t :: %__MODULE__{
           default_locale: String.t(),
@@ -47,7 +48,8 @@ defmodule Cldr.Config do
           generate_docs: boolean(),
           suppress_warnings: boolean(),
           message_formats: map(),
-          force_locale_download: boolean
+          force_locale_download: boolean,
+          https_proxy: String.t() | nil
         }
 
   @type number_system :: atom() | String.t()
@@ -2701,7 +2703,8 @@ defmodule Cldr.Config do
     :default_backend,
     :cacertfile,
     :data_dir,
-    :force_locale_download
+    :force_locale_download,
+    :https_proxy
   ]
 
   @doc false

@@ -7,6 +7,8 @@ defmodule Cldr.LocaleUpgradeTest do
     old_level = Logger.level()
     Logger.configure level: :info
 
+    File.mkdir("/tmp/locales")
+
     File.cp! "./priv/cldr/locales/und.json", "/tmp/locales/und.json"
     File.cp! "./priv/cldr/locales/en.json", "/tmp/locales/en.json"
 

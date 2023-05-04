@@ -251,7 +251,7 @@ use Cldr,
 
  * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
 
- * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) which prevent the generation of docs for this backend.
+ * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) will prevent the generation of docs for this backend.
 
  * `:suppress_warnings` defines whether warnings are logged when a provider module is configured but not available. It also controls whether warnings are logged when a number format is compiled at runtime. Its purpose is to help identify those formats which might best be added to the `:precompile_number_formats` configuration. The default is `false`. Warning are not logged when set to `true`.
 
@@ -265,6 +265,8 @@ defmodule MyApp.Cldr do
     force_locale_download: Mix.env() == :prod
 end
 ```
+
+ * `:https_proxy` is the URL of a proxy host that will be used when downloading locales to be installed. When downloading, this configuration key has priority, followed by the environment variables `HTTPS_PROXY` and `https_proxy`.  The default is `nil`.
 
 ### Providers
 
