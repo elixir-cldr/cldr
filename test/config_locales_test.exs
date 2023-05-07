@@ -90,7 +90,7 @@ defmodule Cldr.Config.Test do
     end)
 
     assert apply(Cldr.Config.Test.PosixDefaultLocale, :known_locale_names, []) ==
-             [:en, :"en-GB", :und]
+             [:en, :"en-GB"]
 
     assert apply(Cldr.Config.Test.PosixDefaultLocale, :default_locale, []).cldr_locale_name ==
              :"en-GB"

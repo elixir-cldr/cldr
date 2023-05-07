@@ -445,7 +445,7 @@ defmodule Cldr.Locale do
   end
 
   defp known_locale(locale_name, _tags, backend) when is_atom(locale_name) do
-    Enum.find(backend.known_locale_names(), &(locale_name == &1))
+    Enum.find(backend.known_locale_names() ++ [Cldr.Config.root_locale_name()], &(locale_name == &1))
   end
 
   defp known_rbnf_locale_name(locale_name, _tags, backend) do
@@ -1809,7 +1809,13 @@ defmodule Cldr.Locale do
     %{language_tag | gettext_locale_name: gettext_locale_name}
   end
 
+  @root_locale_name Cldr.Config.root_locale_name()
+
   @spec cldr_locale_name(Cldr.LanguageTag.t()) :: locale_name() | nil
+  defp cldr_locale_name(%LanguageTag{language: @root_locale_name}) do
+    @root_locale_name
+  end
+
   defp cldr_locale_name(%LanguageTag{} = language_tag) do
     first_match(language_tag, &known_locale(&1, &2, language_tag.backend)) ||
       Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)

@@ -5,10 +5,13 @@ defmodule Cldr.Locale.Parent.Test do
     assert Cldr.Locale.parent("und") ==
              {:error, {Cldr.NoParentError, "The locale :und has no parent locale"}}
 
-    assert Cldr.Locale.parent("en-US") == TestBackend.Cldr.Locale.new("und")
-    assert Cldr.Locale.parent("en-US-u-va-POSIX") == TestBackend.Cldr.Locale.new("und-u-va-posix")
     assert Cldr.Locale.parent("en-AU") == TestBackend.Cldr.Locale.new("en-001")
+  end
+
+  test "parent is :und" do
+    assert Cldr.Locale.parent("en-US") == TestBackend.Cldr.Locale.new("und")
     assert Cldr.Locale.parent("ca") == TestBackend.Cldr.Locale.new("und")
+    assert Cldr.Locale.parent("en-US-u-va-POSIX") == TestBackend.Cldr.Locale.new("und-u-va-posix")
   end
 
   test "parent locale of en-001" do

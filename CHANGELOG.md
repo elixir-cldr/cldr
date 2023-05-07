@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.37.1
+
+This is the changelog for Cldr v2.37.1 released on May 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Don't include `:und` in the list returned by `Cldr.known_locale_names/1` since that function is commonly used to enumerate the configured locales and ultimately used to generate UI elements. `:und` is not a useful locale to select so its inclusion, which was added in `ex_cldr version 2.37.0` is inappropriate and now reverted.
+
 ## Cldr v2.37.0
 
 This is the changelog for Cldr v2.37.0 released on April 28th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
