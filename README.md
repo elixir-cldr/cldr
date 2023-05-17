@@ -1,5 +1,4 @@
 # Getting Started with Cldr
-![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr)
 [![Hex.pm](https://img.shields.io/hexpm/v/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/dw/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
