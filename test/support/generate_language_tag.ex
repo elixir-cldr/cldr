@@ -5,6 +5,7 @@ defmodule GenerateLanguageTag do
   @known_scripts Cldr.Validity.all_valid(:scripts)
   @known_languages Cldr.Validity.all_valid(:languages)
 
+  @dialyzer {:nowarn_function, {:valid_language_tag, 0}}
   def valid_language_tag do
     ExUnitProperties.gen all(
                            language <-
