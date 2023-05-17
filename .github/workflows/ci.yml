@@ -101,6 +101,6 @@ jobs:
     - name: Run tests
       run: mix test
 
-    # Step: Run dialyzer
+    # Step: Execute dialyzer.
     - name: Run dialyzer
       run: mix dialyzer
