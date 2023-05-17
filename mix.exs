@@ -51,7 +51,7 @@ defmodule Cldr.Mixfile do
       {:nimble_parsec, "~> 0.5 or ~> 1.0", optional: true},
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 0.4", only: :test},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true}
     ]
