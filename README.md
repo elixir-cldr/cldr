@@ -4,10 +4,8 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-## If you use Cldr.Plug.PutLocale
-
+> ### If you use Cldr.Plug.PutLocale {: .info}
 Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been extracted to their own `ex_cldr_plugs` library. you will need to add that dependency to your application. For example:
-
 ```elixir
 # in mix.exs
 def deps do
