@@ -8,26 +8,46 @@ defmodule Cldr do
   certain core data types such as locales, currencies and
   territories.
 
+  > #### `use Cldr` {: .info}
+  >
+  > When you `use Cldr`, a number of functions are generated
+  > that encapsulate CLDR data. A moodule that invokes `use Cldr`
+  > is referred to as a Cldr backend module.
+  >
+  > The functions in a Cldr backend module form the primary
+  > recommended API for `ex_cldr`.
+  >
+  > In additional, a number of additional modules
+  > may be generated with names that are prefixed by the name of
+  > the module in which `use Cldr` is invoked. The number and names
+  > of these additional modules is determined by the modules
+  > configured under the `:providers` option to `use Cldr`.
+  >
+  > It is not recommended that a module that invoke `use Cldr`
+  > define any other functions.
+  >
+  > See [the configuration guide](https://hexdocs.pm/ex_cldr/readme.html#configuration)
+  > for details on how to configure.
+
   `Cldr` functionality is packaged into a several
-  packages that each depend on this one.  These additional
-  modules are:
+  libraries that each depend on this one.  These additional
+  libraries are:
 
-  * `Cldr.Number.to_string/2` for formatting numbers and
-    `Cldr.Currency.to_string/2` for formatting currencies.
-    These functions are contained in the hex package
-    [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers).
-
-  * `Cldr.List.to_string/2` for formatting lists.
-    These function is contained in the hex package
-    [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists).
-
-  * `Cldr.Unit.to_string/2` for formatting SI units.
-    These function is contained in the hex package
-    [ex_cldr_units](https://hex.pm/packages/ex_cldr_units).
-
-  * `Cldr.DateTime.to_string/2` for formatting of dates,
-    times and datetimes. This function is contained in the
-    hex package [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times).
+  * Plugs for setting the locale from an HTTP request: [ex_cldr_plugs](https://hex.pm/packages/ex_cldr_plugs)
+  * Number formatting: [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
+  * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
+  * Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
+  * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
+  * Route localization for Phoenix: [ex_cldr_routes](https://hex.pm/packages/ex_cldr_routes)
+  * Locale name localisation: [ex_cldr_locale_display](https://hex.pm/packages/ex_cldr_locale_display)
+  * HTML select helpers: [ex_cldr_html](https://hex.pm/packages/cldr_html)
+  * Calendars: [ex_cldr_calendars](https://hex.pm/packages/ex_cldr_calendars)
+  * Calendar formatting: [ex_cldr_calendars_format](https://hex.pm/packages/ex_cldr_calendars_format)
+  * Printf-like formatting: [ex_cldr_print](https://hex.pm/packages/ex_cldr_print)
+  * Collation: [ex_cldr_collation](https://hex.pm/packages/ex_cldr_collation)
+  * ICU Message formatting: [ex_cldr_messages](https://hex.pm/packages/ex_cldr_messages)
+  * Territories localization and information: [ex_cldr_territories](https://hex.pm/packages/ex_cldr_territories) by @Schultzer
+  * Languages localization: [ex_cldr_languages](https://hex.pm/packages/ex_cldr_languages) by @lostkobrakai
 
   """
 

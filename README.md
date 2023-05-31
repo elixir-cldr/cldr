@@ -4,19 +4,6 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-> ### If you use Cldr.Plug.PutLocale {: .info}
-Please note that as of `ex_cldr` version 2.29.9, the CLDR-based plugs have been extracted to their own `ex_cldr_plugs` library. you will need to add that dependency to your application. For example:
-```elixir
-# in mix.exs
-def deps do
-  [
-    {:ex_cldr, "~> 2.37"},
-    {:ex_cldr_plugs, "~> 1.2"},
-    ...
-  ]
-end
-```
-
 ## Introduction
 
 `ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 28th 2023 and `ex_cldr` Version 2.37.0, `ex_cldr` is based upon [CLDR version 43.0](http://cldr.unicode.org/index/downloads/cldr-43).
@@ -122,6 +109,24 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.
 
 ### Backend Module Configuration
+
+> #### `use Cldr` {: .info}
+>
+> When you `use Cldr`, a number of functions are generated
+> that encapsulate CLDR data. A moodule that invokes `use Cldr`
+> is referred to as a Cldr backend module.
+>
+> The functions in a Cldr backend module form the primary
+> recommended API for `ex_cldr`.
+>
+> In additional, a number of additional modules
+> may be generated with names that are prefixed by the name of
+> the module in which `use Cldr` is invoked. The number and names
+> of these additional modules is determined by the modules
+> configured under the `:providers` option to `use Cldr`.
+>
+> It is not recommended that a module that invoke `use Cldr`
+> define any other functions.
 
 The preferred configuration method is to define the configuration in the backend module.  Using the backend configuration in `config.exs` is discouraged and will result in a warning at compile time. The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
 
