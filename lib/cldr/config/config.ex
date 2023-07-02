@@ -138,10 +138,8 @@ defmodule Cldr.Config do
 
   poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
-  phoenix_json = Application.compile_env(:phoenix, :json_library)
-  ecto_json = Application.compile_env(:ecto, :json_library)
   cldr_json = Application.compile_env(:ex_cldr, :json_library)
-  @json_lib cldr_json || phoenix_json || ecto_json || jason || poison
+  @json_lib cldr_json || jason || poison
 
   cond do
     Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) ->
@@ -174,9 +172,8 @@ defmodule Cldr.Config do
             json_library: Jason
 
       If no configuration is provided, `ex_cldr` will
-      attempt to detect any JSON library configured
-      for Phoenix or Ecto then it will try to detect
-      if Jason or Poison are configured.
+      attempt to detect detect if Jason or Poison are
+      configured.
       """
   end
 

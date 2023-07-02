@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.37.2
+
+This is the changelog for Cldr v2.37.2 released on ______, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Bug Fixes
+
+* Remove checking Phoenix and Ecto json_library configurations.  Ecto no longer configures its `:json_library` in `config.exs` and checking for Phoenix configuration can cause config failures when [building in Docker](https://github.com/elixir-cldr/cldr/issues/208). Thanks to @maciej-szlosarczyk for the report. Closes #208.
+
 ## Cldr v2.37.1
 
 This is the changelog for Cldr v2.37.1 released on May 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
