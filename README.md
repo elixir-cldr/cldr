@@ -4,6 +4,16 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
+> #### `Change to :json_library configuration` {: .warning}
+>
+> As of `ex_cldr` version 2.37.2 the configuration parameter `:json_library`
+> does not attempt to read the configuration of either Phoenix of Ecto.
+>
+> Specifing the `:json_library` parameter under the `:ex_cldr`
+> configuration key in `config.exs` is recommended however the availability 
+> of `Jason` or `Poison` will still be automatically detected and configured 
+> if the `:json_library` key is not set.
+  
 ## Introduction
 
 `ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 28th 2023 and `ex_cldr` Version 2.37.0, `ex_cldr` is based upon [CLDR version 43.0](http://cldr.unicode.org/index/downloads/cldr-43).
