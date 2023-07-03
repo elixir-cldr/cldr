@@ -13,9 +13,7 @@ if Code.ensure_loaded?(NimbleParsec) do
     @spec langtag :: NimbleParsec.t()
     def langtag do
       basic_langtag()
-      |> repeat(ignore(dash()) |> concat(extensions()))
-      |> reduce(:collapse_extensions)
-      |> optional(ignore(dash()) |> concat(private_use()))
+      |> optional(ignore(dash()) |> extensions_and_private_use())
       |> post_traverse({:flatten, []})
       |> label("a valid BCP-47 language tag")
     end
@@ -26,6 +24,18 @@ if Code.ensure_loaded?(NimbleParsec) do
       |> optional(ignore(dash()) |> concat(region()))
       |> repeat(ignore(dash()) |> concat(variant()))
       |> reduce(:collapse_variants)
+    end
+
+    def extensions_and_private_use(combinator \\ empty()) do
+      combinator
+      |> choice([
+        extensions()
+        |> repeat(ignore(dash()) |> concat(extensions()))
+        |> reduce(:collapse_extensions)
+        |> optional(ignore(dash()) |> concat(private_use())),
+        private_use()
+      ])
+      |> post_traverse({:flatten, []})
     end
 
     # language      = 2*3ALPHA            ; shortest ISO 639 code
