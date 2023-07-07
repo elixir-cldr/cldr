@@ -6,7 +6,7 @@ defmodule Cldr.Install do
   the default locales `["en", "und"]` installed and configured.
 
   When other locales are added to the configuration `Cldr` will attempt to
-  download the locale from [github](https://github.com/kipcole9/cldr)
+  download the locale from [github](https://github.com/elixir-cldr/cldr)
   during compilation.
 
   If `Cldr` is installed from github directly then all locales are already

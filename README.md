@@ -322,7 +322,7 @@ end
 
 ## Downloading Locales
 
-`Cldr` can be installed from either [github](https://github.com/kipcole9/cldr)
+`Cldr` can be installed from either [github](https://github.com/elixir-cldr/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from github then all 571 locales are installed when the repo is cloned into your application deps.
