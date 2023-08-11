@@ -37,7 +37,7 @@ end
 ```
 
 This strategy means that different configurations can be defined and it also
-means that one `Cldr` implementation won't interfer with implementations in other,
+means that one `Cldr` implementation won't interfere with implementations in other,
 potentially dependent, applications.
 
 The functions you are mostly likely to use are:
@@ -123,7 +123,7 @@ The preferred way to configure `Cldr` is to define the configuration in your bac
 > #### `use Cldr` {: .info}
 >
 > When you `use Cldr`, a number of functions are generated
-> that encapsulate CLDR data. A moodule that invokes `use Cldr`
+> that encapsulate CLDR data. A module that invokes `use Cldr`
 > is referred to as a Cldr backend module.
 >
 > The functions in a Cldr backend module form the primary
