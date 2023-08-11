@@ -1,5 +1,15 @@
 # Changelog
 
+## Cldr v2.38.0
+
+This is the changelog for Cldr v2.38.0 released on ____, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+### Enhancements
+
+* Adds `<backend>.put_gettext_locale_name/1`
+
 ## Cldr v2.37.2
 
 This is the changelog for Cldr v2.37.2 released on July 4th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

@@ -347,6 +347,50 @@ defmodule Cldr.Backend do
         end
       end
 
+      if Code.ensure_loaded?(Gettext) do
+        @doc """
+        Set the current process's Gettext locale from a
+        `t:Cldr.LanguageTag`.
+
+        ## Arguments
+
+        * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`.
+
+        ## Returns
+
+        * `{:ok, gettext_locale_name}` or
+
+        * `{:error, {exception, reason}}`
+
+        ## Behaviour
+
+        1. If the `locale.gettext_locale_name` is `nil` then an error
+           is returned.
+
+        2. The `gettext` locale for the `gettext_backend` configured for the
+           CLDR backend defined by the `t:Cldr.LanguageTag` is set.
+
+        ## Examples
+
+            iex> import Cldr.LanguageTag.Sigil
+            iex> #{inspect(__MODULE__)}.put_gettext_locale(~l"en")
+            {:ok, "en"}
+
+            iex> import Cldr.LanguageTag.Sigil
+            iex> #{inspect(__MODULE__)}.put_gettext_locale(~l"de")
+            {:error,
+              {Cldr.UnknownLocaleError,
+                "Locale #Cldr.LanguageTag<de [validated]> does not map to a known gettext locale name"}}
+
+        """
+        @spec put_gettext_locale(LanguageTag.t()) ::
+                {:ok, binary() | nil} | {:error, {module(), String.t()}}
+
+        def put_gettext_locale(%LanguageTag{} = locale) do
+          Cldr.put_gettext_locale(locale)
+        end
+      end
+
       @doc """
       Execute a function with a locale ensuring that the
       current locale is restored after the function.
