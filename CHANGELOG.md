@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.38.0 released on ____, 2023.  For older change
 
 ### Enhancements
 
-* Adds `<backend>.put_gettext_locale_name/1`
+* Adds `<backend>.put_gettext_locale_name/1`.
 
 ## Cldr v2.37.2
 
