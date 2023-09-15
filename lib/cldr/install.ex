@@ -189,13 +189,14 @@ defmodule Cldr.Install do
       |> Cldr.Locale.Loader.read_locale_file!()
       |> Config.json_library().decode!
       |> Map.get("version")
+      |> Version.parse!
 
-    stale? = is_nil(version) || Version.compare(Cldr.version(), Version.parse!(version)) != :eq
+    stale? = is_nil(version) || Version.compare(Cldr.version(), version) != :eq
 
     if stale? do
       Logger.bare_log(
         :info,
-        "Locale data for #{inspect(locale_name)} is stale. " <>
+        "Locale data for #{inspect(locale_name)} is stale. Cldr version is #{Cldr.version}, locale version is #{version}" <>
           "Updated locale data will be downloaded."
       )
     end
