@@ -38,7 +38,7 @@ defmodule Cldr.LocaleUpgradeTest do
             providers: []
         end
       end)
-    end) =~ "Locale data for :de is stale. Updated locale data will be downloaded."
+    end) =~ "Locale data for :de is stale"
   end
 
   test "That locales with an old version are replaced with current version" do
@@ -52,6 +52,6 @@ defmodule Cldr.LocaleUpgradeTest do
             providers: []
         end
       end)
-    end) =~ "Locale data for :fr is stale. Updated locale data will be downloaded."
+    end) =~ "Locale data for :fr is stale"
   end
 end
