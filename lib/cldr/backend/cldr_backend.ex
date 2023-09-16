@@ -718,8 +718,10 @@ defmodule Cldr.Backend do
       # in CLDR
       #
       # 1. Adjust the escaping of "\" to suit
-      # 2. Remove compound patterns like `{Rs}` which
-      #    are not supported in Erlang's re
+      # 2. Remove spaces in the regex since `re` considers them
+      #    part of the pattern.
+      # 3. Remove compound patterns like `{Rs}` which
+      #    are not supported in Erlang's `re`.
 
       @remove_compounds Regex.compile!("{.*}", [:ungreedy])
 
@@ -733,6 +735,7 @@ defmodule Cldr.Backend do
               regex =
                 v
                 |> String.replace("\x5c\x5c", "\x5c")
+                |> String.replace(" ","")
                 |> String.replace(@remove_compounds, "")
 
               {k, Regex.compile!(regex, "u")}
