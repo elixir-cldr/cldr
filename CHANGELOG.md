@@ -33,6 +33,8 @@ This is the changelog for Cldr v2.37.3 released on Octoebr 12th, 2023.  For olde
 ### Enhancements
 
 * Adds `<backend>.put_gettext_locale/1`.
+  
+* Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
 
 ## Cldr v2.37.2
 
