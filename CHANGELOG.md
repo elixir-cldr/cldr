@@ -36,6 +36,8 @@ This is the changelog for Cldr v2.37.3 released on Octoebr 12th, 2023.  For olde
   
 * Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
 
+* Add decimal separator and grouping separator to the currency data for each locale. In some rare cases, like the currency [CVE](https://en.wikipedia.org/wiki/Cape_Verdean_escudo#:~:text=The%20escudo%20(sign%3A%20%3B%20ISO,subdivided%20into%20one%20hundred%20centavos.) in the locale [pt-CV](https://www.localeplanet.com/icu/pt-CV/index.html) the currency symbol is placed where decimal separator is normally placed. The same can apply for the grouping separator although it appears not locale uses this field.
+
 ## Cldr v2.37.2
 
 This is the changelog for Cldr v2.37.2 released on July 4th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
