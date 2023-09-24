@@ -195,7 +195,7 @@ defmodule Cldr.Install do
     if stale? do
       Logger.bare_log(
         :info,
-        "Locale data for #{inspect(locale_name)} is stale. Cldr version is #{Cldr.version}, locale version is #{version}" <>
+        "Locale data for #{inspect(locale_name)} is stale. Cldr version is #{Cldr.version}, locale version is #{version}. " <>
           "Updated locale data will be downloaded."
       )
     end
