@@ -670,7 +670,7 @@ defmodule Cldr do
   @doc """
   Return a localised string suitable for
   presentation purposes for structs that
-  implement the  `Cldr.LanguageTag.DisplayName`
+  implement the `Cldr.LanguageTag.DisplayName`
   protocol.
 
   The `Cldr.LanguageTag.DisplayName` protocol is
@@ -806,7 +806,7 @@ defmodule Cldr do
       {:error, {Cldr.InvalidLanguageError, "The language \\"zzz\\" is invalid"}}
 
   """
-  @spec validate_locale(Locale.locale_name() | LanguageTag.t() | String.t(), backend()) ::
+  @spec validate_locale(Locale.locale_reference(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def validate_locale(locale, backend \\ nil)
@@ -821,6 +821,77 @@ defmodule Cldr do
 
   def validate_locale(locale, backend) do
     backend.validate_locale(locale)
+  end
+
+  @doc """
+  Normalise and validate a locale name or raises
+  an exception.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
+    Note that `Cldr.default_backend!/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
+
+  ## Returns
+
+  * `language_tag` or
+
+  * raises an exception
+
+  ## Examples
+
+      iex> Cldr.validate_locale!(:en, TestBackend.Cldr)
+      %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        canonical_locale_name: "en",
+        cldr_locale_name: :en,
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: :en,
+        requested_locale_name: "en",
+        script: :Latn,
+        territory: :US,
+        transform: %{},
+        language_variants: []
+      }
+
+      iex> Cldr.validate_locale!(:af, TestBackend.Cldr)
+      %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        canonical_locale_name: "af",
+        cldr_locale_name: :af,
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "af",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: :af,
+        requested_locale_name: "af",
+        script: :Latn,
+        territory: :ZA,
+        transform: %{},
+        language_variants: []
+      }
+
+      iex> Cldr.validate_locale!("zzz", TestBackend.Cldr)
+      ** (Cldr.InvalidLanguageError) The language "zzz" is invalid
+
+  """
+  @spec validate_locale!(Locale.locale_reference(), backend()) :: LanguageTag.t() | no_return()
+  def validate_locale!(locale, backend \\ nil) do
+    case validate_locale(locale, backend) do
+      {:ok, locale} -> locale
+      {:error, {module, reason}} -> raise module, reason
+    end
   end
 
   @doc """
@@ -855,7 +926,7 @@ defmodule Cldr do
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
 
-  See also `known_locales/1` and `all_locales/0`
+  See also `known_locales/1` and `all_locales/0`.
 
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
