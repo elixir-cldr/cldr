@@ -8,7 +8,11 @@ This is the changelog for Cldr v2.38.0 released on ____, 2023.  For older change
 
 ### Enhancements
 
+* Update to [CLDR 44](https://cldr.unicode.org/index/downloads/cldr-44) data.
+
 * Adds `<backend>.put_gettext_locale_name/1`.
+  
+* Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
 
 ## Cldr v2.37.2
 
