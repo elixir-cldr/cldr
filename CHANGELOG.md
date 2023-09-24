@@ -2,6 +2,16 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
+## Cldr v2.38.0
+
+This is the changelog for Cldr v2.38.0 released on ______, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Update to [CLDR 44](https://cldr.unicode.org/index/downloads/cldr-44) data.
+  
+* Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
+
 ## Cldr v2.37.4
 
 This is the changelog for Cldr v2.37.4 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
