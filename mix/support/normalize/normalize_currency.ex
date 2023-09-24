@@ -34,7 +34,9 @@ defmodule Cldr.Normalize.Currency do
                 default["_rounding"]
             ),
           count: currency_counts(currency),
-          iso_digits: Cldr.IsoCurrency.currencies()[String.to_atom(code)]
+          iso_digits: Cldr.IsoCurrency.currencies()[String.to_atom(code)],
+          decimal_separator: currency["decimal"],
+          grouping_separator: currency["group"]
         }
 
         {code, currency_map}
