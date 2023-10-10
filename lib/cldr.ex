@@ -432,7 +432,7 @@ defmodule Cldr do
   """
   @doc since: "2.27.0"
 
-  @spec with_locale(Cldr.Locale.locale_name(), backend(), fun) :: any
+  @spec with_locale(Cldr.Locale.locale_name() | String.t(), backend(), fun) :: any
   def with_locale(locale, backend \\ default_backend!(), fun) when is_locale_name(locale) do
     with {:ok, locale} = validate_locale(locale, backend) do
       with_locale(locale, fun)
