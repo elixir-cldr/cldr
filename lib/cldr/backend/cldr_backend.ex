@@ -414,7 +414,7 @@ defmodule Cldr.Backend do
       """
       @doc since: "2.32.0"
 
-      @spec with_locale(LanguageTag.t(), fun) :: any
+      @spec with_locale(Locale.locale_reference(), fun) :: any
       def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
         Cldr.with_locale(locale, fun)
       end
@@ -441,7 +441,6 @@ defmodule Cldr.Backend do
       """
       @doc since: "2.32.0"
 
-      @spec with_locale(Locale.locale_reference(), fun) :: any
       def with_locale(locale, fun) when Cldr.is_locale_name(locale) do
         with {:ok, locale} = validate_locale(locale) do
           with_locale(locale, fun)
