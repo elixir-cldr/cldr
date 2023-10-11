@@ -383,6 +383,8 @@ defmodule Cldr.Backend do
                 "Locale #Cldr.LanguageTag<de [validated]> does not map to a known gettext locale name"}}
 
         """
+        @doc since: "2.38.0"
+
         @spec put_gettext_locale(LanguageTag.t()) ::
                 {:ok, binary() | nil} | {:error, {module(), String.t()}}
 
@@ -412,7 +414,7 @@ defmodule Cldr.Backend do
       """
       @doc since: "2.32.0"
 
-      @spec with_locale(Cldr.LanguageTag.t(), fun) :: any
+      @spec with_locale(LanguageTag.t(), fun) :: any
       def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
         Cldr.with_locale(locale, fun)
       end
@@ -439,7 +441,7 @@ defmodule Cldr.Backend do
       """
       @doc since: "2.32.0"
 
-      @spec with_locale(Cldr.Locale.locale_name(), fun) :: any
+      @spec with_locale(Locale.locale_reference(), fun) :: any
       def with_locale(locale, fun) when Cldr.is_locale_name(locale) do
         with {:ok, locale} = validate_locale(locale) do
           with_locale(locale, fun)

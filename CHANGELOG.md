@@ -1,20 +1,22 @@
 # Changelog
 
-## Cldr v2.38.0
-
-This is the changelog for Cldr v2.38.0 released on ____, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
-
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+
+## Cldr v2.37.3
+
+This is the changelog for Cldr v2.37.3 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix spec for `Cldr.with_locale/3` and `MyApp.Cldr.with_locale/2`. Thanks to @nTraum for the PR. Closes #215.
 
 ### Enhancements
 
-* Adds `<backend>.put_gettext_locale_name/1`.
+* Adds `<backend>.put_gettext_locale/1`.
 
 ## Cldr v2.37.2
 
 This is the changelog for Cldr v2.37.2 released on July 4th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
-
-**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
 ### Bug Fixes
 
@@ -28,8 +30,6 @@ This is the changelog for Cldr v2.37.2 released on July 4th, 2023.  For older ch
 
 This is the changelog for Cldr v2.37.1 released on May 7th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
-
 ### Bug Fixes
 
 * Don't include `:und` in the list returned by `Cldr.known_locale_names/1` since that function is commonly used to enumerate the configured locales and ultimately used to generate UI elements. `:und` is not a useful locale to select so its inclusion, which was added in `ex_cldr version 2.37.0` is inappropriate and now reverted.
@@ -37,8 +37,6 @@ This is the changelog for Cldr v2.37.1 released on May 7th, 2023.  For older cha
 ## Cldr v2.37.0
 
 This is the changelog for Cldr v2.37.0 released on April 28th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
-
-**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
 ### Bug Fixes
 
