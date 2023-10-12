@@ -1940,14 +1940,14 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys(level: 1..1)
-    # |> Cldr.Map.deep_map(fn
-    #   {k, v} when is_binary(v) ->
-    #     if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
-    #   other ->
-    #     other
-    #   end,
-    #   filter: :subdivision
-    # )
+    |> Cldr.Map.deep_map(fn
+      {k, v} when is_binary(v) ->
+        if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
+      other ->
+        other
+      end,
+      filter: :subdivision
+    )
     |> structify_languages
   end
 
