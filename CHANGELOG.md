@@ -2,7 +2,15 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
-## Cldr v2.37.3
+## Cldr v2.37.4
+
+This is the changelog for Cldr v2.37.4 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Reverts a change to the format of the alias data for subdivisions which was causing an exception in `ex_cldr_territories`. The change, which normalizes subdivision codes to be upcase atoms when the subdivision has its own ISO 3166 territory code, will be be added back for `ex_cldr` version 2.38.0 which will align with CLDR 44. Closes #216.
+
+## Cldr v2.37.3 [Deprecated]
 
 This is the changelog for Cldr v2.37.3 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
