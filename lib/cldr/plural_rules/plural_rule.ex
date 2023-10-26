@@ -665,6 +665,11 @@ defmodule Cldr.Number.PluralRule do
   def define_plural_rules do
     quote bind_quoted: [], location: :keep do
       alias Cldr.Number.PluralRule
+      
+      # Silence warnings since the success typing of do_plural_rule will depend
+      # on the locale used.
+      @dialyzer {:nowarn_function, [do_plural_rule: 8]}
+
       # Generate the functions to process plural rules
       @spec do_plural_rule(
               LanguageTag.t(),
