@@ -293,7 +293,7 @@ The currently known providers and their `hex` package names are:
   | ex_cldr_numbers        | Cldr.Number        | Formatting of numbers, currencies              |
   | ex_cldr_lists          | Cldr.List          | Formatting of lists                            |
   | ex_cldr_units          | Cldr.Unit          | Formatting of SI and Imperial units            |
-  | ex_cldr_currency       | Cldr.Currency      | Currency definitions and localizations         |
+  | ex_cldr_currencies     | Cldr.Currency      | Currency definitions and localizations         |
   | ex_cldr_territories    | Cldr.Territory     | Formatting of territory (country) data         |
   | ex_cldr_languages      | Cldr.Language      | Formatting of language information             |
   | ex_cldr_dates_times    | Cldr.DateTime      | Formatting of dates, times & datetimes         |
