@@ -2,9 +2,17 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
+## Cldr v2.37.5
+
+This is the changelog for Cldr v2.37.5 released on November 2nd, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix warnings on Elixir 1.16.
+
 ## Cldr v2.37.4
 
-This is the changelog for Cldr v2.37.4 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.37.4 released on October 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
