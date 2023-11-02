@@ -10,6 +10,8 @@ This is the changelog for Cldr v2.37.5 released on November 2nd, 2023.  For olde
 
 * Fix warnings on Elixir 1.16.
 
+* Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220.
+
 ## Cldr v2.37.4
 
 This is the changelog for Cldr v2.37.4 released on October 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
