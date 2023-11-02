@@ -83,7 +83,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.version
+      iex> Cldr.version()
       Version.parse!(#{inspect(@version_string)})
 
   """
@@ -506,7 +506,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.default_locale
+      iex> Cldr.default_locale()
       %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en-001",
@@ -1328,7 +1328,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.known_calendars
+      iex> Cldr.known_calendars()
       [:buddhist, :chinese, :coptic, :dangi, :ethiopic, :ethiopic_amete_alem,
        :gregorian, :hebrew, :indian, :islamic, :islamic_civil, :islamic_rgsa,
        :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
@@ -1419,7 +1419,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.known_territories
+      iex> Cldr.known_territories()
       [:"001", :"002", :"003", :"005", :"009", :"011", :"013", :"014", :"015", :"017",
        :"018", :"019", :"021", :"029", :"030", :"034", :"035", :"039", :"053", :"054",
        :"057", :"061", :"142", :"143", :"145", :"150", :"151", :"154", :"155", :"202",
@@ -1855,7 +1855,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.known_currencies
+      iex> Cldr.known_currencies()
       [:ADP, :AED, :AFA, :AFN, :ALK, :ALL, :AMD, :ANG, :AOA, :AOK, :AON, :AOR, :ARA,
        :ARL, :ARM, :ARP, :ARS, :ATS, :AUD, :AWG, :AZM, :AZN, :BAD, :BAM, :BAN, :BBD,
        :BDT, :BEC, :BEF, :BEL, :BGL, :BGM, :BGN, :BGO, :BHD, :BIF, :BMD, :BND, :BOB,
@@ -1997,7 +1997,7 @@ defmodule Cldr do
 
   ## Example
 
-      iex> Cldr.known_number_systems
+      iex> Cldr.known_number_systems()
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
        :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
        :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,

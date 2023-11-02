@@ -13,7 +13,7 @@ defmodule Cldr.Rbnf.Config do
 
     ## Example
 
-        iex> Cldr.Rbnf.Config.rbnf_dir =~ "/cldr-rbnf/rbnf"
+        iex> Cldr.Rbnf.Config.rbnf_dir() =~ "/cldr-rbnf/rbnf"
         true
 
     """
@@ -36,7 +36,7 @@ defmodule Cldr.Rbnf.Config do
 
     ## Example
 
-        iex> Cldr.Rbnf.Config.rbnf_locale_names
+        iex> Cldr.Rbnf.Config.rbnf_locale_names()
         [:af, :ak, :am, :ar, :az, :be, :bg, :bs, :ca, :ccp, :chr, :cs, :cy, :da, :de,
          :"de-CH", :ee, :el, :en, :"en-IN", :eo, :es, :"es-419", :et, :fa, :"fa-AF",
          :ff, :fi, :fil, :fo, :fr, :"fr-BE", :"fr-CH", :ga, :he, :hi, :hr, :hu, :hy,

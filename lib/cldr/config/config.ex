@@ -942,7 +942,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.known_calendars
+      iex> Cldr.Config.known_calendars()
       [:buddhist, :chinese, :coptic, :dangi, :ethiopic, :ethiopic_amete_alem,
        :gregorian, :hebrew, :indian, :islamic, :islamic_civil, :islamic_rgsa,
        :islamic_tbla, :islamic_umalqura, :japanese, :persian, :roc]
@@ -958,7 +958,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.known_currencies
+      iex> Cldr.Config.known_currencies()
       [:ADP, :AED, :AFA, :AFN, :ALK, :ALL, :AMD, :ANG, :AOA, :AOK, :AON, :AOR, :ARA,
        :ARL, :ARM, :ARP, :ARS, :ATS, :AUD, :AWG, :AZM, :AZN, :BAD, :BAM, :BAN, :BBD,
        :BDT, :BEC, :BEF, :BEL, :BGL, :BGM, :BGN, :BGO, :BHD, :BIF, :BMD, :BND, :BOB,
@@ -999,7 +999,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.known_number_systems
+      iex> Cldr.Config.known_number_systems()
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
        :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
        :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
@@ -1332,7 +1332,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.known_territories
+      iex> Cldr.Config.known_territories()
       [:"001", :"002", :"003", :"005", :"009", :"011", :"013", :"014", :"015", :"017",
        :"018", :"019", :"021", :"029", :"030", :"034", :"035", :"039", :"053", :"054",
        :"057", :"061", :"142", :"143", :"145", :"150", :"151", :"154", :"155", :"202",
@@ -1723,7 +1723,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.territories[:GB]
+      iex> Cldr.Config.territories()[:GB]
       %{
         currency: [GBP: %{from: ~D[1694-07-27]}],
         gdp: 2925000000000,
@@ -2011,7 +2011,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.day_period_info |> Map.get("fr")
+      iex> Cldr.Config.day_period_info() |> Map.get("fr")
       %{"afternoon1" => %{"before" => [18, 0], "from" => [12, 0]},
         "evening1" => %{"before" => [24, 0], "from" => [18, 0]},
         "midnight" => %{"at" => [0, 0]},
@@ -2033,7 +2033,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.calendars |> Map.get(:gregorian)
+      iex> Cldr.Config.calendars() |> Map.get(:gregorian)
       %{
         calendar_system: :solar,
         eras: [
@@ -2073,7 +2073,7 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.units |> get_in([:conversions, :quart])
+      iex> Cldr.Config.units() |> get_in([:conversions, :quart])
       %{
         base_unit: :cubic_meter,
         factor: "0.000946352946",
