@@ -882,7 +882,7 @@ defmodule Cldr.Locale do
 
   ## Example
 
-      iex> Cldr.Locale.consider_as_tlds
+      iex> Cldr.Locale.consider_as_tlds()
       [:AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS]
 
   """

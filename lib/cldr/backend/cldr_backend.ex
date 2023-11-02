@@ -197,10 +197,10 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_locale_name :"en-AU"
+          iex> #{inspect(__MODULE__)}.known_locale_name(:"en-AU")
           :"en-AU"
 
-          iex> #{inspect(__MODULE__)}.known_locale_name :"en-SA"
+          iex> #{inspect(__MODULE__)}.known_locale_name(:"en-SA")
           false
 
       """
@@ -225,10 +225,10 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name :en
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name(:en)
           :en
 
-          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name :"en-SA"
+          iex> #{inspect(__MODULE__)}.known_rbnf_locale_name(:"en-SA")
           false
 
       """
@@ -253,10 +253,10 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.known_gettext_locale_name "en"
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name("en")
           "en"
 
-          iex> #{inspect(__MODULE__)}.known_gettext_locale_name "en-SA"
+          iex> #{inspect(__MODULE__)}.known_gettext_locale_name("en-SA")
           false
 
       """
@@ -276,7 +276,7 @@ defmodule Cldr.Backend do
       ## Example
 
           iex> #{inspect(__MODULE__)}.put_locale("pl")
-          iex> #{inspect(__MODULE__)}.get_locale
+          iex> #{inspect(__MODULE__)}.get_locale()
           %Cldr.LanguageTag{
              backend: #{__MODULE__},
              canonical_locale_name: "pl",
@@ -463,10 +463,10 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.quote "Quoted String"
+          iex> #{inspect(__MODULE__)}.quote("Quoted String")
           "“Quoted String”"
 
-          iex> #{inspect(__MODULE__)}.quote "Quoted String", locale: :ja
+          iex> #{inspect(__MODULE__)}.quote("Quoted String", locale: :ja)
           "「Quoted String」"
 
       """
@@ -513,16 +513,16 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore"
+          iex> #{inspect(__MODULE__)}.ellipsis("And furthermore")
           "And furthermore…"
 
-          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: :ja
+          iex> #{inspect(__MODULE__)}.ellipsis(["And furthermore", "there is much to be done"], locale: :ja)
           "And furthermore…there is much to be done"
 
-          iex> #{inspect(__MODULE__)}.ellipsis "And furthermore", format: :word
+          iex> #{inspect(__MODULE__)}.ellipsis("And furthermore", format: :word)
           "And furthermore …"
 
-          iex> #{inspect(__MODULE__)}.ellipsis ["And furthermore", "there is much to be done"], locale: :ja, format: :word
+          iex> #{inspect(__MODULE__)}.ellipsis(["And furthermore", "there is much to be done"], locale: :ja, format: :word)
           "And furthermore … there is much to be done"
 
       """
@@ -832,7 +832,7 @@ defmodule Cldr.Backend do
 
       ## Example
 
-          iex> #{inspect(__MODULE__)}.known_number_system_types
+          iex> #{inspect(__MODULE__)}.known_number_system_types()
           [:default, :finance, :native, :traditional]
 
       """
@@ -857,19 +857,19 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.validate_number_system_type :default
+          iex> #{inspect(__MODULE__)}.validate_number_system_type(:default)
           {:ok, :default}
 
-          iex> #{inspect(__MODULE__)}.validate_number_system_type :traditional
+          iex> #{inspect(__MODULE__)}.validate_number_system_type(:traditional)
           {:ok, :traditional}
 
-          iex> #{inspect(__MODULE__)}.validate_number_system_type :latn
+          iex> #{inspect(__MODULE__)}.validate_number_system_type(:latn)
           {
             :error,
             {Cldr.UnknownNumberSystemTypeError, "The number system type :latn is unknown"}
           }
 
-          iex> #{inspect(__MODULE__)}.validate_number_system_type "bork"
+          iex> #{inspect(__MODULE__)}.validate_number_system_type("bork")
           {
             :error,
             {Cldr.UnknownNumberSystemTypeError, "The number system type \\"bork\\" is invalid"}
