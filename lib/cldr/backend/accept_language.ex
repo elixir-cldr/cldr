@@ -55,7 +55,7 @@ defmodule Cldr.AcceptLanguage.Backend do
 
         If at least one valid language tag is found but errors are also
         detected on one more more tags, an `{ok, list}` tuple is returned
-        wuth an error tuple for each invalid tag added at the end of the list.
+        with an error tuple for each invalid tag added at the end of the list.
 
         ## Example
 
@@ -182,7 +182,7 @@ defmodule Cldr.AcceptLanguage.Backend do
 
         If at least one valid language tag is found but errors are also
         detected on one more more tags, an `{ok, list}` tuple is returned
-        wuth an error tuple for each invalid tag added at the end of the list.
+        with an error tuple for each invalid tag added at the end of the list.
 
         ## Example
 
@@ -284,7 +284,7 @@ defmodule Cldr.AcceptLanguage.Backend do
 
         ## Arguments
 
-        * `accept_langauge` is a string representing an accept language header
+        * `accept_language` is a string representing an accept language header
 
         ## Returns
 

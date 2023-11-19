@@ -215,7 +215,7 @@ defmodule Cldr.LanguageTag do
   end
 
   @doc """
-  Parse a locale name into a `Cldr.LangaugeTag` struct and raises on error
+  Parse a locale name into a `Cldr.LanguageTag` struct and raises on error
 
   ## Arguments
 
@@ -247,7 +247,7 @@ defmodule Cldr.LanguageTag do
 
   * `locale` is a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
 
-  * `omit_singlular_script?` is a boolean indicating if the
+  * `omit_singular_script?` is a boolean indicating if the
     script name should be omitted if the landuage_tag territory has
     only this one script. The default is `false`.
 
