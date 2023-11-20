@@ -803,7 +803,7 @@ defmodule Cldr.Config do
   @spec language_tag(Locale.locale_name()) :: Cldr.LanguageTag.t() | no_return()
 
   # Even if compiling its possible, at the beginning, that
-  # the cache server isn't fully up and runing to we return a
+  # the cache server isn't fully up and running to we return a
   # non-cached version is absolutely necessary
 
   def language_tag(locale_name) do

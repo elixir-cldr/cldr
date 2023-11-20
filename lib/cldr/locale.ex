@@ -911,7 +911,7 @@ defmodule Cldr.Locale do
 
   ## Returns
 
-  * `{:ok, langauge_tag}` or
+  * `{:ok, language_tag}` or
 
   * `{:error, {exception, reason}}`
 
@@ -1945,7 +1945,7 @@ defmodule Cldr.Locale do
 
   * `omit_singular_script?` is a boolean indicating if
     a match should fail if the language tag script is the only
-    (default) script for the lanaguge. The default is `false`.
+    (default) script for the language. The default is `false`.
 
   ## Returns
 
