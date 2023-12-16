@@ -8,13 +8,11 @@ This is the changelog for Cldr v2.38.0 released on ______, 2023.  For older chan
 
 ### Enhancements
 
-* Update to [CLDR 44](https://cldr.unicode.org/index/downloads/cldr-44) data.
+* Update to [CLDR 44.1](https://cldr.unicode.org/index/downloads/cldr-44) data.
   
 * Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
 
 * Add decimal separator and grouping separator to the currency data for each locale. In some rare cases, like the currency [CVE](https://en.wikipedia.org/wiki/Cape_Verdean_escudo#:~:text=The%20escudo%20(sign%3A%20%3B%20ISO,subdivided%20into%20one%20hundred%20centavos.) in the locale [pt-CV](https://www.localeplanet.com/icu/pt-CV/index.html) the currency symbol is placed where decimal separator is normally placed. The same can apply for the grouping separator although it appears not locale uses this field.
-
-* Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220.
 
 * Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220.
 
