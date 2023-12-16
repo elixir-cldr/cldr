@@ -54,6 +54,9 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
+  @app_name Mix.Project.config()[:app]
+  @cldr_data_dir [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
+
   @root_locale_name :und
   @default_locale_name :"en-001"
 
@@ -131,7 +134,6 @@ defmodule Cldr.Config do
   what this app is called on `hex.pm`
 
   """
-  @app_name Mix.Project.config()[:app]
   def app_name do
     @app_name
   end
@@ -243,7 +245,7 @@ defmodule Cldr.Config do
 
   """
   def cldr_data_dir do
-    [:code.priv_dir(app_name()), "/cldr"] |> :erlang.iolist_to_binary()
+    @cldr_data_dir
   end
 
   @doc """
@@ -308,6 +310,8 @@ defmodule Cldr.Config do
   @doc """
   Returns the version string of the CLDR data repository
   """
+  @external_resource Path.join(@cldr_data_dir, "/cldr/version.json")
+
   def version do
     cldr_data_dir()
     |> Path.join("version.json")
