@@ -395,7 +395,7 @@ defmodule Cldr do
   """
   @doc since: "2.32.0"
 
-  @spec with_locale(Locale.locale_reference(), fun) :: any
+  @spec with_locale(Locale.locale_reference(), (-> any())) :: any
   def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
     current_locale = get_locale(locale.backend)
 
@@ -433,7 +433,7 @@ defmodule Cldr do
   """
   @doc since: "2.27.0"
 
-  @spec with_locale(Locale.locale_reference(), backend(), fun) :: any
+  @spec with_locale(Locale.locale_reference(), backend(), (-> any())) :: any()
   def with_locale(locale, backend \\ default_backend!(), fun) when is_locale_name(locale) do
     with {:ok, locale} = validate_locale(locale, backend) do
       with_locale(locale, fun)
@@ -1519,8 +1519,13 @@ defmodule Cldr do
     @known_territories
   end
 
+  @doc """
+  Returns a map of territories and the territories
+  within which they are contained.
+
+  """
   @territory_containment Cldr.Config.territory_containment()
-  @spec territory_containment() :: map()
+  @spec territory_containment() :: unquote(Cldr.Type.territory_containment(@territory_containment))
   def territory_containment do
     @territory_containment
   end
@@ -1954,7 +1959,7 @@ defmodule Cldr do
 
   """
   @known_currencies Cldr.Config.known_currencies()
-  @spec known_currencies :: [atom(), ...] | []
+  @spec known_currencies :: [atom(), ...]
   def known_currencies do
     @known_currencies
   end
@@ -2081,7 +2086,7 @@ defmodule Cldr do
 
   """
   @known_number_systems Cldr.Config.known_number_systems()
-  @spec known_number_systems :: [atom(), ...] | []
+  @spec known_number_systems :: [atom(), ...]
   def known_number_systems do
     @known_number_systems
   end

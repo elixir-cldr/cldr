@@ -20,7 +20,7 @@ defmodule Cldr.Number.PluralRule do
   types
 
   """
-  @spec known_plural_types :: list(plural_type())
+  @spec known_plural_types :: [plural_type(), ...]
   @plural_types [:zero, :one, :two, :few, :many, :other]
   def known_plural_types do
     @plural_types
@@ -665,7 +665,7 @@ defmodule Cldr.Number.PluralRule do
   def define_plural_rules do
     quote bind_quoted: [], location: :keep do
       alias Cldr.Number.PluralRule
-      
+
       # Silence warnings since the success typing of do_plural_rule will depend
       # on the locale used.
       @dialyzer {:nowarn_function, [do_plural_rule: 8]}
