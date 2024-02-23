@@ -7,17 +7,20 @@ defmodule Cldr.Type do
       Cldr.Config.number_systems()
       |> Enum.map(fn
         {system, %{digits: _digits, type: :numeric}} ->
-          {system, {:%{}, [],
-           [
-             digits: string_t(),
-             type: :numeric
-           ]}}
+          {system,
+           {:%{}, [],
+            [
+              digits: string_t(),
+              type: :numeric
+            ]}}
+
         {system, %{rules: _rules, type: :algorithmic}} ->
-          {system, {:%{}, [],
-           [
-             rules: string_t(),
-             type: :algorithmic
-           ]}}
+          {system,
+           {:%{}, [],
+            [
+              rules: string_t(),
+              type: :algorithmic
+            ]}}
       end)
 
     {:%{}, [], systems_ast}
@@ -34,8 +37,9 @@ defmodule Cldr.Type do
 
   def subdivision_containment() do
     quote do
-      %{subdivision_code :: Cldr.Locale.subdivision_code() =>
-        contained_within :: [Cldr.Locale.territory_code() | Cldr.Locale.subdivision_code(), ...]
+      %{
+        (subdivision_code :: Cldr.Locale.subdivision_code()) =>
+          contained_within :: [Cldr.Locale.territory_code() | Cldr.Locale.subdivision_code(), ...]
       }
     end
   end
@@ -86,46 +90,47 @@ defmodule Cldr.Type do
 
   defp subdivision_list do
     quote do
-      %{subdivision_alias :: String.t() => subdivision ::
-        Cldr.Locale.territory_code() |
-        Cldr.Locale.subdivision_code() |
-        [Cldr.Locale.subdivision_code(), ...]}
+      %{
+        (subdivision_alias :: String.t()) =>
+          subdivision ::
+            Cldr.Locale.territory_code()
+            | Cldr.Locale.subdivision_code()
+            | [Cldr.Locale.subdivision_code(), ...]
+      }
     end
   end
 
   defp zone_list() do
     quote do
-      %{zone_alias :: String.t() =>
-        String.t() | %{city :: String.t() => zone :: String.t()}}
+      %{(zone_alias :: String.t()) => String.t() | %{(city :: String.t()) => zone :: String.t()}}
     end
   end
 
   defp region_list() do
     quote do
-      %{region_alias :: String.t() => region :: String.t()}
+      %{(region_alias :: String.t()) => region :: String.t()}
     end
   end
 
   defp variant_list() do
     quote do
-      %{variant_alias :: String.t() => variant :: String.t()}
+      %{(variant_alias :: String.t()) => variant :: String.t()}
     end
   end
 
   defp language_list() do
     quote do
-      %{language :: String.t() => language_tag :: Cldr.LanguageTag.t()}
+      %{(language :: String.t()) => language_tag :: Cldr.LanguageTag.t()}
     end
   end
 
   defp script_list() do
     quote do
-      %{script_alias :: String.t() => script :: String.t()}
+      %{(script_alias :: String.t()) => script :: String.t()}
     end
   end
 
   def from_list(list) do
     Enum.reduce(list, fn x, acc -> {:|, [], [x, acc]} end)
   end
-
 end

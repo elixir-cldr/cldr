@@ -191,7 +191,7 @@ defmodule Cldr.Install do
       |> Config.json_library().decode!
       |> Map.get("version")
 
-    stale? = is_nil(version) || Version.compare(Cldr.version(),  Version.parse!(version)) != :eq
+    stale? = is_nil(version) || Version.compare(Cldr.version(), Version.parse!(version)) != :eq
 
     if stale? do
       Logger.bare_log(

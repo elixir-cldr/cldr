@@ -1525,7 +1525,8 @@ defmodule Cldr do
 
   """
   @territory_containment Cldr.Config.territory_containment()
-  @spec territory_containment() :: unquote(Cldr.Type.territory_containment(@territory_containment))
+  @spec territory_containment() ::
+          unquote(Cldr.Type.territory_containment(@territory_containment))
   def territory_containment do
     @territory_containment
   end

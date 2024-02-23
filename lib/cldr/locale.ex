@@ -295,15 +295,19 @@ defmodule Cldr.Locale do
 
   """
   @language_data Cldr.Config.language_data()
-  |> Enum.map(fn
-    {language, %{primary: %{scripts: scripts} = primary, secondary: %{scripts: []} = secondary}} ->
-      secondary = Map.put(secondary, :scripts, scripts)
-      {language, %{primary: primary, secondary: secondary}}
+                 |> Enum.map(fn
+                   {language,
+                    %{
+                      primary: %{scripts: scripts} = primary,
+                      secondary: %{scripts: []} = secondary
+                    }} ->
+                     secondary = Map.put(secondary, :scripts, scripts)
+                     {language, %{primary: primary, secondary: secondary}}
 
-    other ->
-      other
-  end)
-  |> Map.new()
+                   other ->
+                     other
+                 end)
+                 |> Map.new()
 
   def language_data do
     @language_data
@@ -413,7 +417,14 @@ defmodule Cldr.Locale do
 
   defp find_parent(%LanguageTag{language_variants: [_ | _] = variants} = locale, backend) do
     %LanguageTag{language: language, script: script, territory: territory} = locale
-    first_match(language, script, territory, variants, &parent_locale(&1, &2, locale.cldr_locale_name, backend))
+
+    first_match(
+      language,
+      script,
+      territory,
+      variants,
+      &parent_locale(&1, &2, locale.cldr_locale_name, backend)
+    )
   end
 
   defp find_parent(%LanguageTag{territory: territory} = locale, backend)
@@ -448,7 +459,10 @@ defmodule Cldr.Locale do
   end
 
   defp known_locale(locale_name, _tags, backend) when is_atom(locale_name) do
-    Enum.find(backend.known_locale_names() ++ [Cldr.Config.root_locale_name()], &(locale_name == &1))
+    Enum.find(
+      backend.known_locale_names() ++ [Cldr.Config.root_locale_name()],
+      &(locale_name == &1)
+    )
   end
 
   defp known_rbnf_locale_name(locale_name, _tags, backend) do
@@ -1770,7 +1784,10 @@ defmodule Cldr.Locale do
 
   defp put_canonical_locale_name(language_tag, omit_singular_script?) do
     language_tag
-    |> Map.put(:canonical_locale_name, Cldr.LanguageTag.to_string(language_tag, omit_singular_script?))
+    |> Map.put(
+      :canonical_locale_name,
+      Cldr.LanguageTag.to_string(language_tag, omit_singular_script?)
+    )
   end
 
   defp put_backend(language_tag, backend) do
@@ -1902,10 +1919,8 @@ defmodule Cldr.Locale do
          [:language, :script, :territory, :language_variants]},
         {[language, nil, territory, variants, omit?],
          [:language, :territory, :language_variants]},
-        {[language, script, nil, variants, omit?],
-         [:language, :script, :language_variants]},
-        {[language, nil, nil, variants, omit?],
-         [:language, :language_variants]}
+        {[language, script, nil, variants, omit?], [:language, :script, :language_variants]},
+        {[language, nil, nil, variants, omit?], [:language, :language_variants]}
       ]
     end
 
@@ -2058,7 +2073,10 @@ defmodule Cldr.Locale do
   # This variant called only from Cldr.LanguageTag.to_string
 
   @doc false
-  def omit_script_if_only_one([language, subtags, script, territory, variants], omit_singular_script?) do
+  def omit_script_if_only_one(
+        [language, subtags, script, territory, variants],
+        omit_singular_script?
+      ) do
     [language, script, territory, variants] =
       omit_script_if_only_one([language, script, territory, variants], omit_singular_script?)
 
@@ -2074,7 +2092,8 @@ defmodule Cldr.Locale do
     tag
   end
 
-  def omit_script_if_only_one([language, script, territory, variants], true) when is_binary(language) do
+  def omit_script_if_only_one([language, script, territory, variants], true)
+      when is_binary(language) do
     case Map.fetch(language_data(), language) do
       {:ok, language_map} ->
         primary = Map.get(language_map, :primary)

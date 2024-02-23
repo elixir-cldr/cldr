@@ -38,7 +38,7 @@ defmodule Cldr.LanguageTag.Sigil do
       #Cldr.LanguageTag<en-US-u-ca-gregory [validated]>
 
   """
-  defmacro sigil_l(locale_name, 'u') do
+  defmacro sigil_l(locale_name, ~c"u") do
     {:<<>>, _, [locale_name]} = locale_name
 
     case parse_locale(String.split(locale_name, "|")) do

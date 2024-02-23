@@ -164,14 +164,15 @@ defmodule Cldr.Number.PluralRule do
       Returns all the plural rules defined in CLDR.
 
       """
-      @spec plural_rules :: %{Cldr.Locale.locale_name() =>
-        [
-          {
-            plural_type :: Cldr.Number.PluralRule.plural_type(),
-            plural_rules :: [Cldr.Number.PluralRule.plural_rule(), ...]
-          },
-          ...
-        ]}
+      @spec plural_rules :: %{
+              Cldr.Locale.locale_name() => [
+                {
+                  plural_type :: Cldr.Number.PluralRule.plural_type(),
+                  plural_rules :: [Cldr.Number.PluralRule.plural_rule(), ...]
+                },
+                ...
+              ]
+            }
 
       def plural_rules do
         @rules

@@ -736,7 +736,7 @@ defmodule Cldr.Config do
     |> tl
     |> tl
     |> Enum.map(fn line ->
-      [_number, name, code | _rest] = String.split(line,",")
+      [_number, name, code | _rest] = String.split(line, ",")
 
       name =
         name
@@ -749,7 +749,7 @@ defmodule Cldr.Config do
 
       {name, code}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
@@ -1944,11 +1944,13 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys(level: 1..1)
-    |> Cldr.Map.deep_map(fn
-      {k, v} when is_binary(v) ->
-        if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
-      other ->
-        other
+    |> Cldr.Map.deep_map(
+      fn
+        {k, v} when is_binary(v) ->
+          if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
+
+        other ->
+          other
       end,
       filter: :subdivision
     )
