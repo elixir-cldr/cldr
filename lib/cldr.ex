@@ -1596,7 +1596,7 @@ defmodule Cldr do
                                      end)
                                      |> Map.new()
 
-  @spec known_territory_subdivision_containment :: map()
+  @spec known_territory_subdivision_containment :: unquote(Cldr.Type.subdivision_containment())
   def known_territory_subdivision_containment do
     @territory_subdivision_containment
   end

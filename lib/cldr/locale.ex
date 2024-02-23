@@ -259,6 +259,9 @@ defmodule Cldr.Locale do
   @typedoc "A territory code as an ISO3166 Alpha-2 in atom form"
   @type territory_code :: atom()
 
+  @typedoc "A territory subdiviiosn code as a string"
+  @type subdivision_code :: String.t()
+
   @typedoc "The list of language variants as strings"
   @type variants :: [String.t()] | []
 
@@ -2531,7 +2534,7 @@ defmodule Cldr.Locale do
   Return a map of the known aliases for Language, Script and Territory
   """
   @aliases Cldr.Config.aliases()
-  @spec aliases :: map()
+  @spec aliases :: unquote(Cldr.Type.aliases(@aliases))
   def aliases do
     @aliases
   end
