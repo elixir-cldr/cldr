@@ -13,7 +13,7 @@ defmodule Cldr.Number.PluralRule do
   Defines the plural types into which a number can be categorised.
 
   """
-  @type plural_type() :: :zero | :one | :two | :few | :many | :other
+  @type plural_type :: :zero | :one | :two | :few | :many | :other
 
   @typedoc """
   Defines the structure of a plural rule before compilation.
