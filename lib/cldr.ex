@@ -304,10 +304,13 @@ defmodule Cldr do
 
         iex> import Cldr.LanguageTag.Sigil
         iex> Cldr.put_gettext_locale(~l"de")
-        {:error,
-          {Cldr.UnknownLocaleError,
-            "Locale #Cldr.LanguageTag<de [validated]> does not map to a known gettext locale name"}}
-
+        {
+          :error,
+          {
+            Cldr.UnknownLocaleError,
+            "Locale TestBackend.Cldr.Locale.new!(\\"de-DE\\") does not map to a known gettext locale name"
+          }
+        }
     """
     @spec put_gettext_locale(LanguageTag.t()) ::
             {:ok, binary() | nil} | {:error, {module(), String.t()}}
