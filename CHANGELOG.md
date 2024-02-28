@@ -23,6 +23,8 @@ MyApp.Cldr.Locale.new!("en-US")
 
 * Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220. Also fixes `:underspecs` warning and the `:underspecs` dialyzer flag is now configured.
 
+* Add configuration for the new `ex_cldr_person_names` backend module generator.
+
 ## Cldr v2.37.4
 
 This is the changelog for Cldr v2.37.4 released on Octoebr 12th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
