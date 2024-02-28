@@ -100,7 +100,4 @@ cp $CLDR_REPO/common/testData/units/unitPreferencesTest.txt \
 cp $CLDR_REPO/common/testData/units/unitsTest.txt \
    $EX_CLDR/test/data/conversion_test_data.txt
 
-cp -R $CLDR_REPO/common/testData/personNameTest \
-   $EX_CLDR/test/data/person_name_test_data
-
 cd $OLDPWD
