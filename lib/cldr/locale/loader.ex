@@ -122,7 +122,6 @@ defmodule Cldr.Locale.Loader do
                          "languages",
                          "lenient_parse",
                          "dates",
-                         "person_names"
                        ]
 
   @doc false
@@ -138,7 +137,6 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
-    |> structure_person_names()
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)
     |> Cldr.Map.atomize_values(filter: :layout)
     |> structure_date_formats()
@@ -203,39 +201,6 @@ defmodule Cldr.Locale.Loader do
     Map.put(content, :dates, dates)
   end
 
-  def structure_person_names(content) do
-    person_names =
-      content
-      |> Map.get("person_names")
-      |> Cldr.Map.deep_map(fn
-        {k, v} ->
-          if k != "formality" && String.starts_with?(k, "formal") || String.starts_with?(k, "informal") do
-            {String.split(k, "_"), v}
-          else
-            {String.to_atom(k), v}
-          end
-
-        other ->
-          other
-      end)
-      |> Cldr.Map.deep_map(fn
-        {k, v} when k in [:addressing, :monogram, :referring] ->
-          formats = Enum.group_by(v, fn {key, _value} -> hd(key) end, fn {_key, value} -> value end)
-          {k, formats}
-        other ->
-          other
-      end)
-      |> Cldr.Map.deep_map(fn
-        {k, v} when k in ["formal", "informal"] ->
-          {String.to_atom(k), Enum.sort(v)}
-        {k, v} when k in [:formality, :length] ->
-          {k, String.to_atom(v)}
-        other ->
-          other
-      end)
-
-    Map.put(content, :person_names, person_names)
-  end
 
   @doc false
   def underscore(string) when is_binary(string) do
