@@ -12,6 +12,9 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
   @doc false
   def run(_) do
+    # So we don't do locale validity checks.
+    :ok = System.put_env("DEV", "TRUE")
+
     # We set the gettext locale name to nil because we can't tell in advance
     # what the gettext locale name will be (if any)
     locale_count = length(Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names())

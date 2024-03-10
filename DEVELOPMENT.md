@@ -142,9 +142,9 @@ git pull
 mix cldr.consolidate
 ```
 
-3. Then regenerate the `language_tags.ebin` file by executing the following:
+3. Then regenerate the `language_tags.ebin` file by executing the following making sure to set the `DEV` shell variable which disables locale stale tests:
 ```bash
-mix cldr.generate_language_tags
+DEV=true mix cldr.generate_language_tags
 ```
 
 

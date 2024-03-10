@@ -155,7 +155,7 @@ defmodule Cldr.Install do
     version = app_version()
 
     if String.contains?(version, "-dev") do
-      "master"
+      "main"
     else
       "v#{version}"
     end
