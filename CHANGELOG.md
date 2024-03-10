@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.38.0 released on ______, 2023.  For older chan
 
 ### Enhancements
 
-* Update to [CLDR 44.1](https://cldr.unicode.org/index/downloads/cldr-44) data.
+* Update to [CLDR 45.0](https://cldr.unicode.org/index/downloads/cldr-45) data.
 
 * Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
 
