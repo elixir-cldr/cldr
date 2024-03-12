@@ -833,6 +833,36 @@ defmodule Cldr.Consolidate do
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
 
+    prefixes =
+      units
+      |> xpath(
+        ~x"//unitPrefix"l,
+        type: ~x"./@type"s,
+        symbol: ~x"./@symbol"s,
+        power10: ~x"./@power10"s,
+        power2: ~x"./@power2"s
+      )
+      |> Enum.map(fn
+        %{type: type, symbol: symbol, power10: power10, power2: ""} ->
+          {type, %{symbol: symbol, base: 10, power: String.to_integer(power10)}}
+
+        %{type: type, symbol: symbol, power10: "", power2: power2} ->
+          {type, %{symbol: symbol, base: 2, power: String.to_integer(power2)}}
+      end)
+      |> Map.new()
+
+    components =
+      units
+      |> xpath(
+        ~x"//unitIdComponent"l,
+        type: ~x"./@type"s,
+        values: ~x"./@values"s
+      )
+      |> Enum.map(fn %{type: type, values: values} ->
+        {type, String.split(values)}
+      end)
+      |> Map.new()
+
     constants =
       units
       |> xpath(
@@ -936,7 +966,9 @@ defmodule Cldr.Consolidate do
       base_units: base_units,
       conversions: conversions,
       aliases: aliases,
-      preferences: preferences
+      preferences: preferences,
+      prefixes: prefixes,
+      components: components
     }
     |> save_file(path)
 
