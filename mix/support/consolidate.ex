@@ -900,22 +900,25 @@ defmodule Cldr.Consolidate do
         base_unit: ~x"./@baseUnit"s,
         factor: ~x"./@factor"s,
         offset: ~x"./@offset"s,
-        systems: ~x"./@systems"s
+        systems: ~x"./@systems"s,
+        special: ~x"./@special"s
       )
-      |> Enum.map(fn %{
-                       source: source,
-                       base_unit: target,
-                       offset: offset,
-                       factor: factor,
-                       systems: systems
-                     } ->
-        {underscore(source),
-         %{
-           base_unit: underscore(target),
-           factor: Parser.parse(factor, 1) |> Expression.run(constants),
-           offset: Parser.parse(offset, 0) |> Expression.run(constants),
-           systems: Parser.systems(systems)
-         }}
+      |> Enum.map(fn
+        %{source: source, base_unit: target, special: "", offset: offset, factor: factor, systems: systems} ->
+          {underscore(source),
+           %{
+             base_unit: underscore(target),
+             factor: Parser.parse(factor, 1) |> Expression.run(constants),
+             offset: Parser.parse(offset, 0) |> Expression.run(constants),
+             systems: Parser.systems(systems)
+           }}
+        %{source: source, base_unit: target, special: special, systems: systems} ->
+          {underscore(source),
+           %{
+             base_unit: underscore(target),
+             special: special,
+             systems: Parser.systems(systems)
+           }}
       end)
       |> Map.new()
 

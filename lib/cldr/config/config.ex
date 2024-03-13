@@ -2120,6 +2120,13 @@ defmodule Cldr.Config do
             Enum.map(current_value, &String.to_atom/1)
           end)
 
+        new_unit =
+          if Map.has_key?(new_unit, :special) do
+            Map.update!(new_unit, :special, fn special -> String.to_atom(special) end)
+          else
+            new_unit
+          end
+
         {k, new_unit}
       end)
 
