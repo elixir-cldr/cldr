@@ -49,7 +49,6 @@ defmodule Cldr.Consolidate do
     save_timezones()
     save_time_preferences()
     save_units()
-    save_measurement_systems()
     save_grammatical_features()
     save_grammatical_gender()
     save_parent_locales()
@@ -791,29 +790,6 @@ defmodule Cldr.Consolidate do
     Enum.map(timezones, fn %{alias: aliases, name: name} ->
       {name, String.split(aliases, " ")}
     end)
-    |> Map.new()
-    |> save_file(path)
-
-    assert_package_file_configured!(path)
-  end
-
-  def save_measurement_systems do
-    import SweetXml
-
-    path = Path.join(consolidated_output_dir(), "measurement_systems.json")
-
-    download_data_dir()
-    |> Path.join(["measurement_systems.xml"])
-    |> File.read!()
-    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
-    |> xpath(
-      ~x"//type"l,
-      name: ~x"./@name"s,
-      description: ~x"./@description"s,
-      alias: ~x"./@alias"s
-    )
-    |> Enum.group_by(& &1.name, &%{alias: &1.alias, description: &1.description})
-    |> Enum.map(fn {k, v} -> {k, hd(v)} end)
     |> Map.new()
     |> save_file(path)
 

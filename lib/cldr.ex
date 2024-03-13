@@ -2423,36 +2423,22 @@ defmodule Cldr do
        "The measurement system \\"something\\" is invalid"}}
 
   """
+  @measurement_systems Cldr.Config.measurement_systems()
+
   def validate_measurement_system(system) when is_binary(system) do
     system
     |> String.downcase()
-    |> do_validate_measurement_system
+    |> String.to_existing_atom()
+    |> validate_measurement_system()
+  rescue ArgumentError ->
+    {:error, unknown_measurement_system_error(system)}
   end
 
-  def validate_measurement_system(system) when is_atom(system) do
-    do_validate_measurement_system(system)
+  def validate_measurement_system(system) when system in @measurement_systems do
+    {:ok, system}
   end
 
-  @measurement_systems Cldr.Config.measurement_systems()
-                       |> Enum.flat_map(fn
-                         {k, %{alias: nil}} -> [{k, k}]
-                         {k, %{alias: a}} -> [{k, k}, {a, k}]
-                       end)
-                       |> Map.new()
-
-  for {system, canonical_system} <- @measurement_systems do
-    defp do_validate_measurement_system(unquote(system)),
-      do: {:ok, unquote(canonical_system)}
-
-    defp do_validate_measurement_system(unquote(Kernel.to_string(system))),
-      do: {:ok, unquote(canonical_system)}
-  end
-
-  defp do_validate_measurement_system(measurement_system) do
-    {:error, unknown_measurement_system_error(measurement_system)}
-  end
-
-  def unknown_measurement_system_error(measurement_system) do
+  defp unknown_measurement_system_error(measurement_system) do
     {
       Cldr.UnknownMeasurementSystemError,
       "The measurement system #{inspect(measurement_system)} is invalid"

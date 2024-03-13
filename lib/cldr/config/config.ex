@@ -753,22 +753,14 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return a map of measurement systems
+  Return a list of measurement systems
 
   """
-  @measurement_systems_file "measurement_systems.json"
   def measurement_systems do
-    Path.join(cldr_data_dir(), @measurement_systems_file)
-    |> File.read!()
-    |> json_library().decode!
-    |> Cldr.Map.atomize_keys()
-    |> Cldr.Map.deep_map(fn
-      {:description, description} -> {:description, description}
-      {:alias, ""} -> {:alias, nil}
-      {k, v} when is_binary(v) -> {k, String.to_atom(v)}
-      other -> other
-    end)
-    |> Map.new()
+    units()
+    |> Map.fetch!(:conversions)
+    |> Enum.flat_map(fn {_unit, conversion} -> conversion.systems end)
+    |> Enum.uniq()
   end
 
   @doc """
