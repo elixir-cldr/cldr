@@ -94,7 +94,6 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territory_subdivision_containment.json",
         "priv/cldr/plural_ranges.json",
         "priv/cldr/timezones.json",
-        "priv/cldr/measurement_systems.json",
         "priv/cldr/units.json",
         "priv/cldr/grammatical_features.json",
         "priv/cldr/grammatical_gender.json",
