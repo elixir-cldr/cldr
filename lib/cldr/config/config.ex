@@ -1543,7 +1543,7 @@ defmodule Cldr.Config do
         :"fr-KM", :"fr-LU", :"fr-MA", :"fr-MC", :"fr-MF", :"fr-MG", :"fr-ML",
         :"fr-MQ", :"fr-MR", :"fr-MU", :"fr-NC", :"fr-NE", :"fr-PF", :"fr-PM",
         :"fr-RE", :"fr-RW", :"fr-SC", :"fr-SN", :"fr-SY", :"fr-TD", :"fr-TG",
-        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT", :frr
+        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT"
       ]
 
   """
@@ -1553,30 +1553,36 @@ defmodule Cldr.Config do
           ...
         ]
   def expand_locale_names(locale_names) do
-    Enum.map(locale_names, fn locale_name ->
+    Enum.flat_map(locale_names, fn locale_name ->
       locale_name = to_string(locale_name)
 
-      if String.contains?(locale_name, @wildcard_matchers) do
-        case Regex.compile(locale_name) do
-          {:ok, regex} ->
-            Enum.filter(all_locale_names(), &match_name?(regex, &1))
+      case String.split(locale_name, @wildcard_matchers) do
+        # Special case of locale-*
+        [locale_base, ""] ->
+          Enum.filter(all_locale_names(), &String.starts_with?(to_string(&1), locale_base))
 
-          {:error, reason} ->
-            raise ArgumentError,
-                  "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
-        end
-      else
-        canonical_name(locale_name)
+        # No wildcard
+        [_locale] ->
+          [canonical_name(locale_name)]
+
+        # Multiple splits so treat it as a regex
+        _other ->
+          case Regex.compile(locale_name) do
+            {:ok, regex} ->
+              Enum.filter(all_locale_names(), &match_name?(regex, &1))
+
+            {:error, reason} ->
+              raise ArgumentError,
+                    "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
+          end
       end
     end)
-    |> List.flatten()
-    |> Enum.map(fn locale_name ->
+    |> Enum.flat_map(fn locale_name ->
       case String.split(to_string(locale_name), "-") do
-        [language] -> String.to_atom(language)
+        [language] -> [String.to_atom(language)]
         [language | _rest] -> [String.to_atom(language), locale_name]
       end
     end)
-    |> List.flatten()
     |> Enum.uniq()
   end
 
@@ -1587,7 +1593,7 @@ defmodule Cldr.Config do
   def canonical_name(locale_name) do
     name =
       locale_name
-      |> locale_name_from_posix
+      |> locale_name_from_posix()
       |> String.downcase()
 
     Map.get(known_locales_map(), name, locale_name)
