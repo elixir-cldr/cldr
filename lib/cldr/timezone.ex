@@ -38,7 +38,7 @@ defmodule Cldr.Timezone do
   IANA timezone names.
 
   """
-  @spec timezones() :: map()
+  @spec timezones() :: %{(zone_name :: String.t()) => [iana_name :: String.t(), ...]}
   def timezones do
     @timezones
   end
@@ -48,7 +48,9 @@ defmodule Cldr.Timezone do
   their known IANA timezone names.
 
   """
-  @spec timezones_for_territory() :: map()
+  @spec timezones_for_territory() ::
+          unquote(Cldr.Type.timezones_for_territory(@timezones_for_territory))
+
   def timezones_for_territory do
     @timezones_for_territory
   end

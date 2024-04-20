@@ -76,5 +76,4 @@ defmodule Cldr.Unit.Expression do
   def div(v1, v2) do
     Decimal.div(Decimal.new(v1), Decimal.new(v2))
   end
-
 end

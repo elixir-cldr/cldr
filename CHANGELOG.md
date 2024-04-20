@@ -2,6 +2,29 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
+## Cldr v2.38.0
+
+This is the changelog for Cldr v2.38.0 released on April 21st, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Update to [CLDR 45.0](https://cldr.unicode.org/index/downloads/cldr-45) data.
+
+* Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
+
+* Add decimal separator and grouping separator to the currency data for each locale. In some rare cases, like the currency [CVE](https://en.wikipedia.org/wiki/Cape_Verdean_escudo#:~:text=The%20escudo%20(sign%3A%20%3B%20ISO,subdivided%20into%20one%20hundred%20centavos.) in the locale [pt-CV](https://www.localeplanet.com/icu/pt-CV/index.html) the currency symbol is placed where decimal separator is normally placed. The same can apply for the grouping separator although it appears not locale uses this field.
+
+* Adjust the `Inspect` protocol implementation for `t:Cldr.LanguageTag.t/0` types. When the language tag is resolved to a CLDR locale then the output is executable code. For example:
+
+```elixir
+iex> MyApp.Cldr.Locale.new!("en-US")
+MyApp.Cldr.Locale.new!("en-US")
+````
+
+* Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220. Also fixes `:underspecs` warning and the `:underspecs` dialyzer flag is now configured.
+
+* Add configuration for the new [ex_cldr_person_names](https://hex.pm/packages/ex_cldr_person_names) backend module generator.
+
 ## Cldr v2.37.5
 
 This is the changelog for Cldr v2.37.5 released on November 2nd, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
@@ -31,6 +54,10 @@ This is the changelog for Cldr v2.37.3 released on Octoebr 12th, 2023.  For olde
 ### Enhancements
 
 * Adds `<backend>.put_gettext_locale/1`.
+
+* Adds `Cldr.validate_locale!/2`. Thanks to @jarrodmoldrich for the suggestion.
+
+* Add decimal separator and grouping separator to the currency data for each locale. In some rare cases, like the currency [CVE](https://en.wikipedia.org/wiki/Cape_Verdean_escudo#:~:text=The%20escudo%20(sign%3A%20%3B%20ISO,subdivided%20into%20one%20hundred%20centavos.) in the locale [pt-CV](https://www.localeplanet.com/icu/pt-CV/index.html) the currency symbol is placed where decimal separator is normally placed. The same can apply for the grouping separator although it appears not locale uses this field.
 
 ## Cldr v2.37.2
 

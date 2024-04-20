@@ -304,10 +304,13 @@ defmodule Cldr do
 
         iex> import Cldr.LanguageTag.Sigil
         iex> Cldr.put_gettext_locale(~l"de")
-        {:error,
-          {Cldr.UnknownLocaleError,
-            "Locale #Cldr.LanguageTag<de [validated]> does not map to a known gettext locale name"}}
-
+        {
+          :error,
+          {
+            Cldr.UnknownLocaleError,
+            "Locale TestBackend.Cldr.Locale.new!(\\"de-DE\\") does not map to a known gettext locale name"
+          }
+        }
     """
     @spec put_gettext_locale(LanguageTag.t()) ::
             {:ok, binary() | nil} | {:error, {module(), String.t()}}
@@ -395,7 +398,7 @@ defmodule Cldr do
   """
   @doc since: "2.32.0"
 
-  @spec with_locale(Locale.locale_reference(), fun) :: any
+  @spec with_locale(Locale.locale_reference(), (-> any())) :: any
   def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
     current_locale = get_locale(locale.backend)
 
@@ -433,7 +436,7 @@ defmodule Cldr do
   """
   @doc since: "2.27.0"
 
-  @spec with_locale(Locale.locale_reference(), backend(), fun) :: any
+  @spec with_locale(Locale.locale_reference(), backend(), (-> any())) :: any()
   def with_locale(locale, backend \\ default_backend!(), fun) when is_locale_name(locale) do
     with {:ok, locale} = validate_locale(locale, backend) do
       with_locale(locale, fun)
@@ -671,7 +674,7 @@ defmodule Cldr do
   @doc """
   Return a localised string suitable for
   presentation purposes for structs that
-  implement the  `Cldr.LanguageTag.DisplayName`
+  implement the `Cldr.LanguageTag.DisplayName`
   protocol.
 
   The `Cldr.LanguageTag.DisplayName` protocol is
@@ -807,7 +810,7 @@ defmodule Cldr do
       {:error, {Cldr.InvalidLanguageError, "The language \\"zzz\\" is invalid"}}
 
   """
-  @spec validate_locale(Locale.locale_name() | LanguageTag.t() | String.t(), backend()) ::
+  @spec validate_locale(Locale.locale_reference(), backend()) ::
           {:ok, LanguageTag.t()} | {:error, {module(), String.t()}}
 
   def validate_locale(locale, backend \\ nil)
@@ -822,6 +825,77 @@ defmodule Cldr do
 
   def validate_locale(locale, backend) do
     backend.validate_locale(locale)
+  end
+
+  @doc """
+  Normalise and validate a locale name or raises
+  an exception.
+
+  ## Arguments
+
+  * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
+    or a `Cldr.LanguageTag` struct returned by `Cldr.Locale.new!/2`
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
+    Note that `Cldr.default_backend!/0` will raise an exception if
+    no `:default_backend` is configured under the `:ex_cldr` key in
+    `config.exs`.
+
+  ## Returns
+
+  * `language_tag` or
+
+  * raises an exception
+
+  ## Examples
+
+      iex> Cldr.validate_locale!(:en, TestBackend.Cldr)
+      %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        canonical_locale_name: "en",
+        cldr_locale_name: :en,
+        extensions: %{},
+        gettext_locale_name: "en",
+        language: "en",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: :en,
+        requested_locale_name: "en",
+        script: :Latn,
+        territory: :US,
+        transform: %{},
+        language_variants: []
+      }
+
+      iex> Cldr.validate_locale!(:af, TestBackend.Cldr)
+      %Cldr.LanguageTag{
+        backend: TestBackend.Cldr,
+        canonical_locale_name: "af",
+        cldr_locale_name: :af,
+        extensions: %{},
+        gettext_locale_name: nil,
+        language: "af",
+        locale: %{},
+        private_use: [],
+        rbnf_locale_name: :af,
+        requested_locale_name: "af",
+        script: :Latn,
+        territory: :ZA,
+        transform: %{},
+        language_variants: []
+      }
+
+      iex> Cldr.validate_locale!("zzz", TestBackend.Cldr)
+      ** (Cldr.InvalidLanguageError) The language "zzz" is invalid
+
+  """
+  @spec validate_locale!(Locale.locale_reference(), backend()) :: LanguageTag.t() | no_return()
+  def validate_locale!(locale, backend \\ nil) do
+    case validate_locale(locale, backend) do
+      {:ok, locale} -> locale
+      {:error, {module, reason}} -> raise module, reason
+    end
   end
 
   @doc """
@@ -856,7 +930,7 @@ defmodule Cldr do
   The list is the combination of configured locales,
   `Gettext` locales and the default locale.
 
-  See also `known_locales/1` and `all_locales/0`
+  See also `known_locales/1` and `all_locales/0`.
 
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
@@ -1448,8 +1522,14 @@ defmodule Cldr do
     @known_territories
   end
 
+  @doc """
+  Returns a map of territories and the territories
+  within which they are contained.
+
+  """
   @territory_containment Cldr.Config.territory_containment()
-  @spec territory_containment() :: map()
+  @spec territory_containment() ::
+          unquote(Cldr.Type.territory_containment(@territory_containment))
   def territory_containment do
     @territory_containment
   end
@@ -1520,7 +1600,7 @@ defmodule Cldr do
                                      end)
                                      |> Map.new()
 
-  @spec known_territory_subdivision_containment :: map()
+  @spec known_territory_subdivision_containment :: unquote(Cldr.Type.subdivision_containment())
   def known_territory_subdivision_containment do
     @territory_subdivision_containment
   end
@@ -1877,13 +1957,13 @@ defmodule Cldr do
        :SYP, :SZL, :THB, :TJR, :TJS, :TMM, :TMT, :TND, :TOP, :TPE, :TRL, :TRY, :TTD,
        :TWD, :TZS, :UAH, :UAK, :UGS, :UGX, :USD, :USN, :USS, :UYI, :UYP, :UYU, :UYW,
        :UZS, :VEB, :VED, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA,
-       :XBB, :XBC, :XBD, :XCD, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT, :XRE,
-       :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR, :ZMK,
-       :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
+       :XBB, :XBC, :XBD, :XCD, :XCG, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT,
+       :XRE, :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR,
+       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
 
   """
   @known_currencies Cldr.Config.known_currencies()
-  @spec known_currencies :: [atom(), ...] | []
+  @spec known_currencies :: [atom(), ...]
   def known_currencies do
     @known_currencies
   end
@@ -2010,7 +2090,7 @@ defmodule Cldr do
 
   """
   @known_number_systems Cldr.Config.known_number_systems()
-  @spec known_number_systems :: [atom(), ...] | []
+  @spec known_number_systems :: [atom(), ...]
   def known_number_systems do
     @known_number_systems
   end
@@ -2343,36 +2423,22 @@ defmodule Cldr do
        "The measurement system \\"something\\" is invalid"}}
 
   """
+  @measurement_systems Cldr.Config.measurement_systems()
+
   def validate_measurement_system(system) when is_binary(system) do
     system
     |> String.downcase()
-    |> do_validate_measurement_system
+    |> String.to_existing_atom()
+    |> validate_measurement_system()
+  rescue ArgumentError ->
+    {:error, unknown_measurement_system_error(system)}
   end
 
-  def validate_measurement_system(system) when is_atom(system) do
-    do_validate_measurement_system(system)
+  def validate_measurement_system(system) when system in @measurement_systems do
+    {:ok, system}
   end
 
-  @measurement_systems Cldr.Config.measurement_systems()
-                       |> Enum.flat_map(fn
-                         {k, %{alias: nil}} -> [{k, k}]
-                         {k, %{alias: a}} -> [{k, k}, {a, k}]
-                       end)
-                       |> Map.new()
-
-  for {system, canonical_system} <- @measurement_systems do
-    defp do_validate_measurement_system(unquote(system)),
-      do: {:ok, unquote(canonical_system)}
-
-    defp do_validate_measurement_system(unquote(Kernel.to_string(system))),
-      do: {:ok, unquote(canonical_system)}
-  end
-
-  defp do_validate_measurement_system(measurement_system) do
-    {:error, unknown_measurement_system_error(measurement_system)}
-  end
-
-  def unknown_measurement_system_error(measurement_system) do
+  defp unknown_measurement_system_error(measurement_system) do
     {
       Cldr.UnknownMeasurementSystemError,
       "The measurement system #{inspect(measurement_system)} is invalid"

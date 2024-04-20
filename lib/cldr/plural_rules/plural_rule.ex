@@ -2,7 +2,7 @@ defmodule Cldr.Number.PluralRule do
   @moduledoc """
   Defines the plural rule implementation
   modules. The functions in this module
-  generates code to implement the plural
+  generate code to implement the plural
   rules of CLDR.
 
   """
@@ -10,17 +10,23 @@ defmodule Cldr.Number.PluralRule do
   @type operand :: any()
 
   @typedoc """
-  Defines the plural types into which a number
-  can be categorised.
+  Defines the plural types into which a number can be categorised.
+
   """
-  @type plural_type() :: :zero | :one | :two | :few | :many | :other
+  @type plural_type :: :zero | :one | :two | :few | :many | :other
+
+  @typedoc """
+  Defines the structure of a plural rule before compilation.
+
+  """
+  @type plural_rule :: Keyword.t()
 
   @doc """
   Returns a list of the possible pluralization
   types
 
   """
-  @spec known_plural_types :: list(plural_type())
+  @spec known_plural_types :: [plural_type(), ...]
   @plural_types [:zero, :one, :two, :few, :many, :other]
   def known_plural_types do
     @plural_types
@@ -31,12 +37,12 @@ defmodule Cldr.Number.PluralRule do
 
   ## Arguments
 
-  * `number` is an integer, float or Decimal number
+  * `number` is an integer, float or Decimal number.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.  The default is `Cldr.default_backend!/0`.
 
-  * `options` is a keyword list of options
+  * `options` is a keyword list of options.
 
   ## Options
 
@@ -158,7 +164,16 @@ defmodule Cldr.Number.PluralRule do
       Returns all the plural rules defined in CLDR.
 
       """
-      @spec plural_rules :: map()
+      @spec plural_rules :: %{
+              Cldr.Locale.locale_name() => [
+                {
+                  plural_type :: Cldr.Number.PluralRule.plural_type(),
+                  plural_rules :: [Cldr.Number.PluralRule.plural_rule(), ...]
+                },
+                ...
+              ]
+            }
+
       def plural_rules do
         @rules
       end
@@ -665,7 +680,7 @@ defmodule Cldr.Number.PluralRule do
   def define_plural_rules do
     quote bind_quoted: [], location: :keep do
       alias Cldr.Number.PluralRule
-      
+
       # Silence warnings since the success typing of do_plural_rule will depend
       # on the locale used.
       @dialyzer {:nowarn_function, [do_plural_rule: 8]}

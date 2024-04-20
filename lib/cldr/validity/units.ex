@@ -36,5 +36,4 @@ defmodule Cldr.Validity.Unit do
   def normalize(nil) do
     nil
   end
-
 end

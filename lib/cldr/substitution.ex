@@ -67,6 +67,14 @@ defmodule Cldr.Substitution do
   """
   @spec substitute(term | [term, ...], [String.t() | integer, ...]) :: [term, ...]
 
+  def substitute(item, [0]) do
+    [item]
+  end
+  
+  def substitute([item], [0]) do
+    [item]
+  end
+
   # Takes care of the case where no parameters are used
   def substitute([_item], [string]) when is_binary(string) do
     [string]

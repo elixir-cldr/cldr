@@ -48,7 +48,7 @@ defmodule Cldr.Validity.Script do
   def unicode_to_subtag(unicode) do
     case Map.fetch(unicode_to_subtag_map(), unicode) do
       {:ok, subtag} -> {:ok, subtag}
-      :error -> {:error, "No unicode language #{inspect unicode} found."}
+      :error -> {:error, "No unicode language #{inspect(unicode)} found."}
     end
   end
 

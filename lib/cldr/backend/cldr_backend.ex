@@ -378,9 +378,13 @@ defmodule Cldr.Backend do
 
             iex> import Cldr.LanguageTag.Sigil
             iex> #{inspect(__MODULE__)}.put_gettext_locale(~l"de")
-            {:error,
-              {Cldr.UnknownLocaleError,
-                "Locale #Cldr.LanguageTag<de [validated]> does not map to a known gettext locale name"}}
+            {
+              :error,
+              {
+                Cldr.UnknownLocaleError,
+                "Locale TestBackend.Cldr.Locale.new!(\\"de-DE\\") does not map to a known gettext locale name"
+              }
+            }
 
         """
         @doc since: "2.38.0"
@@ -414,7 +418,7 @@ defmodule Cldr.Backend do
       """
       @doc since: "2.32.0"
 
-      @spec with_locale(Locale.locale_reference(), fun) :: any
+      @spec with_locale(Locale.locale_reference(), (-> any())) :: any
       def with_locale(%Cldr.LanguageTag{} = locale, fun) when is_function(fun) do
         Cldr.with_locale(locale, fun)
       end
@@ -719,8 +723,10 @@ defmodule Cldr.Backend do
       # in CLDR
       #
       # 1. Adjust the escaping of "\" to suit
-      # 2. Remove compound patterns like `{Rs}` which
-      #    are not supported in Erlang's re
+      # 2. Remove spaces in the regex since `re` considers them
+      #    part of the pattern.
+      # 3. Remove compound patterns like `{Rs}` which
+      #    are not supported in Erlang's `re`.
 
       @remove_compounds Regex.compile!("{.*}", [:ungreedy])
 
@@ -734,6 +740,7 @@ defmodule Cldr.Backend do
               regex =
                 v
                 |> String.replace("\x5c\x5c", "\x5c")
+                |> String.replace(" ", "")
                 |> String.replace(@remove_compounds, "")
 
               {k, Regex.compile!(regex, "u")}

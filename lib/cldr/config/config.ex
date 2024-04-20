@@ -54,6 +54,9 @@ defmodule Cldr.Config do
 
   @type number_system :: atom() | String.t()
 
+  @app_name Mix.Project.config()[:app]
+  @cldr_data_dir [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
+
   @root_locale_name :und
   @default_locale_name :"en-001"
 
@@ -131,7 +134,6 @@ defmodule Cldr.Config do
   what this app is called on `hex.pm`
 
   """
-  @app_name Mix.Project.config()[:app]
   def app_name do
     @app_name
   end
@@ -243,7 +245,7 @@ defmodule Cldr.Config do
 
   """
   def cldr_data_dir do
-    [:code.priv_dir(app_name()), "/cldr"] |> :erlang.iolist_to_binary()
+    @cldr_data_dir
   end
 
   @doc """
@@ -308,6 +310,8 @@ defmodule Cldr.Config do
   @doc """
   Returns the version string of the CLDR data repository
   """
+  @external_resource Path.join(@cldr_data_dir, "/cldr/version.json")
+
   def version do
     cldr_data_dir()
     |> Path.join("version.json")
@@ -732,7 +736,7 @@ defmodule Cldr.Config do
     |> tl
     |> tl
     |> Enum.map(fn line ->
-      [_number, name, code | _rest] = String.split(line,",")
+      [_number, name, code | _rest] = String.split(line, ",")
 
       name =
         name
@@ -745,26 +749,18 @@ defmodule Cldr.Config do
 
       {name, code}
     end)
-    |> Map.new
+    |> Map.new()
   end
 
   @doc """
-  Return a map of measurement systems
+  Return a list of measurement systems
 
   """
-  @measurement_systems_file "measurement_systems.json"
   def measurement_systems do
-    Path.join(cldr_data_dir(), @measurement_systems_file)
-    |> File.read!()
-    |> json_library().decode!
-    |> Cldr.Map.atomize_keys()
-    |> Cldr.Map.deep_map(fn
-      {:description, description} -> {:description, description}
-      {:alias, ""} -> {:alias, nil}
-      {k, v} when is_binary(v) -> {k, String.to_atom(v)}
-      other -> other
-    end)
-    |> Map.new()
+    units()
+    |> Map.fetch!(:conversions)
+    |> Enum.flat_map(fn {_unit, conversion} -> conversion.systems end)
+    |> Enum.uniq()
   end
 
   @doc """
@@ -980,9 +976,9 @@ defmodule Cldr.Config do
        :SYP, :SZL, :THB, :TJR, :TJS, :TMM, :TMT, :TND, :TOP, :TPE, :TRL, :TRY, :TTD,
        :TWD, :TZS, :UAH, :UAK, :UGS, :UGX, :USD, :USN, :USS, :UYI, :UYP, :UYU, :UYW,
        :UZS, :VEB, :VED, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA,
-       :XBB, :XBC, :XBD, :XCD, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT, :XRE,
-       :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR, :ZMK,
-       :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
+       :XBB, :XBC, :XBD, :XCD, :XCG, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT,
+       :XRE, :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR,
+       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
 
   """
   def known_currencies do
@@ -1487,8 +1483,14 @@ defmodule Cldr.Config do
             {"tender", "false"} ->
               [{:tender, false}]
 
+            {"_tz", timezone} ->
+              [{:timezone, timezone}]
+
+            {"_to-tz", timezone} ->
+              [{:timezone_to, timezone}]
+
             other ->
-              raise inspect(other)
+              raise inspect(other, label: "Unexpected key")
           end)
           |> Map.new()
 
@@ -1541,7 +1543,7 @@ defmodule Cldr.Config do
         :"fr-KM", :"fr-LU", :"fr-MA", :"fr-MC", :"fr-MF", :"fr-MG", :"fr-ML",
         :"fr-MQ", :"fr-MR", :"fr-MU", :"fr-NC", :"fr-NE", :"fr-PF", :"fr-PM",
         :"fr-RE", :"fr-RW", :"fr-SC", :"fr-SN", :"fr-SY", :"fr-TD", :"fr-TG",
-        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT", :frr
+        :"fr-TN", :"fr-VU", :"fr-WF", :"fr-YT"
       ]
 
   """
@@ -1551,30 +1553,36 @@ defmodule Cldr.Config do
           ...
         ]
   def expand_locale_names(locale_names) do
-    Enum.map(locale_names, fn locale_name ->
+    Enum.flat_map(locale_names, fn locale_name ->
       locale_name = to_string(locale_name)
 
-      if String.contains?(locale_name, @wildcard_matchers) do
-        case Regex.compile(locale_name) do
-          {:ok, regex} ->
-            Enum.filter(all_locale_names(), &match_name?(regex, &1))
+      case String.split(locale_name, @wildcard_matchers) do
+        # Special case of locale-*
+        [locale_base, ""] ->
+          Enum.filter(all_locale_names(), &String.starts_with?(to_string(&1), locale_base))
 
-          {:error, reason} ->
-            raise ArgumentError,
-                  "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
-        end
-      else
-        canonical_name(locale_name)
+        # No wildcard
+        [_locale] ->
+          [canonical_name(locale_name)]
+
+        # Multiple splits so treat it as a regex
+        _other ->
+          case Regex.compile(locale_name) do
+            {:ok, regex} ->
+              Enum.filter(all_locale_names(), &match_name?(regex, &1))
+
+            {:error, reason} ->
+              raise ArgumentError,
+                    "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
+          end
       end
     end)
-    |> List.flatten()
-    |> Enum.map(fn locale_name ->
+    |> Enum.flat_map(fn locale_name ->
       case String.split(to_string(locale_name), "-") do
-        [language] -> String.to_atom(language)
+        [language] -> [String.to_atom(language)]
         [language | _rest] -> [String.to_atom(language), locale_name]
       end
     end)
-    |> List.flatten()
     |> Enum.uniq()
   end
 
@@ -1585,7 +1593,7 @@ defmodule Cldr.Config do
   def canonical_name(locale_name) do
     name =
       locale_name
-      |> locale_name_from_posix
+      |> locale_name_from_posix()
       |> String.downcase()
 
     Map.get(known_locales_map(), name, locale_name)
@@ -1940,14 +1948,16 @@ defmodule Cldr.Config do
     |> File.read!()
     |> json_library().decode!
     |> Cldr.Map.atomize_keys(level: 1..1)
-    # |> Cldr.Map.deep_map(fn
-    #   {k, v} when is_binary(v) ->
-    #     if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
-    #   other ->
-    #     other
-    #   end,
-    #   filter: :subdivision
-    # )
+    |> Cldr.Map.deep_map(
+      fn
+        {k, v} when is_binary(v) ->
+          if String.length(v) == 2, do: {k, String.to_atom(v)}, else: {k, v}
+
+        other ->
+          other
+      end,
+      filter: :subdivision
+    )
     |> structify_languages
   end
 
@@ -2107,6 +2117,13 @@ defmodule Cldr.Config do
           |> Map.update!(:systems, fn current_value ->
             Enum.map(current_value, &String.to_atom/1)
           end)
+
+        new_unit =
+          if Map.has_key?(new_unit, :special) do
+            Map.update!(new_unit, :special, fn special -> String.to_atom(special) end)
+          else
+            new_unit
+          end
 
         {k, new_unit}
       end)

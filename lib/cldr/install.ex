@@ -110,6 +110,7 @@ defmodule Cldr.Install do
         {:ok, output_file_name}
 
       {:error, reason} ->
+        Logger.bare_log(:error, "Unable to downloaded locale #{inspect(locale_name)}. #{reason}.")
         {:error, reason}
     end
   end
@@ -154,7 +155,7 @@ defmodule Cldr.Install do
     version = app_version()
 
     if String.contains?(version, "-dev") do
-      "master"
+      "main"
     else
       "v#{version}"
     end
@@ -195,7 +196,7 @@ defmodule Cldr.Install do
     if stale? do
       Logger.bare_log(
         :info,
-        "Locale data for #{inspect(locale_name)} is stale. " <>
+        "Locale data for #{inspect(locale_name)} is stale. Cldr version is #{Cldr.version()}, locale version is #{version}. " <>
           "Updated locale data will be downloaded."
       )
     end

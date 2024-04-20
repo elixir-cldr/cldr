@@ -4,7 +4,8 @@ defmodule Cldr.Locale.Backend do
   def define_locale_backend(config) do
     known_locale_names = Cldr.Locale.Loader.known_locale_names(config)
 
-    quote location: :keep, bind_quoted: [config: Macro.escape(config), known_locale_names: known_locale_names] do
+    quote location: :keep,
+          bind_quoted: [config: Macro.escape(config), known_locale_names: known_locale_names] do
       defmodule Locale do
         @moduledoc false
         if Cldr.Config.include_module_docs?(config.generate_docs) do
