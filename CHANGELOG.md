@@ -4,7 +4,7 @@
 
 ## Cldr v2.38.0
 
-This is the changelog for Cldr v2.38.0 released on April 21st, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.38.0 released on April 21st, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
 
