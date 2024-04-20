@@ -19,7 +19,7 @@ This is the changelog for Cldr v2.38.0 released on April 21st, 2024.  For older 
 ```elixir
 iex> MyApp.Cldr.Locale.new!("en-US")
 MyApp.Cldr.Locale.new!("en-US")
-````
+```
 
 * Fix dialyzer warnings. Thanks to @Munksgaard for the PR. Closes #220. Also fixes `:underspecs` warning and the `:underspecs` dialyzer flag is now configured.
 
