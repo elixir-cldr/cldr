@@ -1,0 +1,29 @@
+name: Integration
+on: push
+env:
+  MIX_ENV: test
+  BRANCH: ${{ github.ref_name }}
+permissions:
+  contents: read
+jobs:
+  cldr_territories:
+    runs-on: ubuntu-latest
+    name: CLDR Territories ${{ github.repository }}/${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "elixir-cldr/cldr_territories"
+          ref: "integration-test"
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: 26.2
+          elixir-version: 1.16
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
+      - run: mix deps.get && mix compile --warnings-as-errors && mix test
