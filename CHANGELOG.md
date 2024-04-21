@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
+## Cldr v2.38.1
+
+This is the changelog for Cldr v2.38.1 released on ______, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Sort currency data in `Cldr.Config.territories/0` so ensure deterministic order. Closes #227.
+
 ## Cldr v2.38.0
 
 This is the changelog for Cldr v2.38.0 released on April 21st, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

@@ -1826,7 +1826,7 @@ defmodule Cldr.Config do
           {currency, data}
         end)
 
-      {territory, Map.put(data, :currency, currencies)}
+      {territory, Map.put(data, :currency, Enum.sort(currencies))}
     end)
     |> Map.new()
   end
