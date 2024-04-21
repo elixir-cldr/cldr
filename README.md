@@ -300,7 +300,7 @@ The currently known providers and their `hex` package names are:
   | ex_cldr_locale_display | Cldr.LocaleDisplay | Localising locale names                        |
   | ex_cldr_routes         | Cldr.Route         | Localized routes and route helpers             |
   | ex_money               | Money              | Operations on and formatting of a money type   |
-  | ex_messages            | Cldr.Message       | Formatting of ICU-formatted messages           |
+  | ex_cldr_messages       | Cldr.Message       | Formatting of ICU-formatted messages           |
 
 Any library author can create a provider module by exposing a function called `cldr_backend_provider/1` that takes a `Cldr.Config` struct as a single parameter.  The function should return an AST that is inserted into the `backend` module being compiled.
 
