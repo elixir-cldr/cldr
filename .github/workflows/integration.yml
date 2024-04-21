@@ -1,0 +1,76 @@
+name: Integration
+on: push
+env:
+  CLDR_PATH: ${{github.workspace}}/${{github.ref_name}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}
+permissions:
+  contents: read
+jobs:
+  test:
+    services:
+      db:
+        image: postgres:12
+        ports: ['5432:5432']
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        app: [cldr_calendars, cldr_calendars_composite, cldr_calendars_coptic,
+         cldr_calendars_ethiopic, cldr_calendars_format,
+         cldr_calendars_japanese, cldr_calendars_lunisolar,
+         cldr_calendars_persian, cldr_collation, cldr_currencies,
+         cldr_dates_times, cldr_html, cldr_languages, cldr_lists,
+         cldr_locale_display, cldr_messages, cldr_numbers,
+         cldr_person_names, cldr_plugs, cldr_print, cldr_routes,
+         cldr_sql, cldr_strftime, cldr_territories, cldr_text,
+         cldr_trans, cldr_units, cldr_units_sql, cldr_utils]
+        spec: [min, latest]
+        include:
+          - spec: min
+            elixir: "1.13"
+            otp: "25"
+          - spec: latest
+            elixir: latest
+            otp: latest
+    runs-on: ubuntu-latest
+    name: ${{matrix.app}} ${{matrix.elixir}}-otp-${{matrix.otp}}
+    defaults:
+      run:
+        working-directory: ./${{matrix.app}}
+    steps:
+      - name: Set up elixir ${{matrix.elixir}}-otp-${{matrix.otp}}
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+          hexpm-mirrors: |
+                      https://builds.hex.pm
+                      https://cdn.jsdelivr.net/hex
+      - name: Checkout ${{github.repository_owner}}/${{matrix.app}}
+        uses: actions/checkout@v4
+        with:
+          path: ${{matrix.app}}
+          repository: ${{github.repository_owner}}/${{matrix.app}}
+      - name: Checkout ${{github.repository}}
+        uses: actions/checkout@v4
+        with:
+          path: ${{github.ref_name}}
+          repository: ${{github.repository}}
+          ref: ${{github.ref_name}}
+
+      - name: Built release
+        working-directory: ./${{github.ref_name}}
+        run: mix hex.build -o ${{env.CLDR_PATH}} --unpack
+
+      - run: mix deps.get
+      - run: mix deps.compile
+      - run: mix compile --warnings-as-errors
+      - run: mix test
+      - run: mix help | grep -E '(^| )dialyzer( |$)' && mix dialyzer
