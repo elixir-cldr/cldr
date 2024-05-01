@@ -49,7 +49,6 @@ defmodule Cldr.Consolidate do
     save_timezones()
     save_time_preferences()
     save_units()
-    save_measurement_systems()
     save_grammatical_features()
     save_grammatical_gender()
     save_parent_locales()
@@ -797,29 +796,6 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
-  def save_measurement_systems do
-    import SweetXml
-
-    path = Path.join(consolidated_output_dir(), "measurement_systems.json")
-
-    download_data_dir()
-    |> Path.join(["measurement_systems.xml"])
-    |> File.read!()
-    |> String.replace(~r/<!DOCTYPE.*>\n/, "")
-    |> xpath(
-      ~x"//type"l,
-      name: ~x"./@name"s,
-      description: ~x"./@description"s,
-      alias: ~x"./@alias"s
-    )
-    |> Enum.group_by(& &1.name, &%{alias: &1.alias, description: &1.description})
-    |> Enum.map(fn {k, v} -> {k, hd(v)} end)
-    |> Map.new()
-    |> save_file(path)
-
-    assert_package_file_configured!(path)
-  end
-
   def save_units do
     import SweetXml
     import Cldr.Config, only: [underscore: 1]
@@ -832,6 +808,36 @@ defmodule Cldr.Consolidate do
       |> Path.join(["units.xml"])
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
+
+    prefixes =
+      units
+      |> xpath(
+        ~x"//unitPrefix"l,
+        type: ~x"./@type"s,
+        symbol: ~x"./@symbol"s,
+        power10: ~x"./@power10"s,
+        power2: ~x"./@power2"s
+      )
+      |> Enum.map(fn
+        %{type: type, symbol: symbol, power10: power10, power2: ""} ->
+          {type, %{symbol: symbol, base: 10, power: String.to_integer(power10)}}
+
+        %{type: type, symbol: symbol, power10: "", power2: power2} ->
+          {type, %{symbol: symbol, base: 2, power: String.to_integer(power2)}}
+      end)
+      |> Map.new()
+
+    components =
+      units
+      |> xpath(
+        ~x"//unitIdComponent"l,
+        type: ~x"./@type"s,
+        values: ~x"./@values"s
+      )
+      |> Enum.map(fn %{type: type, values: values} ->
+        {type, String.split(values)}
+      end)
+      |> Map.new()
 
     constants =
       units
@@ -870,22 +876,25 @@ defmodule Cldr.Consolidate do
         base_unit: ~x"./@baseUnit"s,
         factor: ~x"./@factor"s,
         offset: ~x"./@offset"s,
-        systems: ~x"./@systems"s
+        systems: ~x"./@systems"s,
+        special: ~x"./@special"s
       )
-      |> Enum.map(fn %{
-                       source: source,
-                       base_unit: target,
-                       offset: offset,
-                       factor: factor,
-                       systems: systems
-                     } ->
-        {underscore(source),
-         %{
-           base_unit: underscore(target),
-           factor: Parser.parse(factor, 1) |> Expression.run(constants),
-           offset: Parser.parse(offset, 0) |> Expression.run(constants),
-           systems: Parser.systems(systems)
-         }}
+      |> Enum.map(fn
+        %{source: source, base_unit: target, special: "", offset: offset, factor: factor, systems: systems} ->
+          {underscore(source),
+           %{
+             base_unit: underscore(target),
+             factor: Parser.parse(factor, 1) |> Expression.run(constants),
+             offset: Parser.parse(offset, 0) |> Expression.run(constants),
+             systems: Parser.systems(systems)
+           }}
+        %{source: source, base_unit: target, special: special, systems: systems} ->
+          {underscore(source),
+           %{
+             base_unit: underscore(target),
+             special: special,
+             systems: Parser.systems(systems)
+           }}
       end)
       |> Map.new()
 
@@ -936,7 +945,9 @@ defmodule Cldr.Consolidate do
       base_units: base_units,
       conversions: conversions,
       aliases: aliases,
-      preferences: preferences
+      preferences: preferences,
+      prefixes: prefixes,
+      components: components
     }
     |> save_file(path)
 

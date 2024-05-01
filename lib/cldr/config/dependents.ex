@@ -9,7 +9,8 @@ defmodule Cldr.Config.Dependents do
       Cldr.List => {Cldr.List.Backend, :define_list_module},
       Cldr.Unit => {Cldr.Unit.Backend, :define_unit_module},
       Cldr.Territory => {Cldr.Territory.Backend, :define_territory_module},
-      Cldr.Calendar => {Cldr.Calendar.Backend, :define_calendar_module}
+      Cldr.Calendar => {Cldr.Calendar.Backend, :define_calendar_module},
+      Cldr.PersonName => {Cldr.PersonName.Backend, :define_person_name_module},
     }
   end
 

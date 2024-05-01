@@ -381,7 +381,11 @@ defmodule Cldr.LanguageTag do
     end
 
     def inspect(%Cldr.LanguageTag{} = language_tag, _opts) do
-      "#Cldr.LanguageTag<" <> language_tag.canonical_locale_name <> " [validated]>"
+      string = Cldr.LanguageTag.to_string(language_tag)
+      backend = language_tag.backend
+
+      "#{inspect backend}.Locale.new!(" <> inspect(string) <> ")"
+      # "#Cldr.LanguageTag<" <> language_tag.canonical_locale_name <> " [validated]>"
     end
   end
 end

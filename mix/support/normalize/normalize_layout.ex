@@ -21,5 +21,4 @@ defmodule Cldr.Normalize.Layout do
 
     Map.put(content, "layout", layout)
   end
-
 end

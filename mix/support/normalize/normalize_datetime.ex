@@ -93,7 +93,8 @@ defmodule Cldr.Normalize.DateTime do
   end
 
   # Some of these formats may have _count_ structures so we need to
-  # group these
+  # group these. Assumes that a format is either -count- or -alt-ascii
+  # but not boht.
   defp group_formats({"available_formats" = key, formats}) do
     formats =
       formats
@@ -103,10 +104,18 @@ defmodule Cldr.Normalize.DateTime do
           [name, count] -> {name, %{count => format}}
         end
       end)
+      |> Enum.map(fn {name, format} ->
+        case String.split(name, "-alt-ascii") do
+          [_no_count] -> {name, format}
+          [ascii_format, ""] -> {ascii_format, %{ascii: format}}
+        end
+      end)
       |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
       |> Enum.map(fn
         {key, [item]} -> {key, item}
-        {key, list} -> {key, Cldr.Map.merge_map_list(list)}
+        {key, [format, %{ascii: ascii_format}]} -> {key, %{unicode: format, ascii: ascii_format}}
+        {key, [%{ascii: ascii_format}, format]} -> {key, %{unicode: format, ascii: ascii_format}}
+        {key, list} when is_list(list) -> {key, Cldr.Map.merge_map_list(list)}
       end)
       |> Map.new()
 

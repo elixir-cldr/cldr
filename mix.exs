@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.37.5"
+  @version "2.38.0"
 
   def project do
     [
@@ -22,7 +22,8 @@ defmodule Cldr.Mixfile do
       preferred_cli_env: preferred_cli_env(),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a
+        plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a,
+        flags: [:underspecs]
       ],
       compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
@@ -44,7 +45,7 @@ defmodule Cldr.Mixfile do
 
   defp deps do
     [
-      {:cldr_utils, "~> 2.21"},
+      {:cldr_utils, "~> 2.25"},
       {:decimal, "~> 1.6 or ~> 2.0"},
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
@@ -52,7 +53,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 0.4", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
-      {:sweet_xml, "~> 0.6", only: [:dev, :test], optional: true},
+      {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true},
       {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true}
     ]
   end
@@ -93,7 +94,6 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territory_subdivision_containment.json",
         "priv/cldr/plural_ranges.json",
         "priv/cldr/timezones.json",
-        "priv/cldr/measurement_systems.json",
         "priv/cldr/units.json",
         "priv/cldr/grammatical_features.json",
         "priv/cldr/grammatical_gender.json",
