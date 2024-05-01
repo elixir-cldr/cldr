@@ -2,6 +2,16 @@
 
 **Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
 
+## Cldr v2.39.0
+
+This is the changelog for Cldr v2.39.0 released on ______, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* `ex_cldr` version 2.39.0 is supported on Elixir 1.12 and later. This change is primarily driven by the version requirements of the `jason` library.
+
+* Fix warnings on Elixir 1.17. This primarily relates to charlists constants now required to use `sigil_c` to avoid warnings. As a result, tests will only work on Elixir 1.16 and later even though support for the library is for Elixir 1.11 and later.
+
 ## Cldr v2.38.1
 
 This is the changelog for Cldr v2.38.1 released on April 21st, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

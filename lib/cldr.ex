@@ -580,7 +580,7 @@ defmodule Cldr do
   """
   @spec default_territory(backend()) :: atom()
   def default_territory(backend \\ default_backend!()) do
-    backend.default_territory
+    backend.default_territory()
   end
 
   @doc """
@@ -958,7 +958,7 @@ defmodule Cldr do
   """
   @spec known_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_locale_names(backend \\ default_backend!()) do
-    backend.known_locale_names
+    backend.known_locale_names()
   end
 
   @doc """
@@ -980,7 +980,7 @@ defmodule Cldr do
   """
   @spec unknown_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def unknown_locale_names(backend \\ default_backend!()) do
-    backend.unknown_locale_names
+    backend.unknown_locale_names()
   end
 
   @doc """
@@ -995,7 +995,7 @@ defmodule Cldr do
   """
   @spec known_rbnf_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_rbnf_locale_names(backend \\ default_backend!()) do
-    backend.known_rbnf_locale_names
+    backend.known_rbnf_locale_names()
   end
 
   @doc """
@@ -1014,7 +1014,7 @@ defmodule Cldr do
   """
   @spec known_gettext_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def known_gettext_locale_names(backend \\ default_backend!()) do
-    backend.known_gettext_locale_names
+    backend.known_gettext_locale_names()
   end
 
   @doc """
@@ -1089,7 +1089,7 @@ defmodule Cldr do
   """
   @spec known_locale_name?(Locale.locale_name(), backend()) :: boolean
   def known_locale_name?(locale_name, backend \\ default_backend!()) when is_atom(locale_name) do
-    locale_name in backend.known_locale_names
+    locale_name in backend.known_locale_names()
   end
 
   @doc """
@@ -1118,7 +1118,7 @@ defmodule Cldr do
   """
   @spec known_rbnf_locale_name?(Locale.locale_name(), backend()) :: boolean
   def known_rbnf_locale_name?(locale_name, backend \\ default_backend!()) do
-    locale_name in backend.known_rbnf_locale_names
+    locale_name in backend.known_rbnf_locale_names()
   end
 
   @doc """
@@ -1147,7 +1147,7 @@ defmodule Cldr do
   @spec known_gettext_locale_name?(String.t(), backend) :: boolean
   def known_gettext_locale_name?(locale_name, backend \\ default_backend!())
       when is_binary(locale_name) do
-    locale_name in backend.known_gettext_locale_names
+    locale_name in backend.known_gettext_locale_names()
   end
 
   @doc """
@@ -2275,7 +2275,7 @@ defmodule Cldr do
 
   """
   def known_number_system_types(backend \\ default_backend!()) do
-    backend.known_number_system_types
+    backend.known_number_system_types()
   end
 
   @doc """

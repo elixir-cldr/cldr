@@ -224,7 +224,7 @@ defmodule Cldr.Locale do
             va: nil,
             vt: nil
           },
-          private_use: '',
+          private_use: [],
           rbnf_locale_name: :en,
           requested_locale_name: "en-AU",
           script: :Latn,
