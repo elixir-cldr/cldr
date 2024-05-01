@@ -13,7 +13,7 @@ defmodule Cldr.IsoCurrency do
               |> Enum.reject(&is_nil(Map.get(&1, :currency)))
               |> Enum.map(&Map.put(&1, :currency, List.to_atom(Map.get(&1, :currency))))
               |> Enum.map(fn
-                %{subunit: 'N.A.'} = currency ->
+                %{subunit: ~c"N.A."} = currency ->
                   Map.put(currency, :subunit, 0)
 
                 currency ->

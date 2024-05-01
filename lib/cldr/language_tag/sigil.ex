@@ -13,7 +13,7 @@ defmodule Cldr.LanguageTag.Sigil do
   * `locale_name` is either a [BCP 47](https://unicode-org.github.io/cldr/ldml/tr35.html#Identifiers)
   locale name as a string or
 
-  * `locale_name` | `backend` where backend is a backend module name
+  * `locale_name` | `backend` where backend is a backend module name.
 
   ## Options
 
@@ -23,9 +23,9 @@ defmodule Cldr.LanguageTag.Sigil do
 
   ## Returns
 
-  * a `t:Cldr.LanguageTag` struct or
+  * a `t:Cldr.LanguageTag.t/0` struct or
 
-  * raises an exception
+  * raises an exception.
 
   ## Examples
 
@@ -38,7 +38,7 @@ defmodule Cldr.LanguageTag.Sigil do
       #Cldr.LanguageTag<en-US-u-ca-gregory [validated]>
 
   """
-  defmacro sigil_l(locale_name, 'u') do
+  defmacro sigil_l(locale_name, [[?u]]) do
     {:<<>>, _, [locale_name]} = locale_name
 
     case parse_locale(String.split(locale_name, "|")) do
