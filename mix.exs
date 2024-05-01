@@ -1,13 +1,13 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.39.0-dev"
+  @version "2.38.1"
 
   def project do
     [
       app: :ex_cldr,
       version: @version,
-      elixir: "~> 1.12",
+      elixir: "~> 1.11",
       name: "Cldr",
       source_url: "https://github.com/elixir-cldr/cldr",
       docs: docs(),
