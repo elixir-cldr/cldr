@@ -56,6 +56,7 @@ defmodule Cldr.Config do
 
   @app_name Mix.Project.config()[:app]
   @cldr_data_dir [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
+  @external_resource Path.join(@cldr_data_dir, "/cldr/version.json")
 
   @root_locale_name :und
   @default_locale_name :"en-001"
@@ -245,7 +246,7 @@ defmodule Cldr.Config do
 
   """
   def cldr_data_dir do
-    @cldr_data_dir
+    [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
   end
 
   @doc """
@@ -309,9 +310,8 @@ defmodule Cldr.Config do
 
   @doc """
   Returns the version string of the CLDR data repository
-  """
-  @external_resource Path.join(@cldr_data_dir, "/cldr/version.json")
 
+  """
   def version do
     cldr_data_dir()
     |> Path.join("version.json")
