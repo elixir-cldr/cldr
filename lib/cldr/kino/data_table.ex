@@ -1,6 +1,7 @@
 defmodule Cldr.Kino.DataTable do
   @moduledoc false
 
+  @dialyzer {:nowarn_function, [value_to_string: 2]}
   def value_to_string(:__column__, value) when is_atom(value) do
     value
     |> to_string()
