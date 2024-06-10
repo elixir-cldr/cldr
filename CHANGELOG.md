@@ -6,6 +6,10 @@
 
 This is the changelog for Cldr v2.39.0 released on June 11th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Bug Fixes
+
+* Fix dialyzer warnings on Elixir 1.17
+
 ### Enhancements
 
 * Adds `Cldr.Kino.DataTable.value_to_string/2` which can be used to format Kino DataTable cells in an future Kino release. A [fork of Kino](https://github.com/kipcole9/kino) is available for testing.
