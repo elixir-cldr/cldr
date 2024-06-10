@@ -1,0 +1,63 @@
+# Kino.DataTable formatting
+
+```elixir
+Mix.install(
+  [
+    {:kino, path: "/Users/kip/Development/kino", env: :dev},
+    {:ex_cldr, path: "/Users/kip/Development/cldr", override: true},
+    :ex_cldr_dates_times,
+    :jason
+  ],
+  config: [
+    ex_cldr: [default_backend: MyApp.Cldr]
+  ]
+)
+```
+
+## Define a Cldr Backend Module
+
+This livebook uses a Kino DataTable formatter built into `ex_cldr`. As a result we need a Cldr backend module defined. Note that we also need a default locale defined in the configuration above.
+
+```elixir
+defmodule MyApp.Cldr do
+  use Cldr,
+    locales: [:en, :de, :fr],
+    default_locale: :en,
+    providers: [Cldr.Number, Cldr.DateTime, Cldr.Calendar]
+end
+```
+
+## Using a configured Kino DataTable formatter
+
+`Cldr.Kino.DataTable.value_to_string/2` is the same as the default implementation with two changes:
+
+1. The formatter uses the `Cldr.Char` protocol instead of the `String.Chars` protocol. This is implemented in `ex_cldr` libraries for dates, times, numbers, units of measure, locales.
+2. The key `:__column__` is passed when the request is to format a column heading. In the `Cldr.Kino.DataTable.value_to_string/2` implementation, column headings are converted to strings can capitalized.
+
+```elixir
+# Change the locale between :fr and :en and the formatting is different.
+# We use `Cldr.put_default_locale/1` because `Cldr.put_locale/1` sets
+# the locale of the *current* process, and the Kino datatable runs in
+# a different process and we have no place to pass the locale into that
+# process.
+Cldr.put_default_locale(:fr)
+
+data = [
+  %{
+    id: 1,
+    name: "Elixir",
+    website: "https://elixir-lang.org",
+    downloads: 1_000_000.23,
+    first_released: ~D[2010-05-26]
+  },
+  %{
+    id: 2,
+    name: "Erlang",
+    website: "https://www.erlang.org",
+    downloads: 2_000_000.45,
+    first_released: ~D[1980-03-11]
+  }
+]
+
+Kino.DataTable.new(data, formatter: &Cldr.Kino.DataTable.value_to_string/2)
+```
