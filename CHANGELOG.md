@@ -1,6 +1,14 @@
 # Changelog
 
-**Note that `ex_cldr` version 2.33.0 and later are supported on Elixir 1.11 and later only.**
+**Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
+
+## Cldr v2.39.0
+
+This is the changelog for Cldr v2.39.0 released on June 11th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds `Cldr.Kino.DataTable.value_to_string/2` which can be used to format Kino DataTable cells in an future Kino release. A [fork of Kino](https://github.com/kipcole9/kino) is available for testing.
 
 ## Cldr v2.38.1
 
