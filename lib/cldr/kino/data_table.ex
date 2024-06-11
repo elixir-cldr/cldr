@@ -3,10 +3,13 @@ defmodule Cldr.Kino.DataTable do
 
   @dialyzer {:nowarn_function, [format: 2]}
   def format(:__header__, value) when is_atom(value) do
-    value
-    |> to_string()
-    |> String.capitalize()
-    |> String.replace("_", " ")
+    string =
+      value
+      |> to_string()
+      |> String.capitalize()
+      |> String.replace("_", " ")
+
+    {:ok, string}
   end
 
   def format(_key, value) do
