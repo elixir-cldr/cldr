@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.39.1
+
+This is the changelog for Cldr v2.39.1 released on June 11th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.Kino.DataTable.format/2` to reflect the changes requested by the Kino team. See the [PR](https://github.com/livebook-dev/kino/pull/441) for further information.
+
 ## Cldr v2.39.0
 
 This is the changelog for Cldr v2.39.0 released on June 11th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

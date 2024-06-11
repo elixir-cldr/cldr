@@ -60,5 +60,5 @@ data = [
   }
 ]
 
-Kino.DataTable.new(data, formatter: &Cldr.Kino.DataTable.value_to_string/2)
+Kino.DataTable.new(data, formatter: &Cldr.Kino.DataTable.format/2)
 ```
