@@ -2,6 +2,16 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.39.2
+
+This is the changelog for Cldr v2.39.2 released on June 22nd, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.LanguageTag.Sigil.sigil_l/2` which was incorrectly encoding the sigil flags.
+
+* Bump `stream_data` dependency version.
+
 ## Cldr v2.39.1
 
 This is the changelog for Cldr v2.39.1 released on June 11th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

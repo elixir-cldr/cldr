@@ -37,8 +37,16 @@ defmodule Cldr.LanguageTag.Sigil do
       iex> inspect(~l(en-US-u-ca-gregory|MyApp.Cldr))
       "MyApp.Cldr.Locale.new!(\\"en-US-u-ca-gregory\\")"
 
+      iex> import Cldr.LanguageTag.Sigil
+      iex> inspect(~l(en))
+      "TestBackend.Cldr.Locale.new!(\\"en-US\\")"
+
+      iex> import Cldr.LanguageTag.Sigil
+      iex> inspect(~l(en)u)
+      "TestBackend.Cldr.Locale.new!(\\"en\\")"
+
   """
-  defmacro sigil_l(locale_name, [[?u]]) do
+  defmacro sigil_l(locale_name, [?u]) do
     {:<<>>, _, [locale_name]} = locale_name
 
     case parse_locale(String.split(locale_name, "|")) do
