@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.40.0
+
+This is the changelog for Cldr v2.40.0 released on ______, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Support OTP's `:json` module.  `ex_cldr` uses json formatted locale data and supports configuring a `json` library to decode it. Where no library is configured `ex_cldr` will attempt to identify one. This release adds auto-configuring OTP 27's `:json` module through a proxy implemented in `Cldr.Json` (which is part of `cldr_utils`).
+
 ## Cldr v2.39.2
 
 This is the changelog for Cldr v2.39.2 released on June 22nd, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

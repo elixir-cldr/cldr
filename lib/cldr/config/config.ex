@@ -141,8 +141,9 @@ defmodule Cldr.Config do
 
   poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
+  json = if(Code.ensure_loaded?(Cldr.Json), do: Cldr.Json, else: nil)
   cldr_json = Application.compile_env(:ex_cldr, :json_library)
-  @json_lib cldr_json || jason || poison
+  @json_lib cldr_json || json || jason || poison
 
   cond do
     Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) ->
@@ -175,8 +176,8 @@ defmodule Cldr.Config do
             json_library: Jason
 
       If no configuration is provided, `ex_cldr` will
-      attempt to detect detect if Jason or Poison are
-      configured.
+      attempt to detect detect if OTP's json module is
+      available or if Jason or Poison are configured.
       """
   end
 

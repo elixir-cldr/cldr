@@ -12,10 +12,10 @@
 > does not attempt to read the configuration of either Phoenix of Ecto.
 >
 > Specifing the `:json_library` parameter under the `:ex_cldr`
-> configuration key in `config.exs` is recommended however the availability 
-> of `Jason` or `Poison` will still be automatically detected and configured 
+> configuration key in `config.exs` is recommended however the availability
+> of `Jason` or `Poison` will still be automatically detected and configured
 > if the `:json_library` key is not set.
-  
+
 ## Introduction
 
 `ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 28th 2023 and `ex_cldr` Version 2.37.0, `ex_cldr` is based upon [CLDR version 43.0](http://cldr.unicode.org/index/downloads/cldr-43).
@@ -39,7 +39,7 @@ end
 ```
 
 This strategy means that different configurations can be defined and it also
-means that one `Cldr` implementation won't interfere with implementations in other,
+means that one `ex_cldr` implementation won't interfere with implementations in other,
 potentially dependent, applications.
 
 The functions you are mostly likely to use are:
@@ -67,11 +67,11 @@ Use this library if you need to:
 
 ## Elixir Version Requirements
 
-* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.11 or later.
+* [ex_cldr](https://hex.pm/packages/ex_cldr) requires Elixir 1.12 or later.
 
 ## Installation
 
-Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix` project:
+Add `ex_cldr` and the JSON library of your choice as a dependencies to your `mix` project. If running on OTP 27 or later, this step is not required since `ex_cldr` will detect and use the built-in `:json` module.
 
 ```elixir
 defp deps do
@@ -99,7 +99,7 @@ mix deps.compile
 * Plugs for setting the locale from an HTTP request: [ex_cldr_plugs](https://hex.pm/packages/ex_cldr_plugs)
 * Number formatting: [ex_cldr_numbers](https://hex.pm/packages/ex_cldr_numbers)
 * List formatting: [ex_cldr_lists](https://hex.pm/packages/ex_cldr_lists)
-* Unit formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
+* Unit or measure formatting: [ex_cldr_units](https://hex.pm/packages/ex_cldr_units)
 * Date/Time/DateTime formatting: [ex_cldr_dates_times](https://hex.pm/packages/ex_cldr_dates_times)
 * Route localization for Phoenix: [ex_cldr_routes](https://hex.pm/packages/ex_cldr_routes)
 * Locale name localisation: [ex_cldr_locale_display](https://hex.pm/packages/ex_cldr_locale_display)
@@ -109,6 +109,7 @@ mix deps.compile
 * Printf-like formatting: [ex_cldr_print](https://hex.pm/packages/ex_cldr_print)
 * Collation: [ex_cldr_collation](https://hex.pm/packages/ex_cldr_collation)
 * ICU Message formatting: [ex_cldr_messages](https://hex.pm/packages/ex_cldr_messages)
+* Person name formatting: [ex_cldr_person_names](https://hex.pm/packages/ex_cldr_person_names)
 * Territories localization and information: [ex_cldr_territories](https://hex.pm/packages/ex_cldr_territories) by @Schultzer
 * Languages localization: [ex_cldr_languages](https://hex.pm/packages/ex_cldr_languages) by @lostkobrakai
 
@@ -116,9 +117,9 @@ Each of these packages includes `ex_cldr` as a dependency so configuring any of 
 
 ## Configuration
 
-`Cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `Cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 541 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `Cldr` requires that you configure the locales you want to use.
+`ex_cldr` attempts to maximise runtime performance at the expense of additional compile time.  Where possible `ex_cldr` will create functions to encapsulate data at compile time.  To perform these optimizations for all 541 locales known to Cldr wouldn't be an effective use of your time or your computer's.  Therefore `ex_cldr` requires that you configure the locales you want to use.
 
-The preferred way to configure `Cldr` is to define the configuration in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.
+`ex_cldr` is configured in your backend module. This removes any dependency on your `mix.exs` and therefore simplifies deployment as a release.
 
 ### Backend Module Configuration
 
@@ -137,10 +138,8 @@ The preferred way to configure `Cldr` is to define the configuration in your bac
 > of these additional modules is determined by the modules
 > configured under the `:providers` option to `use Cldr`.
 >
-> It is not recommended that a module that invoke `use Cldr`
+> It is not recommended that a module that invokes `use Cldr`
 > define any other functions.
-
-The preferred configuration method is to define the configuration in the backend module.  Using the backend configuration in `config.exs` is discouraged and will result in a warning at compile time. The configuration keys are the same so the preferred way to achieve the same configuration as defined in the global example is:
 
 ```elixir
 defmodule MyApp.Cldr do
@@ -161,7 +160,7 @@ end
 
 ### Otp App Configuration
 
-In the backend configuration example above the `:otp_app` key has been defined.  This means that `Cldr` will look for additional configuration, defined under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
+In the backend configuration example above the `:otp_app` key has been defined.  This means that `ex_cldr` will look for additional configuration, defined under the key `:my_app` with the sub-key `MyApp.Cldr`.  For example:
 
 ```elixir
 # cldr.ex
@@ -196,7 +195,7 @@ Multiple backends can be configured under a single `:otp_app` if required.
 
 ### Global configuration.
 
-In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:default_locale`, `:default_backend`, `:cacertfile`, `:data_dir`, `:force_locale_download` are considered valid.  Other configuration keys may be used to aid migration from `Cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
+In `config.exs` a global configuration can be defined under the `:ex_cldr` key.  Although any valid configuration keys can be used here, only the keys `:json_library`, `:default_locale`, `:default_backend`, `:cacertfile`, `:data_dir`, `:force_locale_download` are considered valid.  Other configuration keys may be used to aid migration from `ex_cldr` version 1.x but a deprecation message will be printed during compilation.  Here's an example of global configuration:
 
 ```elixir
 config :ex_cldr,
@@ -222,7 +221,7 @@ When building the consolidated configuration the following priority applies:
 
 ### Backend Configuration Keys
 
-The configuration keys available for `Cldr` are:
+The configuration keys available for `ex_cldr` are:
 
  * `default_locale` specifies the default locale to be used for this backend.  The default locale in case no other locale has been set is `"en-001"`.  The default locale calculated as follows:
 
@@ -230,7 +229,7 @@ The configuration keys available for `Cldr` are:
      * If no `:default_locale` key, then a configured `Gettext` default locale for this backend is chosen
      * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, use `Cldr.default_locale/0` which returns either the default locale configurated in `mix.exs` under the `ex_cldr` key or then the system default locale will is currently `en-001`
 
- * `locales`: Defines what locales will be configured in `Cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenience it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
+ * `locales`: Defines what locales will be configured in `ex_cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenience it is possible to use wildcard matching of locales which is particulalry helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
 ```elixir
 use Cldr,
@@ -242,7 +241,7 @@ use Cldr,
 
  * `:add_fallback_locales` is a boolean key which when `true` results in the fallback locales being added for each of the configured locales.  The default is `false`. The reason to set this option to `true` is that some data such as rules based number formats and subdivision data are inherited from their language roots. For example, the locale `en-001` is inherited from the locale `en`. Locale `en-001` does not have any rules based number formats or subdivision data defined for it. However locale `en` does. Including the fallback locales maximises the opportunity to resolve localised data.
 
- * `:gettext`: specifies the name of a Gettext module that informs `Cldr` to use that module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `Cldr` uses the Unicode format (a '-' as the subtag separator), `Cldr` will transliterate locale names from `Gettext` into the `Cldr` canonical form. For example:
+ * `:gettext`: specifies the name of a Gettext module that informs `ex_cldr` to use that module as an additional source of locales you want to configure.  Since `Gettext` uses the Posix locale name format (locales with an '\_' in them) and `ex_cldr` uses the Unicode format (a '-' as the subtag separator), `ex_cldr` will transliterate locale names from `Gettext` into the `ex_cldr` canonical form. For example:
 
  ```elixir
  use Cldr,
@@ -263,7 +262,7 @@ use Cldr,
 
  * `:default_currency_format` determines whether `Cldr.Number.to_string/2` will use `:currency` or `:accounting` if no format is specified but a currency is. The default is `nil` which means that the format will be derived from the locale.
 
- * `:providers`: a list of modules that provide `Cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
+ * `:providers`: a list of modules that provide `ex_cldr` functionality to be compiled into the backend module. See the [providers](#providers) section below.
 
  * `:generate_docs` defines whether or not to generate documentation for the modules built as part of the backend.  Since these modules represent the public API for `ex_cldr`, the default is `true`.  Setting this key to `false` (the atom `false`, not a *falsy* value) will prevent the generation of docs for this backend.
 
@@ -284,7 +283,7 @@ end
 
 ### Providers
 
-The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not all capabilities are required by all applications.  Hence `Cldr` has additional optional functionality that can be provided through additional `hex` packages. In order to support compile-time additions to a configured `backend`, any package can define a provider that will be called at compile time.
+The data maintained by [CLDR](https://cldr.unicode.org) is quite large and not all capabilities are required by all applications.  Hence `ex_cldr` has additional optional functionality that can be provided through additional `hex` packages. In order to support compile-time additions to a configured `backend`, any package can define a provider that will be called at compile time.
 
 The currently known providers and their `hex` package names are:
 
@@ -313,7 +312,7 @@ defmodule MyApp.Cldr do
     providers: [Cldr.Number, Cldr.List]
 end
 ```
-**If :providers is `nil` (the default), `Cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.  If you don't wish to invoke any providers, use the empty list `[]`.**
+**If :providers is `nil` (the default), `ex_cldr` will attempt to configure all of the providers described above if they have been installed as `deps`.  If you don't wish to invoke any providers, use the empty list `[]`.**
 
 ## Migrating from Cldr 1.x
 
@@ -324,7 +323,7 @@ end
 
 ## Downloading Locales
 
-`Cldr` can be installed from either [github](https://github.com/elixir-cldr/cldr)
+`ex_cldr` can be installed from either [github](https://github.com/elixir-cldr/cldr)
 or from [hex](https://hex.pm/packages/ex_cldr).
 
 * If installed from github then all 571 locales are installed when the repo is cloned into your application deps.
@@ -540,7 +539,7 @@ Other libraries in the family will progressively implement other extension keys.
 ### Notes
 
 * A language code is an ISO-3166 language code.
-* Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `Cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
+* Potentially one or more modifiers separated by `-` (dash), not a `_`. (underscore).  If you configure a `Gettext` module then `ex_cldr` will transliterate `Gettext`'s `_` into `-` for compatibility.
 * Typically the modifier is a territory code.  This is commonly a two-letter uppercase combination.  For example `pt-PT` is the locale referring to Portuguese as used in Portugal.
 * In `ex_cldr` a locale name is always a `binary` and never an `atom`.  Internally a locale is parsed and stored as a `t:Cldr.LanguageTag` struct.
 * The locales known to `ex_cldr` can be retrieved by `Cldr.known_locale_names/1` to get the locales known to this configuration of `ex_cldr` and `Cldr.all_locale_names/0` to get the locales available in the CLDR data repository.
@@ -551,7 +550,7 @@ See the file `DEVELOPMENT.md` in the github repository.
 
 ### Testing
 
-Tests cover the full ~700 locales defined in CLDR. Since `Cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
+Tests cover the full ~700 locales defined in CLDR. Since `ex_cldr` attempts to maximize the work done at compile time in order to minimize runtime execution, the compilation phase for tests is several minutes.
 
 Tests are run on Elixir 1.11 and later.  `ex_cldr` is not supported on Elixir versions before 1.11.
 
