@@ -256,7 +256,7 @@ defmodule Cldr.Test do
   end
 
   test "that we get the correct default json library" do
-    assert Cldr.Config.json_library() == Jason
+    assert Cldr.Config.json_library() in [Cldr.Json, Jason]
   end
 
   test "that configs merge correctly" do

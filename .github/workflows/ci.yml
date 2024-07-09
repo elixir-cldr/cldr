@@ -19,29 +19,14 @@ permissions:
 
 jobs:
   test:
-    # Set up a Postgres DB service. By default, Phoenix applications
-    # use Postgres. This creates a database for running tests.
-    # Additional services can be defined here if required.
-    # services:
-    #   db:
-    #     image: postgres:12
-    #     ports: ['5432:5432']
-    #     env:
-    #       POSTGRES_PASSWORD: postgres
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-
     runs-on: ubuntu-latest
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
       # Specify the OTP and Elixir versions to use when building
       # and running the workflow steps.
       matrix:
-        otp: ['25.3.2']       # Define the OTP version [required]
-        elixir: ['1.14.4']    # Define the elixir version [required]
+        otp: ['26.2.5.1']       # Define the OTP version [required]
+        elixir: ['1.16.2']    # Define the elixir version [required]
     steps:
     # Step: Setup Elixir + Erlang image as the base.
     - name: Set up Elixir

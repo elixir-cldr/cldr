@@ -140,11 +140,11 @@ defmodule Cldr.Config do
   end
 
   # This wrapper module doesn't produce compatible ressults - yet!
-  # json = if(Code.ensure_loaded?(Cldr.Json), do: Cldr.Json, else: nil)
+  json = if(Code.ensure_loaded?(Cldr.Json), do: Cldr.Json, else: nil)
   poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
   cldr_json = Application.compile_env(:ex_cldr, :json_library)
-  @json_lib cldr_json || jason || poison
+  @json_lib cldr_json || json || jason || poison
 
   cond do
     Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) ->
