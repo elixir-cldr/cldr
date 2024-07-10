@@ -38,7 +38,7 @@ This is the changelog for Cldr v2.39.0 released on June 11th, 2024.  For older c
 
 ### Enhancements
 
-* Adds `Cldr.Kino.DataTable.value_to_string/2` which can be used to format Kino DataTable cells in an future Kino release. A [fork of Kino](https://github.com/kipcole9/kino) is available for testing.
+* Adds `Cldr.Kino.DataTable.value_to_string/2` which can be used to format Kino DataTable cells in a future Kino release. A [fork of Kino](https://github.com/kipcole9/kino) is available for testing.
 
 ## Cldr v2.38.1
 
