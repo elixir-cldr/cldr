@@ -4,7 +4,11 @@
 
 ## Cldr v2.40.0
 
-This is the changelog for Cldr v2.40.0 released on ______, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.40.0 released on July 26th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix parsing of date time avaialable formats and interval formats when building the locale json files. Turns out some locales have formats that have variants and these need to be specifically parsed and grouped.
 
 ### Enhancements
 
