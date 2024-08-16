@@ -1279,7 +1279,7 @@ defmodule Cldr do
       "「Quoted String」"
 
   """
-  @spec quote(String.t(), backend(), Keyword.t()) :: String.t()
+  @spec quote(String.t(), backend(), Keyword.t()) :: String.t() | {:error, {module, String.t()}}
   def quote(string, backend \\ default_backend!(), options \\ [])
 
   def quote(string, options, []) when is_binary(string) and is_list(options) do
@@ -1336,7 +1336,8 @@ defmodule Cldr do
       "And furthermore … there is much to be done"
 
   """
-  @spec ellipsis(String.t() | list(String.t()), backend(), Keyword.t()) :: String.t()
+  @spec ellipsis(String.t() | list(String.t()), backend(), Keyword.t()) ::
+          String.t() | {:error, {module, String.t()}}
   def ellipsis(string, backend \\ default_backend!(), options \\ [])
 
   def ellipsis(string, options, []) when is_list(options) do
@@ -2430,8 +2431,9 @@ defmodule Cldr do
     |> String.downcase()
     |> String.to_existing_atom()
     |> validate_measurement_system()
-  rescue ArgumentError ->
-    {:error, unknown_measurement_system_error(system)}
+  rescue
+    ArgumentError ->
+      {:error, unknown_measurement_system_error(system)}
   end
 
   def validate_measurement_system(system) when system in @measurement_systems do

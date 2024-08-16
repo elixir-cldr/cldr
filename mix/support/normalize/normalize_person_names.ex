@@ -13,7 +13,8 @@ defmodule Cldr.Normalize.PersonName do
       |> Map.delete("sample_name")
       |> Cldr.Map.deep_map(fn
         {k, v} ->
-          if k != "formality" && String.starts_with?(k, "formal") || String.starts_with?(k, "informal") do
+          if (k != "formality" && String.starts_with?(k, "formal")) ||
+               String.starts_with?(k, "informal") do
             {String.split(k, "_"), v}
           else
             {String.to_atom(k), v}
@@ -24,16 +25,21 @@ defmodule Cldr.Normalize.PersonName do
       end)
       |> Cldr.Map.deep_map(fn
         {k, v} when k in [:addressing, :monogram, :referring] ->
-          formats = Enum.group_by(v, fn {key, _value} -> hd(key) end, fn {_key, value} -> value end)
+          formats =
+            Enum.group_by(v, fn {key, _value} -> hd(key) end, fn {_key, value} -> value end)
+
           {k, formats}
+
         other ->
           other
       end)
       |> Cldr.Map.deep_map(fn
         {k, v} when k in ["formal", "informal"] ->
           {String.to_atom(k), Enum.sort(v)}
+
         {k, v} when k in [:formality, :length] ->
           {k, String.to_atom(v)}
+
         other ->
           other
       end)

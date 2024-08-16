@@ -880,7 +880,14 @@ defmodule Cldr.Consolidate do
         special: ~x"./@special"s
       )
       |> Enum.map(fn
-        %{source: source, base_unit: target, special: "", offset: offset, factor: factor, systems: systems} ->
+        %{
+          source: source,
+          base_unit: target,
+          special: "",
+          offset: offset,
+          factor: factor,
+          systems: systems
+        } ->
           {underscore(source),
            %{
              base_unit: underscore(target),
@@ -888,6 +895,7 @@ defmodule Cldr.Consolidate do
              offset: Parser.parse(offset, 0) |> Expression.run(constants),
              systems: Parser.systems(systems)
            }}
+
         %{source: source, base_unit: target, special: special, systems: systems} ->
           {underscore(source),
            %{

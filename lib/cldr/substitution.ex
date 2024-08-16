@@ -29,7 +29,7 @@ defmodule Cldr.Substitution do
   of templates that simplify and speed up parameter substitution at runtime.
 
   """
-  @spec parse(String.t()) :: [String.t() | integer, ...]
+  @spec parse(String.t()) :: [String.t() | integer, ...] | {:error, String.t()}
   def parse("") do
     []
   end
@@ -70,7 +70,7 @@ defmodule Cldr.Substitution do
   def substitute(item, [0]) do
     [item]
   end
-  
+
   def substitute([item], [0]) do
     [item]
   end

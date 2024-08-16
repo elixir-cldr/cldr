@@ -122,12 +122,23 @@ defmodule Cldr.Normalize.DateTime do
       end)
       |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
       |> Enum.map(fn
-        {key, [item]} -> {key, item}
-        {key, [format, %{ascii: ascii_format}]} -> {key, %{unicode: format, ascii: ascii_format}}
-        {key, [%{ascii: ascii_format}, format]} -> {key, %{unicode: format, ascii: ascii_format}}
-        {key, [format, %{variant: variant_format}]} -> {key, %{default: format, variant: variant_format}}
-        {key, [%{variant: variant_format}, format]} -> {key, %{default: format, variant: variant_format}}
-        {key, list} when is_list(list) -> {key, Cldr.Map.merge_map_list(list)}
+        {key, [item]} ->
+          {key, item}
+
+        {key, [format, %{ascii: ascii_format}]} ->
+          {key, %{unicode: format, ascii: ascii_format}}
+
+        {key, [%{ascii: ascii_format}, format]} ->
+          {key, %{unicode: format, ascii: ascii_format}}
+
+        {key, [format, %{variant: variant_format}]} ->
+          {key, %{default: format, variant: variant_format}}
+
+        {key, [%{variant: variant_format}, format]} ->
+          {key, %{default: format, variant: variant_format}}
+
+        {key, list} when is_list(list) ->
+          {key, Cldr.Map.merge_map_list(list)}
       end)
       |> Map.new()
 
@@ -138,8 +149,8 @@ defmodule Cldr.Normalize.DateTime do
     formats =
       formats
       |> Enum.map(fn {interval_name, interval_formats} ->
-          interval_formats = map_interval_formats(interval_formats)
-          {interval_name, interval_formats}
+        interval_formats = map_interval_formats(interval_formats)
+        {interval_name, interval_formats}
       end)
       |> Map.new()
 
@@ -156,10 +167,17 @@ defmodule Cldr.Normalize.DateTime do
     end)
     |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
     |> Enum.map(fn
-      {key, [item]} -> {key, item}
-      {key, [format, %{variant: variant_format}]} -> {key, %{default: format, variant: variant_format}}
-      {key, [%{variant: variant_format}, format]} -> {key, %{default: format, variant: variant_format}}
-      {key, list} when is_list(list) -> {key, Cldr.Map.merge_map_list(list)}
+      {key, [item]} ->
+        {key, item}
+
+      {key, [format, %{variant: variant_format}]} ->
+        {key, %{default: format, variant: variant_format}}
+
+      {key, [%{variant: variant_format}, format]} ->
+        {key, %{default: format, variant: variant_format}}
+
+      {key, list} when is_list(list) ->
+        {key, Cldr.Map.merge_map_list(list)}
     end)
     |> Map.new()
   end

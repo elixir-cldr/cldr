@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.40.1
+
+This is the changelog for Cldr v2.40.1 released on August 16th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix specs to suport dialyzer flags `:error_handling, :unknown, :underspecs, :extra_return, :missing_return`
+
 ## Cldr v2.40.0
 
 This is the changelog for Cldr v2.40.0 released on July 26th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

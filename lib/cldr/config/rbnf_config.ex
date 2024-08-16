@@ -122,7 +122,7 @@ defmodule Cldr.Rbnf.Config do
   # a valid RBNF locale
 
   def for_locale(locale_name) when Cldr.is_locale_name(locale_name) do
-   if File.exists?(locale_path(locale_name)) do
+    if File.exists?(locale_path(locale_name)) do
       rules =
         locale_name
         |> locale_path

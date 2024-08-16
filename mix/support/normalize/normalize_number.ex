@@ -101,7 +101,7 @@ defmodule Cldr.Normalize.Number do
     |> Enum.uniq()
   end
 
-  @spec normalize_short_format(%{}) :: list()
+  @spec normalize_short_format(%{}) :: list() | nil
   def normalize_short_format(nil) do
     nil
   end

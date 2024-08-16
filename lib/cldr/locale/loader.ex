@@ -121,7 +121,7 @@ defmodule Cldr.Locale.Loader do
                          "locale_display_names",
                          "languages",
                          "lenient_parse",
-                         "dates",
+                         "dates"
                        ]
 
   @doc false
@@ -200,7 +200,6 @@ defmodule Cldr.Locale.Loader do
 
     Map.put(content, :dates, dates)
   end
-
 
   @doc false
   def underscore(string) when is_binary(string) do

@@ -12,7 +12,7 @@
 > does not attempt to read the configuration of either Phoenix of Ecto.
 >
 > Specifing the `:json_library` parameter under the `:ex_cldr`
-> configuration key in `config.exs` is recommended however when executing on OTP
+> configuration key in `config.exs` is recommended when executing on OTP
 > versions below OTP 27 but the availability of `Jason` or `Poison` will still be
 > automatically detected and configured if the `:json_library` key is not set.
 
