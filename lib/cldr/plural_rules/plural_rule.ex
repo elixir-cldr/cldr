@@ -448,7 +448,7 @@ defmodule Cldr.Number.PluralRule do
               Math.number_or_decimal(),
               Locale.locale_name() | LanguageTag.t(),
               atom() | pos_integer()
-            ) :: Cldr.Number.PluralRule.plural_type()
+            ) :: Cldr.Number.PluralRule.plural_type() | {:error, {module, String.t()}}
 
       def plural_rule(number, locale, rounding \\ Math.default_rounding())
 
@@ -655,7 +655,7 @@ defmodule Cldr.Number.PluralRule do
                 first :: Cldr.Number.PluralRule.plural_type(),
                 last :: Cldr.Number.PluralRule.plural_type(),
                 locale :: Cldr.Locale.locale_name() | Cldr.LanguageTag.t()
-              ) :: Cldr.Number.PluralRule.plural_type()
+              ) :: Cldr.Number.PluralRule.plural_type() | {:error, {module, String.t()}}
 
         def plural_rule(first, last, %Cldr.LanguageTag{language: language}) do
           plural_rule(first, last, language)

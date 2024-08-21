@@ -44,9 +44,13 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.deep_map(&group_region_formats/1,
         only: "time_zone_names"
       )
-      |> Cldr.Map.deep_map(&group_formats/1,
+      |> Cldr.Map.deep_map(&group_available_formats/1,
         filter: "date_time_formats",
         only: "available_formats"
+      )
+      |> Cldr.Map.deep_map(&group_interval_formats/1,
+        filter: "date_time_formats",
+        only: "interval_formats"
       )
 
     Map.put(content, "dates", dates)
@@ -93,9 +97,9 @@ defmodule Cldr.Normalize.DateTime do
   end
 
   # Some of these formats may have _count_ structures so we need to
-  # group these. Assumes that a format is either -count- or -alt-ascii
-  # but not boht.
-  defp group_formats({"available_formats" = key, formats}) do
+  # group these. Assumes that a format is either -count-, -alt-variant
+  # or -alt-ascii but not both.
+  defp group_available_formats({"available_formats" = key, formats}) do
     formats =
       formats
       |> Enum.map(fn {name, format} ->
@@ -110,15 +114,75 @@ defmodule Cldr.Normalize.DateTime do
           [ascii_format, ""] -> {ascii_format, %{ascii: format}}
         end
       end)
+      |> Enum.map(fn {name, format} ->
+        case String.split(name, "-alt-variant") do
+          [_no_count] -> {name, format}
+          [variant_format, ""] -> {variant_format, %{variant: format}}
+        end
+      end)
       |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
       |> Enum.map(fn
-        {key, [item]} -> {key, item}
-        {key, [format, %{ascii: ascii_format}]} -> {key, %{unicode: format, ascii: ascii_format}}
-        {key, [%{ascii: ascii_format}, format]} -> {key, %{unicode: format, ascii: ascii_format}}
-        {key, list} when is_list(list) -> {key, Cldr.Map.merge_map_list(list)}
+        {key, [item]} ->
+          {key, item}
+
+        {key, [format, %{ascii: ascii_format}]} ->
+          {key, %{unicode: format, ascii: ascii_format}}
+
+        {key, [%{ascii: ascii_format}, format]} ->
+          {key, %{unicode: format, ascii: ascii_format}}
+
+        {key, [format, %{variant: variant_format}]} ->
+          {key, %{default: format, variant: variant_format}}
+
+        {key, [%{variant: variant_format}, format]} ->
+          {key, %{default: format, variant: variant_format}}
+
+        {key, list} when is_list(list) ->
+          {key, Cldr.Map.merge_map_list(list)}
       end)
       |> Map.new()
 
     {key, formats}
+  end
+
+  defp group_interval_formats({"interval_formats" = key, formats}) do
+    formats =
+      formats
+      |> Enum.map(fn {interval_name, interval_formats} ->
+        interval_formats = map_interval_formats(interval_formats)
+        {interval_name, interval_formats}
+      end)
+      |> Map.new()
+
+    {key, formats}
+  end
+
+  defp map_interval_formats(interval_formats) when is_map(interval_formats) do
+    Enum.map(interval_formats, fn
+      {name, format} ->
+        case String.split(name, "-alt-variant") do
+          [_no_count] -> {name, format}
+          [variant_format, ""] -> {variant_format, %{variant: format}}
+        end
+    end)
+    |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
+    |> Enum.map(fn
+      {key, [item]} ->
+        {key, item}
+
+      {key, [format, %{variant: variant_format}]} ->
+        {key, %{default: format, variant: variant_format}}
+
+      {key, [%{variant: variant_format}, format]} ->
+        {key, %{default: format, variant: variant_format}}
+
+      {key, list} when is_list(list) ->
+        {key, Cldr.Map.merge_map_list(list)}
+    end)
+    |> Map.new()
+  end
+
+  defp map_interval_formats(interval_formats) do
+    interval_formats
   end
 end

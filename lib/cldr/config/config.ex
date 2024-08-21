@@ -1513,7 +1513,7 @@ defmodule Cldr.Config do
       true
 
   """
-  @spec gettext_configured?(t()) :: boolean
+  @spec gettext_configured?(t()) :: boolean | nil
   def gettext_configured?(config) do
     Application.ensure_all_started(:gettext)
     gettext_module = gettext(config)

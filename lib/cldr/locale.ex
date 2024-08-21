@@ -1074,7 +1074,8 @@ defmodule Cldr.Locale do
      however it is correctly parsed to support future use.
 
   """
-  @spec territory_from_locale(LanguageTag.t() | locale_name() | String.t()) :: territory_code()
+  @spec territory_from_locale(LanguageTag.t() | locale_name() | String.t()) ::
+          territory_code() | {:error, {module, String.t()}}
 
   @doc since: "2.18.2"
 
@@ -1866,7 +1867,7 @@ defmodule Cldr.Locale do
     end
   end
 
-  @spec gettext_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
+  @spec gettext_locale_name(Cldr.LanguageTag.t()) :: String.t() | nil
   defp gettext_locale_name(%LanguageTag{} = language_tag) do
     language_tag
     |> first_match(&known_gettext_locale_name(&1, &2, language_tag.backend))

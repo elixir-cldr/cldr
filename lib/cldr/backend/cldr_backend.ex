@@ -70,7 +70,7 @@ defmodule Cldr.Backend do
           :"001"
 
       """
-      @spec default_territory() :: Locale.territory_code()
+      @spec default_territory() :: Locale.territory_code() | {:error, {module, String.t()}}
       def default_territory do
         Cldr.Locale.territory_from_locale(@default_locale)
       end
@@ -474,7 +474,7 @@ defmodule Cldr.Backend do
           "「Quoted String」"
 
       """
-      @spec quote(String.t(), Keyword.t()) :: String.t()
+      @spec quote(String.t(), Keyword.t()) :: String.t() | {:error, {module, String.t()}}
 
       def quote(string, options \\ []) when is_binary(string) and is_list(options) do
         locale = options[:locale] || Cldr.get_locale()
@@ -530,7 +530,8 @@ defmodule Cldr.Backend do
           "And furthermore … there is much to be done"
 
       """
-      @spec ellipsis(String.t() | list(String.t()), Keyword.t()) :: String.t()
+      @spec ellipsis(String.t() | list(String.t()), Keyword.t()) ::
+              String.t() | {:error, {module, String.t()}}
 
       def ellipsis(string, options \\ []) when is_list(options) do
         locale = options[:locale] || Cldr.get_locale()

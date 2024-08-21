@@ -47,7 +47,7 @@ defmodule Cldr.Locale.Backend do
 
         """
         @spec territory_from_locale(LanguageTag.t() | Locale.locale_name()) ::
-                Locale.territory_code()
+                Locale.territory_code() | {:error, {module, String.t()}}
 
         @doc since: "2.18.2"
 
