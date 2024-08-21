@@ -3,7 +3,7 @@ defmodule TestGettext.Gettext do
   Implements a Gettext-compatible module but using Cldr locales.  Its for
   testing only.
   """
-  use Gettext,
+  use Gettext.Backend,
     otp_app: Cldr.Config.app_name(),
     priv: "priv/gettext_test"
 end

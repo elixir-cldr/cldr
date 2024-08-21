@@ -27,7 +27,7 @@ defmodule Cldr.Gettext.Test do
         "gsw_CH" but not "gsw" and Gettext forwards plurals to the base language).
 
         """
-        use Gettext,
+        use Gettext.Backend,
           otp_app: Cldr.Config.app_name(),
           priv: "priv/gettext_unknown"
       end

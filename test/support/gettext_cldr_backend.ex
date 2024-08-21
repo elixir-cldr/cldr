@@ -5,7 +5,7 @@ defmodule TestGettext.GettextWithCldrPlural do
   """
   require TestBackend.Gettext.Plural
 
-  use Gettext,
+  use Gettext.Backend,
     otp_app: Cldr.Config.app_name(),
     plural_forms: TestBackend.Gettext.Plural,
     priv: "priv/gettext_test"
