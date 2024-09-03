@@ -734,9 +734,10 @@ defmodule Cldr.Config do
   def unicode_script_to_subtag_mapping do
     Path.join(cldr_data_dir(), @script_metadata_path)
     |> File.read!()
+    |> String.trim()
     |> String.split("\n")
-    |> tl
-    |> tl
+    |> tl()
+    |> tl()
     |> Enum.map(fn line ->
       [_number, name, code | _rest] = String.split(line, ",")
 
@@ -980,7 +981,7 @@ defmodule Cldr.Config do
        :UZS, :VEB, :VED, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA,
        :XBB, :XBC, :XBD, :XCD, :XCG, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT,
        :XRE, :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR,
-       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
+       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWG, :ZWL, :ZWR]
 
   """
   def known_currencies do
@@ -999,14 +1000,15 @@ defmodule Cldr.Config do
 
       iex> Cldr.Config.known_number_systems()
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
-       :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
-       :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
-       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :kawi, :khmr, :knda, :lana, :lanatham,
-       :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
-       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :nagm,
-       :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
-       :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :tnsa, :vaii, :wara, :wcho]
+       :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :gara, :geor, :gong,
+       :gonm, :grek, :greklow, :gujr, :gukh, :guru, :hanidays, :hanidec, :hans,
+       :hansfin, :hant, :hantfin, :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin,
+       :jpanyear, :kali, :kawi, :khmr, :knda, :krai, :lana, :lanatham, :laoo, :latn,
+       :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans, :mlym,
+       :modi, :mong, :mroo, :mtei, :mymr, :mymrepka, :mymrpao, :mymrshan, :mymrtlng,
+       :nagm, :newa, :nkoo, :olck, :onao, :orya, :osma, :outlined, :rohg, :roman,
+       :romanlow, :saur, :segment, :shrd, :sind, :sinh, :sora, :sund, :sunu, :takr,
+       :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :vaii, :wara, :wcho]
 
   """
   def known_number_systems do
@@ -1736,29 +1738,29 @@ defmodule Cldr.Config do
       iex> Cldr.Config.territories()[:GB]
       %{
         currency: [GBP: %{from: ~D[1694-07-27]}],
-        gdp: 2925000000000,
         language_population: %{
           "ar" => %{population_percent: 0.3},
           "bn" => %{population_percent: 0.4},
-          "cy" => %{official_status: "official_regional", population_percent: 1.3},
+          "cy" => %{population_percent: 1.3, official_status: "official_regional"},
           "de" => %{population_percent: 9},
-          "en" => %{official_status: "official", population_percent: 98},
+          "en" => %{population_percent: 98, official_status: "official"},
           "en-Shaw" => %{population_percent: 0},
           "es" => %{population_percent: 8},
           "fr" => %{population_percent: 23},
-          "ga" => %{official_status: "official_regional", population_percent: 0.15},
+          "ga" => %{population_percent: 0.15, official_status: "official_regional"},
           "gd" => %{
-            official_status: "official_regional",
             population_percent: 0.11,
+            official_status: "official_regional",
             writing_percent: 5
           },
           "gu" => %{population_percent: 2.9},
           "it" => %{population_percent: 0.2},
-          "kw" => %{population_percent: 0.003},
+          "kw" => %{population_percent: 0.0029},
           "lt" => %{population_percent: 0.2},
           "pa" => %{population_percent: 3.6},
           "pl" => %{population_percent: 4},
           "pt" => %{population_percent: 0.2},
+          "ro" => %{population_percent: 0.8},
           "sco" => %{population_percent: 2.5, writing_percent: 5},
           "so" => %{population_percent: 0.2},
           "ta" => %{population_percent: 3.2},
@@ -1766,13 +1768,14 @@ defmodule Cldr.Config do
           "ur" => %{population_percent: 3.5},
           "zh-Hant" => %{population_percent: 0.3}
         },
-        literacy_percent: 99,
         measurement_system: %{
           default: :uksystem,
           paper_size: :a4,
           temperature: :uksystem
         },
-        population: 65761100
+        population: 68459100,
+        gdp: 3700000000000,
+        literacy_percent: 99
       }
 
   """
@@ -1857,20 +1860,20 @@ defmodule Cldr.Config do
 
   ## Example
 
-      iex> Cldr.Config.territory "au"
+      iex> Cldr.Config.territory("au")
       %{
         currency: [AUD: %{from: ~D[1966-02-14]}],
-        gdp: 1248000000000,
         language_population: %{
-          "en" => %{official_status: "de_facto_official", population_percent: 96},
+          "en" => %{population_percent: 96, official_status: "de_facto_official"},
+          "hnj" => %{population_percent: 0.0082},
           "it" => %{population_percent: 1.9},
-          "wbp" => %{population_percent: 0.0098},
-          "zh-Hant" => %{population_percent: 2.1},
-          "hnj" => %{population_percent: 0.0086}
+          "wbp" => %{population_percent: 0.0093},
+          "zh-Hant" => %{population_percent: 2.1}
         },
-        literacy_percent: 99,
         measurement_system: %{default: :metric, paper_size: :a4, temperature: :metric},
-        population: 25466500
+        population: 26768600,
+        gdp: 1584000000000,
+        literacy_percent: 99
       }
 
       iex> Cldr.Config.territory "abc"

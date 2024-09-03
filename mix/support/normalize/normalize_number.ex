@@ -67,11 +67,40 @@ defmodule Cldr.Normalize.Number do
 
     symbols =
       Enum.reduce(number_systems, %{}, fn number_system, number_symbols ->
-        symbols = get_in(numbers, ["symbols_number_system_#{number_system}"])
+        symbols =
+          numbers
+          |> get_in(["symbols_number_system_#{number_system}"])
+          |> group_separators
+
         Map.put(number_symbols, number_system, symbols)
       end)
 
     Map.put(content, "number_symbols", symbols)
+  end
+
+  defp group_separators(nil) do
+    nil
+  end
+
+  defp group_separators(symbols) do
+    template = %{"decimal" => %{}, "group" => %{}}
+
+    Enum.reduce(symbols, template, fn
+      {"decimal", decimal}, acc ->
+        put_in(acc, ["decimal", "standard"], decimal)
+
+      {"decimal_alt_" <> type, decimal}, acc ->
+        put_in(acc, ["decimal", type], decimal)
+
+      {"group", grouping}, acc ->
+        put_in(acc, ["group", "standard"], grouping)
+
+      {"group_alt_" <> type, grouping}, acc ->
+        put_in(acc, ["group", type], grouping)
+
+      {key, value}, acc ->
+        Map.put(acc, key, value)
+    end)
   end
 
   @doc false
