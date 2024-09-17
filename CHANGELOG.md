@@ -16,7 +16,7 @@ This is the changelog for Cldr v2.40.0 released on July 26th, 2024.  For older c
 
 ### Bug Fixes
 
-* Fix parsing of date time avaialable formats and interval formats when building the locale json files. Turns out some locales have formats that have variants and these need to be specifically parsed and grouped.
+* Fix parsing of date time available formats and interval formats when building the locale json files. Turns out some locales have formats that have variants and these need to be specifically parsed and grouped.
 
 ### Enhancements
 
