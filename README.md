@@ -18,7 +18,7 @@
 
 ## Introduction
 
-`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of April 28th 2023 and `ex_cldr` Version 2.37.0, `ex_cldr` is based upon [CLDR version 43.0](http://cldr.unicode.org/index/downloads/cldr-43).
+`ex_cldr` is an Elixir library for the [Unicode Consortium's](http://unicode.org) [Common Locale Data Repository (CLDR)](http://cldr.unicode.org).  The intentions of CLDR, and this library, is to simplify the locale specific formatting and parsing of numbers, lists, currencies, calendars, units of measure and dates/times.  As of August 16th 2024 and `ex_cldr` Version 2.40.1, `ex_cldr` is based upon [CLDR version 45.0](http://cldr.unicode.org/index/downloads/cldr-45).
 
 The first step is to define a module that will host the desired `ex_cldr` configuration and the functions that serve as the public API.  This module is referred to in this documentation as a `backend` module. For example:
 
