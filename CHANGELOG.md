@@ -4,6 +4,14 @@
 
 ## Cldr v2.40.1
 
+This is the changelog for Cldr v2.40.2 released on December 23rd, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Support (and automatically configure) Elixir 1.18's JSON module as a `:json_library` in the global configuration. Thanks to @Neophen for the report. Closes #147.
+
+## Cldr v2.40.1
+
 This is the changelog for Cldr v2.40.1 released on August 16th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
