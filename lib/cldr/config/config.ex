@@ -139,12 +139,12 @@ defmodule Cldr.Config do
     @app_name
   end
 
-  # This wrapper module doesn't produce compatible ressults - yet!
   json = if(Code.ensure_loaded?(Cldr.Json), do: Cldr.Json, else: nil)
+  elixir_json = if(Code.ensure_loaded?(JSON), do: JSON, else: nil)
   poison = if(Code.ensure_loaded?(Poison), do: Poison, else: nil)
   jason = if(Code.ensure_loaded?(Jason), do: Jason, else: nil)
   cldr_json = Application.compile_env(:ex_cldr, :json_library)
-  @json_lib cldr_json || json || jason || poison
+  @json_lib cldr_json || json || elixir_json || jason || poison
 
   cond do
     Code.ensure_loaded?(@json_lib) and function_exported?(@json_lib, :decode!, 1) ->
@@ -2100,7 +2100,8 @@ defmodule Cldr.Config do
       cldr_data_dir()
       |> Path.join(@units_file)
       |> File.read!()
-      |> json_library().decode!(keys: :atoms)
+      |> json_library().decode!()
+      |> Cldr.Map.atomize_keys()
 
     base_units =
       data.base_units
@@ -2256,7 +2257,8 @@ defmodule Cldr.Config do
     cldr_data_dir()
     |> Path.join(@calendar_preferences_file)
     |> File.read!()
-    |> json_library().decode!(keys: :atoms)
+    |> json_library().decode!()
+    |> Cldr.Map.atomize_keys()
     |> Cldr.Map.atomize_values()
   end
 

@@ -6,15 +6,12 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr.svg?)](https://hex.pm/packages/ex_cldr)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr.svg)](https://hex.pm/packages/ex_cldr)
 
-> #### `Change to :json_library configuration` {: .warning}
->
+> #### Change to :json_library configuration {: .warning}
 > As of `ex_cldr` version 2.37.2 the configuration parameter `:json_library`
 > does not attempt to read the configuration of either Phoenix or Ecto.
->
-> Specifying the `:json_library` parameter under the `:ex_cldr`
-> configuration key in `config.exs` is recommended when executing on OTP
-> versions below OTP 27 but the availability of `Jason` or `Poison` will still be
-> automatically detected and configured if the `:json_library` key is not set.
+
+> #### Automatic configuration of :json_library  {: .info}
+> OTP 27 and Elixir 1.18 both include native JSON libraries. Therefore if running on either (or both) of these platforms, no `:json_library` configuration is required or recommended.
 
 ## Introduction
 
@@ -207,9 +204,12 @@ config :ex_cldr,
 
 Note that the `:json_library` key can only be defined at the global level since it is required during compilation before any backend module is compiled.
 
+> #### Automatic configuration of :json_library  {: .info}
+> OTP 27 and Elixir 1.18 both include native JSON libraries. Therefore if running on either (or both) of these platforms, no `:json_library` configuration is required or recommended.
+
 On most platforms other than Windows the `:cacertfile` will be automatically detected. Any configured `:cacertfile` will take precedence on all platforms.
 
-**If configuration beyond the keys `:default_locale`, `:cacertfile` or `:json_library` is defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
+**If configuration beyond the keys `:default_locale`, `:cacertfile` or `:json_library` are defined a deprecation warning is printed at compile time noting that configuration should be moved to a backend module.**
 
 ### Configuration Priority
 
