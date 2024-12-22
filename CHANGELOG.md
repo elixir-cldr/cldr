@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.40.2 released on December 23rd, 2024.  For old
 
 ### Bug Fixes
 
-* Support (and automatically configure) Elixir 1.18's JSON module as a `:json_library` in the global configuration. Thanks to @Neophen for the report. Closes #147.
+* Support (and automatically configure) Elixir 1.18's JSON module as a `:json_library` in the global configuration. Thanks to @Neophen for the report. Closes #247.
 
 ## Cldr v2.40.1
 
