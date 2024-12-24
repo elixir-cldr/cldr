@@ -2,7 +2,7 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
-## Cldr v2.40.1
+## Cldr v2.40.2
 
 This is the changelog for Cldr v2.40.2 released on December 23rd, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
