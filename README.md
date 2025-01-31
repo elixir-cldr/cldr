@@ -226,8 +226,8 @@ The configuration keys available for `ex_cldr` are:
  * `default_locale` specifies the default locale to be used for this backend.  The default locale in case no other locale has been set is `"en-001"`.  The default locale is calculated as follows:
 
      * If set by the `:default_locale` key, then this is the priority
-     * If no `:default_locale` key, then a configured `Gettext` default locale for this backend is chosen
-     * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, use `Cldr.default_locale/0` which returns either the default locale configurated in `mix.exs` under the `ex_cldr` key or then the system default locale will is currently `en-001`
+     * If no `:default_locale` key, then a configured `Gettext` default locale for this backend is chosen.
+     * If no `:default_locale` key is specified and no `Gettext` module is configured, or is configured but has no default set, use `Cldr.default_locale/0` which returns either the default locale configurated in `mix.exs` under the `ex_cldr` key or then the system default locale will is currently `en-001`.
 
  * `locales`: Defines what locales will be configured in `ex_cldr`.  Only these locales will be available and an exception `Cldr.UnknownLocaleError` will be raised if there is an attempt to use an unknown locale.  This is the same behaviour as `Gettext`.  Locales are configured as a list of binaries (strings).  For convenience it is possible to use wildcard matching of locales which is particularly helpful when there are many regional variances of a single language locale.  For example, there are over 100 regional variants of the "en" locale in CLDR.  A wildcard locale is detected by the presence of `.`, `[`, `*` and `+` in the locale string.  This locale is then matched using the pattern as a `regex` to match against all available locales.  The example below will configure all locales that start with `en-` and the locale `fr`.
 
