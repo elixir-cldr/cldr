@@ -24,12 +24,10 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     language_tags =
       for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
         with {:ok, canonical_tag} <-
-               Cldr.Locale.canonical_language_tag(locale_name, @test_backend) do
+               Cldr.Locale.canonical_language_tag(locale_name, @test_backend, skip_gettext: true) do
           language_tag =
             canonical_tag
             |> Map.put(:cldr_locale_name, locale_name)
-            |> Map.put(:gettext_locale_name, nil)
-            |> Map.put(:backend, nil)
             |> Map.put(:rbnf_locale_name, rbnf_locale_name(locale_name))
 
           {locale_name, language_tag}

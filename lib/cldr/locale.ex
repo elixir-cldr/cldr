@@ -1424,7 +1424,7 @@ defmodule Cldr.Locale do
 
   ## Options
 
-  * `:add_likely_subtags` is a `boolean` thatdetermines
+  * `:add_likely_subtags` is a `boolean` that determines
     if subtags that are likely to be applicable to this
     language tag are added to the language tag. The default
     is `true`.
@@ -1511,12 +1511,16 @@ defmodule Cldr.Locale do
       }
     end
 
-  def canonical_language_tag(unquote(unvalidated_match) = language_tag, backend, _options)
+  def canonical_language_tag(unquote(unvalidated_match) = language_tag, backend, options)
       when not is_nil(locale_name) and not is_nil(canonical_name) do
     language_tag =
-      language_tag
-      |> put_backend(backend)
-      |> put_gettext_locale_name()
+      if !Keyword.get(options, :skip_gettext) do
+        language_tag
+        |> put_backend(backend)
+        |> put_gettext_locale_name()
+      else
+        language_tag
+      end
 
     {:ok, language_tag}
   end
@@ -1525,6 +1529,7 @@ defmodule Cldr.Locale do
     suppress_requested_locale_substitution? = !language_tag.language
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
     omit_singular_script? = Keyword.get(options, :omit_singular_script?, true)
+    skip_gettext? = Keyword.get(options, :skip_gettext)
 
     language_tag =
       language_tag
@@ -1535,16 +1540,26 @@ defmodule Cldr.Locale do
     with {:ok, language_tag} <- validate_subtags(language_tag),
          {:ok, language_tag} <- U.canonicalize_locale_keys(language_tag),
          {:ok, language_tag} <- T.canonicalize_transform_keys(language_tag) do
-      language_tag
-      |> put_canonical_locale_name(omit_singular_script?)
-      |> remove_unknown(:script)
-      |> remove_unknown(:territory)
-      |> maybe_put_likely_subtags(likely_subtags?)
-      |> put_backend(backend)
-      |> put_cldr_locale_name()
-      |> put_rbnf_locale_name()
-      |> put_gettext_locale_name()
-      |> wrap(:ok)
+      language_tag =
+        language_tag
+        |> put_canonical_locale_name(omit_singular_script?)
+        |> remove_unknown(:script)
+        |> remove_unknown(:territory)
+        |> maybe_put_likely_subtags(likely_subtags?)
+        |> put_cldr_locale_name()
+        |> put_rbnf_locale_name()
+        |> wrap(:ok)
+
+      language_tag =
+        if !skip_gettext? do
+          language_tag
+          |> put_backend(backend)
+          |> put_gettext_locale_name()
+        else
+          language_tag
+        end
+
+      {:ok, language_tag}
     end
   end
 

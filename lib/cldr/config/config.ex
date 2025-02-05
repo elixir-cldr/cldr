@@ -738,19 +738,24 @@ defmodule Cldr.Config do
     |> tl
     |> tl
     |> Enum.map(fn line ->
-      [_number, name, code | _rest] = String.split(line, ",")
+      case String.split(line, ",") do
+        [_number, name, code | _rest] ->
+          name =
+            name
+            |> String.replace(" ", "")
+            |> Cldr.String.underscore()
+            |> String.to_atom()
 
-      name =
-        name
-        |> String.replace(" ", "")
-        |> Cldr.String.underscore()
-        |> String.to_atom()
+          code =
+            String.to_atom(code)
 
-      code =
-        String.to_atom(code)
+          {name, code}
 
-      {name, code}
+        [""] ->
+          nil
+      end
     end)
+    |> Enum.reject(&is_nil/1)
     |> Map.new()
   end
 
