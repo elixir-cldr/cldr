@@ -92,7 +92,7 @@ defmodule Cldr.Normalize.Number do
         end,
         fn {key, value} ->
           case String.split(key, "_alt_") do
-            [_value] -> {"default", value}
+            [_value] -> {"standard", value}
             [_value, type] -> {type, value}
           end
         end

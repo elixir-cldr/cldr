@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.41.0 released on ______, 2025.  For older chan
 
 ### Enhancements
 
-* Update to CLDR 47 data
+* Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.
 
 ## Cldr v2.40.2
 
