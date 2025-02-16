@@ -158,7 +158,11 @@ defmodule Cldr.Mixfile do
   end
 
   defp preferred_cli_env() do
-    []
+    [
+      "cldr.generate_language_tags": :generate,
+      "cldr.download.iso_currency": :generate,
+      "cldr.consolidate": :generate
+    ]
   end
 
   def aliases do

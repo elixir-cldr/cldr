@@ -11,7 +11,6 @@ if Cldr.Config.production_data_location() && Cldr.Code.ensure_compiled?(Cldr.Con
 
     @doc false
     def run(_) do
-      System.put_env("DEV", "true")
       Cldr.Consolidate.consolidate_locales()
     end
   end

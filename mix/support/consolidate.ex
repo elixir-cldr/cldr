@@ -245,8 +245,9 @@ defmodule Cldr.Consolidate do
   @doc false
   def save_cldr_version do
     path = Path.join(consolidated_output_dir(), "version.json")
-    save_file(cldr_version(), path)
-
+    version = cldr_version()
+    save_file(version, path)
+    IO.puts "Saved CLDR version #{inspect version}"
     assert_package_file_configured!(path)
   end
 

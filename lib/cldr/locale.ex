@@ -40,13 +40,13 @@ defmodule Cldr.Locale do
   return an `{:ok, language_tag}` tuple even when the locale returned does
   not exactly match the requested locale name.  For example, the following
   attempts to create a locale matching the non-existent "english as spoken
-  in Spain" local name.  Here `Cldr` will match to the nearest configured
+  in Japan" local name.  Here `Cldr` will match to the nearest configured
   locale, which in this case will be "en".
 
-      iex> Cldr.Locale.new("en-ES", TestBackend.Cldr)
+      iex> Cldr.Locale.new("en-JP", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-ES",
+        canonical_locale_name: "en-JP",
         cldr_locale_name: :en,
         extensions: %{},
         gettext_locale_name: "en",
@@ -54,9 +54,9 @@ defmodule Cldr.Locale do
         locale: %{},
         private_use: [],
         rbnf_locale_name: :en,
-        requested_locale_name: "en-ES",
+        requested_locale_name: "en-JP",
         script: :Latn,
-        territory: :ES,
+        territory: :JP,
         transform: %{},
         language_variants: []
       }}
@@ -465,12 +465,22 @@ defmodule Cldr.Locale do
     )
   end
 
-  defp known_rbnf_locale_name(locale_name, _tags, backend) do
+  defp known_rbnf_locale_name(_locale_name, _tags, [], nil) do
+    false
+  end
+
+  defp known_rbnf_locale_name(locale_name, _tags, [], backend) do
     locale_name = String.to_existing_atom(locale_name)
     Cldr.known_rbnf_locale_name(locale_name, backend)
   rescue
     ArgumentError ->
       nil
+  end
+
+  # nil backend means find any valid RBNF name
+  defp known_rbnf_locale_name(locale_name, _tags, rbnf_names, nil) do
+    locale_name = String.to_existing_atom(locale_name)
+    locale_name in rbnf_names
   end
 
   defp return_parent_or_default(nil, child, backend) do
@@ -1513,23 +1523,19 @@ defmodule Cldr.Locale do
 
   def canonical_language_tag(unquote(unvalidated_match) = language_tag, backend, options)
       when not is_nil(locale_name) and not is_nil(canonical_name) do
-    language_tag =
-      if !Keyword.get(options, :skip_gettext) do
-        language_tag
-        |> put_backend(backend)
-        |> put_gettext_locale_name()
-      else
-        language_tag
-      end
+    skip_gettext_and_cldr? = Keyword.get(options, :skip_gettext_and_cldr, false)
 
-    {:ok, language_tag}
+    language_tag
+    |> put_backend(backend)
+    |> put_gettext_locale_name(skip_gettext_and_cldr?)
+    |> wrap(:ok)
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
     suppress_requested_locale_substitution? = !language_tag.language
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
     omit_singular_script? = Keyword.get(options, :omit_singular_script?, true)
-    skip_gettext? = Keyword.get(options, :skip_gettext)
+    skip_gettext_and_cldr? = Keyword.get(options, :skip_gettext_and_cldr, false)
 
     language_tag =
       language_tag
@@ -1540,26 +1546,16 @@ defmodule Cldr.Locale do
     with {:ok, language_tag} <- validate_subtags(language_tag),
          {:ok, language_tag} <- U.canonicalize_locale_keys(language_tag),
          {:ok, language_tag} <- T.canonicalize_transform_keys(language_tag) do
-      language_tag =
-        language_tag
-        |> put_canonical_locale_name(omit_singular_script?)
-        |> remove_unknown(:script)
-        |> remove_unknown(:territory)
-        |> maybe_put_likely_subtags(likely_subtags?)
-        |> put_cldr_locale_name()
-        |> put_rbnf_locale_name()
-        |> wrap(:ok)
-
-      language_tag =
-        if !skip_gettext? do
-          language_tag
-          |> put_backend(backend)
-          |> put_gettext_locale_name()
-        else
-          language_tag
-        end
-
-      {:ok, language_tag}
+      language_tag
+      |> put_canonical_locale_name(omit_singular_script?)
+      |> remove_unknown(:script)
+      |> remove_unknown(:territory)
+      |> put_backend(backend)
+      |> maybe_put_likely_subtags(likely_subtags?)
+      |> put_gettext_locale_name(skip_gettext_and_cldr?)
+      |> put_cldr_locale_name(skip_gettext_and_cldr?)
+      |> put_rbnf_locale_name(options)
+      |> wrap(:ok)
     end
   end
 
@@ -1821,20 +1817,32 @@ defmodule Cldr.Locale do
     |> Map.put(:requested_locale_name, locale_name_from(language_tag, false))
   end
 
-  @spec put_cldr_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp put_cldr_locale_name(%LanguageTag{} = language_tag) do
+  @spec put_cldr_locale_name(language_tag :: Cldr.LanguageTag.t(), skip? :: boolean()) :: Cldr.LanguageTag.t()
+  defp put_cldr_locale_name(%LanguageTag{} = language_tag, true) do
+    language_tag
+  end
+
+  defp put_cldr_locale_name(%LanguageTag{} = language_tag, false) do
     cldr_locale_name = cldr_locale_name(language_tag)
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec put_rbnf_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  defp put_rbnf_locale_name(%LanguageTag{} = language_tag) do
-    rbnf_locale_name = rbnf_locale_name(language_tag)
+  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t()) :: Cldr.LanguageTag.t()
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, options) do
+    rbnf_locales = Keyword.get(options, :rbnf_locales, [])
+
+    rbnf_locale_name = rbnf_locale_name(language_tag, rbnf_locales)
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
 
-  @spec put_gettext_locale_name(Cldr.LanguageTag.t()) :: Cldr.LanguageTag.t()
-  def put_gettext_locale_name(%LanguageTag{} = language_tag) do
+  @spec put_gettext_locale_name(Cldr.LanguageTag.t(), skip? :: boolean()) :: Cldr.LanguageTag.t()
+  def put_gettext_locale_name(language_tag, skip? \\ false)
+
+  def put_gettext_locale_name(%LanguageTag{} = language_tag, true) do
+    language_tag
+  end
+
+  def put_gettext_locale_name(%LanguageTag{} = language_tag, false) do
     gettext_locale_name = gettext_locale_name(language_tag)
     %{language_tag | gettext_locale_name: gettext_locale_name}
   end
@@ -1846,9 +1854,10 @@ defmodule Cldr.Locale do
   end
 
   @root_locale_name Cldr.Config.root_locale_name()
+  @string_root_locale_name to_string(@root_locale_name)
 
   @spec cldr_locale_name(Cldr.LanguageTag.t()) :: locale_name() | nil
-  defp cldr_locale_name(%LanguageTag{language: @root_locale_name}) do
+  defp cldr_locale_name(%LanguageTag{language: @string_root_locale_name}) do
     @root_locale_name
   end
 
@@ -1857,18 +1866,20 @@ defmodule Cldr.Locale do
       Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
   end
 
-  @spec rbnf_locale_name(Cldr.LanguageTag.t()) :: locale_name | nil
-  defp rbnf_locale_name(%LanguageTag{language: @root_language}) do
+  @spec rbnf_locale_name(Cldr.LanguageTag.t(), rbnf_names :: [locale_name]) :: locale_name | nil
+  defp rbnf_locale_name(language_tag, rbnf_names \\ [])
+
+  defp rbnf_locale_name(%LanguageTag{language: @root_language}, []) do
     @root_rbnf_locale_name
   end
 
   # Get the rbnf locale name for this locale. If not found, see
   # if a parent has RBNF> Note parent in this case means direct parent,
   # not the fallback chain.
-  defp rbnf_locale_name(%LanguageTag{} = language_tag) do
+  defp rbnf_locale_name(%LanguageTag{} = language_tag, rbnf_names) do
     cond do
       rbnf_locale =
-          first_match(language_tag, &known_rbnf_locale_name(&1, &2, language_tag.backend)) ->
+          first_match(language_tag, &known_rbnf_locale_name(&1, &2, rbnf_names, language_tag.backend)) ->
         rbnf_locale
 
       parent = Map.get(parent_locale_map(), language_tag.cldr_locale_name) ->
