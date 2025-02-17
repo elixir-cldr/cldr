@@ -106,11 +106,11 @@ defmodule Cldr.Install do
         output_file_name
         |> File.write!(body)
 
-        Logger.bare_log(:info, "Downloaded locale #{inspect(locale_name)}")
+        Logger.bare_log(:info, "Downloaded locale #{inspect(locale_name)} version #{branch_from_version()}")
         {:ok, output_file_name}
 
       {:error, reason} ->
-        Logger.bare_log(:error, "Unable to downloaded locale #{inspect(locale_name)}. #{reason}.")
+        Logger.bare_log(:error, "Unable to downloaded locale #{inspect(locale_name)} version #{branch_from_version()}. #{reason}.")
         {:error, reason}
     end
   end
