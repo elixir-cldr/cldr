@@ -6,6 +6,15 @@
 
 This is the changelog for Cldr v2.41.0 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Data format changes
+
+There are some changes to the underlying locale data format that should be transparent to users of these libraries. They are noted here for completeness.  
+
+* Delimiters are now organized with `:default` and `:variant` quotation marks where the data is available.
+* Time formats now group the `:default` and `:ascii` alternatives.
+* Day periods used for date/time formatting now group the alternatives for `am` and `pm` where the data is available.
+* Day period display names now group the alternatives for `am` and `pm` where the data is available.
+
 ### Enhancements
 
 * Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.

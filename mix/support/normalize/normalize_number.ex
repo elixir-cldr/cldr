@@ -70,39 +70,13 @@ defmodule Cldr.Normalize.Number do
         symbols =
           numbers
           |> get_in(["symbols_number_system_#{number_system}"])
-          |> group_separators(["decimal", "group"])
+          |> Cldr.Consolidate.group_by_alt("decimal", default: "standard")
+          |> Cldr.Consolidate.group_by_alt("group", default: "standard")
 
         Map.put(number_symbols, number_system, symbols)
       end)
 
     Map.put(content, "number_symbols", symbols)
-  end
-
-  defp group_separators(nil, _groups) do
-    nil
-  end
-
-  defp group_separators(symbols, groups) do
-    grouped =
-      symbols
-      |> Enum.filter(fn {key, _value} -> Enum.any?(groups, &String.starts_with?(key, &1)) end)
-      |> Enum.group_by(
-        fn {key, _value} ->
-          String.split(key, "_alt_") |> hd
-        end,
-        fn {key, value} ->
-          case String.split(key, "_alt_") do
-            [_value] -> {"standard", value}
-            [_value, type] -> {type, value}
-          end
-        end
-      )
-      |> Enum.map(fn {key, value} -> {key, Map.new(value)} end)
-      |> Map.new()
-
-    symbols
-    |> Map.merge(grouped)
-    |> Map.reject(&String.contains?(to_string(elem(&1, 0)), "_alt_"))
   end
 
   @doc false

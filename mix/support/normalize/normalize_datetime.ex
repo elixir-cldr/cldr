@@ -52,6 +52,12 @@ defmodule Cldr.Normalize.DateTime do
         filter: "date_time_formats",
         only: "interval_formats"
       )
+      |> Cldr.Map.deep_map(&group_time_formats/1,
+        only: "time_formats"
+      )
+      |> Cldr.Map.deep_map(&group_day_periods/1,
+        filter: "day_periods"
+      )
 
     Map.put(content, "dates", dates)
   end
@@ -79,6 +85,34 @@ defmodule Cldr.Normalize.DateTime do
       [system] -> {"all", String.trim(system)}
       [format_code, system] -> {String.trim(format_code), String.trim(system)}
     end
+  end
+
+  defp group_day_periods({key, periods}) when key in ["narrow", "wide", "abbreviated"] do
+    day_periods =
+      periods
+      |> Cldr.Consolidate.group_by_alt("am")
+      |> Cldr.Consolidate.group_by_alt("pm")
+
+    {key, day_periods}
+  end
+
+  defp group_day_periods(other) do
+    other
+  end
+
+  defp group_time_formats({key, formats}) do
+    time_formats =
+      formats
+      |> Cldr.Consolidate.group_by_alt("short")
+      |> Cldr.Consolidate.group_by_alt("full")
+      |> Cldr.Consolidate.group_by_alt("medium")
+      |> Cldr.Consolidate.group_by_alt("long")
+
+    {key, time_formats}
+  end
+
+  defp group_time_formats(other) do
+    other
   end
 
   def group_region_formats({"time_zone_names" = key, formats}) do

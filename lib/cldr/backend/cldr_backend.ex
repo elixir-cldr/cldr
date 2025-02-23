@@ -463,12 +463,19 @@ defmodule Cldr.Backend do
       ## Options
 
       * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
-        The default is `Cldr.get_locale/0`
+        The default is `Cldr.get_locale/0`.
+
+      * `:prefer` is one of `:default` or `:variant` with a default of `:default`.
+        Some locales have alternative opening and closing quote marks and `:prefer`
+        allows selecting a variant should one exist.
 
       ## Examples
 
           iex> #{inspect(__MODULE__)}.quote("Quoted String")
           "“Quoted String”"
+
+          iex> #{inspect(__MODULE__)}.quote("Quoted String", prefer: :variant)
+          "‘Quoted String’"
 
           iex> #{inspect(__MODULE__)}.quote("Quoted String", locale: :ja)
           "「Quoted String」"
@@ -477,13 +484,20 @@ defmodule Cldr.Backend do
       @spec quote(String.t(), Keyword.t()) :: String.t() | {:error, {module, String.t()}}
 
       def quote(string, options \\ []) when is_binary(string) and is_list(options) do
-        locale = options[:locale] || Cldr.get_locale()
+        locale = Keyword.get(options, :locale, Cldr.get_locale())
+        preference = Keyword.get(options, :prefer, :default)
 
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
           marks = quote_marks_for(locale_name)
-          marks[:quotation_start] <> string <> marks[:quotation_end]
+          quote_start = quote_preference(marks.quotation_start, preference)
+          quote_end = quote_preference(marks.quotation_end, preference)
+
+          quote_start <> string <> quote_end
         end
       end
+
+      defp quote_preference(marks, preference) when is_map_key(marks, preference), do: Map.fetch!(marks, preference)
+      defp quote_preference(marks, _preference), do: marks.default
 
       @doc """
       Add locale-specific ellipsis to a string.

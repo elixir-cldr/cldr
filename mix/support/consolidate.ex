@@ -142,6 +142,7 @@ defmodule Cldr.Consolidate do
   defp save_locale(content, locale) do
     output_path = Path.join(consolidated_locales_dir(), "#{locale}.json")
     File.write!(output_path, Cldr.Config.json_library().encode!(content))
+    content
   end
 
   defp merge_maps([file_1]) do
@@ -205,6 +206,49 @@ defmodule Cldr.Consolidate do
 
   defp cldr_dir?(filename) do
     String.starts_with?(filename, "cldr-")
+  end
+
+  @doc """
+  Apply grouping to keys which have an "_alt_"
+  variant as well.
+
+  The result is a map with a submap of the consoldiated
+  key and key_alt values.
+
+  """
+  def group_by_alt(map, key, options \\ [])
+
+  def group_by_alt(nil, _key, _options) do
+    nil
+  end
+
+  def group_by_alt(map, key, options) when is_map(map) and is_binary(key) do
+    default_key = Keyword.get(options, :default, "default")
+    alt = "_" <> Keyword.get(options, :alt, "alt") <> "_"
+
+    grouped =
+      map
+      |> Enum.filter(fn
+        {^key, _v} -> true
+        {k, _v} -> String.starts_with?(k, key <> alt)
+      end)
+      |> Enum.group_by(
+        fn {k, _value} ->
+          String.split(k, alt) |> hd
+        end,
+        fn {k, v} ->
+          case String.split(k, alt) do
+            [_] -> {default_key, v}
+            [_, type] -> {type, v}
+          end
+        end
+      )
+      |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
+      |> Map.new()
+
+    map
+    |> Map.merge(grouped)
+    |> Map.reject(&String.starts_with?(elem(&1, 0), key <> alt))
   end
 
   defp ensure_output_dir_exists!(dir) do

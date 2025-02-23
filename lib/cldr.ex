@@ -1270,12 +1270,19 @@ defmodule Cldr do
   * `:locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
     The default is `Cldr.get_locale/0`
 
+  * `:prefer` is one of `:default` or `:variant` with a default of `:default`.
+    Some locales have alternative opening and closing quote marks and `:prefer`
+    allows selecting a variant should one exist.
+
   ## Examples
 
-      iex> Cldr.quote "Quoted String", MyApp.Cldr
+      iex> Cldr.quote("Quoted String", MyApp.Cldr)
       "“Quoted String”"
 
-      iex> Cldr.quote "Quoted String", MyApp.Cldr, locale: "ja"
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, prefer: :variant)
+      "‘Quoted String’"
+
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, locale: "ja")
       "「Quoted String」"
 
   """
