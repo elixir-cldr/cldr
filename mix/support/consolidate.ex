@@ -97,7 +97,7 @@ defmodule Cldr.Consolidate do
     )
     |> normalize_content(locale)
     |> Map.take(Cldr.Config.required_modules())
-    |> Cldr.Map.atomize_keys(except: :locale_display_names)
+    |> Cldr.Map.atomize_keys(except: [:locale_display_names], skip: ["zone", "metazone"])
     |> add_version()
     |> save_locale(locale)
   end

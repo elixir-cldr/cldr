@@ -20,6 +20,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Map.delete("fields")
       |> Cldr.Map.rename_keys("_numbers", "number_system")
       |> Cldr.Map.rename_keys("_value", "format")
+      |> Cldr.Map.rename_keys("_type", "type")
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.underscore_keys(only: "intervalFormatFallback")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
@@ -36,6 +37,10 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "time_zone_names",
         only: ["gmt_format", "fallback_format"]
+      )
+      |> Cldr.Map.atomize_values(
+        filter: "time_zone_names",
+        only: ["type"]
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "month_patterns",
@@ -57,6 +62,9 @@ defmodule Cldr.Normalize.DateTime do
       )
       |> Cldr.Map.deep_map(&group_day_periods/1,
         filter: "day_periods"
+      )
+      |> Cldr.Map.atomize_keys(
+        only: ["long", "daylight", "generic", "standard", "short", "type"]
       )
 
     Map.put(content, "dates", dates)
