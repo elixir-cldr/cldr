@@ -111,10 +111,10 @@ defmodule Cldr.Normalize.DateTime do
   defp group_time_formats({key, formats}) do
     time_formats =
       formats
-      |> Cldr.Consolidate.group_by_alt("short")
-      |> Cldr.Consolidate.group_by_alt("full")
-      |> Cldr.Consolidate.group_by_alt("medium")
-      |> Cldr.Consolidate.group_by_alt("long")
+      |> Cldr.Consolidate.group_by_alt("short", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("full", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("medium", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("long", default: :unicode)
 
     {key, time_formats}
   end
