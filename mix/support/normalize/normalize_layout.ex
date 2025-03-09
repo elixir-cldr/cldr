@@ -18,6 +18,8 @@ defmodule Cldr.Normalize.Layout do
         other -> other
       end)
       |> Map.new()
+      |> Cldr.Map.atomize_values()
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, "layout", layout)
   end

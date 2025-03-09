@@ -84,6 +84,7 @@ defmodule Cldr.Consolidate do
   * `locale` is any locale defined by `Cldr.all_locale_names/0`
 
   """
+  @required_modules Enum.map(Cldr.Config.required_modules(), &String.to_atom/1)
   def consolidate_locale(locale) do
     IO.puts("Consolidating locale #{inspect(locale)}")
 
@@ -96,8 +97,8 @@ defmodule Cldr.Consolidate do
       skip: ["availableFormats", "intervalFormats"]
     )
     |> normalize_content(locale)
-    |> Map.take(Cldr.Config.required_modules())
-    |> Cldr.Map.atomize_keys(except: [:locale_display_names], skip: ["zone", "metazone"])
+    |> Cldr.Map.atomize_keys(level: 1)
+    |> Map.take(@required_modules)
     |> add_version()
     |> save_locale(locale)
   end
@@ -130,7 +131,8 @@ defmodule Cldr.Consolidate do
   end
 
   defp add_version(content) do
-    Map.put(content, :version, Cldr.Config.version())
+    version = Cldr.Config.version() # |> Version.parse()
+    Map.put(content, :version, version)
   end
 
   # Remove the top two levels of the map since they add nothing

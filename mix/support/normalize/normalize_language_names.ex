@@ -36,6 +36,7 @@ defmodule Cldr.Normalize.LanguageNames do
       end)
       |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
       |> Enum.into(%{})
+      |> Cldr.Map.atomize_keys(only: ["standard", "long", "menu", "variant"])
 
     Map.put(content, "languages", territories)
   end

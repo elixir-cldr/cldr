@@ -177,7 +177,8 @@ defmodule Cldr.Locale.Loader do
     "daylight",
     "formal",
     "daylight_savings",
-    "generic"
+    "generic",
+    "type"
   ]
 
   defp structure_date_formats(content) do
@@ -196,6 +197,7 @@ defmodule Cldr.Locale.Loader do
       |> Cldr.Map.atomize_keys(only: @date_atoms)
       |> Cldr.Map.atomize_keys(filter: "calendars", skip: :number_system)
       |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
+      |> Cldr.Map.atomize_values(only: [:type])
       |> Cldr.Map.atomize_keys(level: 1..1)
 
     Map.put(content, :dates, dates)

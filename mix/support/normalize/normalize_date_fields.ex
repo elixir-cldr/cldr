@@ -24,6 +24,7 @@ defmodule Cldr.Normalize.DateFields do
     |> Cldr.Map.deep_map(&group_day_period/1,
         only: "day_period"
     )
+    |> Cldr.Map.atomize_keys()
   end
 
   defp group_day_period({key, day_period}) do

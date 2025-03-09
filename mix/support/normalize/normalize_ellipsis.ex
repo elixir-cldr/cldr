@@ -14,6 +14,7 @@ defmodule Cldr.Normalize.Ellipsis do
       |> get_in(["characters", "ellipsis"])
       |> Enum.map(fn {type, data} -> {type, Substitution.parse(data)} end)
       |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, "ellipsis", ellipsis)
   end

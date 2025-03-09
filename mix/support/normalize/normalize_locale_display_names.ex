@@ -21,23 +21,27 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       locale_display_names
       |> Map.get("scripts", %{})
       |> merge_alt(&String.capitalize/1)
+      |> Cldr.Map.atomize_keys()
 
     territories =
       locale_display_names
       |> Map.get("territories", %{})
       |> merge_alt(&String.upcase/1)
+      |> Cldr.Map.atomize_keys()
 
     locale_display_pattern =
       locale_display_names
       |> Map.get("locale_display_pattern", %{})
       |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
       |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     code_patterns =
       locale_display_names
       |> Map.get("code_patterns")
       |> Enum.map(fn {k, v} -> {k, Cldr.Substitution.parse(v)} end)
       |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     measurement_systems =
       locale_display_names
@@ -48,11 +52,13 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
         other -> other
       end)
       |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     types =
       locale_display_names
       |> Map.get("types", %{})
       |> Map.put("ms", measurement_systems)
+      |> Cldr.Map.atomize_keys()
 
     locale_display_names =
       locale_display_names

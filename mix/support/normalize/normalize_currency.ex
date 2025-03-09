@@ -42,6 +42,7 @@ defmodule Cldr.Normalize.Currency do
         {code, currency_map}
       end)
       |> Enum.into(%{})
+      |> Cldr.Map.atomize_keys(level: 1)
 
     Map.put(content, "currencies", currencies)
   end

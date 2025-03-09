@@ -15,6 +15,7 @@ defmodule Cldr.Normalize.NumberSystem do
       |> Map.merge(numbers["other_numbering_systems"])
       |> Enum.map(fn {type, system} -> {type, system} end)
       |> Enum.into(%{})
+      |> Cldr.Map.atomize_values()
 
     Map.put(content, "number_systems", number_systems)
   end
