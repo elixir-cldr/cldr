@@ -55,8 +55,8 @@ defmodule Cldr.Config do
   @type number_system :: atom() | String.t()
 
   @app_name Mix.Project.config()[:app]
-  @cldr_data_dir [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
-  @external_resource Path.join(@cldr_data_dir, "/cldr/version.json")
+  @cldr_data_dir Path.join(Application.app_dir(@app_name), "priv/cldr")
+  @external_resource Path.join(@cldr_data_dir, "version.json")
 
   @root_locale_name :und
   @default_locale_name :"en-001"
@@ -248,7 +248,7 @@ defmodule Cldr.Config do
 
   """
   def cldr_data_dir do
-    [:code.priv_dir(@app_name), "/cldr"] |> :erlang.iolist_to_binary()
+    Path.join(Application.app_dir(@app_name), "priv/cldr")
   end
 
   @doc """
