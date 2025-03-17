@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.41.0 released on ______, 2025.  For older chan
 
 ### Data format changes
 
-There are some changes to the underlying locale data format that should be transparent to users of these libraries. They are noted here for completeness.  
+There are some changes to the underlying locale data format that should be transparent to users of these libraries. They are noted here for completeness.
 
 * Delimiters are now organized with `:default` and `:variant` quotation marks where the data is available.
 * Time formats now group the `:default` and `:ascii` alternatives.
@@ -18,6 +18,8 @@ There are some changes to the underlying locale data format that should be trans
 ### Enhancements
 
 * Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.
+
+* Remove `:ex_unit` and `:eex` from `:extra_applications`.
 
 ## Cldr v2.40.2
 
