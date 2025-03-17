@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.40.4
+
+This is the changelog for Cldr v2.40.4 released on March 18th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Remove `:eex` and `:ex_unit` from `:extra_applications`. Thanks to @tanguilp for the report. Closes #253.
+
 ## Cldr v2.40.3
 
 This is the changelog for Cldr v2.40.3 released on March 9th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
