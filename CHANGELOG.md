@@ -24,7 +24,7 @@ This is the changelog for Cldr v2.40.1 released on August 16th, 2024.  For older
 
 ### Bug Fixes
 
-* Fix specs to suport dialyzer flags `:error_handling, :unknown, :underspecs, :extra_return, :missing_return`
+* Fix specs to suport dialyzer flags `:error_handling, :unknown, :underspecs, :extra_return, :missing_return`.
 
 ## Cldr v2.40.0
 

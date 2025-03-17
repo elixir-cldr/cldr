@@ -45,7 +45,7 @@ defmodule Cldr.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :inets, :ssl, :eex, :ex_unit]
+      extra_applications: [:logger, :inets, :ssl]
     ]
   end
 
