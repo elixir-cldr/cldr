@@ -67,7 +67,12 @@ defmodule Cldr.Normalize.Number do
 
     symbols =
       Enum.reduce(number_systems, %{}, fn number_system, number_symbols ->
-        symbols = get_in(numbers, ["symbols_number_system_#{number_system}"])
+        symbols =
+          numbers
+          |> get_in(["symbols_number_system_#{number_system}"])
+          |> Cldr.Consolidate.group_by_alt("decimal", default: "standard")
+          |> Cldr.Consolidate.group_by_alt("group", default: "standard")
+
         Map.put(number_symbols, number_system, symbols)
       end)
 

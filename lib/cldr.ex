@@ -1270,12 +1270,19 @@ defmodule Cldr do
   * `:locale` is any valid locale name returned by `Cldr.known_locale_names/1`.
     The default is `Cldr.get_locale/0`
 
+  * `:prefer` is one of `:default` or `:variant` with a default of `:default`.
+    Some locales have alternative opening and closing quote marks and `:prefer`
+    allows selecting a variant should one exist.
+
   ## Examples
 
-      iex> Cldr.quote "Quoted String", MyApp.Cldr
+      iex> Cldr.quote("Quoted String", MyApp.Cldr)
       "“Quoted String”"
 
-      iex> Cldr.quote "Quoted String", MyApp.Cldr, locale: "ja"
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, prefer: :variant)
+      "‘Quoted String’"
+
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, locale: "ja")
       "「Quoted String」"
 
   """
@@ -1960,7 +1967,7 @@ defmodule Cldr do
        :UZS, :VEB, :VED, :VEF, :VES, :VND, :VNN, :VUV, :WST, :XAF, :XAG, :XAU, :XBA,
        :XBB, :XBC, :XBD, :XCD, :XCG, :XDR, :XEU, :XFO, :XFU, :XOF, :XPD, :XPF, :XPT,
        :XRE, :XSU, :XTS, :XUA, :XXX, :YDD, :YER, :YUD, :YUM, :YUN, :YUR, :ZAL, :ZAR,
-       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWL, :ZWR]
+       :ZMK, :ZMW, :ZRN, :ZRZ, :ZWD, :ZWG, :ZWL, :ZWR]
 
   """
   @known_currencies Cldr.Config.known_currencies()
@@ -2080,14 +2087,15 @@ defmodule Cldr do
 
       iex> Cldr.known_number_systems()
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
-       :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :geor, :gong, :gonm, :grek,
-       :greklow, :gujr, :guru, :hanidays, :hanidec, :hans, :hansfin, :hant, :hantfin,
-       :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin, :jpanyear, :kali, :kawi, :khmr, :knda, :lana, :lanatham,
-       :laoo, :latn, :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb,
-       :mathsans, :mlym, :modi, :mong, :mroo, :mtei, :mymr, :mymrshan, :mymrtlng, :nagm,
-       :newa, :nkoo, :olck, :orya, :osma, :rohg, :roman, :romanlow, :saur, :segment, :shrd,
-       :sind, :sinh, :sora, :sund, :takr, :talu, :taml, :tamldec, :telu, :thai, :tibt,
-       :tirh, :tnsa, :vaii, :wara, :wcho]
+       :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :gara, :geor, :gong,
+       :gonm, :grek, :greklow, :gujr, :gukh, :guru, :hanidays, :hanidec, :hans,
+       :hansfin, :hant, :hantfin, :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin,
+       :jpanyear, :kali, :kawi, :khmr, :knda, :krai, :lana, :lanatham, :laoo, :latn,
+       :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans, :mlym,
+       :modi, :mong, :mroo, :mtei, :mymr, :mymrepka, :mymrpao, :mymrshan, :mymrtlng,
+       :nagm, :newa, :nkoo, :olck, :onao, :orya, :osma, :outlined, :rohg, :roman,
+       :romanlow, :saur, :segment, :shrd, :sind, :sinh, :sora, :sund, :sunu, :takr,
+       :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :vaii, :wara, :wcho]
 
   """
   @known_number_systems Cldr.Config.known_number_systems()

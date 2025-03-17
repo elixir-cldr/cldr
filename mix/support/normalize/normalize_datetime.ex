@@ -20,6 +20,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Map.delete("fields")
       |> Cldr.Map.rename_keys("_numbers", "number_system")
       |> Cldr.Map.rename_keys("_value", "format")
+      |> Cldr.Map.rename_keys("_type", "type")
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
       |> Cldr.Map.underscore_keys(only: "intervalFormatFallback")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
@@ -37,6 +38,10 @@ defmodule Cldr.Normalize.DateTime do
         filter: "time_zone_names",
         only: ["gmt_format", "fallback_format"]
       )
+      |> Cldr.Map.atomize_values(
+        filter: "time_zone_names",
+        only: ["type"]
+      )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "month_patterns",
         only: "leap"
@@ -51,6 +56,15 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.deep_map(&group_interval_formats/1,
         filter: "date_time_formats",
         only: "interval_formats"
+      )
+      |> Cldr.Map.deep_map(&group_time_formats/1,
+        only: "time_formats"
+      )
+      |> Cldr.Map.deep_map(&group_day_periods/1,
+        filter: "day_periods"
+      )
+      |> Cldr.Map.atomize_keys(
+        only: ["long", "daylight", "generic", "standard", "short", "type"]
       )
 
     Map.put(content, "dates", dates)
@@ -79,6 +93,34 @@ defmodule Cldr.Normalize.DateTime do
       [system] -> {"all", String.trim(system)}
       [format_code, system] -> {String.trim(format_code), String.trim(system)}
     end
+  end
+
+  defp group_day_periods({key, periods}) when key in ["narrow", "wide", "abbreviated"] do
+    day_periods =
+      periods
+      |> Cldr.Consolidate.group_by_alt("am")
+      |> Cldr.Consolidate.group_by_alt("pm")
+
+    {key, day_periods}
+  end
+
+  defp group_day_periods(other) do
+    other
+  end
+
+  defp group_time_formats({key, formats}) do
+    time_formats =
+      formats
+      |> Cldr.Consolidate.group_by_alt("short", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("full", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("medium", default: :unicode)
+      |> Cldr.Consolidate.group_by_alt("long", default: :unicode)
+
+    {key, time_formats}
+  end
+
+  defp group_time_formats(other) do
+    other
   end
 
   def group_region_formats({"time_zone_names" = key, formats}) do

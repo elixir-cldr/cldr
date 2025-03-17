@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.40.4"
+  @version "2.41.0"
 
   def project do
     [
@@ -158,7 +158,11 @@ defmodule Cldr.Mixfile do
   end
 
   defp preferred_cli_env() do
-    []
+    [
+      "cldr.generate_language_tags": :generate,
+      "cldr.download.iso_currency": :generate,
+      "cldr.consolidate": :generate
+    ]
   end
 
   def aliases do
@@ -196,6 +200,7 @@ defmodule Cldr.Mixfile do
   end
 
   defp elixirc_paths(:test), do: ["lib", "src", "dev", "mix/support/units", "mix/tasks", "test"]
+  defp elixirc_paths(:generate), do: ["lib", "src", "mix"]
   defp elixirc_paths(:dev), do: ["lib", "mix", "src", "dev", "bench"]
   defp elixirc_paths(:release), do: ["lib", "dev", "src"]
   defp elixirc_paths(_), do: ["lib", "src"]

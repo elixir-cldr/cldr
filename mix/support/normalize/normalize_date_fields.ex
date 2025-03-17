@@ -20,9 +20,27 @@ defmodule Cldr.Normalize.DateFields do
     |> fold_default_content
     |> fold_variant_content
     |> normalize_elements
+    |> Cldr.Map.rename_keys("dayperiod", "day_period")
+    |> Cldr.Map.deep_map(&group_day_period/1,
+        only: "day_period"
+    )
+    |> Cldr.Map.atomize_keys()
   end
 
-  def fold_default_content(content) do
+  defp group_day_period({key, day_period}) do
+    day_period =
+      day_period
+      |> Enum.map(fn {key, periods} -> {key, Cldr.Consolidate.group_by_alt(periods, "display_name")} end)
+      |> Map.new()
+
+    {key, day_period}
+  end
+
+  defp group_day_period(other) do
+    other
+  end
+
+  defp fold_default_content(content) do
     Enum.reduce(base_keys(content), content, fn key, acc ->
       base_content =
         acc
@@ -33,7 +51,7 @@ defmodule Cldr.Normalize.DateFields do
     end)
   end
 
-  def fold_variant_content(content) do
+  defp fold_variant_content(content) do
     Enum.reduce(variant_keys(content), content, fn key, acc ->
       variant_content =
         acc
@@ -48,14 +66,14 @@ defmodule Cldr.Normalize.DateFields do
   end
 
   @relative_keys ["relative_type__1", "relative_type_0", "relative_type_1"]
-  def normalize_content(content) do
+  defp normalize_content(content) do
     relative_ordinals = Enum.map(@relative_keys, &Map.get(content, &1))
 
     Map.put(content, "relative_ordinal", relative_ordinals)
     |> Map.drop(@relative_keys)
   end
 
-  def normalize_elements(content) do
+  defp normalize_elements(content) do
     Enum.map(content, fn {element, data} ->
       {element, normalize_variant(data)}
     end)
@@ -63,14 +81,14 @@ defmodule Cldr.Normalize.DateFields do
   end
 
   # Iterate over each item and normalize each variant
-  def normalize_variant(content) do
+  defp normalize_variant(content) do
     Enum.map(content, fn {element, variant} ->
       {element, normalize_relative_times(variant)}
     end)
     |> Enum.into(%{})
   end
 
-  def normalize_relative_times(content) do
+  defp normalize_relative_times(content) do
     Enum.map(content, fn
       {"relative_time_type_future", relative} ->
         {"relative_future", normalize_time_patterns(relative)}
@@ -87,11 +105,11 @@ defmodule Cldr.Normalize.DateFields do
     |> Enum.into(%{})
   end
 
-  def normalize_time_patterns(nil) do
+  defp normalize_time_patterns(nil) do
     %{}
   end
 
-  def normalize_time_patterns(content) do
+  defp normalize_time_patterns(content) do
     content
     |> Enum.map(fn {"relative_time_pattern_count_" <> type, data} ->
       {type, Substitution.parse(data)}
@@ -99,19 +117,19 @@ defmodule Cldr.Normalize.DateFields do
     |> Enum.into(%{})
   end
 
-  def base_keys(content) do
+  defp base_keys(content) do
     content
     |> Map.keys()
     |> Enum.reject(&(String.ends_with?(&1, "narrow") or String.ends_with?(&1, "short")))
   end
 
-  def variant_keys(content) do
+  defp variant_keys(content) do
     content
     |> Map.keys()
     |> Enum.filter(&(String.ends_with?(&1, "narrow") or String.ends_with?(&1, "short")))
   end
 
-  def base_and_variant_from(key) do
+  defp base_and_variant_from(key) do
     parts = String.split(key, "_")
 
     variant =

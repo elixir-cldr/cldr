@@ -8,28 +8,22 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
 
   @impl Mix.Task
   @shortdoc "Generate language tags for all available locales"
-  @test_backend MyApp.Cldr
 
   @doc false
   def run(_) do
-    # So we don't do locale validity checks.
-    dev = System.get_env("DEV")
-    :ok = System.put_env("DEV", "TRUE")
-
     # We set the gettext locale name to nil because we can't tell in advance
     # what the gettext locale name will be (if any)
-    locale_count = length(Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names())
+    locale_names = Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names()
+    locale_count = length(locale_names)
     IO.puts("Generating language tags for #{locale_count} locales")
 
     language_tags =
-      for locale_name <- Cldr.all_locale_names() -- Cldr.Config.non_language_locale_names() do
+      for locale_name <- locale_names do
         with {:ok, canonical_tag} <-
-               Cldr.Locale.canonical_language_tag(locale_name, @test_backend) do
+               Cldr.Locale.canonical_language_tag(locale_name, nil, skip_gettext_and_cldr: true) do
           language_tag =
             canonical_tag
             |> Map.put(:cldr_locale_name, locale_name)
-            |> Map.put(:gettext_locale_name, nil)
-            |> Map.put(:backend, nil)
             |> Map.put(:rbnf_locale_name, rbnf_locale_name(locale_name))
 
           {locale_name, language_tag}
@@ -46,8 +40,6 @@ defmodule Mix.Tasks.Cldr.GenerateLanguageTags do
     IO.puts(
       "Wrote binary term file of #{Enum.count(language_tags)} language tags to #{output_path}"
     )
-
-    if dev, do: System.put_env("DEV", dev), else: System.delete_env("DEV")
   end
 
   defp rbnf_locale_name(locale_name) do

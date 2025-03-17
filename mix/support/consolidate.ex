@@ -84,6 +84,7 @@ defmodule Cldr.Consolidate do
   * `locale` is any locale defined by `Cldr.all_locale_names/0`
 
   """
+  @required_modules Enum.map(Cldr.Config.required_modules(), &String.to_atom/1)
   def consolidate_locale(locale) do
     IO.puts("Consolidating locale #{inspect(locale)}")
 
@@ -96,8 +97,8 @@ defmodule Cldr.Consolidate do
       skip: ["availableFormats", "intervalFormats"]
     )
     |> normalize_content(locale)
-    |> Map.take(Cldr.Config.required_modules())
-    |> Cldr.Map.atomize_keys(except: :locale_display_names)
+    |> Cldr.Map.atomize_keys(level: 1)
+    |> Map.take(@required_modules)
     |> add_version()
     |> save_locale(locale)
   end
@@ -130,7 +131,8 @@ defmodule Cldr.Consolidate do
   end
 
   defp add_version(content) do
-    Map.put(content, :version, Cldr.Config.version())
+    version = Cldr.Config.version() # |> Version.parse()
+    Map.put(content, :version, version)
   end
 
   # Remove the top two levels of the map since they add nothing
@@ -142,6 +144,7 @@ defmodule Cldr.Consolidate do
   defp save_locale(content, locale) do
     output_path = Path.join(consolidated_locales_dir(), "#{locale}.json")
     File.write!(output_path, Cldr.Config.json_library().encode!(content))
+    content
   end
 
   defp merge_maps([file_1]) do
@@ -207,6 +210,49 @@ defmodule Cldr.Consolidate do
     String.starts_with?(filename, "cldr-")
   end
 
+  @doc """
+  Apply grouping to keys which have an "_alt_"
+  variant as well.
+
+  The result is a map with a submap of the consoldiated
+  key and key_alt values.
+
+  """
+  def group_by_alt(map, key, options \\ [])
+
+  def group_by_alt(nil, _key, _options) do
+    nil
+  end
+
+  def group_by_alt(map, key, options) when is_map(map) and is_binary(key) do
+    default_key = Keyword.get(options, :default, "default")
+    alt = "_" <> Keyword.get(options, :alt, "alt") <> "_"
+
+    grouped =
+      map
+      |> Enum.filter(fn
+        {^key, _v} -> true
+        {k, _v} -> String.starts_with?(k, key <> alt)
+      end)
+      |> Enum.group_by(
+        fn {k, _value} ->
+          String.split(k, alt) |> hd
+        end,
+        fn {k, v} ->
+          case String.split(k, alt) do
+            [_] -> {default_key, v}
+            [_, type] -> {type, v}
+          end
+        end
+      )
+      |> Enum.map(fn {k, v} -> {k, Map.new(v)} end)
+      |> Map.new()
+
+    map
+    |> Map.merge(grouped)
+    |> Map.reject(&String.starts_with?(elem(&1, 0), key <> alt))
+  end
+
   defp ensure_output_dir_exists!(dir) do
     case File.mkdir(dir) do
       :ok ->
@@ -245,8 +291,9 @@ defmodule Cldr.Consolidate do
   @doc false
   def save_cldr_version do
     path = Path.join(consolidated_output_dir(), "version.json")
-    save_file(cldr_version(), path)
-
+    version = cldr_version()
+    save_file(version, path)
+    IO.puts "Saved CLDR version #{inspect version}"
     assert_package_file_configured!(path)
   end
 

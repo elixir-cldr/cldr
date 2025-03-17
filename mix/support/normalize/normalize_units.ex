@@ -23,6 +23,7 @@ defmodule Cldr.Normalize.Units do
       |> process_unit_types(@unit_types)
       |> Enum.map(fn {style, units} -> {style, group_units(units)} end)
       |> Map.new()
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, "units", normalized_units)
   end
