@@ -6,9 +6,15 @@
 
 This is the changelog for Cldr v2.41.0 released on March 18th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
-### Data format changes
+### Breaking Data format changes
 
-There are some changes to the underlying locale data format that should be transparent to users of these libraries. They are noted here for completeness.
+There are some changes to the underlying locale data format that will be a breaking change for results returned from:
+
+* `Cldr.DateTime.Format.time_formats/{1,2,3}`
+* `Cldr.Number.Symbol.number_symbols_for/3`
+* `MyApp.Cldr.Calendar.day_periods/{0, 1, 2}`
+
+The data changes are summarised as:
 
 * Delimiters are now organized with `:default` and `:variant` quotation marks where the data is available.
 * Time formats now group the `:default` and `:ascii` alternatives.
