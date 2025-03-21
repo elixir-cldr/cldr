@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.41.1
+
+This is the changelog for Cldr v2.41.1 released on March 22nd, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Changes compile-time calls to `List.flatten/1` to be `Elixir.List.flatten/1` to help resolve unpredictable compile errors. Relates to #256.
+
 ## Cldr v2.41.0
 
 This is the changelog for Cldr v2.41.0 released on March 18th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
