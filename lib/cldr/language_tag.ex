@@ -337,10 +337,6 @@ defmodule Cldr.LanguageTag do
   end
 
   defimpl Cldr.LanguageTag.Chars, for: BitString do
-    def to_string(nil) do
-      ""
-    end
-
     def to_string(string) do
       string
     end

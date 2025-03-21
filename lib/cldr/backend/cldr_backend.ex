@@ -728,7 +728,7 @@ defmodule Cldr.Backend do
 
           Enum.reduce(lenient_parse_map(scope, locale_name), string, fn
             {replacement, regex}, acc ->
-              String.replace(acc, regex, replacement)
+              String.replace(acc, Regex.compile!(regex, "u"), replacement)
           end)
         end
       end
@@ -743,9 +743,11 @@ defmodule Cldr.Backend do
       # 3. Remove compound patterns like `{Rs}` which
       #    are not supported in Erlang's `re`.
 
-      @remove_compounds Regex.compile!("{.*}", [:ungreedy])
+      @remove_compounds "{.*}"
 
       for locale_name <- Cldr.Locale.Loader.known_locale_names(config) do
+        remove_compounds = Regex.compile!(@remove_compounds, [:ungreedy])
+
         lenient_parse =
           locale_name
           |> Cldr.Locale.Loader.get_locale(config)
@@ -756,9 +758,9 @@ defmodule Cldr.Backend do
                 v
                 |> String.replace("\x5c\x5c", "\x5c")
                 |> String.replace(" ", "")
-                |> String.replace(@remove_compounds, "")
+                |> String.replace(remove_compounds, "")
 
-              {k, Regex.compile!(regex, "u")}
+              {k, regex}
             end,
             level: 2
           )

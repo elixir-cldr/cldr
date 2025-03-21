@@ -101,7 +101,11 @@ defmodule Cldr do
 
     Cldr.Install.install_known_locale_names(config)
 
-    known_locale_count = Enum.count(Loader.known_locale_names(config))
+    known_locale_count =
+      config
+      |> Loader.known_locale_names()
+      |> Enum.count()
+
     locale_string = if known_locale_count > 1, do: "locales named ", else: "locale named "
 
     if Enum.any?(Config.unknown_locale_names(config)) do
@@ -687,9 +691,9 @@ defmodule Cldr do
 
   """
   @spec display_name(term(), Keyword.t()) :: String.t()
-  @display_name_options [prefer: :default, compound_locale: true]
+  @display_name_options [prefer: :default, dialect: true]
 
-  def display_name(term, options \\ []) do
+  def display_name(%Cldr.LanguageTag{} = term, options \\ []) do
     options = Keyword.merge(@display_name_options, options)
     Cldr.DisplayName.display_name(term, options)
   end
