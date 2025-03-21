@@ -115,7 +115,7 @@ defmodule Cldr.Validity.U do
         {k, nil} -> {String.to_atom(k), k}
         {k, v} -> {String.to_atom(v), k}
       end)
-      |> List.flatten()
+      |> Elixir.List.flatten()
       |> Map.new()
 
     defp encode_key(unquote(key), value) when value in unquote(Map.keys(inverted_values)) do

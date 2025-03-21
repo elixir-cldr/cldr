@@ -26,7 +26,7 @@ defmodule Cldr.Timezone do
                            end)
                            |> Enum.map(fn {k, v} ->
                              case Cldr.validate_territory(k) do
-                               {:ok, territory} -> {territory, List.flatten(v)}
+                               {:ok, territory} -> {territory, Elixir.List.flatten(v)}
                                {:error, _} -> nil
                              end
                            end)
