@@ -32,11 +32,15 @@ defmodule Cldr.Mixfile do
       ],
       compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
-    |> Kernel.++(
-      if Version.compare(System.version(), "1.19.0-dev") == :lt,
-        do: [preferred_cli_env: cli()],
-        else: []
-    )
+    |> Keyword.merge(maybe_add_preferred_cli())
+  end
+
+  defp maybe_add_preferred_cli(project) do
+    if Version.compare(System.version(), "1.19.0-dev") == :lt do
+      [preferred_cli_env: cli()]
+    else
+      []
+    end
   end
 
   defp description do
