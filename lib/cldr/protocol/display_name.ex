@@ -5,5 +5,5 @@ defprotocol Cldr.DisplayName do
 
   """
 
-  def display_name(language_tag, options)
+  def display_name(term, options)
 end

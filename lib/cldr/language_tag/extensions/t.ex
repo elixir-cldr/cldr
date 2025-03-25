@@ -80,37 +80,6 @@ defmodule Cldr.LanguageTag.T do
     ""
   end
 
-  def display_name(language_tag, in_locale) do
-    module = Module.concat(in_locale.backend, :Locale)
-    {:ok, display_names} = module.display_names(in_locale)
-    fields = Cldr.Validity.T.field_mapping() |> Enum.sort()
-
-    for {_key, field} <- fields, !is_nil(Map.get(language_tag, field)) do
-      [display_field(field, display_names), display_value(language_tag, field, display_names)]
-      |> format_key_type(display_names)
-    end
-    |> join_field_values(display_names)
-  end
-
-  def format_key_type(key_value, display_values) do
-    display_pattern = get_in(display_values, [:locale_display_pattern, :locale_key_type_pattern])
-    Cldr.Substitution.substitute(key_value, display_pattern)
-  end
-
-  defp display_field(field, display_names) do
-    get_in(display_names, [:keys, field])
-  end
-
-  defp display_value(language_tag, field, display_names) do
-    value = Map.fetch!(language_tag, field)
-    get_in(display_names, [:types, field, value])
-  end
-
-  def join_field_values(fields, display_names) do
-    join_pattern = get_in(display_names, [:locale_display_pattern, :locale_separator])
-    Enum.reduce(fields, &Cldr.Substitution.substitute([&2, &1], join_pattern))
-  end
-
   defimpl String.Chars do
     def to_string(locale) do
       Cldr.LanguageTag.T.to_string(locale)

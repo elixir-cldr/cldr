@@ -693,7 +693,7 @@ defmodule Cldr do
   @spec display_name(term(), Keyword.t()) :: String.t()
   @display_name_options [prefer: :default, dialect: true]
 
-  def display_name(%Cldr.LanguageTag{} = term, options \\ []) do
+  def display_name(term, options \\ []) do
     options = Keyword.merge(@display_name_options, options)
     Cldr.DisplayName.display_name(term, options)
   end
