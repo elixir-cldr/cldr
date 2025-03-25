@@ -35,7 +35,7 @@ defmodule Cldr.Mixfile do
     |> Keyword.merge(maybe_add_preferred_cli())
   end
 
-  defp maybe_add_preferred_cli(project) do
+  defp maybe_add_preferred_cli() do
     if Version.compare(System.version(), "1.19.0-dev") == :lt do
       [preferred_cli_env: cli()]
     else
@@ -165,7 +165,8 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  defp cli() do
+  @doc false
+  def cli() do
     [
       "cldr.generate_language_tags": :generate,
       "cldr.download.iso_currency": :generate,
