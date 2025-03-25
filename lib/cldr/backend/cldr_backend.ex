@@ -496,7 +496,9 @@ defmodule Cldr.Backend do
         end
       end
 
-      defp quote_preference(marks, preference) when is_map_key(marks, preference), do: Map.fetch!(marks, preference)
+      defp quote_preference(marks, preference) when is_map_key(marks, preference),
+        do: Map.fetch!(marks, preference)
+
       defp quote_preference(marks, _preference), do: marks.default
 
       @doc """
