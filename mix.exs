@@ -19,7 +19,6 @@ defmodule Cldr.Mixfile do
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      preferred_cli_env: preferred_cli_env(),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
         plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a,
@@ -33,6 +32,15 @@ defmodule Cldr.Mixfile do
       ],
       compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
+    |> Keyword.merge(maybe_add_preferred_cli())
+  end
+
+  defp maybe_add_preferred_cli(project) do
+    if Version.compare(System.version(), "1.19.0-dev") == :lt do
+      [preferred_cli_env: cli()]
+    else
+      []
+    end
   end
 
   defp description do
@@ -59,8 +67,8 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 1.0", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
-      {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true},
-      {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true}
+      {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true}
+      # {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true}
     ]
   end
 
@@ -157,7 +165,7 @@ defmodule Cldr.Mixfile do
     ]
   end
 
-  defp preferred_cli_env() do
+  defp cli() do
     [
       "cldr.generate_language_tags": :generate,
       "cldr.download.iso_currency": :generate,

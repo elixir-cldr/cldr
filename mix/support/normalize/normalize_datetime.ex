@@ -63,9 +63,7 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.deep_map(&group_day_periods/1,
         filter: "day_periods"
       )
-      |> Cldr.Map.atomize_keys(
-        only: ["long", "daylight", "generic", "standard", "short", "type"]
-      )
+      |> Cldr.Map.atomize_keys(only: ["long", "daylight", "generic", "standard", "short", "type"])
 
     Map.put(content, "dates", dates)
   end

@@ -1377,9 +1377,8 @@ defmodule Cldr.Config do
   * `config` is a `Config.Cldr.t()` struct or a `Cldr.backend()` module
 
   """
-  @reg Regex.compile!(
-         "(?<currency>[^\\(]+)(?<annotation>\\([^0-9].+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
-       )
+  @reg "(?<currency>[^\\(]+)(?<annotation>\\([^0-9].+\\))?(.*\\((?<from>[0-9]{4}))?(–(?<to>[0-9]{4}))?"
+
   def currencies_for(locale_name, config) do
     if known_locale_name(locale_name, config) do
       currencies =
@@ -1413,7 +1412,8 @@ defmodule Cldr.Config do
   end
 
   def split_currency_metadata({k, %{name: name} = v}) do
-    name_and_range = Regex.named_captures(@reg, name)
+    regex = Regex.compile!(@reg)
+    name_and_range = Regex.named_captures(regex, name)
 
     name =
       (Map.get(name_and_range, "currency") <> Map.get(name_and_range, "annotation"))

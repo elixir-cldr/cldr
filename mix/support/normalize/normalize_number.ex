@@ -165,12 +165,14 @@ defmodule Cldr.Normalize.Number do
   # the section that is marked as a set of "unitPattern-count-___".
   @doc false
   @pattern_count "unit_pattern_count_"
-  @pattern_regex Regex.compile!(@pattern_count)
+
   def currency_long_format(nil), do: nil
 
   def currency_long_format(formats) do
+    pattern_regex = Regex.compile!(@pattern_count)
+
     formats
-    |> Enum.filter(fn {k, _v} -> Regex.match?(@pattern_regex, k) end)
+    |> Enum.filter(fn {k, _v} -> Regex.match?(pattern_regex, k) end)
     |> Enum.map(fn {k, v} ->
       @pattern_count <> count = k
       {count, Cldr.Substitution.parse(v)}

@@ -1,7 +1,7 @@
 defmodule Cldr.Unit.Parser do
   @moduledoc false
 
-  @operators ~r/[*\/^]/
+  @operators "[*\/^]"
 
   def parse(expression, default \\ "")
 
@@ -10,8 +10,10 @@ defmodule Cldr.Unit.Parser do
   end
 
   def parse(expression, _default) do
+    operator_regex = Regex.compile!(@operators)
+
     expression
-    |> String.split(@operators, include_captures: true)
+    |> String.split(operator_regex, include_captures: true)
     |> Enum.map(&String.trim/1)
     |> infix_to_postfix
   end
