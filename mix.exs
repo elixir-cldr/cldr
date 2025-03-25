@@ -30,9 +30,13 @@ defmodule Cldr.Mixfile do
           :missing_return
         ]
       ],
-      compilers: [:yecc, :leex] ++ Mix.compilers(),
+      compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
-    |> Kernel.++(if Version.compare(System.version(), "1.19.0-dev") == :lt, do: [preferred_cli_env: cli()], else: [])
+    |> Kernel.++(
+      if Version.compare(System.version(), "1.19.0-dev") == :lt,
+        do: [preferred_cli_env: cli()],
+        else: []
+    )
   end
 
   defp description do
@@ -59,7 +63,7 @@ defmodule Cldr.Mixfile do
       {:gettext, "~> 0.19", optional: true},
       {:stream_data, "~> 1.0", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
-      {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true},
+      {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true}
       # {:benchee, "~> 1.0", only: :dev, runtime: false, optional: true}
     ]
   end

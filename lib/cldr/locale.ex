@@ -1817,7 +1817,8 @@ defmodule Cldr.Locale do
     |> Map.put(:requested_locale_name, locale_name_from(language_tag, false))
   end
 
-  @spec put_cldr_locale_name(language_tag :: Cldr.LanguageTag.t(), skip? :: boolean()) :: Cldr.LanguageTag.t()
+  @spec put_cldr_locale_name(language_tag :: Cldr.LanguageTag.t(), skip? :: boolean()) ::
+          Cldr.LanguageTag.t()
   defp put_cldr_locale_name(%LanguageTag{} = language_tag, true) do
     language_tag
   end
@@ -1827,7 +1828,8 @@ defmodule Cldr.Locale do
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t()) :: Cldr.LanguageTag.t()
+  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t()) ::
+          Cldr.LanguageTag.t()
   defp put_rbnf_locale_name(%LanguageTag{} = language_tag, options) do
     rbnf_locales = Keyword.get(options, :rbnf_locales, [])
 
@@ -1879,7 +1881,10 @@ defmodule Cldr.Locale do
   defp rbnf_locale_name(%LanguageTag{} = language_tag, rbnf_names) do
     cond do
       rbnf_locale =
-          first_match(language_tag, &known_rbnf_locale_name(&1, &2, rbnf_names, language_tag.backend)) ->
+          first_match(
+            language_tag,
+            &known_rbnf_locale_name(&1, &2, rbnf_names, language_tag.backend)
+          ) ->
         rbnf_locale
 
       parent = Map.get(parent_locale_map(), language_tag.cldr_locale_name) ->

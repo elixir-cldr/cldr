@@ -131,7 +131,8 @@ defmodule Cldr.Consolidate do
   end
 
   defp add_version(content) do
-    version = Cldr.Config.version() # |> Version.parse()
+    # |> Version.parse()
+    version = Cldr.Config.version()
     Map.put(content, :version, version)
   end
 
@@ -293,7 +294,7 @@ defmodule Cldr.Consolidate do
     path = Path.join(consolidated_output_dir(), "version.json")
     version = cldr_version()
     save_file(version, path)
-    IO.puts "Saved CLDR version #{inspect version}"
+    IO.puts("Saved CLDR version #{inspect(version)}")
     assert_package_file_configured!(path)
   end
 

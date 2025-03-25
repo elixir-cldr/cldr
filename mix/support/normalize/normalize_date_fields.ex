@@ -22,7 +22,7 @@ defmodule Cldr.Normalize.DateFields do
     |> normalize_elements
     |> Cldr.Map.rename_keys("dayperiod", "day_period")
     |> Cldr.Map.deep_map(&group_day_period/1,
-        only: "day_period"
+      only: "day_period"
     )
     |> Cldr.Map.atomize_keys()
   end
@@ -30,7 +30,9 @@ defmodule Cldr.Normalize.DateFields do
   defp group_day_period({key, day_period}) do
     day_period =
       day_period
-      |> Enum.map(fn {key, periods} -> {key, Cldr.Consolidate.group_by_alt(periods, "display_name")} end)
+      |> Enum.map(fn {key, periods} ->
+        {key, Cldr.Consolidate.group_by_alt(periods, "display_name")}
+      end)
       |> Map.new()
 
     {key, day_period}
