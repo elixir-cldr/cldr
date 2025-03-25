@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.41.0"
+  @version "2.42.0"
 
   def project do
     [
@@ -19,7 +19,6 @@ defmodule Cldr.Mixfile do
       test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      preferred_cli_env: cli(),
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
         plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a,
@@ -31,8 +30,9 @@ defmodule Cldr.Mixfile do
           :missing_return
         ]
       ],
-      compilers: [:yecc, :leex] ++ Mix.compilers()
+      compilers: [:yecc, :leex] ++ Mix.compilers(),
     ]
+    |> Kernel.++(if Version.compare(System.version(), "1.19.0-dev") == :lt, do: [preferred_cli_env: cli()], else: [])
   end
 
   defp description do
