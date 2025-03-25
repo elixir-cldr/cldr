@@ -695,7 +695,7 @@ defmodule Cldr do
 
   def display_name(term, options \\ []) do
     options = Keyword.merge(@display_name_options, options)
-    Cldr.DisplayName.display_name(term, options)
+    apply(Cldr.DisplayName, :display_name, [term, options])
   end
 
   @doc """
