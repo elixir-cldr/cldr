@@ -730,7 +730,7 @@ defmodule Cldr.Backend do
 
           Enum.reduce(lenient_parse_map(scope, locale_name), string, fn
             {replacement, regex}, acc ->
-              String.replace(acc, Regex.compile!(regex, "u"), replacement)
+              String.replace(acc, ~r/#{regex}/u, replacement)
           end)
         end
       end
