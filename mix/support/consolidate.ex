@@ -56,6 +56,7 @@ defmodule Cldr.Consolidate do
     save_validity_data()
     save_bcp47_data()
     save_metazone_data()
+    save_primary_zones()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -543,6 +544,7 @@ defmodule Cldr.Consolidate do
   def save_metazone_data do
     metazone_path = Path.join(consolidated_output_dir(), "metazones.json")
     metazone_mapping_path = Path.join(consolidated_output_dir(), "metazone_mapping.json")
+    metazone_id_path = Path.join(consolidated_output_dir(), "metazone_ids.json")
 
     metazone_data =
       download_data_dir()
@@ -577,6 +579,34 @@ defmodule Cldr.Consolidate do
     |> save_file(metazone_mapping_path)
 
     assert_package_file_configured!(metazone_mapping_path)
+
+    metazone_data
+    |> get_in(["supplemental", "metaZones", "metazoneIds"])
+    |> Enum.map(fn {short_zone, zone} ->
+      timezone = Map.fetch!(zone, "_longId")
+      %{short_zone => timezone}
+    end)
+    |> Cldr.Map.merge_map_list()
+    |> save_file(metazone_id_path)
+
+    assert_package_file_configured!(metazone_id_path)
+  end
+
+  def save_primary_zones do
+    primary_zones_path = Path.join(consolidated_output_dir(), "primary_zones.json")
+
+    primary_zone_data =
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/primaryZones.json"])
+      |> File.read!()
+      |> Jason.decode!()
+
+    primary_zone_data
+    |> get_in(["supplemental", "primaryZones"])
+    |> Cldr.Map.atomize_keys()
+    |> save_file(primary_zones_path)
+
+    assert_package_file_configured!(primary_zones_path)
   end
 
   defp map_metazones(zones) do

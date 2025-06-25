@@ -110,6 +110,8 @@ defmodule Cldr.Mixfile do
         "priv/cldr/timezones.json",
         "priv/cldr/metazones.json",
         "priv/cldr/metazone_mapping.json",
+        "priv/cldr/metazone_ids.json",
+        "priv/cldr/primary_zones.json",
         "priv/cldr/units.json",
         "priv/cldr/grammatical_features.json",
         "priv/cldr/grammatical_gender.json",

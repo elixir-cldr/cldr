@@ -8,7 +8,12 @@ This is the changelog for Cldr v2.43.0 released on ______, 2025.  For older chan
 
 ### Enhancements
 
-* Adds metazone and metazone mapping data to the build process. This data supports timezone name localisation for a future release of [ex_cldr_dates_times](https://github.com/elixir-cldr/cldr_dates_times). See the [github discussion](https://github.com/orgs/elixir-cldr/discussions/258) for more background.
+* Adds metazone, metazone mapping and primary zone data to the build process. This data supports timezone name localisation for a future release of [ex_cldr_dates_times](https://github.com/elixir-cldr/cldr_dates_times). See the [github discussion](https://github.com/orgs/elixir-cldr/discussions/258) for more background.
+
+  * Adds `Cldr.Config.metazones/0`
+  * Adds `Cldr.Config.metazone_mapping/0`
+  * Adds `Cldr.Config.metazone_ids/0`
+  * Adds `Cldr.Config.primary_zones/0`
 
 ## Cldr v2.42.0
 

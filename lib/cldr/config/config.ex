@@ -1513,7 +1513,6 @@ defmodule Cldr.Config do
 
   """
   @metazone_mapping_file "metazone_mapping.json"
-  @spec metazone_mapping :: map()
   def metazone_mapping do
     Path.join(cldr_data_dir(), @metazone_mapping_file)
     |> File.read!()
@@ -1526,12 +1525,34 @@ defmodule Cldr.Config do
 
   """
   @metazone_file "metazones.json"
-  @spec metazones :: map()
   def metazones do
     Path.join(cldr_data_dir(), @metazone_file)
     |> File.read!()
     |> json_library().decode!()
     |> Cldr.Map.atomize_keys(filter: ["from", "to"])
+  end
+
+  @doc """
+  Return the mapping from short zone to metazone.
+
+  """
+  @metazone_id_file "metazone_ids.json"
+  def metazone_ids do
+    Path.join(cldr_data_dir(), @metazone_id_file)
+    |> File.read!()
+    |> json_library().decode!()
+  end
+
+  @doc """
+  Return the primary zones for a territories.
+
+  """
+  @primary_zone_file "primary_zones.json"
+  def primary_zones do
+    Path.join(cldr_data_dir(), @primary_zone_file)
+    |> File.read!()
+    |> json_library().decode!()
+    |> Cldr.Map.atomize_keys()
   end
 
   @doc """
