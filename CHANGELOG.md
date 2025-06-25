@@ -6,9 +6,23 @@
 
 This is the changelog for Cldr v2.43.0 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Deprecations
+
+* Deprecate `Cldr.Timezone.fetch/1` in favor of `Cldr.Timezone.fetch_short_zone/1`
+
+* Deprecate `Cldr.Timezone.get/1` in favor of `Cldr.Timezone.get_short_zone/1`
+
+* Deprecate `Cldr.Timezone.timezones_for_territory/0` in favor of `Cldr.Timezone.timezones_by_territory/0`
+
+* Deprecate `Cldr.Timezone.validate_timezone/1` in favor of `Cldr.Timezone.validate_short_zone/1`
+
 ### Enhancements
 
 * Adds metazone and metazone mapping data to the build process. This data supports timezone name localisation for a future release of [ex_cldr_dates_times](https://github.com/elixir-cldr/cldr_dates_times). See the [github discussion](https://github.com/orgs/elixir-cldr/discussions/258) for more background.
+
+* Adds `Cldr.Timezone.canonical_timezones/0` to return the mapping of IANA long timezone names to their canonical equivalent.
+
+* Adds `Cldr.Timezone.canonical_timezone/1` to return the canonical timezone name for a given IANA long timezone name, or `{:error, "Etc/Unknown"}`.
 
 ## Cldr v2.42.0
 

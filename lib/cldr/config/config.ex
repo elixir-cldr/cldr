@@ -1509,6 +1509,34 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Get the canonical timezone data
+
+  """
+  @timezones_file "timezones.json"
+  def timezones do
+    Path.join(cldr_data_dir(), @timezones_file)
+    |> File.read!()
+    |> Cldr.Config.json_library().decode!
+    |> Enum.reject(fn {_k, v} -> v == [""] end)
+    |> Map.new()
+  end
+
+  @doc """
+  Returns a mapping of valid long timezone names
+  to their canonical equivalent.
+
+  """
+  def canonical_timezones do
+    timezones()
+    |> Enum.map(fn {_short_name, zones} ->
+     [canonical | others] = zones
+     Enum.map(others, fn other -> {other, canonical} end)
+    end)
+    |> List.flatten()
+    |> Map.new()
+  end
+
+  @doc """
   Return the metazone mapping data.
 
   """

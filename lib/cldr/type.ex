@@ -44,7 +44,7 @@ defmodule Cldr.Type do
     end
   end
 
-  def timezones_for_territory(territory_timezones) do
+  def timezones_by_territory(territory_timezones) do
     timezone_ast =
       Enum.map(territory_timezones, fn {territory, _timezones} ->
         {territory, string_list()}
