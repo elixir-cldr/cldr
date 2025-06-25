@@ -55,6 +55,7 @@ defmodule Cldr.Consolidate do
     save_language_data()
     save_validity_data()
     save_bcp47_data()
+    save_metazone_data()
 
     all_locales()
     |> Task.async_stream(__MODULE__, :consolidate_locale, [],
@@ -536,6 +537,72 @@ defmodule Cldr.Consolidate do
       territory
       | parents(territory_parents, :proplists.get_value(territory, territory_parents, nil))
     ]
+  end
+
+  @doc false
+  def save_metazone_data do
+    metazone_path = Path.join(consolidated_output_dir(), "metazones.json")
+    metazone_mapping_path = Path.join(consolidated_output_dir(), "metazone_mapping.json")
+
+    metazone_data =
+      download_data_dir()
+      |> Path.join(["cldr-core", "/supplemental", "/metaZones.json"])
+      |> File.read!()
+      |> Jason.decode!()
+
+    metazone_data
+    |> get_in(["supplemental", "metaZones", "metazoneInfo", "timezone"])
+    |> Cldr.Map.rename_keys("_mzone", "metazone")
+    |> Cldr.Map.rename_keys("_to", "to")
+    |> Cldr.Map.rename_keys("_from", "from")
+    |> Enum.map(fn {region, zones} ->
+      {region, map_metazones(zones)}
+    end)
+    |> Map.new()
+    |> save_file(metazone_path)
+
+    metazone_data
+    |> get_in(["supplemental", "metaZones", "metazones"])
+    |> Cldr.Map.rename_keys("_other", "other")
+    |> Cldr.Map.rename_keys("_type", "type")
+    |> Cldr.Map.rename_keys("_territory", "territory")
+    |> Enum.map(fn %{"mapZone" => mapping} ->
+      %{"type" => type, "other" => other, "territory" => territory} = mapping
+      territory = String.to_atom(territory)
+      {other, %{territory => type}}
+    end)
+    |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
+    |> Enum.map(fn {zone, mapping} -> {zone, Cldr.Map.merge_map_list(mapping)} end)
+    |> Map.new()
+    |> save_file(metazone_mapping_path)
+
+    assert_package_file_configured!(metazone_mapping_path)
+  end
+
+  defp map_metazones(zones) do
+    Enum.map(zones, fn {zone, metazones} ->
+      meta =
+        Enum.map(metazones, fn
+          %{"usesMetazone" => %{"metazone" => metazone, "from" => from, "to" => to}} ->
+            %{metazone => %{from: from, to: to}}
+
+           %{"usesMetazone" => %{"metazone" => metazone, "from" => from}} ->
+            %{metazone => %{from: from, to: nil}}
+
+          %{"usesMetazone" => %{"metazone" => metazone, "to" => to}} ->
+            %{metazone => %{from: nil, to: to}}
+
+          %{"usesMetazone" => %{"metazone" => metazone}} ->
+            %{metazone => %{from: nil, to: nil}}
+
+          {subzone, zones} when is_list(zones)->
+            %{subzone => zones}
+            |> map_metazones()
+            |> Map.new()
+        end)
+      {zone, meta}
+    end)
+    |> Map.new()
   end
 
   @doc false

@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.43.0
+
+This is the changelog for Cldr v2.43.0 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds metazone and metazone mapping data to the build process. This data supports timezone name localisation for a future release of [ex_cldr_dates_times](https://github.com/elixir-cldr/cldr_dates_times). See the [github discussion](https://github.com/orgs/elixir-cldr/discussions/258) for more background.
+
 ## Cldr v2.42.0
 
 This is the changelog for Cldr v2.42.0 released on March 26th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
