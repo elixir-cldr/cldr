@@ -1529,8 +1529,8 @@ defmodule Cldr.Config do
   def canonical_timezones do
     timezones()
     |> Enum.map(fn {_short_name, zones} ->
-     [canonical | others] = zones
-     Enum.map(others, fn other -> {other, canonical} end)
+     [canonical | _others] = zones
+     Enum.map(zones, fn other -> {other, canonical} end)
     end)
     |> List.flatten()
     |> Map.new()
