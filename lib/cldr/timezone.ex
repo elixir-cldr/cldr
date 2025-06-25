@@ -15,7 +15,6 @@ defmodule Cldr.Timezone do
   @unknown_zone "Etc/Unknown"
 
   @timezones Cldr.Config.timezones()
-  @canonical_timezones Cldr.Config.canonical_timezones()
 
   @timezones_by_territory @timezones
                            |> Enum.group_by(fn {k, _v} -> String.slice(k, 0, 2) end, fn {_k, v} ->
@@ -40,32 +39,6 @@ defmodule Cldr.Timezone do
     @timezones
   end
 
-  @doc """
-  Returns the mapping of IANA long zone names to the
-  canonical zone name.
-
-  """
-  @doc since: "2.43.0"
-  def canonical_timezones do
-    @canonical_timezones
-  end
-
-  @doc """
-  Resolve the canonical timezone name for a given
-  zone.
-
-  Returns `#{@unknown_zone}` if no canonical zone
-  can be found.
-
-  """
-  @doc since: "2.43.0"
-  def canonical_timezone(zone) do
-    case Map.fetch(canonical_timezones(), zone) do
-      {:ok, canonical} -> {:ok, canonical}
-      :error -> {:error, @unknown_zone}
-    end
-  end
-
   @doc false
   @deprecated "Use timezones_by_territory/0 instead"
   def timezones_for_territory do
@@ -78,6 +51,12 @@ defmodule Cldr.Timezone do
   @doc """
   Returns a mapping of territories to
   their known IANA timezone names.
+
+  The results are estimates, not definitive. While
+  the short zone names often start with an ISO 3166-2
+  territory code, this is not guaranteed. And the
+  code is not guaranteed to be specific to that
+  territory.
 
   """
   def timezones_by_territory do
@@ -92,7 +71,10 @@ defmodule Cldr.Timezone do
 
   @doc """
   Returns a list of IANA time zone names for
-  a given CLDR short zone code, or `nil`
+  a given CLDR short zone code, or `nil`.
+
+  The first time zone name in the list is
+  the canonical time zone name.
 
   ### Examples
 
