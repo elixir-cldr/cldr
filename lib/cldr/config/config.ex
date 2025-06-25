@@ -1509,6 +1509,32 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return the metazone mapping data.
+
+  """
+  @metazone_mapping_file "metazone_mapping.json"
+  @spec metazone_mapping :: map()
+  def metazone_mapping do
+    Path.join(cldr_data_dir(), @metazone_mapping_file)
+    |> File.read!()
+    |> json_library().decode!()
+    |> Cldr.Map.atomize_keys(level: 2)
+  end
+
+  @doc """
+  Return the metazone data.
+
+  """
+  @metazone_file "metazones.json"
+  @spec metazones :: map()
+  def metazones do
+    Path.join(cldr_data_dir(), @metazone_file)
+    |> File.read!()
+    |> json_library().decode!()
+    |> Cldr.Map.atomize_keys(filter: ["from", "to"])
+  end
+
+  @doc """
   Returns true if a `Gettext` module is configured in Cldr and
   the `Gettext` module is available.
 
