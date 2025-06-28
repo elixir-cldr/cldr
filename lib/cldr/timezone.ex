@@ -66,12 +66,6 @@ defmodule Cldr.Timezone do
   Returns a mapping of territories to
   their known IANA timezone names.
 
-  The results are estimates, not definitive. While
-  the short zone names often start with an ISO 3166-2
-  territory code, this is not guaranteed. And the
-  code is not guaranteed to be specific to that
-  territory.
-
   """
   @dialyzer {:nowarn_function, timezones_by_territory: 0}
   def timezones_by_territory do

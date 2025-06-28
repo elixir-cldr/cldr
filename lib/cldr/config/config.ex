@@ -1611,7 +1611,7 @@ defmodule Cldr.Config do
   end
 
   @doc """
-  Return the primary zones for a territories.
+  Return the primary zones for territories.
 
   """
   @primary_zone_file "primary_zones.json"
@@ -1619,7 +1619,7 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @primary_zone_file)
     |> File.read!()
     |> json_library().decode!()
-    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values()
   end
 
   @doc """

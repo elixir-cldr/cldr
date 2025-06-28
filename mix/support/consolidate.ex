@@ -604,6 +604,8 @@ defmodule Cldr.Consolidate do
     primary_zone_data
     |> get_in(["supplemental", "primaryZones"])
     |> Cldr.Map.atomize_keys()
+    |> Enum.map(fn {k, v} -> {v, k} end)
+    |> Map.new()
     |> save_file(primary_zones_path)
 
     assert_package_file_configured!(primary_zones_path)
