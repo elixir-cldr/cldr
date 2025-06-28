@@ -1343,7 +1343,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.timezone_from_locale "en-AU"
       {:error,
        {Cldr.AmbiguousTimezoneError,
-        "Cannot determine the timezone since the territory :AU has 13 timezone IDs"}}
+        "Cannot determine the timezone since the territory :AU has 12 timezone IDs"}}
 
   """
 
@@ -1394,7 +1394,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.timezone_from_locale :"en-AU", TestBackend.Cldr
       {:error,
        {Cldr.AmbiguousTimezoneError,
-        "Cannot determine the timezone since the territory :AU has 13 timezone IDs"}}
+        "Cannot determine the timezone since the territory :AU has 12 timezone IDs"}}
 
   """
 
