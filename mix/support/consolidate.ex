@@ -614,25 +614,34 @@ defmodule Cldr.Consolidate do
       meta =
         Enum.map(metazones, fn
           %{"usesMetazone" => %{"metazone" => metazone, "from" => from, "to" => to}} ->
-            %{metazone => %{from: from, to: to}}
+            [metazone, from, to]
 
            %{"usesMetazone" => %{"metazone" => metazone, "from" => from}} ->
-            %{metazone => %{from: from, to: nil}}
+            [metazone, from, nil]
 
           %{"usesMetazone" => %{"metazone" => metazone, "to" => to}} ->
-            %{metazone => %{from: nil, to: to}}
+            [metazone, nil, to]
 
           %{"usesMetazone" => %{"metazone" => metazone}} ->
-            %{metazone => %{from: nil, to: nil}}
+            [metazone, nil, nil]
 
           {subzone, zones} when is_list(zones)->
             %{subzone => zones}
             |> map_metazones()
             |> Map.new()
         end)
-      {zone, meta}
+
+      if is_subzone?(meta) do
+        {zone, Cldr.Map.merge_map_list(meta)}
+      else
+        {zone, meta}
+      end
     end)
     |> Map.new()
+  end
+
+  defp is_subzone?(meta) when is_list(meta) do
+    is_map(hd(meta))
   end
 
   @doc false
@@ -929,11 +938,24 @@ defmodule Cldr.Consolidate do
       |> File.read!()
       |> String.replace(~r/<!DOCTYPE.*>\n/, "")
       |> xpath(~x"//key"l,
-        timezones: [~x"./type"l, name: ~x"./@name"s, alias: ~x"./@alias"s]
+        timezones: [
+          ~x"./type"l,
+          name: ~x"./@name"s,
+          alias: ~x"./@alias"s,
+          region: ~x"./@region"s,
+          preferred: ~x"./@preferred"s
+        ]
       )
 
-    Enum.map(timezones, fn %{alias: aliases, name: name} ->
-      {name, String.split(aliases, " ")}
+    Enum.map(timezones, fn
+      %{alias: aliases, name: name, region: "", preferred: ""} ->
+        region = String.slice(name, 0, 2) |> String.upcase() |> String.to_atom()
+        {name, %{aliases: String.split(aliases, " "), territory: region, preferred: nil}}
+      %{alias: aliases, name: name, region: region, preferred: ""} ->
+        region = String.to_atom(region)
+        {name, %{aliases: String.split(aliases, " "), territory: region, preferred: nil}}
+      %{name: name, preferred: preferred} ->
+        {name, %{aliases: nil, territory: nil, preferred: preferred}}
     end)
     |> Map.new()
     |> save_file(path)

@@ -11,6 +11,7 @@ defmodule Doc.Test do
   doctest Cldr.LanguageTag.Sigil
   doctest Cldr.AcceptLanguage
   doctest Cldr.Substitution
+  doctest Cldr.Timezone
 
   doctest Cldr.Validity.Territory
   doctest Cldr.Validity.Script

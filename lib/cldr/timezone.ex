@@ -12,19 +12,31 @@ defmodule Cldr.Timezone do
   releases.
 
   """
+  alias Cldr.Locale
+
+  @type timezone :: %{
+    aliases: [String.t(), ...],
+    preferred: nil | Locale.territory_code(),
+    territory: Locale.territory_code()
+  }
   @unknown_zone "Etc/Unknown"
 
   @timezones Cldr.Config.timezones()
 
   @timezones_by_territory @timezones
-                           |> Enum.group_by(fn {k, _v} -> String.slice(k, 0, 2) end, fn {_k, v} ->
-                             v
+                           |> Enum.group_by(
+                             fn {_k, v} -> v.territory end,
+                             fn {k, v} -> Map.put(v, :short_zone, k)
                            end)
-                           |> Enum.map(fn {k, v} ->
-                             case Cldr.validate_territory(k) do
-                               {:ok, territory} -> {territory, Elixir.List.flatten(v)}
-                               {:error, _} -> nil
-                             end
+                           |> Enum.map(fn
+                             {nil, _} ->
+                               nil
+                             {:UT = territory, v} ->
+                               {territory, Elixir.List.flatten(v)}
+                             {k, v} ->
+                               case Cldr.validate_territory(k) do
+                                 {:ok, territory} -> {territory, Elixir.List.flatten(v)}
+                               end
                            end)
                            |> Enum.reject(&is_nil/1)
                            |> Map.new()
@@ -34,7 +46,7 @@ defmodule Cldr.Timezone do
   IANA timezone names.
 
   """
-  @spec timezones() :: %{(zone_name :: String.t()) => [iana_name :: String.t(), ...]}
+  @spec timezones() :: %{(zone_name :: String.t()) => timezone()}
   def timezones do
     @timezones
   end
@@ -65,7 +77,7 @@ defmodule Cldr.Timezone do
 
   @doc false
   def timezones_for_territory(territory) do
-    timezones_for_territory()
+    timezones_by_territory()
     |> Map.fetch(territory)
   end
 
@@ -79,13 +91,17 @@ defmodule Cldr.Timezone do
   ### Examples
 
       iex> Cldr.Timezone.get_short_zone("ausyd")
-      ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"]}
+      %{
+        preferred: nil,
+        aliases: ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"],
+        territory: :AU
+      }
 
       iex> Cldr.Timezone.get_short_zone("nope")
       nil
 
   """
-  @spec get_short_zone(String.t(), String.t() | nil) :: [String.t()] | nil
+  @spec get_short_zone(String.t(), String.t() | nil) :: map() | nil
   def get_short_zone(short_zone, default \\ nil) do
     Map.get(timezones(), short_zone, default)
   end
@@ -105,14 +121,20 @@ defmodule Cldr.Timezone do
   ### Example
 
       iex> Cldr.Timezone.fetch_short_zone("ausyd")
-      {:ok,
-       ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"]}
+      {
+        :ok,
+        %{
+          preferred: nil,
+          aliases: ["Australia/Sydney", "Australia/ACT", "Australia/Canberra", "Australia/NSW"],
+          territory: :AU
+        }
+      }
 
       iex> Cldr.Timezone.fetch_short_zone("nope")
       :error
 
   """
-  @spec fetch_short_zone(String.t()) :: {:ok, [String.t()]} | :error
+  @spec fetch_short_zone(String.t()) :: {:ok, map()} | :error
   def fetch_short_zone(short_zone) do
     Map.fetch(timezones(), short_zone)
   end
@@ -133,7 +155,7 @@ defmodule Cldr.Timezone do
   @spec validate_short_zone(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def validate_short_zone(short_zone) do
     case fetch(short_zone) do
-      {:ok, [first_zone | _others]} ->
+      {:ok, %{aliases: [first_zone | _others]}} ->
         {:ok, first_zone}
 
       :error ->

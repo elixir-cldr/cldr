@@ -1517,7 +1517,8 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @timezones_file)
     |> File.read!()
     |> Cldr.Config.json_library().decode!
-    |> Enum.reject(fn {_k, v} -> v == [""] end)
+    |> Cldr.Map.atomize_keys(level: 2)
+    |> Cldr.Map.atomize_values(only: :territory)
     |> Map.new()
   end
 
@@ -1557,7 +1558,40 @@ defmodule Cldr.Config do
     Path.join(cldr_data_dir(), @metazone_file)
     |> File.read!()
     |> json_library().decode!()
-    |> Cldr.Map.atomize_keys(filter: ["from", "to"])
+    |> Cldr.Map.deep_map(fn
+      s when is_binary(s) ->
+        maybe_datetime(s)
+      other ->
+        other
+    end)
+    |> Enum.map(&reverse_date_list/1)
+    |> Map.new()
+  end
+
+  defp maybe_datetime(string) do
+    maybe_datetime =
+      string
+      |> String.replace(" ", "T")
+      |> Kernel.<>(":00Z")
+      |> DateTime.from_iso8601()
+
+    case maybe_datetime do
+      {:ok, datetime, _} -> datetime
+      _error -> string
+    end
+  end
+
+  defp reverse_date_list({k, v}) when is_list(v) do
+    {k, Enum.reverse(v)}
+  end
+
+  defp reverse_date_list({k, v}) when is_map(v) do
+    {k, reverse_date_list(v)}
+  end
+
+  defp reverse_date_list(map) when is_map(map) do
+    Enum.map(map, fn m -> reverse_date_list(m) end)
+    |> Map.new()
   end
 
   @doc """
