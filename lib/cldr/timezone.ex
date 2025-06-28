@@ -43,6 +43,16 @@ defmodule Cldr.Timezone do
                            |> Enum.reject(&is_nil/1)
                            |> Map.new()
 
+  @territories_by_timezone @timezones_by_territory
+  |> Enum.map(fn {territory, zones} ->
+    Enum.map(zones, fn zone ->
+      Enum.map(zone.aliases, fn aliass -> {aliass, territory} end)
+    end)
+  end)
+  |> List.flatten()
+  |> Enum.reject(fn {_zone, territory} -> territory == :UT end)
+  |> Map.new()
+
   @doc """
   Returns a mapping of CLDR short zone codes to
   IANA timezone names.
@@ -70,6 +80,18 @@ defmodule Cldr.Timezone do
   @dialyzer {:nowarn_function, timezones_by_territory: 0}
   def timezones_by_territory do
     @timezones_by_territory
+  end
+
+  @doc """
+  Returns a mapping of time zone IDs to
+  their known territory.
+
+  A time zone can only belong to one
+  territory in CLDR.
+
+  """
+  def territories_by_timezone do
+    @territories_by_timezone
   end
 
   @doc false
