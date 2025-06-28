@@ -618,7 +618,7 @@ defmodule Cldr.Consolidate do
           %{"usesMetazone" => %{"metazone" => metazone, "from" => from, "to" => to}} ->
             [metazone, from, to]
 
-           %{"usesMetazone" => %{"metazone" => metazone, "from" => from}} ->
+          %{"usesMetazone" => %{"metazone" => metazone, "from" => from}} ->
             [metazone, from, nil]
 
           %{"usesMetazone" => %{"metazone" => metazone, "to" => to}} ->
@@ -627,7 +627,7 @@ defmodule Cldr.Consolidate do
           %{"usesMetazone" => %{"metazone" => metazone}} ->
             [metazone, nil, nil]
 
-          {subzone, zones} when is_list(zones)->
+          {subzone, zones} when is_list(zones) ->
             %{subzone => zones}
             |> map_metazones()
             |> Map.new()
@@ -953,9 +953,11 @@ defmodule Cldr.Consolidate do
       %{alias: aliases, name: name, region: "", preferred: ""} ->
         region = String.slice(name, 0, 2) |> String.upcase() |> String.to_atom()
         {name, %{aliases: String.split(aliases, " "), territory: region, preferred: nil}}
+
       %{alias: aliases, name: name, region: region, preferred: ""} ->
         region = String.to_atom(region)
         {name, %{aliases: String.split(aliases, " "), territory: region, preferred: nil}}
+
       %{name: name, preferred: preferred} ->
         {name, %{aliases: nil, territory: nil, preferred: preferred}}
     end)

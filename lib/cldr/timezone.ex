@@ -17,41 +17,43 @@ defmodule Cldr.Timezone do
   @type short_zone :: String.t()
 
   @type timezone :: %{
-    aliases: [String.t(), ...],
-    preferred: nil | short_zone(),
-    territory: Locale.territory_code()
-  }
+          aliases: [String.t(), ...],
+          preferred: nil | short_zone(),
+          territory: Locale.territory_code()
+        }
   @unknown_zone "Etc/Unknown"
 
   @timezones Cldr.Config.timezones()
 
   @timezones_by_territory @timezones
-                           |> Enum.group_by(
-                             fn {_k, v} -> v.territory end,
-                             fn {k, v} -> Map.put(v, :short_zone, k)
-                           end)
-                           |> Enum.map(fn
-                             {nil, _} ->
-                               nil
-                             {:UT = territory, v} ->
-                               {territory, Elixir.List.flatten(v)}
-                             {k, v} ->
-                               case Cldr.validate_territory(k) do
-                                 {:ok, territory} -> {territory, Elixir.List.flatten(v)}
-                               end
-                           end)
-                           |> Enum.reject(&is_nil/1)
-                           |> Map.new()
+                          |> Enum.group_by(
+                            fn {_k, v} -> v.territory end,
+                            fn {k, v} -> Map.put(v, :short_zone, k) end
+                          )
+                          |> Enum.map(fn
+                            {nil, _} ->
+                              nil
+
+                            {:UT = territory, v} ->
+                              {territory, Elixir.List.flatten(v)}
+
+                            {k, v} ->
+                              case Cldr.validate_territory(k) do
+                                {:ok, territory} -> {territory, Elixir.List.flatten(v)}
+                              end
+                          end)
+                          |> Enum.reject(&is_nil/1)
+                          |> Map.new()
 
   @territories_by_timezone @timezones_by_territory
-  |> Enum.map(fn {territory, zones} ->
-    Enum.map(zones, fn zone ->
-      Enum.map(zone.aliases, fn aliass -> {aliass, territory} end)
-    end)
-  end)
-  |> List.flatten()
-  |> Enum.reject(fn {_zone, territory} -> territory == :UT end)
-  |> Map.new()
+                           |> Enum.map(fn {territory, zones} ->
+                             Enum.map(zones, fn zone ->
+                               Enum.map(zone.aliases, fn aliass -> {aliass, territory} end)
+                             end)
+                           end)
+                           |> List.flatten()
+                           |> Enum.reject(fn {_zone, territory} -> territory == :UT end)
+                           |> Map.new()
 
   @doc """
   Returns a mapping of CLDR short zone codes to
@@ -181,5 +183,4 @@ defmodule Cldr.Timezone do
         {:error, @unknown_zone}
     end
   end
-
 end

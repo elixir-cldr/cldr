@@ -1530,12 +1530,12 @@ defmodule Cldr.Config do
   def canonical_timezones do
     timezones()
     |> Enum.map(fn {_short_name, zone} ->
-     if aliases = zone.aliases do
-       [canonical | _others] = aliases
-       Enum.map(aliases, fn other -> {other, canonical} end)
-     else
-       nil
-     end
+      if aliases = zone.aliases do
+        [canonical | _others] = aliases
+        Enum.map(aliases, fn other -> {other, canonical} end)
+      else
+        nil
+      end
     end)
     |> Enum.reject(&is_nil/1)
     |> List.flatten()
@@ -1566,6 +1566,7 @@ defmodule Cldr.Config do
     |> Cldr.Map.deep_map(fn
       s when is_binary(s) ->
         maybe_datetime(s)
+
       other ->
         other
     end)
