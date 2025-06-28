@@ -14,9 +14,11 @@ defmodule Cldr.Timezone do
   """
   alias Cldr.Locale
 
+  @type short_zone :: String.t()
+
   @type timezone :: %{
     aliases: [String.t(), ...],
-    preferred: nil | Locale.territory_code(),
+    preferred: nil | short_zone(),
     territory: Locale.territory_code()
   }
   @unknown_zone "Etc/Unknown"
@@ -71,6 +73,7 @@ defmodule Cldr.Timezone do
   territory.
 
   """
+  @dialyzer {:nowarn_function, timezones_by_territory: 0}
   def timezones_by_territory do
     @timezones_by_territory
   end

@@ -1,6 +1,8 @@
 defmodule Cldr.Type do
   @moduledoc false
 
+  alias Cldr.Timezone
+
   # Convert a map to a typespec
   def number_systems() do
     systems_ast =
@@ -47,7 +49,7 @@ defmodule Cldr.Type do
   def timezones_by_territory(territory_timezones) do
     timezone_ast =
       Enum.map(territory_timezones, fn {territory, _timezones} ->
-        {territory, string_list()}
+        {territory, territory_list()}
       end)
 
     {:%{}, [], timezone_ast}
@@ -82,9 +84,9 @@ defmodule Cldr.Type do
     {{:., [], [{:__aliases__, [alias: false], [:String]}, :t]}, [], []}
   end
 
-  defp string_list do
+  defp territory_list do
     quote do
-      [String.t(), ...]
+      [Timezone.timezone(), ...]
     end
   end
 
