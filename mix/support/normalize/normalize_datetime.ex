@@ -128,7 +128,7 @@ defmodule Cldr.Normalize.DateTime do
 
     region_formats = %{
       "generic" => Cldr.Substitution.parse(generic),
-      "daylight_savings" => Cldr.Substitution.parse(daylight),
+      "daylight" => Cldr.Substitution.parse(daylight),
       "standard" => Cldr.Substitution.parse(standard)
     }
 
