@@ -176,6 +176,7 @@ defmodule Cldr.Locale.Loader do
     "short",
     "daylight",
     "formal",
+    # TODO Remove when we publish with CLDR 48
     "daylight_savings",
     "generic",
     "type"
@@ -199,6 +200,8 @@ defmodule Cldr.Locale.Loader do
       |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
       |> Cldr.Map.atomize_values(only: [:type])
       |> Cldr.Map.atomize_keys(level: 1..1)
+      # TODO remove when we publish CLDR 48
+      |> Cldr.Map.rename_keys(:daylight_savings, :daylight)
 
     Map.put(content, :dates, dates)
   end
