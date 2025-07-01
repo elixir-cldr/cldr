@@ -952,11 +952,13 @@ defmodule Cldr.Consolidate do
       )
 
     Enum.map(timezones, fn
-      %{alias: aliases, name: "ut" <> _rest = name, region: "", preferred: ""} ->
-        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: nil}}
+      %{alias: aliases, name: "ut" <> _rest = name, preferred: preferred} ->
+        preferred = if preferred == "", do: nil, else: preferred
+        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: preferred}}
 
-      %{alias: aliases, name: name, region: "", preferred: ""} when name in @zones_with_no_territory ->
-        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: nil}}
+      %{alias: aliases, name: name, preferred: preferred} when name in @zones_with_no_territory ->
+        preferred = if preferred == "", do: nil, else: preferred
+        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: preferred}}
 
       %{alias: aliases, name: name, region: "", preferred: ""} ->
         region = String.slice(name, 0, 2) |> String.upcase() |> String.to_atom()
