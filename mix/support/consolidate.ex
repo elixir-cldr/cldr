@@ -930,6 +930,8 @@ defmodule Cldr.Consolidate do
     assert_package_file_configured!(path)
   end
 
+  @zones_with_no_territory ["gmt", "unk"]
+
   def save_timezones do
     import SweetXml
     path = Path.join(consolidated_output_dir(), "timezones.json")
@@ -950,6 +952,12 @@ defmodule Cldr.Consolidate do
       )
 
     Enum.map(timezones, fn
+      %{alias: aliases, name: "ut" <> _rest = name, region: "", preferred: ""} ->
+        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: nil}}
+
+      %{alias: aliases, name: name, region: "", preferred: ""} when name in @zones_with_no_territory ->
+        {name, %{aliases: String.split(aliases, " "), territory: nil, preferred: nil}}
+
       %{alias: aliases, name: name, region: "", preferred: ""} ->
         region = String.slice(name, 0, 2) |> String.upcase() |> String.to_atom()
         {name, %{aliases: String.split(aliases, " "), territory: region, preferred: nil}}
