@@ -555,7 +555,7 @@ defmodule Cldr.Backend do
         location = options[:location] || :between
 
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
-          ellipsis(string, ellipsis_chars(locale_name), location, format)
+          ellipsis(string, ellipsis_chars_for(locale_name), location, format)
         end
       end
 
@@ -807,8 +807,12 @@ defmodule Cldr.Backend do
 
         defp quote_marks_for(unquote(locale_name)) do
           marks = unquote(Macro.escape(delimiters))
-          if !is_map(marks) do
-            IO.inspect marks, label: "Quote marks for #{unquote(locale_name)} are not a map"
+          if !is_map(marks.quotation_start) do
+            IO.inspect marks.quotation_start, label: "Quote start for #{unquote(locale_name)} is not a map"
+          end
+
+          if !is_map(marks.quotation_end) do
+            IO.inspect marks.quotation_start, label: "Quote end for #{unquote(locale_name)} is not a map"
           end
           marks
         end
@@ -819,7 +823,7 @@ defmodule Cldr.Backend do
           |> Map.get(:ellipsis)
 
         @doc false
-        def ellipsis_chars(unquote(locale_name)) do
+        def ellipsis_chars_for(unquote(locale_name)) do
           unquote(Macro.escape(ellipsis))
         end
       end
