@@ -499,7 +499,11 @@ defmodule Cldr.Backend do
       defp quote_preference(marks, preference) when is_map_key(marks, preference),
         do: Map.fetch!(marks, preference)
 
-      defp quote_preference(marks, _preference), do: marks.default
+      defp quote_preference(marks, _preference) when is_map_key(marks, :default),
+        do: Map.fetch!(marks, :default)
+
+      defp quote_preference(marks, _preference) when is_binary(marks),
+        do: marks
 
       @doc """
       Add locale-specific ellipsis to a string.
