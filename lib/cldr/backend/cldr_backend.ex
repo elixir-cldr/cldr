@@ -515,7 +515,7 @@ defmodule Cldr.Backend do
         no `:default_backend` is configured under the `:ex_cldr` key in
         `config.exs`.
 
-      * `options` is a keyword list of options
+      * `options` is a keyword list of options.
 
       ## Options
 
