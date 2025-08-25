@@ -806,7 +806,11 @@ defmodule Cldr.Backend do
           |> Map.get(:delimiters)
 
         defp quote_marks_for(unquote(locale_name)) do
-          unquote(Macro.escape(delimiters))
+          marks = unquote(Macro.escape(delimiters))
+          if !is_map(marks) do
+            IO.inspect marks, label: "Quote marks for #{unquote(locale_name)} are not a map"
+          end
+          marks
         end
 
         ellipsis =
