@@ -489,6 +489,15 @@ defmodule Cldr.Backend do
 
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
           marks = quote_marks_for(locale_name)
+
+          if !is_map(marks.quotation_start) do
+            IO.inspect marks.quotation_start, label: "Quote start for #{locale_name} is not a map"
+          end
+
+          if !is_map(marks.quotation_end) do
+            IO.inspect marks.quotation_end, label: "Quote end for #{locale_name} is not a map"
+          end
+
           quote_start = quote_preference(marks.quotation_start, preference)
           quote_end = quote_preference(marks.quotation_end, preference)
 
@@ -806,15 +815,7 @@ defmodule Cldr.Backend do
           |> Map.get(:delimiters)
 
         defp quote_marks_for(unquote(locale_name)) do
-          marks = unquote(Macro.escape(delimiters))
-          # if !is_map(marks.quotation_start) do
-          #   IO.inspect marks.quotation_start, label: "Quote start for #{unquote(locale_name)} is not a map"
-          # end
-          #
-          # if !is_map(marks.quotation_end) do
-          #   IO.inspect marks.quotation_end, label: "Quote end for #{unquote(locale_name)} is not a map"
-          # end
-          marks
+          unquote(Macro.escape(delimiters))
         end
 
         ellipsis =
