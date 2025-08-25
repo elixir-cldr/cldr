@@ -807,13 +807,13 @@ defmodule Cldr.Backend do
 
         defp quote_marks_for(unquote(locale_name)) do
           marks = unquote(Macro.escape(delimiters))
-          if !is_map(marks.quotation_start) do
-            IO.inspect marks.quotation_start, label: "Quote start for #{unquote(locale_name)} is not a map"
-          end
-
-          if !is_map(marks.quotation_end) do
-            IO.inspect marks.quotation_start, label: "Quote end for #{unquote(locale_name)} is not a map"
-          end
+          # if !is_map(marks.quotation_start) do
+          #   IO.inspect marks.quotation_start, label: "Quote start for #{unquote(locale_name)} is not a map"
+          # end
+          #
+          # if !is_map(marks.quotation_end) do
+          #   IO.inspect marks.quotation_end, label: "Quote end for #{unquote(locale_name)} is not a map"
+          # end
           marks
         end
 
