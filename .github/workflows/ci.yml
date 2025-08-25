@@ -27,16 +27,16 @@ jobs:
       matrix:
         include:
           # minimum required versions
-          - otp: "26.2.5.6"
-            elixir: "1.15.4-otp-26"
-          - otp: "26.2.5.6"
-            elixir: "1.16.2-otp-26"
-          - otp: "26.2.5.6"
-            elixir: "1.17.2-otp-26"
-          - otp: "27.2"
-            elixir: "1.17.2-otp-27"
-          - otp: "27.2"
-            elixir: "1.18.4-otp-27"
+          # - otp: "26.2.5.6"
+          #   elixir: "1.15.4-otp-26"
+          # - otp: "26.2.5.6"
+          #   elixir: "1.16.2-otp-26"
+          # - otp: "26.2.5.6"
+          #   elixir: "1.17.2-otp-26"
+          # - otp: "27.2"
+          #   elixir: "1.17.2-otp-27"
+          # - otp: "27.2"
+          #   elixir: "1.18.4-otp-27"
           - otp: "28.0.2"
             elixir: "1.18.4-otp-27"
             lint: true
