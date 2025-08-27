@@ -1369,11 +1369,11 @@ defmodule Cldr.Locale do
           zone_id
 
         %{prefer: short_zone} when not is_nil(short_zone)->
-          %{aliases: [zone_id]} =
+          %{aliases: zone_ids} =
             Cldr.Timezone.timezones()
             |> Map.fetch!(short_zone)
 
-          zone_id
+          hd(zone_ids)
 
         %{aliases: zones} ->
           ambiguous_timezone_error(territory, zones)

@@ -2,9 +2,9 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
-## Cldr v2.43.1
+## Cldr v2.43.2
 
-This is the changelog for Cldr v2.43.1 released on August 26th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.43.2 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Upgrading
 
@@ -12,6 +12,14 @@ This is the changelog for Cldr v2.43.1 released on August 26th, 2025.  For older
 
   * `ex_cldr_dates_times` to at least version 2.23.0
   * `ex_cldr_locale_display` to at least version 1.6.1
+
+### Bug Fixes
+
+* Fix Parsing a language tag when the U extension has a timezone short code that needs to be canonicalised. For example, "en-u-tz-est5edt" needs to become "en-u-tz-usnyc".
+
+## Cldr v2.43.1
+
+This is the changelog for Cldr v2.43.1 released on August 26th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 

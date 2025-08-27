@@ -159,4 +159,12 @@ defmodule CldrLanguageTagTest do
              {:error,
               {Cldr.LanguageTag.ParseError, "The value \"bogus\" is not valid for the key \"mu\""}}
   end
+
+  test "with u extensions and time zone that requires canonicalisation" do
+    import Cldr.LanguageTag.Sigil
+
+    assert {:ok, tag} = Cldr.validate_locale("en-u-tz-est5edt")
+    assert "TestBackend.Cldr.Locale.new!(\"en-US-u-tz-usnyc\")" == inspect(tag)
+    assert "America/New_York" = tag.locale.timezone
+  end
 end

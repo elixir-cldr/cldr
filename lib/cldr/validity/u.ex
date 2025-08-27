@@ -173,12 +173,28 @@ defmodule Cldr.Validity.U do
   # valid function check that the value provided
   # is acceptable for the given key.
 
-  for {key, values} <- @validity_data, key in @process_keys do
+  for {key, values} <- @validity_data, key in @process_keys -- ["tz"] do
     defp valid(unquote(key), value) when value in unquote(Map.keys(values)) do
       unquote(Macro.escape(values))
       |> get_value(unquote(key), value)
       |> maybe_get_list_head()
       |> wrap(:ok)
+    end
+  end
+
+  # For timezones a nil value means its an acceptable
+  # time zone name but it needs to be resolved to its
+  # canonical version. For example, est5edt becomes usnyc
+  @tz_values @validity_data["tz"]
+  defp valid("tz", value) do
+    case Map.fetch(@tz_values, value) do
+      {:ok, nil} ->
+        {:ok, preferred} = preferred_timezone(value)
+        {:ok, %{aliases: aliases}} = Map.fetch(Cldr.Timezone.timezones(), preferred)
+        {:ok, hd(aliases)}
+
+      {:ok, values} when is_list(values) ->
+        {:ok, hd(values)}
     end
   end
 
@@ -264,6 +280,12 @@ defmodule Cldr.Validity.U do
 
   defp valid(key, _value) do
     {:error, invalid_key_error(key)}
+  end
+
+  defp preferred_timezone(timezone) do
+    Cldr.Timezone.timezones()
+    |> Map.fetch!(timezone)
+    |> Map.fetch(:preferred)
   end
 
   defp get_value(map, "cu", value) do
