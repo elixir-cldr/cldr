@@ -331,7 +331,7 @@ defmodule Cldr.Locale do
   Returns a list of all the parent locales
   for a given locale.
 
-  ## Examples
+  ### Examples
 
         Cldr.Locale.parents "fr-ca"
         => {:ok, [#Cldr.LanguageTag<fr [validated]>, #Cldr.LanguageTag<en [validated]>]}
@@ -556,17 +556,17 @@ defmodule Cldr.Locale do
   data if such localised data does not exist for
   this specific locale.
 
-  ## Arguments
+  ### Arguments
 
-  * `locale` is any `LanguageTag.t`
+  * `locale` is any `t:Cldr.LanguageTag.t/0`
 
-  ## Returns
+  ### Returns
 
   * `{:ok, list_of_locales}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
       Cldr.Locale.fallback_locales(Cldr.Locale.new!("fr-CA", MyApp.Cldr))
       => {:ok,
@@ -603,7 +603,7 @@ defmodule Cldr.Locale do
   data if such localised data does not exist for
   this specific locale.
 
-  ## Arguments
+  ### Arguments
 
   * `locale_name` is any locale name returned by
     `Cldr.known_locale_names/1`
@@ -612,13 +612,13 @@ defmodule Cldr.Locale do
     is a `Cldr` backend module. The default is
     `Cldr.default_locale/0`.
 
-  ## Returns
+  ### Returns
 
   * `{:ok, list_of_locales}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
       Cldr.Locale.fallback_locales(:"fr-CA")
       => {:ok,
@@ -655,17 +655,17 @@ defmodule Cldr.Locale do
   data if such localised data does not exist for
   this specific locale.
 
-  ## Arguments
+  ### Arguments
 
-  * `locale` is any `LanguageTag.t`
+  * `locale` is any `t:Cldr.LanguageTag.t/0`
 
-  ## Returns
+  ### Returns
 
   * `{:ok, list_of_locale_names}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
   In these examples the default locale is `:"en-001"`.
 
@@ -701,17 +701,17 @@ defmodule Cldr.Locale do
   data if such localised data does not exist for
   this specific locale.
 
-  ## Arguments
+  ### Arguments
 
-  * `locale` is any `LanguageTag.t`
+  * `locale` is any `t:Cldr.LanguageTag.t/0`
 
-  ## Returns
+  ### Returns
 
   * `list_of_locale_names` or
 
   * raises an exception
 
-  ## Examples
+  ### Examples
 
   In these examples the default locale is `:"en-001"`.
 
@@ -743,7 +743,7 @@ defmodule Cldr.Locale do
   data if such localised data does not exist for
   this specific locale.
 
-  ## Arguments
+  ### Arguments
 
   * `locale_name` is any locale name returned by
     `Cldr.known_locale_names/1`
@@ -752,13 +752,13 @@ defmodule Cldr.Locale do
     is a `Cldr` backend module. The default is
     `Cldr.default_locale/0`.
 
-  ## Returns
+  ### Returns
 
   * `{:ok, list_of_locale_names}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
   In these examples the default locale is `:"en-001"`.
 
@@ -788,7 +788,7 @@ defmodule Cldr.Locale do
   Returns a map of a territory code to its
   most-spoken language.
 
-  ## Example
+  ### Example
 
         Cldr.Locale.languages_for_territories()
         => %{
@@ -821,7 +821,7 @@ defmodule Cldr.Locale do
   language most spoken is "en". First, the locale "en-AU"
   is validated and if that fails, "en" is validated.
 
-  ## Arguments
+  ### Arguments
 
   * `territory` is any ISO 3166 Alpha-2 territory
     code that can be validated by `Cldr.validate_territory/1`
@@ -829,13 +829,13 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.
 
-  ## Returns
+  ### Returns
 
   * `{:ok, language_tag}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
     iex> Cldr.Locale.locale_for_territory(:AU, TestBackend.Cldr)
     Cldr.validate_locale(:"en-AU", TestBackend.Cldr)
@@ -907,7 +907,7 @@ defmodule Cldr.Locale do
   for an explanation of why some valid territory suffixxes
   are considered as TLDs.
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.consider_as_tlds()
       [:AD, :AS, :BZ, :CC, :CD, :CO, :DJ, :FM, :IO, :LA, :ME, :MS, :NU, :SC, :SR, :SU, :TV, :TK, :WS]
@@ -920,7 +920,7 @@ defmodule Cldr.Locale do
   @doc """
   Returns a "best fit" locale for a host name.
 
-  ## Arguments
+  ### Arguments
 
   * `host` is any valid host name
 
@@ -930,19 +930,19 @@ defmodule Cldr.Locale do
   * `options` is a keyword list of options. The default
     is `[tlds: Cldr.Locale.consider_as_tlds()]`.
 
-  ## Options
+  ### Options
 
   * `:tlds` is a list of territory codes as upper-cased
     atoms that are to be considered as top-level domains.
     The default list is `consider_as_tlds/0`.
 
-  ## Returns
+  ### Returns
 
   * `{:ok, language_tag}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Notes
+  ### Notes
 
   Certain top-level domains have become associated with content
   underlated to the territory for who the domain is registered.
@@ -950,7 +950,7 @@ defmodule Cldr.Locale do
   TLDs as belonging to the territory but rather are considered
   generic top-level domain names.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.locale_from_host "a.b.com.au", TestBackend.Cldr
       Cldr.validate_locale(:"en-AU", TestBackend.Cldr)
@@ -984,17 +984,17 @@ defmodule Cldr.Locale do
   Returns the last segment of a host that might
   be a territory.
 
-  ## Arguments
+  ### Arguments
 
   * `host` is any valid host name
 
-  ## Returns
+  ### Returns
 
   * `{:ok, territory}` or
 
   * `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.territory_from_host("a.b.com.au")
       {:ok, :AU}
@@ -1027,18 +1027,18 @@ defmodule Cldr.Locale do
   @doc """
   Returns the effective territory for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
     or any `locale_name` returned by `Cldr.known_locale_names/1`. If
     the parameter is a `locale_name` then a default backend must be
     configured in `config.exs` or an exception will be raised.
 
-  ## Returns
+  ### Returns
 
   * The territory to be used for localization purposes.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.territory_from_locale "en-US"
       :US
@@ -1049,7 +1049,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx"
       {:error, {Cldr.LanguageTag.ParseError, "The value \\"xxxxx\\" is not valid for the key \\"rg\\""}}
 
-  ## Notes
+  ### Notes
 
   A locale can reflect the desired territory to be used
   when determining region-specific defaults for items such
@@ -1104,7 +1104,7 @@ defmodule Cldr.Locale do
   @doc """
   Returns the effective territory for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `locale_name` is any locale name returned by
     `Cldr.known_locale_names/1`.
@@ -1112,12 +1112,12 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.
 
-  ## Returns
+  ### Returns
 
   * The territory to be used for localization purposes or
     `{:error, {exception, reason}}`.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.territory_from_locale "en-US", TestBackend.Cldr
       :US
@@ -1128,7 +1128,7 @@ defmodule Cldr.Locale do
       iex> Cldr.Locale.territory_from_locale "en-US-u-rg-xxxxx", TestBackend.Cldr
       {:error, {Cldr.LanguageTag.ParseError, "The value \\"xxxxx\\" is not valid for the key \\"rg\\""}}
 
-  ## Notes
+  ### Notes
 
   A locale can reflect the desired territory to be used
   when determining region-specific defaults for items such
@@ -1178,18 +1178,18 @@ defmodule Cldr.Locale do
   @doc """
   Returns the script for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
     or any `locale_name` returned by `Cldr.known_locale_names/1`. If
     the parameter is a `locale_name` then a default backend must be
     configured in `config.exs` or an exception will be raised.
 
-  ## Returns
+  ### Returns
 
   * The script to be used for localization purposes.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.script_from_locale "en-US"
       :Latn
@@ -1214,7 +1214,7 @@ defmodule Cldr.Locale do
   @doc """
   Returns the script for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `locale_name` is any locale name returned by
     `Cldr.known_locale_names/1`.
@@ -1222,11 +1222,11 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.
 
-  ## Returns
+  ### Returns
 
   * The script to be used for localization purposes.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.script_from_locale "en-US", TestBackend.Cldr
       :Latn
@@ -1250,19 +1250,19 @@ defmodule Cldr.Locale do
   @doc """
   Returns the script direction for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
     or any `locale_name` returned by `Cldr.known_locale_names/1`. If
     the parameter is a `locale_name` then a default backend must be
     configured in `config.exs` or an exception will be raised.
 
-  ## Returns
+  ### Returns
 
   * The script direction which is either `:ltr` (for left-to-right
     scripts) or `:rtl` (for right-to-left scripts).
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.script_direction_from_locale "en-US"
       :ltr
@@ -1287,7 +1287,7 @@ defmodule Cldr.Locale do
   @doc """
   Returns the script direction for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `locale_name` is any locale name returned by
     `Cldr.known_locale_names/1`.
@@ -1295,12 +1295,12 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module.
 
-  ## Returns
+  ### Returns
 
   * The script direction which is either `:ltr` (for left-to-right
     scripts) or `:rtl` (for right-to-left scripts).
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.script_direction_from_locale :"en-US", TestBackend.Cldr
       :ltr
@@ -1324,23 +1324,26 @@ defmodule Cldr.Locale do
   @doc """
   Returns the effective time zone for a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
     or any `locale_name` returned by `Cldr.known_locale_names/1`. If
     the parameter is a `locale_name` then a default backend must be
     configured in `config.exs` or an exception will be raised.
 
-  ## Returns
+  ### Returns
 
-  * The time zone ID as a `String.t` or `{:error, {exception, reason}}`
+  * The time zone ID as a `t:String.t/0` or `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
-      iex> Cldr.Locale.timezone_from_locale "en-US-u-tz-ausyd"
+      iex> Cldr.Locale.timezone_from_locale("en-US-u-tz-ausyd")
       "Australia/Sydney"
 
-      iex> Cldr.Locale.timezone_from_locale "en-AU"
+      iex> Cldr.Locale.timezone_from_locale("de-CH")
+      "Europe/Zurich"
+
+      iex> Cldr.Locale.timezone_from_locale("en-AU")
       {:error,
        {Cldr.AmbiguousTimezoneError,
         "Cannot determine the timezone since the territory :AU has 12 timezone IDs"}}
@@ -1361,7 +1364,20 @@ defmodule Cldr.Locale do
     territory = territory_from_locale(language_tag)
 
     with {:ok, [zone]} <- Cldr.Timezone.timezones_for_territory(territory) do
-      zone
+      case zone do
+        %{aliases: [zone_id]} ->
+          zone_id
+
+        %{prefer: short_zone} when not is_nil(short_zone)->
+          %{aliases: [zone_id]} =
+            Cldr.Timezone.timezones()
+            |> Map.fetch!(short_zone)
+
+          zone_id
+
+        %{aliases: zones} ->
+          ambiguous_timezone_error(territory, zones)
+      end
     else
       {:ok, zones} -> ambiguous_timezone_error(territory, zones)
       _ -> Cldr.unknown_territory_error(territory)
@@ -1375,23 +1391,23 @@ defmodule Cldr.Locale do
   @doc """
   Returns the effective time zone for a locale.
 
-  ## Arguments
+  ### Arguments
 
-  * `locale_name` is any name returned by `Cldr.known_locale_names/1`
+  * `locale_name` is any name returned by `Cldr.known_locale_names/1`.
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.
 
   ## Returns
 
-  * The time zone ID as a `String.t` or `{:error, {exception, reason}}`
+  * The time zone ID as a `t:String.t/0` or `{:error, {exception, reason}}`
 
-  ## Examples
+  ### Examples
 
-      iex> Cldr.Locale.timezone_from_locale "en-US-u-tz-ausyd", TestBackend.Cldr
+      iex> Cldr.Locale.timezone_from_locale("en-US-u-tz-ausyd", TestBackend.Cldr)
       "Australia/Sydney"
 
-      iex> Cldr.Locale.timezone_from_locale :"en-AU", TestBackend.Cldr
+      iex> Cldr.Locale.timezone_from_locale(:"en-AU", TestBackend.Cldr)
       {:error,
        {Cldr.AmbiguousTimezoneError,
         "Cannot determine the timezone since the territory :AU has 12 timezone IDs"}}
@@ -1422,7 +1438,7 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
     or any `locale_name` returned by `Cldr.known_locale_names/1`
@@ -1430,22 +1446,22 @@ defmodule Cldr.Locale do
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
 
-  * `options` is a keyword list of options
+  * `options` is a keyword list of options.
 
-  ## Options
+  ### Options
 
   * `:add_likely_subtags` is a `boolean` that determines
     if subtags that are likely to be applicable to this
     language tag are added to the language tag. The default
     is `true`.
 
-  ## Returns
+  ### Returns
 
   * `{:ok, language_tag}` or
 
   * `{:error, reason}`
 
-  ## Method
+  ### Method
 
   1. The language tag is parsed in accordance with [RFC5646](https://tools.ietf.org/html/rfc5646)
 
@@ -1460,7 +1476,7 @@ defmodule Cldr.Locale do
   4. A `Cldr` locale name is selected that is the nearest fit to the
      requested locale.
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.canonical_language_tag("en", TestBackend.Cldr)
       {
@@ -1593,10 +1609,10 @@ defmodule Cldr.Locale do
   Parses a locale name and returns a `Cldr.LanguageTag` struct
   that represents a locale or raises on error.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
-    or any `locale_name` returned by `Cldr.known_locale_names/1`
+    or any `locale_name` returned by `Cldr.known_locale_names/1`.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module
@@ -1633,11 +1649,11 @@ defmodule Cldr.Locale do
   Substitute deprecated subtags with a `Cldr.LanguageTag` with their
   non-deprecated alternatives.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
 
-  ## Method
+  ### Method
 
   * Replace any deprecated subtags with their canonical values using the alias
     data. Use the first value in the replacement list, if
@@ -1651,7 +1667,7 @@ defmodule Cldr.Locale do
   * Get the components of the cleaned-up source tag (languages, scripts, and
     regions/territories), plus any variants and extensions.
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.substitute_aliases Cldr.LanguageTag.Parser.parse!("mo")
       %Cldr.LanguageTag{
@@ -1984,7 +2000,7 @@ defmodule Cldr.Locale do
   A match is determined when the `fun/1` returns
   a `truthy` value.
 
-  ## Arguments
+  ### Arguments
 
   * `language_tag` is any language tag returned by
     `Cldr.Locale.new/2`.
@@ -1997,7 +2013,7 @@ defmodule Cldr.Locale do
     a match should fail if the language tag script is the only
     (default) script for the language. The default is `false`.
 
-  ## Returns
+  ### Returns
 
   * The first `truthy` value returned by `fun/2` or `nil` if no
     match is made.
@@ -2025,12 +2041,12 @@ defmodule Cldr.Locale do
   @doc """
   Return a locale name from a `Cldr.LanguageTag`
 
-  ## Options
+  ### Options
 
   * `locale_name` is any `Cldr.LanguageTag` struct returned by
     `Cldr.Locale.new!/2`
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.locale_name_from Cldr.Locale.new!("en", TestBackend.Cldr)
       "en"
@@ -2059,10 +2075,10 @@ defmodule Cldr.Locale do
   Return a locale name by combining language, script, territory and variant
   parameters
 
-  ## Arguments
+  ### Arguments
 
   * `language` is a string representing
-    a valid language code
+    a valid language code.
 
   * `script` is an atom that is a valid
     script code.
@@ -2078,7 +2094,7 @@ defmodule Cldr.Locale do
   * The atom locale name constructed from the non-nil arguments joined
     by a "-".
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.locale_name_from("en", :Latn, "001", [])
       "en-Latn-001"
@@ -2183,25 +2199,25 @@ defmodule Cldr.Locale do
   Replace empty subtags within a `t:Cldr.LanguageTag.t/0` with the most likely
   subtag.
 
-  ## Arguments
+  ### Arguments
 
-  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`
+  * `language_tag` is any language tag returned by `Cldr.Locale.new/2`.
 
-  * `options` is a keyword list of options
+  * `options` is a keyword list of options.
 
-  ## Options
+  ### Options
 
   * `:add_likely` is a boolean indicating whether to add
     likely subtags. The default is `true`.
 
-  ## Notes
+  ### Notes
 
   A subtag is called empty if it has a missing script or territory subtag, or it is
   a base language subtag with the value `und`. In the description below,
   a subscript on a subtag x indicates which tag it is from: x<sub>s</sub> is in the
   source, x<sub>m</sub> is in a match, and x<sub>r</sub> is in the final result.
 
-  ## Lookup
+  ### Lookup
 
   Lookup each of the following in order, and stops on the first match:
 
@@ -2211,7 +2227,7 @@ defmodule Cldr.Locale do
   * language<sub>s</sub>
   * und-script<sub>s</sub>
 
-  ## Returns
+  ### Returns
 
   * If there is no match,either return
     * an error value, or
@@ -2223,7 +2239,7 @@ defmodule Cldr.Locale do
 
   * Return the language tag composed of language<sub>r</sub>-script<sub>r</sub>-region<sub>r</sub> + variants + extensions .
 
-  ## Example
+  ### Example
 
       iex> Cldr.Locale.put_likely_subtags Cldr.LanguageTag.parse!("zh-SG")
       %Cldr.LanguageTag{
@@ -2478,7 +2494,7 @@ defmodule Cldr.Locale do
   Note that not all locales are guaranteed
   to have likely subtags.
 
-  ## Example
+  ### Example
 
       Cldr.Locale.likely_subtags
       => %{
@@ -2523,12 +2539,12 @@ defmodule Cldr.Locale do
   Returns the likely substags, as a `Cldr.LanguageTag`,
   for a given locale name.
 
-  ## Options
+  ### Options
 
   * `locale` is any valid locale name returned by `Cldr.known_locale_names/1`
-    or a `Cldr.LanguageTag` struct
+    or a `t:Cldr.LanguageTag.t/0` struct.
 
-  ## Examples
+  ### Examples
 
       iex> Cldr.Locale.likely_subtags :en
       %Cldr.LanguageTag{
@@ -2591,9 +2607,9 @@ defmodule Cldr.Locale do
   end
 
   @doc """
-  Return a map of the aliases for a given alias key and type
+  Return a map of the aliases for a given alias key and type.
 
-  ## Options
+  ### Options
 
   * `type` is one of `[:language, :region, :script, :variant, :zone]`
 
