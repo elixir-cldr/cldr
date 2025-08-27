@@ -6,6 +6,13 @@
 
 This is the changelog for Cldr v2.43.1 released on August 26th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Upgrading
+
+* Please note that when upgrading to `ex_cldr` version 2.43.0 and later it is also required to update the following dependent libraries:
+
+  * `ex_cldr_dates_times` to at least version 2.23.0
+  * `ex_cldr_locale_display` to at least version 1.6.1
+
 ### Bug Fixes
 
 * Fix `Cldr.Locale.timezone_from_locale/1` when the territory has one zone and the zone short code is not instantiated as part of the language tag.
