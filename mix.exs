@@ -1,7 +1,7 @@
 defmodule Cldr.Mixfile do
   use Mix.Project
 
-  @version "2.43.1"
+  @version "2.43.2"
 
   def project do
     [
@@ -64,7 +64,7 @@ defmodule Cldr.Mixfile do
       {:jason, "~> 1.0", optional: true},
       {:ex_doc, "~> 0.18", only: [:release, :dev]},
       {:nimble_parsec, "~> 0.5 or ~> 1.0", optional: true},
-      {:gettext, "~> 0.19", optional: true},
+      {:gettext, "~> 0.19 or ~> 1.0", optional: true},
       {:stream_data, "~> 1.0", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
       {:sweet_xml, "~> 0.6", only: [:dev, :test, :generate], optional: true}

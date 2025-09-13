@@ -4,7 +4,7 @@
 
 ## Cldr v2.43.2
 
-This is the changelog for Cldr v2.43.2 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.43.2 released on September 13th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Upgrading
 
@@ -16,6 +16,8 @@ This is the changelog for Cldr v2.43.2 released on ______, 2025.  For older chan
 ### Bug Fixes
 
 * Fix Parsing a language tag when the U extension has a timezone short code that needs to be canonicalised. For example, "en-u-tz-est5edt" needs to become "en-u-tz-usnyc".
+
+* Relax `gettext` requirement to allow the recently release `1.0` version. Thanks to @Terbium-135 for the report. Closes #262.
 
 ## Cldr v2.43.1
 
