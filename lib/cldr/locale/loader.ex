@@ -136,6 +136,7 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.atomize_keys(filter: "locale_display_names", skip: @language_keys)
     |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
+
     |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)
     |> Cldr.Map.atomize_values(filter: :layout)

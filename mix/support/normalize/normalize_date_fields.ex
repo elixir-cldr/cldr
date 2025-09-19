@@ -67,7 +67,14 @@ defmodule Cldr.Normalize.DateFields do
     end)
   end
 
-  @relative_keys ["relative_type__1", "relative_type_0", "relative_type_1"]
+  @relative_keys [
+    "relative_type__1",
+    "relative_type_0",
+    "relative_type_1",
+    "relative_type_2",
+    "relative_type__2"
+  ]
+
   defp normalize_content(content) do
     relative_ordinals = Enum.map(@relative_keys, &Map.get(content, &1))
 

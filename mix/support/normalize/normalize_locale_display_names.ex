@@ -1,6 +1,8 @@
 defmodule Cldr.Normalize.LocaleDisplayNames do
   @moduledoc false
 
+  alias Cldr.Consolidate
+
   def normalize(content, locale) do
     content
     |> normalize_locale_display_names(locale)
@@ -10,23 +12,23 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     locale_display_names =
       content
       |> Map.fetch!("locale_display_names")
-      |> Cldr.Consolidate.default([])
+      |> Consolidate.default([])
 
     languages =
       locale_display_names
       |> Map.get("languages")
-      |> merge_alt(&Cldr.Locale.canonical_locale_name!/1)
+      |> Consolidate.group_alt_content(&Cldr.Locale.canonical_locale_name!/1)
 
     scripts =
       locale_display_names
       |> Map.get("scripts", %{})
-      |> merge_alt(&String.capitalize/1)
+      |> Consolidate.group_alt_content(&String.capitalize/1)
       |> Cldr.Map.atomize_keys()
 
     territories =
       locale_display_names
       |> Map.get("territories", %{})
-      |> merge_alt(&String.upcase/1)
+      |> Consolidate.group_alt_content(&String.upcase/1)
       |> Cldr.Map.atomize_keys()
 
     locale_display_pattern =
@@ -76,37 +78,4 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
     Map.put(content, "locale_display_names", locale_display_names)
   end
 
-  def merge_alt(map, normalizer_fun \\ & &1) do
-    map =
-      map
-      |> Cldr.Consolidate.default([])
-      |> Enum.map(fn {code, display_name} ->
-        case String.split(code, "_alt_") do
-          [name] -> {normalizer_fun.(name), display_name}
-          [name, alt] -> {{:alt, normalizer_fun.(name)}, {alt, display_name}}
-        end
-      end)
-      |> Map.new()
-
-    # Now take care of -ALT-VARIANT and -ALT-SHORT
-    filter = fn {k, _v} -> match?({:alt, _x}, k) end
-
-    alt =
-      map
-      |> Enum.filter(filter)
-      |> Map.new()
-
-    map
-    |> Enum.reject(filter)
-    |> Enum.map(fn {k, v} ->
-      case Map.fetch(alt, {:alt, k}) do
-        {:ok, {alt, display_name}} ->
-          {k, %{"default" => v, alt => display_name}}
-
-        :error ->
-          {k, v}
-      end
-    end)
-    |> Map.new()
-  end
 end
