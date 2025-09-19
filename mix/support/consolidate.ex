@@ -191,6 +191,39 @@ defmodule Cldr.Consolidate do
     end
   end
 
+  # Groups content that contains _alt_ or _menu_ separators
+  # for content.
+  def group_alt_content(map, normalizer_fun \\ & &1) do
+    map
+    |> Cldr.Consolidate.default([])
+    |> Enum.map(fn {code, value} ->
+      case String.split(code, ~r/(_alt_|_menu_)/, include_captures: true) do
+        [lang] ->
+          {[normalizer_fun.(lang)], value}
+
+        [lang, "_alt_", "menu"] ->
+          {[normalizer_fun.(lang), "_menu_", "default"], value}
+
+        [lang, alt, alt_value] ->
+          {[normalizer_fun.(lang), alt, alt_value], value}
+      end
+    end)
+    |> Enum.group_by(fn {k, _v} -> hd(k) end, fn {k, v} ->
+      case k do
+        [_lang] ->
+          %{:default  => v}
+
+        [_lang, "_alt_", alt] ->
+          %{String.to_atom(alt) => v}
+
+        [_lang, "_menu_", menu] ->
+          %{:menu => %{String.to_atom(menu) => v}}
+      end
+    end)
+    |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
+    |> Map.new()
+  end
+
   defp jason_decode!("", file) do
     IO.puts(
       "CLDR json file #{inspect(file)} was found to be empty. " <>
