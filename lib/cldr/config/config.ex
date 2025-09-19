@@ -1004,15 +1004,16 @@ defmodule Cldr.Config do
 
       iex> Cldr.Config.known_number_systems()
       [:adlm, :ahom, :arab, :arabext, :armn, :armnlow, :bali, :beng, :bhks, :brah,
-       :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :gara, :geor, :gong,
-       :gonm, :grek, :greklow, :gujr, :gukh, :guru, :hanidays, :hanidec, :hans,
-       :hansfin, :hant, :hantfin, :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin,
-       :jpanyear, :kali, :kawi, :khmr, :knda, :krai, :lana, :lanatham, :laoo, :latn,
-       :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans, :mlym,
-       :modi, :mong, :mroo, :mtei, :mymr, :mymrepka, :mymrpao, :mymrshan, :mymrtlng,
-       :nagm, :newa, :nkoo, :olck, :onao, :orya, :osma, :outlined, :rohg, :roman,
-       :romanlow, :saur, :segment, :shrd, :sind, :sinh, :sora, :sund, :sunu, :takr,
-       :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :vaii, :wara, :wcho]
+      :cakm, :cham, :cyrl, :deva, :diak, :ethi, :fullwide, :gara, :geor, :gong,
+      :gonm, :grek, :greklow, :gujr, :gukh, :guru, :hanidays, :hanidec, :hans,
+      :hansfin, :hant, :hantfin, :hebr, :hmng, :hmnp, :java, :jpan, :jpanfin,
+      :jpanyear, :kali, :kawi, :khmr, :knda, :krai, :lana, :lanatham, :laoo, :latn,
+      :lepc, :limb, :mathbold, :mathdbl, :mathmono, :mathsanb, :mathsans, :mlym,
+      :modi, :mong, :mroo, :mtei, :mymr, :mymrepka, :mymrpao, :mymrshan, :mymrtlng,
+      :nagm, :newa, :nkoo, :olck, :onao, :orya, :osma, :outlined, :rohg, :roman,
+      :romanlow, :saur, :segment, :shrd, :sind, :sinh, :sora, :sund, :sunu, :takr,
+      :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :tols, :vaii, :wara,
+      :wcho]
 
   """
   def known_number_systems do
@@ -1857,11 +1858,6 @@ defmodule Cldr.Config do
       iex> Cldr.Config.territories()[:GB]
       %{
         currency: [GBP: %{from: ~D[1694-07-27]}],
-        measurement_system: %{
-          default: :uksystem,
-          paper_size: :a4,
-          temperature: :uksystem
-        },
         language_population: %{
           "ar" => %{population_percent: 0.3},
           "bn" => %{population_percent: 0.4},
@@ -1882,6 +1878,7 @@ defmodule Cldr.Config do
           "kw" => %{population_percent: 0.0029},
           "lt" => %{population_percent: 0.2},
           "pa" => %{population_percent: 3.6},
+          "pi" => %{population_percent: 0.0002},
           "pl" => %{population_percent: 4},
           "pt" => %{population_percent: 0.2},
           "ro" => %{population_percent: 0.8},
@@ -1892,9 +1889,14 @@ defmodule Cldr.Config do
           "ur" => %{population_percent: 3.5},
           "zh-Hant" => %{population_percent: 0.3}
         },
+        population: 68459100,
+        measurement_system: %{
+          default: :uksystem,
+          paper_size: :a4,
+          temperature: :uksystem
+        },
         gdp: 3700000000000,
-        literacy_percent: 99,
-        population: 68459100
+        literacy_percent: 99
       }
 
   """
@@ -2171,8 +2173,8 @@ defmodule Cldr.Config do
       %{
         calendar_system: :solar,
         eras: [
-          [0, %{end: [0, 12, 31], aliases: ["bc", "bce"], code: :gregory_inverse}],
-          [1, %{start: [1, 1, 1], aliases: ["ad", "ce"], code: :gregory}]
+          [0, %{code: :bce, end: [0, 12, 31], aliases: ["bc"]}],
+          [1, %{code: :ce, start: [1, 1, 1], aliases: ["ad"]}]
         ]
       }
 

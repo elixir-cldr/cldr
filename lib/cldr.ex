@@ -2099,7 +2099,8 @@ defmodule Cldr do
        :modi, :mong, :mroo, :mtei, :mymr, :mymrepka, :mymrpao, :mymrshan, :mymrtlng,
        :nagm, :newa, :nkoo, :olck, :onao, :orya, :osma, :outlined, :rohg, :roman,
        :romanlow, :saur, :segment, :shrd, :sind, :sinh, :sora, :sund, :sunu, :takr,
-       :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :vaii, :wara, :wcho]
+       :talu, :taml, :tamldec, :telu, :thai, :tibt, :tirh, :tnsa, :tols, :vaii, :wara,
+       :wcho]
 
   """
   @known_number_systems Cldr.Config.known_number_systems()
@@ -2114,7 +2115,7 @@ defmodule Cldr do
   ## Arguments
 
   * `number_system` is any number system name returned by
-    `Cldr.known_number_systems/0`
+    `Cldr.known_number_systems/0`.
 
   ## Returns
 

@@ -40,13 +40,13 @@ defmodule Cldr.Locale do
   return an `{:ok, language_tag}` tuple even when the locale returned does
   not exactly match the requested locale name.  For example, the following
   attempts to create a locale matching the non-existent "english as spoken
-  in Japan" local name.  Here `Cldr` will match to the nearest configured
+  in China" local name.  Here `Cldr` will match to the nearest configured
   locale, which in this case will be "en".
 
-      iex> Cldr.Locale.new("en-JP", TestBackend.Cldr)
+      iex> Cldr.Locale.new("en-CN", TestBackend.Cldr)
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
-        canonical_locale_name: "en-JP",
+        canonical_locale_name: "en-CN",
         cldr_locale_name: :en,
         extensions: %{},
         gettext_locale_name: "en",
@@ -54,9 +54,9 @@ defmodule Cldr.Locale do
         locale: %{},
         private_use: [],
         rbnf_locale_name: :en,
-        requested_locale_name: "en-JP",
+        requested_locale_name: "en-CN",
         script: :Latn,
-        territory: :JP,
+        territory: :CN,
         transform: %{},
         language_variants: []
       }}

@@ -47,7 +47,7 @@ defmodule Cldr.Normalize.DateFields do
       base_content =
         acc
         |> Map.get(key)
-        |> normalize_content
+        |> normalize_ordinals()
 
       Map.put(acc, key, %{"default" => base_content})
     end)
@@ -58,7 +58,7 @@ defmodule Cldr.Normalize.DateFields do
       variant_content =
         acc
         |> Map.get(key)
-        |> normalize_content
+        |> normalize_ordinals
 
       [base_key, variant_key] = base_and_variant_from(key)
 
@@ -67,16 +67,22 @@ defmodule Cldr.Normalize.DateFields do
     end)
   end
 
-  @relative_keys [
-    "relative_type__1",
-    "relative_type_0",
-    "relative_type_1",
-    "relative_type_2",
-    "relative_type__2"
-  ]
+  @relative_ordinal %{
+    "relative_type__2" => -2,
+    "relative_type__1" => -1,
+    "relative_type_0" => 0,
+    "relative_type_1" => 1,
+    "relative_type_2" => 2
+  }
 
-  defp normalize_content(content) do
-    relative_ordinals = Enum.map(@relative_keys, &Map.get(content, &1))
+  @relative_keys Map.keys(@relative_ordinal)
+
+  defp normalize_ordinals(content) do
+    relative_ordinals =
+      Enum.map(@relative_ordinal, fn {key, ordinal_key} ->
+        {ordinal_key, Map.get(content, key)}
+      end)
+      |> Map.new()
 
     Map.put(content, "relative_ordinal", relative_ordinals)
     |> Map.drop(@relative_keys)
