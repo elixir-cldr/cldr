@@ -98,4 +98,10 @@ cp $CLDR_REPO/common/testData/units/unitPreferencesTest.txt \
 cp $CLDR_REPO/common/testData/units/unitsTest.txt \
    $EX_CLDR/test/data/conversion_test_data.txt
 
+# For now, copy language_data from CLDR 47
+# The territory data is now removed from currenct versions
+# and we should not depend on it - but its used for locale
+# canonicalisation (for now).
+cp $EX_CLDR/priv/cldr/language_data_cldr47.json $EX_CLDR/priv/cldr/language_data.json
+
 cd $OLDPWD
