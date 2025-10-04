@@ -54,6 +54,7 @@ defmodule Cldr.Rbnf.Config do
   def rbnf_locale_names do
     rbnf_dir()
     |> File.ls!()
+    |> Enum.reject(&String.ends_with?(&1, ".txt"))
     |> Enum.map(&Path.basename(&1, ".json"))
     |> Enum.sort()
     |> Enum.map(&String.to_atom/1)
