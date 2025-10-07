@@ -33,6 +33,7 @@ defmodule Cldr.Backend.Compiler do
       alias Cldr.LanguageTag
       alias Cldr.Locale
 
+      @doc false
       def __cldr__(:backend), do: unquote(Map.get(config, :backend))
       def __cldr__(:gettext), do: unquote(Map.get(config, :gettext))
       def __cldr__(:data_dir), do: unquote(Map.get(config, :data_dir))
