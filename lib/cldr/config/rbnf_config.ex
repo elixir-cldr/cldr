@@ -54,6 +54,7 @@ defmodule Cldr.Rbnf.Config do
   def rbnf_locale_names do
     rbnf_dir()
     |> File.ls!()
+    |> Enum.reject(&String.ends_with?(&1, ".txt"))
     |> Enum.map(&Path.basename(&1, ".json"))
     |> Enum.sort()
     |> Enum.map(&String.to_atom/1)
@@ -130,7 +131,7 @@ defmodule Cldr.Rbnf.Config do
         |> Cldr.Config.json_library().decode!()
         |> Map.get("rbnf")
         |> Map.get("rbnf")
-        |> rules_from_rule_sets
+        |> rules_from_rule_sets()
 
       {:ok, rules}
     else
@@ -145,15 +146,19 @@ defmodule Cldr.Rbnf.Config do
     }
   end
 
-  defp rules_from_rule_sets(json) do
-    Enum.map(json, fn {group, sets} ->
+  defp rules_from_rule_sets(rule_sets) do
+    Enum.map(rule_sets, fn {group, sets} ->
       {String.to_atom(group), rules_from_one_group(sets)}
     end)
     |> Enum.into(%{})
   end
 
   defp rules_from_one_group(sets) do
-    Enum.map(sets, fn {set, rules} ->
+    sets
+    |> Enum.reject(fn {_set, rules} ->
+      is_binary(rules)
+    end)
+    |> Enum.map(fn {set, rules} ->
       access = access_from_set(set)
       {function_name_from(set), %{access: access, rules: rules_from(rules)}}
     end)

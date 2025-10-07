@@ -161,8 +161,6 @@ defmodule CldrLanguageTagTest do
   end
 
   test "with u extensions and time zone that requires canonicalisation" do
-    import Cldr.LanguageTag.Sigil
-
     assert {:ok, tag} = Cldr.validate_locale("en-u-tz-est5edt")
     assert "TestBackend.Cldr.Locale.new!(\"en-US-u-tz-usnyc\")" == inspect(tag)
     assert "America/New_York" = tag.locale.timezone
