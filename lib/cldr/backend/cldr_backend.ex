@@ -471,11 +471,11 @@ defmodule Cldr.Backend do
 
       ## Examples
 
-          iex> #{inspect(__MODULE__)}.quote("Quoted String")
+          iex> #{inspect(__MODULE__)}.quote("Quoted String", locale: :en)
           "“Quoted String”"
 
-          iex> #{inspect(__MODULE__)}.quote("Quoted String", prefer: :variant)
-          "‘Quoted String’"
+          iex> #{inspect(__MODULE__)}.quote("Quoted String", prefer: :variant, locale: :de)
+          "‚Quoted String‘"
 
           iex> #{inspect(__MODULE__)}.quote("Quoted String", locale: :ja)
           "「Quoted String」"
@@ -508,11 +508,7 @@ defmodule Cldr.Backend do
       # a map entry of :default.
 
       defp quote_preference(marks, preference) do
-        if is_binary(marks) do
-          marks
-        else
-          Map.get(marks, preference) || Map.fetch!(marks, :default)
-        end
+        Map.get(marks, preference) || Map.fetch!(marks, :default)
       end
 
 

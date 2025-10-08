@@ -1280,11 +1280,11 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.quote("Quoted String", MyApp.Cldr)
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, locale: :en)
       "“Quoted String”"
 
-      iex> Cldr.quote("Quoted String", MyApp.Cldr, prefer: :variant)
-      "‘Quoted String’"
+      iex> Cldr.quote("Quoted String", MyApp.Cldr, prefer: :variant, locale: :de)
+      "‚Quoted String‘"
 
       iex> Cldr.quote("Quoted String", MyApp.Cldr, locale: "ja")
       "「Quoted String」"
