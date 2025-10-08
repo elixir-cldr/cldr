@@ -65,7 +65,22 @@ defmodule Cldr.Consolidate do
     )
     |> Enum.to_list()
 
+    copy_test_locales()
+
     :ok
+  end
+
+  @doc false
+  # Copy `en`, `en-001` and `und` to the test data directory in
+  # "another_backend/cldr/data_dir/locales"
+  def copy_test_locales do
+    Enum.each ["en", "en-001", "und"], fn locale ->
+      locale_file = locale <> ".json"
+
+      source_path = Path.join(consolidated_locales_dir(), locale_file)
+      destination_path = Path.join("another_backend/cldr/data_dir/locales", locale_file)
+      File.cp(source_path, destination_path)
+    end
   end
 
   @doc """
