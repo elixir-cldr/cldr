@@ -191,7 +191,10 @@ defmodule Cldr.Consolidate do
     end
   end
 
+<<<<<<< HEAD
   @doc false
+=======
+>>>>>>> b9089a35225562f70b98af28cc0bcfc27628105e
   # Groups content that contains _alt_ or _menu_ separators
   # for content.
   def group_alt_content(map, normalizer_fun \\ & &1) do
@@ -225,6 +228,7 @@ defmodule Cldr.Consolidate do
     |> Map.new()
   end
 
+<<<<<<< HEAD
   @doc false
   def group_prefixed_content(map, prefix, normalizer_fun \\ & &1) do
     map
@@ -237,6 +241,8 @@ defmodule Cldr.Consolidate do
     |> group_alt_content(normalizer_fun)
   end
 
+=======
+>>>>>>> b9089a35225562f70b98af28cc0bcfc27628105e
   defp jason_decode!("", file) do
     IO.puts(
       "CLDR json file #{inspect(file)} was found to be empty. " <>

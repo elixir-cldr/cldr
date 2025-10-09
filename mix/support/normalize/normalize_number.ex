@@ -28,7 +28,11 @@ defmodule Cldr.Normalize.Number do
 
         locale_formats = %{
           standard: decimal_formats["standard"],
+<<<<<<< HEAD
           rational: normalize_rational_formats(rational_formats),
+=======
+          rational: rational_formats,
+>>>>>>> b9089a35225562f70b98af28cc0bcfc27628105e
           decimal_long: normalize_short_format(decimal_long_format),
           decimal_short: normalize_short_format(decimal_short_format),
           currency: currency_formats["standard"],
