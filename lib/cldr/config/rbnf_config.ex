@@ -146,15 +146,9 @@ defmodule Cldr.Rbnf.Config do
     }
   end
 
-<<<<<<< HEAD
   defp rules_from_rule_sets(rule_sets) do
     Enum.map(rule_sets, fn {group, sets} ->
       {String.to_atom(group), rules_from_one_group(sets)}
-=======
-  defp rules_from_rule_sets(json) do
-    Enum.map(json, fn {group, sets} ->
-        {String.to_atom(group), rules_from_one_group(sets)}
->>>>>>> b9089a35225562f70b98af28cc0bcfc27628105e
     end)
     |> Enum.reject(&is_nil/1)
     |> Map.new()
@@ -163,7 +157,6 @@ defmodule Cldr.Rbnf.Config do
   # FIXME eventually the embedded rules will go
   # and we need to deal with the sidecar files
   defp rules_from_one_group(sets) do
-<<<<<<< HEAD
     sets
     |> Enum.reject(fn {_set, rules} ->
       is_binary(rules)
@@ -171,15 +164,6 @@ defmodule Cldr.Rbnf.Config do
     |> Enum.map(fn {set, rules} ->
       access = access_from_set(set)
       {function_name_from(set), %{access: access, rules: rules_from(rules)}}
-=======
-    Enum.map(sets, fn
-      {"_rbnfRulesFile", _} ->
-        nil
-
-      {set, rules} ->
-        access = access_from_set(set)
-        {function_name_from(set), %{access: access, rules: rules_from(rules)}}
->>>>>>> b9089a35225562f70b98af28cc0bcfc27628105e
     end)
     |> Enum.reject(&is_nil/1)
     |> Map.new()
