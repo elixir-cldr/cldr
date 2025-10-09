@@ -146,13 +146,17 @@ defmodule Cldr.Rbnf.Config do
     }
   end
 
+<<<<<<< HEAD
   defp rules_from_rule_sets(rule_sets) do
     Enum.map(rule_sets, fn {group, sets} ->
       {String.to_atom(group), rules_from_one_group(sets)}
     end)
-    |> Enum.into(%{})
+    |> Enum.reject(&is_nil/1)
+    |> Map.new()
   end
 
+  # FIXME eventually the embedded rules will go
+  # and we need to deal with the sidecar files
   defp rules_from_one_group(sets) do
     sets
     |> Enum.reject(fn {_set, rules} ->
@@ -162,7 +166,8 @@ defmodule Cldr.Rbnf.Config do
       access = access_from_set(set)
       {function_name_from(set), %{access: access, rules: rules_from(rules)}}
     end)
-    |> Enum.into(%{})
+    |> Enum.reject(&is_nil/1)
+    |> Map.new()
   end
 
   defp access_from_set(<<"%%", _rest::binary>>), do: :private

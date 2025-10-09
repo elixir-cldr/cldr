@@ -15,6 +15,7 @@ defmodule Cldr.Normalize.Number do
     number_formats =
       Enum.reduce(number_systems, %{}, fn number_system, formats ->
         decimal_formats = numbers["decimal_formats_number_system_#{number_system}"]
+        rational_formats = numbers["rational_formats_number_system_#{number_system}"]
         currency_formats = numbers["currency_formats_number_system_#{number_system}"]
         scientific_formats = numbers["scientific_formats_number_system_#{number_system}"]
         percent_formats = numbers["percent_formats_number_system_#{number_system}"]
@@ -27,6 +28,7 @@ defmodule Cldr.Normalize.Number do
 
         locale_formats = %{
           standard: decimal_formats["standard"],
+          rational: rational_formats,
           decimal_long: normalize_short_format(decimal_long_format),
           decimal_short: normalize_short_format(decimal_short_format),
           currency: currency_formats["standard"],
