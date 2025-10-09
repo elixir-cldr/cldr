@@ -57,6 +57,7 @@ defmodule Cldr.Config do
   @app_name Mix.Project.config()[:app]
   @cldr_data_dir Path.join(Application.app_dir(@app_name), "priv/cldr")
   @external_resource Path.join(@cldr_data_dir, "version.json")
+  @external_resource Path.join(@cldr_data_dir, "language_data.json")
 
   @root_locale_name :und
   @default_locale_name :"en-001"

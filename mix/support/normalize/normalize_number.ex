@@ -28,7 +28,7 @@ defmodule Cldr.Normalize.Number do
 
         locale_formats = %{
           standard: decimal_formats["standard"],
-          rational: rational_formats,
+          rational: normalize_rational_formats(rational_formats),
           decimal_long: normalize_short_format(decimal_long_format),
           decimal_short: normalize_short_format(decimal_short_format),
           currency: currency_formats["standard"],
@@ -51,6 +51,7 @@ defmodule Cldr.Normalize.Number do
       end)
       |> Map.new()
       |> Cldr.Map.integerize_keys()
+      |> Cldr.Map.atomize_keys()
 
     content =
       Map.put(
@@ -139,6 +140,27 @@ defmodule Cldr.Normalize.Number do
 
   def normalize_iso_format(format) when is_binary(format) do
     Cldr.Substitution.parse(format)
+  end
+
+  @doc false
+  def normalize_rational_formats(nil) do
+    nil
+  end
+
+  def normalize_rational_formats(formats) do
+    usage = Map.get(formats, "rational_usage")
+
+    formats
+    |> Map.delete("rational_usage")
+    |> Enum.map(fn {code, format} ->
+      if String.contains?(format, "{0}") do
+        {code, Cldr.Substitution.parse(format)}
+      else
+        {code, format}
+      end
+    end)
+    |> Cldr.Consolidate.group_prefixed_content("integer_and_rational_pattern")
+    |> Map.put(:usage, String.to_atom(usage))
   end
 
   @doc false

@@ -294,6 +294,7 @@ defmodule Cldr.Locale do
   scripts and territories
 
   """
+  @external_resource Path.join(Cldr.Config.cldr_data_dir(), "language_data.json")
   @language_data Cldr.Config.language_data()
                  |> Enum.map(fn
                    {language,

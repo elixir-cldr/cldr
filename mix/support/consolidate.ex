@@ -135,10 +135,10 @@ defmodule Cldr.Consolidate do
     |> Normalize.Rbnf.normalize(locale)
     |> Normalize.Units.normalize(locale)
     |> Normalize.DateFields.normalize(locale)
+    |> Normalize.Calendar.normalize(locale)
     |> Normalize.DateTime.normalize(locale)
     |> Normalize.TerritoryNames.normalize(locale)
     |> Normalize.LanguageNames.normalize(locale)
-    |> Normalize.Calendar.normalize(locale)
     |> Normalize.Delimiter.normalize(locale)
     |> Normalize.Ellipsis.normalize(locale)
     |> Normalize.LenientParse.normalize(locale)
@@ -191,6 +191,7 @@ defmodule Cldr.Consolidate do
     end
   end
 
+  @doc false
   # Groups content that contains _alt_ or _menu_ separators
   # for content.
   def group_alt_content(map, normalizer_fun \\ & &1) do
@@ -222,6 +223,18 @@ defmodule Cldr.Consolidate do
     end)
     |> Enum.map(fn {k, v} -> {k, Cldr.Map.merge_map_list(v)} end)
     |> Map.new()
+  end
+
+  @doc false
+  def group_prefixed_content(map, prefix, normalizer_fun \\ & &1) do
+    map
+    |> Cldr.Consolidate.default([])
+    |> Enum.map(fn
+      {^prefix, value} -> {prefix <> "_alt_default", value}
+      other -> other
+    end)
+    |> Map.new()
+    |> group_alt_content(normalizer_fun)
   end
 
   defp jason_decode!("", file) do

@@ -4,6 +4,12 @@ The `ex_cldr` library and its derivative packages are driven by data provided by
 
 `ex_cldr` operates on the json content generated from the CLDR xml data files. The remainder of this document describes the process by which CLDR data is generated and provisioned for `ex_cldr`.
 
+> #### Not to developers {: .info}
+>
+> The notes in this document are only relevant if updating ex_cldr with new data from
+> the CLDR project. For all other uses of `ex_cldr`, just clone the repo
+> (--depth=1 is probably enough) and hack away.
+
 ### Initial setup
 
 Installation instructions are platform dependent. For a typical MacOS environment the following using [Homebrew](https://brew.sh) will suffice.

@@ -146,7 +146,6 @@ defmodule Cldr.Rbnf.Config do
     }
   end
 
-<<<<<<< HEAD
   defp rules_from_rule_sets(rule_sets) do
     Enum.map(rule_sets, fn {group, sets} ->
       {String.to_atom(group), rules_from_one_group(sets)}

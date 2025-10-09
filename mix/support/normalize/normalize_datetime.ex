@@ -29,7 +29,7 @@ defmodule Cldr.Normalize.DateTime do
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "date_time_formats",
-        only: ["interval_format_fallback"]
+        only: ["interval_format_fallback", "short", "full", "long"]
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "append_items"
@@ -63,7 +63,10 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.deep_map(&group_day_periods/1,
         filter: "day_periods"
       )
-      |> Cldr.Map.atomize_keys(only: ["long", "daylight", "generic", "standard", "short", "type"])
+      |> Cldr.Map.atomize_keys(filter: "calendars", skip: :number_system)
+      |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
+      |> Cldr.Map.atomize_values(only: [:type])
+      |> Cldr.Map.atomize_keys(level: 1..2)
 
     Map.put(content, "dates", dates)
   end
