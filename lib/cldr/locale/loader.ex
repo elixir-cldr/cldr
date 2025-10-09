@@ -132,6 +132,7 @@ defmodule Cldr.Locale.Loader do
     |> assert_valid_keys!(locale)
     |> Cldr.Map.integerize_keys(filter: "list_formats")
     |> Cldr.Map.integerize_keys(filter: "number_formats")
+    |> Cldr.Map.integerize_keys(filter: "date_fields")
     |> Cldr.Map.atomize_values(filter: "number_systems")
     |> Cldr.Map.atomize_keys(filter: "locale_display_names", skip: @language_keys)
     |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)

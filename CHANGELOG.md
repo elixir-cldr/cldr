@@ -2,6 +2,21 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.44.0
+
+This is the changelog for Cldr v2.44.0 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Breaking Changes
+
+* Some data formats have changed and the changes are reflected in the locale `.json` files. These changes should not normally affect consumers since consumers are not normally expected to deal with the underlying data.
+
+  * Relative ordinal date field localized names are now captured as a map not a list. In addition, `2` and `-2` ordinal names are added to the data.
+  * Locale display names and language names now have a subtype of `menu` which is a map containing the keys `:core`, `:extension` and `:default`. More or more of these entries may be `nil`.
+
+### Enhancements
+
+* Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.
+
 ## Cldr v2.43.2
 
 This is the changelog for Cldr v2.43.2 released on September 13th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
