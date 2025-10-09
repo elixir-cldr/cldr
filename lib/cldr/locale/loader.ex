@@ -178,8 +178,6 @@ defmodule Cldr.Locale.Loader do
     "short",
     "daylight",
     "formal",
-    # TODO Remove when we publish with CLDR 48
-    "daylight_savings",
     "generic",
     "type"
   ]
