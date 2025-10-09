@@ -391,7 +391,19 @@ defmodule Cldr.Consolidate do
       |> Map.new()
 
     save_file(language_data, path)
+
+    # FIXME For now we use the CLDR 47 data
+    # because we use the territory mapping in
+    # Cldr.Locale.canonical_language_tag/1.
+    use_cldr47_language_data(path)
+
     assert_package_file_configured!(path)
+  end
+
+  def use_cldr47_language_data(path) do
+    from_path = Path.join(consolidated_output_dir(), "language_data_cldr47.json")
+    language_data = File.read!(from_path) |> Jason.decode!()
+    save_file(language_data, path)
   end
 
   defp normalise_language_data(data) do
