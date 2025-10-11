@@ -29,7 +29,7 @@ defmodule Cldr.Normalize.DateTime do
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "date_time_formats",
-        only: ["interval_format_fallback", "short", "full", "long"]
+        only: ["interval_format_fallback", "short", "full", "long", "medium"]
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "append_items"
@@ -57,8 +57,11 @@ defmodule Cldr.Normalize.DateTime do
         filter: "date_time_formats",
         only: "interval_formats"
       )
-      |> Cldr.Map.deep_map(&group_time_formats/1,
+      |> Cldr.Map.deep_map(&group_formats/1,
         only: "time_formats"
+      )
+      |> Cldr.Map.deep_map(&group_formats(&1, :standard),
+        only: "date_formats"
       )
       |> Cldr.Map.deep_map(&group_day_periods/1,
         filter: "day_periods"
@@ -67,8 +70,75 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
       |> Cldr.Map.atomize_values(only: [:type])
       |> Cldr.Map.atomize_keys(level: 1..2)
+      |> add_to_date_time_available_formats(:time_skeletons, :time_formats)
+      |> add_to_date_time_available_formats(:date_skeletons, :date_formats)
+      |> hoist(:append_items)
+      |> hoist(:available_formats)
+      |> hoist(:interval_formats)
 
     Map.put(content, "dates", dates)
+  end
+
+  # Move an item from date_time_formats to the base calendar
+  # map.
+  defp hoist(content, key) do
+    calendars =
+      Enum.map(content.calendars, fn {calendar, formats} ->
+        item = Map.fetch!(formats.date_time_formats, key)
+        date_time_formats = Map.delete(formats.date_time_formats, key)
+
+        formats =
+          formats
+          |> Map.put(:date_time_formats, date_time_formats)
+          |> Map.put(key, item)
+
+        {calendar, formats}
+      end)
+      |> Map.new()
+
+    Map.put(content, :calendars, calendars)
+  end
+
+  # Merge the predefined date and time formats into the available formats
+  # list.
+  defp add_to_date_time_available_formats(content, skeletons, standard_formats) do
+    calendars =
+      Enum.map(content.calendars, fn {calendar, formats} ->
+        merged_standard_formats =
+          Map.merge(formats[skeletons], formats[standard_formats], fn
+            _k, a, b when is_binary(a) ->
+              [String.to_atom(a), b]
+
+            _k, %{format: skeleton}, b ->
+              [String.to_atom(skeleton), b]
+          end)
+
+        new_standard_formats =
+          Enum.map(merged_standard_formats, fn {format, [skeleton, _format_string]} ->
+            {format, skeleton}
+          end)
+          |> Map.new()
+
+        added_available_formats =
+          merged_standard_formats
+          |> Map.values()
+          |> Enum.map(&List.to_tuple/1)
+          |> Map.new()
+
+        merged_available_formats =
+          Map.merge(formats.date_time_formats.available_formats, added_available_formats)
+
+        formats =
+          formats
+          |> put_in([:date_time_formats, :available_formats], merged_available_formats)
+          |> put_in([standard_formats], new_standard_formats)
+          |> Map.delete(skeletons)
+
+        {calendar, formats}
+      end)
+      |> Map.new()
+
+    Map.put(content, :calendars, calendars)
   end
 
   defp compile_items({key, value}) when is_binary(value) do
@@ -109,18 +179,21 @@ defmodule Cldr.Normalize.DateTime do
     other
   end
 
-  defp group_time_formats({key, formats}) do
-    time_formats =
-      formats
-      |> Cldr.Consolidate.group_by_alt("short", default: :unicode)
-      |> Cldr.Consolidate.group_by_alt("full", default: :unicode)
-      |> Cldr.Consolidate.group_by_alt("medium", default: :unicode)
-      |> Cldr.Consolidate.group_by_alt("long", default: :unicode)
+  defp group_formats(item, default \\ :unicode)
 
-    {key, time_formats}
+  defp group_formats({key, formats}, default) do
+    formats =
+      formats
+      |> Cldr.Consolidate.group_by_alt("short", default: default)
+      |> Cldr.Consolidate.group_by_alt("full", default: default)
+      |> Cldr.Consolidate.group_by_alt("medium", default: default)
+      |> Cldr.Consolidate.group_by_alt("long", default: default)
+      |> Cldr.Consolidate.unnest_if_only_one(["short", "full", "medium", "long"])
+
+    {key, formats}
   end
 
-  defp group_time_formats(other) do
+  defp group_formats(other, _) do
     other
   end
 

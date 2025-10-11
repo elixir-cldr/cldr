@@ -112,7 +112,7 @@ defmodule Cldr.Locale.Loader do
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
-  @alt_keys ["default", "menu", "short", "long", "variant", "standard"]
+  @alt_keys ["default", "menu", "short", "long", "variant", "standard", "medium"]
   @lenient_parse_keys ["date", "general", "number"]
   @language_keys ["language", "language_variants"]
 

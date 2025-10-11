@@ -14,6 +14,7 @@ defmodule Cldr.Normalize.Delimiter do
       |> Cldr.Map.rename_keys("alternate_quotation_end", "quotation_end_alt_variant")
       |> Cldr.Consolidate.group_by_alt("quotation_start")
       |> Cldr.Consolidate.group_by_alt("quotation_end")
+      |> Cldr.Map.atomize_keys()
 
     Map.put(content, "delimiters", delimiters)
   end

@@ -25,7 +25,7 @@ defmodule Cldr.Consolidate do
   @timeout 10_000
 
   @spec consolidate_locales :: :ok
-  def consolidate_locales do
+  def consolidate_locales(async \\ true) do
     ensure_output_dir_exists!(consolidated_output_dir())
     ensure_output_dir_exists!(consolidated_locales_dir())
     save_cldr_version()
@@ -58,12 +58,19 @@ defmodule Cldr.Consolidate do
     save_metazone_data()
     save_primary_zones()
 
-    all_locales()
-    |> Task.async_stream(__MODULE__, :consolidate_locale, [],
-      max_concurrency: @max_concurrency,
-      timeout: @timeout
-    )
-    |> Enum.to_list()
+    if async do
+      all_locales()
+      |> Task.async_stream(__MODULE__, :consolidate_locale, [],
+        max_concurrency: @max_concurrency,
+        timeout: @timeout
+      )
+      |> Enum.to_list()
+    else
+      all_locales()
+      |> Enum.each(&consolidate_locale/1)
+
+      :ok
+    end
 
     copy_test_locales()
 
@@ -235,6 +242,17 @@ defmodule Cldr.Consolidate do
     end)
     |> Map.new()
     |> group_alt_content(normalizer_fun)
+  end
+
+  @doc false
+  def unnest_if_only_one(map, keys) do
+    Enum.reduce(keys, map, fn k, acc ->
+      if length(Map.keys(acc[k])) == 1 do
+        Map.put(acc, k, hd(Map.values(acc[k])))
+      else
+        acc
+      end
+    end)
   end
 
   defp jason_decode!("", file) do
