@@ -199,6 +199,8 @@ defmodule Cldr.Locale.Loader do
       |> Cldr.Map.atomize_keys(only: @date_atoms)
       |> Cldr.Map.atomize_keys(filter: "calendars", skip: :number_system)
       |> Cldr.Map.atomize_keys(filter: "time_zone_names", level: 1..2)
+      |> Cldr.Map.atomize_values(filter: :date_formats)
+      |> Cldr.Map.atomize_values(filter: :time_formats)
       |> Cldr.Map.atomize_values(only: [:type])
       |> Cldr.Map.atomize_keys(level: 1..1)
 
