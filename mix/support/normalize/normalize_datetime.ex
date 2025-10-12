@@ -22,6 +22,8 @@ defmodule Cldr.Normalize.DateTime do
       |> Cldr.Map.rename_keys("_value", "format")
       |> Cldr.Map.rename_keys("_type", "type")
       |> Cldr.Map.rename_keys("exemplar_city_alt_formal", "formal")
+      |> Cldr.Map.rename_keys("date_time_formats_at_time", "date_time_at_formats")
+      |> Cldr.Map.rename_keys("date_time_formats_relative", "date_time_relative_formats")
       |> Cldr.Map.underscore_keys(only: "intervalFormatFallback")
       |> Cldr.Map.deep_map(&normalize_number_system/1,
         filter: @normalize_number_systems_for,
@@ -29,7 +31,7 @@ defmodule Cldr.Normalize.DateTime do
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "date_time_formats",
-        only: ["interval_format_fallback", "short", "full", "long", "medium"]
+        only: ["interval_format_fallback"]
       )
       |> Cldr.Map.deep_map(&compile_items/1,
         filter: "append_items"
