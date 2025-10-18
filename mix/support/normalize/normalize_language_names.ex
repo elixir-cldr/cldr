@@ -13,15 +13,8 @@ defmodule Cldr.Normalize.LanguageNames do
       content
       |> get_in(["locale_display_names", "languages"])
       |> Consolidate.default([])
-      # |> Enum.map(fn {k, v} ->
-      #   k =
-      #     k
-      #     |> String.replace("__", "_")
-      #     |> String.replace(~r/^(.)_(.)/, "\\1\\2")
-      #
-      #   {k, v}
-      # end)
       |> Consolidate.group_alt_content(&Cldr.Locale.canonical_locale_name!/1)
+      |> Cldr.Map.atomize_keys(level: 2..4)
 
     Map.put(content, "languages", languages)
   end

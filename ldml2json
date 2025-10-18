@@ -104,9 +104,6 @@ cp $CLDR_REPO/tools/cldr-code/src/test/resources/org/unicode/cldr/unittest/data/
 cp $CLDR_REPO/tools/cldr-code/src/test/resources/org/unicode/cldr/unittest/data/localeMatcherTest.txt \
    $EX_CLDR/test/data/locale_matching_test_data.txt
 
-cp $CLDR_REPO/common/testData/datetime/datetime.json \
-   $EX_CLDR/test/data/date_time_formatting.json
-
 # For now, copy language_data from CLDR 47
 # The territory data is now removed from currenct versions
 # and we should not depend on it - but its used for locale

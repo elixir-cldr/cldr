@@ -14,21 +14,10 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.fetch!("locale_display_names")
       |> Consolidate.default([])
 
-    languages =
-      locale_display_names
-      |> Map.get("languages")
-      |> Consolidate.group_alt_content(&Cldr.Locale.canonical_locale_name!/1)
-
     scripts =
       locale_display_names
       |> Map.get("scripts", %{})
       |> Consolidate.group_alt_content(&String.capitalize/1)
-      |> Cldr.Map.atomize_keys()
-
-    territories =
-      locale_display_names
-      |> Map.get("territories", %{})
-      |> Consolidate.group_alt_content(&String.upcase/1)
       |> Cldr.Map.atomize_keys()
 
     locale_display_pattern =
@@ -68,12 +57,11 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.delete("languages")
       |> Map.delete("scripts")
       |> Map.delete("territories")
-      |> Map.put("language", languages)
-      |> Map.put("script", scripts)
-      |> Map.put("territory", territories)
+      |> Map.put("scripts", scripts)
       |> Map.put("types", types)
       |> Map.put("locale_display_pattern", locale_display_pattern)
       |> Map.put("code_patterns", code_patterns)
+      |> Cldr.Map.atomize_keys(level: 1)
 
     Map.put(content, "locale_display_names", locale_display_names)
   end

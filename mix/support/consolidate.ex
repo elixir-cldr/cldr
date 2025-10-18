@@ -210,7 +210,7 @@ defmodule Cldr.Consolidate do
           {[normalizer_fun.(lang)], value}
 
         [lang, "_alt_", "menu"] ->
-          {[normalizer_fun.(lang), "_menu_", "default"], value}
+          {[normalizer_fun.(lang), "_menu_", "core"], value}
 
         [lang, alt, alt_value] ->
           {[normalizer_fun.(lang), alt, alt_value], value}
