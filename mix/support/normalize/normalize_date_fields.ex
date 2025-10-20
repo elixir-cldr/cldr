@@ -42,6 +42,8 @@ defmodule Cldr.Normalize.DateFields do
     other
   end
 
+  @base_content_type "long"
+
   defp fold_default_content(content) do
     Enum.reduce(base_keys(content), content, fn key, acc ->
       base_content =
@@ -49,7 +51,7 @@ defmodule Cldr.Normalize.DateFields do
         |> Map.get(key)
         |> normalize_ordinals()
 
-      Map.put(acc, key, %{"default" => base_content})
+      Map.put(acc, key, %{@base_content_type => base_content})
     end)
   end
 
