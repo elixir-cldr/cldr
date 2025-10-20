@@ -19,6 +19,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.get("scripts", %{})
       |> Consolidate.group_alt_content(&String.capitalize/1)
       |> Cldr.Map.atomize_keys()
+      |> Cldr.Map.rename_keys(:default, :standard)
 
     locale_display_pattern =
       locale_display_names
