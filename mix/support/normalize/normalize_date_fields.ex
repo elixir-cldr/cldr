@@ -42,7 +42,7 @@ defmodule Cldr.Normalize.DateFields do
     other
   end
 
-  @base_content_type "long"
+  @base_content_type "standard"
 
   defp fold_default_content(content) do
     Enum.reduce(base_keys(content), content, fn key, acc ->
