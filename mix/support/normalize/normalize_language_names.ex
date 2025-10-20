@@ -14,6 +14,7 @@ defmodule Cldr.Normalize.LanguageNames do
       |> get_in(["locale_display_names", "languages"])
       |> Consolidate.default([])
       |> Consolidate.group_alt_content(&Cldr.Locale.canonical_locale_name!/1)
+      |> Cldr.Map.rename_keys(:default, :standard)
       |> Cldr.Map.atomize_keys(level: 2..4)
 
     Map.put(content, "languages", languages)

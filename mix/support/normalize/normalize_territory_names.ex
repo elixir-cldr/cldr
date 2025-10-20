@@ -13,6 +13,7 @@ defmodule Cldr.Normalize.TerritoryNames do
       content
       |> get_in(["locale_display_names", "territories"])
       |> Consolidate.group_alt_content(&String.upcase/1)
+      |> Cldr.Map.rename_keys(:default, :standard)
       |> Cldr.Map.atomize_keys()
 
     Map.put(content, "territories", territories)
