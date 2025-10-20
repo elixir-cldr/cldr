@@ -57,7 +57,7 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
       |> Map.delete("languages")
       |> Map.delete("scripts")
       |> Map.delete("territories")
-      |> Map.put("scripts", scripts)
+      |> Map.put("script", scripts)
       |> Map.put("types", types)
       |> Map.put("locale_display_pattern", locale_display_pattern)
       |> Map.put("code_patterns", code_patterns)
