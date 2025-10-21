@@ -99,6 +99,13 @@ defmodule Cldr.Timezone do
     |> Map.fetch(territory)
   end
 
+  @doc false
+  def timezone_count_for_territory(territory) do
+    with {:ok, zones} <- timezones_for_territory(territory) do
+      Enum.count(zones)
+    end
+  end
+
   @doc """
   Returns a list of IANA time zone names for
   a given CLDR short zone code, or `nil`.
