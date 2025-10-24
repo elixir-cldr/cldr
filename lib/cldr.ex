@@ -691,7 +691,7 @@ defmodule Cldr do
 
   """
   @spec display_name(term(), Keyword.t()) :: String.t()
-  @display_name_options [prefer: :default, dialect: true]
+  @display_name_options [prefer: :standard, language_display: :dialect]
 
   def display_name(term, options \\ []) do
     options = Keyword.merge(@display_name_options, options)
