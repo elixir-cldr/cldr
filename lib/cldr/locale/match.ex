@@ -1,6 +1,6 @@
 defmodule Cldr.Locale.Match do
   @moduledoc """
-  Implements the language matching algorithm.
+  Implements the [CLDR language matching algorithm](https://www.unicode.org/reports/tr35/tr35.html#LanguageMatching).
 
   """
 
@@ -79,11 +79,12 @@ defmodule Cldr.Locale.Match do
     desired = List.wrap(desired) |> Enum.with_index()
     backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
     supported = Keyword.get_lazy(options, :supported, &backend.known_locale_names/0)
-    threshold = Keyword.get(options, :limit, @default_threshold)
+    threshold = Keyword.get(options, :threshold, @default_threshold)
 
     for {desired, index} <- desired, supported <- supported,
-        match_distance = match_distance(desired, supported, index, backend),
-        match_distance < threshold  do
+        match_distance = match_distance(desired, supported, backend),
+        adjusted_match_distance = match_distance + index + @more_than_region_diff,
+        adjusted_match_distance < threshold  do
       {supported, match_distance}
     end
     |> Enum.sort_by(&match_key/1)
@@ -138,24 +139,25 @@ defmodule Cldr.Locale.Match do
       iex> Cldr.Locale.Match.match_distance("en", "en")
       0
 
-      iex> Cldr.Locale.Match.match_distance("en", "en-GB")
+      iex> Cldr.Locale.Match.match_distance("en-AU", "en")
       5
 
-      iex> Cldr.Locale.Match.match_distance("en-GB", "en-AU")
+      iex> Cldr.Locale.Match.match_distance("en-AU", "en-GB")
       3
+
+      iex> Cldr.Locale.Match.match_distance("zh-HK", "zh-Hant")
+      5
 
       iex> Cldr.Locale.Match.match_distance("en", "zh-Hans")
       100
 
   """
   @doc since: "2.44.0"
-  def match_distance(desired, supported, index \\ 0, backend \\ Cldr.default_backend!()) do
+  def match_distance(desired, supported, backend \\ Cldr.default_backend!()) do
     with {:ok, desired} <- validate(desired, backend),
          {:ok, supported} <- validate(supported, backend) do
       @match_list
-      |> Enum.reduce(0, &distance(desired, supported, &1, &2))
-      |> Kernel.+(index)
-      |> Kernel.+(@more_than_region_diff)
+      |> Enum.reduce(0, &subtag_distance(desired, supported, &1, &2))
       |> min(100)
     end
   end
@@ -165,10 +167,11 @@ defmodule Cldr.Locale.Match do
   end
 
   defp validate(locale, backend) do
-    Cldr.Locale.canonical_language_tag(locale, backend, skip_gettext_and_cldr: true, skip_rbnf_name: true)
+    options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
+    Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
-  defp distance(desired, supported, subtags, acc) do
+  defp subtag_distance(desired, supported, subtags, acc) do
     desired_fields = subtags(desired, subtags)
     supported_fields = subtags(supported, subtags)
     calculate_distance(desired_fields, supported_fields, acc)
@@ -194,7 +197,8 @@ defmodule Cldr.Locale.Match do
             matches?(supported, match.supported) ->
           {:halt, match.distance} # |> IO.inspect(label: "Score for #{inspect match}}")
 
-        !Map.get(match, :one_way) && matches?(desired, match.supported) && matches?(supported, match.desired) ->
+        !Map.get(match, :one_way) && matches?(desired, match.supported) &&
+            matches?(supported, match.desired) ->
           {:halt, match.distance} # |> IO.inspect(label: "Score for inverse #{inspect match}}")
 
         true ->
@@ -254,6 +258,8 @@ defmodule Cldr.Locale.Match do
     Map.fetch!(match_variables(), variable)
   end
 
+  # Map.fetch!/3 not Map.take/2 because
+  # we need to guarantee order
   defp subtags(locale, subtags) do
     Enum.map(subtags, &(Map.fetch!(locale, &1)))
   end

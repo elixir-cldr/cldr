@@ -1,6 +1,6 @@
 defmodule Cldr.CanonicalLocaleGenerator do
   def data do
-    Path.join(__DIR__, "../data/locale_canonicalization.txt")
+    Path.join(__DIR__, "../support/data/locale_canonicalization.txt")
     |> Path.expand()
     |> File.read!()
     |> String.split("\n")
