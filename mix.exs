@@ -185,7 +185,10 @@ defmodule Cldr.Mixfile do
 
   defp groups_for_modules do
     [
-      "Language Tag": ~r/^Cldr.LanguageTag.?/,
+      "Language Tag": [
+        ~r/^Cldr.LanguageTag.?/,
+        ~r/^Cldr.Locale.?/
+      ],
       "Plural Rules": ~r/^Cldr.Number.?/,
       Protocols: [
         Cldr.Chars,

@@ -28,4 +28,6 @@ defmodule Doc.Test do
   doctest TestBackend.Gettext.Plural
   doctest MyApp.Cldr
   doctest Cldr.Rbnf.Config
+
+  doctest Cldr.Locale.Match
 end

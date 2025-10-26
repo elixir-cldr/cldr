@@ -21,6 +21,8 @@ This is the changelog for Cldr v2.44.0 released on ______, 2025.  For older chan
 
 * Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.
 
+* Add `Cldr.Locale.Match.best_match/2` and `Cldr.Locale.Match.match_distance/3` to implement the [CLDR Language Matching algorithm](https://www.unicode.org/reports/tr35/tr35.html#LanguageMatching). This is a more formal and testable approach that the previous mechanism. This new function will be use to implement better matching between a known CLDR locale name and supported Gettext locale names. Therefore it is possible that the `gettext_locale_name` field of a `t:Cldr.LanguageTag.t/0` may change with this release.
+
 ## Cldr v2.43.2
 
 This is the changelog for Cldr v2.43.2 released on September 13th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

@@ -4,6 +4,9 @@ defmodule Cldr.Locale.Match do
 
   """
 
+  @more_than_region_diff 5
+  @default_limit 100
+
   @match_list [
     [:language, :script, :territory],
     [:language, :script],
@@ -30,6 +33,101 @@ defmodule Cldr.Locale.Match do
     @paradigm_locales
   end
 
+  @doc """
+  Find the desired locale that is the best suported match.
+
+  ### Arguments
+
+  * `desired` is any valid locale name or list of locale names
+    returned by `Cldr.known_locale_names/1` or a string or atom locale name.
+
+  * `options` is a keyword list of options.
+
+  ### Options
+
+  * `:backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
+
+  * `:supported` is a list of locale names that are supported by the application.
+    The default is `Cldr.known_locale_names/1`.
+
+  * `:limit` filters the returned list to those locales that score below this
+    limit. The default is #{@default_limit}. The option is primarily useful for
+    debugging purposes. The number itself has no meaning other than to establish
+    an order of best match.
+
+  ### Returns
+
+  * A possibly empty list of `{supported_locale, numeric_score}` tuples sorted in ascending numeric
+    score order. The head of the list is considered the best match for `desired` in
+    `supported`.
+
+  ### Examples
+
+        iex> Cldr.Locale.Match.best_match "zh-HK",
+        ...>   supported: ["zh", "zh-Hans", "zh-Hant", "en", "fr", "en-Hant"]
+        [{"zh-Hant", 10}, {"zh", 59}, {"zh-Hans", 59}, {"en-Hant", 89}]
+
+        iex> supported = Cldr.known_gettext_locale_names()
+        ["en", "en-GB", "es", "it"]
+        iex> Cldr.Locale.Match.best_match("en-GB", supported: supported)
+        [{"en-GB", 5}, {"en", 10}, {"es", 89}, {"it", 89}]
+        iex> Cldr.Locale.Match.best_match("zh-HK", supported: supported)
+        []
+
+  """
+  @doc since: "2.44.0"
+  def best_match(desired, options \\ []) do
+    desired = List.wrap(desired) |> Enum.with_index()
+    backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
+    supported = Keyword.get_lazy(options, :supported, &backend.known_locale_names/0)
+    limit = Keyword.get(options, :limit, @default_limit)
+
+    for {desired, index} <- desired, supported <- supported do
+      demotion_value = (index + @more_than_region_diff)
+      {supported, match_distance(desired, supported, backend) + demotion_value}
+    end
+    |> Enum.reject(&(elem(&1, 1) > limit))
+    |> Enum.sort_by(&(elem(&1, 1)))
+  end
+
+  @doc """
+  Return a match distance between a desired locale and
+  a supported locale.
+
+  ### Arguments
+
+  * `desired` is any valid locale returned by `Cldr.known_locale_names/1`
+    or a string or atom locale name.
+
+  * `supported` is any valid locale returned by `Cldr.known_locale_names/1`
+    or a string or atom locale name.
+
+  * `backend` is any module that includes `use Cldr` and therefore
+    is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
+
+  ### Returns
+
+  * A numeric score indicating how well the supported locale can represent
+    the desired locale. A smaller number is better with a value under 10 being
+    a good fit and a number over 50 being a poor fit.
+
+  ### Example
+
+      iex> Cldr.Locale.Match.match_distance("en", "en")
+      0
+
+      iex> Cldr.Locale.Match.match_distance("en", "en-GB")
+      5
+
+      iex> Cldr.Locale.Match.match_distance("en-GB", "en-AU")
+      3
+
+      iex> Cldr.Locale.Match.match_distance("en", "zh-Hans")
+      100
+
+  """
+  @doc since: "2.44.0"
   def match_distance(desired, supported, backend \\ Cldr.default_backend!()) do
     with {:ok, desired} <- Cldr.validate_locale(desired, backend),
          {:ok, supported} <- Cldr.validate_locale(supported, backend) do
@@ -86,44 +184,43 @@ defmodule Cldr.Locale.Match do
   # > and nb. The first match is also for a value of 96%, so the result is 92%.
 
   # Language matching
-  def matches?([language, _, _], [language, :"*", :"*"]), do: true
-  def matches?([language, _], [language, :"*"]), do: true
-  def matches?([language], [language]), do: true
+  defp matches?([language, _, _], [language, :"*", :"*"]), do: true
+  defp matches?([language, _], [language, :"*"]), do: true
+  defp matches?([language], [language]), do: true
 
   # Language and script
-  def matches?([language, script, _], [language, script, :"*"]), do: true
-  def matches?([language, script], [language, script]), do: true
+  defp matches?([language, script, _], [language, script, :"*"]), do: true
+  defp matches?([language, script], [language, script]), do: true
 
   # Language, script and territory
-  def matches?([language, _, territory], [language, :"*", territory]), do: true
-  def matches?([language, script, territory], [language, script, territory]), do: true
+  defp matches?([language, _, territory], [language, :"*", territory]), do: true
+  defp matches?([language, script, territory], [language, script, territory]), do: true
 
   # Expanded match variables
-  def matches?([language, _script, territory], [language, :"*", {:in, variable}]) do
+  defp matches?([language, _script, territory], [language, :"*", {:in, variable}]) do
     territory in expand(variable)
   end
 
-  def matches?([language, script, territory], [language, script, {:in, variable}]) do
+  defp matches?([language, script, territory], [language, script, {:in, variable}]) do
     territory in expand(variable)
   end
 
-  def matches?([language, _script, territory], [language, :"*", {:not_in, variable}]) do
+  defp matches?([language, _script, territory], [language, :"*", {:not_in, variable}]) do
     territory not in expand(variable)
   end
 
-  def matches?([language, script, territory], [language, script, {:not_in, variable}]) do
+  defp matches?([language, script, territory], [language, script, {:not_in, variable}]) do
     territory not in expand(variable)
-
   end
 
   # Wildcard matches are true
-  def matches?([_, _, _], [:"*", :"*", :"*"]), do: true
-  def matches?([_, _], [:"*", :"*"]), do: true
-  def matches?([_], [:"*"]), do: true
+  defp matches?([_, _, _], [:"*", :"*", :"*"]), do: true
+  defp matches?([_, _], [:"*", :"*"]), do: true
+  defp matches?([_], [:"*"]), do: true
 
-  def matches?(_fields, _match_data), do: false
+  defp matches?(_fields, _match_data), do: false
 
-  def expand(variable) do
+  defp expand(variable) do
     Map.fetch!(match_variables(), variable)
   end
 
