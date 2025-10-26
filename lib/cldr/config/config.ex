@@ -717,6 +717,7 @@ defmodule Cldr.Config do
     |> json_library().decode!
     |> Cldr.Map.atomize_keys()
     |> Cldr.Map.atomize_values(filter: :match_variables)
+    |> Cldr.Map.atomize_values(filter: :paradigm_locales)
     |> format_matches()
   end
 

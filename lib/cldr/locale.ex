@@ -275,6 +275,9 @@ defmodule Cldr.Locale do
   @root_language Atom.to_string(@root_locale)
   @root_rbnf_locale_name Cldr.Config.root_locale_name()
 
+  # Any score below this we consider not matched
+  @matching_threshold 30
+
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
@@ -1553,6 +1556,8 @@ defmodule Cldr.Locale do
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
     omit_singular_script? = Keyword.get(options, :omit_singular_script?, true)
     skip_gettext_and_cldr? = Keyword.get(options, :skip_gettext_and_cldr, false)
+    skip_rbnf_name? = Keyword.get(options, :skip_rbnf_name, false)
+    rbnf_locales = Keyword.get(options, :rbnf_locales, [])
 
     language_tag =
       language_tag
@@ -1571,7 +1576,7 @@ defmodule Cldr.Locale do
       |> maybe_put_likely_subtags(likely_subtags?)
       |> put_gettext_locale_name(skip_gettext_and_cldr?)
       |> put_cldr_locale_name(skip_gettext_and_cldr?)
-      |> put_rbnf_locale_name(options)
+      |> put_rbnf_locale_name(rbnf_locales, skip_rbnf_name?)
       |> wrap(:ok)
     end
   end
@@ -1845,11 +1850,14 @@ defmodule Cldr.Locale do
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t()) ::
+  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t(), skip :: boolean) ::
           Cldr.LanguageTag.t()
-  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, options) do
-    rbnf_locales = Keyword.get(options, :rbnf_locales, [])
 
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, _rbnf_locales, true = _skip?) do
+    language_tag
+  end
+
+  defp put_rbnf_locale_name(%LanguageTag{} = language_tag, rbnf_locales, false = _skip?) do
     rbnf_locale_name = rbnf_locale_name(language_tag, rbnf_locales)
     %{language_tag | rbnf_locale_name: rbnf_locale_name}
   end
@@ -1917,16 +1925,25 @@ defmodule Cldr.Locale do
 
   @spec gettext_locale_name(Cldr.LanguageTag.t()) :: String.t() | nil
   defp gettext_locale_name(%LanguageTag{} = language_tag) do
-    language_tag
-    |> first_match(&known_gettext_locale_name(&1, &2, language_tag.backend))
-    |> locale_name_to_posix
+    backend = language_tag.backend
+    gettext_locales = backend.known_gettext_locale_names()
+    gettext_match(language_tag, gettext_locales, backend)
   end
 
   # Used at compile time only
   defp gettext_locale_name(%LanguageTag{} = language_tag, config) do
-    language_tag
-    |> first_match(&known_gettext_locale_name(&1, &2, config))
-    |> locale_name_to_posix
+    gettext_locales = Cldr.Config.known_gettext_locale_names(config)
+    gettext_match(language_tag, gettext_locales, config.backend)
+  end
+
+  defp gettext_match(language_tag, supported, backend) do
+    case Cldr.Locale.Match.best_match(language_tag, backend: backend, supported: supported) do
+      [{locale, score} | _rest] when score <= @matching_threshold ->
+        locale
+
+      _other ->
+        nil
+    end
   end
 
   @spec known_gettext_locale_name(locale_name(), Cldr.backend() | Cldr.Config.t()) ::

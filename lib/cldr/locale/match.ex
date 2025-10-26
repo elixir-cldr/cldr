@@ -5,7 +5,7 @@ defmodule Cldr.Locale.Match do
   """
 
   @more_than_region_diff 5
-  @default_limit 100
+  @default_threshold 30
 
   @match_list [
     [:language, :script, :territory],
@@ -51,10 +51,8 @@ defmodule Cldr.Locale.Match do
   * `:supported` is a list of locale names that are supported by the application.
     The default is `Cldr.known_locale_names/1`.
 
-  * `:limit` filters the returned list to those locales that score below this
-    limit. The default is #{@default_limit}. The option is primarily useful for
-    debugging purposes. The number itself has no meaning other than to establish
-    an order of best match.
+  * `:threshold` filters the returned list to those locales that score below this
+    limit. The default is #{@default_threshold}.
 
   ### Returns
 
@@ -71,7 +69,7 @@ defmodule Cldr.Locale.Match do
         iex> supported = Cldr.known_gettext_locale_names()
         ["en", "en-GB", "es", "it"]
         iex> Cldr.Locale.Match.best_match("en-GB", supported: supported)
-        [{"en-GB", 5}, {"en", 10}, {"es", 89}, {"it", 89}]
+        [{"en-GB", 5}, {"en", 10}]
         iex> Cldr.Locale.Match.best_match("zh-HK", supported: supported)
         []
 
@@ -81,14 +79,34 @@ defmodule Cldr.Locale.Match do
     desired = List.wrap(desired) |> Enum.with_index()
     backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
     supported = Keyword.get_lazy(options, :supported, &backend.known_locale_names/0)
-    limit = Keyword.get(options, :limit, @default_limit)
+    threshold = Keyword.get(options, :limit, @default_threshold)
 
-    for {desired, index} <- desired, supported <- supported do
-      demotion_value = (index + @more_than_region_diff)
-      {supported, match_distance(desired, supported, backend) + demotion_value}
+    for {desired, index} <- desired, supported <- supported,
+        match_distance = match_distance(desired, supported, index, backend),
+        match_distance < threshold  do
+      {supported, match_distance}
     end
-    |> Enum.reject(&(elem(&1, 1) > limit))
-    |> Enum.sort_by(&(elem(&1, 1)))
+    |> Enum.sort_by(&match_key/1)
+  end
+
+  # If the language is a paradigmn locale then it
+  # takes precedence of non-paradigm locales. We
+  # leverage erlang term ordering to craft a match
+  # key.  Since false sorts before true, we use
+  # "not in" rather than "in".
+
+  defp match_key({language, distance}) do
+    {distance, atomize(language) not in paradigm_locales()}
+  end
+
+  defp atomize(string) when is_binary(string) do
+    String.to_existing_atom(string)
+  rescue _e ->
+    nil
+  end
+
+  defp atomize(atom) when is_atom(atom) do
+    atom
   end
 
   @doc """
@@ -102,6 +120,9 @@ defmodule Cldr.Locale.Match do
 
   * `supported` is any valid locale returned by `Cldr.known_locale_names/1`
     or a string or atom locale name.
+
+  * `index` is the position of this `desired` language in a
+    list of desired languages. The default is `0`.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
@@ -128,13 +149,23 @@ defmodule Cldr.Locale.Match do
 
   """
   @doc since: "2.44.0"
-  def match_distance(desired, supported, backend \\ Cldr.default_backend!()) do
-    with {:ok, desired} <- Cldr.validate_locale(desired, backend),
-         {:ok, supported} <- Cldr.validate_locale(supported, backend) do
+  def match_distance(desired, supported, index \\ 0, backend \\ Cldr.default_backend!()) do
+    with {:ok, desired} <- validate(desired, backend),
+         {:ok, supported} <- validate(supported, backend) do
       @match_list
       |> Enum.reduce(0, &distance(desired, supported, &1, &2))
+      |> Kernel.+(index)
+      |> Kernel.+(@more_than_region_diff)
       |> min(100)
     end
+  end
+
+  defp validate(%Cldr.LanguageTag{} = locale, _backend) do
+    {:ok, locale}
+  end
+
+  defp validate(locale, backend) do
+    Cldr.Locale.canonical_language_tag(locale, backend, skip_gettext_and_cldr: true, skip_rbnf_name: true)
   end
 
   defp distance(desired, supported, subtags, acc) do
@@ -163,8 +194,7 @@ defmodule Cldr.Locale.Match do
             matches?(supported, match.supported) ->
           {:halt, match.distance} # |> IO.inspect(label: "Score for #{inspect match}}")
 
-        matches?(desired, match.supported) && matches?(supported, match.desired)
-            && !Map.get(match, :one_way) ->
+        !Map.get(match, :one_way) && matches?(desired, match.supported) && matches?(supported, match.desired) ->
           {:halt, match.distance} # |> IO.inspect(label: "Score for inverse #{inspect match}}")
 
         true ->

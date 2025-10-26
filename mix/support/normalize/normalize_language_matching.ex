@@ -14,6 +14,7 @@ defmodule Cldr.Normalize.LanguageMatching do
       filter: "match_variables", only: "value")
     |> parse_language_matches()
     |> expand_match_variables()
+    |> level_up_paradigm_locales()
     |> Cldr.Map.atomize_keys()
     |> Map.fetch!(:written_new)
   end
@@ -95,5 +96,16 @@ defmodule Cldr.Normalize.LanguageMatching do
     else
       territory
     end
+  end
+
+  def level_up_paradigm_locales(matching) do
+    paradigm_locales =
+      matching
+      |> get_in(["written_new", "paradigm_locales", "locales"])
+      |> Enum.map(&String.to_atom/1)
+
+    matching
+    |> Map.delete("paradigm_locales")
+    |> put_in(["written_new", "paradigm_locales"], paradigm_locales)
   end
 end
