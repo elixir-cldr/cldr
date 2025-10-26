@@ -64,12 +64,12 @@ defmodule Cldr.Locale.Match do
 
         iex> Cldr.Locale.Match.best_match "zh-HK",
         ...>   supported: ["zh", "zh-Hans", "zh-Hant", "en", "fr", "en-Hant"]
-        [{"zh-Hant", 10}, {"zh", 59}, {"zh-Hans", 59}, {"en-Hant", 89}]
+        [{"zh-Hant", 5}]
 
         iex> supported = Cldr.known_gettext_locale_names()
         ["en", "en-GB", "es", "it"]
         iex> Cldr.Locale.Match.best_match("en-GB", supported: supported)
-        [{"en-GB", 5}, {"en", 10}]
+        [{"en-GB", 0}, {"en", 5}]
         iex> Cldr.Locale.Match.best_match("zh-HK", supported: supported)
         []
 
