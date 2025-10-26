@@ -13,6 +13,10 @@ This is the changelog for Cldr v2.44.0 released on ______, 2025.  For older chan
   * Relative ordinal date field localized names are now captured as a map not a list. In addition, `2` and `-2` ordinal names are added to the data.
   * Locale display names and language names now have a subtype of `menu` which is a map containing the keys `:core`, `:extension` and `:default`. More or more of these entries may be `nil`.
 
+### Bug Fixes
+
+* Territory containment was previously not considering nested containers and is now doing so. For example, territory "019" (Americas) includes "419" (Latin America and the Carribbean) but "419" was not appearing in the list for "019" since CLDR categories "grouping" territories separately. This should not affect any consumers, only library writers.
+
 ### Enhancements
 
 * Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.

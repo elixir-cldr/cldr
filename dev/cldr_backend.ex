@@ -7,7 +7,7 @@ defmodule MyApp.Cldr do
     gettext: MyApp.Gettext,
     locales: [
       "en", "en-001", "de", "ja", "en-AU", "th", "ar", "pl", "doi", "fr-CA", "nb", "no", "ca-ES-VALENCIA", "ca",
-      "zh-Hant-HK", "zh"],
+      "zh-Hant-HK", "zh", "nn", "da", "hr", "sr", "to"],
     generate_docs: true,
     providers: []
 

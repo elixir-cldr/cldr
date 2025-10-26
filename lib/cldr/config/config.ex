@@ -707,6 +707,70 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Returns the language matching data
+
+  """
+  @language_matching_file "language_matching.json"
+  def language_matching do
+    Path.join(cldr_data_dir(), @language_matching_file)
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+    |> Cldr.Map.atomize_values(filter: :match_variables)
+    |> format_matches()
+  end
+
+  defp format_matches(matching) do
+    language_matches = Enum.map(matching.language_match, &format_match/1)
+    Map.put(matching, :language_match, language_matches)
+  end
+
+  defp format_match(match) do
+    supported = format_locale(match.supported)
+    desired = format_locale(match.desired)
+
+    match
+    |> Map.put(:supported, supported)
+    |> Map.put(:desired, desired)
+  end
+
+  defp format_locale(["*", script, territory]) do
+    format_locale([:"*", script, territory])
+  end
+
+  defp format_locale([language, script, territory]) do
+    [language, String.to_atom(script), format_territory(territory)]
+  end
+
+  defp format_locale(["*", script]) do
+    [:"*", String.to_atom(script)]
+  end
+
+  defp format_locale([language, script]) do
+    [language, String.to_atom(script)]
+  end
+
+  defp format_locale(["*"]) do
+    [:"*"]
+  end
+
+  defp format_locale([language]) do
+    [language]
+  end
+
+  defp format_territory(["not_in", territory]) do
+    {:not_in, String.to_atom(territory)}
+  end
+
+  defp format_territory(["in", territory]) do
+    {:in, String.to_atom(territory)}
+  end
+
+  defp format_territory(territory) do
+    String.to_atom(territory)
+  end
+
+  @doc """
   Return a map of plural ranges
 
   """

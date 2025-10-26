@@ -57,6 +57,7 @@ defmodule Cldr.Consolidate do
     save_bcp47_data()
     save_metazone_data()
     save_primary_zones()
+    save_language_matching()
 
     if async do
       all_locales()
@@ -1256,6 +1257,19 @@ defmodule Cldr.Consolidate do
       "US-Letter" -> "us_letter"
       other -> other
     end
+  end
+
+  def save_language_matching do
+    path = Path.join(consolidated_output_dir(), "language_matching.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/languageMatching.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> Cldr.Normalize.LanguageMatching.normalize()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
   end
 
   @doc false
