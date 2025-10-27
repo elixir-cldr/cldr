@@ -275,9 +275,6 @@ defmodule Cldr.Locale do
   @root_language Atom.to_string(@root_locale)
   @root_rbnf_locale_name Cldr.Config.root_locale_name()
 
-  # Any score below this we consider not matched
-  @matching_threshold 30
-
   defdelegate new(locale_name, backend), to: __MODULE__, as: :canonical_language_tag
   defdelegate new!(locale_name, backend), to: __MODULE__, as: :canonical_language_tag!
 
@@ -1938,10 +1935,10 @@ defmodule Cldr.Locale do
 
   defp gettext_match(language_tag, supported, backend) do
     case Cldr.Locale.Match.best_match(language_tag, backend: backend, supported: supported) do
-      [{locale, score} | _rest] when score <= @matching_threshold ->
+      {:ok, locale, _index} ->
         locale
 
-      _other ->
+      {:error, _reason} ->
         nil
     end
   end

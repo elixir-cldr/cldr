@@ -4,8 +4,7 @@ defmodule Cldr.Locale.Match do
 
   """
 
-  @more_than_region_diff 5
-  @default_threshold 30
+  @default_threshold 50
 
   @match_list [
     [:language, :script, :territory],
@@ -31,6 +30,11 @@ defmodule Cldr.Locale.Match do
   @doc false
   def paradigm_locales do
     @paradigm_locales
+  end
+
+  @doc false
+  def default_threshold do
+    @default_threshold
   end
 
   @doc """
@@ -76,18 +80,31 @@ defmodule Cldr.Locale.Match do
   """
   @doc since: "2.44.0"
   def best_match(desired, options \\ []) do
-    desired = List.wrap(desired) |> Enum.with_index()
-    backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
-    supported = Keyword.get_lazy(options, :supported, &backend.known_locale_names/0)
     threshold = Keyword.get(options, :threshold, @default_threshold)
+    backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
 
-    for {desired, index} <- desired, supported <- supported,
-        match_distance = match_distance(desired, supported, backend),
-        adjusted_match_distance = match_distance + index + @more_than_region_diff,
-        adjusted_match_distance < threshold  do
-      {supported, match_distance}
+    desired_list =
+      desired
+      |> List.wrap()
+      |> Enum.with_index()
+
+    supported =
+      options
+      |> Keyword.get_lazy(:supported, &backend.known_locale_names/0)
+
+    matches =
+      for {candidate, index} <- desired_list, supported <- supported,
+          match_distance = match_distance(candidate, supported, backend),
+          match_distance < threshold  do
+        {supported, match_distance, index}
+      end
+      |> Enum.sort_by(&match_key/1)
+      # |> IO.inspect(label: "Ordered matches")
+
+    case matches do
+      [{supported, distance, _index} | _rest] -> {:ok, supported, distance}
+      [] -> {:error, {Cldr.NoMatchingLocale, "No match for desired locales #{inspect desired}"}}
     end
-    |> Enum.sort_by(&match_key/1)
   end
 
   # If the language is a paradigmn locale then it
@@ -96,8 +113,8 @@ defmodule Cldr.Locale.Match do
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key({language, distance}) do
-    {distance, atomize(language) not in paradigm_locales()}
+  defp match_key({language, distance, index}) do
+    {distance, index, atomize(language) not in paradigm_locales()}
   end
 
   defp atomize(string) when is_binary(string) do
@@ -174,32 +191,32 @@ defmodule Cldr.Locale.Match do
   defp subtag_distance(desired, supported, subtags, acc) do
     desired_fields = subtags(desired, subtags)
     supported_fields = subtags(supported, subtags)
-    calculate_distance(desired_fields, supported_fields, acc)
+    distance(desired_fields, supported_fields, acc)
   end
 
   # When the last subtag is the same, don't process it following the rule:
   # If respective subtags in each language tag are identical, remove the subtag from each
   # (logically) and continue.
-  defp calculate_distance([_, _, territory], [_, _, territory], acc), do: acc
-  defp calculate_distance([_, script], [_, script], acc), do: acc
-  defp calculate_distance([language], [language], acc), do: acc
+  defp distance([_, _, territory], [_, _, territory], acc), do: acc
+  defp distance([_, script], [_, script], acc), do: acc
+  defp distance([language], [language], acc), do: acc
 
   # If the subtags are identical then there is no difference
-  defp calculate_distance(desired, desired, acc), do: acc + 0
+  defp distance(desired, desired, acc), do: acc + 0
 
   # Now we have to calculate
-  defp calculate_distance(desired, supported, acc), do: acc + match_score(desired, supported)
+  defp distance(desired, supported, acc), do: acc + match_score(desired, supported)
 
   defp match_score(desired, supported) do
     Enum.reduce_while(language_matches(), 0, fn match, acc ->
       cond do
         matches?(desired, match.desired) &&
             matches?(supported, match.supported) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Score for #{inspect match}}")
+          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}}")
 
         !Map.get(match, :one_way) && matches?(desired, match.supported) &&
             matches?(supported, match.desired) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Score for inverse #{inspect match}}")
+          {:halt, match.distance} # |> IO.inspect(label: "Match for inverse #{inspect match}}")
 
         true ->
           {:cont, acc}

@@ -28,7 +28,7 @@ no ; 	no ; 	0
 no ; 	da ; 	12
 da ; 	zh-Hant ; 	100
 
-# The distance was increased in CLDR 39
+# Changed in 2020. See https://unicode-org.atlassian.net/browse/CLDR-14355
 # So no longer 23, now its 54
 zh-Hant ; 	zh-Hans ; 	54
 zh-Hans ; 	en ; 	100

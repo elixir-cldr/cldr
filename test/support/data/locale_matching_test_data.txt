@@ -193,6 +193,9 @@ en, de, fr, ja ; 	de-CH, fr ; 	de
 # The script distance (simplified vs. traditional Han) is considered small enough
 # to be an acceptable match. The regional difference is considered almost insignificant.
 
+# See: https://unicode-org.atlassian.net/browse/CLDR-14355 where the small difference
+# rule has been removed.
+
 fr, zh-Hans-CN, en-US ; 	zh-TW ; 	zh-Hans-CN
 fr, zh-Hans-CN, en-US ; 	zh-Hant ; 	zh-Hans-CN
 
@@ -232,12 +235,21 @@ it, und ; 	en ; 	it
 # testGetBestMatch-regionDistance
 
 es-AR, es ; 	es-MX ; 	es-AR
-fr, en, en-GB ; 	en-CA ; 	en-GB
+
+# Was expecting en-GB. However en-CA is in
+# the $enUS cluster so the result should be en
+# See https://unicode-org.atlassian.net/browse/CLDR-14635
+fr, en, en-GB ; 	en-CA ; 	en
+
 de-AT, de-DE, de-CH ; 	de ; 	de-DE
 
 ##################################################
 # testAsymmetry
 
+# These next 2 tests cant return the expected result
+# because there are no rules for mul or nl (specifically)
+# and the only rule for af is to en.
+# See: https://unicode-org.atlassian.net/browse/CLDR-18198
 mul, nl ; 	af ; 	nl	# af => nl
 mul, af ; 	nl ; 	mul	# but nl !=> af
 

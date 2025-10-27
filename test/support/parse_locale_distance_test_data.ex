@@ -1,4 +1,4 @@
-defmodule Cldr.Locale.MatchDistance.TestData do
+defmodule Cldr.Locale.Distance.TestData do
   @path "test/support/data/locale_distance_test_data.txt"
 
   def parse do
