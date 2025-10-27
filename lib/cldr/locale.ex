@@ -93,7 +93,7 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         extensions: %{},
-        gettext_locale_name: nil,
+        gettext_locale_name: "en",
         language: "ro",
         language_subtags: [],
         language_variants: [],

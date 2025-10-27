@@ -232,7 +232,7 @@ defmodule Cldr.Test do
                canonical_locale_name: "nb",
                cldr_locale_name: :nb,
                extensions: %{},
-               gettext_locale_name: nil,
+               gettext_locale_name: "en",
                language: "nb",
                language_subtags: [],
                language_variants: [],

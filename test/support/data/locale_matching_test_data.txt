@@ -148,8 +148,8 @@ en-Hant-TW, und-TW ; 	zh ; 	und-TW	# zh should be closer to und-TW than to en-Ha
 
 ##################################################
 # testMatchLegacyCode
-
-fr, i-klingon, en-Latn-US ; 	en-GB-oed ; 	en-Latn-US
+# Changed en-GB-oed (not valid in ex_cldr, deprecated in CLDR) to en-GB-oxendict
+fr, i-klingon, en-Latn-US ; 	en-GB-oxendict ; 	en-Latn-US
 
 ##################################################
 # testGetBestMatchForList-exactMatch

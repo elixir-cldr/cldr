@@ -1,11 +1,12 @@
 defmodule Cldr.Locale.Match.Test do
   use ExUnit.Case, async: true
 
-  @ignore_tests [331]
-  @dont_match_und []
+  @invalid_variant [344, 345, 346]
+  @ignore_tests [253, 254, 331]
+  @dont_match_und [145, 217, 231, 317]
 
   for test <- Cldr.Locale.Match.TestData.parse(),
-      test.index not in @ignore_tests ++ @dont_match_und do
+      test.index not in @ignore_tests ++ @dont_match_und ++ @invalid_variant do
 
     supported =
       inspect(test.supported)

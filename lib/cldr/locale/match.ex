@@ -4,7 +4,7 @@ defmodule Cldr.Locale.Match do
 
   """
 
-  @default_threshold 50
+  @default_threshold 100
 
   @match_list [
     [:language, :script, :territory],
@@ -68,14 +68,14 @@ defmodule Cldr.Locale.Match do
 
         iex> Cldr.Locale.Match.best_match "zh-HK",
         ...>   supported: ["zh", "zh-Hans", "zh-Hant", "en", "fr", "en-Hant"]
-        [{"zh-Hant", 5}]
+        {:ok, "zh-Hant", 5}
 
         iex> supported = Cldr.known_gettext_locale_names()
         ["en", "en-GB", "es", "it"]
         iex> Cldr.Locale.Match.best_match("en-GB", supported: supported)
-        [{"en-GB", 0}, {"en", 5}]
+        {:ok, "en-GB", 0}
         iex> Cldr.Locale.Match.best_match("zh-HK", supported: supported)
-        []
+        {:error, {Cldr.NoMatchingLocale, "No match for desired locales \\"zh-HK\\""}}
 
   """
   @doc since: "2.44.0"
@@ -183,7 +183,12 @@ defmodule Cldr.Locale.Match do
     {:ok, locale}
   end
 
-  defp validate(locale, backend) do
+  defp validate("und" = locale, backend) do
+    options = [skip_gettext_and_cldr: true, skip_rbnf_name: true, add_likely_subtags: false]
+    Cldr.Locale.canonical_language_tag(locale, backend, options)
+  end
+
+  defp validate(locale, backend) when is_binary(locale) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
