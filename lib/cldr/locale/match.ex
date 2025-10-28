@@ -5,6 +5,7 @@ defmodule Cldr.Locale.Match do
   """
 
   @default_threshold 100
+  @more_than_region_difference 5
 
   @match_list [
     [:language, :script, :territory],
@@ -91,18 +92,19 @@ defmodule Cldr.Locale.Match do
     supported =
       options
       |> Keyword.get_lazy(:supported, &backend.known_locale_names/0)
+      |> Enum.with_index()
 
     matches =
-      for {candidate, index} <- desired_list, supported <- supported,
+      for {candidate, priority} <- desired_list, {supported, index} <- supported,
           match_distance = match_distance(candidate, supported, backend),
-          match_distance < threshold  do
-        {supported, match_distance, index}
+          match_distance <= threshold  do
+        {supported, match_distance, priority, index}
       end
       |> Enum.sort_by(&match_key/1)
       # |> IO.inspect(label: "Ordered matches")
 
     case matches do
-      [{supported, distance, _index} | _rest] -> {:ok, supported, distance}
+      [{supported, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
       [] -> {:error, {Cldr.NoMatchingLocale, "No match for desired locales #{inspect desired}"}}
     end
   end
@@ -113,8 +115,8 @@ defmodule Cldr.Locale.Match do
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key({language, distance, index}) do
-    {distance, index, atomize(language) not in paradigm_locales()}
+  defp match_key({language, distance, priority, index}) do
+    {distance + (priority * @more_than_region_difference), index, atomize(language) not in paradigm_locales()}
   end
 
   defp atomize(string) when is_binary(string) do
