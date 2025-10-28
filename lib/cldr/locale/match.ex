@@ -4,7 +4,7 @@ defmodule Cldr.Locale.Match do
 
   """
 
-  @default_threshold 100
+  @default_threshold 50
   @more_than_region_difference 5
 
   @match_list [

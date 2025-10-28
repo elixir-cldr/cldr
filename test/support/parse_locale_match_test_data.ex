@@ -1,13 +1,15 @@
 defmodule Cldr.Locale.Match.TestData do
   @path "test/support/data/locale_matching_test_data.txt"
 
+  @default_threshold 100
+
   def parse do
     @path
     |> File.read!()
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
     |> Enum.with_index(1)
-    |> Enum.map(&format_test(&1, Cldr.Locale.Match.default_threshold()))
+    |> Enum.map(&format_test(&1, @default_threshold))
     |> Enum.reject(&is_nil/1)
   end
 

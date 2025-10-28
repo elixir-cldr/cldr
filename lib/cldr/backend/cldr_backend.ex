@@ -282,7 +282,7 @@ defmodule Cldr.Backend do
              canonical_locale_name: "pl",
              cldr_locale_name: :pl,
              extensions: %{},
-             gettext_locale_name: "en",
+             gettext_locale_name: nil,
              language: "pl",
              locale: %{},
              private_use: [],
