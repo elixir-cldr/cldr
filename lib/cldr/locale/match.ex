@@ -4,8 +4,22 @@ defmodule Cldr.Locale.Match do
 
   """
 
+  # Since the default distance for differnt territories is 4
+  # and the default distance for different scripts is 50 this
+  # default will match if there is a territory difference or
+  # a script different but not both. Bote that a language
+  # default distance is 80 so by default different languages
+  # can never match.
+
   @default_threshold 50
-  @more_than_region_difference 5
+
+  # When looking for a best match amongst multiple desired
+  # languages we want the languages earlier in the list to
+  # be preferred over those later in the list in the cases
+  # where their match distance is the same. We do that by
+  # demoting later entries in the list by am amount greater
+  # than the default territory difference (which is 4).
+  @more_than_territory_difference 5
 
   @match_list [
     [:language, :script, :territory],
@@ -100,7 +114,7 @@ defmodule Cldr.Locale.Match do
           match_distance <= threshold  do
         {supported, match_distance, priority, index}
       end
-      |> Enum.sort_by(&match_key/1)
+      |> Enum.sort(&language_comparator/2)
       # |> IO.inspect(label: "Ordered matches")
 
     case matches do
@@ -109,14 +123,38 @@ defmodule Cldr.Locale.Match do
     end
   end
 
+  defp language_comparator(a, b) do
+    if same_language?(a, b) do
+      match_key_with_paradigm(a) < match_key_with_paradigm(b)
+    else
+      match_key_no_paradigm(a) < match_key_no_paradigm(b)
+    end
+  end
+
+  defp same_language?(a, b) do
+    extract_language(a) == extract_language(b)
+  end
+
+  defp extract_language({language, _, _, _}) do
+    hd(String.split(language, "-"))
+  end
+
   # If the language is a paradigmn locale then it
   # takes precedence of non-paradigm locales. We
   # leverage erlang term ordering to craft a match
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key({language, distance, priority, index}) do
-    {distance + (priority * @more_than_region_difference), index, atomize(language) not in paradigm_locales()}
+  defp match_key_with_paradigm({language, distance, priority, index}) do
+    {distance + (priority * @more_than_territory_difference), !paradigm_locale(language), index}
+  end
+
+  defp match_key_no_paradigm({_language, distance, priority, index}) do
+    {distance + (priority * @more_than_territory_difference), index}
+  end
+
+  defp paradigm_locale(language) do
+    atomize(language) in paradigm_locales()
   end
 
   defp atomize(string) when is_binary(string) do
