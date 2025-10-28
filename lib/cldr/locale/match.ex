@@ -123,20 +123,29 @@ defmodule Cldr.Locale.Match do
     end
   end
 
+  # "und" sorts after any other language that has the same distance score
+  defp language_comparator({"und", distance, _, _}, {_lang, distance, _, _}) do
+    false
+  end
+
+  defp language_comparator({_lang, distance, _, _}, {"und", distance, _, _}) do
+    true
+  end
+
   defp language_comparator(a, b) do
-    if same_language?(a, b) do
+    if same_base_language?(a, b) do
       match_key_with_paradigm(a) < match_key_with_paradigm(b)
     else
       match_key_no_paradigm(a) < match_key_no_paradigm(b)
     end
   end
 
-  defp same_language?(a, b) do
-    extract_language(a) == extract_language(b)
+  defp same_base_language?(a, b) do
+    extract_base_language(a) == extract_base_language(b)
   end
 
-  defp extract_language({language, _, _, _}) do
-    hd(String.split(language, "-"))
+  defp extract_base_language({language, _, _, _}) do
+    hd(String.split(language, ["-", "_"]))
   end
 
   # If the language is a paradigmn locale then it
@@ -219,16 +228,20 @@ defmodule Cldr.Locale.Match do
     end
   end
 
-  defp validate(%Cldr.LanguageTag{} = locale, _backend) do
+  @doc false
+  def validate(%Cldr.LanguageTag{} = locale, _backend) do
     {:ok, locale}
   end
 
-  defp validate("und" = locale, backend) do
+  # Likely subtags has an entry for "und" that will
+  # transform it to `en-Latn-US` which is not what
+  # we want for matching. So don't apply liekely subtags.
+  def validate("und" = locale, backend) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true, add_likely_subtags: false]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
-  defp validate(locale, backend) when is_binary(locale) do
+  def validate(locale, backend) when is_binary(locale) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
@@ -242,9 +255,14 @@ defmodule Cldr.Locale.Match do
   # When the last subtag is the same, don't process it following the rule:
   # If respective subtags in each language tag are identical, remove the subtag from each
   # (logically) and continue.
+
   defp distance([_, _, territory], [_, _, territory], acc), do: acc
   defp distance([_, script], [_, script], acc), do: acc
   defp distance([language], [language], acc), do: acc
+
+  # "und" matches any language
+  defp distance(["und"], [_language], acc), do: acc
+  defp distance([_language], ["und"], acc), do: acc
 
   # If the subtags are identical then there is no difference
   defp distance(desired, desired, acc), do: acc + 0
@@ -320,10 +338,8 @@ defmodule Cldr.Locale.Match do
     Map.fetch!(match_variables(), variable)
   end
 
-  # Map.fetch!/3 not Map.take/2 because
-  # we need to guarantee order
-  defp subtags(locale, subtags) do
-    Enum.map(subtags, &(Map.fetch!(locale, &1)))
-  end
+  defp subtags(locale, [:language]), do: [locale.language]
+  defp subtags(locale, [:language, :script]), do: [locale.language, locale.script]
+  defp subtags(locale, [:language, :script, :territory]), do: [locale.language, locale.script, locale.territory]
 
 end

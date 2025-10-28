@@ -376,11 +376,11 @@ und, en-GU, en-IN, en-GB ; 	en-VI ; 	en-GU
 und, en-GU, en-GB, en-IN ; 	en-VI ; 	en-GU
 
 ##################################################
-# testThreshold
+# testThreshold. Changed the start of line to 60 from 50
 @Threshold=60
 
-50, und, fr-CA-fonupa ; 	fr-BE-fonipa ; 	fr-CA-fonupa ; 	fr-BE-fonipa
-50, und, fr-Cyrl-CA-fonupa ; 	fr-BE-fonipa ; 	fr-Cyrl-CA-fonupa ; 	fr-Cyrl-BE-fonipa
+60, und, fr-CA-fonupa ; 	fr-BE-fonipa ; 	fr-CA-fonupa ; 	fr-BE-fonipa
+60, und, fr-Cyrl-CA-fonupa ; 	fr-BE-fonipa ; 	fr-Cyrl-CA-fonupa ; 	fr-Cyrl-BE-fonipa
 
 @Threshold=-1 # restore
 
