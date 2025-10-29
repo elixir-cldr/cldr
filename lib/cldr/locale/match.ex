@@ -117,7 +117,7 @@ defmodule Cldr.Locale.Match do
         {supported, supported_tag, match_distance, priority, index}
       end
       |> Enum.sort(&language_comparator/2)
-      # |> IO.inspect(label: "Ordered matches")
+      |> IO.inspect(label: "Ordered matches")
 
     case matches do
       [{supported, _supported_tag, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
@@ -267,10 +267,6 @@ defmodule Cldr.Locale.Match do
   defp distance([_, _, territory], [_, _, territory], acc), do: acc
   defp distance([_, script], [_, script], acc), do: acc
   defp distance([language], [language], acc), do: acc
-
-  # "und" matches any language
-  # defp distance(["und"], [_language], acc), do: acc
-  defp distance([_language], ["und"], acc), do: acc
 
   # If the subtags are identical then there is no difference
   defp distance(desired, desired, acc), do: acc + 0
