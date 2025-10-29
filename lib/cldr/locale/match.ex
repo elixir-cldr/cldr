@@ -110,25 +110,27 @@ defmodule Cldr.Locale.Match do
 
     matches =
       for {candidate, priority} <- desired_list, {supported, index} <- supported,
-          match_distance = match_distance(candidate, supported, backend),
+          {:ok, candidate_tag} = validate(candidate, backend),
+          {:ok, supported_tag} = validate(supported, backend),
+          match_distance = match_distance(candidate_tag, supported_tag, backend),
           match_distance <= threshold  do
-        {supported, match_distance, priority, index}
+        {supported, supported_tag, match_distance, priority, index}
       end
       |> Enum.sort(&language_comparator/2)
       # |> IO.inspect(label: "Ordered matches")
 
     case matches do
-      [{supported, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
+      [{supported, _supported_tag, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
       [] -> {:error, {Cldr.NoMatchingLocale, "No match for desired locales #{inspect desired}"}}
     end
   end
 
   # "und" sorts after any other language that has the same distance score
-  defp language_comparator({"und", distance, _, _}, {_lang, distance, _, _}) do
+  defp language_comparator({"und", _, distance, _, _}, {_lang, _, distance, _, _}) do
     false
   end
 
-  defp language_comparator({_lang, distance, _, _}, {"und", distance, _, _}) do
+  defp language_comparator({_lang, _, distance, _, _}, {"und", _, distance, _, _}) do
     true
   end
 
@@ -144,8 +146,8 @@ defmodule Cldr.Locale.Match do
     extract_base_language(a) == extract_base_language(b)
   end
 
-  defp extract_base_language({language, _, _, _}) do
-    hd(String.split(language, ["-", "_"]))
+  defp extract_base_language({_supported, supported_tag, _, _, _}) do
+    supported_tag.language
   end
 
   # If the language is a paradigmn locale then it
@@ -154,11 +156,11 @@ defmodule Cldr.Locale.Match do
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key_with_paradigm({language, distance, priority, index}) do
-    {distance + (priority * @more_than_territory_difference), !paradigm_locale(language), index}
+  defp match_key_with_paradigm({_language, supported_tag, distance, priority, index}) do
+    {distance + (priority * @more_than_territory_difference), !paradigm_locale(supported_tag.canonical_locale_name), index}
   end
 
-  defp match_key_no_paradigm({_language, distance, priority, index}) do
+  defp match_key_no_paradigm({_language, _supported_tag, distance, priority, index}) do
     {distance + (priority * @more_than_territory_difference), index}
   end
 
@@ -246,6 +248,12 @@ defmodule Cldr.Locale.Match do
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
+  def validate(locale, backend) when is_atom(locale) do
+    locale
+    |> Atom.to_string()
+    |> validate(backend)
+  end
+
   defp subtag_distance(desired, supported, subtags, acc) do
     desired_fields = subtags(desired, subtags)
     supported_fields = subtags(supported, subtags)
@@ -261,7 +269,7 @@ defmodule Cldr.Locale.Match do
   defp distance([language], [language], acc), do: acc
 
   # "und" matches any language
-  defp distance(["und"], [_language], acc), do: acc
+  # defp distance(["und"], [_language], acc), do: acc
   defp distance([_language], ["und"], acc), do: acc
 
   # If the subtags are identical then there is no difference

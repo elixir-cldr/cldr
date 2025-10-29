@@ -1565,7 +1565,7 @@ defmodule Cldr.Config do
               [{:timezone_to, timezone}]
 
             other ->
-              raise inspect(other, label: "Unexpected key")
+              raise "Unexpected key: #{inspect(other)}"
           end)
           |> Map.new()
 
