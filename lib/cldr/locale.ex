@@ -2286,8 +2286,12 @@ defmodule Cldr.Locale do
   def put_likely_subtags(%LanguageTag{} = language_tag) do
     %LanguageTag{language: language, script: script, territory: territory} = language_tag
     subtags = likely_subtags(language, script, territory, [])
-
-    Map.merge(subtags, language_tag, fn _k, v1, v2 -> if empty?(v2), do: v1, else: v2 end)
+    Map.merge(subtags, language_tag, fn
+      :language, v1, "und" ->
+        v1
+      _k, v1, v2 ->
+        if empty?(v2), do: v1, else: v2
+    end)
   end
 
   # The process of applying alias substitutions is a map merge.

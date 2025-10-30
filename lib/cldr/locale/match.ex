@@ -110,14 +110,14 @@ defmodule Cldr.Locale.Match do
 
     matches =
       for {candidate, priority} <- desired_list, {supported, index} <- supported,
-          {:ok, candidate_tag} = validate(candidate, backend),
+          {:ok, candidate_tag} = validate(candidate, backend, :skip_subtags_for_und),
           {:ok, supported_tag} = validate(supported, backend),
           match_distance = match_distance(candidate_tag, supported_tag, backend),
           match_distance <= threshold  do
         {supported, supported_tag, match_distance, priority, index}
       end
       |> Enum.sort(&language_comparator/2)
-      |> IO.inspect(label: "Ordered matches")
+      # |> IO.inspect(label: "Ordered matches")
 
     case matches do
       [{supported, _supported_tag, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
@@ -217,7 +217,7 @@ defmodule Cldr.Locale.Match do
       5
 
       iex> Cldr.Locale.Match.match_distance("en", "zh-Hans")
-      100
+      134
 
   """
   @doc since: "2.44.0"
@@ -226,32 +226,33 @@ defmodule Cldr.Locale.Match do
          {:ok, supported} <- validate(supported, backend) do
       @match_list
       |> Enum.reduce(0, &subtag_distance(desired, supported, &1, &2))
-      |> min(100)
     end
   end
 
   @doc false
-  def validate(%Cldr.LanguageTag{} = locale, _backend) do
+  def validate(locale, backend, subtags \\ :add_subtags)
+
+  def validate(%Cldr.LanguageTag{} = locale, _backend, _add_subtags) do
     {:ok, locale}
   end
 
   # Likely subtags has an entry for "und" that will
   # transform it to `en-Latn-US` which is not what
   # we want for matching. So don't apply liekely subtags.
-  def validate("und" = locale, backend) do
+  def validate("und" <> _rest = locale, backend, :skip_subtags_for_und) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true, add_likely_subtags: false]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
-  def validate(locale, backend) when is_binary(locale) do
+  def validate(locale, backend, _add_subtags) when is_binary(locale) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
-  def validate(locale, backend) when is_atom(locale) do
+  def validate(locale, backend, add_subtags) when is_atom(locale) do
     locale
     |> Atom.to_string()
-    |> validate(backend)
+    |> validate(backend, add_subtags)
   end
 
   defp subtag_distance(desired, supported, subtags, acc) do
@@ -271,6 +272,7 @@ defmodule Cldr.Locale.Match do
   # If the subtags are identical then there is no difference
   defp distance(desired, desired, acc), do: acc + 0
 
+
   # Now we have to calculate
   defp distance(desired, supported, acc), do: acc + match_score(desired, supported)
 
@@ -279,7 +281,7 @@ defmodule Cldr.Locale.Match do
       cond do
         matches?(desired, match.desired) &&
             matches?(supported, match.supported) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}}")
+          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}} desire: #{inspect desired} support: #{inspect supported}")
 
         !Map.get(match, :one_way) && matches?(desired, match.supported) &&
             matches?(supported, match.desired) ->

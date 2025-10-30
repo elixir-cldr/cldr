@@ -1,7 +1,7 @@
 defmodule Cldr.Locale.Match.TestData do
   @path "test/support/data/locale_matching_test_data.txt"
 
-  @default_threshold 100
+  @default_threshold 134
 
   def parse do
     @path
