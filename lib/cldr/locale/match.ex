@@ -86,9 +86,9 @@ defmodule Cldr.Locale.Match do
         {:ok, "zh-Hant", 5}
 
         iex> supported = Cldr.known_gettext_locale_names()
-        ["en", "en-GB", "es", "it"]
+        ["en", "en_GB", "es", "it"]
         iex> Cldr.Locale.Match.best_match("en-GB", supported: supported)
-        {:ok, "en-GB", 0}
+        {:ok, "en_GB", 0}
         iex> Cldr.Locale.Match.best_match("zh-HK", supported: supported)
         {:error, {Cldr.NoMatchingLocale, "No match for desired locales \\"zh-HK\\""}}
 
@@ -113,7 +113,7 @@ defmodule Cldr.Locale.Match do
           {:ok, candidate_tag} = validate(candidate, backend, :skip_subtags_for_und),
           {:ok, supported_tag} = validate(supported, backend),
           match_distance = match_distance(candidate_tag, supported_tag, backend),
-          match_distance <= threshold  do
+          match_distance <= threshold do
         {supported, supported_tag, match_distance, priority, index}
       end
       |> Enum.sort(&language_comparator/2)
@@ -157,7 +157,8 @@ defmodule Cldr.Locale.Match do
   # "not in" rather than "in".
 
   defp match_key_with_paradigm({_language, supported_tag, distance, priority, index}) do
-    {distance + (priority * @more_than_territory_difference), !paradigm_locale(supported_tag.canonical_locale_name), index}
+    {distance + (priority * @more_than_territory_difference),
+      !paradigm_locale(supported_tag.canonical_locale_name), index}
   end
 
   defp match_key_no_paradigm({_language, _supported_tag, distance, priority, index}) do

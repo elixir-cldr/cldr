@@ -49,7 +49,7 @@ defmodule Cldr.Test do
                cldr_locale_name: :"en-001",
                language_subtags: [],
                extensions: %{},
-               gettext_locale_name: "en-GB",
+               gettext_locale_name: "en_GB",
                language: "en",
                locale: %{},
                private_use: [],
@@ -343,6 +343,6 @@ defmodule Cldr.Test do
   end
 
   test "MyApp.Cldr.known_gettext_locale_names/0" do
-    assert MyApp.Cldr.known_gettext_locale_names() == ["en", "en-GB", "es", "it"]
+    assert MyApp.Cldr.known_gettext_locale_names() == ["en", "en_GB", "es", "it"]
   end
 end

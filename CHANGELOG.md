@@ -15,6 +15,8 @@ This is the changelog for Cldr v2.44.0 released on ______, 2025.  For older chan
 
 ### Bug Fixes
 
+* The `:gettext_locale_name` field of a `t:Cldr.LanguageTag.t/0` is now set exactly as returned from `Gettext.known_locale_names/1`. Previously it was being tranformed to a BCP 47 format locale (replacing "_" with "-"). That is no longer the case.
+
 * Territory containment was previously not considering nested containers and is now doing so. For example, territory "019" (Americas) includes "419" (Latin America and the Carribbean) but "419" was not appearing in the list for "019" since CLDR categories "grouping" territories separately. This should not affect any consumers, only library writers.
 
 ### Enhancements

@@ -427,7 +427,6 @@ defmodule Cldr.Config do
 
       locales
       |> Enum.reject(&is_nil/1)
-      |> Enum.map(&locale_name_from_posix/1)
       |> Enum.uniq()
       |> Enum.sort()
     else
@@ -2742,17 +2741,22 @@ defmodule Cldr.Config do
     gettext_locales = known_gettext_locale_names(config)
 
     unknown_locales =
-      Enum.filter(gettext_locales, &(String.to_atom(&1) not in all_locale_names()))
+      Enum.filter(gettext_locales, fn locale ->
+        bcp47_locale_name =
+          locale
+          |> locale_name_from_posix()
+          |> String.to_atom()
+
+        bcp47_locale_name not in all_locale_names()
+      end)
 
     case unknown_locales do
       [] ->
         config
 
       [unknown_locale] ->
-        unknown = locale_name_to_posix(unknown_locale)
-
         note(
-          "The locale #{inspect(unknown)} is configured in the #{inspect(gettext)} " <>
+          "The locale #{inspect(unknown_locale)} is configured in the #{inspect(gettext)} " <>
             "gettext backend but is unknown to CLDR. It will not be used to configure CLDR " <>
             "but it will still be used to match CLDR locales to Gettext locales at runtime.",
           config
@@ -2761,10 +2765,8 @@ defmodule Cldr.Config do
         Map.put(config, :locales, locales -- [unknown_locale])
 
       unknown_locales ->
-        unknown = Enum.map(unknown_locales, &locale_name_to_posix/1)
-
         note(
-          "The locales #{inspect(unknown)} are configured in the #{inspect(gettext)} " <>
+          "The locales #{inspect(unknown_locales)} are configured in the #{inspect(gettext)} " <>
             "gettext backend but are unknown to CLDR. They will not be used to configure CLDR " <>
             "but they will still be used to match CLDR locales to Gettext locales at runtime.",
           config
