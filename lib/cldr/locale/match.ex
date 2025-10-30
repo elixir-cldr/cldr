@@ -4,6 +4,8 @@ defmodule Cldr.Locale.Match do
 
   """
 
+  alias Cldr.Locale
+
   # Since the default distance for differnt territories is 4
   # and the default distance for different scripts is 50 this
   # default will match if there is a territory difference or
@@ -156,9 +158,12 @@ defmodule Cldr.Locale.Match do
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key_with_paradigm({_language, supported_tag, distance, priority, index}) do
+  defp match_key_with_paradigm({_language, supported, distance, priority, index}) do
+    maybe_paradigm_locale =
+      Locale.locale_name_from(supported)
+
     {distance + (priority * @more_than_territory_difference),
-      !paradigm_locale(supported_tag.canonical_locale_name), index}
+      !paradigm_locale(maybe_paradigm_locale), index}
   end
 
   defp match_key_no_paradigm({_language, _supported_tag, distance, priority, index}) do
@@ -190,9 +195,6 @@ defmodule Cldr.Locale.Match do
 
   * `supported` is any valid locale returned by `Cldr.known_locale_names/1`
     or a string or atom locale name.
-
-  * `index` is the position of this `desired` language in a
-    list of desired languages. The default is `0`.
 
   * `backend` is any module that includes `use Cldr` and therefore
     is a `Cldr` backend module. The default is `Cldr.default_backend!/0`.
