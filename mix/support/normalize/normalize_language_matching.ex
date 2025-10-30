@@ -102,7 +102,6 @@ defmodule Cldr.Normalize.LanguageMatching do
     paradigm_locales =
       matching
       |> get_in(["written_new", "paradigm_locales", "locales"])
-      |> Enum.map(&String.to_atom/1)
 
     matching
     |> Map.delete("paradigm_locales")

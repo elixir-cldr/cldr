@@ -171,17 +171,7 @@ defmodule Cldr.Locale.Match do
   end
 
   defp paradigm_locale(language) do
-    atomize(language) in paradigm_locales()
-  end
-
-  defp atomize(string) when is_binary(string) do
-    String.to_existing_atom(string)
-  rescue _e ->
-    nil
-  end
-
-  defp atomize(atom) when is_atom(atom) do
-    atom
+    language in paradigm_locales()
   end
 
   @doc """
