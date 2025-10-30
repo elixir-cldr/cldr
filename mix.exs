@@ -21,6 +21,7 @@ defmodule Cldr.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
         plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a,
+        ignore_warnings: ".dialyzer_ignore-warnings",
         flags: [
           :error_handling,
           :unknown,
