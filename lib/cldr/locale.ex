@@ -2073,7 +2073,7 @@ defmodule Cldr.Locale do
       "en"
 
   """
-  @spec locale_name_from(Cldr.LanguageTag.t()) :: locale_name()
+  @spec locale_name_from(Cldr.LanguageTag.t()) :: String.t()
 
   def locale_name_from(language_tag, omit_singular_script? \\ true)
 

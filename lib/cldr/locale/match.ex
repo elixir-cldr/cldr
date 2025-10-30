@@ -170,7 +170,7 @@ defmodule Cldr.Locale.Match do
     {distance + (priority * @more_than_territory_difference), index}
   end
 
-  defp paradigm_locale(language) do
+  defp paradigm_locale(language) when is_binary(language) do
     language in paradigm_locales()
   end
 
