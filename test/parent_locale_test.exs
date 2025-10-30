@@ -9,9 +9,9 @@ defmodule Cldr.Locale.Parent.Test do
   end
 
   test "parent is :und" do
-    assert Cldr.Locale.parent("en-US") == TestBackend.Cldr.Locale.new("und")
-    assert Cldr.Locale.parent("ca") == TestBackend.Cldr.Locale.new("und")
-    assert Cldr.Locale.parent("en-US-u-va-POSIX") == TestBackend.Cldr.Locale.new("und-u-va-posix")
+    assert Cldr.Locale.parent("en-US") |> elem(1) |> inspect() == "TestBackend.Cldr.Locale.new!(\"und-Latn-US\")"
+    assert Cldr.Locale.parent("ca")  |> elem(1) |> inspect() == "TestBackend.Cldr.Locale.new!(\"und-Latn-US\")"
+    assert Cldr.Locale.parent("en-US-u-va-POSIX")  |> elem(1) |> inspect() == "TestBackend.Cldr.Locale.new!(\"und-Latn-US-u-va-posix\")"
   end
 
   test "parent locale of en-001" do
