@@ -1845,14 +1845,14 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.territory_chain "US"
-      {:ok, [:US, :"021", :"019", :"001"]}
+      {:ok,  [:US, :UN, :"001"]}
 
       iex> Cldr.territory_chain :AU
-      {:ok, [:AU, :"053", :"009", :"001"]}
+      {:ok, [:AU, :UN, :"001"]}
 
       iex> {:ok, locale} = Cldr.validate_locale("en-US-u-rg-CAzzzz", MyApp.Cldr)
       iex> Cldr.territory_chain locale
-      {:ok, [:CA, :"021", :"019", :"001"]}
+      {:ok,  [:CA, :UN, :"001"]}
 
       iex> Cldr.territory_chain :"001"
       {:ok, [:"001"]}
@@ -1912,7 +1912,7 @@ defmodule Cldr do
   ## Examples
 
       iex> Cldr.territory_chain "en-US-u-rg-CAzzzz", MyApp.Cldr
-      {:ok, [:CA, :"021", :"019", :"001"]}
+      {:ok,  [:CA, :UN, :"001"]}
 
   """
   def territory_chain(locale_name, backend) when is_atom(backend) do
