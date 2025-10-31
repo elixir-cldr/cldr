@@ -1960,7 +1960,7 @@ defmodule Cldr.Locale do
   end
 
   # This clause is only called at compile time when we're
-  # building a backend.  In normal use is should not be used.
+  # building a backend.  In normal use it should not be used.
   @doc false
   def known_gettext_locale_name(locale_name, _tags, config) when is_map(config) do
     gettext_locales = Cldr.Config.known_gettext_locale_names(config)

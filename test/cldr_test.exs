@@ -265,7 +265,7 @@ defmodule Cldr.Test do
              [:en, :"en-001", :fr, :und]
 
     assert WithGettextBackend.Cldr.__cldr__(:config).locales ==
-             [:en, :"en-001", :"en-GB", :es, :it, :und]
+             [:bg, :en, :"en-001", :"en-GB", :es, :it, :und]
 
     assert TestBackend.Cldr.__cldr__(:config).locales == :all
   end
@@ -343,6 +343,6 @@ defmodule Cldr.Test do
   end
 
   test "MyApp.Cldr.known_gettext_locale_names/0" do
-    assert MyApp.Cldr.known_gettext_locale_names() == ["en", "en_GB", "es", "it"]
+    assert MyApp.Cldr.known_gettext_locale_names() == ["bg_BG", "en", "en_GB", "es", "it"]
   end
 end

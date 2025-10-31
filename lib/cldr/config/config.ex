@@ -1778,16 +1778,39 @@ defmodule Cldr.Config do
     Regex.match?(regex, Atom.to_string(locale_name))
   end
 
+  # This function matches a requested locale to a CLDR
+  # locale name taking care of "_" to "-", consistent
+  # casing. In addition, if a locale name doesn't match,
+  # but its base language does, return the base language.
+  # This means "en-US" will return "en" and "bg-BG" will
+  # return "bg".
+
   def canonical_name(locale_name) do
-    name =
+    bcp47_name =
       locale_name
       |> locale_name_from_posix()
       |> String.downcase()
+      |> String.split("-")
 
-    Map.get(known_locales_map(), name, locale_name)
+    find_matching_locale(locale_name, bcp47_name)
   end
 
-  defp known_locales_map do
+  defp find_matching_locale(bcp47_name, [language, script, territory | _rest]) do
+    Map.get(known_locales_map(), language <> "-" <> script <> "-" <> territory) ||
+      find_matching_locale(bcp47_name, [language, script])
+  end
+
+  defp find_matching_locale(bcp47_name, [language, script]) do
+    Map.get(known_locales_map(), language <> "-" <> script) ||
+      find_matching_locale(bcp47_name, [language])
+  end
+
+  defp find_matching_locale(bcp47_name, [language]) do
+    Map.get(known_locales_map(), language, bcp47_name)
+  end
+
+  @doc false
+  def known_locales_map do
     all_locale_names()
     |> Enum.map(fn x -> {Atom.to_string(x) |> String.downcase(), x} end)
     |> Map.new()
@@ -2741,12 +2764,7 @@ defmodule Cldr.Config do
 
     unknown_locales =
       Enum.filter(gettext_locales, fn locale ->
-        bcp47_locale_name =
-          locale
-          |> locale_name_from_posix()
-          |> String.to_atom()
-
-        bcp47_locale_name not in all_locale_names()
+        canonical_name(locale) not in all_locale_names()
       end)
 
     case unknown_locales do
@@ -2771,7 +2789,7 @@ defmodule Cldr.Config do
           config
         )
 
-        Map.put(config, :locales, locales -- unknown_locales)
+      Map.put(config, :locales, locales -- unknown_locales)
     end
   end
 

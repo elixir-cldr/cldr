@@ -30,7 +30,7 @@ defmodule Cldr.Config.Test do
     capture_io(:stderr, fn ->
       assert_raise Cldr.UnknownLocaleError, match, fn ->
         defmodule InvalidLocale do
-          use Cldr, locales: ["gsw-CH"]
+          use Cldr, locales: ["www"]
         end
       end
     end)

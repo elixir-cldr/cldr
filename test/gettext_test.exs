@@ -2,7 +2,7 @@ defmodule Cldr.Gettext.Test do
   use ExUnit.Case, async: true
 
   test "that Cldr.Config gets the list of locales when there is no global default" do
-    assert TestBackend.Cldr.known_gettext_locale_names() == ["en", "en_GB", "es", "it"]
+    assert TestBackend.Cldr.known_gettext_locale_names() == ["bg_BG", "en", "en_GB", "es", "it"]
   end
 
   test "that an incorrect configuration raises" do
@@ -16,7 +16,7 @@ defmodule Cldr.Gettext.Test do
   end
 
   test "An exception is raised when a Gettext backend module encounters an unknown locale" do
-    assert_raise Gettext.Plural.UnknownLocaleError, ~r/gsw/, fn ->
+    assert_raise Gettext.Plural.UnknownLocaleError, ~r/www/, fn ->
       defmodule TestGettext.GettextUnknown do
         @moduledoc """
         Implements a Gettext-compatible module that does not have the base
