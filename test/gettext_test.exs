@@ -20,7 +20,7 @@ defmodule Cldr.Gettext.Test do
       defmodule TestGettext.GettextUnknown do
         @moduledoc """
         Implements a Gettext-compatible module that does not have the base
-        language locale configured for "gsw" and will therefore raise.
+        language locale configured for "www" and will therefore raise.
 
         See https://hexdocs.pm/gettext/Gettext.Plural.html#module-language-and-territory
         for an explanation of which the exception is raised (its because we have configured
