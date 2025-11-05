@@ -4,7 +4,7 @@
 
 ## Cldr v2.44.0
 
-This is the changelog for Cldr v2.44.0 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.44.0 released on November 6th, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Breaking Changes
 
@@ -24,11 +24,11 @@ iex> Cldr.validate_locale("und-TW")
 
 * The `:gettext_locale_name` field of a `t:Cldr.LanguageTag.t/0` is now set exactly as returned from `Gettext.known_locale_names/1`. Previously it was being tranformed to a BCP 47 format locale (replacing "_" with "-"). That is no longer the case.
 
-* Territory containment was previously not considering nested containers and is now doing so. For example, territory "019" (Americas) includes "419" (Latin America and the Carribbean) but "419" was not appearing in the list for "019" since CLDR categories "grouping" territories separately. This should not affect any consumers, only library writers.
+* Territory containment was previously not considering nested containers and is now doing so. For example, territory "019" (Americas) includes "419" (Latin America and the Carribbean) but "419" was not appearing in the list for "019" since CLDR categorises "grouping" territories separately. This should not affect any consumers, only library writers.
 
 ### Enhancements
 
-* Update to [CLDR 47](https://cldr.unicode.org/downloads/cldr-47) data.
+* Update to [CLDR 48](https://cldr.unicode.org/downloads/cldr-48) data.
 
 * Add `Cldr.Locale.Match.best_match/2` and `Cldr.Locale.Match.match_distance/3` to implement the [CLDR Language Matching algorithm](https://www.unicode.org/reports/tr35/tr35.html#LanguageMatching). This is a more formal and testable approach that the previous mechanism. This new function will be use to implement better matching between a known CLDR locale name and supported Gettext locale names. Therefore it is possible that the `gettext_locale_name` field of a `t:Cldr.LanguageTag.t/0` may change with this release.
 
