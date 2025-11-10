@@ -491,11 +491,6 @@ defmodule Cldr.Backend do
         with {:ok, %LanguageTag{cldr_locale_name: locale_name}} <- validate_locale(locale) do
           marks = quote_marks_for(locale_name)
 
-          # if is_binary(marks.quotation_start) || is_binary(marks.quotation_end) do
-          #   IO.inspect marks.quotation_start, label: "Quote start for #{locale_name}"
-          #   IO.inspect marks.quotation_end, label: "Quote end for #{locale_name}"
-          # end
-
           quote_start = quote_preference(marks.quotation_start, preference)
           quote_end = quote_preference(marks.quotation_end, preference)
 
