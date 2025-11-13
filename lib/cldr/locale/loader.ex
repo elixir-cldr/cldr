@@ -112,9 +112,29 @@ defmodule Cldr.Locale.Loader do
     do_get_locale(locale, path, Cldr.Locale.Cache.compiling?())
   end
 
-  @alt_keys ["default", "menu", "short", "long", "variant", "standard", "medium"]
-  @lenient_parse_keys ["date", "general", "number"]
-  @language_keys ["language", "language_variants"]
+  @alt_keys [
+    "default",
+    "menu",
+    "short",
+    "long",
+    "variant",
+    "standard",
+    "medium",
+    "core",
+    "extension",
+    "alt"
+  ]
+
+  @lenient_parse_keys [
+    "date",
+    "general",
+    "number"
+  ]
+
+  @language_keys [
+    "language",
+    "language_variants"
+  ]
 
   @remaining_modules Cldr.Config.required_modules() --
                        [
@@ -135,9 +155,8 @@ defmodule Cldr.Locale.Loader do
     |> Cldr.Map.integerize_keys(filter: "date_fields")
     |> Cldr.Map.atomize_values(filter: "number_systems")
     |> Cldr.Map.atomize_keys(filter: "locale_display_names", skip: @language_keys)
-    |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)
+    # |> Cldr.Map.atomize_keys(filter: :language, only: @alt_keys)
     |> Cldr.Map.atomize_keys(filter: "languages", only: @alt_keys)
-
     |> Cldr.Map.atomize_keys(filter: "lenient_parse", only: @lenient_parse_keys)
     |> Cldr.Map.atomize_keys(filter: @remaining_modules)
     |> Cldr.Map.atomize_values(filter: :layout)
