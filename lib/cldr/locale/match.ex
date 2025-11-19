@@ -158,9 +158,9 @@ defmodule Cldr.Locale.Match do
   # key.  Since false sorts before true, we use
   # "not in" rather than "in".
 
-  defp match_key_with_paradigm({_language, supported, distance, priority, index}) do
+  defp match_key_with_paradigm({_language, supported_tag, distance, priority, index}) do
     maybe_paradigm_locale =
-      Locale.locale_name_from(supported)
+      Locale.locale_name_from(supported_tag)
 
     {distance + (priority * @more_than_territory_difference),
       !paradigm_locale(maybe_paradigm_locale), index}
@@ -214,8 +214,9 @@ defmodule Cldr.Locale.Match do
 
   """
   @doc since: "2.44.0"
+
   def match_distance(desired, supported, backend \\ Cldr.default_backend!()) do
-    with {:ok, desired} <- validate(desired, backend),
+    with {:ok, desired} <- validate(desired, backend, :skip_subtags_for_und),
          {:ok, supported} <- validate(supported, backend) do
       @match_list
       |> Enum.reduce(0, &subtag_distance(desired, supported, &1, &2))
@@ -264,7 +265,6 @@ defmodule Cldr.Locale.Match do
 
   # If the subtags are identical then there is no difference
   defp distance(desired, desired, acc), do: acc + 0
-
 
   # Now we have to calculate
   defp distance(desired, supported, acc), do: acc + match_score(desired, supported)

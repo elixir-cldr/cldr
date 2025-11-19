@@ -47,7 +47,7 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en-CN",
-        cldr_locale_name: :en,
+        cldr_locale_name: :"en-GB",
         extensions: %{},
         gettext_locale_name: "en_GB",
         language: "en",
@@ -151,7 +151,7 @@ defmodule Cldr.Locale do
       {:ok, %Cldr.LanguageTag{
         backend: TestBackend.Cldr,
         canonical_locale_name: "en-XX",
-        cldr_locale_name: :en,
+        cldr_locale_name: :"en-GB",
         extensions: %{},
         gettext_locale_name: "en_GB",
         language: "en",
@@ -235,6 +235,7 @@ defmodule Cldr.Locale do
 
   """
   alias Cldr.LanguageTag
+  alias Cldr.Locale.Match
   alias Cldr.LanguageTag.{U, T}
 
   import Cldr.Helpers, only: [empty?: 1]
@@ -1892,9 +1893,16 @@ defmodule Cldr.Locale do
   end
 
   defp cldr_locale_name(%LanguageTag{} = language_tag) do
-    first_match(language_tag, &known_locale(&1, &2, language_tag.backend)) ||
-      Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
+    case Match.best_match(language_tag, preferred: language_tag.backend.known_locale_names()) do
+      {:ok, cldr_locale, _distance} -> cldr_locale
+      _other -> Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
+    end
   end
+
+  # defp cldr_locale_name(%LanguageTag{} = language_tag) do
+  #   first_match(language_tag, &known_locale(&1, &2, language_tag.backend)) ||
+  #     Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
+  # end
 
   @spec rbnf_locale_name(Cldr.LanguageTag.t(), rbnf_names :: [locale_name]) :: locale_name | nil
   defp rbnf_locale_name(language_tag, rbnf_names \\ [])
