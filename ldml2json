@@ -1,5 +1,8 @@
 #! /bin/zsh
 
+# TODO Try to use https://github.com/unicode-org/cldr-json/blob/main/cldr-generate-json.sh
+# for CLDR 49
+
 # The location of the `ex_cldr` repo
 export EX_CLDR="${EX_CLDR:=$HOME/Development/cldr}"
 [ ! -d $EX_CLDR ] && { echo "ex_cldr repository $EX_CLDR was not found."; exit 1; }

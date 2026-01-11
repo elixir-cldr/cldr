@@ -1,4 +1,3 @@
-require Cldr.Backend
 require Cldr.Locale.Loader
 require MyApp.Gettext
 
