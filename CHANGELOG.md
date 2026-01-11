@@ -2,11 +2,13 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
-## Cldr v2.44.2
+## Cldr v2.45.0
 
-This is the changelog for Cldr v2.44.2 released on ______, 2025.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.45.0 released on January 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Enhancements
+
+* Updates to [CLDR 48.1](https://cldr.unicode.org/downloads/cldr-48#481-changes) data.
 
 * Improves matching the desired locale name to an configured CLDR locale name by using `Cldr.Locale.Match.best_match/2` function. This better formalises the matching process and is compliant with the [CLDR locale matching specification](https://unicode.org/reports/tr35/tr35.html#LanguageMatching). The matching process is slower than the previous mechanism but more accurate and compliant (there is room for future performance optimization).  Configurations with a small number of locales should see no performance difference however raising an issue is encouraged if performance characteristics appear materially worse.
 

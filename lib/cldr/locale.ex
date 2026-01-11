@@ -1522,7 +1522,7 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(locale_name, backend, options) when is_atom(locale_name) do
-    language_tag = Map.get(Cldr.Config.all_language_tags(), locale_name)
+    language_tag = Cldr.Config.all_language_tags() |> Map.get(locale_name)
 
     if Keyword.get(options, :add_likely_subtags, true) && language_tag do
       canonical_language_tag(language_tag, backend, options)
@@ -1893,18 +1893,14 @@ defmodule Cldr.Locale do
   end
 
   defp cldr_locale_name(%LanguageTag{} = language_tag) do
-    case Match.best_match(language_tag, preferred: language_tag.backend.known_locale_names()) do
+    case Match.best_match(language_tag, supported: language_tag.backend.known_locale_names()) do
       {:ok, cldr_locale, _distance} -> cldr_locale
       _other -> Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
     end
   end
 
-  # defp cldr_locale_name(%LanguageTag{} = language_tag) do
-  #   first_match(language_tag, &known_locale(&1, &2, language_tag.backend)) ||
-  #     Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
-  # end
-
   @spec rbnf_locale_name(Cldr.LanguageTag.t(), rbnf_names :: [locale_name]) :: locale_name | nil
+
   defp rbnf_locale_name(language_tag, rbnf_names \\ [])
 
   defp rbnf_locale_name(%LanguageTag{language: @root_language}, []) do
@@ -1914,6 +1910,38 @@ defmodule Cldr.Locale do
   # Get the rbnf locale name for this locale. If not found, see
   # if a parent has RBNF> Note parent in this case means direct parent,
   # not the fallback chain.
+
+  # This implementation uses the conformat locale matcher but
+  # it matches `en-AU` to rbnf `en-IN` which is probably unexpected.
+  # TODO For further research.
+
+  # defp rbnf_locale_name(%LanguageTag{} = language_tag, []) do
+  #   rbnf_locale_name(language_tag, language_tag.backend.known_rbnf_locale_names())
+  # end
+
+  # defp rbnf_locale_name(%LanguageTag{} = language_tag, rbnf_names) do
+  #   case Match.best_match(language_tag, supported: rbnf_names) do
+  #     {:ok, rbnf_locale, _distance} ->
+  #       rbnf_locale
+  #
+  #     _other ->
+  #       parent_rbnf_locale_name(language_tag, rbnf_names)
+  #   end
+  # end
+  #
+  # defp parent_rbnf_locale_name(language_tag, rbnf_names) do
+  #   cond do
+  #     parent = Map.get(parent_locale_map(), language_tag.cldr_locale_name) ->
+  #       case Cldr.validate_locale(parent, language_tag.backend) do
+  #         {:ok, parent} -> rbnf_locale_name(parent, rbnf_names)
+  #         {:error, _} -> nil
+  #       end
+  #
+  #     true ->
+  #       nil
+  #   end
+  # end
+
   defp rbnf_locale_name(%LanguageTag{} = language_tag, rbnf_names) do
     cond do
       rbnf_locale =
