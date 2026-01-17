@@ -95,8 +95,6 @@ defmodule Cldr.Install do
   end
 
   defp do_install_locale_name(locale_name, config, true) do
-    require Logger
-
     output_file_name = locale_output_file_name(locale_name, config)
 
     url = "#{base_url()}#{locale_filename(locale_name)}"

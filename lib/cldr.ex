@@ -64,7 +64,6 @@ defmodule Cldr do
   alias Cldr.LanguageTag
 
   require Config
-  require Cldr.Backend.Compiler
 
   import Kernel, except: [to_string: 1]
 

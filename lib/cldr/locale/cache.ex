@@ -5,7 +5,6 @@ defmodule Cldr.Locale.Cache do
   # during compilation to improve performance
 
   use GenServer
-  require Logger
 
   alias Cldr.Locale.Loader
 
