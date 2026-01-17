@@ -6,6 +6,10 @@
 
 This is the changelog for Cldr v2.45.0 released on January 18th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
+### Bug Fixes
+
+* Fix unsed `require` to remove warnings on Elixir 1.20
+
 ### Enhancements
 
 * Updates to [CLDR 48.1](https://cldr.unicode.org/downloads/cldr-48#481-changes) data.
