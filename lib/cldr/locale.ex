@@ -1893,9 +1893,11 @@ defmodule Cldr.Locale do
   end
 
   defp cldr_locale_name(%LanguageTag{} = language_tag) do
-    case Match.best_match(language_tag, supported: language_tag.backend.known_locale_names()) do
+    backend = language_tag.backend
+
+    case Match.best_match(language_tag, supported: backend.known_locale_names(), backend: backend) do
       {:ok, cldr_locale, _distance} -> cldr_locale
-      _other -> Cldr.known_locale_name(language_tag.requested_locale_name, language_tag.backend)
+      _other -> Cldr.known_locale_name(language_tag.requested_locale_name, backend)
     end
   end
 

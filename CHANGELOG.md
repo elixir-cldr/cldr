@@ -2,9 +2,21 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.45.1
+
+This is the changelog for Cldr v2.45.1 released on January 18th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix `Cldr.Locale.cldr_locale_name/1` to pass through the backend to `Cldr.Locale.Match.best_match/2`.
+
 ## Cldr v2.45.0
 
-This is the changelog for Cldr v2.45.0 released on January 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.45.0 released on January 18th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix unsed `require` to remove warnings on Elixir 1.20.
 
 ### Enhancements
 
