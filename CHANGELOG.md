@@ -8,7 +8,7 @@ This is the changelog for Cldr v2.45.2 released on January 19th, 2026.  For olde
 
 ### Changes
 
-* Changes the default locale match distance from `50` to `54`. This means that a desired locale will match with a suported locale if the language matches - even if both the script and territory do not match. This change is very unlikely to affect the majority of users.
+* Changes the default locale match distance from `50` to `54`. This means that a desired locale will match with a suported locale if the language matches - even if both the script and territory do not match. This matching algorithm is used when matching a requested locale to a known CLDR locale and a known Gettext locale. This change is very unlikely to affect the majority of users.
 
 ## Cldr v2.45.1
 
