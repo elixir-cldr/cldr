@@ -13,7 +13,10 @@ defmodule Cldr.Locale.Match do
   # default distance is 80 so by default different languages
   # can never match.
 
-  @default_threshold 50
+  # UPDATED: now matching if only the language matches. Was 50,
+  # now 54.
+
+  @default_threshold 54
 
   # When looking for a best match amongst multiple desired
   # languages we want the languages earlier in the list to

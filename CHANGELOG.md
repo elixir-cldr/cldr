@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.45.2
+
+This is the changelog for Cldr v2.45.2 released on January 19th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Changes
+
+* Changes the default locale match distance from `50` to `54`. This means that a desired locale will match with a suported locale if the language matches - even if both the script and territory do not match. This change is very unlikely to affect the majority of users.
+
 ## Cldr v2.45.1
 
 This is the changelog for Cldr v2.45.1 released on January 18th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
