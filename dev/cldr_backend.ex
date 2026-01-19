@@ -1,6 +1,5 @@
-# require Cldr.Backend
-# require Cldr.Locale.Loader
-# require MyApp.Gettext
+require Cldr.Locale.Loader
+require MyApp.Gettext
 
 defmodule MyApp.Cldr do
   use Cldr,
