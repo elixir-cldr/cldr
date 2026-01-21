@@ -105,6 +105,17 @@ end
 
 defmodule Cldr.UnknownCurrencyError do
   @moduledoc """
+  Exception raised when there is an unknown currency code.
+  """
+  defexception [:message]
+
+  def exception(message) do
+    %__MODULE__{message: message}
+  end
+end
+
+defmodule Cldr.InvalidCurrencyError do
+  @moduledoc """
   Exception raised when there is an invalid currency code.
   """
   defexception [:message]

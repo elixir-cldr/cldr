@@ -2009,11 +2009,14 @@ defmodule Cldr do
       iex> Cldr.validate_currency("xtc")
       {:ok, :XTC}
 
+      iex> Cldr.validate_currency("ZZZ")
+      {:error, {Cldr.UnknownCurrencyError, "The currency \\"ZZZ\\" is unknown"}}
+
       iex> Cldr.validate_currency("invalid")
-      {:error, {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}}
+      {:error, {Cldr.InvalidCurrencyError, "The currency \\"invalid\\" is invalid"}}
 
       iex> Cldr.validate_currency(:invalid)
-      {:error, {Cldr.UnknownCurrencyError, "The currency :invalid is invalid"}}
+      {:error, {Cldr.InvalidCurrencyError, "The currency :invalid is invalid"}}
 
   """
 
@@ -2024,10 +2027,11 @@ defmodule Cldr do
   def validate_currency(currency) when is_atom(currency) do
     currency
     |> Atom.to_string()
-    |> validate_currency
+    |> validate_currency()
     |> case do
-      {:error, _} -> {:error, unknown_currency_error(currency)}
-      ok -> ok
+      {:error, {Cldr.UnknownCurrencyError, _}} -> {:error, unknown_currency_error(currency)}
+      {:error, {Cldr.InvalidCurrencyError, _}} -> {:error, invalid_currency_error(currency)}
+      {:ok, currency} -> {:ok, currency}
     end
   end
 
@@ -2060,11 +2064,11 @@ defmodule Cldr do
   end
 
   def validate_currency(invalid_currency) do
-    {:error, unknown_currency_error(invalid_currency)}
+    {:error, invalid_currency_error(invalid_currency)}
   end
 
   @doc """
-  Returns an error tuple for an invalid currency.
+  Returns an error tuple for an unknown currency.
 
   ## Arguments
 
@@ -2076,12 +2080,33 @@ defmodule Cldr do
 
   ## Examples
 
-      iex> Cldr.unknown_currency_error("invalid")
-      {Cldr.UnknownCurrencyError, "The currency \\"invalid\\" is invalid"}
+      iex> Cldr.unknown_currency_error("XAB")
+      {Cldr.UnknownCurrencyError, "The currency \\"XAB\\" is unknown"}
 
   """
   def unknown_currency_error(currency) do
-    {Cldr.UnknownCurrencyError, "The currency #{inspect(currency)} is invalid"}
+    {Cldr.UnknownCurrencyError, "The currency #{inspect(currency)} is unknown"}
+  end
+
+  @doc """
+  Returns an error tuple for an invalid currency.
+
+  ## Arguments
+
+  * `currency` is any currency code **not** returned by `Cldr.known_currencies/0`
+
+  ## Returns
+
+  * `{:error, {Cldr.InvalidCurrencyError, message}}`
+
+  ## Examples
+
+      iex> Cldr.invalid_currency_error("invalid")
+      {Cldr.InvalidCurrencyError, "The currency \\"invalid\\" is invalid"}
+
+  """
+  def invalid_currency_error(currency) do
+    {Cldr.InvalidCurrencyError, "The currency #{inspect(currency)} is invalid"}
   end
 
   @doc """

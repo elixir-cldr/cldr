@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.46.0
+
+This is the changelog for Cldr v2.46.0 released on January 20th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Enhancements
+
+* Adds an exception `Cldr.InvalidCurrencyCode` to allow differentiation between invalid and unknown currency codes. This is primarily to support between currency validation in [ex_money](https://github.com/kipcole9/money).
+
 ## Cldr v2.45.2
 
 This is the changelog for Cldr v2.45.2 released on January 19th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
