@@ -550,18 +550,22 @@ defmodule Cldr.Config do
      an alias in `parent_locales/1`
 
   """
+  def fallback(:und) do
+    nil
+  end
+
   def fallback(locale_name) do
     all_locale_names = all_locale_names()
 
     fun = fn locale_name ->
-      locale_name in all_locale_names && locale_name
+      (locale_name in all_locale_names) && locale_name || nil
     end
 
     if inherited = Map.get(parent_locales(), locale_name) do
       inherited
     else
       {:ok, locale} = Cldr.LanguageTag.Parser.parse(to_string(locale_name))
-      first_match(locale.language, locale.script, locale.territory, fun)
+      first_match(locale.language, locale.script, locale.territory, fun) || :und
     end
   end
 
@@ -589,6 +593,7 @@ defmodule Cldr.Config do
     |> omit_script_if_only_one(omit_singular_script?)
     |> Enum.reject(&is_nil/1)
     |> Enum.join("-")
+    |> String.to_existing_atom()
   end
 
   @doc false

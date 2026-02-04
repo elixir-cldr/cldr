@@ -2,6 +2,16 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.46.1
+
+This is the changelog for Cldr v2.46.1 released on February 6th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fixes adding of spurious base language locales. Thanks to @DaAnalyst for the report. Closes #270.
+
+* Fix calculating the fallback chain for a locale.
+
 ## Cldr v2.46.0
 
 This is the changelog for Cldr v2.46.0 released on January 20th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
