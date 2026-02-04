@@ -237,7 +237,7 @@ use Cldr,
   locales: ["en-*", "fr"]
 ```
 
- * There is one additional setting which is `:all` which will configure all 541 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
+ * There is one additional setting which is `:all` which will configure all ~700 locales.  **This is highly discouraged** since it will take many minutes to compile your project and will consume more memory than you really want.  This setting is there to aid in running the test suite.  Really, don't use this setting.
 
  * `:add_fallback_locales` is a boolean key which when `true` results in the fallback locales being added for each of the configured locales.  The default is `false`. The reason to set this option to `true` is that some data such as rules based number formats and subdivision data are inherited from their language roots. For example, the locale `en-001` is inherited from the locale `en`. Locale `en-001` does not have any rules-based number formats or subdivision data defined for it. However locale `en` does. Including the fallback locales maximises the opportunity to resolve localised data.
 

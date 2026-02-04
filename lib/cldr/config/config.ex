@@ -898,7 +898,7 @@ defmodule Cldr.Config do
   The locale "und" is always added to the list of configured locales since it
   is required to support some RBNF functions.
 
-  The use of `:all` is not recommended since all 571 locales take
+  The use of `:all` is not recommended since all ~700 locales take
   quite some time (minutes) to compile. It is however
   helpful for testing Cldr.
 
@@ -1721,11 +1721,11 @@ defmodule Cldr.Config do
   ## Examples
 
       iex> Cldr.Config.expand_locale_names(["en-A+"])
-      [:en, :"en-AE", :"en-AG", :"en-AI", :"en-AS", :"en-AT", :"en-AU"]
+      [:"en-AE", :"en-AG", :"en-AI", :"en-AS", :"en-AT", :"en-AU"]
 
       iex> Cldr.Config.expand_locale_names(["fr-*"])
       [
-        :fr, :"fr-BE", :"fr-BF", :"fr-BI", :"fr-BJ", :"fr-BL", :"fr-CA",
+        :"fr-BE", :"fr-BF", :"fr-BI", :"fr-BJ", :"fr-BL", :"fr-CA",
         :"fr-CD", :"fr-CF", :"fr-CG", :"fr-CH", :"fr-CI", :"fr-CM", :"fr-DJ",
         :"fr-DZ", :"fr-GA", :"fr-GF", :"fr-GN", :"fr-GP", :"fr-GQ", :"fr-HT",
         :"fr-KM", :"fr-LU", :"fr-MA", :"fr-MC", :"fr-MF", :"fr-MG", :"fr-ML",
@@ -1763,12 +1763,6 @@ defmodule Cldr.Config do
               raise ArgumentError,
                     "Invalid regex in locale name #{inspect(locale_name)}: #{inspect(reason)}"
           end
-      end
-    end)
-    |> Enum.flat_map(fn locale_name ->
-      case String.split(to_string(locale_name), "-") do
-        [language] -> [String.to_atom(language)]
-        [language | _rest] -> [String.to_atom(language), locale_name]
       end
     end)
     |> Enum.uniq()

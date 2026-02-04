@@ -3,7 +3,7 @@ defmodule Cldr.Config.Test do
   import ExUnit.CaptureIO
 
   @from_locales ["en", "en-au", "zh-hant-hk", "zh_haNt"]
-  @to_locales [:en, :"en-001", :"en-AU", :und, :zh, :"zh-Hant", :"zh-Hant-HK"]
+  @to_locales [:en, :"en-001", :"en-AU", :und, :"zh-Hant", :"zh-Hant-HK"]
 
   test "locale resolution in a config is case insensitive" do
     capture_io(:stderr, fn ->
@@ -52,14 +52,11 @@ defmodule Cldr.Config.Test do
     from_locales = ["en-AU", "ca-ES-VALENCIA", "pt-PT", "nb"]
 
     to_locales = [
-      :ca,
       :"ca-ES-valencia",
-      :en,
       :"en-001",
       :"en-AU",
       :nb,
       :no,
-      :pt,
       :"pt-PT",
       :und
     ]
@@ -90,7 +87,7 @@ defmodule Cldr.Config.Test do
     end)
 
     assert apply(Cldr.Config.Test.PosixDefaultLocale, :known_locale_names, []) ==
-             [:en, :"en-GB"]
+             [:"en-GB"]
 
     assert apply(Cldr.Config.Test.PosixDefaultLocale, :default_locale, []).cldr_locale_name ==
              :"en-GB"
