@@ -38,6 +38,7 @@ defmodule Cldr.Consolidate do
     save_territory_containment()
     save_territory_subdivisions()
     save_territory_subdivision_containment()
+    save_territory_codes()
     save_weeks()
     save_calendars()
     save_calendar_preferences()
@@ -832,6 +833,24 @@ defmodule Cldr.Consolidate do
 
     territory_parents
     |> Enum.map(fn {k, v} -> {k, parents(territory_parents, v)} end)
+    |> Map.new()
+    |> save_file(path)
+
+    assert_package_file_configured!(path)
+  end
+
+  def save_territory_codes do
+    path = Path.join(consolidated_output_dir(), "territory_codes.json")
+
+    download_data_dir()
+    |> Path.join(["cldr-core", "/supplemental", "/codeMappings.json"])
+    |> File.read!()
+    |> Jason.decode!()
+    |> get_in(["supplemental", "codeMappings"])
+    |> Cldr.Map.rename_keys("_numeric", "numeric")
+    |> Cldr.Map.rename_keys("_alpha3", "alpha3")
+    |> Cldr.Map.rename_keys("_fips10", "fips10")
+    |> Enum.reject(fn {code, _value} -> String.length(code) > 2 end)
     |> Map.new()
     |> save_file(path)
 

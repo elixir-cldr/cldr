@@ -4,13 +4,17 @@
 
 ## Cldr v2.46.1
 
-This is the changelog for Cldr v2.46.1 released on February 6th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.46.1 released on February 9th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
 * Fixes adding of spurious base language locales. Thanks to @DaAnalyst for the report. Closes #270.
 
 * Fix calculating the fallback chain for a locale.
+
+### Enhancements
+
+* Add `Cldr.Config.territory_codes/0` to return a mapping from an ISO3166 alpha-2 code to the corresponding FIP, numerica and alpah-3 codes (where available).
 
 ## Cldr v2.46.0
 

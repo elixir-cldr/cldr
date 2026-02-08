@@ -112,6 +112,7 @@ defmodule Cldr.Mixfile do
         "priv/cldr/territories.json",
         "priv/cldr/territory_subdivisions.json",
         "priv/cldr/territory_subdivision_containment.json",
+        "priv/cldr/territory_codes.json",
         "priv/cldr/plural_ranges.json",
         "priv/cldr/timezones.json",
         "priv/cldr/metazones.json",

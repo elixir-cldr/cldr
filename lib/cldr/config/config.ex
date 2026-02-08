@@ -1933,6 +1933,20 @@ defmodule Cldr.Config do
   end
 
   @doc """
+  Return a map of ISO 3166 Alpha-2 territory codes
+  to their alpha-3, FIPS and numeric values where
+  available
+
+  """
+  def territory_codes do
+    cldr_data_dir()
+    |> Path.join("territory_codes.json")
+    |> File.read!()
+    |> json_library().decode!
+    |> Cldr.Map.atomize_keys()
+  end
+
+  @doc """
   Returns a map of territory info for all territories
   known to CLDR.
 
