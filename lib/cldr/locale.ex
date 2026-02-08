@@ -515,36 +515,6 @@ defmodule Cldr.Locale do
     error
   end
 
-  @doc false
-  def omit_likely_subtags(%LanguageTag{} = language_tag) do
-    %{language: language, script: script, territory: territory} = language_tag
-    %{language_variants: variants} = language_tag
-
-    [_language, script, territory, variants] =
-      omit_likely_subtags(language, script, territory, variants)
-
-    %{language_tag | script: script, territory: territory, language_variants: variants}
-  end
-
-  def omit_likely_subtags([language, subtags, script, territory, variants]) do
-    [language, script, territory, variants] =
-      omit_likely_subtags(language, script, territory, variants)
-
-    [language, subtags, script, territory, variants]
-  end
-
-  def omit_likely_subtags(language, script, territory, variants) do
-    case likely_subtags(language, script, territory, variants) do
-      nil ->
-        [language, script, territory, variants]
-
-      %Cldr.LanguageTag{script: s_script, territory: s_territory} ->
-        script = if script == s_script, do: nil, else: script
-        territory = if territory == s_territory, do: nil, else: territory
-        [language, script, territory, variants]
-    end
-  end
-
   defp no_parent_error(locale_name) do
     {Cldr.NoParentError, "The locale #{inspect(locale_name)} has no parent locale"}
   end
@@ -1550,9 +1520,10 @@ defmodule Cldr.Locale do
   end
 
   def canonical_language_tag(%LanguageTag{} = language_tag, backend, options) do
+    IO.inspect(language_tag, label: "canonical_language_tag")
     suppress_requested_locale_substitution? = !language_tag.language
     likely_subtags? = Keyword.get(options, :add_likely_subtags, true)
-    omit_singular_script? = Keyword.get(options, :omit_singular_script?, true)
+    omit_likely_subtags? = Keyword.get(options, :omit_likely_subtags?, true)
     skip_gettext_and_cldr? = Keyword.get(options, :skip_gettext_and_cldr, false)
     skip_rbnf_name? = Keyword.get(options, :skip_rbnf_name, false)
     rbnf_locales = Keyword.get(options, :rbnf_locales, [])
@@ -1562,19 +1533,22 @@ defmodule Cldr.Locale do
       |> transform_language(backend)
       |> put_requested_locale_name(suppress_requested_locale_substitution?)
       |> substitute_aliases()
+      |> IO.inspect(label: "After aliases", structs: false)
 
     with {:ok, language_tag} <- validate_subtags(language_tag),
          {:ok, language_tag} <- U.canonicalize_locale_keys(language_tag),
          {:ok, language_tag} <- T.canonicalize_transform_keys(language_tag) do
       language_tag
-      |> put_canonical_locale_name(omit_singular_script?)
       |> remove_unknown(:script)
       |> remove_unknown(:territory)
       |> put_backend(backend)
       |> maybe_put_likely_subtags(likely_subtags?)
-      |> put_gettext_locale_name(skip_gettext_and_cldr?)
-      |> put_cldr_locale_name(skip_gettext_and_cldr?)
-      |> put_rbnf_locale_name(rbnf_locales, skip_rbnf_name?)
+      |> IO.inspect(label: "After likely", structs: false)
+      |> put_canonical_locale_name(omit_likely_subtags?)
+      |> IO.inspect(label: "After canonical locale name", structs: false)
+      # |> put_gettext_locale_name(skip_gettext_and_cldr?)
+      #|> put_cldr_locale_name(skip_gettext_and_cldr?)
+      #|> put_rbnf_locale_name(rbnf_locales, skip_rbnf_name?)
       |> wrap(:ok)
     end
   end
@@ -1593,8 +1567,18 @@ defmodule Cldr.Locale do
     language_tag
   end
 
-  defp maybe_put_likely_subtags(language_tag, true), do: put_likely_subtags(language_tag)
-  defp maybe_put_likely_subtags(language_tag, _), do: language_tag
+  defp maybe_put_likely_subtags(language_tag, true),
+    do: put_likely_subtags(language_tag)
+
+  defp maybe_put_likely_subtags(language_tag, _),
+    do: language_tag
+
+  @doc false
+  def maybe_omit_likely_subtags(language_tag, true),
+    do: omit_likely_subtags(language_tag)
+
+  def maybe_omit_likely_subtags(language_tag, _),
+    do: language_tag
 
   defp wrap(term, tag) do
     {tag, term}
@@ -1610,7 +1594,7 @@ defmodule Cldr.Locale do
     or any `locale_name` returned by `Cldr.known_locale_names/1`.
 
   * `backend` is any module that includes `use Cldr` and therefore
-    is a `Cldr` backend module
+    is a `Cldr` backend module.
 
   See `Cldr.Locale.canonical_language_tag/3` for more information.
 
@@ -2113,21 +2097,21 @@ defmodule Cldr.Locale do
   """
   @spec locale_name_from(Cldr.LanguageTag.t()) :: String.t()
 
-  def locale_name_from(language_tag, omit_singular_script? \\ true)
+  def locale_name_from(language_tag, omit_likely_subtags? \\ true)
 
-  def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_singular_script?) do
+  def locale_name_from(%LanguageTag{canonical_locale_name: nil} = tag, omit_likely_subtags?) do
     %LanguageTag{language: language, script: script, territory: territory} = tag
     %LanguageTag{language_variants: language_variants} = tag
 
-    locale_name_from(language, script, territory, language_variants, omit_singular_script?)
+    locale_name_from(language, script, territory, language_variants, omit_likely_subtags?)
   end
 
-  def locale_name_from(%LanguageTag{canonical_locale_name: locale_name}, _omit_singular_script?) do
+  def locale_name_from(%LanguageTag{canonical_locale_name: locale_name}, _omit_likely_subtags?) do
     locale_name
   end
 
-  def locale_name_from([language, script, territory, variants], omit_singular_script?) do
-    locale_name_from(language, script, territory, variants, omit_singular_script?)
+  def locale_name_from([language, script, territory, variants], omit_likely_subtags?) do
+    locale_name_from(language, script, territory, variants, omit_likely_subtags?)
   end
 
   @doc """
@@ -2148,6 +2132,9 @@ defmodule Cldr.Locale do
   * `variants` is a list of language variants as lower
     case string or `[]`.
 
+  * `omit_likely_subtags?` is a boolean indicating if
+    likely subtags should be omitted. The default is `true`.
+
   ## Returns
 
   * The atom locale name constructed from the non-nil arguments joined
@@ -2165,11 +2152,10 @@ defmodule Cldr.Locale do
   @spec locale_name_from(language(), script(), territory_reference(), variants(), boolean) ::
           String.t()
 
-  def locale_name_from(language, script, territory, variants, omit_singular_script? \\ true) do
+  def locale_name_from(language, script, territory, variants, omit_likely_subtags? \\ true) do
     [language, script, territory, variants]
-    |> omit_script_if_only_one(omit_singular_script?)
-    |> Enum.reject(&is_nil/1)
-    |> Enum.reject(&(&1 == []))
+    |> maybe_omit_likely_subtags(omit_likely_subtags?)
+    |> Enum.reject(&empty?/1)
     |> Enum.join("-")
   end
 
@@ -2177,82 +2163,82 @@ defmodule Cldr.Locale do
   def join_variants([]), do: nil
   def join_variants(variants), do: variants |> Enum.sort() |> Enum.join("-")
 
-  # This variant called only from Cldr.LanguageTag.to_string
-
-  @doc false
-  def omit_script_if_only_one(
-        [language, subtags, script, territory, variants],
-        omit_singular_script?
-      ) do
-    [language, script, territory, variants] =
-      omit_script_if_only_one([language, script, territory, variants], omit_singular_script?)
-
-    [language, subtags, script, territory, variants]
-  end
-
-  # If the language has only one script for a given territory then
-  # we omit it in the canonical form.  For now we ignore the :secondary
-  # language data.
-
-  @doc false
-  def omit_script_if_only_one([_language, nil, _territory, _variants] = tag, _) do
-    tag
-  end
-
-  def omit_script_if_only_one([language, script, territory, variants], true)
-      when is_binary(language) do
-    case Map.fetch(language_data(), language) do
-      {:ok, language_map} ->
-        primary = Map.get(language_map, :primary)
-        secondary = Map.get(language_map, :secondary)
-
-        script =
-          cond do
-            is_nil(maybe_nil_script(primary, script, territory)) -> nil
-            is_nil(maybe_nil_script(secondary, script, territory)) -> nil
-            true -> script
-          end
-
-        [language, script, territory, variants]
-
-      :error ->
-        [language, script, territory, variants]
-    end
-  end
-
-  def omit_script_if_only_one([language, script, territory, variants], false) do
-    [language, script, territory, variants]
-  end
-
-  # No language data so we keep the script
-  defp maybe_nil_script(nil, script, _territory) do
-    script
-  end
-
-  # There is only one script for this territory and its the requested one
-  # so its not required for the canonical form.
-  defp maybe_nil_script(language_map, script, territory) when is_binary(script) do
-    maybe_nil_script(language_map, String.to_existing_atom(script), territory)
-  end
-
-  defp maybe_nil_script(language_map, script, territory) when is_binary(territory) do
-    maybe_nil_script(language_map, script, String.to_existing_atom(territory))
-  end
-
-  # Scripts match and we assume when territories is [] it means *any*
-  defp maybe_nil_script(%{scripts: [script], territories: []}, script, _territory) do
-    nil
-  end
-
-  # Scripts match so lets see if the territory is in the list - which means its the one and only
-  defp maybe_nil_script(%{scripts: [script], territories: territories}, script, territory) do
-    if territory in territories, do: nil, else: script
-  end
-
-  # In all other cases we keep the script because there is either none or more than one
-  defp maybe_nil_script(_language_map, script, _territory) do
-    script
-  end
+  # # This variant called only from Cldr.LanguageTag.to_string
+  #
+  # @doc false
+  # def omit_script_if_only_one(
+  #       [language, subtags, script, territory, variants],
+  #       omit_singular_script?
+  #     ) do
+  #   [language, script, territory, variants] =
+  #     omit_script_if_only_one([language, script, territory, variants], omit_singular_script?)
+  #
+  #   [language, subtags, script, territory, variants]
+  # end
+  #
+  # # If the language has only one script for a given territory then
+  # # we omit it in the canonical form.  For now we ignore the :secondary
+  # # language data.
+  #
+  # @doc false
+  # def omit_script_if_only_one([_language, nil, _territory, _variants] = tag, _) do
+  #   tag
+  # end
+  #
+  # def omit_script_if_only_one([language, script, territory, variants], true)
+  #     when is_binary(language) do
+  #   case Map.fetch(language_data(), language) do
+  #     {:ok, language_map} ->
+  #       primary = Map.get(language_map, :primary)
+  #       secondary = Map.get(language_map, :secondary)
+  #
+  #       script =
+  #         cond do
+  #           is_nil(maybe_nil_script(primary, script, territory)) -> nil
+  #           is_nil(maybe_nil_script(secondary, script, territory)) -> nil
+  #           true -> script
+  #         end
+  #
+  #       [language, script, territory, variants]
+  #
+  #     :error ->
+  #       [language, script, territory, variants]
+  #   end
+  # end
+  #
+  # def omit_script_if_only_one([language, script, territory, variants], false) do
+  #   [language, script, territory, variants]
+  # end
+  #
+  # # No language data so we keep the script
+  # defp maybe_nil_script(nil, script, _territory) do
+  #   script
+  # end
+  #
+  # # There is only one script for this territory and its the requested one
+  # # so its not required for the canonical form.
+  # defp maybe_nil_script(language_map, script, territory) when is_binary(script) do
+  #   maybe_nil_script(language_map, String.to_existing_atom(script), territory)
+  # end
+  #
+  # defp maybe_nil_script(language_map, script, territory) when is_binary(territory) do
+  #   maybe_nil_script(language_map, script, String.to_existing_atom(territory))
+  # end
+  #
+  # # Scripts match and we assume when territories is [] it means *any*
+  # defp maybe_nil_script(%{scripts: [script], territories: []}, script, _territory) do
+  #   nil
+  # end
+  #
+  # # Scripts match so lets see if the territory is in the list - which means its the one and only
+  # defp maybe_nil_script(%{scripts: [script], territories: territories}, script, territory) do
+  #   if territory in territories, do: nil, else: script
+  # end
+  #
+  # # In all other cases we keep the script because there is either none or more than one
+  # defp maybe_nil_script(_language_map, script, _territory) do
+  #   script
+  # end
 
   @doc """
   Replace empty subtags within a `t:Cldr.LanguageTag.t/0` with the most likely
@@ -2261,13 +2247,6 @@ defmodule Cldr.Locale do
   ### Arguments
 
   * `language_tag` is any language tag returned by `Cldr.Locale.new/2`.
-
-  * `options` is a keyword list of options.
-
-  ### Options
-
-  * `:add_likely` is a boolean indicating whether to add
-    likely subtags. The default is `true`.
 
   ### Notes
 
@@ -2324,12 +2303,46 @@ defmodule Cldr.Locale do
   def put_likely_subtags(%LanguageTag{} = language_tag) do
     %LanguageTag{language: language, script: script, territory: territory} = language_tag
     subtags = likely_subtags(language, script, territory, [])
+
     Map.merge(subtags, language_tag, fn
       :language, v1, "und" ->
         v1
       _k, v1, v2 ->
         if empty?(v2), do: v1, else: v2
     end)
+  end
+
+  def omit_likely_subtags(%LanguageTag{} = language_tag) do
+    %{language: language, script: script, territory: territory} = language_tag
+    %{language_variants: variants} = language_tag
+
+    [_language, script, territory, variants] =
+      omit_likely_subtags(language, script, territory, variants)
+
+    %{language_tag | script: script, territory: territory, language_variants: variants}
+  end
+
+  def omit_likely_subtags([language, subtags, script, territory, variants]) do
+    [language, script, territory, variants] =
+      omit_likely_subtags(language, script, territory, variants)
+
+    [language, subtags, script, territory, variants]
+  end
+
+  def omit_likely_subtags([language, script, territory, variants]) do
+    omit_likely_subtags(language, script, territory, variants)
+  end
+
+  def omit_likely_subtags(language, script, territory, variants) do
+    case likely_subtags(language, script, territory, variants) do
+      nil ->
+        [language, script, territory, variants]
+
+      %Cldr.LanguageTag{script: s_script, territory: s_territory} ->
+        script = if script == s_script, do: nil, else: script
+        territory = if territory == s_territory, do: nil, else: territory
+        [language, script, territory, variants]
+    end
   end
 
   # The process of applying alias substitutions is a map merge.
@@ -2646,17 +2659,17 @@ defmodule Cldr.Locale do
 
   @doc false
   def likely_subtags(@root_language = language, script, territory, variants) do
-    likely_subtags(locale_name_from(language, script, territory, variants)) ||
-      likely_subtags(locale_name_from(language, nil, territory, variants)) ||
-      likely_subtags(locale_name_from(language, script, nil, variants)) ||
-      likely_subtags(locale_name_from(language, nil, nil, variants))
+    likely_subtags(locale_name_from(language, script, territory, variants, false)) ||
+      likely_subtags(locale_name_from(language, nil, territory, variants, false)) ||
+      likely_subtags(locale_name_from(language, script, nil, variants, false)) ||
+      likely_subtags(locale_name_from(language, nil, nil, variants, false))
   end
 
   def likely_subtags(language, script, territory, variants) do
-    likely_subtags(locale_name_from(language, script, territory, variants)) ||
-      likely_subtags(locale_name_from(language, nil, territory, variants)) ||
-      likely_subtags(locale_name_from(language, script, nil, variants)) ||
-      likely_subtags(locale_name_from(language, nil, nil, variants)) ||
+    likely_subtags(locale_name_from(language, script, territory, variants, false)) ||
+      likely_subtags(locale_name_from(language, nil, territory, variants, false)) ||
+      likely_subtags(locale_name_from(language, script, nil, variants, false)) ||
+      likely_subtags(locale_name_from(language, nil, nil, variants, false)) ||
       likely_subtags(@root_language, script, territory, variants)
   end
 
