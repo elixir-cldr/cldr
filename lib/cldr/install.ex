@@ -120,7 +120,7 @@ defmodule Cldr.Install do
       {:error, reason} ->
         Logger.bare_log(
           :error,
-          "Unable to downloaded locale #{inspect(locale_name)} version #{branch_from_version()}. #{reason}."
+          "Unable to downloaded locale #{inspect(locale_name)} version #{branch_from_version()}. #{inspect reason}."
         )
 
         {:error, reason}
