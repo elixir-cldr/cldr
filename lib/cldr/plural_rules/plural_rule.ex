@@ -695,7 +695,7 @@ defmodule Cldr.Number.PluralRule do
               PluralRule.operand(),
               [integer(), ...] | integer(),
               number()
-            ) :: :zero | :one | :two | :few | :many | :other
+            ) :: :zero | :one | :two | :few | :many | :other | {:error, {module(), String.t()}}
 
       # Function body is the AST of the function which needs to be injected
       # into the function definition.
@@ -724,7 +724,7 @@ defmodule Cldr.Number.PluralRule do
       # If we get here then it means that the locale doesn't have a plural rule,
       # but the language might
       defp do_plural_rule(%LanguageTag{} = language_tag, n, i, v, w, f, t, e) do
-        if language_tag.language == language_tag.cldr_locale_name do
+        if language_tag.language == to_string(language_tag.cldr_locale_name) do
           {
             :error,
             {
