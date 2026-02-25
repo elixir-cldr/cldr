@@ -160,7 +160,7 @@ defmodule Cldr.Mixfile do
         "LICENSE.md",
         "CHANGELOG.md"
       ],
-      formatters: ["html"],
+      formatters: ["html", "markdown"],
       deps: [
         ex_cldr_numbers: "https://hexdocs.pm/ex_cldr_numbers",
         ex_cldr_dates_times: "https://hexdocs.pm/ex_cldr_dates_times",
