@@ -27,15 +27,16 @@ defmodule Cldr.Validity.Script do
     String.capitalize(code)
   end
 
+  def normalize(nil) do
+    nil
+  end
+
   def normalize(code) when is_atom(code) do
     code
     |> Atom.to_string()
     |> normalize()
   end
 
-  def normalize(nil) do
-    nil
-  end
 
   @unicode_to_subtag_mapping Cldr.Config.unicode_script_to_subtag_mapping()
 

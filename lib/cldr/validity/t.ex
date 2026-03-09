@@ -84,6 +84,10 @@ defmodule Cldr.Validity.T do
     end
   end
 
+  defp encode_key("x0", private_use) when is_list(private_use) do
+    Enum.join(private_use, "-")
+  end
+
   defp encode_key(key, values) when is_list(values) do
     values
     |> Enum.map(&encode_key(key, &1))
@@ -108,10 +112,6 @@ defmodule Cldr.Validity.T do
 
   defp encode_key("language", language) do
     String.downcase(language.canonical_locale_name)
-  end
-
-  defp encode_key("x0", private_use) when is_list(private_use) do
-    Enum.join(private_use, "-")
   end
 
   defp encode_key("x0", private_use) do

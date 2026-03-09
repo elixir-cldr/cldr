@@ -27,13 +27,13 @@ defmodule Cldr.Validity.Unit do
     String.downcase(code)
   end
 
+  def normalize(nil) do
+    nil
+  end
+
   def normalize(code) when is_atom(code) do
     code
     |> Atom.to_string()
     |> normalize()
-  end
-
-  def normalize(nil) do
-    nil
   end
 end
