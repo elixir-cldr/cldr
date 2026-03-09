@@ -345,4 +345,19 @@ defmodule Cldr.Test do
   test "MyApp.Cldr.known_gettext_locale_names/0" do
     assert MyApp.Cldr.known_gettext_locale_names() == ["bg_BG", "en", "en_GB", "es", "it"]
   end
+
+  # test "Validating a locale that has no fallback locale configured" do
+  #   assert {:ok, NoFallback.Cldr.Locale.new!("es-US")} ==
+  #     Cldr.validate_locale("es-US", NoFallback.Cldr)
+  # end
+
+  test "Components of a locale with no fallback configured" do
+    {:ok, locale} = Cldr.Locale.canonical_language_tag("es-US", NoFallback.Cldr)
+
+    assert :"es-US" = locale.cldr_locale_name
+    assert "es-US" = locale.requested_locale_name
+    assert "es-US" = locale.canonical_locale_name
+    assert is_nil(locale.rbnf_locale_name)
+    assert is_nil(locale.gettext_locale_name)
+  end
 end

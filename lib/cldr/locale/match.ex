@@ -99,7 +99,9 @@ defmodule Cldr.Locale.Match do
 
   """
   @doc since: "2.44.0"
-  def best_match(desired, options \\ []) do
+  def best_match(desired, options \\ [])
+
+  def best_match(desired, options) do
     threshold = Keyword.get(options, :threshold, @default_threshold)
     backend = Keyword.get_lazy(options, :backend, &Cldr.default_backend!/0)
 
@@ -241,15 +243,9 @@ defmodule Cldr.Locale.Match do
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
-  def validate(locale, backend, _add_subtags) when is_binary(locale) do
+  def validate(locale, backend, _add_subtags) when is_binary(locale) or is_atom(locale) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
-  end
-
-  def validate(locale, backend, add_subtags) when is_atom(locale) do
-    locale
-    |> Atom.to_string()
-    |> validate(backend, add_subtags)
   end
 
   defp subtag_distance(desired, supported, subtags, acc) do
@@ -277,7 +273,7 @@ defmodule Cldr.Locale.Match do
       cond do
         matches?(desired, match.desired) &&
             matches?(supported, match.supported) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}} desire: #{inspect desired} support: #{inspect supported}")
+          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}} desired: #{inspect desired} support: #{inspect supported}")
 
         !Map.get(match, :one_way) && matches?(desired, match.supported) &&
             matches?(supported, match.desired) ->
@@ -305,6 +301,7 @@ defmodule Cldr.Locale.Match do
   defp matches?([language], [language]), do: true
 
   # Language and script
+  defp matches?([language, _script], [language, :"*"]), do: true
   defp matches?([language, script, _], [language, script, :"*"]), do: true
   defp matches?([language, script], [language, script]), do: true
 

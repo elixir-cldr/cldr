@@ -785,8 +785,8 @@ defmodule Cldr.Backend do
 
       # When validating known locale names we memoize the
       # parsed language tag for performance reasons and only
-      # add the gettext locale name (if there is one) and the
-      # backend module.
+      # add the gettext locale name (if there is one),
+      # and the backend module.
 
       for locale_name <- Cldr.Locale.Loader.known_locale_names(config),
           not is_nil(Cldr.Config.language_tag(locale_name)) do

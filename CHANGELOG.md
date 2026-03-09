@@ -2,13 +2,23 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
-## Cldr v2.47.1
+## Cldr v2.47.2
 
-This is the changelog for Cldr v2.47.0 released on February 9th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.47.2 released on March 9th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
 * Fix compiler warnings on Elixir 1.20.0-rc.2.
+
+## Cldr v2.47.1
+
+This is the changelog for Cldr v2.47.1 released on February 26th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fixes `Cldr.Locale.canonical_local_name/3` infinite recursion when there is no fallback locale configured when generating the RBNF locale name. Fixes #272.
+
+* Fixes `plural_rule/2` infinite recursion when the applicable locale has no plural rules and no fallback locale is configured. Fixes #272.
 
 ## Cldr v2.47.0
 
