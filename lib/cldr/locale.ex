@@ -474,18 +474,6 @@ defmodule Cldr.Locale do
     )
   end
 
-  defp known_rbnf_locale_name(_locale_name, _tags, [], nil) do
-    false
-  end
-
-  defp known_rbnf_locale_name(locale_name, _tags, [], backend) do
-    locale_name = String.to_existing_atom(locale_name)
-    Cldr.known_rbnf_locale_name(locale_name, backend)
-  rescue
-    ArgumentError ->
-      nil
-  end
-
   defp known_rbnf_locale_name(locale_name, _tags, known_rbnf_locales, _backend) do
     locale_name = String.to_existing_atom(locale_name)
     (locale_name in known_rbnf_locales) && locale_name
