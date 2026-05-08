@@ -85,11 +85,11 @@ defmodule Cldr.Rbnf.Config do
   end
 
   def known_locale_names(backend) do
-    MapSet.intersection(
-      MapSet.new(Cldr.known_locale_names(backend)),
-      MapSet.new(rbnf_locale_names())
-    )
-    |> MapSet.to_list()
+    rbnf = rbnf_locale_names()
+
+    backend
+    |> Cldr.known_locale_names()
+    |> Enum.filter(&(&1 in rbnf))
     |> Enum.sort()
   end
 

@@ -982,11 +982,7 @@ defmodule Cldr.Config do
   end
 
   def unknown_locale_names(%__MODULE__{locales: locales}) do
-    locales
-    |> MapSet.new()
-    |> MapSet.difference(MapSet.new(all_locale_names()))
-    |> MapSet.to_list()
-    |> Enum.sort()
+    (locales -- all_locale_names()) |> Enum.sort()
   end
 
   @doc """
