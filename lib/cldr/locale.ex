@@ -352,9 +352,20 @@ defmodule Cldr.Locale do
   def parents(locale, acc \\ [])
 
   def parents(%LanguageTag{} = locale, acc) do
-    case parent(locale) do
-      {:error, _} -> {:ok, Enum.reverse(acc)}
-      {:ok, locale} -> parents(locale, [locale | acc])
+    case structural_parent(locale) do
+      {:error, _} ->
+        {:ok, Enum.reverse(acc)}
+
+      {:ok, parent} ->
+        # Guard against any residual cycle: if the structural parent has the
+        # same locale identity as its input, terminate. structural_parent/1
+        # makes monotonic forward progress so this should never fire, but
+        # the check is cheap insurance.
+        if same_identity?(parent, locale) do
+          {:ok, Enum.reverse(acc)}
+        else
+          parents(parent, [parent | acc])
+        end
     end
   end
 
@@ -369,6 +380,168 @@ defmodule Cldr.Locale do
       parents(locale)
     end
   end
+
+  defp same_identity?(a, b) do
+    a.language == b.language and a.script == b.script and
+      a.territory == b.territory and a.language_variants == b.language_variants
+  end
+
+  @doc """
+  Returns the structural parent of the given locale.
+
+  Unlike `parent/1`, this function operates purely on the subtags of the
+  language tag (language / script / territory / variants) and walks the
+  CLDR parent locales map without re-validating the result through the
+  backend. This guarantees monotonic forward progress towards `und` and
+  avoids the cycle that can occur when `parent/1`'s call to
+  `Cldr.validate_locale/2` re-resolves the parent's `cldr_locale_name`
+  back to the input (e.g. `en-AU` → `en-001` → cldr_locale_name resolves
+  to `en-AU` again).
+
+  Used internally by `parents/2` and `fallback_locales/1`.
+  """
+  @doc since: "2.47.4"
+  @spec structural_parent(LanguageTag.t()) ::
+          {:ok, LanguageTag.t()} | {:error, {module(), binary()}}
+
+  def structural_parent(%LanguageTag{cldr_locale_name: @root_locale}) do
+    {:error, no_parent_error(@root_locale)}
+  end
+
+  def structural_parent(%LanguageTag{cldr_locale_name: name} = locale)
+      when not is_nil(name) do
+    parent_name =
+      case Map.get(parent_locale_map(), name) do
+        nil -> strip_locale_name(name)
+        explicit -> explicit
+      end
+
+    {:ok, build_parent_tag(parent_name, locale)}
+  end
+
+  def structural_parent(%LanguageTag{} = locale) do
+    # No cldr_locale_name to drive the walk; fall back to root.
+    {:ok, build_parent_tag(@root_locale, locale)}
+  end
+
+  # Strip one component from a locale-name atom. Order: variants → territory → root.
+  # The script is deliberately not stripped on its own — see strip_one_subtag below
+  # for the rationale. We operate on the cldr_locale_name (the user-facing form)
+  # rather than the maximised LanguageTag fields, so likely-subtag artefacts
+  # (e.g. fr-CA's auto-added :Latn script) don't appear in the chain.
+  defp strip_locale_name(name) when is_atom(name) do
+    parts = name |> Atom.to_string() |> String.split("-")
+    parts |> drop_last_meaningful_part() |> rebuild_name()
+  end
+
+  # Walk parts from the end, dropping the last that looks like a variant or
+  # territory subtag. Stop after dropping one. If only a language remains,
+  # return [] which becomes root.
+  defp drop_last_meaningful_part([_only]), do: []
+  defp drop_last_meaningful_part(parts) do
+    {dropped, kept} =
+      parts
+      |> Enum.reverse()
+      |> drop_one_variant_or_territory()
+
+    if dropped, do: Enum.reverse(kept), else: []
+  end
+
+  # variant subtags: 5-8 alnum or 4 alnum starting with digit.
+  # territory subtags: 2 letters or 3 digits.
+  # script subtags: 4 letters. We skip these.
+  defp drop_one_variant_or_territory([head | rest]) do
+    cond do
+      variant?(head) -> {true, rest}
+      territory?(head) -> {true, rest}
+      script?(head) -> drop_one_variant_or_territory(rest) |> prepend_skipped(head)
+      true -> {false, [head | rest]}
+    end
+  end
+
+  defp drop_one_variant_or_territory([]), do: {false, []}
+
+  defp prepend_skipped({dropped, rest}, skipped), do: {dropped, [skipped | rest]}
+
+  defp variant?(part) do
+    len = String.length(part)
+    (len in 5..8 and alnum?(part)) or (len == 4 and starts_with_digit?(part) and alnum?(part))
+  end
+
+  defp territory?(part) do
+    case String.length(part) do
+      2 -> letters?(part)
+      3 -> digits?(part)
+      _ -> false
+    end
+  end
+
+  defp script?(part) do
+    String.length(part) == 4 and letters?(part)
+  end
+
+  defp letters?(s), do: s =~ ~r/^[A-Za-z]+$/
+  defp digits?(s), do: s =~ ~r/^\d+$/
+  defp alnum?(s), do: s =~ ~r/^[A-Za-z0-9]+$/
+  defp starts_with_digit?(s), do: s =~ ~r/^\d/
+
+  defp rebuild_name([]), do: @root_locale
+  defp rebuild_name(parts) do
+    parts |> Enum.join("-") |> safe_to_existing_atom() || @root_locale
+  end
+
+  defp safe_to_existing_atom(string) do
+    String.to_existing_atom(string)
+  rescue
+    ArgumentError -> nil
+  end
+
+  # Build a parent LanguageTag from a cldr_locale_name atom. We don't validate
+  # through the backend (that would re-resolve cldr_locale_name back to the
+  # input via Match.best_match — the very cycle this function exists to avoid).
+  # Instead we parse the name for structural fields, but keep cldr_locale_name
+  # as the literal map/strip result.
+  defp build_parent_tag(@root_locale, %LanguageTag{backend: backend}) do
+    %LanguageTag{
+      language: @root_language,
+      script: nil,
+      territory: nil,
+      language_variants: [],
+      requested_locale_name: @root_language,
+      canonical_locale_name: @root_language,
+      cldr_locale_name: @root_locale,
+      backend: backend
+    }
+  end
+
+  defp build_parent_tag(name, %LanguageTag{backend: backend}) when is_atom(name) do
+    string = Atom.to_string(name)
+
+    {language, script, territory, variants} =
+      case Cldr.LanguageTag.parse(string) do
+        {:ok, parsed} ->
+          {parsed.language, coerce_atom(parsed.script), coerce_atom(parsed.territory),
+           parsed.language_variants}
+
+        _other ->
+          {string, nil, nil, []}
+      end
+
+    %LanguageTag{
+      language: language,
+      script: script,
+      territory: territory,
+      language_variants: variants,
+      requested_locale_name: string,
+      canonical_locale_name: string,
+      cldr_locale_name: name,
+      backend: backend
+    }
+  end
+
+  defp coerce_atom(nil), do: nil
+  defp coerce_atom(value) when is_atom(value), do: value
+  defp coerce_atom(value) when is_binary(value), do: safe_to_existing_atom(value) || String.to_atom(value)
 
   @doc """
   Returns the parent for a given locale.

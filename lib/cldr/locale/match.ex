@@ -26,25 +26,20 @@ defmodule Cldr.Locale.Match do
   # than the default territory difference (which is 4).
   @more_than_territory_difference 5
 
-  @match_list [
-    [:language, :script, :territory],
-    [:language, :script],
-    [:language]
-  ]
-
   @language_matching Cldr.Config.language_matching()
-  @language_matches Map.fetch!(@language_matching, :language_match)
-  @match_variables Map.fetch!(@language_matching, :match_variables)
   @paradigm_locales Map.fetch!(@language_matching, :paradigm_locales)
 
+  # Kept as @doc false accessors for backward compatibility with any
+  # downstream callers. The matching engine itself no longer iterates
+  # these — see Cldr.Locale.DistanceTrie.
   @doc false
   def language_matches do
-    @language_matches
+    Map.fetch!(@language_matching, :language_match)
   end
 
   @doc false
   def match_variables do
-    @match_variables
+    Map.fetch!(@language_matching, :match_variables)
   end
 
   @doc false
@@ -223,8 +218,14 @@ defmodule Cldr.Locale.Match do
   def match_distance(desired, supported, backend \\ Cldr.default_backend!()) do
     with {:ok, desired} <- validate(desired, backend, :skip_subtags_for_und),
          {:ok, supported} <- validate(supported, backend) do
-      @match_list
-      |> Enum.reduce(0, &subtag_distance(desired, supported, &1, &2))
+      Cldr.Locale.DistanceTrie.lookup(
+        desired.language,
+        desired.script,
+        desired.territory,
+        supported.language,
+        supported.script,
+        supported.territory
+      )
     end
   end
 
@@ -237,108 +238,61 @@ defmodule Cldr.Locale.Match do
 
   # Likely subtags has an entry for "und" that will
   # transform it to `en-Latn-US` which is not what
-  # we want for matching. So don't apply liekely subtags.
+  # we want for matching. So don't apply likely subtags.
   def validate("und" <> _rest = locale, backend, :skip_subtags_for_und) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true, add_likely_subtags: false]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
 
+  # Fast path: when the locale is a precomputed known name on the backend,
+  # delegate to backend.validate_locale/1 which returns a fully maximised
+  # tag in O(1). This is the asymptotic fix — without it, best_match did
+  # full canonicalisation per supported locale on every call.
+  #
+  # Crucially, we MUST NOT fall through to backend.validate_locale/1 for
+  # unknown names: its generic clause calls Cldr.Locale.canonical_language_tag
+  # without skip_gettext_and_cldr, which re-enters Match.best_match and
+  # recurses indefinitely while best_match is itself iterating the
+  # supported list. Detect the precomputed path explicitly and use the
+  # safe slow path otherwise.
   def validate(locale, backend, _add_subtags) when is_binary(locale) or is_atom(locale) do
+    cond do
+      not (Code.ensure_loaded?(backend) and function_exported?(backend, :validate_locale, 1)) ->
+        slow_validate(locale, backend)
+
+      precomputed?(locale, backend) ->
+        backend.validate_locale(locale)
+
+      true ->
+        slow_validate(locale, backend)
+    end
+  end
+
+  defp precomputed?(locale, backend) do
+    not is_nil(Cldr.known_locale_name(normalise_for_lookup(locale), backend))
+  end
+
+  defp normalise_for_lookup(locale) when is_atom(locale) do
+    locale
+    |> Atom.to_string()
+    |> normalise_for_lookup()
+  end
+
+  defp normalise_for_lookup(locale) when is_binary(locale) do
+    normalised =
+      locale
+      |> String.downcase()
+      |> Cldr.Config.locale_name_from_posix()
+
+    try do
+      String.to_existing_atom(normalised)
+    rescue
+      ArgumentError -> nil
+    end
+  end
+
+  defp slow_validate(locale, backend) do
     options = [skip_gettext_and_cldr: true, skip_rbnf_name: true]
     Cldr.Locale.canonical_language_tag(locale, backend, options)
   end
-
-  defp subtag_distance(desired, supported, subtags, acc) do
-    desired_fields = subtags(desired, subtags)
-    supported_fields = subtags(supported, subtags)
-    distance(desired_fields, supported_fields, acc)
-  end
-
-  # When the last subtag is the same, don't process it following the rule:
-  # If respective subtags in each language tag are identical, remove the subtag from each
-  # (logically) and continue.
-
-  defp distance([_, _, territory], [_, _, territory], acc), do: acc
-  defp distance([_, script], [_, script], acc), do: acc
-  defp distance([language], [language], acc), do: acc
-
-  # If the subtags are identical then there is no difference
-  defp distance(desired, desired, acc), do: acc + 0
-
-  # Now we have to calculate
-  defp distance(desired, supported, acc), do: acc + match_score(desired, supported)
-
-  defp match_score(desired, supported) do
-    Enum.reduce_while(language_matches(), 0, fn match, acc ->
-      cond do
-        matches?(desired, match.desired) &&
-            matches?(supported, match.supported) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Match for #{inspect match}} desired: #{inspect desired} support: #{inspect supported}")
-
-        !Map.get(match, :one_way) && matches?(desired, match.supported) &&
-            matches?(supported, match.desired) ->
-          {:halt, match.distance} # |> IO.inspect(label: "Match for inverse #{inspect match}}")
-
-        true ->
-          {:cont, acc}
-      end
-    end)
-  end
-
-  # Using the following except from TR35 we deduce:
-  # a. Traverse the map for each combination of subtags in @match_list (above)
-  # b. Only match with the designated subtags - ignore matching if the number of
-  #    subtags is different to the number of subtags in the match data.
-  #
-  # > For example, suppose that nn-DE and nb-FR are being compared. They are first maximized to
-  # > nn-Latn-DE and nb-Latn-FR, respectively. The list is searched. The first match is with
-  # > "*-*-*", for a match of 96%. The languages are truncated to nn-Latn and nb-Latn, then to nn
-  # > and nb. The first match is also for a value of 96%, so the result is 92%.
-
-  # Language matching
-  defp matches?([language, _, _], [language, :"*", :"*"]), do: true
-  defp matches?([language, _], [language, :"*"]), do: true
-  defp matches?([language], [language]), do: true
-
-  # Language and script
-  defp matches?([language, _script], [language, :"*"]), do: true
-  defp matches?([language, script, _], [language, script, :"*"]), do: true
-  defp matches?([language, script], [language, script]), do: true
-
-  # Language, script and territory
-  defp matches?([language, _, territory], [language, :"*", territory]), do: true
-  defp matches?([language, script, territory], [language, script, territory]), do: true
-
-  # Expanded match variables
-  defp matches?([language, _script, territory], [language, :"*", {:in, variable}]) do
-    territory in expand(variable)
-  end
-
-  defp matches?([language, script, territory], [language, script, {:in, variable}]) do
-    territory in expand(variable)
-  end
-
-  defp matches?([language, _script, territory], [language, :"*", {:not_in, variable}]) do
-    territory not in expand(variable)
-  end
-
-  defp matches?([language, script, territory], [language, script, {:not_in, variable}]) do
-    territory not in expand(variable)
-  end
-
-  # Wildcard matches are true
-  defp matches?([_, _, _], [:"*", :"*", :"*"]), do: true
-  defp matches?([_, _], [:"*", :"*"]), do: true
-  defp matches?([_], [:"*"]), do: true
-
-  defp matches?(_fields, _match_data), do: false
-
-  defp expand(variable) do
-    Map.fetch!(match_variables(), variable)
-  end
-
-  defp subtags(locale, [:language]), do: [locale.language]
-  defp subtags(locale, [:language, :script]), do: [locale.language, locale.script]
-  defp subtags(locale, [:language, :script, :territory]), do: [locale.language, locale.script, locale.territory]
-
 end

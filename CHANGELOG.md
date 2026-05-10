@@ -2,6 +2,16 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.47.4
+
+This is the changelog for Cldr v2.47.4 released on May 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* `Cldr.Locale.Match.best_match/2` is significantly faster. Distance scoring now uses a trie (`Cldr.Locale.DistanceTrie`) baked at compile time from the ICU language-matching rules, replacing the per-call reduce over the full rule list.
+
+* `Cldr.Locale.Match.validate/3` short-circuits through the backend's precomputed `validate_locale/1` for known locale names, eliminating the per-supported-locale canonicalisation cost that previously dominated `best_match` on backends with many supported locales.
+
 ## Cldr v2.47.3
 
 This is the changelog for Cldr v2.47.3 released on May 9th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
