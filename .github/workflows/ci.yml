@@ -97,6 +97,13 @@ jobs:
     - name: Run tests
       run: mix test
 
-    # Step: Execute dialyzer.
+    # Step: Execute dialyzer. Only on the lint matrix entry (latest
+    # Elixir + OTP) and in :dev env so the analysis matches local
+    # `mix dialyzer` runs. Running across every matrix entry under
+    # MIX_ENV=test produces many spurious warnings from differences in
+    # Elixir/OTP versions and test-only deps.
     - name: Run dialyzer
-      run: mix dialyzer
+      if: matrix.lint
+      env:
+        MIX_ENV: dev
+      run: mix deps.get && mix dialyzer
