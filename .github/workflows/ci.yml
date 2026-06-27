@@ -98,12 +98,12 @@ jobs:
       run: mix test
 
     # Step: Execute dialyzer. Only on the lint matrix entry (latest
-    # Elixir + OTP) and in :dev env so the analysis matches local
-    # `mix dialyzer` runs. Running across every matrix entry under
-    # MIX_ENV=test produces many spurious warnings from differences in
-    # Elixir/OTP versions and test-only deps.
+    # Elixir + OTP). Runs under the workflow's MIX_ENV=test: that env's
+    # elixirc_paths excludes the data-regeneration helpers under mix/
+    # (mix/support/iso_currency.ex etc.), which read $CLDR_PRODUCTION and
+    # the CLDR source files at compile time and so cannot compile in CI.
+    # Gating to a single matrix entry avoids the spurious cross-version
+    # warnings that running dialyzer on every entry would produce.
     - name: Run dialyzer
       if: matrix.lint
-      env:
-        MIX_ENV: dev
-      run: mix deps.get && mix dialyzer
+      run: mix dialyzer
