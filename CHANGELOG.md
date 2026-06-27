@@ -14,6 +14,8 @@ This is the changelog for Cldr v2.47.5 released on June 28th, 2026.  For older c
 
 * Fix race condition in the compile-time locale cache.
 
+* Update CI matrix to include Elixir 1.20.2 and OTP 29.
+
 ## Cldr v2.47.4
 
 This is the changelog for Cldr v2.47.4 released on May 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
