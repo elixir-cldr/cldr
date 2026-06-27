@@ -36,7 +36,9 @@ jobs:
           - otp: "28.3.1"
             elixir: "1.19.5-otp-28"
           - otp: "28.3.1"
-            elixir: "1.20.0-rc.1-otp-28"
+            elixir: "1.20.2-otp-28"
+          - otp: "29.0.2"
+            elixir: "1.20.2-otp-29"
             lint: true
     steps:
     # Step: Setup Elixir + Erlang image as the base.
