@@ -2,6 +2,18 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.47.5
+
+This is the changelog for Cldr v2.47.5 released on June 28th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Fix map key name in timezone data structures. It's `:preferred`, not `:prefer`.
+
+* Remove dead code identified and warned by the Elixir type checker.
+
+* Fix race condition in the compile-time locale cache.
+
 ## Cldr v2.47.4
 
 This is the changelog for Cldr v2.47.4 released on May 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

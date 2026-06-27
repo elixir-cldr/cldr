@@ -155,6 +155,16 @@ defmodule Cldr.Locale.Cache do
         Cldr.maybe_log("Compiler language tag cache miss for locale #{inspect(locale)}.")
         nil
     end
+  rescue
+    ArgumentError ->
+      # The gen_server name is registered by OTP *before* `init/1` runs, and it is
+      # `init/1` that creates this ets table. During parallel compilation another
+      # process can therefore observe `gen_server_started?/0` as true, skip starting
+      # the server, and reach this lookup before the table exists. Treat it as a
+      # cache miss; the caller (`Cldr.Config.language_tag/1`) falls back to
+      # `all_language_tags/0`. This mirrors the same guard in `do_get_locale/2`.
+      Cldr.maybe_log("Compiler language tag cache: table not ready for #{inspect(locale)}.")
+      nil
   end
 
   # We assign the compiler pid as the heir for our table so

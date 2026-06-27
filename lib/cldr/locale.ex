@@ -1540,13 +1540,6 @@ defmodule Cldr.Locale do
         %{aliases: [zone_id]} ->
           zone_id
 
-        %{prefer: short_zone} when not is_nil(short_zone)->
-          %{aliases: zone_ids} =
-            Cldr.Timezone.timezones()
-            |> Map.fetch!(short_zone)
-
-          hd(zone_ids)
-
         %{aliases: zones} ->
           ambiguous_timezone_error(territory, zones)
       end
