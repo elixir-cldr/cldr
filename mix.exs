@@ -20,7 +20,13 @@ defmodule Cldr.Mixfile do
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [
-        plt_add_apps: ~w(gettext inets jason mix sweet_xml nimble_parsec)a,
+        plt_add_apps: ~w(gettext inets jason mix nimble_parsec)a,
+        # sweet_xml (and its transitive dep :xmerl) is only used by the
+        # data-regeneration helpers under mix/, which are not compiled in
+        # :test where dialyzer now runs. :xmerl ships without specs and, on
+        # OTP 29+, floods the PLT build with "missing specification" warnings.
+        # Nothing dialyzer analyses calls it, so drop it from the PLT.
+        plt_ignore_apps: [:xmerl],
         ignore_warnings: ".dialyzer_ignore-warnings",
         flags: [
           :error_handling,
