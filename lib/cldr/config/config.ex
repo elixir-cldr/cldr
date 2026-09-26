@@ -1363,7 +1363,7 @@ defmodule Cldr.Config do
         |> Map.get(:number_symbols)
         |> Enum.map(fn
           {k, nil} -> {k, nil}
-          {k, v} -> {k, struct(Cldr.Number.Symbol, v)}
+          {k, v} -> {k, number_symbol!(v)}
         end)
 
       {:ok, symbols}
@@ -1395,6 +1395,25 @@ defmodule Cldr.Config do
       {:ok, symbols} -> symbols
       {:error, {exception, reason}} -> raise exception, reason
     end
+  end
+
+  # CLDR number symbols left out by name:
+  #
+  # * `time_separator_alt_variant` is the "." that nb, nn, no and sv
+  #   use as an alternative time separator. No formatter reads it.
+  @excluded_number_symbols [:time_separator_alt_variant]
+
+  # CLDR number symbols that only some versions of `Cldr.Number.Symbol`
+  # (in ex_cldr_numbers) define. They are kept when the struct has them.
+  @optional_number_symbols [:approximately_sign, :currency_decimal, :currency_group]
+
+  @doc false
+  # Builds a `Cldr.Number.Symbol` from the CLDR symbols of one number
+  # system. A symbol that is neither a struct field nor listed above
+  # raises, so new CLDR data cannot be dropped without a decision.
+  def number_symbol!(symbols) do
+    unsupported = @optional_number_symbols -- Map.keys(struct(Cldr.Number.Symbol))
+    struct!(Cldr.Number.Symbol, Map.drop(symbols, @excluded_number_symbols ++ unsupported))
   end
 
   @doc """
