@@ -939,7 +939,7 @@ defmodule Cldr do
   """
   @spec requested_locale_names(backend()) :: [Locale.locale_name(), ...] | []
   def requested_locale_names(backend \\ default_backend!()) do
-    backend.requested_locale_names
+    backend.requested_locale_names()
   end
 
   @doc """

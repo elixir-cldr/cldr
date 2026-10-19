@@ -2822,7 +2822,7 @@ defmodule Cldr.Locale do
   """
   @alias_keys Map.keys(@aliases)
   @spec aliases(locale_name() | String.t(), atom()) ::
-          String.t() | list(String.t()) | LanguageTag.t() | nil
+          String.t() | atom() | list(String.t()) | LanguageTag.t() | nil
 
   def aliases(key, :region = type) when is_atom(key) do
     aliases()
