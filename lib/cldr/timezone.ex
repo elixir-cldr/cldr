@@ -17,6 +17,7 @@ defmodule Cldr.Timezone do
   @type short_zone :: String.t()
 
   @type timezone :: %{
+          optional(:short_zone) => short_zone(),
           aliases: [String.t(), ...],
           preferred: nil | short_zone(),
           territory: Locale.territory_code()
