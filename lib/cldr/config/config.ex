@@ -558,7 +558,7 @@ defmodule Cldr.Config do
     all_locale_names = all_locale_names()
 
     fun = fn locale_name ->
-      (locale_name in all_locale_names) && locale_name || nil
+      (locale_name in all_locale_names && locale_name) || nil
     end
 
     if inherited = Map.get(parent_locales(), locale_name) do
@@ -739,7 +739,7 @@ defmodule Cldr.Config do
   end
 
   defp format_locale(["*", script, territory]) do
-    format_locale([:"*", script, territory])
+    format_locale([:*, script, territory])
   end
 
   defp format_locale([language, script, territory]) do
@@ -747,7 +747,7 @@ defmodule Cldr.Config do
   end
 
   defp format_locale(["*", script]) do
-    [:"*", String.to_atom(script)]
+    [:*, String.to_atom(script)]
   end
 
   defp format_locale([language, script]) do
@@ -755,7 +755,7 @@ defmodule Cldr.Config do
   end
 
   defp format_locale(["*"]) do
-    [:"*"]
+    [:*]
   end
 
   defp format_locale([language]) do
@@ -2798,7 +2798,7 @@ defmodule Cldr.Config do
           config
         )
 
-      Map.put(config, :locales, locales -- unknown_locales)
+        Map.put(config, :locales, locales -- unknown_locales)
     end
   end
 

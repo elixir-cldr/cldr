@@ -37,7 +37,6 @@ defmodule Cldr.Validity.Script do
     |> normalize()
   end
 
-
   @unicode_to_subtag_mapping Cldr.Config.unicode_script_to_subtag_mapping()
 
   @doc false

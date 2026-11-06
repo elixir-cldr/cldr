@@ -111,7 +111,8 @@ defmodule Cldr.Locale.Match do
       |> Enum.with_index()
 
     matches =
-      for {candidate, priority} <- desired_list, {supported, index} <- supported,
+      for {candidate, priority} <- desired_list,
+          {supported, index} <- supported,
           {:ok, candidate_tag} = validate(candidate, backend, :skip_subtags_for_und),
           {:ok, supported_tag} = validate(supported, backend),
           match_distance = match_distance(candidate_tag, supported_tag, backend),
@@ -119,11 +120,15 @@ defmodule Cldr.Locale.Match do
         {supported, supported_tag, match_distance, priority, index}
       end
       |> Enum.sort(&language_comparator/2)
-      # |> IO.inspect(label: "Ordered matches")
+
+    # |> IO.inspect(label: "Ordered matches")
 
     case matches do
-      [{supported, _supported_tag, distance, _priority, _index} | _rest] -> {:ok, supported, distance}
-      [] -> {:error, {Cldr.NoMatchingLocale, "No match for desired locales #{inspect desired}"}}
+      [{supported, _supported_tag, distance, _priority, _index} | _rest] ->
+        {:ok, supported, distance}
+
+      [] ->
+        {:error, {Cldr.NoMatchingLocale, "No match for desired locales #{inspect(desired)}"}}
     end
   end
 
@@ -162,12 +167,12 @@ defmodule Cldr.Locale.Match do
     maybe_paradigm_locale =
       Locale.locale_name_from(supported_tag)
 
-    {distance + (priority * @more_than_territory_difference),
-      !paradigm_locale(maybe_paradigm_locale), index}
+    {distance + priority * @more_than_territory_difference,
+     !paradigm_locale(maybe_paradigm_locale), index}
   end
 
   defp match_key_no_paradigm({_language, _supported_tag, distance, priority, index}) do
-    {distance + (priority * @more_than_territory_difference), index}
+    {distance + priority * @more_than_territory_difference, index}
   end
 
   defp paradigm_locale(language) when is_binary(language) do

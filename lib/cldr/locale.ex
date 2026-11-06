@@ -438,6 +438,7 @@ defmodule Cldr.Locale do
   # territory subtag. Stop after dropping one. If only a language remains,
   # return [] which becomes root.
   defp drop_last_meaningful_part([_only]), do: []
+
   defp drop_last_meaningful_part(parts) do
     {dropped, kept} =
       parts
@@ -486,6 +487,7 @@ defmodule Cldr.Locale do
   defp starts_with_digit?(s), do: s =~ ~r/^\d/
 
   defp rebuild_name([]), do: @root_locale
+
   defp rebuild_name(parts) do
     parts |> Enum.join("-") |> safe_to_existing_atom() || @root_locale
   end
@@ -541,7 +543,9 @@ defmodule Cldr.Locale do
 
   defp coerce_atom(nil), do: nil
   defp coerce_atom(value) when is_atom(value), do: value
-  defp coerce_atom(value) when is_binary(value), do: safe_to_existing_atom(value) || String.to_atom(value)
+
+  defp coerce_atom(value) when is_binary(value),
+    do: safe_to_existing_atom(value) || String.to_atom(value)
 
   @doc """
   Returns the parent for a given locale.
@@ -649,7 +653,7 @@ defmodule Cldr.Locale do
 
   defp known_rbnf_locale_name(locale_name, _tags, known_rbnf_locales, _backend) do
     locale_name = String.to_existing_atom(locale_name)
-    (locale_name in known_rbnf_locales) && locale_name
+    locale_name in known_rbnf_locales && locale_name
   rescue
     ArgumentError ->
       nil
@@ -2017,7 +2021,11 @@ defmodule Cldr.Locale do
     %{language_tag | cldr_locale_name: cldr_locale_name}
   end
 
-  @spec put_rbnf_locale_name(language_tag :: Cldr.LanguageTag.t(), options :: Keyword.t(), skip :: boolean) ::
+  @spec put_rbnf_locale_name(
+          language_tag :: Cldr.LanguageTag.t(),
+          options :: Keyword.t(),
+          skip :: boolean
+        ) ::
           Cldr.LanguageTag.t()
   @doc false
   def put_rbnf_locale_name(language_tag, rbnf_locales, skip? \\ false)
@@ -2465,9 +2473,11 @@ defmodule Cldr.Locale do
   def put_likely_subtags(%LanguageTag{} = language_tag) do
     %LanguageTag{language: language, script: script, territory: territory} = language_tag
     subtags = likely_subtags(language, script, territory, [])
+
     Map.merge(subtags, language_tag, fn
       :language, v1, "und" ->
         v1
+
       _k, v1, v2 ->
         if empty?(v2), do: v1, else: v2
     end)

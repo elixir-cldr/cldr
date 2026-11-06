@@ -9,9 +9,13 @@ defmodule Cldr.Normalize.LanguageMatching do
     |> Cldr.Map.rename_keys("_value", "value")
     |> Cldr.Map.rename_keys("_locales", "locales")
     |> Cldr.Map.rename_keys("_oneway", "one_way")
-    |> Cldr.Map.deep_map(fn {"value", v} ->
-      {"value", String.split(v, "+")} end,
-      filter: "match_variables", only: "value")
+    |> Cldr.Map.deep_map(
+      fn {"value", v} ->
+        {"value", String.split(v, "+")}
+      end,
+      filter: "match_variables",
+      only: "value"
+    )
     |> parse_language_matches()
     |> expand_match_variables()
     |> level_up_paradigm_locales()
@@ -41,8 +45,10 @@ defmodule Cldr.Normalize.LanguageMatching do
     case String.split(skeleton, "-") do
       [language] ->
         [language]
+
       [language, script] ->
         [language, String.to_atom(script)]
+
       [language, script, territory] ->
         [language, String.to_atom(script), parse_territory(territory)]
     end

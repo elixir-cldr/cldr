@@ -51,19 +51,20 @@ defmodule Cldr.Config.Test do
   test "that a backend config includes fallback locales" do
     from_locales = ["en-AU", "ca-ES-VALENCIA", "pt-PT", "nb"]
 
-    to_locales = [
-      :ca,
-      :en,
-      :pt,
-      :"ca-ES-valencia",
-      :"en-001",
-      :"en-AU",
-      :nb,
-      :no,
-      :"pt-PT",
-      :und
-    ]
-    |> Enum.sort()
+    to_locales =
+      [
+        :ca,
+        :en,
+        :pt,
+        :"ca-ES-valencia",
+        :"en-001",
+        :"en-AU",
+        :nb,
+        :no,
+        :"pt-PT",
+        :und
+      ]
+      |> Enum.sort()
 
     capture_io(:stderr, fn ->
       capture_io(fn ->

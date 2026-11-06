@@ -5,16 +5,15 @@ defmodule Cldr.Locale.Distance.Test do
 
   for test <- Cldr.Locale.Distance.TestData.parse(),
       test.index not in @maybe_incorrect_test_result do
-
     if test.distance == 100 do
       test "##{test.index} Distance desired #{inspect(test.desired)} to supported #{inspect(test.supported)}" do
         assert unquote(String.to_integer(test.distance)) =
-          Cldr.Locale.Match.match_distance(unquote(test.desired), unquote(test.supported))
+                 Cldr.Locale.Match.match_distance(unquote(test.desired), unquote(test.supported))
       end
     else
       test "##{test.index} Distance desired #{inspect(test.desired)} to supported #{inspect(test.supported)}" do
         assert unquote(String.to_integer(test.distance)) <=
-          Cldr.Locale.Match.match_distance(unquote(test.desired), unquote(test.supported))
+                 Cldr.Locale.Match.match_distance(unquote(test.desired), unquote(test.supported))
       end
     end
   end

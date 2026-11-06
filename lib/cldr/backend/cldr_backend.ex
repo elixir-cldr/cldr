@@ -507,7 +507,6 @@ defmodule Cldr.Backend do
         Map.get(marks, preference) || Map.fetch!(marks, :default)
       end
 
-
       @doc """
       Add locale-specific ellipsis to a string.
 

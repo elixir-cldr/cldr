@@ -83,13 +83,13 @@ defmodule Cldr.Consolidate do
   # Copy `en`, `en-001` and `und` to the test data directory in
   # "another_backend/cldr/data_dir/locales"
   def copy_test_locales do
-    Enum.each ["en", "en-001", "und"], fn locale ->
+    Enum.each(["en", "en-001", "und"], fn locale ->
       locale_file = locale <> ".json"
 
       source_path = Path.join(consolidated_locales_dir(), locale_file)
       destination_path = Path.join("another_backend/cldr/data_dir/locales", locale_file)
       File.cp(source_path, destination_path)
-    end
+    end)
   end
 
   @doc """
@@ -221,7 +221,7 @@ defmodule Cldr.Consolidate do
     |> Enum.group_by(fn {k, _v} -> hd(k) end, fn {k, v} ->
       case k do
         [_lang] ->
-          %{:default  => v}
+          %{:default => v}
 
         [_lang, "_alt_", alt] ->
           %{String.to_atom(alt) => v}

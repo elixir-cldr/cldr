@@ -173,7 +173,7 @@ defmodule Cldr.Validity.U do
   # valid function check that the value provided
   # is acceptable for the given key.
 
-  for {key, values} <- @validity_data, key in @process_keys -- ["tz"] do
+  for {key, values} <- @validity_data, key in (@process_keys -- ["tz"]) do
     defp valid(unquote(key), value) when value in unquote(Map.keys(values)) do
       unquote(Macro.escape(values))
       |> get_value(unquote(key), value)

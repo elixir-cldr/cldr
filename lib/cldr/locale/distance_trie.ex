@@ -384,5 +384,4 @@ defmodule Cldr.Locale.DistanceTrie do
       Map.get(table, {:*, supported}) ||
       Map.get(table, {:*, :*})
   end
-
 end

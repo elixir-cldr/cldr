@@ -66,5 +66,4 @@ defmodule Cldr.Normalize.LocaleDisplayNames do
 
     Map.put(content, "locale_display_names", locale_display_names)
   end
-
 end

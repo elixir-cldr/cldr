@@ -1,16 +1,11 @@
 name: Elixir CI
 
-# Define workflow that runs when changes are pushed to the
-# `main` branch or pushed to a PR branch that targets the `main`
-# branch. Change the branch name if your project uses a
-# different name for the main branch like "master" or "production".
 on:
   push:
-    branches: [ "main" ]  # adapt branch for project
+    branches: [main]
   pull_request:
-    branches: [ "main" ]  # adapt branch for project
+    branches: [main]
 
-# Sets the ENV `MIX_ENV` to `test` for running tests
 env:
   MIX_ENV: test
 
@@ -19,93 +14,100 @@ permissions:
 
 jobs:
   test:
+    name: "Elixir ${{ matrix.elixir }} / OTP ${{ matrix.otp }}${{ matrix.lint && ' (lint)' || '' }}"
     runs-on: ubuntu-latest
-    name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+
     strategy:
-      # Specify the OTP and Elixir versions to use when building
-      # and running the workflow steps.
+      fail-fast: false
       matrix:
         include:
-          # minimum required versions
-          - otp: "27.2.4"
-            elixir: "1.18.4-otp-27"
-          - otp: "28.3.1"
-            elixir: "1.18.4-otp-28"
-          - otp: "27.2.4"
-            elixir: "1.19.5-otp-27"
-          - otp: "28.3.1"
-            elixir: "1.19.5-otp-28"
-          - otp: "28.3.1"
-            elixir: "1.20.2-otp-28"
-          - otp: "29.0.2"
-            elixir: "1.20.2-otp-29"
+          # Every row pins the latest patch of its Elixir minor and its OTP
+          # major, verified against the release tags. Bump every row that
+          # uses a version in the same change, never one at a time.
+
+          # Elixir 1.17 — supports OTP 25–27
+          - elixir: "1.17.3-otp-26"
+            otp: "26.2.5.21"
+          - elixir: "1.17.3-otp-27"
+            otp: "27.3.4.19"
+
+          # Elixir 1.18 — supports OTP 25–27
+          - elixir: "1.18.6-otp-26"
+            otp: "26.2.5.21"
+          - elixir: "1.18.6-otp-27"
+            otp: "27.3.4.19"
+
+          # Elixir 1.19 — supports OTP 26–28
+          - elixir: "1.19.7-otp-26"
+            otp: "26.2.5.21"
+          - elixir: "1.19.7-otp-27"
+            otp: "27.3.4.19"
+          - elixir: "1.19.7-otp-28"
+            otp: "28.5.0.8"
+
+          # Elixir 1.20 — supports OTP 27–29
+          - elixir: "1.20.5-otp-27"
+            otp: "27.3.4.19"
+          - elixir: "1.20.5-otp-28"
+            otp: "28.5.0.8"
+          - elixir: "1.20.5-otp-29"
+            otp: "29.1.2"
             lint: true
+
     steps:
-    # Step: Setup Elixir + Erlang image as the base.
-    - name: Set up Elixir
-      uses: erlef/setup-beam@v1
-      with:
-        otp-version: ${{matrix.otp}}
-        elixir-version: ${{matrix.elixir}}
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    # Step: Check out the code.
-    - name: Checkout code
-      uses: actions/checkout@v7
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
 
-    # Step: Define how to cache deps. Restores existing cache if present.
-    - name: Cache deps
-      id: cache-deps
-      uses: actions/cache@v6
-      env:
-        cache-name: cache-elixir-deps
-      with:
-        path: deps
-        key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-mix-${{ env.cache-name }}-
+      # Compiled BEAMs are tied to the Elixir and OTP versions, so the key
+      # and every restore key carry both.
+      - name: Restore dependency cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            deps
+            _build
+          key: mix-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('mix.lock') }}
+          restore-keys: |
+            mix-${{ matrix.elixir }}-${{ matrix.otp }}-
 
-    # Step: Define how to cache the `_build` directory. After the first run,
-    # this speeds up tests runs a lot. This includes not re-compiling our
-    # project's downloaded deps every run.
-    - name: Cache compiled build
-      id: cache-build
-      uses: actions/cache@v6
-      env:
-        cache-name: cache-compiled-build
-      with:
-        path: _build
-        key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-mix-${{ env.cache-name }}-
-          ${{ runner.os }}-mix-
+      - name: Install dependencies
+        run: mix deps.get
 
-    # Step: Download project dependencies. If unchanged, uses
-    # the cached version.
-    - name: Install dependencies
-      run: mix deps.get
+      - name: Check formatting
+        if: matrix.lint
+        run: mix format --check-formatted
 
-    # Step: Compile the project treating any warnings as errors.
-    # Customize this step if a different behavior is desired.
-    - name: Compiles without warnings
-      run: mix compile --warnings-as-errors
+      - name: Compile (warnings as errors)
+        run: mix compile --warnings-as-errors
 
-    # Step: Check that the checked in code has already been formatted.
-    # This step fails if something was found unformatted.
-    # Customize this step as desired.
-    # - name: Check Formatting
-    #   run: mix format --check-formatted
+      - name: Run tests
+        run: mix test
 
-    # Step: Execute the tests.
-    - name: Run tests
-      run: mix test
+      - name: Restore PLT cache
+        if: matrix.lint
+        uses: actions/cache@v6
+        with:
+          path: _build/test/dialyxir_*
+          key: plt-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('mix.lock') }}
+          restore-keys: |
+            plt-${{ matrix.elixir }}-${{ matrix.otp }}-
 
-    # Step: Execute dialyzer. Only on the lint matrix entry (latest
-    # Elixir + OTP). Runs under the workflow's MIX_ENV=test: that env's
-    # elixirc_paths excludes the data-regeneration helpers under mix/
-    # (mix/support/iso_currency.ex etc.), which read $CLDR_PRODUCTION and
-    # the CLDR source files at compile time and so cannot compile in CI.
-    # Gating to a single matrix entry avoids the spurious cross-version
-    # warnings that running dialyzer on every entry would produce.
-    - name: Run dialyzer
-      if: matrix.lint
-      run: mix dialyzer
+      # Dialyzer runs under the workflow's MIX_ENV=test, not dev: the dev
+      # env compiles the data-regeneration helpers under mix/support
+      # (iso_currency.ex and others), which read $CLDR_PRODUCTION and the
+      # CLDR source files at compile time and so cannot compile in CI.
+      - name: Run dialyzer
+        if: matrix.lint
+        run: mix dialyzer
+
+      - name: Check docs
+        if: matrix.lint
+        env:
+          MIX_ENV: release
+        run: mix docs --warnings-as-errors

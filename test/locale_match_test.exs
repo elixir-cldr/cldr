@@ -12,8 +12,7 @@ defmodule Cldr.Locale.Match.Test do
   @und_tests_that_need_research [220, 232, 342]
 
   for test <- Cldr.Locale.Match.TestData.parse(),
-      test.index not in @ignore_tests ++ @invalid_variant ++ @und_tests_that_need_research do
-
+      test.index not in (@ignore_tests ++ @invalid_variant ++ @und_tests_that_need_research) do
     supported =
       inspect(test.supported)
 
@@ -26,7 +25,10 @@ defmodule Cldr.Locale.Match.Test do
 
     test "##{test.index} Match desired #{inspect(test.desired)} to supported #{supported}" do
       assert {:ok, unquote(test.expected), _} =
-        Cldr.Locale.Match.best_match(unquote(test.desired), supported: unquote(test.supported), threshold: unquote(test.threshold))
+               Cldr.Locale.Match.best_match(unquote(test.desired),
+                 supported: unquote(test.supported),
+                 threshold: unquote(test.threshold)
+               )
     end
   end
 end

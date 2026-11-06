@@ -11,10 +11,13 @@ defmodule Cldr.Normalize.TerritoryContainers do
     |> Enum.map(fn
       {<<container::binary-3>>, v} ->
         {container, Map.get(v, "_contains")}
+
       {<<container::binary-2>>, v} ->
         {container, Map.get(v, "_contains")}
+
       {<<container::binary-3, "-status-grouping">>, v} ->
         {container, Map.get(v, "_contains")}
+
       _other ->
         nil
     end)
