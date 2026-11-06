@@ -1,7 +1,15 @@
-# TODO for CLDR version 43 (April 2023)
+# TODO
 
-* [ ] Add a CLDR version to the generated locale files. Then when configuring a backend, if a locale is detected but its of an earlier version, force download the new version. This will overcome the issue some consumers have whereby the old locales are not removed when `ex_cldr` is updated (and reproducing this has not been possible)
+Known defects and parked work in `ex_cldr`. The library is in maintenance mode (see `STATUS.md`): defects users report are fixed and released, while defects found in review are recorded here and deferred, because development time goes to Localize. An item is revived when someone reports it.
 
-* [ ] Implement a CLDR-locale-aware shim for [ex_phone_number](https://hex.pm/packages/ex_phone_number) to make it easy to integrate phone number parsing and printing
+## Deferred
 
-* [X] Add configuration option `:default_currency_format` to be either `:currency`, `:accounting` or `nil`. This is used by `ex_cldr_number` version 2.30.0 onwards.
+* [ ] **`Cldr.requested_locale_names/1` always raises** — it calls `backend.requested_locale_names/0`, which no backend has defined since v2.0, so every call raises `UndefinedFunctionError` (on Elixir 1.20 after a warning about the call having no parentheses). Found in review of PR #275 on 2026-11-07, not reported.
+
+* [ ] **Record the CLDR version in generated locale files** — when a backend finds a locale file from an earlier CLDR version, download the current one, so locale files left behind by an `ex_cldr` upgrade are replaced. Functional work, parked by maintenance mode.
+
+* [ ] **CLDR-aware shim for `ex_phone_number`** — make phone number parsing and printing easy to integrate with a backend. Functional work, parked by maintenance mode; Localize has `localize_phonenumber`.
+
+## Done
+
+* [x] **`:default_currency_format` backend option** — `:currency`, `:accounting` or `nil`, used by `ex_cldr_numbers` 2.30.0 onwards. 2023-03-07, v2.35.0.

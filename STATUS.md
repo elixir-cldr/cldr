@@ -1,5 +1,5 @@
 # Status
 
-**Status:** bug fixes only, 2026-11-06
+**Status:** bug fixes only, 2026-11-07
 
-`ex_cldr` is in maintenance mode. Defects are fixed and released; no functional work is planned, and `TODO.md` stays empty.
+`ex_cldr` is in maintenance mode. Defects users report are fixed and released; defects found in review are recorded in `TODO.md` and deferred, because development time goes to Localize. No functional work is planned.
