@@ -256,8 +256,9 @@ defmodule Cldr.Test do
              ]
   end
 
+  # Cldr.Json needs OTP 27, so Elixir 1.18 and later on OTP 26 use JSON
   test "that we get the correct default json library" do
-    assert Cldr.Config.json_library() in [Cldr.Json, Jason]
+    assert Cldr.Config.json_library() in [Cldr.Json, JSON, Jason]
   end
 
   test "that configs merge correctly" do
