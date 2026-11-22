@@ -2,6 +2,14 @@
 
 **Note that `ex_cldr` version 2.39.0 and later are supported on Elixir 1.12 and later only.**
 
+## Cldr v2.47.6
+
+This is the changelog for Cldr v2.47.6 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+
+### Bug Fixes
+
+* Read an RBNF radix written with a grouping separator, as in the Maltese rules named `11000000/1,000`. The 16 affected rules in `mt` now have an integer radix and a divisor; they had the string "1,000" and no divisor, so formatting 11,000,000 and above raised in `ex_cldr_numbers`.
+
 ## Cldr v2.47.5
 
 This is the changelog for Cldr v2.47.5 released on June 28th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)

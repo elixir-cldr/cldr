@@ -196,7 +196,7 @@ defmodule Cldr.Rbnf.Config do
   defp radix_from_name(name) do
     case String.split(name, "/") do
       [base_value, radix] ->
-        {to_integer(base_value), to_integer(radix)}
+        {to_integer(base_value), radix_to_integer(radix)}
 
       [base_value] ->
         {to_integer(base_value), @default_radix}
@@ -206,6 +206,14 @@ defmodule Cldr.Rbnf.Config do
   @spec locale_path(binary) :: String.t()
   defp locale_path(locale) when Cldr.is_locale_name(locale) do
     Path.join(rbnf_dir(), "/#{locale}.json")
+  end
+
+  # A radix may be written with grouping separators: Maltese has
+  # rules named "11000000/1,000".
+  defp radix_to_integer(radix) do
+    radix
+    |> String.replace(",", "")
+    |> to_integer()
   end
 
   defp to_integer(value) do

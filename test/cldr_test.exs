@@ -67,6 +67,20 @@ defmodule Cldr.Test do
     refute Cldr.available_locale_name?("jabberwocky")
   end
 
+  test "that every RBNF rule with an integer base value has an integer radix and divisor" do
+    for locale_name <- Cldr.known_rbnf_locale_names(TestBackend.Cldr) do
+      locale = Cldr.Locale.Loader.get_locale(locale_name, TestBackend.Cldr)
+
+      for {_rule_group, rule_sets} <- locale.rbnf,
+          {rule_set, %{rules: rules}} <- rule_sets,
+          %{base_value: base_value} = rule <- rules,
+          is_integer(base_value) do
+        assert is_integer(rule.radix) and is_integer(rule.divisor),
+               "#{inspect(locale_name)} #{inspect(rule_set)} #{inspect(rule)}"
+      end
+    end
+  end
+
   test "that we have the right number of rbnf locales" do
     alias TestBackend.Cldr
 
