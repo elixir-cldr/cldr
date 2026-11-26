@@ -4,7 +4,7 @@
 
 ## Cldr v2.47.6
 
-This is the changelog for Cldr v2.47.6 released on ______.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
+This is the changelog for Cldr v2.47.6 released on November 26th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr/tags)
 
 ### Bug Fixes
 
