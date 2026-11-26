@@ -208,8 +208,10 @@ defmodule Cldr.Rbnf.Config do
     Path.join(rbnf_dir(), "/#{locale}.json")
   end
 
+  # CLDR may group digits in a base value or radix, like
+  # `11000000/1,000` in Maltese. ICU ignores the commas.
   defp to_integer(value) do
-    with {int, ""} <- Integer.parse(value) do
+    with {int, ""} <- Integer.parse(String.replace(value, ",", "")) do
       int
     else
       _ -> value
